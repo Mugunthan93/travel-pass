@@ -43,13 +43,6 @@ export class User {
 
   constructor(user : user){
 
-    if(user.role == 'manager'){
-      this.role = new Manager(user);
-    }
-    else if(user.role == 'user'){
-      this.role = new Employee(user);
-    }
-
   }
 
 }

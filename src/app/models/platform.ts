@@ -1,73 +1,115 @@
-import { from, Observable, of } from 'rxjs';
-import { NativeStorage } from '@ionic-native/native-storage/ngx';
-import { map, tap } from 'rxjs/operators';
+import { HTTP } from '@ionic-native/http/ngx';
+import { HttpClient, HttpHandler, HttpHeaders } from '@angular/common/http';
+import { Platform } from '@ionic/angular';
+import { from } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { map } from 'rxjs/operators';
 
-export class Android {
+export class Platforms {
+
+    protected platform: Platform;
+    private http : any;
+
+    platforms : string[];
 
     constructor(
-        private nativeStorage: NativeStorage
     ){
-
-    }
-
-    storeSession(user){
-        return from(this.nativeStorage.setItem('user', user))
-          .pipe(
-            () => {
-              console.log("android session saved");
-              return null;
+       this.platforms = this.platform.platforms();
+       this.platforms.forEach(
+           (platform) => {
+            switch(platform){
+                case "desktop":
+                    this.http = new BrowserHttp();
+                    break;
+                case "android":
+                    this.http = new NativeHttp();
+                    break;
             }
-          )
-    }
-    
-    getSession(){
-        return from(this.nativeStorage.getItem('user'))
-        .pipe(
-        map(
-        (sessionData) => {
-            let parsedData = JSON.parse(sessionData);
-            return parsedData;
-        })
-        )
-    }
-
-    clearSession() {
-    return from(this.nativeStorage.clear())
-        .pipe(
-        map(
-            () => {
-            console.log("android session cleared");
-            return null;
-            }
-        )
-        );
+           }
+       );
     }
 
 }
 
-export class Desktop {
+export class BrowserHttp extends HttpClient {
 
-    constructor() {
+    header : HttpHeaders;
 
+    constructor(){
+        let httpHandler : HttpHandler;
+        super(httpHandler);
+        this.header = new HttpHeaders({
+            "Access-Control-Allow-Origin":'*',
+            "Access-Control-Allow-Headers":"Content-Type",
+            "Access-Control-Allow-Methods":"GET, POST, OPTIONS, PUT, PATCH, DELETE"
+        });
     }
 
-    storeSession(user) {
-        return of(sessionStorage.setItem("user", JSON.stringify(user)));
-    }
-    
-    getSession(){
-        return of(sessionStorage.getItem("user"))
+    login(data) {
+        return from(
+            this.post(environment.baseURL + "/users/login",data)
+            )
             .pipe(
                 map(
-                    (sessionData) => {
-                        let parsedData = JSON.parse(sessionData);
-                        return parsedData;
-                    })
+                    (resData) => {
+                        return resData;
+                    }
+                )
             );
     }
 
-    clearSession() {
-    return of(sessionStorage.removeItem("user"));
+    logout(){
+        return from(
+            this.post(environment.baseURL + "/users/logout",{})
+            )
+            .pipe(
+                map(
+                    (resData) => {
+                        return resData;
+                    }
+                )
+            );
+    }
+
+}
+
+export class NativeHttp extends HTTP {
+
+    constructor(){
+        super();
+        this.setHeader("localhost","Access-Control-Allow-Origin",'*');
+        this.setHeader("localhost", "Access-Control-Allow-Headers","Content-Type");
+        this.setHeader("localhost","Access-Control-Allow-Methods","GET, POST, OPTIONS, PUT, PATCH, DELETE");
+    }
+
+    get headers(){
+        return this.getHeaders("localhost");
+    }
+
+    login(data) {
+        return from(
+            this.post(environment.baseURL + "/users/login",data,this.headers)
+            )
+            .pipe(
+                map(
+                    (resData) => {
+                        return resData;
+                    }
+                )
+            );
+    }
+
+    logout(){
+        return from(
+            this.get(environment.baseURL + "/users/logout",{},this.headers)
+            )
+            .pipe(
+                map(
+                    (resData) => {
+                        return resData;
+                    }
+                )
+            );
     }
 
 }

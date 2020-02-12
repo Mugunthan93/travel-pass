@@ -11,19 +11,23 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
-import { Android, Desktop } from './models/platform';
 import { InterceptorService } from './services/interceptor.service';
+import { HTTP } from '@ionic-native/http/ngx';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, BrowserAnimationsModule, HttpClientModule],
+  imports: [
+    BrowserModule, 
+    IonicModule.forRoot(), 
+    AppRoutingModule, 
+    BrowserAnimationsModule,
+    HttpClientModule],
   providers: [
     StatusBar,
     SplashScreen,
-    Android,
-    Desktop,
     NativeStorage,
+    HTTP,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: HTTP_INTERCEPTORS, useClass:InterceptorService, multi:true }
   ],

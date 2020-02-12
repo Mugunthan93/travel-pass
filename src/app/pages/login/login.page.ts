@@ -40,14 +40,13 @@ export class LoginPage implements OnInit,OnDestroy {
           this.loginSub = this.authService.login(this.loginForm.value.email,this.loginForm.value.password)
           .subscribe(
             (resData) => {
-              console.log(resData);
-              this.loadingCtrl.dismiss();
-              this.router.navigate([resData]);
+              
+              this.router.navigate(['/','booking']);
+                this.loadingCtrl.dismiss();
             }
           )
         }
       );
-      
     }
   }
 

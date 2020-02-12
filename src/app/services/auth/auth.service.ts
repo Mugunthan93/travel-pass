@@ -1,25 +1,58 @@
 import { Injectable } from '@angular/core';
-import {  HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Observable, BehaviorSubject, from } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { User, user } from 'src/app/models/user';
-import { Account } from 'src/app/models/account';
-import { Booking } from 'src/app/models/booking';
-
-import { Platform } from '@ionic/angular';
-import { Android, Desktop } from 'src/app/models/platform';
+import { Observable, BehaviorSubject, from, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { HTTP } from '@ionic-native/http/ngx';
+import { NativeStorage } from '@ionic-native/native-storage/ngx';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
+  
   private _user = new BehaviorSubject<any>(null);
-  _headers = new HttpHeaders().set("Access-Control-Allow-Origin",'*');
-
+  
+  set setUser(data){
+    this.nativeStorage.setItem('user',data)
+      .then(
+        () => {
+          this._user.next(data);
+          return {
+            status : true,
+            message : "user data stored in native storage"
+          }
+        }
+        );
+      }
+      
   get getUser(){
     return this._user.asObservable();
+  }
+  
+  get retrieveUser(){
+    return from(this.nativeStorage.getItem('user'))
+      .pipe(
+        map((resData) => {
+          this._user.next(resData);
+          return {
+            status : true,
+            message : "user data retrieved from native storage"
+          }
+        })
+      );
+  }
+  
+  removeUser(){
+    return from(this.nativeStorage.remove('user'))
+      .pipe(
+        map(() => {
+          this._user.next(null);
+          return {
+            status : true,
+            message : "user data removed from nataive storage"
+          }
+        })
+      );
   }
 
   get isUserAuthenticated() {
@@ -36,66 +69,55 @@ export class AuthService {
           }
         }
       )
-    );;
+    );
+  }
+
+  get getHeaders(){
+    return this.nativeHttp.getHeaders("localhost");
   }
 
   constructor(
-    private http : HttpClient,
-    private platform : Platform,
-    private android : Android,
-    private desktop : Desktop
+    private nativeHttp : HTTP,
+    private nativeStorage : NativeStorage
   ) {
-  }
-
-  autoLogin() {
-    return from(this.android.getSession())
-      .pipe(
-        map(
-          (storedData) => {
-            if(!storedData){
-              return null;
-            }
-            else {
-              return storedData;
-            }
-          }
-        ),
-        tap(
-          (user) => {
-            if (user) {
-              this._user.next(user);
-            }
-          }
-        ),
-        map(
-          (user) => {
-            return !!user;
-          }
-        )
-      )
-
+    this.nativeHttp.setHeader("localhost","Access-Control-Allow-Origin",'*');
+    this.nativeHttp.setHeader("localhost", "Access-Control-Allow-Headers","Content-Type");
+    this.nativeHttp.setHeader("localhost","Access-Control-Allow-Methods","GET, POST, OPTIONS, PUT, PATCH, DELETE");
   }
 
   login(userName : string,password : string) : Observable<any>{
-    console.log(userName,password);
-    return this.http.post<User>(environment.baseURL + "/users/login" ,  { username: userName, password: password }, {} )
-      .pipe(
-        map( (resData : user ) => {
-                const user = new User(resData);
-                  return "booking";
-                })
+    return from(this.nativeHttp.post(
+      environment.baseURL + "/users/login" ,
+      { username: userName, password: password },
+      this.nativeHttp.getHeaders
+    ))
+    .pipe(
+      map( resData => {
+          this.setUser = resData.data;
+          return;
+        })
+    );
+  }
 
+  logout() {
+    return from(this.nativeHttp.post(
+      environment.baseURL + "/users/logout",
+      {},
+      this.nativeHttp.getHeaders
+    ))
+    .pipe(
+      map(
+        (resData) => {
+          this.removeUser().subscribe(
+            (result) => {
+              if(result.status == true){
+                return resData;
+              }
+            }
+          );
+        }
       )
+    );
   }
 
-  logout(){
-    return this.http.post<User>(environment.baseURL + "/users/logout", {} )
-      .pipe(
-        map(
-          (resData) => {
-            return resData;
-          }
-        )
-      );
-  }
 }
