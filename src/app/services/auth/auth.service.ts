@@ -86,10 +86,11 @@ export class AuthService {
   }
 
   login(userName : string,password : string) : Observable<any>{
+    const header = this.nativeHttp.getHeaders;
     return from(this.nativeHttp.post(
       environment.baseURL + "/users/login" ,
       { username: userName, password: password },
-      this.nativeHttp.getHeaders
+      header
     ))
     .pipe(
       map( resData => {
@@ -100,10 +101,11 @@ export class AuthService {
   }
 
   logout() {
+    const header = this.nativeHttp.getHeaders;
     return from(this.nativeHttp.post(
       environment.baseURL + "/users/logout",
       {},
-      this.nativeHttp.getHeaders
+      header
     ))
     .pipe(
       map(
