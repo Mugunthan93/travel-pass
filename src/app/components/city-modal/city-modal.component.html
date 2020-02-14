@@ -1,0 +1,19 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>Search City</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-item>
+        <ion-label position="floating">Select City</ion-label>
+        <ion-input type="text" (input)="searchCity($event.target.value)"></ion-input>
+    </ion-item>
+    <ion-spinner *ngIf="cities.length == 0"></ion-spinner>
+    <div *ngIf="cities.length > 0">
+    <ion-list *ngFor="let city of cities">
+        <ion-item lines="none" (click)="selectCity(city)">
+            <ion-text>{{city.city_name}}[[{{city.city_code}}]]</ion-text>
+        </ion-item>
+    </ion-list>
+    </div>
+</ion-content>

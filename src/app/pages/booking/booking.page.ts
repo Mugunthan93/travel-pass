@@ -1,18 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/services/auth/auth.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-booking',
   templateUrl: './booking.page.html',
   styleUrls: ['./booking.page.scss'],
 })
-export class BookingPage implements OnInit {
-
-  constructor(
-    private authService : AuthService
-  ) { }
-
-  ngOnInit() {
+export class BookingPage implements OnInit,OnDestroy {
+  
+  ngOnDestroy(): void {
   }
+  ngOnInit(): void {
+  }
+
+ 
 
 }

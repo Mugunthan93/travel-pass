@@ -4,6 +4,7 @@ import { Observable, BehaviorSubject, from, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HTTP } from '@ionic-native/http/ngx';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
+import { User } from 'src/app/models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,6 @@ export class AuthService {
     this.nativeStorage.setItem('user',data)
       .then(
         () => {
-          this._user.next(data);
           return {
             status : true,
             message : "user data stored in native storage"
@@ -72,21 +72,19 @@ export class AuthService {
     );
   }
 
-  get getHeaders(){
-    return this.nativeHttp.getHeaders("localhost");
-  }
-
   constructor(
     private nativeHttp : HTTP,
     private nativeStorage : NativeStorage
   ) {
+    console.log(nativeHttp);
     this.nativeHttp.setHeader("localhost","Access-Control-Allow-Origin",'*');
     this.nativeHttp.setHeader("localhost", "Access-Control-Allow-Headers","Content-Type");
     this.nativeHttp.setHeader("localhost","Access-Control-Allow-Methods","GET, POST, OPTIONS, PUT, PATCH, DELETE");
+    this.nativeHttp.setDataSerializer('json');
   }
 
   login(userName : string,password : string) : Observable<any>{
-    const header = this.nativeHttp.getHeaders;
+    const header = this.nativeHttp.getHeaders("localhost");
     return from(this.nativeHttp.post(
       environment.baseURL + "/users/login" ,
       { username: userName, password: password },
@@ -94,14 +92,18 @@ export class AuthService {
     ))
     .pipe(
       map( resData => {
-          this.setUser = resData.data;
-          return;
+          const userData = JSON.parse(resData.data);
+          this.setUser = userData;
+          const userObject = new User(userData); 
+          this._user.next(userObject);
+          console.log(userData);
+          return true;
         })
     );
   }
 
   logout() {
-    const header = this.nativeHttp.getHeaders;
+    const header = this.nativeHttp.getHeaders("localhost");
     return from(this.nativeHttp.post(
       environment.baseURL + "/users/logout",
       {},
@@ -117,6 +119,27 @@ export class AuthService {
               }
             }
           );
+        }
+      )
+    );
+  }
+
+  searchCity(reqCity : string) {
+    let param :  {[key: string]: string | string[]} = {
+      "city" : reqCity
+    }
+    const header = this.nativeHttp.getHeaders("localhost");
+    return from(this.nativeHttp.get(
+      environment.baseURL + "/airlines/tboairlinecities",
+      param,
+      header
+    )).pipe(
+      map(
+        (resData) => {
+          if(resData.status == 200){
+            const data = JSON.parse(resData.data);
+            return data;
+          }
         }
       )
     );

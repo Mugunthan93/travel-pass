@@ -1,0 +1,156 @@
+
+<ion-content>
+  <ion-card>
+
+    <!--Trip way segment button-->
+    <ion-card-header>
+      <ion-segment (ionChange)="selectTrip($event)" color="primary" mode="md" value="One_Way">
+        <ion-segment-button value="One_Way">
+          One Way
+        </ion-segment-button>
+        <ion-segment-button value="Round_Trip">
+          Round Trip
+        </ion-segment-button>
+        <ion-segment-button value="Multi_City">
+          Multi City
+        </ion-segment-button>
+      </ion-segment>
+    </ion-card-header>
+
+    <ion-card-content>
+
+      <form [formGroup]="searchTripForm" (ngSubmit)="onSearchTrip()">
+
+        <!--Trip location -->
+        <ion-grid>
+          <ion-row>
+            <ion-col size="5" (click)="selectOrigin()">
+              <ion-row class="ion-justify-content-start">
+                <ion-col>
+                  <ion-text>From</ion-text>
+                </ion-col>
+              </ion-row>
+              <ion-row  class="ion-justify-content-start">
+                <ion-col>
+                  <ion-input type="text" formControlName="origin_city_code" [value]="trip?.origin?.city_code ? trip.origin.city_code : 'MAS'" readonly></ion-input>
+                </ion-col>
+              </ion-row>
+              <ion-row  class="ion-justify-content-start">
+                <ion-col>
+                  <ion-input type="text" formControlName="origin_city_name" [value]="trip?.origin?.city_name ? trip.origin.city_name : 'Chennai'" readonly></ion-input>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+            <ion-col size="2"></ion-col>
+            <ion-col size="5"  (click)="selectDestination()">
+              <ion-row class="ion-justify-content-end">
+                <ion-col size="3">
+                  <ion-text>To</ion-text>
+                </ion-col>
+              </ion-row>
+              <ion-row  class="ion-justify-content-end">
+                <ion-col  size="9">
+                  <ion-input type="text" formControlName="destination_city_code" [value]="trip?.destination?.city_code ? trip.destination.city_code : 'BAN'" readonly></ion-input>
+                </ion-col>
+              </ion-row>
+              <ion-row class="ion-justify-content-end">
+                <ion-col size="10">
+                  <ion-input type="text" formControlname="destination_city_name" [value]="trip?.destination?.city_name ? trip.destination.city_name : 'Bangalore'" readonly></ion-input>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <!--Trip Time-->
+        <ion-grid>
+          <ion-row>
+
+            <ion-col size="5">
+              <ion-row class="ion-justify-content-start">
+                <ion-col>
+                  <ion-text>Depart</ion-text>
+                </ion-col>
+              </ion-row>
+              <ion-row  class="ion-justify-content-start">
+                <ion-col>
+                  <ion-datetime formControlName="departure_date" [value]="trip?.departureDate" display-timezone="utc"></ion-datetime>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+            <ion-col size="2"></ion-col>
+
+            <ion-col size="5">
+              <ion-row class="ion-justify-content-end">
+                <ion-col size="6">
+                  <ion-text>Return</ion-text>
+                </ion-col>
+              </ion-row>
+              <ion-row  class="ion-justify-content-end">
+                <ion-col  size="9">
+                  <ion-datetime formControlName="arrival_date" value="2019-10-01T15:43:40.394Z" display-timezone="utc"></ion-datetime>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <!--Trip persons-->
+        <ion-grid>
+          <ion-row>
+
+            <ion-col size="5">
+              <ion-row class="ion-justify-content-start">
+                <ion-col>
+                  <ion-text>Travellers</ion-text>
+                </ion-col>
+              </ion-row>
+              <ion-row  class="ion-justify-content-start">
+                <ion-col (click)="selectPerson()">
+                  <ion-input type="number" formControlName="persons" [value]="5" readonly></ion-input>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+            <ion-col size="2"></ion-col>
+
+            <ion-col size="5">
+              <ion-row class="ion-justify-content-end">
+                <ion-col size="6">
+                  <ion-text>Class</ion-text>
+                </ion-col>
+              </ion-row>
+              <ion-row  class="ion-justify-content-end">
+                <ion-col  size="8" (click)="selectClass()">
+                  <ion-input type="string" formControlName="class" [value]="'Economy'" readonly></ion-input>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        
+        <ion-grid>
+          <ion-row>
+            <ion-col size="1">
+              <ion-checkbox color="primary"></ion-checkbox>
+            </ion-col>
+            <ion-col size="11">
+              <ion-text>Non Stop Flight Only</ion-text>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <ion-grid>
+          <ion-row>
+            <ion-col size="8" offset="2">
+              <ion-button expand="block" fill="solid" size="small" type="submit">Search</ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+      </form>
+
+    </ion-card-content>
+  </ion-card>
+</ion-content>

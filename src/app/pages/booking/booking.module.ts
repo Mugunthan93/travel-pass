@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { BookingPageRoutingModule } from './booking-routing.module';
 
 import { BookingPage } from './booking.page';
+import { CityModalComponent } from 'src/app/components/city-modal/city-modal.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,11 @@ import { BookingPage } from './booking.page';
     IonicModule,
     BookingPageRoutingModule
   ],
-  declarations: [BookingPage]
+  declarations: 
+  [
+    BookingPage,
+    CityModalComponent
+  ],
+  entryComponents :[CityModalComponent]
 })
 export class BookingPageModule {}
