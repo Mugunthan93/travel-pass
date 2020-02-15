@@ -1,50 +1,30 @@
-export class PersonalDetail {
-  id: number;
+export class User {
+
   name: string;
-  lastname: string;
   email: string;
+  phone_number: string;
   dob: string;
+  PAN_number: string;
+  aadhar_no: string;
+  address: string;
   city: string;
   gender: string;
   status: string;
-  address: string;
+  lastname: string;
   password: string;
-  PAN_number: string;
   passport_no: string;
   country_name: string;
-  phone_number: string;
   passport_expiry: string;
   validity_period: string;
+
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  created_by: string;
   resetPasswordToken: string;
   is_Password_Changed: string;
   resetPasswordExpires: string;
 
-  constructor(user){
-    this.id = user.id;
-    this.name = user.name;
-    this.lastname = user.lastname;
-    this.email = user.email;
-    this.dob = user.dob;
-    this.city = user.city;
-    this.gender = user.gender;
-    this.status = user.status;
-    this.address = user.address;
-    this.password = user.password;
-    this.PAN_number = user.PAN_number;
-    this.passport_no = user.passport_no;
-    this.country_name = user.country_name;
-    this.phone_number = user.phone_number;
-    this.passport_expiry = user.passport_expiry;
-    this.validity_period = user.validity_period;
-    this.resetPasswordToken = user.resetPasswordExpires;
-    this.is_Password_Changed = user.is_Password_Changed;
-    this.resetPasswordExpires = user.resetPasswordExpires;
-  }
-
-
-}
-
-export class CompanyDetail {
   customer_id: number;
   role: string;
   grade: string;
@@ -59,38 +39,49 @@ export class CompanyDetail {
   markup_charge: string;
   service_charge: string;
   is_rightsto_book: string;
-  constructor(user){
+
+  constructor(user) {
+    this.name = user.name;
+    this.email = user.email;
+    this.phone_number = user.phone_number;
+    this.dob = user.dob;
+    this.PAN_number = user.PAN_number;
+    this.aadhar_no = user.aadhar_no;
+    this.address = user.address;
+    this.city = user.city;
+    this.gender = user.gender;
+    this.status = user.status;
+    this.lastname = user.lastname;
+    this.password = this.password;
+    this.passport_no = this.passport_no;
+    this.passport_expiry = user.passport_expiry;
+    this.validity_period = user.validity_period;
+
+    this.id = user.id;
+    this.createdAt = user.createdAt;
+    this.updatedAt = user.updatedAt;
+    this.created_by = user.created_by;
+    this.resetPasswordToken = user.resetPasswordToken;
+    this.resetPasswordExpires = user.resetPasswordExpires;
+    this.is_Password_Changed = user.is_Password_Changed;
+
     this.customer_id = user.customer_id;
     this.role = user.role;
     this.grade = user.grade;
     this.approver = user.approver;
-    this.sales_id =  user.sales_id;
+    this.sales_id = user.sales_id;
     this.credit_req = user.credit_req;
-    this.designation =  user.designation;
+    this.designation = user.designation;
     this.gst_details = user.gst_details;
-    this.credit_limit =  user.credit_limit;
-    this.manager_name =  user.manager_name;
+    this.credit_limit = user.credit_limit;
+    this.manager_name = user.manager_name;
     this.manager_email = user.manager_email;
     this.markup_charge = user.markup_charge;
-    this.service_charge =  user.service_charge;
-    this.is_rightsto_book =  user.is_rightsto_book;
-  }
-}
-export class User {
-  
-  personal_detail : PersonalDetail
-  company_detail : CompanyDetail
-  createdAt: string;
-  updatedAt: string;
-  created_by: string;
-  
-  
-  constructor(user){
-    this.personal_detail = new PersonalDetail(user);
-    this.company_detail = new CompanyDetail(user);
+    this.service_charge = user.service_charge;
+    this.is_rightsto_book = user.is_rightsto_book;
   }
 
-  
+
 
 }
 
@@ -101,4 +92,3 @@ export class User {
 
 
 
-  
