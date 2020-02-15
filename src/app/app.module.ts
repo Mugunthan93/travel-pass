@@ -20,6 +20,7 @@ import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { InterceptorService } from './services/interceptor.service';
 import { HTTP } from '@ionic-native/http/ngx';
 import { environment } from 'src/environments/environment';
+import { UserState } from './stores/auth.action';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,7 @@ import { environment } from 'src/environments/environment';
     AppRoutingModule, 
     BrowserAnimationsModule,
     HttpClientModule,
-    NgxsModule.forRoot([],{ developmentMode: !environment.production }),
+    NgxsModule.forRoot([UserState],{ developmentMode: !environment.production }),
     NgxsLoggerPluginModule.forRoot({
       disabled : true,
       collapsed : true
