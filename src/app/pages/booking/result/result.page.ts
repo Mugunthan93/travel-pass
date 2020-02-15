@@ -7,7 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ResultPage implements OnInit {
 
-  constructor() { }
+  bookingPage : string;
+
+  constructor() {
+
+    this.bookingPage = "airline-result";
+   }
 
   ngOnInit() {
   }

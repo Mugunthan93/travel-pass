@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './services/auth/auth.service';
 import { Router } from '@angular/router';
+import { Store } from '@ngxs/store';
 
 @Component({
   selector: 'app-root',
@@ -19,9 +20,11 @@ export class AppComponent {
     private statusBar: StatusBar,
     private authService : AuthService,
     private router : Router,
-    private menuController : MenuController
+    private menuController : MenuController,
+    private store : Store
   ) {
     this.initializeApp();
+    console.log(this.store);
     console.log(this.platform.platforms());
   }
 

@@ -8,6 +8,11 @@ import { BookingPageRoutingModule } from './booking-routing.module';
 
 import { BookingPage } from './booking.page';
 import { CityModalComponent } from 'src/app/components/city-modal/city-modal.component';
+import { BookingPageComponent } from 'src/app/components/booking-page/booking-page.component';
+import { BookingTypeComponent } from 'src/app/components/booking-type/booking-type.component';
+import { BookingWayComponent } from 'src/app/components/booking-way/booking-way.component';
+import { SearchPage } from './search/search.page';
+import { ResultPage } from './result/result.page';
 
 @NgModule({
   imports: [
@@ -19,6 +24,11 @@ import { CityModalComponent } from 'src/app/components/city-modal/city-modal.com
   declarations: 
   [
     BookingPage,
+    SearchPage,
+    ResultPage,
+    BookingPageComponent,
+    BookingTypeComponent,
+    BookingWayComponent,
     CityModalComponent
   ],
   entryComponents :[CityModalComponent]

@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { BookingPage } from './booking.page';
+import { SearchPage } from './search/search.page';
+import { ResultPage } from './result/result.page';
 
 const routes: Routes = [
   {
@@ -10,11 +12,11 @@ const routes: Routes = [
     children : [
       {
         path: 'search',
-        loadChildren: () => import('./search/search.module').then( m => m.SearchPageModule)
+        component : SearchPage
       },
       {
         path: 'result',
-        loadChildren: () => import('./result/result.module').then( m => m.ResultPageModule)
+        component : ResultPage
       },
       { path: '', redirectTo: '/booking/search', pathMatch: 'full' },
     ]

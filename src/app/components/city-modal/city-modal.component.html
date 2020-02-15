@@ -12,7 +12,7 @@
     <div *ngIf="cities.length > 0">
     <ion-list *ngFor="let city of cities">
         <ion-item lines="none" (click)="selectCity(city)">
-            <ion-text>{{city.city_name}}[[{{city.city_code}}]]</ion-text>
+            <ion-text>{{city.city_name}}[{{city.city_code}}]</ion-text>
         </ion-item>
     </ion-list>
     </div>

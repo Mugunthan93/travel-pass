@@ -6,12 +6,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
   styleUrls: ['./booking.page.scss'],
 })
 export class BookingPage implements OnInit,OnDestroy {
-  
-  ngOnDestroy(): void {
-  }
+
   ngOnInit(): void {
   }
 
- 
+  ngOnDestroy(): void {
+  }
 
 }
