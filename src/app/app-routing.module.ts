@@ -3,20 +3,20 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth/auth.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/booking/search', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   {
     path: 'login',
-    loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
+    loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule)
   },
   {
     path: 'account',
-    loadChildren: () => import('./pages/account/account.module').then( m => m.AccountPageModule),
+    loadChildren: () => import('./pages/account/account.module').then(m => m.AccountPageModule),
     canLoad: [AuthGuard]
   },
   {
     path: 'booking',
-    loadChildren: () => import('./pages/booking/booking.module').then( m => m.BookingPageModule),
-    canLoad:[AuthGuard]
+    loadChildren: () => import('./pages/booking/booking.module').then(m => m.BookingPageModule),
+    canLoad: [AuthGuard]
   },
 ];
 

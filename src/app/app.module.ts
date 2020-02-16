@@ -20,7 +20,7 @@ import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { InterceptorService } from './services/interceptor.service';
 import { HTTP } from '@ionic-native/http/ngx';
 import { environment } from 'src/environments/environment';
-import { UserState } from './stores/auth.action';
+import { UserState } from './stores/states/auth.state';
 
 @NgModule({
   declarations: [
@@ -28,19 +28,20 @@ import { UserState } from './stores/auth.action';
   ],
   entryComponents: [],
   imports: [
-    BrowserModule, 
-    IonicModule.forRoot(), 
-    AppRoutingModule, 
+    BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    NgxsModule.forRoot([UserState],{ developmentMode: !environment.production }),
-    NgxsLoggerPluginModule.forRoot({
-      disabled : true,
-      collapsed : true
-    }),
+    NgxsModule.forRoot([UserState], { developmentMode: !environment.production }),
     NgxsFormPluginModule.forRoot(),
     NgxsStoragePluginModule.forRoot(),
-    NgxsRouterPluginModule.forRoot()
+    NgxsRouterPluginModule.forRoot(),
+    NgxsLoggerPluginModule.forRoot({
+      logger: null,
+      disabled: true,
+      collapsed: true
+    })
   ],
   providers: [
     StatusBar,
@@ -48,8 +49,8 @@ import { UserState } from './stores/auth.action';
     NativeStorage,
     HTTP,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    { provide: HTTP_INTERCEPTORS, useClass:InterceptorService, multi:true }
+    { provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true }
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

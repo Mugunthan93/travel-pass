@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { User } from 'src/app/models/user';
+import { user } from 'src/app/models/user';
 import { Subscription } from 'rxjs';
 import { PickerController, ModalController } from '@ionic/angular';
 import { CityModalComponent } from 'src/app/components/city-modal/city-modal.component';
@@ -14,9 +14,9 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class BookingWayComponent implements OnInit {
 
- 
+
   //local variable
-  user: User;
+  user: user;
   trip: OneWayTrip;
   searchTripForm: FormGroup;
   date = "2019-10-01T15:43:40.394Z";
@@ -36,11 +36,7 @@ export class BookingWayComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userSub = this.authService.getUser.subscribe(
-      (resData: User) => {
-        this.user = resData;
-      }
-    );
+
     this.searchTripForm = new FormGroup({
       origin: new FormGroup({
         city_code: new FormControl(),

@@ -1,6 +1,6 @@
 export interface login {
-  username : string,
-  passwrod : string
+  email: string,
+  password: string
 }
 
 export interface user {

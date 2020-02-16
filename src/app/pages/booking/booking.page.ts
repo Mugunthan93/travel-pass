@@ -5,7 +5,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
   templateUrl: './booking.page.html',
   styleUrls: ['./booking.page.scss'],
 })
-export class BookingPage implements OnInit,OnDestroy {
+export class BookingPage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
   }

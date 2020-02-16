@@ -4,47 +4,50 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
+import { Store } from '@ngxs/store';
+import { AddUser } from 'src/app/stores/actions/auth.action';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit,OnDestroy {
+export class LoginPage implements OnInit, OnDestroy {
 
-  cmpLogo : string = "../assets/logo.png";
-  emailPattern : string = '[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,63}';
-  loginForm : FormGroup;
-  loginSub : Subscription;
+  cmpLogo: string = "../assets/logo.png";
+  emailPattern: string = '[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,63}';
+  loginForm: FormGroup;
+  loginSub: Subscription;
 
   constructor(
-    public authService : AuthService,
-    public router : Router,
-    public loadingCtrl : LoadingController
+    public authService: AuthService,
+    public router: Router,
+    public loadingCtrl: LoadingController,
+    public store: Store
   ) {
-   }
+  }
 
   ngOnInit() {
     this.loginForm = new FormGroup({
-      email : new FormControl(null,[Validators.required,Validators.pattern(this.emailPattern)]),
-      password : new FormControl(null,[Validators.required])
+      email: new FormControl(null, [Validators.required, Validators.pattern(this.emailPattern)]),
+      password: new FormControl(null, [Validators.required])
     });
   }
 
   onLogin() {
+    this.store.dispatch(new AddUser({ email: this.loginForm.value.email, password: this.loginForm.value.password }))
     console.log(this.loginForm);
-    if(this.loginForm.valid)
-    {
+    if (this.loginForm.valid) {
       this.presentLoading().then(
         () => {
-          this.loginSub = this.authService.login(this.loginForm.value.email,this.loginForm.value.password)
-          .subscribe(
-            (resData) => {
-              
-              this.router.navigate(['/','booking']);
+          this.loginSub = this.authService.login(this.loginForm.value.email, this.loginForm.value.password)
+            .subscribe(
+              (resData) => {
+
+                this.router.navigate(['/', 'booking']);
                 this.loadingCtrl.dismiss();
-            }
-          )
+              }
+            )
         }
       );
     }
@@ -52,8 +55,8 @@ export class LoginPage implements OnInit,OnDestroy {
 
   async presentLoading() {
     const loading = await this.loadingCtrl.create({
-      message : 'Loading... Please wait',
-      spinner : 'dots'
+      message: 'Loading... Please wait',
+      spinner: 'dots'
     });
 
     return await loading.present();

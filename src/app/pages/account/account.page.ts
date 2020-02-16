@@ -7,22 +7,16 @@ import { Subscription } from 'rxjs';
   templateUrl: './account.page.html',
   styleUrls: ['./account.page.scss'],
 })
-export class AccountPage implements OnInit,OnDestroy {
+export class AccountPage implements OnInit, OnDestroy {
 
-  user : Account;
-  userSub : Subscription;
+  user: Account;
+  userSub: Subscription;
 
   constructor(
-    private authService :AuthService
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
-    this.userSub = this.authService.getUser.subscribe(
-      (user) => {
-        this.user = user;
-        console.log(user);
-      }
-    );
   }
 
   ngOnDestroy(): void {
