@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule, MatInputModule } from '@angular/material';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -15,9 +14,7 @@ import { LoginPage } from './login.page';
     FormsModule,
     IonicModule,
     LoginPageRoutingModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule
+    ReactiveFormsModule
   ],
   declarations: [LoginPage]
 })

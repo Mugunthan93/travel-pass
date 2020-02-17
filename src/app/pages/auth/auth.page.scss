@@ -1,0 +1,33 @@
+ion-grid{
+    display: flex; 
+    flex-flow: column;
+    height: 100%;
+    >ion-row{
+        flex-grow: 1;
+        >ion-col{
+            display: flex; 
+            flex-flow: column;
+            >ion-row:first-child{
+                height:30%;
+            }
+            >ion-row:last-child{
+                height:70%;
+            }
+        }
+    }
+}
+
+ion-tab-bar{
+    --background :transparent;
+    --border : none;
+}
+
+ion-tab-button{
+    >ion-label{
+        font-size:15px;
+    }
+}
+
+ion-img{
+    height: 50px;
+}

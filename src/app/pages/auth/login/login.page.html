@@ -1,0 +1,47 @@
+<ion-grid>
+  <ion-row>
+    <ion-col>
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <ion-item>
+          <ion-input type="email" formControlName="email" placeholder="E-mail" required pattern></ion-input>
+        </ion-item>
+        <ion-label 
+          *ngIf="loginForm.controls['email'].touched && 
+                loginForm.controls['email'].dirty && 
+                loginForm.controls['email'].hasError('required')" 
+                color="danger">
+                Email Address Required
+        </ion-label>
+        <ion-label 
+          *ngIf="loginForm.controls['email'].touched && 
+                loginForm.controls['email'].dirty && 
+                loginForm.controls['email'].hasError('pattern')" 
+                color="danger">
+                Invalid Email Address
+        </ion-label>
+        <ion-item>
+          <ion-input type="password" formControlName="password" placeholder="Password"></ion-input>
+        </ion-item>
+        <ion-label 
+          *ngIf="loginForm.controls['password'].touched && 
+                loginForm.controls['password'].dirty && 
+                loginForm.controls['password'].hasError('required')" 
+                color="danger">
+                Password Required
+        </ion-label>
+        <ion-item lines="none">
+          <ion-row>
+            <ion-col size="12">
+              <ion-button expand="block" fill="solid" color="primary" type="submit">Login</ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+        <ion-row>
+          <ion-col size="9" offset="3">
+            <a>Forgot Email or Password</a>
+          </ion-col>
+        </ion-row>
+      </form>
+    </ion-col>
+  </ion-row>
+</ion-grid>

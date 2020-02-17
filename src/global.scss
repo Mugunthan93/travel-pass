@@ -26,3 +26,8 @@
 @import "~@ionic/angular/css/flex-utils.css";
 
 
+ion-content {
+    --background: url(./assets/bg.jpeg);
+    --background-repeat: no-repeat;
+    --background-size: cover;
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { Subscription } from 'rxjs';
@@ -8,13 +8,13 @@ import { Store } from '@ngxs/store';
 import { AddUser } from 'src/app/stores/actions/auth.action';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss'],
+  selector: 'app-auth',
+  templateUrl: './auth.page.html',
+  styleUrls: ['./auth.page.scss'],
 })
-export class LoginPage implements OnInit, OnDestroy {
+export class AuthPage implements OnInit {
 
-  cmpLogo: string = "../assets/logo.png";
+  cmpLogo: string = "../assets/logo.jpeg";
   emailPattern: string = '[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,63}';
   loginForm: FormGroup;
   loginSub: Subscription;
@@ -64,6 +64,10 @@ export class LoginPage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.loginSub.unsubscribe();
+  }
+
+  authTab(evt){
+
   }
 
 }

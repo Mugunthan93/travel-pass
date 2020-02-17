@@ -1,0 +1,33 @@
+ion-grid{
+    margin:0px 10px 0px 10px;
+}
+
+ion-row{
+    flex-grow: 1;
+    >ion-col{
+        display: flex; 
+        flex-flow: column;
+        >ion-row:last-child{
+            flex-grow: 1;
+        }
+    }
+}
+
+ion-item {
+    --background:transparent;
+}
+
+form {
+    >ion-item {
+        --inner-padding-top : 10px;
+        --inner-padding-bottom : 10px;
+    }
+}
+
+ion-button{
+    --opacity:0.4;
+}
+
+ion-label {
+    font-size: x-small;
+}
