@@ -3,6 +3,7 @@
     <ion-col>
       <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
         <ion-item>
+          <ion-icon src="../../../../assets/ng-img/icons/mail.svg"></ion-icon>
           <ion-input type="email" formControlName="email" placeholder="E-mail" required pattern></ion-input>
         </ion-item>
         <ion-label 
@@ -20,6 +21,7 @@
                 Invalid Email Address
         </ion-label>
         <ion-item>
+          <ion-icon src="../../../../assets/ng-img/icons/password.svg"></ion-icon>
           <ion-input type="password" formControlName="password" placeholder="Password"></ion-input>
         </ion-item>
         <ion-label 

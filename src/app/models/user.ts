@@ -1,7 +1,4 @@
-export interface login {
-  email: string,
-  password: string
-}
+
 
 export interface user {
 
@@ -33,9 +30,9 @@ export interface user {
   customer_id: number;
   role: string;
   grade: string;
-  approver: Array<object>;
+  approver: approver;
   sales_id: string;
-  credit_req: Array<object>;
+  credit_req: creditReq;
   designation: string;
   gst_details: string;
   credit_limit: number;
@@ -45,6 +42,24 @@ export interface user {
   service_charge: string;
   is_rightsto_book: string;
 
+}
+
+export interface approver{
+  id:number
+  name : string
+  email : string
+  label : string
+  customer_id : number
+  customer_name:string
+}
+
+export  interface creditReq{
+  id:number
+  name : string
+  email : string
+  label : string
+  customer_id : number
+  customer_name:string
 }
 
 

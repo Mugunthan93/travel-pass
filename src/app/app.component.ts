@@ -7,9 +7,6 @@ import { AuthService } from './services/auth/auth.service';
 import { Router } from '@angular/router';
 
 import { Store } from '@ngxs/store';
-import { AddUser, RemoveUser } from 'src/app/stores/actions/auth.action';
-import { Observable } from 'rxjs';
-import { user } from './models/user';
 
 @Component({
   selector: 'app-root',
@@ -17,8 +14,6 @@ import { user } from './models/user';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
-
-  user$: Observable<user>;
 
   constructor(
     private platform: Platform,
@@ -32,13 +27,6 @@ export class AppComponent {
     this.initializeApp();
     console.log(this.store);
     console.log(this.platform.platforms());
-
-
-    this.user$ = this.store.select(
-      (state) => {
-        return state;
-      }
-    );
   }
 
   initializeApp() {
@@ -49,7 +37,6 @@ export class AppComponent {
   }
 
   onLogout() {
-    this.store.dispatch(new RemoveUser('User is empty'));
     this.authService.logout().subscribe(
       (resData) => {
         this.menuController.close();

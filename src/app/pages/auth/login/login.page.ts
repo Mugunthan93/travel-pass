@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
-import { AddUser } from 'src/app/stores/actions/auth.action';
 
 @Component({
   selector: 'app-login',
@@ -35,7 +34,6 @@ export class LoginPage implements OnInit, OnDestroy {
   }
 
   onLogin() {
-    this.store.dispatch(new AddUser({ email: this.loginForm.value.email, password: this.loginForm.value.password }))
     console.log(this.loginForm);
     if (this.loginForm.valid) {
       this.presentLoading().then(
