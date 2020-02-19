@@ -4,7 +4,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
-import { Store } from '@ngxs/store';
+import { login } from 'src/app/models/auth';
 
 @Component({
   selector: 'app-login',
@@ -21,8 +21,7 @@ export class LoginPage implements OnInit, OnDestroy {
   constructor(
     public authService: AuthService,
     public router: Router,
-    public loadingCtrl: LoadingController,
-    public store: Store
+    public loadingCtrl: LoadingController
   ) {
   }
 
@@ -36,13 +35,16 @@ export class LoginPage implements OnInit, OnDestroy {
   onLogin() {
     console.log(this.loginForm);
     if (this.loginForm.valid) {
+      const payload : login = {
+        username : this.loginForm.value.email,
+        password : this.loginForm.value.password
+      }
       this.presentLoading().then(
         () => {
           this.loginSub = this.authService.login(this.loginForm.value.email, this.loginForm.value.password)
             .subscribe(
               (resData) => {
-
-                this.router.navigate(['/', 'booking']);
+                this.router.navigate(['/booking']);
                 this.loadingCtrl.dismiss();
               }
             )

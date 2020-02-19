@@ -21,7 +21,7 @@ const routes: Routes = [
       { path: '', redirectTo: '/booking/search', pathMatch: 'full' },
     ]
   },
-  { path: '', redirectTo: '/booking/search', pathMatch: 'full' },
+  { path: '', redirectTo: '/booking/search', pathMatch: 'full' }
 ];
 
 @NgModule({

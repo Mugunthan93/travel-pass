@@ -15,10 +15,12 @@ export class AuthService {
     private nativeStorage: NativeStorage,
   ) {
     console.log(nativeHttp);
+    this.nativeHttp.useBasicAuth('username','username');
     this.nativeHttp.setHeader("localhost", "Access-Control-Allow-Origin", '*');
     this.nativeHttp.setHeader("localhost", "Access-Control-Allow-Headers", "Content-Type");
     this.nativeHttp.setHeader("localhost", "Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
     this.nativeHttp.setDataSerializer('json');
+    console.log(this.nativeHttp.getBasicAuthHeader('username','username'));
 
   }
 
@@ -34,9 +36,7 @@ export class AuthService {
       .pipe(
         map(resData => {
           const userData = JSON.parse(resData.data);
-          return {
-            user : userData
-          };
+          return  userData;
         })
       );
   }
@@ -50,8 +50,8 @@ export class AuthService {
     ))
       .pipe(
         map(
-          (resData) => {
-            return resData;
+          (logOutData) => {
+            return logOutData;
           }
         )
       );

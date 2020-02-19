@@ -4,7 +4,7 @@ import { RouteReuseStrategy } from '@angular/router';
 
 import { NgxsModule } from '@ngxs/store';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
-import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
+import { NgxsStoragePluginModule, STORAGE_ENGINE, StorageOption } from '@ngxs/storage-plugin';
 import { NgxsFormPluginModule } from '@ngxs/form-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 
@@ -20,6 +20,9 @@ import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { InterceptorService } from './services/interceptor.service';
 import { HTTP } from '@ionic-native/http/ngx';
 import { environment } from 'src/environments/environment';
+import { AppState } from './stores/app.state';
+import { customStorage } from './stores/customStorage';
+import { storageOptionsFactory } from '@ngxs/storage-plugin/src/internals';
 
 @NgModule({
   declarations: [
@@ -33,12 +36,13 @@ import { environment } from 'src/environments/environment';
     BrowserAnimationsModule,
     HttpClientModule,
     NgxsModule.forRoot([], { developmentMode: !environment.production }),
+    NgxsStoragePluginModule.forRoot({
+      key : AppState
+    }),
     NgxsFormPluginModule.forRoot(),
-    NgxsStoragePluginModule.forRoot(),
     NgxsRouterPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot({
-      logger: null,
-      disabled: true,
+      disabled: false,
       collapsed: true
     })
   ],
@@ -48,7 +52,8 @@ import { environment } from 'src/environments/environment';
     NativeStorage,
     HTTP,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    { provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true },
+    { provide: STORAGE_ENGINE, useClass: customStorage }
   ],
   bootstrap: [AppComponent],
 })
