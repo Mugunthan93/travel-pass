@@ -5,6 +5,8 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { login } from 'src/app/models/auth';
+import { Store } from '@ngxs/store';
+import { AddUser } from 'src/app/stores/app.state';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +23,8 @@ export class LoginPage implements OnInit, OnDestroy {
   constructor(
     public authService: AuthService,
     public router: Router,
-    public loadingCtrl: LoadingController
+    public loadingCtrl: LoadingController,
+    private store : Store
   ) {
   }
 
@@ -44,6 +47,7 @@ export class LoginPage implements OnInit, OnDestroy {
           this.loginSub = this.authService.login(this.loginForm.value.email, this.loginForm.value.password)
             .subscribe(
               (resData) => {
+                this.store.dispatch(new AddUser(resData));
                 this.router.navigate(['/booking']);
                 this.loadingCtrl.dismiss();
               }

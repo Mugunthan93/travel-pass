@@ -8,10 +8,10 @@ ion-grid{
             display: flex; 
             flex-flow: column;
             >ion-row:first-child{
-                height:30%;
+                height:10%;
             }
             >ion-row:last-child{
-                height:70%;
+                height:90%;
             }
         }
     }
@@ -30,4 +30,8 @@ ion-tab-button{
 
 ion-img{
     height: 50px;
+}
+
+ng-template{
+    height : 18px !important;
 }

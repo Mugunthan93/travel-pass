@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 import { Platform, MenuController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';

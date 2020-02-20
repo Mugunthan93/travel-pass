@@ -1,7 +1,5 @@
 import { StorageEngine } from '@ngxs/storage-plugin';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
-import { from, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { Platform } from '@ionic/angular';
 
 export class customStorage implements StorageEngine{
@@ -16,43 +14,52 @@ export class customStorage implements StorageEngine{
     }
     
     getItem(key: string) {
-        return from(this.nativeStorage.getItem(key))
-            .pipe(
-                tap(
-                (appData) => {
-                    return appData;
-                }) 
+        return this.nativeStorage.getItem(key)
+            .then(
+                (data) => {
+                    console.log(data);
+                    return data
+                },
+                (error) => {
+                    console.log(error);
+                    return;
+                }
             );
     }
-    setItem(key: string, val: any) : Observable<boolean> {
-        return from(this.nativeStorage.setItem(key,val))
-            .pipe(
-                tap(
+    setItem(key: string, val: any) {
+        return this.nativeStorage.setItem(key,val)
+            .then(
                 () => {
-                    console.log(key + " is saved");
-                    return true;
-                })
+                    console.log("Data saved");
+                },
+                (error) => {
+                    console.log("Error while saving data");
+                    console.log(error);
+                }
             );
     }
-    removeItem(key: string) : Observable<boolean> {
-        return from(this.nativeStorage.remove(key))
-            .pipe(
-                tap(
+    removeItem(key: string) {
+        return this.nativeStorage.remove(key)
+            .then(
                 () => {
-                    console.log(key + " is removed");
-                    return true;
-                })
+                    console.log("Data removed");
+                },
+                (error) => {
+                    console.log("Error while removing data");
+                    console.log(error);
+                }
             );
     }
-    clear() : Observable<boolean>{
-        return from(this.nativeStorage.clear())
-            .pipe(
-                tap(
-                    () => {
-                       console.log("app data is cleared"); 
-                       return true;
-                    }
-                )
+    clear(){
+        return this.nativeStorage.clear()
+            .then(
+                () => {
+                    console.log("Data cleared");
+                },
+                (error) => {
+                    console.log("Error while clear data");
+                    console.log(error);
+                }
             );
     }
 

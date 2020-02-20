@@ -7,6 +7,7 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsStoragePluginModule, STORAGE_ENGINE, StorageOption } from '@ngxs/storage-plugin';
 import { NgxsFormPluginModule } from '@ngxs/form-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -35,15 +36,21 @@ import { storageOptionsFactory } from '@ngxs/storage-plugin/src/internals';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    NgxsModule.forRoot([], { developmentMode: !environment.production }),
+    NgxsModule.forRoot([AppState], { developmentMode: !environment.production }),
     NgxsStoragePluginModule.forRoot({
-      key : AppState
+      key : 'App',
+      deserialize :JSON.parse,
+      serialize : JSON.stringify
     }),
     NgxsFormPluginModule.forRoot(),
     NgxsRouterPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot({
       disabled: false,
       collapsed: true
+    }),
+    NgxsReduxDevtoolsPluginModule.forRoot({
+      name: 'App',
+      disabled: true
     })
   ],
   providers: [

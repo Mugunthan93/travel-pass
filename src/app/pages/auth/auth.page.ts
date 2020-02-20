@@ -61,7 +61,9 @@ export class AuthPage implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.loginSub.unsubscribe();
+    if(this.loginSub){
+      this.loginSub.unsubscribe();
+    }
   }
 
   authTab(evt){

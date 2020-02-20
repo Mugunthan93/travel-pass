@@ -1,8 +1,8 @@
-import { State, Action, StateContext } from '@ngxs/store';
+import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { user } from '../models/user';
 
 export interface App {
-    user : user
+    user : user | Object
 }
 
 export class AddUser {
@@ -19,23 +19,29 @@ export class RemoveUser {
 }
 
 @State<App>({
-    name : 'App',
-    defaults : {
-        user : null
-    }
+    name : 'App'
 })
 export class AppState {
 
+    @Selector()
+    static getUser(state: App) {
+        return state.user;
+    }
+
     @Action(AddUser)
-    addUser(state : StateContext<App>,action : AddUser){
-        state.patchState({
-            user : action.payload
+    addUser(states : StateContext<App>,action : AddUser){
+        const currentState = states.getState();
+        console.log(currentState);
+        states.patchState({
+            user: action.payload
         });
+        console.log(currentState);
     }
 
     @Action(RemoveUser)
-    removeUser(state : StateContext<App>,action : AddUser){
-        state.patchState({
+    removeUser(states : StateContext<App>,action : AddUser){
+        const currentState = states.getState();
+        states.patchState({
             user : null
         });
     }
