@@ -6,6 +6,7 @@ import { Directionality } from '@angular/cdk/bidi';
   selector: 'app-custom-stepper',
   templateUrl: './custom-stepper.component.html',
   styleUrls: ['./custom-stepper.component.scss'],
+  providers : [{ provide: CdkStepper, useExisting: CustomStepperComponent }]
 })
 export class CustomStepperComponent extends CdkStepper implements OnInit {
 
@@ -15,8 +16,14 @@ export class CustomStepperComponent extends CdkStepper implements OnInit {
   )
   {
     super(_dir,_changeDetectorRef);
+    console.log(this);
   }
 
   ngOnInit() {}
+
+  onClick(index : number) : void{
+    this.selectedIndex = index;
+    console.log(this);
+  }
 
 }

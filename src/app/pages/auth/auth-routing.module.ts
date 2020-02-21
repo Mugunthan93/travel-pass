@@ -10,11 +10,18 @@ const routes: Routes = [
     children:[
       {
         path: 'signup',
-        loadChildren: () => import('./signup/signup.module').then(m => m.SignupPageModule)
+        loadChildren: () => import('./signup/signup.module').then(
+          (mod) => {
+            return mod.SignupPageModule;
+          }
+        )
       },
       {
         path: 'login',
-        loadChildren:  () => import('./login/login.module').then(m => m.LoginPageModule)
+        loadChildren:  () => import('./login/login.module').then(
+          (mod) => {
+          return mod.LoginPageModule;
+        })
       },
       {
         path:'',
@@ -22,6 +29,11 @@ const routes: Routes = [
         pathMatch: 'full'
       }
     ]
+  },
+  {
+    path:'',
+    redirectTo : '/auth/login',
+    pathMatch: 'full'
   }
 ];
 

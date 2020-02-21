@@ -7,8 +7,10 @@ import { IonicModule } from '@ionic/angular';
 import { SignupPageRoutingModule } from './signup-routing.module';
 
 import { SignupPage } from './signup.page';
-import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CustomStepperComponent } from 'src/app/components/custom-stepper/custom-stepper.component';
+import { CdkStepperModule } from '@angular/cdk/stepper';
+
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   imports: [
@@ -17,7 +19,8 @@ import { CustomStepperComponent } from 'src/app/components/custom-stepper/custom
     ReactiveFormsModule,
     IonicModule,
     SignupPageRoutingModule,
-    CdkStepperModule
+    CdkStepperModule,
+    MatIconModule
   ],
   declarations: [
     SignupPage,
