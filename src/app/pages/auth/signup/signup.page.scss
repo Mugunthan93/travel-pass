@@ -7,13 +7,16 @@ ion-grid{
     flex-flow: column;
     height: 100%;
     margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    >ion-row {
+        padding : 0px 0px 0px 0px;
+    }
     >ion-row:last-child{
         flex-grow: 1;
         height: 100%;
         >ion-col{
             display: flex; 
             flex-flow: column;
-            padding : 0px 0px 0px 0px;
             >ion-row:last-child{
                 flex-grow: 1;
                 height: 100%;
@@ -79,4 +82,9 @@ ion-icon{
 
 ion-content{
     --background: none;
+}
+
+
+ion-fab-button.finish {
+    --border-radius : 0px;
 }

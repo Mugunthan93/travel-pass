@@ -236,10 +236,61 @@
     </ion-grid>
   </cdk-step>
   <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="">
+    
     <ion-grid>
       <ion-row>
         <ion-col size="12">
-          <ion-content>
+          <app-add-branch *ngIf="showBranchForm" (closeBranch)="closeBranch($event)"></app-add-branch>
+          <ion-content *ngIf="!showBranchForm">
+            <ion-grid>
+              <ion-row>
+                <ion-col size="12">
+                  <ion-searchbar></ion-searchbar>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="12" class="ion-align-self-center">
+                  <ion-text *ngIf="user.length == 0" class="ion-text-center">Add atleast one Branch</ion-text>
+                  <ion-list *ngIf="user.length > 0">
+                    <ion-item lines="none">
+                    </ion-item>
+                  </ion-list>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+            <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+              <button type="submit" (click)="addBranch()">
+                <ion-fab-button>
+                  <ion-icon name="add"></ion-icon>
+                </ion-fab-button>
+              </button>
+            </ion-fab>
+            <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+              <button type="button" cdkStepperPrevious>
+                <ion-fab-button>
+                  <ion-icon name="arrow-back"></ion-icon>
+                </ion-fab-button>
+              </button>
+            </ion-fab>
+            <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+              <button type="submit" cdkStepperNext>
+                <ion-fab-button>
+                  <ion-icon name="arrow-forward"></ion-icon>
+                </ion-fab-button>
+              </button>
+            </ion-fab>
+          </ion-content>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </cdk-step>
+
+  <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="userSignupForm">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12">
+          <app-add-user *ngIf="showUserForm" (closeUser)="closeUser($event)"></app-add-user>
+          <ion-content *ngIf="!showUserForm">
             <ion-grid>
               <ion-row>
                 <ion-col size="12">
@@ -257,7 +308,14 @@
               </ion-row>
             </ion-grid>
             <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-              <button type="submit" cdkStepperNext>
+              <button type="button" (click)="finishSignup()">
+                <ion-fab-button>
+                  <ion-icon name="arrow-forward"></ion-icon>
+                </ion-fab-button>
+              </button>
+            </ion-fab>
+            <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+              <button type="button" (click)="addUser()">
                 <ion-fab-button>
                   <ion-icon name="add"></ion-icon>
                 </ion-fab-button>
@@ -274,126 +332,5 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-  </cdk-step>
-  <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="userSignupForm">
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Adding user</ion-card-title>
-        <ion-card-subtitle>Company Name</ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-        <form [formGroup]="userSignupForm" (ngSubmit)="onSubmit()">
-          <ion-item>
-            <!-- <ion-icon src="../../../../assets/ng-img/icons/mail.svg"></ion-icon> -->
-            <ion-input type="text" formControlName="name" placeholder="Name" required></ion-input>
-          </ion-item>
-          <!-- <ion-label 
-            *ngIf="loginForm.controls['email'].touched && 
-                  loginForm.controls['email'].dirty && 
-                  loginForm.controls['email'].hasError('required')" 
-                  color="danger">
-                  Email Address Required
-          </ion-label>
-          <ion-label 
-            *ngIf="loginForm.controls['email'].touched && 
-                  loginForm.controls['email'].dirty && 
-                  loginForm.controls['email'].hasError('pattern')" 
-                  color="danger">
-                  Invalid Email Address
-          </ion-label> -->
-        
-          <ion-item>
-            <!-- <ion-icon src="../../../../assets/ng-img/icons/password.svg"></ion-icon> -->
-            <ion-input type="text" formControlName="mobile_number" placeholder="Mobile Number"></ion-input>
-          </ion-item>
-          <!-- <ion-label 
-            *ngIf="loginForm.controls['password'].touched && 
-                  loginForm.controls['password'].dirty && 
-                  loginForm.controls['password'].hasError('required')" 
-                  color="danger">
-                  Password Required
-          </ion-label> -->
-        
-          <ion-item>
-            <!-- <ion-icon src="../../../../assets/ng-img/icons/password.svg"></ion-icon> -->
-            <ion-input type="text" formControlName="email_id" placeholder="Email ID"></ion-input>
-          </ion-item>
-          <!-- <ion-label 
-            *ngIf="loginForm.controls['password'].touched && 
-                  loginForm.controls['password'].dirty && 
-                  loginForm.controls['password'].hasError('required')" 
-                  color="danger">
-                  Password Required
-          </ion-label> -->
-        
-          <ion-item>
-            <!-- <ion-icon src="../../../../assets/ng-img/icons/password.svg"></ion-icon> -->
-            <ion-input type="text" formControlName="approver_name" placeholder="Approver Name"></ion-input>
-          </ion-item>
-          <!-- <ion-label 
-            *ngIf="loginForm.controls['password'].touched && 
-                  loginForm.controls['password'].dirty && 
-                  loginForm.controls['password'].hasError('required')" 
-                  color="danger">
-                  Password Required
-          </ion-label> -->
-        
-         <ion-item>
-            <ion-radio-group value="admin">
-              <ion-grid>
-                <ion-row>
-                  <ion-col size="6">
-                    <ion-item>
-                      <ion-label>Admin</ion-label>
-                      <ion-radio slot="start" formControlname="role" value="admin"></ion-radio>
-                    </ion-item>
-                  </ion-col>
-                  <ion-col size="6">
-                    <ion-item>
-                      <ion-label>Approver</ion-label>
-                      <ion-radio slot="start" formControlname="role" value="approver"></ion-radio>
-                    </ion-item>
-                  </ion-col>
-                  <ion-col size="6">
-                    <ion-item>
-                      <ion-label>User</ion-label>
-                      <ion-radio slot="start" formControlname="role" value="user"></ion-radio>
-                    </ion-item>
-                  </ion-col>
-                  <ion-col size="6">
-                    <ion-item>
-                      <ion-label>Accounts</ion-label>
-                      <ion-radio slot="start" formControlname="role" value="accounts"></ion-radio>
-                    </ion-item>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
-            </ion-radio-group>
-         </ion-item>
-          <ion-item lines="none">
-            <ion-grid>
-              <ion-row>
-                <ion-col size="4" offset="1">
-                  <button type="button" cdkStepperPrevious>
-                    <ion-button expand="block" fill="solid" color="primary">
-                      back
-                    </ion-button>
-                  </button>
-                </ion-col>
-    
-                <ion-col size="4" offset="1">
-                  <button type="submit" cdkStepper>
-                    <ion-button expand="block" fill="solid" color="primary">
-                      Signup
-                    </ion-button>
-                  </button>
-                </ion-col>
-    
-              </ion-row>
-            </ion-grid>
-          </ion-item>
-        </form>
-      </ion-card-content>
-    </ion-card>
   </cdk-step>
 </app-custom-stepper>

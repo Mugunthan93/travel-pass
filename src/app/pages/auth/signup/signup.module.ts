@@ -10,7 +10,8 @@ import { SignupPage } from './signup.page';
 import { CustomStepperComponent } from 'src/app/components/custom-stepper/custom-stepper.component';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 
-import {MatIconModule} from '@angular/material/icon';
+import { AddBranchComponent } from 'src/app/components/add-branch/add-branch.component';
+import { AddUserComponent } from 'src/app/components/add-user/add-user.component';
 
 @NgModule({
   imports: [
@@ -20,12 +21,14 @@ import {MatIconModule} from '@angular/material/icon';
     IonicModule,
     SignupPageRoutingModule,
     CdkStepperModule,
-    MatIconModule
   ],
   declarations: [
     SignupPage,
-    CustomStepperComponent
+    CustomStepperComponent,
+    AddBranchComponent,
+    AddUserComponent
   ],
-  providers : []
+  providers : [],
+  entryComponents : []
 })
 export class SignupPageModule {}

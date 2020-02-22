@@ -29,6 +29,11 @@
                 "glob": "**/*.svg",
                 "input": "src/assets/ionicons",
                 "output": "./svg"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "src/assets/icons",
+                "output": "./svg"
               }
             ],
             "styles": [
