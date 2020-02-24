@@ -12,6 +12,7 @@ import { CdkStepperModule } from '@angular/cdk/stepper';
 
 import { AddBranchComponent } from 'src/app/components/add-branch/add-branch.component';
 import { AddUserComponent } from 'src/app/components/add-user/add-user.component';
+import { AddProfileComponent } from 'src/app/components/add-profile/add-profile.component';
 
 @NgModule({
   imports: [
@@ -26,9 +27,10 @@ import { AddUserComponent } from 'src/app/components/add-user/add-user.component
     SignupPage,
     CustomStepperComponent,
     AddBranchComponent,
-    AddUserComponent
+    AddUserComponent,
+    AddProfileComponent
   ],
-  providers : [],
-  entryComponents : []
+  providers: [],
+  entryComponents: []
 })
-export class SignupPageModule {}
+export class SignupPageModule { }

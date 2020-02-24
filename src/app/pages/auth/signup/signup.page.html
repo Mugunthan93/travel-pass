@@ -1,9 +1,9 @@
 <app-custom-stepper [linear]="false" [selected]="" [selectedIndex]="" #stepper>
-  <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="personalSignupForm">
+  <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="personalForm">
     <ion-grid>
       <ion-row>
         <ion-col size="12">
-          <form [formGroup]="personalSignupForm" (ngSubmit)="onSignup()">
+          <form [formGroup]="personalForm" (ngSubmit)="onSignup()">
             <ion-item>
               <!-- <ion-icon src="../../../../assets/ng-img/icons/mail.svg"></ion-icon> -->
               <ion-input type="text" formControlName="name" placeholder="Name" required></ion-input>
@@ -22,7 +22,7 @@
                     color="danger">
                     Invalid Email Address
             </ion-label> -->
-            
+
             <ion-item>
               <!-- <ion-icon src="../../../../assets/ng-img/icons/password.svg"></ion-icon> -->
               <ion-input type="text" formControlName="mobile_number" placeholder="Mobile Number"></ion-input>
@@ -34,7 +34,7 @@
                     color="danger">
                     Password Required
             </ion-label> -->
-          
+
             <ion-item>
               <!-- <ion-icon src="../../../../assets/ng-img/icons/password.svg"></ion-icon> -->
               <ion-input type="text" formControlName="bussiness_email_id" placeholder="Bussiness Email"></ion-input>
@@ -46,7 +46,7 @@
                     color="danger">
                     Password Required
             </ion-label> -->
-          
+
             <ion-item>
               <!-- <ion-icon src="../../../../assets/ng-img/icons/password.svg"></ion-icon> -->
               <ion-input type="text" formControlName="company_name" placeholder="Company Name"></ion-input>
@@ -58,7 +58,7 @@
                     color="danger">
                     Password Required
             </ion-label> -->
-          
+
             <ion-item>
               <!-- <ion-icon src="../../../../assets/ng-img/icons/password.svg"></ion-icon> -->
               <ion-input type="text" formControlName="company_address" placeholder="Company Address"></ion-input>
@@ -70,7 +70,7 @@
                     color="danger">
                     Password Required
             </ion-label> -->
-          
+
             <ion-item>
               <!-- <ion-icon src="../../../../assets/ng-img/icons/password.svg"></ion-icon> -->
               <ion-input type="text" formControlName="gst_number" placeholder="GST Number"></ion-input>
@@ -82,7 +82,7 @@
                     color="danger">
                     Password Required
             </ion-label> -->
-            
+
             <ion-item lines="none">
               <ion-grid>
                 <ion-row>
@@ -101,11 +101,11 @@
       </ion-row>
     </ion-grid>
   </cdk-step>
-  <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="companySignupForm">
+  <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="companyForm">
     <ion-grid>
       <ion-row>
         <ion-col>
-          <form [formGroup]="companySignupForm" (ngSubmit)="onSubmit()">
+          <form [formGroup]="companyForm" (ngSubmit)="onSubmit()">
             <ion-item>
               <!-- <ion-icon src="../../../../assets/ng-img/icons/mail.svg"></ion-icon> -->
               <ion-input type="text" formControlName="company_name" placeholder="Company Name" required></ion-input>
@@ -124,7 +124,7 @@
                     color="danger">
                     Invalid Email Address
             </ion-label> -->
-          
+
             <ion-item>
               <!-- <ion-icon src="../../../../assets/ng-img/icons/password.svg"></ion-icon> -->
               <ion-input type="text" formControlName="company_address" placeholder="Company Address"></ion-input>
@@ -136,10 +136,11 @@
                     color="danger">
                     Password Required
             </ion-label> -->
-          
+
             <ion-item>
               <!-- <ion-icon src="../../../../assets/ng-img/icons/password.svg"></ion-icon> -->
-              <ion-input type="text" formControlName="auth_sign_name" placeholder="Authorized Signatory Name"></ion-input>
+              <ion-input type="text" formControlName="auth_sign_name" placeholder="Authorized Signatory Name">
+              </ion-input>
             </ion-item>
             <!-- <ion-label 
               *ngIf="loginForm.controls['password'].touched && 
@@ -148,10 +149,11 @@
                     color="danger">
                     Password Required
             </ion-label> -->
-          
+
             <ion-item>
               <!-- <ion-icon src="../../../../assets/ng-img/icons/password.svg"></ion-icon> -->
-              <ion-input type="text" formControlName="company_phone_number" placeholder="Company Phone Number"></ion-input>
+              <ion-input type="text" formControlName="company_phone_number" placeholder="Company Phone Number">
+              </ion-input>
             </ion-item>
             <!-- <ion-label 
               *ngIf="loginForm.controls['password'].touched && 
@@ -160,7 +162,7 @@
                     color="danger">
                     Password Required
             </ion-label> -->
-          
+
             <ion-item>
               <!-- <ion-icon src="../../../../assets/ng-img/icons/password.svg"></ion-icon> -->
               <ion-input type="text" formControlName="gst_number" placeholder="GST Number"></ion-input>
@@ -172,7 +174,7 @@
                     color="danger">
                     Password Required
             </ion-label> -->
-      
+
             <ion-item>
               <!-- <ion-icon src="../../../../assets/ng-img/icons/password.svg"></ion-icon> -->
               <ion-input type="text" formControlName="gst_email" placeholder="GST Email"></ion-input>
@@ -184,7 +186,7 @@
                     color="danger">
                     Password Required
             </ion-label> -->
-      
+
             <ion-item>
               <!-- <ion-icon src="../../../../assets/ng-img/icons/password.svg"></ion-icon> -->
               <ion-input type="text" formControlName="gst_phone_number" placeholder="GST Phone Number"></ion-input>
@@ -196,7 +198,7 @@
                     color="danger">
                     Password Required
             </ion-label> -->
-      
+
             <ion-item>
               <!-- <ion-icon src="../../../../assets/ng-img/icons/password.svg"></ion-icon> -->
               <ion-input type="text" formControlName="branch" placeholder="Branch"></ion-input>
@@ -208,7 +210,7 @@
                     color="danger">
                     Password Required
             </ion-label> -->
-            
+
             <ion-item lines="none">
               <ion-grid>
                 <ion-row>
@@ -219,7 +221,7 @@
                       </ion-button>
                     </button>
                   </ion-col>
-      
+
                   <ion-col size="4" offset="1">
                     <button type="button" cdkStepperNext>
                       <ion-button expand="block" fill="solid" color="primary">
@@ -236,7 +238,6 @@
     </ion-grid>
   </cdk-step>
   <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="">
-    
     <ion-grid>
       <ion-row>
         <ion-col size="12">
@@ -284,8 +285,7 @@
       </ion-row>
     </ion-grid>
   </cdk-step>
-
-  <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="userSignupForm">
+  <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="userForm">
     <ion-grid>
       <ion-row>
         <ion-col size="12">
@@ -332,5 +332,8 @@
         </ion-col>
       </ion-row>
     </ion-grid>
+  </cdk-step>
+  <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="profileForm">
+    <app-add-profile (closeProfile)="finishSignup($event)"></app-add-profile>
   </cdk-step>
 </app-custom-stepper>

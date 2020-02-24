@@ -23,7 +23,6 @@ import { HTTP } from '@ionic-native/http/ngx';
 import { environment } from 'src/environments/environment';
 import { AppState } from './stores/app.state';
 import { customStorage } from './stores/customStorage';
-import { storageOptionsFactory } from '@ngxs/storage-plugin/src/internals';
 
 @NgModule({
   declarations: [
@@ -38,9 +37,9 @@ import { storageOptionsFactory } from '@ngxs/storage-plugin/src/internals';
     HttpClientModule,
     NgxsModule.forRoot([AppState], { developmentMode: !environment.production }),
     NgxsStoragePluginModule.forRoot({
-      key : 'App',
-      deserialize :JSON.parse,
-      serialize : JSON.stringify
+      key: 'App',
+      deserialize: JSON.parse,
+      serialize: JSON.stringify
     }),
     NgxsFormPluginModule.forRoot(),
     NgxsRouterPluginModule.forRoot(),
