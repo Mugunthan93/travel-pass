@@ -9,114 +9,70 @@ import { NativeStorage } from '@ionic-native/native-storage/ngx';
   providedIn: 'root'
 })
 export class AuthService {
-  
-  private _user = new BehaviorSubject<any>(null);
-  
-  set setUser(data){
-    this.nativeStorage.setItem('user',data)
-      .then(
-        () => {
-          this._user.next(data);
-          return {
-            status : true,
-            message : "user data stored in native storage"
-          }
-        }
-        );
-      }
-      
-  get getUser(){
-    return this._user.asObservable();
-  }
-  
-  get retrieveUser(){
-    return from(this.nativeStorage.getItem('user'))
-      .pipe(
-        map((resData) => {
-          this._user.next(resData);
-          return {
-            status : true,
-            message : "user data retrieved from native storage"
-          }
-        })
-      );
-  }
-  
-  removeUser(){
-    return from(this.nativeStorage.remove('user'))
-      .pipe(
-        map(() => {
-          this._user.next(null);
-          return {
-            status : true,
-            message : "user data removed from nataive storage"
-          }
-        })
-      );
-  }
-
-  get isUserAuthenticated() {
-    return this._user
-    .asObservable()
-    .pipe(
-      map(
-        (user) => {
-          if (user) {
-            return true;
-          }
-          else {
-            return false;
-          }
-        }
-      )
-    );
-  }
-
-  get getHeaders(){
-    return this.nativeHttp.getHeaders("localhost");
-  }
 
   constructor(
-    private nativeHttp : HTTP,
-    private nativeStorage : NativeStorage
+    private nativeHttp: HTTP,
+    private nativeStorage: NativeStorage,
   ) {
-    this.nativeHttp.setHeader("localhost","Access-Control-Allow-Origin",'*');
-    this.nativeHttp.setHeader("localhost", "Access-Control-Allow-Headers","Content-Type");
-    this.nativeHttp.setHeader("localhost","Access-Control-Allow-Methods","GET, POST, OPTIONS, PUT, PATCH, DELETE");
+    console.log(nativeHttp);
+    this.nativeHttp.useBasicAuth('username','username');
+    this.nativeHttp.setHeader("localhost", "Access-Control-Allow-Origin", '*');
+    this.nativeHttp.setHeader("localhost", "Access-Control-Allow-Headers", "Content-Type");
+    this.nativeHttp.setHeader("localhost", "Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+    this.nativeHttp.setDataSerializer('json');
+    console.log(this.nativeHttp.getBasicAuthHeader('username','username'));
+
   }
 
-  login(userName : string,password : string) : Observable<any>{
-    const header = this.nativeHttp.getHeaders;
-    return from(this.nativeHttp.post(
-      environment.baseURL + "/users/login" ,
-      { username: userName, password: password },
-      header
-    ))
-    .pipe(
-      map( resData => {
-          this.setUser = resData.data;
-          return;
+  login(email: string, password: string): Observable<any> {
+
+    const login = {
+      username : email,
+      password : password
+    }
+    const header = this.nativeHttp.getHeaders("localhost");
+
+    return from(this.nativeHttp.post(environment.baseURL + "/users/login",login,header))
+      .pipe(
+        map(resData => {
+          const userData = JSON.parse(resData.data);
+          return  userData;
         })
-    );
+      );
   }
 
   logout() {
-    const header = this.nativeHttp.getHeaders;
+    const header = this.nativeHttp.getHeaders("localhost");
     return from(this.nativeHttp.post(
       environment.baseURL + "/users/logout",
       {},
       header
     ))
-    .pipe(
+      .pipe(
+        map(
+          (logOutData) => {
+            return logOutData;
+          }
+        )
+      );
+  }
+
+  searchCity(reqCity: string) {
+    let param: { [key: string]: string | string[] } = {
+      "city": reqCity
+    }
+    const header = this.nativeHttp.getHeaders("localhost");
+    return from(this.nativeHttp.get(
+      environment.baseURL + "/airlines/tboairlinecities",
+      param,
+      header
+    )).pipe(
       map(
         (resData) => {
-          this.removeUser().subscribe(
-            (result) => {
-              if(result.status == true){
-                return resData;
-              }
-            }
-          );
+          if (resData.status == 200) {
+            const data = JSON.parse(resData.data);
+            return data;
+          }
         }
       )
     );

@@ -1,0 +1,43 @@
+ion-item {
+    --background: transparent;
+
+    >ion-label {
+        width: 100%;
+        font-size: small;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+}
+
+
+
+ion-grid {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+
+    >ion-row {
+        >ion-col {
+            padding: 0px 0px 0px 0px;
+        }
+    }
+
+    >ion-row:last-child {
+        flex-grow: 1;
+        height: 100%;
+
+        >ion-col {
+            display: flex;
+            flex-flow: column;
+        }
+    }
+}
+
+ion-icon {
+    margin: 0px 0px 0px 0px;
+}
+
+ion-row[cdkStepHeader] {
+    ion-col {
+        --ion-grid-columns: 15;
+    }
+}

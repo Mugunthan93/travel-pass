@@ -1,93 +1,66 @@
+
+
 export interface user {
-  id: number;
-  customer_id: number;
-  email: string;
-  dob: string;
-  city: string;
+
   name: string;
-  role: string;
-  grade: string;
+  email: string;
+  phone_number: string;
+  dob: string;
+  PAN_number: string;
+  aadhar_no: string;
+  address: string;
+  city: string;
   gender: string;
   status: string;
-  address: string;
-  approver: Array<object>;
   lastname: string;
   password: string;
-  sales_id: string;
-  createdAt: string;
-  updatedAt: string;
-  PAN_number: string;
-  created_by: string;
-  credit_req: Array<object>;
-  designation: string;
-  gst_details: string;
   passport_no: string;
   country_name: string;
-  credit_limit: number;
-  manager_name: string;
-  phone_number: string;
-  manager_email: string;
-  markup_charge: string;
-  service_charge: string;
   passport_expiry: string;
   validity_period: string;
-  is_rightsto_book: string;
+
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  created_by: string;
   resetPasswordToken: string;
   is_Password_Changed: string;
   resetPasswordExpires: string;
-}
 
-export class User {
-
-  role : any;
-
-  constructor(user : user){
-
-  }
-
-}
-
-export class Employee {
-
-  constructor(user : user){
-
-  }
-
-  requestList(){
-
-  }
-
-  request(){
-
-  }
-
-  downloadTicket(){
-
-  }
+  customer_id: number;
+  role: string;
+  grade: string;
+  approver: approver;
+  sales_id: string;
+  credit_req: creditReq;
+  designation: string;
+  gst_details: string;
+  credit_limit: number;
+  manager_name: string;
+  manager_email: string;
+  markup_charge: string;
+  service_charge: string;
+  is_rightsto_book: string;
 
 }
 
-export class Manager {
+export interface approver{
+  id:number
+  name : string
+  email : string
+  label : string
+  customer_id : number
+  customer_name:string
+}
 
-  constructor(user : user){
-
-  }
-
-  approveList(){
-
-  }
-
-  approve() {
-    
-  }
-
+export  interface creditReq{
+  id:number
+  name : string
+  email : string
+  label : string
+  customer_id : number
+  customer_name:string
 }
 
 
 
-
-
-
-
-
-  

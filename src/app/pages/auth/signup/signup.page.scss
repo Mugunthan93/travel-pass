@@ -1,0 +1,90 @@
+app-custom-stepper{
+    height: 100%;
+}
+
+ion-grid{
+    display: flex; 
+    flex-flow: column;
+    height: 100%;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    >ion-row {
+        padding : 0px 0px 0px 0px;
+    }
+    >ion-row:last-child{
+        flex-grow: 1;
+        height: 100%;
+        >ion-col{
+            display: flex; 
+            flex-flow: column;
+            >ion-row:last-child{
+                flex-grow: 1;
+                height: 100%;
+                >ion-col{
+                    padding : 0px 0px 0px 0px;
+                }
+            }
+        }
+    }
+}
+
+ion-searchbar{
+    padding : 0px 0px 0px 0px;
+}
+
+ion-item, ion-searchbar {
+    --background:transparent;
+}
+
+ion-list {
+    background: transparent;
+}
+
+form {
+    >ion-item {
+        --inner-padding-top : 0px;
+        --inner-padding-bottom : 0px;
+    }
+}
+
+ion-button{
+    --opacity:0.4;
+}
+
+button {
+    padding : 0px 0px 0px 0px;
+    border-radius: 100px;
+    >ion-button {
+        margin : 0px 0px 0px 0px ;
+    }
+}
+
+ion-label,a {
+    font-size: x-small;
+}
+
+ion-icon{
+    padding-right : 10px;
+}
+
+//////////////////////////////////////////////////////
+
+mat-stepper-horizontal {
+    >.mat-horizontal-stepper-header-container{
+        height : 8px;
+    }
+  }
+
+ion-icon{
+    padding-right: 0px;
+}
+
+
+ion-content{
+    --background: none;
+}
+
+
+ion-fab-button.finish {
+    --border-radius : 0px;
+}
