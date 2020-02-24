@@ -36,3 +36,27 @@ ion-content {
     --background-repeat: no-repeat;
     --background-size: cover;
 }
+
+:root {
+    ion-icon{
+        padding-right: 0px;
+        color : #3d9ed7 !important;
+        // color : #90bd1c; approve button
+        // color : #e44b00; rejecrt button
+    }
+
+    ion-button {
+        --opacity:0.4;
+        --background :  #90bd1c;
+
+    }
+
+    button{
+        background : transparent;
+        ion-button {
+            --opacity:0.4;
+            --background :  #90bd1c;
+    
+        }
+    }
+}

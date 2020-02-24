@@ -12,4 +12,12 @@ export class DashboardPage implements OnInit {
   ngOnInit() {
   }
 
+  openMenu() {
+
+  }
+
+  onLogout() {
+    
+  }
+
 }

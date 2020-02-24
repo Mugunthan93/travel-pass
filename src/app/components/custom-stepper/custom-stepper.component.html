@@ -1,23 +1,15 @@
 <ion-grid cdkStepper labelPosition="bottom">
   <ion-row cdkStepHeader>
-    <ion-col size="3" class="ion-align-self-center">
-      <ion-item lines="none" button cdkStepperPrevious (click)="onClick(0)">
-        <ion-icon name="person-add"></ion-icon>
-        <!-- <ion-label class="ion-text-center ion-text-uppercase" matStepLabel>
-          Personal
-        </ion-label> -->
-      </ion-item>
-    </ion-col>
     <ion-col size="3">
-      <ion-item lines="none" button cdkStepperNext (click)="onClick(1)">
-        <ion-icon name="briefcase"></ion-icon>
+      <ion-item lines="none" button cdkStepperNext (click)="onClick(0)">
+        <ion-icon name="briefcase" slot="start"></ion-icon>
         <!-- <ion-label class="ion-text-center ion-text-uppercase" matStepLabel>
           Company
         </ion-label> -->
       </ion-item>
     </ion-col>
     <ion-col size="3">
-      <ion-item lines="none" button cdkStepperNext (click)="onClick(2)">
+      <ion-item lines="none" button cdkStepperNext (click)="onClick(1)">
         <ion-icon name="git-branch"></ion-icon>
         <!-- <ion-label class="ion-text-center ion-text-uppercase" matStepLabel>
           Team
@@ -25,7 +17,7 @@
       </ion-item>
     </ion-col>
     <ion-col size="3">
-      <ion-item lines="none" button cdkStepperNext (click)="onClick(3)">
+      <ion-item lines="none" button cdkStepperNext (click)="onClick(2)">
         <ion-icon name="people-circle-outline"></ion-icon>
         <!-- <ion-label class="ion-text-center ion-text-uppercase" matStepLabel>
           User
@@ -33,7 +25,7 @@
       </ion-item>
     </ion-col>
     <ion-col size="3">
-      <ion-item lines="none" button cdkStepperNext (click)="onClick(4)">
+      <ion-item lines="none" button cdkStepperNext (click)="onClick(3)">
         <ion-icon name="person"></ion-icon>
         <!-- <ion-label class="ion-text-center ion-text-uppercase" matStepLabel>
           User

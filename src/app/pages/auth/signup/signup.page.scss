@@ -32,7 +32,7 @@ ion-searchbar{
     padding : 0px 0px 0px 0px;
 }
 
-ion-item, ion-searchbar {
+ion-item, ion-searchbar, ion-input {
     --background:transparent;
 }
 
@@ -42,18 +42,18 @@ ion-list {
 
 form {
     >ion-item {
-        --inner-padding-top : 0px;
-        --inner-padding-bottom : 0px;
+        --inner-padding-top : 5px;
+        --inner-padding-bottom : 5px;
     }
 }
 
 ion-button{
     --opacity:0.4;
+    margin-top : 20px;
 }
 
 button {
     padding : 0px 0px 0px 0px;
-    border-radius: 100px;
     >ion-button {
         margin : 0px 0px 0px 0px ;
     }
@@ -69,22 +69,6 @@ ion-icon{
 
 //////////////////////////////////////////////////////
 
-mat-stepper-horizontal {
-    >.mat-horizontal-stepper-header-container{
-        height : 8px;
-    }
-  }
-
-ion-icon{
-    padding-right: 0px;
-}
-
-
 ion-content{
     --background: none;
-}
-
-
-ion-fab-button.finish {
-    --border-radius : 0px;
 }
