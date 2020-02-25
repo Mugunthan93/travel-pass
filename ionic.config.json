@@ -1,0 +1,8 @@
+{
+  "name": "travel-pass",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular",
+  "id": "34db93be"
+}

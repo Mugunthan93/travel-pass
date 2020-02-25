@@ -1,0 +1,42 @@
+<ion-grid cdkStepper labelPosition="bottom">
+  <ion-row cdkStepHeader>
+    <ion-col size="3">
+      <ion-item lines="none" button cdkStepperNext (click)="onClick(0)">
+        <ion-icon name="briefcase" slot="start"></ion-icon>
+        <!-- <ion-label class="ion-text-center ion-text-uppercase" matStepLabel>
+          Company
+        </ion-label> -->
+      </ion-item>
+    </ion-col>
+    <ion-col size="3">
+      <ion-item lines="none" button cdkStepperNext (click)="onClick(1)">
+        <ion-icon name="git-branch"></ion-icon>
+        <!-- <ion-label class="ion-text-center ion-text-uppercase" matStepLabel>
+          Team
+        </ion-label> -->
+      </ion-item>
+    </ion-col>
+    <ion-col size="3">
+      <ion-item lines="none" button cdkStepperNext (click)="onClick(2)">
+        <ion-icon name="people-circle-outline"></ion-icon>
+        <!-- <ion-label class="ion-text-center ion-text-uppercase" matStepLabel>
+          User
+        </ion-label> -->
+      </ion-item>
+    </ion-col>
+    <ion-col size="3">
+      <ion-item lines="none" button cdkStepperNext (click)="onClick(3)">
+        <ion-icon name="person"></ion-icon>
+        <!-- <ion-label class="ion-text-center ion-text-uppercase" matStepLabel>
+          User
+        </ion-label> -->
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="12">
+      <ng-template [ngTemplateOutlet]="selected.content">
+      </ng-template>
+    </ion-col>
+  </ion-row>
+</ion-grid>

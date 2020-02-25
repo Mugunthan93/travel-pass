@@ -1,0 +1,100 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Adding user</ion-card-title>
+    <ion-card-subtitle>Company Name</ion-card-subtitle>
+  </ion-card-header>
+  <ion-card-content>
+    <form [formGroup]="userSignupForm" (ngSubmit)="addUser()">
+      <ion-item>
+        <ion-icon src="../../../assets/icons/name.svg" slot="start"></ion-icon>
+        <ion-input type="text" formControlName="name" placeholder="Name" required></ion-input>
+      </ion-item>
+      <!-- <ion-label 
+        *ngIf="loginForm.controls['email'].touched && 
+              loginForm.controls['email'].dirty && 
+              loginForm.controls['email'].hasError('required')" 
+              color="danger">
+              Email Address Required
+      </ion-label>
+      <ion-label 
+        *ngIf="loginForm.controls['email'].touched && 
+              loginForm.controls['email'].dirty && 
+              loginForm.controls['email'].hasError('pattern')" 
+              color="danger">
+              Invalid Email Address
+      </ion-label> -->
+    
+      <ion-item>
+        <ion-icon name="phone-portrait" slot="start"></ion-icon>
+        <ion-input type="text" formControlName="mobile_number" placeholder="Mobile Number"></ion-input>
+      </ion-item>
+      <!-- <ion-label 
+        *ngIf="loginForm.controls['password'].touched && 
+              loginForm.controls['password'].dirty && 
+              loginForm.controls['password'].hasError('required')" 
+              color="danger">
+              Password Required
+      </ion-label> -->
+    
+      <ion-item>
+        <ion-icon src="../../../../assets/ng-img/icons/mail.svg" slot="start"></ion-icon>
+        <ion-input type="text" formControlName="email_id" placeholder="Email ID"></ion-input>
+      </ion-item>
+      <!-- <ion-label 
+        *ngIf="loginForm.controls['password'].touched && 
+              loginForm.controls['password'].dirty && 
+              loginForm.controls['password'].hasError('required')" 
+              color="danger">
+              Password Required
+      </ion-label> -->
+    
+      <ion-item>
+        <ion-icon src="../../../assets/icons/name.svg" slot="start"></ion-icon>
+        <ion-input type="text" formControlName="approver_name" placeholder="Approver Name"></ion-input>
+      </ion-item>
+      <!-- <ion-label 
+        *ngIf="loginForm.controls['password'].touched && 
+              loginForm.controls['password'].dirty && 
+              loginForm.controls['password'].hasError('required')" 
+              color="danger">
+              Password Required
+      </ion-label> -->
+    
+     <ion-item>
+        <ion-radio-group value="admin">
+          <ion-grid>
+            <ion-row>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label>Admin</ion-label>
+                  <ion-radio slot="start" formControlname="role" value="admin"></ion-radio>
+                </ion-item>
+              </ion-col>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label>Approver</ion-label>
+                  <ion-radio slot="start" formControlname="role" value="approver"></ion-radio>
+                </ion-item>
+              </ion-col>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label>User</ion-label>
+                  <ion-radio slot="start" formControlname="role" value="user"></ion-radio>
+                </ion-item>
+              </ion-col>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label>Accounts</ion-label>
+                  <ion-radio slot="start" formControlname="role" value="accounts"></ion-radio>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-radio-group>
+     </ion-item>
+     <ion-button type="submit" expand="block" fill="solid">
+       Add User
+     </ion-button>
+    </form>
+  </ion-card-content>
+</ion-card>

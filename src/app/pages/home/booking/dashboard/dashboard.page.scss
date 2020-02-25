@@ -1,0 +1,9 @@
+ion-grid#header{
+    --ion-grid-padding:0px;
+    ion-row{
+        ion-col{
+            --ion-grid-column-padding : 0px;
+            height:50px;
+        }
+    }
+}

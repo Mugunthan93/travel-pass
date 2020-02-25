@@ -1,0 +1,112 @@
+<ion-grid>
+  <ion-row>
+    <ion-col size="12">
+      <form [formGroup]="profileForm" (ngSubmit)="onSignup()">
+        <ion-item>
+          <ion-icon src="../../../assets/icons/name.svg" slot="start"></ion-icon>
+          <ion-input type="text" formControlName="name" placeholder="Name" required></ion-input>
+        </ion-item>
+        <!-- <ion-label 
+              *ngIf="loginForm.controls['email'].touched && 
+                    loginForm.controls['email'].dirty && 
+                    loginForm.controls['email'].hasError('required')" 
+                    color="danger">
+                    Email Address Required
+            </ion-label>
+            <ion-label 
+              *ngIf="loginForm.controls['email'].touched && 
+                    loginForm.controls['email'].dirty && 
+                    loginForm.controls['email'].hasError('pattern')" 
+                    color="danger">
+                    Invalid Email Address
+            </ion-label> -->
+
+        <ion-item>
+          <ion-icon name="phone-portrait" slot="start"></ion-icon>
+          <ion-input type="text" formControlName="mobile_number" placeholder="Mobile Number"></ion-input>
+        </ion-item>
+        <!-- <ion-label 
+              *ngIf="loginForm.controls['password'].touched && 
+                    loginForm.controls['password'].dirty && 
+                    loginForm.controls['password'].hasError('required')" 
+                    color="danger">
+                    Password Required
+            </ion-label> -->
+
+        <ion-item>
+          <ion-icon name="calendar" slot="start"></ion-icon>
+          <ion-input type="text" formControlName="dob" placeholder="Date of Birth"></ion-input>
+        </ion-item>
+        <!-- <ion-label 
+              *ngIf="loginForm.controls['password'].touched && 
+                    loginForm.controls['password'].dirty && 
+                    loginForm.controls['password'].hasError('required')" 
+                    color="danger">
+                    Password Required
+            </ion-label> -->
+        <ion-item>
+          <ion-icon src="../../../assets/icons/PAN.svg" slot="start"></ion-icon>
+          <ion-input type="text" formControlName="pan_number" placeholder="PAN Number"></ion-input>
+        </ion-item>
+        <!-- <ion-label 
+              *ngIf="loginForm.controls['password'].touched && 
+                    loginForm.controls['password'].dirty && 
+                    loginForm.controls['password'].hasError('required')" 
+                    color="danger">
+                    Password Required
+            </ion-label> -->
+
+        <ion-item>
+          <ion-icon src="../../../assets/icons/AADHAR.svg" slot="start"></ion-icon>
+          <ion-input type="text" formControlName="aadhar_number" placeholder="Aadhar Number"></ion-input>
+        </ion-item>
+        <!-- <ion-label 
+              *ngIf="loginForm.controls['password'].touched && 
+                    loginForm.controls['password'].dirty && 
+                    loginForm.controls['password'].hasError('required')" 
+                    color="danger">
+                    Password Required
+            </ion-label> -->
+
+        <ion-item>
+          <ion-icon src="../../../assets/icons/address.svg" slot="start"></ion-icon>
+          <ion-input type="text" formControlName="self_address" placeholder="Self Address"></ion-input>
+        </ion-item>
+        <!-- <ion-label 
+              *ngIf="loginForm.controls['password'].touched && 
+                    loginForm.controls['password'].dirty && 
+                    loginForm.controls['password'].hasError('required')" 
+                    color="danger">
+                    Password Required
+            </ion-label> -->
+
+        <ion-item>
+          <ion-icon name="phone-portrait" slot="start"></ion-icon>
+          <ion-input type="text" formControlName="emergency_contact" placeholder="Emergency Contact"></ion-input>
+        </ion-item>
+        <!-- <ion-label 
+              *ngIf="loginForm.controls['password'].touched && 
+                    loginForm.controls['password'].dirty && 
+                    loginForm.controls['password'].hasError('required')" 
+                    color="danger">
+                    Password Required
+            </ion-label> -->
+
+        <ion-item>
+          <ion-icon src="../../../assets/icons/PASSPORT.svg" slot="start"></ion-icon>
+          <ion-input type="text" formControlName="passport_number" placeholder="Passport Number"></ion-input>
+        </ion-item>
+        <!-- <ion-label 
+              *ngIf="loginForm.controls['password'].touched && 
+                    loginForm.controls['password'].dirty && 
+                    loginForm.controls['password'].hasError('required')" 
+                    color="danger">
+                    Password Required
+            </ion-label> -->
+        <ion-button expand="block" fill="solid" type="submit">
+          SignUp
+        </ion-button>
+      </form>
+    </ion-col>
+  </ion-row>
+</ion-grid>
