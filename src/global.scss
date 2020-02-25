@@ -60,11 +60,12 @@ ion-content {
         }
     }
 
-    ion-text{
+    ion-text, ion-label{
         color:grey;
+        font-size: large;
     }
 
-    ion-img{
-        background: transparent;
+    ion-item{
+        --background: transparent;
     }
 }

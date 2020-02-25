@@ -1,0 +1,18 @@
+<ion-grid id="upcoming-trip">
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-text>Upcoming Trips</ion-text>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <ion-virtual-scroll [items]="items" approxItemHeight="50px">
+        <ion-item *virtualItem="let item">
+          {{item}}
+        </ion-item>
+      </ion-virtual-scroll>
+    </ion-col>
+  </ion-row>
+</ion-grid>

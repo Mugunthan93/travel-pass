@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardPage implements OnInit {
 
+
   constructor() { }
 
   ngOnInit() {
@@ -25,7 +26,7 @@ export class DashboardPage implements OnInit {
   }
 
   profile() {
-    
+
   }
 
 }

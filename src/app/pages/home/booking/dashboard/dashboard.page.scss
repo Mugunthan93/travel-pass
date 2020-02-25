@@ -7,3 +7,21 @@ ion-grid#header{
         }
     }
 }
+
+ion-title{
+    padding-left : 0px;
+    padding-right : 0px;
+}
+
+ion-label{
+    font-size: large;
+}
+
+ion-toolbar {
+    --color: #ffffff;
+    --background: rgb(137, 247, 137);
+    *{
+        background: transparent;
+        --background:transparent;
+    }
+}

@@ -1,0 +1,30 @@
+ion-grid{
+    margin:0px 0px 0px 0px;
+}
+
+ion-grid#carrier{
+    --ion-grid-padding:10px;
+
+    ion-text{
+        text-transform: uppercase;
+        padding-left : 10px;
+        color:grey;
+        font-weight: bold;
+        font-size: medium;
+    }
+
+
+}
+
+ion-grid#upcoming-trip{
+    >ion-row:last-child{
+        flex-grow: 1;
+        >ion-col{
+            --ion-grid-column-padding:5px;
+        }
+    }
+}
+
+ion-label{
+    font-size: large;
+}

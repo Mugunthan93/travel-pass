@@ -6,7 +6,31 @@ import { DashboardPage } from './dashboard.page';
 const routes: Routes = [
   {
     path: '',
-    component: DashboardPage
+    component: DashboardPage,
+    children:[
+      {
+        path: 'home-tab',
+        loadChildren: () => import('./home-tab/home-tab.module').then( m => m.HomeTabPageModule)
+      },
+      {
+        path: 'trip-tab',
+        loadChildren: () => import('./trip-tab/trip-tab.module').then( m => m.TripTabPageModule)
+      },
+      {
+        path: 'expense-tab',
+        loadChildren: () => import('./expense-tab/expense-tab.module').then( m => m.ExpenseTabPageModule)
+      },
+      {
+        path:'',
+        redirectTo:'/home/booking/dashboard/home-tab',
+        pathMatch:'full'
+      }
+    ]
+  },
+  {
+    path:'',
+    redirectTo:'/home/booking/dashboard/home-tab',
+    pathMatch:'full'
   }
 ];
 
