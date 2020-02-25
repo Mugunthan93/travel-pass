@@ -20,4 +20,12 @@ export class DashboardPage implements OnInit {
     
   }
 
+  notification() {
+
+  }
+
+  profile() {
+    
+  }
+
 }

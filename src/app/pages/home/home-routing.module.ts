@@ -18,10 +18,15 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/home/booking',
+        redirectTo: '/home/booking/dashboard',
         pathMatch: 'full'
       }
     ]
+  },
+  {
+    path: '',
+    redirectTo: '/home/booking/dashboard',
+    pathMatch: 'full'
   }
 ];
 

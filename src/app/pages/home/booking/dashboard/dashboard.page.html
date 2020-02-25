@@ -16,10 +16,36 @@
 </ion-menu>
 <ion-header id="sidebar">
   <ion-toolbar>
-      <ion-item button slot="start" mode="md" (click)="openMenu()">
+      <ion-item lines="none" button slot="start" mode="md" (click)="openMenu()">
         <ion-icon name="menu"></ion-icon>
       </ion-item>
-    <ion-title>dashboard</ion-title>
+    <ion-title>
+      <ion-grid id="header">
+        <ion-row>
+          <ion-col size="8">
+            <ion-item lines="none">
+              <ion-text>
+                Travellers Pass
+              </ion-text>
+            </ion-item>
+          </ion-col>
+          <ion-col size="2">
+            <ion-item lines="none" button (click)="notification()">
+              <ion-avatar slot="start">
+                <ion-icon name="notifications-outline" size="large"></ion-icon>
+              </ion-avatar>
+            </ion-item>
+          </ion-col>
+          <ion-col size="2">
+            <ion-item lines="none" button (click)="profile()">
+              <ion-avatar slot="start">
+                <ion-icon src="../../../../../assets/ionicons/md-people-circle-outline.svg" size="large"></ion-icon>
+              </ion-avatar>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 

@@ -31,6 +31,11 @@ const routes: Routes = [
       }
     ]
   },
+  {
+    path: "",
+    redirectTo: '/home/booking/dashboard',
+    pathMatch: 'full'
+  }
 ];
 
 @NgModule({

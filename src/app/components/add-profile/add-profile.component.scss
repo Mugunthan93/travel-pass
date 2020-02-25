@@ -6,3 +6,10 @@ ion-item {
 ion-button {
     margin-top : 20px;
 }
+
+form {
+    >ion-item {
+        --inner-padding-top : 5px;
+        --inner-padding-bottom : 5px;
+    }
+}

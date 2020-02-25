@@ -7,9 +7,12 @@ ion-grid{
         >ion-col{
             display: flex; 
             flex-flow: column;
+            >ion-row:first-child{
+                margin-top : 50px;
+                margin-bottom : 50px;
+            }
             >ion-row:last-child{
                 flex-grow: 1;
-                margin-top : 100px;
             }
         }
     }
