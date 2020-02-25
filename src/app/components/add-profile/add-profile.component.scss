@@ -7,6 +7,12 @@ ion-button {
     margin-top : 20px;
 }
 
+ion-item{
+    ion-icon{
+    width: 25px;
+    }
+}
+
 form {
     >ion-item {
         --inner-padding-top : 5px;
