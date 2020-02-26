@@ -9,23 +9,31 @@ const routes: Routes = [
     component: HomePage,
     children: [
       {
-        path: 'account',
-        loadChildren: () => import('./account/account.module').then(m => m.AccountPageModule)
+        path: 'dashboard',
+        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardPageModule)
       },
       {
-        path: 'booking',
-        loadChildren: () => import('./booking/booking.module').then(m => m.BookingPageModule)
+        path: 'search',
+        loadChildren: () => import('./search/search.module').then(m => m.SearchPageModule)
+      },
+      {
+        path: 'result',
+        loadChildren: () => import('./result/result.module').then(m => m.ResultPageModule)
+      },
+      {
+        path: 'book',
+        loadChildren: () => import('./book/book.module').then(m => m.BookPageModule)
       },
       {
         path: '',
-        redirectTo: '/home/booking/dashboard',
+        redirectTo: '/home/dashboard',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/home/booking/dashboard',
+    redirectTo: '/home/dashboard',
     pathMatch: 'full'
   }
 ];

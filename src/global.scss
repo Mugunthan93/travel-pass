@@ -38,34 +38,45 @@ ion-content {
 }
 
 :root {
-    ion-icon{
+
+    ion-icon,
+    ion-back-button {
         padding-right: 0px;
-        color : #3d9ed7 !important;
+        color: #3d9ed7 !important;
         // color : #90bd1c; approve button
         // color : #e44b00; rejecrt button
     }
 
     ion-button {
-        --opacity:0.4;
-        --background :  #90bd1c;
+        --opacity: 0.4;
+        --background: #90bd1c;
 
     }
 
-    button{
-        background : transparent;
+    button {
+        background: transparent;
+
         ion-button {
-            --opacity:0.4;
-            --background :  #90bd1c;
-    
+            --opacity: 0.4;
+            --background: #90bd1c;
+
         }
     }
 
-    ion-text, ion-label{
-        color:grey;
+    ion-text,
+    ion-label {
+        color: grey;
         font-size: large;
     }
 
-    ion-item{
+    ion-item {
         --background: transparent;
+    }
+
+    ion-back-button {
+        --padding-start: 0px;
+        --padding-end: 0px;
+        --icon-padding-start: 0px;
+        --icon-padding-end: 0px;
     }
 }

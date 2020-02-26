@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { BookingService } from 'src/app/services/booking/booking.service';
 
 @Component({
   selector: 'app-booking-page',
@@ -7,13 +8,15 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class BookingPageComponent implements OnInit {
 
-  @Input() pageType : string;
+  currentPage: string;
 
-  constructor() {
-
+  constructor(
+    public booking: BookingService
+  ) {
+    this.currentPage = this.booking.bookingPage;
   }
 
-  
+
   ngOnInit(): void {
   }
 

@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
-export interface carrier{
-  
-}
+import { BookingService } from 'src/app/services/booking/booking.service';
 
 @Component({
   selector: 'app-home-tab',
@@ -12,20 +9,18 @@ export interface carrier{
 })
 export class HomeTabPage implements OnInit {
 
-  flight : carrier;
-  bus : carrier;
-  hotel : carrier;
-  cab : carrier;
-
   constructor(
-    public router : Router
+    public router: Router,
+    public booking: BookingService
   ) { }
 
   ngOnInit() {
   }
 
-  search(carrier : carrier) {
-    this.router.navigate(['/','home','booking','search']);
+  search(carrier: string) {
+    this.booking.bookingPage = 'search';
+    this.booking.bookingCarrier = carrier;
+    this.router.navigate(['/', 'home', 'search']);
   }
 
 }
