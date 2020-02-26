@@ -22,8 +22,23 @@ ion-grid{
 
 ion-img{
     height: 50px;
+<<<<<<< HEAD
 }
 
+=======
+    
+}
+ion-item{
+    ion-img{
+    width: 25px;
+    }
+}
+
+// iongst
+// {
+//     width: 25px!important;
+// }
+>>>>>>> 8fb4fd12f19ddbd0034f79848d9a1437baa4a6b2
 ion-item {
     --background : transparent;
 }
