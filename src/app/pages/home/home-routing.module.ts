@@ -9,7 +9,6 @@ const routes: Routes = [
     component: HomePage,
     children: [
       {
-<<<<<<< HEAD
         path: 'dashboard',
         loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardPageModule)
       },
@@ -28,29 +27,13 @@ const routes: Routes = [
       {
         path: '',
         redirectTo: '/home/dashboard/home-tab',
-=======
-        path: 'account',
-        loadChildren: () => import('./account/account.module').then(m => m.AccountPageModule)
-      },
-      {
-        path: 'booking',
-        loadChildren: () => import('./booking/booking.module').then(m => m.BookingPageModule)
-      },
-      {
-        path: '',
-        redirectTo: '/home/booking/dashboard',
->>>>>>> 8fb4fd12f19ddbd0034f79848d9a1437baa4a6b2
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-<<<<<<< HEAD
     redirectTo: '/home/dashboard/home-tab',
-=======
-    redirectTo: '/home/booking/dashboard',
->>>>>>> 8fb4fd12f19ddbd0034f79848d9a1437baa4a6b2
     pathMatch: 'full'
   }
 ];
