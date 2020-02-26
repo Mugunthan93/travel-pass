@@ -15,6 +15,8 @@ import { ResultPage } from './result.page';
     IonicModule,
     ResultPageRoutingModule
   ],
-  declarations: [ResultPage]
+  declarations: [
+    ResultPage
+  ]
 })
 export class ResultPageModule {}

@@ -15,6 +15,8 @@ import { BookPage } from './book.page';
     IonicModule,
     BookPageRoutingModule
   ],
-  declarations: [BookPage]
+  declarations: [
+    BookPage
+  ]
 })
 export class BookPageModule {}

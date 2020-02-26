@@ -8,12 +8,13 @@ import { BookingService, booking } from 'src/app/services/booking/booking.servic
 })
 export class SearchPage implements OnInit {
 
-  currentBooking : booking;
+  booking : booking;
+  searchData : any;
 
   constructor(
     public bookingService: BookingService
   ) {
-    this.currentBooking = this.bookingService.getBooking;
+    this.booking = this.bookingService.getBooking;
   }
 
   ngOnInit() {
