@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { BookingService } from 'src/app/services/booking/booking.service';
+import { BookingService, booking } from 'src/app/services/booking/booking.service';
 
 @Component({
   selector: 'app-booking-page',
@@ -7,13 +7,14 @@ import { BookingService } from 'src/app/services/booking/booking.service';
   styleUrls: ['./booking-page.component.scss'],
 })
 export class BookingPageComponent implements OnInit {
-
-  currentPage: string;
+  
+  booking: booking;
 
   constructor(
-    public booking: BookingService
+    public bookingService: BookingService
   ) {
-    this.currentPage = this.booking.bookingPage;
+    this.booking = this.bookingService.getBooking;
+    console.log(this.booking);
   }
 
 

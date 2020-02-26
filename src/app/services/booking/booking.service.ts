@@ -1,47 +1,50 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+
+export interface booking{
+  page : string,
+  type : string,
+  way?  : string
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookingService {
 
-  bookingCarrier: string;
-  bookingPage: string;
-  bookingType: string;
-  bookingWay: string;
+  booking : booking
 
-  constructor() { }
-
-  set setBookingCarrier(carrier: string) {
-    this.bookingCarrier = carrier;
+  constructor(
+    public router : Router
+  ) {
   }
 
-  set setBookingPage(page: string) {
-    this.bookingPage = page;
+  set setBooking(book : booking){
+    this.booking = book;
   }
 
-  set setBookingType(type: string) {
-    this.bookingType = type;
+  get getBooking() {
+    return this.booking;
   }
 
-  set setBookingWay(way: string) {
-    this.bookingWay = way;
+  select(type : string) {
+    this.booking = {
+      page : 'search',
+      type : type
+    }
+    this.router.navigate(['/', 'home', 'search']);
   }
 
-  get getBookingCarrier() {
-    return this.bookingCarrier;
+  search(){
+
   }
 
-  get getBookingpage() {
-    return this.bookingPage;
+  result(){
+
   }
 
-  get getBookingType() {
-    return this.bookingType;
-  }
+  book(){
 
-  get getBookingWay() {
-    return this.bookingWay;
   }
 
 

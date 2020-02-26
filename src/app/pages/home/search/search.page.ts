@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BookingService } from 'src/app/services/booking/booking.service';
+import { BookingService, booking } from 'src/app/services/booking/booking.service';
 
 @Component({
   selector: 'app-search',
@@ -8,15 +8,12 @@ import { BookingService } from 'src/app/services/booking/booking.service';
 })
 export class SearchPage implements OnInit {
 
-  currentPage: string = "search";
-  currentCarrier: string;
+  currentBooking : booking;
 
   constructor(
-    public booking: BookingService
+    public bookingService: BookingService
   ) {
-
-    this.currentCarrier = this.booking.bookingCarrier;
-    console.log(this.currentCarrier);
+    this.currentBooking = this.bookingService.getBooking;
   }
 
   ngOnInit() {

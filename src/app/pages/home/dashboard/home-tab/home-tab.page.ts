@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { BookingService } from 'src/app/services/booking/booking.service';
 
 @Component({
@@ -10,17 +9,14 @@ import { BookingService } from 'src/app/services/booking/booking.service';
 export class HomeTabPage implements OnInit {
 
   constructor(
-    public router: Router,
-    public booking: BookingService
+    public bookingService: BookingService
   ) { }
 
   ngOnInit() {
   }
 
-  search(carrier: string) {
-    this.booking.bookingPage = 'search';
-    this.booking.bookingCarrier = carrier;
-    this.router.navigate(['/', 'home', 'search']);
+  select(type: string) {
+    this.bookingService.select(type);
   }
 
 }

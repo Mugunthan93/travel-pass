@@ -26,14 +26,14 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/home/dashboard',
+        redirectTo: '/home/dashboard/home-tab',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/home/dashboard',
+    redirectTo: '/home/dashboard/home-tab',
     pathMatch: 'full'
   }
 ];

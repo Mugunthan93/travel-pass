@@ -1,0 +1,33 @@
+ion-grid#upcoming-trip{
+    display: flex; 
+    flex-flow: column;
+    margin:0px 0px 0px 0px;
+    height : 100%;
+    >ion-row:last-child{
+        display: flex; 
+        flex-flow: column;
+        flex-grow: 1;
+        >ion-col{
+            --ion-grid-column-padding:5px;
+        }
+    }
+}
+
+ion-virtual-scroll{
+
+    >ion-item{
+        --background:transparent;
+        --border-width : 2px;
+        --border-color:grey;
+        --border-radius:10px;
+        margin-top : 5px;
+        margin-bottom:5px;
+    }
+}
+
+ion-grid#trip-items{
+    display: flex; 
+    flex-flow: column;
+    margin:0px 0px 0px 0px;
+    height : 100%;
+}

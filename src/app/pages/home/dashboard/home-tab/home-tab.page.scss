@@ -1,5 +1,13 @@
-ion-grid{
+ion-grid#home-page{
+    display: flex; 
+    flex-flow: column;
     margin:0px 0px 0px 0px;
+    height : 100%;
+    >ion-row:last-child{
+        display: flex; 
+        flex-flow: column;
+        flex-grow: 1;
+    }
 }
 
 ion-grid#carrier{
@@ -16,13 +24,9 @@ ion-grid#carrier{
 
 }
 
-ion-grid#upcoming-trip{
-    >ion-row:last-child{
-        flex-grow: 1;
-        >ion-col{
-            --ion-grid-column-padding:5px;
-        }
-    }
+ion-virtual-scroll{
+    background:transparent;
+    box-sizing:unset;
 }
 
 ion-label{
