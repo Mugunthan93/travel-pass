@@ -30,7 +30,8 @@ export class BookingService {
   select(type : string) {
     this.booking = {
       page : 'search',
-      type : type
+      type : type,
+      way : null
     }
     this.router.navigate(['/', 'home', 'search']);
   }
