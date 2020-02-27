@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
-export interface booking{
-  page : string,
-  type : string,
-  way?  : string
+export interface booking {
+  page: string,
+  type: string,
+  way?: string
 }
 
 @Injectable({
@@ -12,14 +12,14 @@ export interface booking{
 })
 export class BookingService {
 
-  booking : booking
+  booking: booking
 
   constructor(
-    public router : Router
+    public router: Router
   ) {
   }
 
-  set setBooking(book : booking){
+  set setBooking(book: booking) {
     this.booking = book;
   }
 
@@ -27,24 +27,24 @@ export class BookingService {
     return this.booking;
   }
 
-  select(type : string) {
+  select(type: string) {
     this.booking = {
-      page : 'search',
-      type : type,
-      way : null
+      page: 'search',
+      type: type,
+      way: null
     }
-    this.router.navigate(['/', 'home', 'search']);
+    this.router.navigate(['/', 'home', 'search', type, 'one-way']);
   }
 
-  search(){
-
-  }
-
-  result(){
+  search() {
 
   }
 
-  book(){
+  result() {
+
+  }
+
+  book() {
 
   }
 
