@@ -1,6 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Observable, from } from 'rxjs';
 
 @Component({
   selector: 'app-add-profile',
@@ -13,7 +12,8 @@ export class AddProfileComponent implements OnInit {
 
   profileForm: FormGroup;
 
-  constructor() { }
+  constructor(
+  ) { }
 
   ngOnInit() {
     this.profileForm = new FormGroup({

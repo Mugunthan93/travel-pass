@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonTabs } from '@ionic/angular';
 
 @Component({
   selector: 'app-flight',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FlightPage implements OnInit {
 
-  constructor() { }
+  @ViewChild('flightWay',{static : true}) way : IonTabs;
 
+  constructor() {
+  }
+  
   ngOnInit() {
+    this.way.select('one-way');
   }
 
 }

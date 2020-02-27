@@ -37,7 +37,7 @@ export class LoginPage implements OnInit, OnDestroy {
 
   onLogin() {
     console.log(this.loginForm);
-    this.router.navigate(['/register']);
+    this.router.navigate(['/home']);
     
     // if (this.loginForm.valid) {
     //   const payload : login = {

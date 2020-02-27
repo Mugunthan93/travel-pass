@@ -9,7 +9,6 @@ import { BookingService, booking } from 'src/app/services/booking/booking.servic
 export class SearchPage implements OnInit {
 
   booking : booking;
-  searchData : any;
 
   constructor(
     public bookingService: BookingService

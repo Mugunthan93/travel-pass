@@ -64,7 +64,8 @@ ion-content {
     }
 
     ion-text,
-    ion-label {
+    ion-label,
+    ion-back-button {
         color: grey;
         font-size: large;
     }
@@ -78,5 +79,14 @@ ion-content {
         --padding-end: 0px;
         --icon-padding-start: 0px;
         --icon-padding-end: 0px;
+    }
+
+    ion-toolbar {
+        --color: #ffffff;
+        --background: rgb(137, 247, 137);
+        *{
+            background: transparent;
+            --background:transparent;
+        }
     }
 }

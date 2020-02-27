@@ -1,0 +1,19 @@
+ion-grid,form{
+    display: flex; 
+    flex-flow: column;
+    --ion-grid-padding:0px;
+    height : 100%;
+    >ion-row{
+        display: flex; 
+        flex-flow: column;
+        height : 100%;
+        margin-top:15px;
+        margin-bottom : 15px;
+        >ion-row{
+            --ion-grid-columns-padding:0px;
+            display: flex; 
+            flex-flow: column;
+            height : 100%;
+        }
+    }
+}

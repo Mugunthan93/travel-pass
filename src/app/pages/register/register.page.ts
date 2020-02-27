@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 
 export interface role {
   label: string,
@@ -30,7 +31,9 @@ export class RegisterPage implements OnInit {
     { label: 'Accounts', value: 'accounts' }
   ];
 
-  constructor() { }
+  constructor(
+    public router : Router
+  ) { }
 
   ngOnInit() {
 
@@ -67,7 +70,7 @@ export class RegisterPage implements OnInit {
   }
 
   finishSignup() {
-
+    this.router.navigate(['/','home']);
   }
 
 }

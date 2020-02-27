@@ -45,6 +45,10 @@ export class CityModalComponent implements OnInit, OnDestroy {
     );
   }
 
+  closeModal() {
+    this.modalCtrl.dismiss();
+  }
+
   ngOnDestroy() {
     if (this.citySub) {
       this.citySub.unsubscribe();
