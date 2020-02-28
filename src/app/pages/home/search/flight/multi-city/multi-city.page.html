@@ -1,9 +1,99 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>multi-city</ion-title>
-  </ion-toolbar>
-</ion-header>
 
 <ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <form [formGroup]="oneWaySearch">
+          <ion-row>
+            <ion-col>
+              <!--Place-->
+              <ion-row class="ion-justify-content-between">
+                <!--from-->
+                <ion-col size="4">
+                  <ion-row>
+                    <ion-text>From</ion-text>
+                  </ion-row>
+                  <ion-row>
+                    <ion-text>MAS</ion-text>
+                  </ion-row>
+                  <ion-row>
+                    <ion-text>Chennai</ion-text>
+                  </ion-row>
+                </ion-col>
+                <!--exhange-->
+                <ion-col size="2">
+                  <ion-row>
+                    <ion-item button lines="none">
+                      <ion-icon src="../../../../../../assets/icons/straight.svg"></ion-icon>
+                    </ion-item>
+                  </ion-row>
+                </ion-col>
+                <!--to-->
+                <ion-col size="4">
+                  <ion-row>
+                    <ion-text>To</ion-text>
+                  </ion-row>
+                  <ion-row>
+                    <ion-text>CBE</ion-text>
+                  </ion-row>
+                  <ion-row>
+                    <ion-text>Coimbatore</ion-text>
+                  </ion-row>
+                </ion-col>
+              </ion-row>
+              <!--Date-->
+              <ion-row class="ion-justify-content-between">
+                <!--depart-->
+                <ion-col size="4">
+                  <ion-row>
+                    <ion-text>Depart</ion-text>
+                  </ion-row>
+                  <ion-row>
+                    <ion-text>Tue,25 Feb</ion-text>
+                  </ion-row>
+                </ion-col>
+                <ion-col size="1">
 
+                </ion-col>
+                <!--return-->
+                <ion-col size="4">
+                  <ion-row>
+                    <ion-text>Travellers</ion-text>
+                  </ion-row>
+                  <ion-row>
+                    <ion-text>1 Traveller</ion-text>
+                  </ion-row>
+                </ion-col>
+              </ion-row>
+              <!--class-->
+              <ion-row class="ion-justify-content-between">
+                <!--class-->
+                <ion-col size="4">
+                  <ion-row>
+                    <ion-text>Class</ion-text>
+                  </ion-row>
+                  <ion-row>
+                    <ion-text>Economy</ion-text>
+                  </ion-row>
+                </ion-col>
+                <ion-col size="1">
+                </ion-col>
+                <!--blank-->
+                <ion-col size="4">
+                </ion-col>
+              </ion-row>
+              <!--search button-->
+              <ion-row>
+                <ion-col size="6" offset="3">
+                  <ion-item button>
+                    <ion-text>{{'Search Flight' | titlecase}}</ion-text>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

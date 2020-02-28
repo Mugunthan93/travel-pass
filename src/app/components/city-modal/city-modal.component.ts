@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { Subscription } from 'rxjs';
 import { ModalController } from '@ionic/angular';
@@ -11,9 +11,6 @@ import { City } from 'src/app/models/search';
 })
 export class CityModalComponent implements OnInit, OnDestroy {
 
-  @Input() location: City;
-  @Input() point: string;
-
   citySub: Subscription;
   cities: City[] = [];
 
@@ -23,11 +20,10 @@ export class CityModalComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    console.log(this.location);
   }
 
   selectCity(city: City) {
-    this.modalCtrl.dismiss(city, this.point);
+    this.modalCtrl.dismiss(city);
   }
 
   searchCity(cityString: string) {

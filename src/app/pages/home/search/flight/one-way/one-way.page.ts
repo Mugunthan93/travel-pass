@@ -14,9 +14,7 @@ export class OneWayPage implements OnInit {
    }
 
   ngOnInit(){
-    this.oneWaySearch = new FormGroup({
-      
-    });
+    this.oneWaySearch = new FormGroup({});
   }
 
 }
