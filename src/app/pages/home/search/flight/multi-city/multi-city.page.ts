@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-multi-city',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MultiCityPage implements OnInit {
 
+  oneWaySearch : FormGroup
+
   constructor() { }
 
   ngOnInit() {
+    this.oneWaySearch = new FormGroup({});
   }
 
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-round-trip',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RoundTripPage implements OnInit {
 
+  oneWaySearch : FormGroup
+
+
   constructor() { }
 
   ngOnInit() {
+    this.oneWaySearch = new FormGroup({});
   }
 
 }
