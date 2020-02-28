@@ -10,10 +10,13 @@ export class OneWayPage implements OnInit {
 
   oneWaySearch : FormGroup
 
-  constructor() { }
+  constructor() {
+   }
 
   ngOnInit(){
-
+    this.oneWaySearch = new FormGroup({
+      
+    });
   }
 
 }

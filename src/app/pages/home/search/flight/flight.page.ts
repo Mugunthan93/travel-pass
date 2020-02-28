@@ -5,16 +5,19 @@ import { IonTabs } from '@ionic/angular';
   selector: 'app-flight',
   templateUrl: './flight.page.html',
   styleUrls: ['./flight.page.scss'],
+  providers : [IonTabs]
 })
 export class FlightPage implements OnInit {
 
-  @ViewChild('flightWay',{static : true}) way : IonTabs;
+  @ViewChild('tabs', { static: true, read: IonTabs })  tabs : IonTabs;
 
-  constructor() {
+  constructor(
+    public ionTabs : IonTabs
+  ) {
   }
   
   ngOnInit() {
-    this.way.select('one-way');
+    console.log(this.tabs);
   }
 
 }
