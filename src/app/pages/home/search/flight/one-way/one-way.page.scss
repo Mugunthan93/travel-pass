@@ -30,6 +30,15 @@ form{
             >ion-row{
                 height : 20%;
                 ion-col{
+                    >ion-item{  
+                        --background: #3566ee;
+                        --border-radius:5px;
+                        ion-text{
+                            margin-left:auto;
+                            margin-right:auto;
+                            color:white;
+                        }
+                    }
                     margin-top:auto;
                     margin-bottom:auto;
                     ion-row{
@@ -44,9 +53,17 @@ form{
                         }
                     }
 
+                    ion-row:nth-child(2){
+                        ion-text{
+                            font-weight: 500;
+                        }
+                    }
+
                     >ion-row:last-child{
                         ion-text{
                             font-size: large;
+                            font-weight: 500;
+
                         }
                     }
                 }
@@ -58,19 +75,17 @@ form{
                     }
                 }
             }
+            ion-row:not(:first-child){
+                ion-col:nth-child(2){
+                    margin:0px;
+                    ion-icon{
+                        height : 100%;
+                    }
+                }
+            }
             >ion-row:not(:last-child){
                 border-bottom : 0.5px solid grey;
             }
         }
-    }
-}
-
-ion-item{
-    --background: #3566ee;
-    --border-radius:5px;
-    ion-text{
-        margin-left:auto;
-        margin-right:auto;
-        color:white;
     }
 }

@@ -6,10 +6,10 @@
         <form [formGroup]="oneWaySearch">
           <ion-row>
             <ion-col>
-              <!--Place-->
+              <!--place array-->
               <ion-row class="ion-justify-content-between">
                 <!--from-->
-                <ion-col size="4">
+                <ion-col size="3">
                   <ion-row>
                     <ion-text>From</ion-text>
                   </ion-row>
@@ -20,16 +20,11 @@
                     <ion-text>Chennai</ion-text>
                   </ion-row>
                 </ion-col>
-                <!--exhange-->
-                <ion-col size="2">
-                  <ion-row>
-                    <ion-item button lines="none">
-                      <ion-icon src="../../../../../../assets/icons/straight.svg"></ion-icon>
-                    </ion-item>
-                  </ion-row>
+                <ion-col size="1">
+                  <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
                 </ion-col>
-                <!--to-->
-                <ion-col size="4">
+                <!--exhange-->
+                <ion-col size="3">
                   <ion-row>
                     <ion-text>To</ion-text>
                   </ion-row>
@@ -40,32 +35,78 @@
                     <ion-text>Coimbatore</ion-text>
                   </ion-row>
                 </ion-col>
-              </ion-row>
-              <!--Date-->
-              <ion-row class="ion-justify-content-between">
-                <!--depart-->
-                <ion-col size="4">
+                <ion-col size="1">
+                  <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
+                </ion-col>
+                <!--to-->
+                <ion-col size="3">
                   <ion-row>
                     <ion-text>Depart</ion-text>
                   </ion-row>
                   <ion-row>
-                    <ion-text>Tue,25 Feb</ion-text>
-                  </ion-row>
-                </ion-col>
-                <ion-col size="1">
-
-                </ion-col>
-                <!--return-->
-                <ion-col size="4">
-                  <ion-row>
-                    <ion-text>Travellers</ion-text>
+                    <ion-text>25 Feb</ion-text>
                   </ion-row>
                   <ion-row>
-                    <ion-text>1 Traveller</ion-text>
+                    <ion-text>Tue,2020</ion-text>
                   </ion-row>
                 </ion-col>
               </ion-row>
-              <!--class-->
+              <ion-row class="ion-justify-content-between">
+                <!--from-->
+                <ion-col size="3">
+                  <ion-row>
+                    <ion-text>From</ion-text>
+                  </ion-row>
+                  <ion-row>
+                    <ion-text>MAS</ion-text>
+                  </ion-row>
+                  <ion-row>
+                    <ion-text>Chennai</ion-text>
+                  </ion-row>
+                </ion-col>
+                <ion-col size="1">
+                  <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
+                </ion-col>
+                <!--exhange-->
+                <ion-col size="3">
+                  <ion-row>
+                    <ion-text>To</ion-text>
+                  </ion-row>
+                  <ion-row>
+                    <ion-text>CBE</ion-text>
+                  </ion-row>
+                  <ion-row>
+                    <ion-text>Coimbatore</ion-text>
+                  </ion-row>
+                </ion-col>
+                <ion-col size="1">
+                  <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
+                </ion-col>
+                <!--to-->
+                <ion-col size="3">
+                  <ion-row>
+                    <ion-text>Depart</ion-text>
+                  </ion-row>
+                  <ion-row>
+                    <ion-text>25 Feb</ion-text>
+                  </ion-row>
+                  <ion-row>
+                    <ion-text>Tue,2020</ion-text>
+                  </ion-row>
+                </ion-col>
+              </ion-row>
+              <!--add array button-->
+              <ion-row class="ion-justify-content-between">
+                <!--depart-->
+                <ion-col size="4" offset="4">
+                  <!--add city button-->
+                  <ion-item button lines="none">
+                    <ion-icon name="add"></ion-icon>
+                    <ion-text>{{'Add city' | titlecase}}</ion-text>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <!--depart/traveller-->
               <ion-row class="ion-justify-content-between">
                 <!--class-->
                 <ion-col size="4">
@@ -77,9 +118,16 @@
                   </ion-row>
                 </ion-col>
                 <ion-col size="1">
+                  <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
                 </ion-col>
                 <!--blank-->
                 <ion-col size="4">
+                  <ion-row>
+                    <ion-text>Class</ion-text>
+                  </ion-row>
+                  <ion-row>
+                    <ion-text>Economy</ion-text>
+                  </ion-row>
                 </ion-col>
               </ion-row>
               <!--search button-->
