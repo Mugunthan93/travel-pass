@@ -8,6 +8,9 @@ import { OneWayPageRoutingModule } from './one-way-routing.module';
 
 import { OneWayPage } from './one-way.page';
 import { CityModalComponent } from 'src/app/components/city-modal/city-modal.component';
+import { CalendarModalComponent } from 'src/app/components/calendar-modal/calendar-modal.component';
+
+import { CalendarModule, CalendarModal } from "ion4-calendar";
 
 @NgModule({
   imports: [
@@ -15,12 +18,17 @@ import { CityModalComponent } from 'src/app/components/city-modal/city-modal.com
     FormsModule,
     IonicModule,
     ReactiveFormsModule,
-    OneWayPageRoutingModule
+    OneWayPageRoutingModule,
+    CalendarModule
   ],
   declarations: [
     OneWayPage,
-    CityModalComponent 
+    CityModalComponent,
+    CalendarModalComponent
   ],
-  entryComponents:[CityModalComponent]
+  entryComponents:[
+    CityModalComponent,
+    CalendarModal
+  ]
 })
 export class OneWayPageModule {}

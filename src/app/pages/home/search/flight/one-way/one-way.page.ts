@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { CityModalComponent } from 'src/app/components/city-modal/city-modal.component';
+import { CalendarModal } from 'ion4-calendar';
 
 @Component({
   selector: 'app-one-way',
@@ -21,7 +22,8 @@ export class OneWayPage implements OnInit {
   ngOnInit(){
     this.oneWaySearch = new FormGroup({
       from : this.fb.control(null),
-      to : this.fb.control(null)
+      to : this.fb.control(null),
+      departure : this.fb.control(null)
     });
 
     this.oneWaySearch.valueChanges.subscribe(
@@ -45,6 +47,20 @@ export class OneWayPage implements OnInit {
       );
 
       return await modal.present();
+  }
+
+  async selectDate(){
+    const modal = await this.modalCtrl.create({
+      component: CalendarModal
+    });
+
+    modal.onDidDismiss().then(
+      (selectedCity) => {
+        
+      }
+    );
+
+    return await modal.present();
   }
 
 }
