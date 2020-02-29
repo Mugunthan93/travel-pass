@@ -25,8 +25,6 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
-@import "~ion4-calendar/dist/index.scss";
-
 
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 
@@ -87,9 +85,10 @@ ion-content {
     ion-toolbar {
         --color: #ffffff;
         --background: rgb(137, 247, 137);
-        *{
+
+        * {
             background: transparent;
-            --background:transparent;
+            --background: transparent;
         }
     }
 }

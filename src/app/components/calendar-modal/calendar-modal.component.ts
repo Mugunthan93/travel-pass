@@ -7,16 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CalendarModalComponent implements OnInit {
 
-  date: string;
-  type: 'string'; // 'string' | 'js-date' | 'moment' | 'time' | 'object'
-
   constructor() { }
 
-  ngOnInit() {}
-
- 
-  onChange($event) {
-    console.log($event);
-  }
+  ngOnInit() { }
 
 }

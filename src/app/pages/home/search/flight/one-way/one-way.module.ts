@@ -10,25 +10,22 @@ import { OneWayPage } from './one-way.page';
 import { CityModalComponent } from 'src/app/components/city-modal/city-modal.component';
 import { CalendarModalComponent } from 'src/app/components/calendar-modal/calendar-modal.component';
 
-import { CalendarModule, CalendarModal } from "ion4-calendar";
-
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     ReactiveFormsModule,
-    OneWayPageRoutingModule,
-    CalendarModule
+    OneWayPageRoutingModule
   ],
   declarations: [
     OneWayPage,
     CityModalComponent,
     CalendarModalComponent
   ],
-  entryComponents:[
+  entryComponents: [
     CityModalComponent,
-    CalendarModal
+    CalendarModalComponent
   ]
 })
-export class OneWayPageModule {}
+export class OneWayPageModule { }
