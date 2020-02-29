@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { CityModalComponent } from 'src/app/components/city-modal/city-modal.component';
 
@@ -13,28 +13,38 @@ export class OneWayPage implements OnInit {
   oneWaySearch : FormGroup
 
   constructor(
-    public modalCtrl : ModalController
+    public modalCtrl : ModalController,
+    public fb : FormBuilder
   ) {
    }
 
   ngOnInit(){
-    this.oneWaySearch = new FormGroup({});
+    this.oneWaySearch = new FormGroup({
+      from : this.fb.control(null),
+      to : this.fb.control(null)
+    });
+
+    this.oneWaySearch.valueChanges.subscribe(
+      (value) =>{
+        console.log(value);
+      }
+    );
+
+    console.log(this.oneWaySearch);
   }
 
-  async selectCity(){
-      return await this.modalCtrl.create({
+  async selectCity(field){
+      const modal = await this.modalCtrl.create({
         component: CityModalComponent
-      }).then(
-        (modalEl) => {
-          modalEl.present();
-          modalEl.onDidDismiss()
-          .then(
-            (selectedCity) => {
-              console.log(selectedCity);
-            }
-          );
+      });
+
+      modal.onDidDismiss().then(
+        (selectedCity) => {
+          this.oneWaySearch.controls[field].patchValue(selectedCity.data);
         }
       );
+
+      return await modal.present();
   }
 
 }

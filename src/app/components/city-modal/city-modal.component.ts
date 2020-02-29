@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { Subscription } from 'rxjs';
-import { ModalController } from '@ionic/angular';
+import { ModalController, NavParams } from '@ionic/angular';
 import { City } from 'src/app/models/search';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-city-modal',
@@ -16,10 +17,20 @@ export class CityModalComponent implements OnInit, OnDestroy {
 
   constructor(
     public authService: AuthService,
-    public modalCtrl: ModalController
-  ) { }
+    public modalCtrl: ModalController,
+    public navParams : NavParams
+  ) {
+    this.cities = [
+      {airport_code: '',airport_name: '',city_code: 'MAS',city_name: 'Chennai',country_code: '',country_name: '',currency: '',nationalty: ''},
+      {airport_code: '',airport_name: '',city_code: 'MAD',city_name: 'Madurai',country_code: '',country_name: '',currency: '',nationalty: ''},
+      {airport_code: '',airport_name: '',city_code: 'CBE',city_name: 'Coimbatore',country_code: '',country_name: '',currency: '',nationalty: ''},
+      {airport_code: '',airport_name: '',city_code: 'BAN',city_name: 'Bangalore',country_code: '',country_name: '',currency: '',nationalty: ''},
+      {airport_code: '',airport_name: '',city_code: 'DEL',city_name: 'New Delhi',country_code: '',country_name: '',currency: '',nationalty: ''}
+    ];
+   }
 
   ngOnInit() {
+
   }
 
   selectCity(city: City) {

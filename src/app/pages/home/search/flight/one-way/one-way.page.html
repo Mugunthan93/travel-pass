@@ -9,15 +9,16 @@
               <!--Place-->
               <ion-row class="ion-justify-content-between">
                 <!--from-->
-                <ion-col size="4" (click)="selectCity()">
+                <ion-input formControlName="from" hidden></ion-input>
+                <ion-col size="4" (click)="selectCity('from')">
                   <ion-row>
                     <ion-text>From</ion-text>
                   </ion-row>
                   <ion-row>
-                    <ion-text>MAS</ion-text>
+                    <ion-text>{{this.oneWaySearch.value.from !== null ? this.oneWaySearch.value.from.city_code : 'MAS'}}</ion-text>
                   </ion-row>
                   <ion-row>
-                    <ion-text>Chennai</ion-text>
+                    <ion-text>{{this.oneWaySearch.value.from !== null ? this.oneWaySearch.value.from.city_name : 'Chennai'}}</ion-text>
                   </ion-row>
                 </ion-col>
                 <!--exhange-->
@@ -29,20 +30,22 @@
                   </ion-row>
                 </ion-col>
                 <!--to-->
-                <ion-col size="4" (click)="selectCity()">
+                <ion-input formControlName="to" hidden></ion-input>
+                <ion-col size="4" (click)="selectCity('to')">
                   <ion-row>
                     <ion-text>To</ion-text>
                   </ion-row>
                   <ion-row>
-                    <ion-text>CBE</ion-text>
+                    <ion-text>{{this.oneWaySearch.value.to !== null ? this.oneWaySearch.value.to.city_code : 'BAN'}}</ion-text>
                   </ion-row>
                   <ion-row>
-                    <ion-text>Coimbatore</ion-text>
+                    <ion-text>{{this.oneWaySearch.value.to !== null ? this.oneWaySearch.value.to.city_name : 'Bangalore'}}</ion-text>
                   </ion-row>
                 </ion-col>
               </ion-row>
               <!--Date-->
               <ion-row class="ion-justify-content-between">
+                <ion-input formControlName="departure" hidden></ion-input>
                 <!--depart-->
                 <ion-col size="4">
                   <ion-row>
