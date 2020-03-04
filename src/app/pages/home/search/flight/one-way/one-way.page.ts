@@ -2,7 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { CityModalComponent } from 'src/app/components/city-modal/city-modal.component';
+<<<<<<< HEAD
 import { CalendarModalComponent } from 'src/app/components/calendar-modal/calendar-modal.component';
+=======
+import { CalendarModal } from 'ion4-calendar';
+import { BookingService } from 'src/app/services/booking/booking.service';
+>>>>>>> 5fb89b46332f14828c213dfb4bb5bc97096e6b3d
 
 @Component({
   selector: 'app-one-way',
@@ -14,8 +19,14 @@ export class OneWayPage implements OnInit {
   oneWaySearch: FormGroup
 
   constructor(
+<<<<<<< HEAD
     public modalCtrl: ModalController,
     public fb: FormBuilder
+=======
+    public modalCtrl : ModalController,
+    public fb : FormBuilder,
+    public booking : BookingService
+>>>>>>> 5fb89b46332f14828c213dfb4bb5bc97096e6b3d
   ) {
   }
 
@@ -61,6 +72,10 @@ export class OneWayPage implements OnInit {
     );
 
     return await modal.present();
+  }
+
+  searchFlight() {
+    this.booking.search('flight');
   }
 
 }

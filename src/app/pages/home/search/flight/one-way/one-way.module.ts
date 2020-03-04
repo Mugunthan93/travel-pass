@@ -10,13 +10,16 @@ import { OneWayPage } from './one-way.page';
 import { CityModalComponent } from 'src/app/components/city-modal/city-modal.component';
 import { CalendarModalComponent } from 'src/app/components/calendar-modal/calendar-modal.component';
 
+import { NgCalendarModule } from 'ionic2-calendar';
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     ReactiveFormsModule,
-    OneWayPageRoutingModule
+    OneWayPageRoutingModule,
+    NgCalendarModule
   ],
   declarations: [
     OneWayPage,

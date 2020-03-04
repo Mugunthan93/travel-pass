@@ -36,8 +36,13 @@ export class BookingService {
     this.router.navigate(['/', 'home', 'search', type, 'one-way']);
   }
 
-  search() {
-
+  search(type : string) {
+    this.booking = {
+      page: 'result',
+      type: type,
+      way: null
+    }
+    this.router.navigate(['/', 'home', 'result', type, 'one-way']);
   }
 
   result() {

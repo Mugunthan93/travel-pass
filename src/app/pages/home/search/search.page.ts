@@ -13,7 +13,12 @@ export class SearchPage implements OnInit {
   constructor(
     public bookingService: BookingService
   ) {
-    this.booking = this.bookingService.getBooking;
+    if (this.bookingService) {
+      this.booking = this.bookingService.getBooking;
+    }
+    else {
+      this.booking.type = 'flight';
+    }
   }
 
   ngOnInit() {

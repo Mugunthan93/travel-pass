@@ -7,7 +7,11 @@ const routes: Routes = [
   {
     path: '',
     component: ResultPage
+  },  {
+    path: 'flight',
+    loadChildren: () => import('./flight/flight.module').then( m => m.FlightPageModule)
   }
+
 ];
 
 @NgModule({
