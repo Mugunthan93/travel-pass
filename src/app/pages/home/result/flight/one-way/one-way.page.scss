@@ -1,0 +1,110 @@
+ion-grid#list{  
+    display: flex; 
+    flex-flow: column;
+    --ion-grid-padding:0px;
+    height : 100%;
+    margin-left : 0px;
+    margin-right : 0px;
+    >ion-row{
+        display: flex; 
+        flex-flow: column;
+        height : 100%;
+        >ion-col{
+            padding : 0px 0px 0px 0px;
+            >ion-row:first-child{
+                --ion-grid-columns-padding:0px;
+                display: flex; 
+                flex-flow: column;
+                ion-segment {
+                    ion-col{
+                    padding : 0px 0px 0px 0px;
+                    ion-segment-bottom{
+                        --indicator-color : red;
+                        --color-checked : red;
+                        --border-color : red;
+                    }
+                    }
+
+                }
+            }
+            >ion-row:nth-of-type(2){
+                display: flex; 
+                flex-flow: column;
+                flex-grow: 1;
+                height : 100%;
+                ion-col{
+                    padding : 0px 0px 0px 0px;
+                }
+            }
+        }
+    }
+
+    ion-label{
+        font-size: small;
+    }
+}
+
+ion-content{
+    ion-row:only-child{
+        border-bottom : 2px solid grey;
+    }
+    ion-row{
+        mat-accordion{
+            >mat-expansion-panel{
+                >mat-expansion-panel-header{
+                    padding-left: 0px;
+                    padding-right : 0px;
+                    display: flex; 
+                    flex-flow: column;
+                    height : 100%;
+                    >::ng-deep span{
+                        width : 100%;
+                        >ion-row{
+                            width : 100%;
+                        }
+                        ion-row{
+                            ion-col{
+                                display: flex; 
+                                flex-flow: column;
+                                height : 100%;
+                                align-items: stretch;
+                                ion-row{
+                                    margin : auto;
+                                    ion-text{
+                                        font-size: small;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                ::ng-deep .mat-expansion-panel-body{
+                    padding : 2px;
+                    border-bottom : 1px solid grey;
+                    >ion-row:first-child{
+                        margin : 5px;
+                        ion-text{
+                            font-size: small;
+                        }
+                    }
+                    >ion-row:last-child{
+                        margin : 5px;
+                            ion-col{
+                                display: flex; 
+                                flex-flow: column;
+                                height : 100%;
+                                align-items: stretch;
+                                ion-row{
+                                    margin : auto;
+                                    ion-text{
+                                        margin : 2px;
+                                        font-size: small;
+                                    }
+                                }
+                            }
+                    }
+                }
+            }
+        }
+    }
+}

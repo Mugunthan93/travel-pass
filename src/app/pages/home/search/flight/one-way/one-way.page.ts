@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { CityModalComponent } from 'src/app/components/city-modal/city-modal.component';
 import { CalendarModal } from 'ion4-calendar';
+import { BookingService } from 'src/app/services/booking/booking.service';
 
 @Component({
   selector: 'app-one-way',
@@ -15,7 +16,8 @@ export class OneWayPage implements OnInit {
 
   constructor(
     public modalCtrl : ModalController,
-    public fb : FormBuilder
+    public fb : FormBuilder,
+    public booking : BookingService
   ) {
    }
 
@@ -61,6 +63,10 @@ export class OneWayPage implements OnInit {
     );
 
     return await modal.present();
+  }
+
+  searchFlight() {
+    this.booking.search('flight');
   }
 
 }
