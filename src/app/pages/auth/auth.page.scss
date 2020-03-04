@@ -3,15 +3,16 @@ ion-grid{
     flex-flow: column;
     height: 100%;
     >ion-row{
-        flex-grow: 1;
+        flex-grow:1;
         >ion-col{
             display: flex; 
             flex-flow: column;
             >ion-row:first-child{
-                height:10%;
+                margin-top : 50px;
+                margin-bottom : 50px;
             }
             >ion-row:last-child{
-                height:90%;
+                flex-grow: 1;
             }
         }
     }

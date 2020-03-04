@@ -1,0 +1,20 @@
+ion-title {
+    padding-left: 0px;
+}
+
+ion-grid{
+    display: flex; 
+    flex-flow: column;
+    margin:0px 10px 0px 10px;
+    --ion-grid-padding : 15px;
+    height : 100%;
+    >ion-row:last-child{
+        display: flex; 
+        flex-flow: column;
+        flex-grow: 1;
+    }
+}
+
+ion-content{
+    background: transparent;
+}

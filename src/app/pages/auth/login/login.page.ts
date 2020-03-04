@@ -37,24 +37,26 @@ export class LoginPage implements OnInit, OnDestroy {
 
   onLogin() {
     console.log(this.loginForm);
-    if (this.loginForm.valid) {
-      const payload : login = {
-        username : this.loginForm.value.email,
-        password : this.loginForm.value.password
-      }
-      this.presentLoading().then(
-        () => {
-          this.loginSub = this.authService.login(this.loginForm.value.email, this.loginForm.value.password)
-            .subscribe(
-              (resData) => {
-                this.store.dispatch(new AddUser(resData));
-                this.router.navigate(['/booking']);
-                this.loadingCtrl.dismiss();
-              }
-            )
-        }
-      );
-    }
+    this.router.navigate(['/home']);
+    
+    // if (this.loginForm.valid) {
+    //   const payload : login = {
+    //     username : this.loginForm.value.email,
+    //     password : this.loginForm.value.password
+    //   }
+    //   this.presentLoading().then(
+    //     () => {
+    //       this.loginSub = this.authService.login(this.loginForm.value.email, this.loginForm.value.password)
+    //         .subscribe(
+    //           (resData) => {
+    //             this.store.dispatch(new AddUser(resData));
+    //             this.router.navigate(['/register']);
+    //             this.loadingCtrl.dismiss();
+    //           }
+    //         )
+    //     }
+    //   );
+    // }
   }
 
   async presentLoading() {

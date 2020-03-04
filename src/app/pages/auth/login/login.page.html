@@ -1,4 +1,4 @@
-<ion-grid>
+<ion-grid id="loginForm">
   <ion-row>
     <ion-col>
       <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
@@ -31,20 +31,8 @@
                 color="danger">
                 Password Required
         </ion-label>
-        <ion-item lines="none">
-          <ion-grid>
-            <ion-row>
-              <ion-col size="12">
-                <ion-button expand="block" fill="solid" color="primary" type="submit">Login</ion-button>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col size="9" offset="3">
-                <a class="ion-text-end">Forgot Email or Password</a>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-item>
+        <ion-button expand="block" fill="solid" type="submit">Login</ion-button>
+        <a class="ion-float-right">Forgot Email or Password</a>
       </form>
     </ion-col>
   </ion-row>

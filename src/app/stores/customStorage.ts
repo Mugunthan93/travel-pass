@@ -1,7 +1,9 @@
 import { StorageEngine } from '@ngxs/storage-plugin';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { Platform } from '@ionic/angular';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export class customStorage implements StorageEngine{
 
     length: number;

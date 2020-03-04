@@ -24,7 +24,7 @@ export class AddUserComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+  addUser() {
     this.closeUser.emit(false);
   }
 

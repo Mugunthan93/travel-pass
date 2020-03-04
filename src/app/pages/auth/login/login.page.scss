@@ -1,37 +1,43 @@
-ion-grid{
+ion-grid#loginForm {
     margin:0px 10px 0px 10px;
-}
-
-ion-row{
-    flex-grow: 1;
-    >ion-col{
-        display: flex; 
-        flex-flow: column;
-        >ion-row:last-child{
-            flex-grow: 1;
+    ion-row{
+        display: flex;
+        height : 100%;
+        >ion-col{
+            display: flex; 
+            flex-flow: column;
+            >ion-row{
+                flex-grow: 1;
+            }
         }
     }
 }
+
 
 ion-item {
     --background:transparent;
 }
 
 form {
+    padding-bottom:100px;
     >ion-item {
-        --inner-padding-top : 10px;
-        --inner-padding-bottom : 10px;
+        --inner-padding-top : 20px;
+        --inner-padding-bottom : 20px;
     }
 }
 
-ion-button{
+ion-button {
+    margin-top : 20px;
+    --padding-top : 20px;
+    --padding-bottom : 20px;
     --opacity:0.4;
 }
 
 ion-label,a {
+    margin-top:10px;
     font-size: x-small;
 }
 
-ion-icon{
+ion-icon {
     padding-right : 10px;
 }
