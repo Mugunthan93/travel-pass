@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { ModalController, PickerController } from '@ionic/angular';
+import { ModalController, PickerController, IonSelect } from '@ionic/angular';
 import { CityModalComponent } from 'src/app/components/city-modal/city-modal.component';
 import { BookingService } from 'src/app/services/booking/booking.service';
 import { CalendarModalComponent } from 'src/app/components/calendar-modal/calendar-modal.component';
@@ -13,6 +13,7 @@ import { CalendarModalComponent } from 'src/app/components/calendar-modal/calend
 export class OneWayPage implements OnInit {
 
   oneWaySearch: FormGroup;
+  @ViewChild('select',{static : true}) select : IonSelect;
   traveller = [
     [
       '1',
@@ -61,7 +62,9 @@ export class OneWayPage implements OnInit {
     this.oneWaySearch = new FormGroup({
       from: this.fb.control(null),
       to: this.fb.control(null),
-      departure: this.fb.control(null)
+      departure: this.fb.control(null),
+      traveller : this.fb.control(null),
+      class : this.fb.control(null)
     });
 
     this.oneWaySearch.valueChanges.subscribe(
@@ -179,7 +182,7 @@ export class OneWayPage implements OnInit {
   }
 
   return columns;
-}
+  }
 
   getColumnOptions(columnIndex, numOptions, columnOptions) {
     let options = [];
@@ -189,5 +192,10 @@ export class OneWayPage implements OnInit {
         value: i
       })
     }
+  }
+
+  selectClass() {
+    console.log(this.oneWaySearch);
+    this.select.open();
   }
 }

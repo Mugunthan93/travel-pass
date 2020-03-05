@@ -1,0 +1,21 @@
+calendar{
+    ion-text{
+        font-size: small;
+    }
+
+    ::ng-deep {
+        td.monthview-selected {
+            background-color: rgb(5, 5, 77);
+            ion-text{
+                color:white !important;
+            }
+        }
+        td.text-muted{
+            background-color: rgb(252, 206, 206);
+            ion-text{
+                
+            }
+        }
+    }
+
+}

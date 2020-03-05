@@ -18,7 +18,7 @@ export interface EventSource{
 })
 export class CalendarModalComponent implements OnInit, AfterViewInit {
   
-  @ViewChild(CalendarComponent, null) myCalendar: CalendarComponent;
+  @ViewChild('myCalendar', {static : true}) myCalendar: CalendarComponent ;
 
   eventSource : EventSource[] = [];
   showEventDetail = true
@@ -127,6 +127,10 @@ export class CalendarModalComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit() { 
+    console.log(this.myCalendar);
+    this.myCalendar.showEventDetail = false;
+    this.myCalendar.formatDay = 'dd';
+    this.myCalendar.formatDayHeader = 'E';
   }
 
   ngAfterViewInit() {
