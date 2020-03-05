@@ -59,7 +59,8 @@
                   <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
                 </ion-col>
                 <!--traveller number-->
-                <ion-col size="4">
+                <ion-col size="4" (click)="selectPassenger(3,9)">
+                <ion-input formControlName="departure" hidden></ion-input>
                   <ion-row>
                     <ion-text>Travellers</ion-text>
                   </ion-row>

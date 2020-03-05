@@ -30,4 +30,15 @@ ion-grid#trip-items{
     flex-flow: column;
     margin:0px 0px 0px 0px;
     height : 100%;
+    --ion-grid-padding:0px;
+    ion-row{
+        ion-col{
+            --ion-grid-column-padding:5px;
+            ion-row{
+                ion-col{
+                    --ion-grid-column-padding:0px;
+                }
+            }
+        }
+    }
 }
