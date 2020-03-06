@@ -27,17 +27,15 @@ export class AppComponent implements OnInit{
   ) {
     this.initializeApp();
     console.log(this.store,this.actions);
-    console.log(this.platform.platforms());
   }
 
   ngOnInit() {
-
-    
 
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
+      console.log("device is ready");
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });

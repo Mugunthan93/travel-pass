@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Observable, BehaviorSubject, from, of } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HTTP } from '@ionic-native/http/ngx';
-import { NativeStorage } from '@ionic-native/native-storage/ngx';
+import { Platform } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -12,15 +12,19 @@ export class AuthService {
 
   constructor(
     private nativeHttp: HTTP,
-    private nativeStorage: NativeStorage,
+    private platform : Platform
   ) {
-    console.log(nativeHttp);
-    this.nativeHttp.useBasicAuth('username','username');
-    this.nativeHttp.setHeader("localhost", "Access-Control-Allow-Origin", '*');
-    this.nativeHttp.setHeader("localhost", "Access-Control-Allow-Headers", "Content-Type");
-    this.nativeHttp.setHeader("localhost", "Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
-    this.nativeHttp.setDataSerializer('json');
-    console.log(this.nativeHttp.getBasicAuthHeader('username','username'));
+    this.platform.ready().then(
+      () => {
+        console.log(nativeHttp);
+        this.nativeHttp.useBasicAuth('username','username');
+        this.nativeHttp.setHeader("localhost", "Access-Control-Allow-Origin", '*');
+        this.nativeHttp.setHeader("localhost", "Access-Control-Allow-Headers", "Content-Type");
+        this.nativeHttp.setHeader("localhost", "Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+        this.nativeHttp.setDataSerializer('json');
+        console.log(this.nativeHttp.getBasicAuthHeader('username','username'));
+      }
+    );
 
   }
 
