@@ -1,24 +1,17 @@
 <ion-header>
    <ion-toolbar>
-     <ion-buttons slot="start">
-       <ion-back-button icon="chevron-back-outline" defaultHref="home">
-       </ion-back-button>
+      <ion-title>
+        <ion-text>select Date</ion-text>
+      </ion-title>
+     <ion-buttons slot="end" (click)="close(this.myCalendar.currentDate)">
+        <ion-icon size="large" name="close"></ion-icon>
      </ion-buttons>
-     <ion-title>
-       <ion-text>select Date</ion-text>
-     </ion-title>
    </ion-toolbar>
  </ion-header>
 <ion-content>
+
    <calendar #myCalendar
-      [eventSource]="eventSource" 
-      [calendarMode]="calendar.mode" 
-      [currentDate]="calendar.currentDate"
-      (onCurrentDateChanged)="onCurrentDateChanged($event)" 
-      (onRangeChanged)="reloadSource(startTime, endTime)"
-      (onEventSelected)="onEventSelected($event)" 
-      (onTitleChanged)="onViewTitleChanged($event)"
-      (onTimeSelected)="onTimeSelected($event)" 
+      [currentDate]="myCalendar.currentDate" 
       step="60"
       [monthviewDisplayEventTemplate]="monthviewDisplay">
    </calendar>

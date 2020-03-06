@@ -4,6 +4,7 @@ import { ModalController, PickerController, IonSelect } from '@ionic/angular';
 import { CityModalComponent } from 'src/app/components/city-modal/city-modal.component';
 import { BookingService } from 'src/app/services/booking/booking.service';
 import { CalendarModalComponent } from 'src/app/components/calendar-modal/calendar-modal.component';
+import { PassengerModalComponent } from 'src/app/components/passenger-modal/passenger-modal.component';
 
 @Component({
   selector: 'app-one-way',
@@ -62,7 +63,7 @@ export class OneWayPage implements OnInit {
     this.oneWaySearch = new FormGroup({
       from: this.fb.control(null),
       to: this.fb.control(null),
-      departure: this.fb.control(null),
+      departure: this.fb.control(new Date()),
       traveller : this.fb.control(null),
       class : this.fb.control(null)
     });
@@ -90,14 +91,21 @@ export class OneWayPage implements OnInit {
     return await modal.present();
   }
 
+  swapTrip() {
+    let from = this.oneWaySearch.value.from;
+    let to = this.oneWaySearch.value.to;
+    this.oneWaySearch.controls['from'].patchValue(to);
+    this.oneWaySearch.controls['to'].patchValue(from);
+  }
+
   async selectDate() {
     const modal = await this.modalCtrl.create({
       component: CalendarModalComponent
     });
 
     modal.onDidDismiss().then(
-      (selectedCity) => {
-
+      (selectedDate) => {
+        this.oneWaySearch.controls['departure'].patchValue(selectedDate.data);
       }
     );
 
@@ -123,7 +131,8 @@ export class OneWayPage implements OnInit {
           { text: 'seven', value: '7' },
           { text: 'eight', value: '8' },
           { text: 'nine', value: '9' }
-        ]
+        ],
+        selectedIndex:3
       },
       {
         name: 'child',
@@ -137,7 +146,8 @@ export class OneWayPage implements OnInit {
           { text: 'seven', value: '7' },
           { text: 'eight', value: '8' },
           { text: 'nine', value: '9' }
-        ]
+        ],
+        selectedIndex:3
         },
         {
           name: 'infant',
@@ -151,7 +161,8 @@ export class OneWayPage implements OnInit {
             { text: 'seven', value: '7' },
             { text: 'eight', value: '8' },
             { text: 'nine', value: '9' }
-          ]
+          ],
+          selectedIndex:3
         }
       ],
       buttons: [
@@ -166,10 +177,11 @@ export class OneWayPage implements OnInit {
             console.log(val);
           }
         }
-      ]
+      ],
+      cssClass :'passenger'
     });
 
-    return await pickr.present();;
+    return await pickr.present();
   }
 
   getColumns(numColumns, numOptions, columnOptions) {
@@ -192,6 +204,23 @@ export class OneWayPage implements OnInit {
         value: i
       })
     }
+  }
+
+  async selectPassengers() {
+    const modal = await this.modalCtrl.create({
+      component: PassengerModalComponent,
+      showBackdrop : true,
+      backdropDismiss : true,
+      cssClass : 'passenger'
+    });
+
+    modal.onDidDismiss().then(
+      (selecetedPassenger) => {
+        this.oneWaySearch.controls['traveller'].patchValue(selecetedPassenger.data);
+      }
+    );
+
+    return await modal.present();
   }
 
   selectClass() {

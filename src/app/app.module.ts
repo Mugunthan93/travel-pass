@@ -23,6 +23,7 @@ import { HTTP } from '@ionic-native/http/ngx';
 import { environment } from 'src/environments/environment';
 import { AppState } from './stores/app.state';
 import { customStorage } from './stores/customStorage';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,8 @@ import { customStorage } from './stores/customStorage';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
     NgxsModule.forRoot([AppState], { developmentMode: !environment.production }),
     NgxsStoragePluginModule.forRoot({
       key: 'App',
@@ -61,6 +64,6 @@ import { customStorage } from './stores/customStorage';
     { provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true },
     { provide: STORAGE_ENGINE, useClass: customStorage }
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

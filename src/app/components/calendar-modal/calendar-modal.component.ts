@@ -1,5 +1,6 @@
-import { Component, OnInit, AfterViewInit, LOCALE_ID, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, LOCALE_ID, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { CalendarComponent } from "ionic2-calendar/calendar";
+import { ModalController } from '@ionic/angular';
 
 export interface EventSource{
   title : string,
@@ -14,116 +15,16 @@ export interface EventSource{
   styleUrls: ['./calendar-modal.component.scss'],
   providers: [
     { provide: LOCALE_ID, useValue: 'en-US' }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalendarModalComponent implements OnInit, AfterViewInit {
   
   @ViewChild('myCalendar', {static : true}) myCalendar: CalendarComponent ;
-
-  eventSource : EventSource[] = [];
-  showEventDetail = true
-  calendar = {
-    mode: 'month',
-    currentDate: new Date(),
-    locale: 'en-GB',
-    dateFormatter: {
-      formatMonthViewDay: function (date: Date) {
-        return date.getDate().toString();
-      },
-      formatMonthViewDayHeader: function (date: Date) {
-        return 'testMDH';
-      },
-      formatMonthViewTitle: function (date: Date) {
-        return 'testMT';
-      },
-      formatWeekViewDayHeader: function (date: Date) {
-        return 'testWDH';
-      },
-      formatWeekViewTitle: function (date: Date) {
-        return 'testWT';
-      },
-      formatWeekViewHourColumn: function (date: Date) {
-        return 'testWH';
-      },
-      formatDayViewHourColumn: function (date: Date) {
-        return 'testDH';
-      },
-      formatDayViewTitle: function (date: Date) {
-        return 'testDT';
-      }
-    }
-  }
-  format = {
-    day: 'dd',
-    dayHeader: 'EEE',
-    dayTitle: 'MMMM dd, yyyy',
-    weekTitle: 'MMMM yyyy, "Week" w',
-    monthTitle: 'MMMM yyyy',
-    WeekViewDayHeader: 'EEE d',
-    HourColumn: 'ha',
-  }
-  starting = {
-    DayMonth: 0,
-    DayWeek: 0
-  }
-  allDayLabel = 'all day';
-  noEventsLabel = 'No Events';
-  queryMode = 'local' || 'remote';
-  timeInterval = 60;
-  autoSelect = true;
-  markDisabled = (date: Date) => {
-    var current = new Date();
-    return date < current;
-  };
-  scrollToHour = 0;
-  preserveScrollPosition = false;
-  lockSwipeToPrev = false;
-  lockSwipes = false;
-  startHour = 9;
-  endHour = 20;
-  sliderOptions = {};
-  viewTitle = null;
-
-  //template variable
-  template = {
-    month: {
-      displayEvent: "monthviewDisplay",
-      inactiveDisplayEvent: "monthviewInactiveDisplay",
-      eventDetail: "monthviewEventDetail"
-    },
-    week: {
-      header: "weekviewHeader",
-      allday: {
-        event: "weekviewAllDayEvent",
-        eventsection: "weekviewAllDayEventSection"
-      },
-      normal: {
-        event: "weekviewNormalEvent",
-        eventsection: "weekviewNormalEventSection"
-      },
-      inactive: {
-        allday: "weekviewInactiveAllDayEventSection",
-        normal: "weekviewInactiveNormalEventSection"
-      }
-    },
-    day: {
-      allday: {
-        event: "dayviewAllDayEvent",
-        eventsection: "dayviewAllDayEventSection"
-      },
-      normal: {
-        event: "dayviewNormalEvent",
-        eventsection: "dayviewNormalEventSection"
-      },
-      inactive: {
-        allday: "dayviewInactiveAllDayEventSection",
-        normal: "dayviewInactiveNormalEventSection"
-      }
-    }
-  }
+  viewTitle : string;
   
-
   constructor(
+    public modalCtrl : ModalController
   ) { }
 
   ngOnInit() { 
@@ -134,14 +35,10 @@ export class CalendarModalComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    var me = this;
-    setTimeout(function () {
-      me.lockSwipes = true;
-    }, 100);
   }
 
   loadEvents() {
-    this.eventSource.push({
+    this.myCalendar.eventSource.push({
       title: 'test',
       startTime: new Date,
       endTime: new Date,
@@ -164,11 +61,11 @@ export class CalendarModalComponent implements OnInit, AfterViewInit {
     today.setHours(0, 0, 0, 0);
     event.setHours(0, 0, 0, 0);
 
-    if (this.calendar.mode === 'month') {
+    if (this.myCalendar.calendarMode === 'month') {
       if (event.getFullYear() < today.getFullYear() || (event.getFullYear() === today.getFullYear() && event.getMonth() <= today.getMonth())) {
-        this.lockSwipeToPrev = true;
+        this.myCalendar.lockSwipeToPrev = true;
       } else {
-        this.lockSwipeToPrev = false;
+        this.myCalendar.lockSwipeToPrev = false;
       }
     }
   }
@@ -190,10 +87,13 @@ export class CalendarModalComponent implements OnInit, AfterViewInit {
   }
 
   onRangeChanged(ev: { startTime: Date, endTime: Date }) {
-    // Events.query(ev, (events) => {
-    //   this.eventSource = events;
-    // });
+
   }
+
+  close(date){
+    this.modalCtrl.dismiss(date);
+  }
+
 
 
 

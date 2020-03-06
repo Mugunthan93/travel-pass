@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { RoundTripPageRoutingModule } from './round-trip-routing.module';
 
 import { RoundTripPage } from './round-trip.page';
+import { NgCalendarModule } from 'ionic2-calendar';
 
 @NgModule({
   imports: [
@@ -16,6 +17,8 @@ import { RoundTripPage } from './round-trip.page';
     ReactiveFormsModule,
     RoundTripPageRoutingModule
   ],
-  declarations: [RoundTripPage]
+  declarations: [
+    RoundTripPage
+  ]
 })
 export class RoundTripPageModule {}

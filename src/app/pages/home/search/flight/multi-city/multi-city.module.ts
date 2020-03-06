@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { MultiCityPageRoutingModule } from './multi-city-routing.module';
 
 import { MultiCityPage } from './multi-city.page';
+import { NgCalendarModule } from 'ionic2-calendar';
 
 @NgModule({
   imports: [
@@ -16,6 +17,8 @@ import { MultiCityPage } from './multi-city.page';
     ReactiveFormsModule,
     MultiCityPageRoutingModule
   ],
-  declarations: [MultiCityPage]
+  declarations: [
+    MultiCityPage
+  ]
 })
 export class MultiCityPageModule {}

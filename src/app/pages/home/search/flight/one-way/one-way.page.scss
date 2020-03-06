@@ -79,6 +79,11 @@ form{
                         }
                     }
                 }
+                ion-col:nth-of-type(2){
+                    ion-row{
+                        justify-content: center;
+                    }
+                }       
             }
             ion-row:not(:first-child){
                 ion-col:nth-child(2){

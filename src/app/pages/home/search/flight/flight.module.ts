@@ -15,6 +15,8 @@ import { FlightPage } from './flight.page';
     IonicModule,
     FlightPageRoutingModule
   ],
-  declarations: [FlightPage]
+  declarations: [
+    FlightPage
+  ]
 })
 export class FlightPageModule {}

@@ -18,17 +18,10 @@ import { NgCalendarModule } from 'ionic2-calendar';
     FormsModule,
     IonicModule,
     ReactiveFormsModule,
-    OneWayPageRoutingModule,
-    NgCalendarModule
+    OneWayPageRoutingModule
   ],
   declarations: [
-    OneWayPage,
-    CityModalComponent,
-    CalendarModalComponent
-  ],
-  entryComponents: [
-    CityModalComponent,
-    CalendarModalComponent
+    OneWayPage
   ]
 })
 export class OneWayPageModule { }
