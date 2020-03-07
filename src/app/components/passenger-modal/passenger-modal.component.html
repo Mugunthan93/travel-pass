@@ -7,7 +7,7 @@
 </ion-header>
 <ion-content>
   <ion-grid>
-    <form [formGroup]="traveller" (ngSubmit)="confirmTraveller()">
+    <form [formGroup]="traveller" (ngSubmit)="close()">
       <ion-row>
         <ion-col size="3" class="ion-align-self-center">
           <ion-text slots="end">Adult</ion-text>
@@ -15,16 +15,18 @@
         <ion-col size="9">
           <ion-row>
             <ion-col size="4">
-              <ion-button  expand="full">
+              <ion-button type="button" expand="full" (click)="increase('adult')">
                 <ion-icon  slot="icon-only" size="large" name="add-circle-outline"></ion-icon>
               </ion-button>
             </ion-col>
             <ion-col size="4">
-              <ion-input formControlName="adult" hidden></ion-input>
-              {{traveller.value.adult}}
+              <ion-input type="number" formControlName="adult" hidden></ion-input>
+              <ion-text>
+                {{traveller.value.adult}}
+              </ion-text>
             </ion-col>
             <ion-col size="4">
-              <ion-button  expand="full">
+              <ion-button type="button" expand="full" (click)="decrease('adult')">
                 <ion-icon  slot="icon-only" size="large" name="remove-circle-outline"></ion-icon>
               </ion-button>
             </ion-col>
@@ -38,16 +40,18 @@
         <ion-col size="9">
           <ion-row>
             <ion-col size="4">
-              <ion-button  expand="full">
+              <ion-button type="button" expand="full" (click)="increase('child')">
                 <ion-icon  slot="icon-only" size="large" name="add-circle-outline"></ion-icon>
               </ion-button>
             </ion-col>
             <ion-col size="4">
-              <ion-input formControlName="child" hidden></ion-input>
-              {{traveller.value.child}}
+              <ion-input type="number" formControlName="child" hidden></ion-input>
+              <ion-text>
+                {{traveller.value.child}}
+              </ion-text>
             </ion-col>
             <ion-col size="4">
-              <ion-button  expand="full">
+              <ion-button type="button" expand="full" (click)="decrease('child')">
                 <ion-icon  slot="icon-only" size="large" name="remove-circle-outline"></ion-icon>
               </ion-button>
             </ion-col>
@@ -61,16 +65,18 @@
         <ion-col size="9">
           <ion-row>
             <ion-col size="4">
-              <ion-button  expand="full">
+              <ion-button type="button" expand="full" (click)="increase('infant')">
                 <ion-icon  slot="icon-only" size="large" name="add-circle-outline"></ion-icon>
               </ion-button>
             </ion-col>
             <ion-col size="4">
-              <ion-input formControlName="infant" hidden></ion-input>
-              {{traveller.value.infant}}
+              <ion-input type="number" formControlName="infant" hidden></ion-input>
+              <ion-text>
+                {{traveller.value.infant}}
+              </ion-text>
             </ion-col>
             <ion-col size="4">
-              <ion-button  expand="full">
+              <ion-button type="button" expand="full" (click)="decrease('infant')">
                 <ion-icon  slot="icon-only" size="large" name="remove-circle-outline"></ion-icon>
               </ion-button>
             </ion-col>
@@ -79,14 +85,14 @@
       </ion-row>
       <ion-row>
         <ion-col size="6">
-          <ion-item button>
+          <ion-button (click)="close()">
             <ion-text>Cancel</ion-text>
-          </ion-item>
+          </ion-button>
         </ion-col>
         <ion-col size="6">
-          <ion-item button type="submit">
+          <ion-button type="submit">
             <ion-text>Confirm</ion-text>
-          </ion-item>
+          </ion-button>
         </ion-col>
       </ion-row>
     </form>

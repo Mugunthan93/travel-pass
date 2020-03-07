@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, LOCALE_ID, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { CalendarComponent } from "ionic2-calendar/calendar";
 import { ModalController } from '@ionic/angular';
+
+import { CalendarComponent } from 'ionic2-calendar/calendar';
 
 export interface EventSource{
   title : string,

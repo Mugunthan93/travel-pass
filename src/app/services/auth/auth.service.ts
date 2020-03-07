@@ -14,9 +14,12 @@ export class AuthService {
     private nativeHttp: HTTP,
     private platform : Platform
   ) {
+    this.checkPlatform();
+  }
+
+  checkPlatform(){
     this.platform.ready().then(
       () => {
-        console.log(nativeHttp);
         this.nativeHttp.useBasicAuth('username','username');
         this.nativeHttp.setHeader("localhost", "Access-Control-Allow-Origin", '*');
         this.nativeHttp.setHeader("localhost", "Access-Control-Allow-Headers", "Content-Type");
@@ -25,7 +28,6 @@ export class AuthService {
         console.log(this.nativeHttp.getBasicAuthHeader('username','username'));
       }
     );
-
   }
 
   login(email: string, password: string): Observable<any> {

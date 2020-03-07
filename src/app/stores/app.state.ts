@@ -19,7 +19,10 @@ export class RemoveUser {
 }
 
 @State<App>({
-    name : 'App'
+    name : 'App',
+    defaults:{
+        user : null
+    }
 })
 export class AppState {
 
