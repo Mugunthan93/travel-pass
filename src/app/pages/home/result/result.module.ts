@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { ResultPageRoutingModule } from './result-routing.module';
 
 import { ResultPage } from './result.page';
+import { TripFilterComponent } from 'src/app/components/trip-filter/trip-filter.component';
 
 @NgModule({
   imports: [
@@ -16,7 +17,11 @@ import { ResultPage } from './result.page';
     ResultPageRoutingModule
   ],
   declarations: [
-    ResultPage
+    ResultPage,
+    TripFilterComponent
+  ],
+  entryComponents: [
+    TripFilterComponent
   ]
 })
 export class ResultPageModule {}

@@ -113,6 +113,7 @@ export class OneWayPage implements OnInit {
   }
 
   searchFlight() {
+    console.log(this.oneWaySearch.value);
     this.booking.search('flight');
   }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonContent } from '@ionic/angular';
-import { MatExpansionPanel } from '@angular/material/expansion';
+import { ModalController } from '@ionic/angular';
+import { TripFilterComponent } from 'src/app/components/trip-filter/trip-filter.component';
 
 export interface flightList{
   type : string,
@@ -13,8 +13,6 @@ export interface flightList{
   styleUrls: ['./one-way.page.scss'],
 })
 export class OneWayPage implements OnInit {
-
-  @ViewChild('panel',{static : true}) panel : any;
 
   flightList : flightList[] = [
     {type:"listItem",accordian : "baggageItem"},
@@ -43,8 +41,8 @@ export class OneWayPage implements OnInit {
   panelOpenState = false;
 
   constructor(
+    public modalCtrl : ModalController
   ) {
-    console.log(this.panel);
   }
   
   ngOnInit() {
@@ -52,6 +50,23 @@ export class OneWayPage implements OnInit {
 
   sorting(evt){
     console.log(evt);
+  }
+
+  async filter() {
+    const modal = await this.modalCtrl.create({
+      component: TripFilterComponent,
+      componentProps: {
+        list: this.flightList
+      }
+    });
+
+    modal.onDidDismiss().then(
+      (filteredFlightList) => {
+        this.flightList = filteredFlightList.data;
+      }
+    );
+
+    return await modal.present();
   }
 
 }
