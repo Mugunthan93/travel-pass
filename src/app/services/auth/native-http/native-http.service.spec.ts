@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { InterceptorService } from './interceptor.service';
+import { NativeHttpService } from './native-http.service';
 
-describe('InterceptorService', () => {
+describe('NativeHttpService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: InterceptorService = TestBed.get(InterceptorService);
+    const service: NativeHttpService = TestBed.get(NativeHttpService);
     expect(service).toBeTruthy();
   });
 });
