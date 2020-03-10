@@ -44,5 +44,6 @@ export const environment = {
   baseUrlMode: "DEV",
   idle: 1500,
   timeout: 10,
-  ping: 120
+  ping: 120,
+  number :0
 };

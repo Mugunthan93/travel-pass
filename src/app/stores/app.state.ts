@@ -39,6 +39,7 @@ export class AppState {
             user: action.payload
         });
         console.log(currentState);
+        console.log("sample");
     }
 
     @Action(RemoveUser)
