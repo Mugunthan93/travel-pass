@@ -1,3 +1,145 @@
-<p>
-  trip-filter works!
-</p>
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="backToList()" slots="icon-only">
+        <ion-icon size="large" src="../../../../../assets/ionicons/md-arrow-back-outline.svg"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Flight filter</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="reset()">
+        <ion-text>RESET</ion-text>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      
+      <ion-col>
+        <ion-row>
+          <ion-col size="3">
+            <ion-text>STOPS</ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <ion-segment mode="ios" (ionChange)="chooseStop($event)">
+                  <ion-segment-button value="home">
+                    <ion-text>All</ion-text>
+                  </ion-segment-button>
+                  <ion-segment-button value="heart">
+                    <ion-text>Non-Stop</ion-text>
+                  </ion-segment-button>
+                  <ion-segment-button value="pin">
+                    <ion-text>1 Stop</ion-text>
+                  </ion-segment-button>
+                  <ion-segment-button value="star">
+                    <ion-text>2 Stops</ion-text>
+                  </ion-segment-button>
+            </ion-segment>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+      
+      <ion-col>
+        <ion-row>
+          <ion-text>Onward Departure Time</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-row>
+              <ion-col size="12">
+                <ion-range min="-200" max="200" color="secondary">
+                </ion-range>
+              </ion-col>
+            </ion-row>
+            <ion-row class="ion-justify-content-between">
+              <ion-col size="4">
+                  <ion-text>0 hour</ion-text>
+              </ion-col>
+              <ion-col size="4">
+                  <ion-text>24 hour</ion-text>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+      
+      <ion-col>
+        <ion-row>
+          <ion-text>Return Departure Time</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-row>
+              <ion-col size="12">
+                <ion-range min="-200" max="200" color="secondary">
+                </ion-range>
+              </ion-col>
+            </ion-row>
+            <ion-row class="ion-justify-content-between">
+              <ion-col size="4">
+                  <ion-text>0 hour</ion-text>
+              </ion-col>
+              <ion-col size="4">
+                  <ion-text>24 hour</ion-text>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+      
+      <ion-col>
+        <ion-row>
+          <ion-text>Price</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-row>
+              <ion-col size="12">
+                <ion-range min="-200" max="200" color="secondary">
+                </ion-range>
+              </ion-col>
+            </ion-row>
+            <ion-row class="ion-justify-content-between">
+              <ion-col size="4">
+                  <ion-text>0 hour</ion-text>
+              </ion-col>
+              <ion-col size="4">
+                  <ion-text>24 hour</ion-text>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+      
+      <ion-col size="auto">
+        <ion-row  class="ion-justify-content-between">
+          <ion-col size="4">
+            <ion-text>Corporate Fare</ion-text>
+          </ion-col>
+          <ion-col size="4">
+            <ion-checkbox></ion-checkbox>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+      
+      <ion-col>
+        <ion-row>
+          <ion-text>Preffered Airlines</ion-text>
+        </ion-row>
+        <ion-row *ngFor="let airline of airlines"  class="ion-justify-content-between">
+          <ion-col>
+            <ion-text>{{airline}}</ion-text>
+          </ion-col>
+          <ion-col>
+            <ion-checkbox></ion-checkbox>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -11,6 +11,13 @@ export class TripFilterComponent implements OnInit {
 
   @Input() list: flightList[];
 
+  airlines : string[] = [
+    'spiceJet',
+    'airIndia',
+    'lufthansa',
+    'indigo'
+  ];
+
   constructor(
     public modalCtrl : ModalController
   ) { }
@@ -19,6 +26,18 @@ export class TripFilterComponent implements OnInit {
   
   close() {
     this.modalCtrl.dismiss(this.list);
+  }
+
+  reset() {
+    
+  }
+
+  backToList() {
+    this.modalCtrl.dismiss(this.list);
+  }
+
+  chooseStop(evt){
+
   }
 
 }
