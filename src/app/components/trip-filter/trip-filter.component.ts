@@ -15,6 +15,14 @@ export class TripFilterComponent implements OnInit {
     'spiceJet',
     'airIndia',
     'lufthansa',
+    'indigo',
+    'spiceJet',
+    'airIndia',
+    'lufthansa',
+    'indigo',
+    'spiceJet',
+    'airIndia',
+    'lufthansa',
     'indigo'
   ];
 
@@ -30,10 +38,6 @@ export class TripFilterComponent implements OnInit {
 
   reset() {
     
-  }
-
-  backToList() {
-    this.modalCtrl.dismiss(this.list);
   }
 
   chooseStop(evt){

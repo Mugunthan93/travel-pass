@@ -109,3 +109,15 @@ ion-content{
         }
     }
 }
+
+ion-footer{
+    ion-toolbar{
+        --background: rgb(218, 214, 214);
+        ion-button{
+            --background:blue;
+        }
+        ion-text{
+            font-size: small;
+        }
+    }
+}

@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)="backToList()" slots="icon-only">
+      <ion-button (click)="close()" slots="icon-only">
         <ion-icon size="large" src="../../../../../assets/ionicons/md-arrow-back-outline.svg"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -15,131 +15,281 @@
 </ion-header>
 <ion-content>
   <ion-grid>
-    <ion-row>
-      
+    <!-- <ion-row>
       <ion-col>
         <ion-row>
-          <ion-col size="3">
-            <ion-text>STOPS</ion-text>
+          <ion-col>
+            <ion-row>
+              <ion-text>STOPS</ion-text>
+            </ion-row>
+            <ion-row>
+              <ion-segment mode="ios" (ionChange)="chooseStop($event)">
+                    <ion-segment-button value="home">
+                      <ion-text>All</ion-text>
+                    </ion-segment-button>
+                    <ion-segment-button value="heart">
+                      <ion-text>Non-Stop</ion-text>
+                    </ion-segment-button>
+                    <ion-segment-button value="pin">
+                      <ion-text>1 Stop</ion-text>
+                    </ion-segment-button>
+                    <ion-segment-button value="star">
+                      <ion-text>2 Stops</ion-text>
+                    </ion-segment-button>
+              </ion-segment>
+            </ion-row>
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col size="12">
-            <ion-segment mode="ios" (ionChange)="chooseStop($event)">
-                  <ion-segment-button value="home">
-                    <ion-text>All</ion-text>
-                  </ion-segment-button>
-                  <ion-segment-button value="heart">
-                    <ion-text>Non-Stop</ion-text>
-                  </ion-segment-button>
-                  <ion-segment-button value="pin">
-                    <ion-text>1 Stop</ion-text>
-                  </ion-segment-button>
-                  <ion-segment-button value="star">
-                    <ion-text>2 Stops</ion-text>
-                  </ion-segment-button>
-            </ion-segment>
+          <ion-col>
+            <ion-row>
+              <ion-text>Onward Departure Time</ion-text>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-row>
+                  <ion-col size="12">
+                    <ion-range min="-200" max="200" color="secondary">
+                    </ion-range>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="ion-justify-content-between">
+                  <ion-col size="6">
+                      <ion-text>0 hour</ion-text>
+                  </ion-col>
+                  <ion-col size="6">
+                      <ion-text>24 hour</ion-text>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+            </ion-row>
           </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-row>
+              <ion-text>Return Departure Time</ion-text>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-row>
+                  <ion-col size="12">
+                    <ion-range min="-200" max="200" color="secondary">
+                    </ion-range>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="ion-justify-content-between">
+                  <ion-col size="4">
+                      <ion-text>0 hour</ion-text>
+                  </ion-col>
+                  <ion-col size="4">
+                      <ion-text>24 hour</ion-text>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-row>
+              <ion-text>Price</ion-text>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-row>
+                  <ion-col size="12">
+                    <ion-range min="-200" max="200" color="secondary">
+                    </ion-range>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="ion-justify-content-between">
+                  <ion-col size="4">
+                      <ion-text>0 hour</ion-text>
+                  </ion-col>
+                  <ion-col size="4">
+                      <ion-text>24 hour</ion-text>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-row class="ion-justify-content-between">
+              <ion-col size="4">
+                <ion-text>Corporate Fare</ion-text>
+              </ion-col>
+              <ion-col size="4">
+                <ion-checkbox></ion-checkbox>
+              </ion-col>
+            </ion-row>
+            <ion-row class="ion-justify-content-between">
+              <ion-col size="5">
+                <ion-text>Preffered Airlines</ion-text>
+              </ion-col>
+              <ion-col size="5">
+              </ion-col>
+            </ion-row>
+            <ion-row *ngFor="let airline of airlines"  class="ion-justify-content-between">
+              <ion-col size="4">
+                <ion-text>{{airline}}</ion-text>
+              </ion-col>
+              <ion-col size="4">
+                <ion-checkbox></ion-checkbox>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col></ion-col>
         </ion-row>
       </ion-col>
-      
+    </ion-row> -->
+
+    <!--stop row-->
+    <ion-row>
       <ion-col>
+        <!--heading-->
+        <ion-row>
+          <ion-text>Stops</ion-text>
+        </ion-row>
+        <!--segment-->
+        <ion-row>
+          <ion-segment mode="ios" (ionChange)="chooseStop($event)">
+            <ion-segment-button value="home">
+              <ion-text>All</ion-text>
+            </ion-segment-button>
+            <ion-segment-button value="heart">
+              <ion-text>Non-Stop</ion-text>
+            </ion-segment-button>
+            <ion-segment-button value="pin">
+              <ion-text>1 Stop</ion-text>
+            </ion-segment-button>
+            <ion-segment-button value="star">
+              <ion-text>2 Stops</ion-text>
+            </ion-segment-button>
+          </ion-segment>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+
+    <!--departure row-->
+    <ion-row>
+      <ion-col>
+        <!--heading-->
         <ion-row>
           <ion-text>Onward Departure Time</ion-text>
         </ion-row>
+        <!--range row-->
         <ion-row>
+          <ion-range min="-200" max="200" color="secondary"></ion-range>
+        </ion-row>
+         <!--value row-->
+         <ion-row>
           <ion-col>
-            <ion-row>
-              <ion-col size="12">
-                <ion-range min="-200" max="200" color="secondary">
-                </ion-range>
-              </ion-col>
-            </ion-row>
-            <ion-row class="ion-justify-content-between">
-              <ion-col size="4">
-                  <ion-text>0 hour</ion-text>
-              </ion-col>
-              <ion-col size="4">
-                  <ion-text>24 hour</ion-text>
-              </ion-col>
-            </ion-row>
+            <ion-text>0 Hours</ion-text>
+          </ion-col>
+          <ion-col>
+            <ion-text>24 Hours</ion-text>
           </ion-col>
         </ion-row>
       </ion-col>
-      
+    </ion-row>
+
+    <!--return row-->
+    <ion-row>
       <ion-col>
+        <!--heading-->
         <ion-row>
-          <ion-text>Return Departure Time</ion-text>
+          <ion-text>Onward Return Time</ion-text>
         </ion-row>
+        <!--range row-->
         <ion-row>
+          <ion-range min="-200" max="200" color="secondary"></ion-range>
+        </ion-row>
+         <!--value row-->
+         <ion-row>
           <ion-col>
-            <ion-row>
-              <ion-col size="12">
-                <ion-range min="-200" max="200" color="secondary">
-                </ion-range>
-              </ion-col>
-            </ion-row>
-            <ion-row class="ion-justify-content-between">
-              <ion-col size="4">
-                  <ion-text>0 hour</ion-text>
-              </ion-col>
-              <ion-col size="4">
-                  <ion-text>24 hour</ion-text>
-              </ion-col>
-            </ion-row>
+            <ion-text>0 Hours</ion-text>
+          </ion-col>
+          <ion-col>
+            <ion-text>24 Hours</ion-text>
           </ion-col>
         </ion-row>
       </ion-col>
-      
+    </ion-row>
+
+    <!--price row-->
+    <ion-row>
       <ion-col>
+        <!--heading-->
         <ion-row>
           <ion-text>Price</ion-text>
         </ion-row>
+        <!--range row-->
+        <ion-row>
+          <ion-range min="-200" max="200" color="secondary"></ion-range>
+        </ion-row>
+        <!--value row-->
         <ion-row>
           <ion-col>
-            <ion-row>
-              <ion-col size="12">
-                <ion-range min="-200" max="200" color="secondary">
-                </ion-range>
-              </ion-col>
-            </ion-row>
-            <ion-row class="ion-justify-content-between">
-              <ion-col size="4">
-                  <ion-text>0 hour</ion-text>
-              </ion-col>
-              <ion-col size="4">
-                  <ion-text>24 hour</ion-text>
-              </ion-col>
-            </ion-row>
+            <ion-text>1,000</ion-text>
+          </ion-col>
+          <ion-col>
+            <ion-text>1,00,00,000</ion-text>
           </ion-col>
         </ion-row>
       </ion-col>
-      
-      <ion-col size="auto">
-        <ion-row  class="ion-justify-content-between">
-          <ion-col size="4">
-            <ion-text>Corporate Fare</ion-text>
-          </ion-col>
-          <ion-col size="4">
-            <ion-checkbox></ion-checkbox>
-          </ion-col>
-        </ion-row>
-      </ion-col>
-      
+    </ion-row>
+
+    <!--fare row-->
+    <ion-row>
       <ion-col>
-        <ion-row>
-          <ion-text>Preffered Airlines</ion-text>
-        </ion-row>
-        <ion-row *ngFor="let airline of airlines"  class="ion-justify-content-between">
+        <ion-text>Corporate Fare</ion-text>
+      </ion-col>
+      <ion-col>
+        <ion-checkbox></ion-checkbox>
+      </ion-col>
+    </ion-row>
+
+    <!--airline heading row-->
+    <ion-row>
+      <ion-col>
+        <ion-text>Preferred Airlines</ion-text>
+      </ion-col>
+      <ion-col>
+
+      </ion-col>
+    </ion-row>
+
+    <!--airlines row-->
+    <ion-row>
+      <ion-col>
+        <!--airline row-->
+        <ion-row *ngFor="let airline of airlines">
+          <!--airline name-->
           <ion-col>
             <ion-text>{{airline}}</ion-text>
           </ion-col>
+          <!--chekcbox-->
           <ion-col>
             <ion-checkbox></ion-checkbox>
           </ion-col>
         </ion-row>
       </ion-col>
-      <ion-col></ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button size="large" (click)="close()">
+      <ion-text>Cancel</ion-text>
+    </ion-button>
+    <ion-button size="large" (click)="close()">
+      <ion-text>Apply</ion-text>
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

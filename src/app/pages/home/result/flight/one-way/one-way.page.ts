@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { TripFilterComponent } from 'src/app/components/trip-filter/trip-filter.component';
+import { Router } from '@angular/router';
 
 export interface flightList{
   type : string,
@@ -39,9 +40,11 @@ export class OneWayPage implements OnInit {
     {type:"listItem",accordian : "baggageItem"},
   ];
   panelOpenState = false;
+  multipanel = true;
 
   constructor(
-    public modalCtrl : ModalController
+    public modalCtrl : ModalController,
+    public router : Router
   ) {
   }
   
@@ -69,4 +72,7 @@ export class OneWayPage implements OnInit {
     return await modal.present();
   }
 
+  book() {
+    this.router.navigate(['/','home','book','flight','one-way']);
+  }
 }
