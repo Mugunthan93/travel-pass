@@ -26,13 +26,30 @@ export class ResultListComponent implements OnInit {
     this.getFlightState.emit(this.flightState);
   }
 
-  getFlight(flight : any){
+  selectFlight(panel : MatExpansionPanel,flight:any,evt : Event){
+
+    evt.stopPropagation();
+
+    if (!this._isExpansionIndicator(evt.target)) {
+      panel.toggle();
+      return;
+    }
+
     if(this.flightState){
       this.getFlightValue.emit(flight);
     }
     else if(!this.flightState){
       this.getFlightValue.emit(null);
     }
+  }
+
+  private _isExpansionIndicator(target : EventTarget) : boolean {
+    const expansionIndicatorClass = 'mat-expansion-indicator';
+    return ((target as HTMLElement).classList && (target as HTMLElement).classList.contains(expansionIndicatorClass) );
+  }
+
+  expandPanel(panel : MatExpansionPanel){
+    panel.toggle();
   }
 
 }
