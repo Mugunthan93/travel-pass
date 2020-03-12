@@ -8,7 +8,7 @@ import { OneWayPageRoutingModule } from './one-way-routing.module';
 
 import { OneWayPage } from './one-way.page';
 
-import {MatExpansionModule, MatExpansionPanel} from '@angular/material/expansion';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   imports: [

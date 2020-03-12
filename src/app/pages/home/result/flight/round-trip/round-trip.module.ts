@@ -7,14 +7,20 @@ import { IonicModule } from '@ionic/angular';
 import { RoundTripPageRoutingModule } from './round-trip-routing.module';
 
 import { RoundTripPage } from './round-trip.page';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { ResultListComponent } from 'src/app/components/result-list/result-list.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    RoundTripPageRoutingModule
+    RoundTripPageRoutingModule,
+    MatExpansionModule
   ],
-  declarations: [RoundTripPage]
+  declarations: [
+    RoundTripPage,
+    ResultListComponent
+  ]
 })
 export class RoundTripPageModule {}

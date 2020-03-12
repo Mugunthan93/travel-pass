@@ -10,6 +10,7 @@ import { ModalController } from '@ionic/angular';
 export class TripFilterComponent implements OnInit {
 
   @Input() list: flightList[];
+  @Input() lisType : string;
 
   airlines : string[] = [
     'spiceJet',
@@ -33,7 +34,7 @@ export class TripFilterComponent implements OnInit {
   ngOnInit() { }
   
   close() {
-    this.modalCtrl.dismiss(this.list);
+    this.modalCtrl.dismiss(this.list,this.lisType);
   }
 
   reset() {
