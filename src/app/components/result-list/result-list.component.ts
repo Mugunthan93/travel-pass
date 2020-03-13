@@ -1,41 +1,57 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { flightList } from 'src/app/pages/home/result/flight/one-way/one-way.page';
-import { MatExpansionPanel } from '@angular/material/expansion';
+import { MatExpansionPanelHeader, matExpansionAnimations } from '@angular/material/expansion';
+import { CdkAccordion } from '@angular/cdk/accordion';
 
 @Component({
   selector: 'app-result-list',
   templateUrl: './result-list.component.html',
   styleUrls: ['./result-list.component.scss'],
+  animations : [matExpansionAnimations.bodyExpansion]
 })
-export class ResultListComponent implements OnInit {
-
-  @ViewChild('panel',{static : true}) panel : MatExpansionPanel;
+export class ResultListComponent implements OnInit,OnChanges {
 
   @Input() flightList : flightList[];
+  @Input() selectedFlights : any;
   @Output() getFlightValue: EventEmitter<any> = new EventEmitter<any>(null);
   
   selectedFlight = null;
 
-  constructor() { }
-
-  ngOnInit() {
+  constructor(
+  ) {
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
   }
 
-  selectFlight(panel: MatExpansionPanel, flight: any, evt: Event) {
+  ngOnInit() {
+    console.log(this.selectedFlights);
+  }
+
+  selectFlight(panel : MatExpansionPanelHeader, flight: any, evt: Event) {
     
-    if (this._isExpansionIndicator(evt.target)) {
-      panel.toggle();
-    }
-    else if (!this._isExpansionIndicator(evt.target)) {
+    if (!this._isExpansionIndicator(evt.target)) {
+
+      evt.stopPropagation();
+
       if (this.selectedFlight == null) {
+
         this.selectedFlight = flight;
         this.getFlightValue.emit(flight);
+
       }
       else if (this.selectedFlight !== null) {
-        this.selectedFlight = null;
-        this.getFlightValue.emit(null);
+
+        if(this.selectedFlight == flight){
+          return;
+        }
+        else if(this.selectedFlight !== flight){
+          this.selectedFlight = flight;
+
+          this.getFlightValue.emit(flight);
+        }
       }
-      panel.toggle();
+
     }
 
   }
@@ -43,10 +59,6 @@ export class ResultListComponent implements OnInit {
   private _isExpansionIndicator(target : EventTarget) : boolean {
     const expansionIndicatorClass = 'expandcol';
     return ((target as HTMLElement).classList && (target as HTMLElement).classList.contains(expansionIndicatorClass) );
-  }
-
-  expandPanel(panel : MatExpansionPanel){
-    panel.toggle();
   }
 
 }

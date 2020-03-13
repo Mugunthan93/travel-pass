@@ -26,23 +26,7 @@ export class RoundTripPage implements OnInit {
     {type:"listItem",accordian : "baggageItem"},
     {type:"listItem",accordian : "baggageItem"},
     {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
+    {type:"listItem",accordian : "baggageItem"}
   ];
   returnList : flightList[] = [
     {type:"listItem",accordian : "baggageItem"},
@@ -50,23 +34,7 @@ export class RoundTripPage implements OnInit {
     {type:"listItem",accordian : "baggageItem"},
     {type:"listItem",accordian : "baggageItem"},
     {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
+    {type:"listItem",accordian : "baggageItem"}
   ];
 
   constructor(
@@ -120,7 +88,7 @@ export class RoundTripPage implements OnInit {
   }
 
   currentFlight(flight){
-    console.log(flight);
+    
     if(this.listType == 'departure'){
       this.selectedFlight.departure = flight;
     }

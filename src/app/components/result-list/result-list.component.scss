@@ -1,11 +1,13 @@
 ion-content{
-    ion-row:only-child{
-        border-bottom : 2px solid grey;
-    }
     ion-row{
         mat-accordion{
             >mat-expansion-panel{
+                border-bottom : 2px solid grey;
                 >mat-expansion-panel-header{
+
+                    background: transparent;
+
+                    border-bottom : 1px solid grey;
                     padding-left: 0px;
                     padding-right : 0px;
                     display: flex; 
@@ -23,7 +25,7 @@ ion-content{
                                 height : 100%;
                                 align-items: stretch;
                                 ion-row{
-                                    margin : auto;
+                                    margin : 0px;
                                     ion-text{
                                         font-size: small;
                                     }
@@ -32,9 +34,12 @@ ion-content{
                         }
                     }
                 }
-                // ::ng-deep span:nth-child(2){
-                    
-                // }
+                mat-expansion-panel-header.cdk-focused{
+                    background: rgb(236, 203, 203);
+                    ion-text{
+                        color:white;
+                    }
+                }
 
                 ::ng-deep .mat-expansion-panel-body{
                     padding : 2px;

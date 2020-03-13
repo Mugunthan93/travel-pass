@@ -9,7 +9,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content scroll-y="false">
   <ion-grid id="list">
     <ion-row>
       <ion-col>
@@ -74,8 +74,9 @@
         <ion-row>
           <ion-col>
             <app-result-list  
-              [flightList]="flightList"  
-              (getFlightValue)="currentFlight($event)"
+              [flightList]="flightList"
+              [selectedFlights]="selectedFlight"
+              (getFlightValue)="currentFlight($event)" 
             ></app-result-list>
           </ion-col>
         </ion-row>
