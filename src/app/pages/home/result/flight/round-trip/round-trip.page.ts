@@ -15,17 +15,10 @@ export class RoundTripPage implements OnInit {
   flightState : boolean;
   listType : string = 'departure';
 
-  selectedState : any = {
-    departure : false,
-    return : false
-  }
-
   selectedFlight : any = {
     departure : null,
     return : null
   }
-
-  
   
   departList : flightList[] = [
     {type:"listItem",accordian : "baggageItem"},
@@ -76,7 +69,6 @@ export class RoundTripPage implements OnInit {
     {type:"listItem",accordian : "baggageItem"},
   ];
 
-
   constructor(
     public modalCtrl : ModalController,
     public router : Router
@@ -125,11 +117,6 @@ export class RoundTripPage implements OnInit {
 
   book() {
     this.router.navigate(['/','home','book','flight','one-way']);
-  }
-
-  currentFlightState(state : boolean) {
-    console.log(state);
-    this.flightState = state;
   }
 
   currentFlight(flight){

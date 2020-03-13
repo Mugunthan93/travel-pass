@@ -12,39 +12,36 @@ export class ResultListComponent implements OnInit {
   @ViewChild('panel',{static : true}) panel : MatExpansionPanel;
 
   @Input() flightList : flightList[];
-  @Input() flightState : boolean;
-  @Output() getFlightState : EventEmitter<boolean> = new EventEmitter<boolean>(false);
-  @Output() getFlightValue : EventEmitter<any> = new EventEmitter<any>(null);
+  @Output() getFlightValue: EventEmitter<any> = new EventEmitter<any>(null);
+  
+  selectedFlight = null;
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  panelOpen(){
-    this.flightState = !this.flightState;
-    this.getFlightState.emit(this.flightState);
-  }
-
-  selectFlight(panel : MatExpansionPanel,flight:any,evt : Event){
-
-    evt.stopPropagation();
-
-    if (!this._isExpansionIndicator(evt.target)) {
+  selectFlight(panel: MatExpansionPanel, flight: any, evt: Event) {
+    
+    if (this._isExpansionIndicator(evt.target)) {
       panel.toggle();
-      return;
+    }
+    else if (!this._isExpansionIndicator(evt.target)) {
+      if (this.selectedFlight == null) {
+        this.selectedFlight = flight;
+        this.getFlightValue.emit(flight);
+      }
+      else if (this.selectedFlight !== null) {
+        this.selectedFlight = null;
+        this.getFlightValue.emit(null);
+      }
+      panel.toggle();
     }
 
-    if(this.flightState){
-      this.getFlightValue.emit(flight);
-    }
-    else if(!this.flightState){
-      this.getFlightValue.emit(null);
-    }
   }
 
   private _isExpansionIndicator(target : EventTarget) : boolean {
-    const expansionIndicatorClass = 'mat-expansion-indicator';
+    const expansionIndicatorClass = 'expandcol';
     return ((target as HTMLElement).classList && (target as HTMLElement).classList.contains(expansionIndicatorClass) );
   }
 
