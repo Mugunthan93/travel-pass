@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { NativeHttpService } from './native-http.service';
+import { HttpService } from './http.service';
 
-describe('NativeHttpService', () => {
+describe('HttpService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: NativeHttpService = TestBed.get(NativeHttpService);
+    const service: HttpService = TestBed.get(HttpService);
     expect(service).toBeTruthy();
   });
 });
