@@ -7,6 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { FlightPageRoutingModule } from './flight-routing.module';
 
 import { FlightPage } from './flight.page';
+import { ResultListComponent } from 'src/app/components/result-list/result-list.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   imports: [
@@ -15,6 +17,8 @@ import { FlightPage } from './flight.page';
     IonicModule,
     FlightPageRoutingModule
   ],
-  declarations: [FlightPage]
+  declarations: [
+    FlightPage
+  ]
 })
 export class FlightPageModule {}

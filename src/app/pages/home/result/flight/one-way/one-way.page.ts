@@ -23,24 +23,12 @@ export class OneWayPage implements OnInit {
     {type:"listItem",accordian : "baggageItem"},
     {type:"listItem",accordian : "baggageItem"},
     {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
+    {type:"listItem",accordian : "baggageItem"}
   ];
   panelOpenState = false;
   multipanel = true;
+
+  selectedFlight : any = null;
 
   constructor(
     public modalCtrl : ModalController,
@@ -74,5 +62,9 @@ export class OneWayPage implements OnInit {
 
   book() {
     this.router.navigate(['/','home','book','flight','one-way']);
+  }
+
+  currentFlight(flight){
+    this.selectedFlight = flight;
   }
 }

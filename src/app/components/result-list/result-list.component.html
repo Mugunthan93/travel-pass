@@ -3,7 +3,8 @@
     <ion-col>
       <mat-accordion multi="false">
         <mat-expansion-panel [id]="i" *ngFor="let item of flightList;let i = index" [hideToggle]="true">
-          <mat-expansion-panel-header [collapsedHeight]="'60px'" #panel #panelRef>
+          <mat-expansion-panel-header [collapsedHeight]="'60px'" #panel
+          [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}">
               <ion-row>
                 <ion-col (click)="selectFlight(panel,item,$event)" size="11">
                   <ion-row class="ion-justify-content-between">

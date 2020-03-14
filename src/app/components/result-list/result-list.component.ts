@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { flightList } from 'src/app/pages/home/result/flight/one-way/one-way.page';
 import { MatExpansionPanelHeader, matExpansionAnimations } from '@angular/material/expansion';
-import { CdkAccordion } from '@angular/cdk/accordion';
 
 @Component({
   selector: 'app-result-list',
@@ -34,22 +33,29 @@ export class ResultListComponent implements OnInit,OnChanges {
 
       evt.stopPropagation();
 
-      if (this.selectedFlight == null) {
+      if (!this._isExpansionIndicator(evt.target)) {
 
-        this.selectedFlight = flight;
-        this.getFlightValue.emit(flight);
-
-      }
-      else if (this.selectedFlight !== null) {
-
-        if(this.selectedFlight == flight){
-          return;
-        }
-        else if(this.selectedFlight !== flight){
-          this.selectedFlight = flight;
-
+        evt.stopPropagation();
+  
+        if (this.selectedFlights == null) {
+  
+          this.selectedFlights = flight;
           this.getFlightValue.emit(flight);
+  
         }
+        else if (this.selectedFlights !== null) {
+  
+          if(this.selectedFlights == flight){
+            this.selectedFlights = null;
+            this.getFlightValue.emit(null);
+          }
+          else if(this.selectedFlights !== flight){
+  
+            this.selectedFlights = flight;
+            this.getFlightValue.emit(flight);
+          }
+        }
+  
       }
 
     }

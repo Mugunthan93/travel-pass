@@ -34,12 +34,6 @@ ion-content{
                         }
                     }
                 }
-                mat-expansion-panel-header.cdk-focused{
-                    background: rgb(236, 203, 203);
-                    ion-text{
-                        color:white;
-                    }
-                }
 
                 ::ng-deep .mat-expansion-panel-body{
                     padding : 2px;
@@ -69,5 +63,12 @@ ion-content{
                 }
             }
         }
+    }
+}
+
+.selectedItem{
+    background: rgb(229, 173, 173) !important;
+    ion-text{
+        color:white;
     }
 }
