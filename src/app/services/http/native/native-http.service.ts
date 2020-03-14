@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HTTP } from '@ionic-native/http/ngx';
 import { environment } from 'src/environments/environment';
-import { from, Observable } from 'rxjs';
+import { from } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
