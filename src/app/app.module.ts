@@ -10,11 +10,16 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { HTTP } from '@ionic-native/http/ngx';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { StateManagementModule } from './modules/state-management/state-management.module';
 import { InterceptorService } from './services/http/interceptor/interceptor.service';
+import { HttpService } from './services/http/http.service';
+import { StatusBarService } from './services/status-bar/status-bar.service';
+import { SplashScreenService } from './services/splash-screen/splash-screen.service';
+import { NativeStorage } from '@ionic-native/native-storage/ngx';
+import { CustomStorage } from './stores/custom-storage';
+import { STORAGE_ENGINE } from '@ngxs/storage-plugin';
 
 @NgModule({
   declarations: [
@@ -32,10 +37,9 @@ import { InterceptorService } from './services/http/interceptor/interceptor.serv
     StateManagementModule
   ],
   providers: [
-    StatusBar,
-    SplashScreen,
-    NativeStorage,
-    HTTP,
+    { provide: StatusBarService, useClass: StatusBar },
+    { provide: SplashScreenService, useClass: SplashScreen },
+    { provide : HttpService , useClass : HTTP},
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true }
   ],

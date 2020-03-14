@@ -16,17 +16,11 @@ import { Store,ofActionDispatched, Actions } from '@ngxs/store';
 export class AppComponent implements OnInit{
 
   constructor(
-    private platform: Platform,
-    private splashScreen: SplashScreen,
-    private statusBar: StatusBar,
     private authService: AuthService,
     private router: Router,
-    private menuController: MenuController,
-    private store: Store,
-    private actions : Actions
+    private menuController: MenuController
   ) {
     this.initializeApp();
-    console.log(this.store,this.actions);
   }
 
   ngOnInit() {
@@ -34,11 +28,6 @@ export class AppComponent implements OnInit{
   }
 
   initializeApp() {
-    this.platform.ready().then(() => {
-      console.log("device is ready");
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
-    });
   }
 
   onLogout() {

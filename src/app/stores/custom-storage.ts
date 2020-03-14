@@ -3,8 +3,10 @@ import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { Platform } from '@ionic/angular';
 import { Injectable } from '@angular/core';
 
-@Injectable()
-export class customStorage implements StorageEngine{
+@Injectable({
+    providedIn: 'root'
+})
+export class CustomStorage implements StorageEngine{
 
     length: number;
 
@@ -12,7 +14,6 @@ export class customStorage implements StorageEngine{
         public platform : Platform,
         public nativeStorage : NativeStorage
     ) {
-        console.log(this.platform);
     }
     
     getItem(key: string) {
