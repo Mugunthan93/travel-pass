@@ -1,21 +1,23 @@
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { user } from '../models/user';
+import { AuthService } from '../services/auth/auth.service';
+import { login } from '../models/auth';
+import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 export interface App {
     user : user | Object
 }
 
-export class AddUser {
-    static readonly type = '[App] AddUser';
-    constructor(
-        public payload : user
-    ){
-
+export class Login {
+    static readonly type = '[App] LoginUser';
+    constructor(public username,public password) {
+        
     }
 }
 
-export class RemoveUser {
-    static readonly type = '[App] RemoveUser';
+export class LogOut {
+    static readonly type = '[App] LogOutUser';
 }
 
 @State<App>({
@@ -26,28 +28,48 @@ export class RemoveUser {
 })
 export class AppState {
 
+    constructor(
+        public authService: AuthService,
+        public router : Router
+    ) {
+        
+    }
+
     @Selector()
     static getUser(state: App) {
         return state.user;
     }
 
-    @Action(AddUser)
-    addUser(states : StateContext<App>,action : AddUser){
-        const currentState = states.getState();
-        console.log(currentState);
-        states.patchState({
-            user: action.payload
-        });
-        console.log(currentState);
-        console.log("sample");
+    @Selector()
+    static isUserAuthenticated(state: App): boolean {
+        return !!state.user;
     }
 
-    @Action(RemoveUser)
-    removeUser(states : StateContext<App>,action : AddUser){
+    @Action(Login)
+    Login(states: StateContext<App>, action: Login) {
+        return this.authService.login(action.username, action.password)
+            .pipe(
+                map(
+                    (resData) => {    
+                        const currentState = states.getState();
+                        console.log(currentState);
+                        states.patchState({
+                            user: resData
+                        });
+                        console.log(currentState);
+                        this.router.navigate(['/','home']);
+                    }
+                )
+            );
+    }
+
+    @Action(LogOut)
+    Logout(states : StateContext<App>,action : LogOut){
         const currentState = states.getState();
         states.patchState({
             user : null
         });
+        console.log(currentState);
     }
 
 }

@@ -4,9 +4,8 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
-import { login } from 'src/app/models/auth';
 import { Store } from '@ngxs/store';
-import { AddUser } from 'src/app/stores/app.state';
+import { Login } from 'src/app/stores/app.state';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +23,7 @@ export class LoginPage implements OnInit, OnDestroy {
     public authService: AuthService,
     public router: Router,
     public loadingCtrl: LoadingController,
-    private store : Store
+    public store : Store
   ) {
   }
 
@@ -36,27 +35,7 @@ export class LoginPage implements OnInit, OnDestroy {
   }
 
   onLogin() {
-    console.log(this.loginForm);
-    this.router.navigate(['/home']);
-    
-    // if (this.loginForm.valid) {
-    //   const payload : login = {
-    //     username : this.loginForm.value.email,
-    //     password : this.loginForm.value.password
-    //   }
-    //   this.presentLoading().then(
-    //     () => {
-    //       this.loginSub = this.authService.login(this.loginForm.value.email, this.loginForm.value.password)
-    //         .subscribe(
-    //           (resData) => {
-    //             this.store.dispatch(new AddUser(resData));
-    //             this.router.navigate(['/register']);
-    //             this.loadingCtrl.dismiss();
-    //           }
-    //         )
-    //     }
-    //   );
-    // }
+    this.store.dispatch(new Login(this.loginForm.value.email, this.loginForm.value.password));
   }
 
   async presentLoading() {
