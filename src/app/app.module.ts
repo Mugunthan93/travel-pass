@@ -17,7 +17,6 @@ import { InterceptorService } from './services/http/interceptor/interceptor.serv
 import { HttpService } from './services/http/http.service';
 import { StatusBarService } from './services/status-bar/status-bar.service';
 import { SplashScreenService } from './services/splash-screen/splash-screen.service';
-import { platform } from 'os';
 
 @Injectable({
   providedIn: 'root'

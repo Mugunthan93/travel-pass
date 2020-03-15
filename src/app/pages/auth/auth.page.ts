@@ -36,18 +36,18 @@ export class AuthPage implements OnInit {
   onLogin() {
     console.log(this.loginForm);
     if (this.loginForm.valid) {
-      this.presentLoading().then(
-        () => {
-          this.loginSub = this.authService.login(this.loginForm.value.email, this.loginForm.value.password)
-            .subscribe(
-              (resData) => {
+      // this.presentLoading().then(
+      //   () => {
+      //     this.loginSub = this.authService.login(this.loginForm.value.email, this.loginForm.value.password)
+      //       .subscribe(
+      //         (resData) => {
 
-                this.router.navigate(['/', 'booking']);
-                this.loadingCtrl.dismiss();
-              }
-            )
-        }
-      );
+      //           this.router.navigate(['/', 'booking']);
+      //           this.loadingCtrl.dismiss();
+      //         }
+      //       )
+      //   }
+      // );
     }
   }
 

@@ -40,16 +40,16 @@ export class CityModalComponent implements OnInit, OnDestroy {
   searchCity(cityString: string) {
     let currentCityString = cityString;
     this.cities = [];
-    this.citySub = this.authService.searchCity(currentCityString).subscribe(
-      (resData) => {
-        console.log(resData);
-        if (this.cities.length > 0) {
-          this.cities = [];
-        }
-        this.cities = resData.data;
-        console.log(this.cities);
-      }
-    );
+    // this.citySub = this.authService.searchCity(currentCityString).subscribe(
+    //   (resData) => {
+    //     console.log(resData);
+    //     if (this.cities.length > 0) {
+    //       this.cities = [];
+    //     }
+    //     this.cities = resData.data;
+    //     console.log(this.cities);
+    //   }
+    // );
   }
 
   closeModal() {

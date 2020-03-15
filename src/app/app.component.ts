@@ -31,12 +31,12 @@ export class AppComponent implements OnInit{
   }
 
   onLogout() {
-    this.authService.logout().subscribe(
-      (resData) => {
-        this.menuController.close();
-        this.router.navigate(['/login']);
-      }
-    );
+    // this.authService.logout().subscribe(
+    //   (resData) => {
+    //     this.menuController.close();
+    //     this.router.navigate(['/login']);
+    //   }
+    // );
   }
 }
 

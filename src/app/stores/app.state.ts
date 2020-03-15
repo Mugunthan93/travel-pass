@@ -46,22 +46,22 @@ export class AppState {
     }
 
     @Action(Login)
-    Login(states: StateContext<App>, action: Login) {
-        return this.authService.login(action.username, action.password)
-            .pipe(
-                map(
-                    (resData) => {    
-                        const currentState = states.getState();
-                        console.log(currentState);
-                        states.patchState({
-                            user: resData
-                        });
-                        console.log(currentState);
-                        this.router.navigate(['/','home']);
-                    }
-                )
-            );
-    }
+    // Login(states: StateContext<App>, action: Login) {
+    //     return this.authService.login(action.username, action.password)
+    //         .pipe(
+    //             map(
+    //                 (resData) => {    
+    //                     const currentState = states.getState();
+    //                     console.log(currentState);
+    //                     states.patchState({
+    //                         user: resData
+    //                     });
+    //                     console.log(currentState);
+    //                     this.router.navigate(['/','home']);
+    //                 }
+    //             )
+    //         );
+    // }
 
     @Action(LogOut)
     Logout(states : StateContext<App>,action : LogOut){
