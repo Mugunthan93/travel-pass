@@ -9,36 +9,17 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient, HttpHandler } from '@angular/common/http';
 import { HTTP } from '@ionic-native/http/ngx';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { StateManagementModule } from './modules/state-management/state-management.module';
 import { InterceptorService } from './services/http/interceptor/interceptor.service';
-import { HttpService } from './services/http/http.service';
 import { StatusBarService } from './services/status-bar/status-bar.service';
 import { SplashScreenService } from './services/splash-screen/splash-screen.service';
-
-@Injectable({
-  providedIn: 'root'
-})
-export class HTTPService {
-
-  constructor(
-    public nativeHttp: HTTP
-  ) {
-  }
-}
-
-@Injectable({
-  providedIn: 'root'
-})
-export class PlatformService {
-
-  constructor(
-    public platform: Platform
-  ) {
-  }
-}
+import { PlatformService } from './services/platform/platform.service';
+import { AuthService } from './services/auth/auth.service';
+import { NativeHttpService } from './services/http/native-http/native-http.service';
+import { BrowserHttpService } from './services/http/browser-http/browser-http.service';
 
 
 @NgModule({
@@ -59,29 +40,17 @@ export class PlatformService {
   providers: [
     { provide: StatusBarService, useClass: StatusBar },
     { provide: SplashScreenService, useClass: SplashScreen },
-    { provide: HTTPService, useClass: HTTP },
-    { provide: PlatformService, useClass:Platform},
-    {
-      provide: HttpService,
-      useFactory: (browserHttp: HttpClient, nativeHttp: HTTP, platform: Platform) => {
-        platform.ready().then(
-          () => {
-            console.log(platform.platforms());
-            if (platform.is("desktop")) {
-              console.log("browser http triggered");
-              return new HttpService(browserHttp);
-            }
-            else if (platform.is("mobile")) {
-              console.log("native http triggered");
-              return new HttpService(nativeHttp);
-            }
-          }
-        );
+    { provide: NativeHttpService, useClass:HTTP },
+    { 
+      provide: BrowserHttpService,
+      useFactory:(httpHandler : HttpHandler) => {
+        return new BrowserHttpService(httpHandler);
       },
-      deps: [HttpClient, HTTPService, PlatformService]
+      deps:[HttpHandler]
     },
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    { provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true }
+    { provide:HttpClient, useClass:BrowserHttpService},
+    { provide: PlatformService, useClass:Platform},
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
 })

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
-import { HttpService } from '../http/http.service';
+import { NativeHttpService } from '../http/native-http/native-http.service';
+import { BrowserHttpService } from '../http/browser-http/browser-http.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,57 +9,59 @@ import { HttpService } from '../http/http.service';
 export class AuthService {
 
   constructor(
-    private httpService : HttpService
+    private httpService : BrowserHttpService
   ) {
+    console.log(this.httpService);
   }
 
-  // login(email: string, password: string) {
+  login(email: string, password: string) {
 
-  //   const login = {
-  //     username : email,
-  //     password : password
-  //   }
+    const login = {
+      username : email,
+      password : password
+    }
 
-  //   this.httpService.setAuth(email,password);
+    if(this.httpService instanceof NativeHttpService){
+      this.httpService.setAuth(email,password);
+    }
 
-  //   return this.httpService.post("/users/login",login)
-  //     .pipe(
-  //       map(resData => {
-  //         const userData = JSON.parse(resData.data);
-  //         return  userData;
-  //       })
-  //     );
-  // }
+    return this.httpService.postHttp("/users/login",login)
+      .pipe(
+        map(resData => {
+          return  resData;
+        })
+      );
+  }
 
-  // logout() {
+  logout() {
 
-  //   return this.httpService.post(environment.baseURL + "/users/logout")
-  //     .pipe(
-  //       map(
-  //         (logOutData) => {
-  //           return logOutData;
-  //         }
-  //       )
-  //     );
-  // }
+    return this.httpService.postHttp("/users/logout")
+      .pipe(
+        map(
+          (logOutData) => {
+            return logOutData;
+          }
+        )
+      );
+  }
 
-  // searchCity(reqCity: string) {
+  searchCity(reqCity: string) {
 
-  //   const param: { [key: string]: string | string[] } = {
-  //     "city": reqCity
-  //   }
+    const param: { [key: string]: string | string[] } = {
+      "city": reqCity
+    }
 
-  //   return this.httpService.get(environment.baseURL + "/airlines/tboairlinecities", param)
-  //     .pipe(
-  //       map(
-  //         (resData: any) => {
-  //           if (resData.status == 200) {
-  //             const data = JSON.parse(resData.data);
-  //             return data;
-  //           }
-  //         }
-  //       )
-  //   );
-  // }
+    return this.httpService.getHttp("/airlines/tboairlinecities", param)
+      .pipe(
+        map(
+          (resData: any) => {
+            if (resData.status == 200) {
+              const data = JSON.parse(resData.data);
+              return data;
+            }
+          }
+        )
+    );
+  }
 
 }

@@ -1,7 +1,6 @@
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { user } from '../models/user';
 import { AuthService } from '../services/auth/auth.service';
-import { login } from '../models/auth';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
@@ -30,9 +29,9 @@ export class AppState {
 
     constructor(
         public authService: AuthService,
-        public router : Router
+        public router: Router
     ) {
-        
+        console.log(this.authService);
     }
 
     @Selector()
@@ -46,22 +45,22 @@ export class AppState {
     }
 
     @Action(Login)
-    // Login(states: StateContext<App>, action: Login) {
-    //     return this.authService.login(action.username, action.password)
-    //         .pipe(
-    //             map(
-    //                 (resData) => {    
-    //                     const currentState = states.getState();
-    //                     console.log(currentState);
-    //                     states.patchState({
-    //                         user: resData
-    //                     });
-    //                     console.log(currentState);
-    //                     this.router.navigate(['/','home']);
-    //                 }
-    //             )
-    //         );
-    // }
+    Login(states: StateContext<App>, action: Login) {
+        return this.authService.login(action.username, action.password)
+            .pipe(
+                map(
+                    (resData) => {    
+                        const currentState = states.getState();
+                        console.log(currentState);
+                        states.patchState({
+                            user: resData
+                        });
+                        console.log(currentState);
+                        this.router.navigate(['/','home']);
+                    }
+                )
+            );
+    }
 
     @Action(LogOut)
     Logout(states : StateContext<App>,action : LogOut){
