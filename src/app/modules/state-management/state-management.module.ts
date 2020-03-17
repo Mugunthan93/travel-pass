@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, JsonPipe, APP_BASE_HREF } from '@angular/common';
 import { NgxsModule } from '@ngxs/store';
 import { AppState } from 'src/app/stores/app.state';
 import { environment } from 'src/environments/environment';
@@ -20,7 +20,9 @@ import { NativeStorage } from '@ionic-native/native-storage/ngx';
     CommonModule,
     NgxsModule.forRoot([AppState,SearchState], { developmentMode: !environment.production }),
     NgxsStoragePluginModule.forRoot({
-      key: []
+      key: [
+        'App.user'
+      ]
     }),
     NgxsFormPluginModule.forRoot(),
     NgxsRouterPluginModule.forRoot(),

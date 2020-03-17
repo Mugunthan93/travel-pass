@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, CanActivate, CanLoad, Route, UrlSegment, Router } from '@angular/router';
 import { Observable, pipe, of } from 'rxjs';
 import { Store } from '@ngxs/store';
+import { AppState } from 'src/app/stores/app.state';
 
 @Injectable({
   providedIn: 'root'
@@ -17,12 +18,15 @@ export class AuthGuard implements CanLoad, CanActivate  {
 
 
   canLoad(route: Route, segments: UrlSegment[]): boolean | Observable<boolean> | Promise<boolean> {
-    return true;
+    const isAuth = this.store.selectSnapshot(AppState.isUserAuthenticated);
+    return isAuth;
   }  
   
   
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    return true;
+    const isAuth = this.store.selectSnapshot(AppState.isUserAuthenticated);
+    return isAuth;
+
   }
 
   

@@ -50,12 +50,12 @@ export class AppState {
             .pipe(
                 map(
                     (resData) => {    
-                        const currentState = states.getState();
-                        console.log(currentState);
+                        console.log(resData);
+                        console.log(states.getState());
                         states.patchState({
-                            user: resData
+                            user : resData
                         });
-                        console.log(currentState);
+                        console.log(states.getState());
                         this.router.navigate(['/','home']);
                     }
                 )
