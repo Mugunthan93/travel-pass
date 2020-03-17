@@ -5,7 +5,10 @@ import { Router } from '@angular/router';
 
 export interface flightList{
   type : string,
-  accordian : string
+  accordian : string,
+  item? : {
+    val : string
+  }[]
 }
 
 @Component({

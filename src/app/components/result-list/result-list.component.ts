@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { flightList } from 'src/app/pages/home/result/flight/one-way/one-way.page';
 import { MatExpansionPanelHeader, matExpansionAnimations } from '@angular/material/expansion';
+import { ModalController } from '@ionic/angular';
+import { FlightBaggageComponent } from '../flight-baggage/flight-baggage.component';
 
 @Component({
   selector: 'app-result-list',
@@ -15,8 +17,9 @@ export class ResultListComponent implements OnInit,OnChanges {
   @Output() getFlightValue: EventEmitter<any> = new EventEmitter<any>(null);
   
   selectedFlight = null;
-
+  flightHeight : any;
   constructor(
+    public modalCtrl : ModalController
   ) {
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -25,6 +28,10 @@ export class ResultListComponent implements OnInit,OnChanges {
 
   ngOnInit() {
     console.log(this.selectedFlights);
+    this.flightList.forEach(
+      (el) => {
+        this.flightHeight = el.item.length*60+"px"
+    });
   }
 
   selectFlight(panel : MatExpansionPanelHeader, flight: any, evt: Event) {
@@ -65,6 +72,18 @@ export class ResultListComponent implements OnInit,OnChanges {
   private _isExpansionIndicator(target : EventTarget) : boolean {
     const expansionIndicatorClass = 'expandcol';
     return ((target as HTMLElement).classList && (target as HTMLElement).classList.contains(expansionIndicatorClass) );
+  }
+
+  async showBaggage(flight){
+    const modal = await this.modalCtrl.create({
+      component: FlightBaggageComponent,
+      componentProps: {
+        list: flight
+      },
+      cssClass:'baggage'
+    });
+
+    return await modal.present();
   }
 
 }

@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <ion-text>Baggage Information</ion-text>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeBaggage()">
+        <ion-icon name="close" size="large"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-row>
+    <ion-col>
+      <ion-row *ngFor="let bag of list">
+        <ion-col>
+          <ion-row>
+            <ion-text>New Delhi - Mumbai</ion-text>
+          </ion-row>
+          <ion-row>
+            <ion-col>Travellers</ion-col>
+            <ion-col>Cabin</ion-col>
+            <ion-col>Check-in</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>Adult</ion-col>
+            <ion-col>5-7 Kgs</ion-col>
+            <ion-col>15 Kgs</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>Infant</ion-col>
+            <ion-col>5-7 Kgs</ion-col>
+            <ion-col>0 Kgs</ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-content>

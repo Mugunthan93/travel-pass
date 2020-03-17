@@ -93,7 +93,7 @@ ion-content {
         }
     }
 
-    .passenger {
+    .passenger, .baggage {
         .modal-wrapper, .picker-wrapper{
         position: absolute;
         overflow: hidden;
@@ -109,7 +109,7 @@ ion-content {
         border: 0;
         box-shadow: 0 16px 20px rgba(0,0,0,.4);
         background-color: #fafafa;
-    }
+        }
     }
         
 }

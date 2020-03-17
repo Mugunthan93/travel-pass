@@ -40,7 +40,7 @@ export class AppState {
 
     @Selector()
     static isUserAuthenticated(state: App): boolean {
-        return !!state.user.id;
+        return state.user.id;
     }
 
     @Action(Login)

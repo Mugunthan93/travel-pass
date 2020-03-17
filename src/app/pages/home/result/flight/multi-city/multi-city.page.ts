@@ -12,14 +12,14 @@ import { TripFilterComponent } from 'src/app/components/trip-filter/trip-filter.
 export class MultiCityPage implements OnInit {
 
   flightList : flightList[] = [
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"}
+    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}]},
+    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}]},
+    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}]},
+    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}]},
+    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}]},
+    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}]},
+    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}]}
+
   ];
   panelOpenState = false;
   multipanel = true;

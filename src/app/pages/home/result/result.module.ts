@@ -8,6 +8,7 @@ import { ResultPageRoutingModule } from './result-routing.module';
 
 import { ResultPage } from './result.page';
 import { TripFilterComponent } from 'src/app/components/trip-filter/trip-filter.component';
+import { FlightBaggageComponent } from 'src/app/components/flight-baggage/flight-baggage.component';
 
 @NgModule({
   imports: [
@@ -18,10 +19,12 @@ import { TripFilterComponent } from 'src/app/components/trip-filter/trip-filter.
   ],
   declarations: [
     ResultPage,
-    TripFilterComponent
+    TripFilterComponent,
+    FlightBaggageComponent
   ],
   entryComponents: [
-    TripFilterComponent
+    TripFilterComponent,
+    FlightBaggageComponent
   ]
 })
 export class ResultPageModule {}
