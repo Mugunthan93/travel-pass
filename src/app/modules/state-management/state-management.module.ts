@@ -10,7 +10,6 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { SearchState } from 'src/app/stores/search.state';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
-import { CustomStorage } from 'src/app/stores/custom-storage';
 
 @NgModule({
   declarations: [],
@@ -34,8 +33,7 @@ import { CustomStorage } from 'src/app/stores/custom-storage';
     })
   ],
   providers: [
-    NativeStorage,
-    { provide:STORAGE_ENGINE,useClass:CustomStorage}
+    NativeStorage
   ]
 })
 export class StateManagementModule { }

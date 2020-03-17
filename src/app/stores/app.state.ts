@@ -1,8 +1,6 @@
 import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
-import { user } from '../models/user';
 import { AuthService } from '../services/auth/auth.service';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 
 export interface App {
@@ -16,12 +14,15 @@ export class Login {
     }
 }
 
-export class LogOut {
+export class Logout {
     static readonly type = '[App] LogOutUser';
 }
 
 @State<App>({
     name : 'App',
+    defaults:{
+        user : null
+    }
 })
 export class AppState {
 
@@ -57,8 +58,8 @@ export class AppState {
             );
     }
 
-    @Action(LogOut)
-    Logout(states : StateContext<App>,action : LogOut){
+    @Action(Logout)
+    Logout(states : StateContext<App>,action : Logout){
         return this.authService.logout()
             .pipe(
                 map(

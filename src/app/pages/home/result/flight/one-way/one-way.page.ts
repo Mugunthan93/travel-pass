@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { TripFilterComponent } from 'src/app/components/trip-filter/trip-filter.component';
 import { Router } from '@angular/router';

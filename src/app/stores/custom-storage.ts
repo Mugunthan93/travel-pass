@@ -20,7 +20,7 @@ export class CustomStorage implements StorageEngine{
         if (key !== 'undefined' && typeof key !== 'undefined' && key !== null) {
             return this.platform.ready().then(() => {
                 if(this.platform.is("desktop") || this.platform.is("mobile")){
-                    return sessionStorage.getItem(key);
+                    return localStorage.getItem(key);
                 }
                 else if(this.platform.is("android")){
                     return this.nativeStorage.getItem(key)
@@ -43,7 +43,7 @@ export class CustomStorage implements StorageEngine{
         if (key !== 'undefined' && typeof key !== 'undefined' && key !== null) {
             return this.platform.ready().then(() => {
                 if(this.platform.is("desktop") || this.platform.is("mobile")){
-                    return sessionStorage.setItem(key,val);
+                    return localStorage.setItem(key,val);
                 }
                 else if(this.platform.is("android")){
                     return this.nativeStorage.setItem(key, val)
@@ -65,7 +65,7 @@ export class CustomStorage implements StorageEngine{
         if (key !== 'undefined' && typeof key !== 'undefined' && key !== null) {
             return this.platform.ready().then(() => {
                 if(this.platform.is("desktop") || this.platform.is("mobile")){
-                    return sessionStorage.removeItem(key);
+                    return localStorage.removeItem(key);
                 }
                 else if(this.platform.is("android")){
                     return this.nativeStorage.remove(key)
@@ -86,7 +86,7 @@ export class CustomStorage implements StorageEngine{
     clear() {
         return this.platform.ready().then(() => {
             if(this.platform.is("desktop") || this.platform.is("mobile")){
-                return sessionStorage.clear();
+                return localStorage.clear();
             }
             else if(this.platform.is("android")){
                 return this.nativeStorage.clear()

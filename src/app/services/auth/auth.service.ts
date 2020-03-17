@@ -28,6 +28,7 @@ export class AuthService {
     return this.httpService.postHttp("/users/login",login)
       .pipe(
         map(resData => {
+          console.log(resData);
           return  resData;
         })
       );
