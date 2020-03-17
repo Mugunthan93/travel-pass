@@ -17,9 +17,11 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
     console.log("hello world");
-    this.actions.pipe(ofActionDispatched(LogOut)).subscribe(() => {
-      this.router.navigate(['/auth/login']);
-    });
+    // this.actions.pipe(ofActionDispatched(LogOut)).subscribe(() => {
+    //   this.router.navigate(['/auth/login']);
+    // });
   }
+
+
 
 }

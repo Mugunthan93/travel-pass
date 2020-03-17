@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
+import { Store } from '@ngxs/store';
+import { Navigation } from 'swiper/js/swiper.esm';
+import { Navigate } from '@ngxs/router-plugin';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,7 +13,8 @@ export class DashboardPage implements OnInit {
 
 
   constructor(
-    public menuCtrl : MenuController
+    public menuCtrl : MenuController,
+    public store : Store
   ) { }
 
   ngOnInit() {
@@ -21,7 +25,7 @@ export class DashboardPage implements OnInit {
   }
 
   onLogout() {
-    
+    this.store.dispatch(new Navigate(['/','auth','login']));
   }
 
   notification() {

@@ -1,11 +1,12 @@
-import { State, Action, StateContext, Selector } from '@ngxs/store';
+import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
 import { user } from '../models/user';
 import { AuthService } from '../services/auth/auth.service';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { Navigate } from '@ngxs/router-plugin';
 
 export interface App {
-    user : user | Object
+    user : any
 }
 
 export class Login {
@@ -21,15 +22,12 @@ export class LogOut {
 
 @State<App>({
     name : 'App',
-    defaults:{
-        user : null
-    }
 })
 export class AppState {
 
     constructor(
         public authService: AuthService,
-        public router: Router
+        public store : Store
     ) {
         console.log(this.authService);
     }
@@ -41,7 +39,7 @@ export class AppState {
 
     @Selector()
     static isUserAuthenticated(state: App): boolean {
-        return !!state.user;
+        return !!state.user.id;
     }
 
     @Action(Login)
@@ -49,14 +47,11 @@ export class AppState {
         return this.authService.login(action.username, action.password)
             .pipe(
                 map(
-                    (resData) => {    
-                        console.log(resData);
-                        console.log(states.getState());
+                    (resData) => {
                         states.patchState({
                             user : resData
                         });
-                        console.log(states.getState());
-                        this.router.navigate(['/','home']);
+                        this.store.dispatch(new Navigate(['/','home']));
                     }
                 )
             );
@@ -64,11 +59,17 @@ export class AppState {
 
     @Action(LogOut)
     Logout(states : StateContext<App>,action : LogOut){
-        const currentState = states.getState();
-        states.patchState({
-            user : null
-        });
-        console.log(currentState);
+        return this.authService.logout()
+            .pipe(
+                map(
+                    (resData) => {
+                        states.patchState({
+                            user : null
+                        });
+                        this.store.dispatch(new Navigate(['/','auth','login']));
+                    }
+                )
+            );
     }
 
 }

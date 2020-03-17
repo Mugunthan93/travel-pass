@@ -29,14 +29,5 @@ export class AppComponent implements OnInit{
 
   initializeApp() {
   }
-
-  onLogout() {
-    // this.authService.logout().subscribe(
-    //   (resData) => {
-    //     this.menuController.close();
-    //     this.router.navigate(['/login']);
-    //   }
-    // );
-  }
 }
 

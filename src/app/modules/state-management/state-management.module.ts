@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, JsonPipe, APP_BASE_HREF } from '@angular/common';
+import { CommonModule} from '@angular/common';
 import { NgxsModule } from '@ngxs/store';
 import { AppState } from 'src/app/stores/app.state';
 import { environment } from 'src/environments/environment';
@@ -9,10 +9,8 @@ import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { SearchState } from 'src/app/stores/search.state';
-import { CustomStorage } from 'src/app/stores/custom-storage';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
-
-
+import { CustomStorage } from 'src/app/stores/custom-storage';
 
 @NgModule({
   declarations: [],
@@ -37,7 +35,7 @@ import { NativeStorage } from '@ionic-native/native-storage/ngx';
   ],
   providers: [
     NativeStorage,
-    { provide: STORAGE_ENGINE, useClass: CustomStorage }
+    { provide:STORAGE_ENGINE,useClass:CustomStorage}
   ]
 })
 export class StateManagementModule { }
