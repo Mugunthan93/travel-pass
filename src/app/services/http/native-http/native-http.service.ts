@@ -1,47 +1,100 @@
 import { Injectable } from '@angular/core';
-import { HTTP } from '@ionic-native/http/ngx';
+import { HTTP, HTTPResponse } from '@ionic-native/http/ngx';
 import { environment } from 'src/environments/environment';
-import { Observable, from } from 'rxjs';
+import { Observable, from, of } from 'rxjs';
+import { Platform } from '@ionic/angular';
+
+export interface auth{
+  Authorization: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
-export class NativeHttpService extends HTTP {
+export class NativeHttpService {
+
+  private header : any;
 
   constructor(
+    public platform : Platform,
+    public http : HTTP
   ) {
-    super();
-      this.setHeader(environment.baseURL, "Acenvironment.baseURL cess-Control-Allow-Origin", '*');
-      this.setHeader(environment.baseURL, "Access-Control-Allow-Headers", "Content-Type");
-      this.setHeader(environment.baseURL, "Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
-      this.setHeader(environment.baseURL, "Content-Type:", "application/json; charset=utf-8");
+    console.log(http);
+      this.http.setHeader(environment.baseURL, "Access-Control-Allow-Origin", '*');
+      this.http.setHeader(environment.baseURL, "Access-Control-Allow-Headers", "Content-Type");
+      this.http.setHeader(environment.baseURL, "Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+      this.http.setHeader(environment.baseURL, "Content-Type:", "application/json; charset=utf-8");
+
+      this.header = this.http.getHeaders(environment.baseURL);
   }
 
-  setAuth(username,password) : void {
-    this.useBasicAuth(username,password);
+  async setAuth(username : string,password : string) : Promise<void>  {
+    await this.platform.ready();
+    console.log("platform ready");
+    this.http.useBasicAuth(username,password);
   }
 
-  getAuth(username,password) {
-    return this.getBasicAuthHeader(username, password);
+  async getAuth(username,password) : Promise<auth> {
+    await this.platform.ready()
+    return this.http.getBasicAuthHeader(username, password);
   }
 
-  getHTTP(url: string, opt: any): Observable<any>  {
-      return from(this.get(environment.baseURL + url, opt, this.getHeaders(environment.baseURL)));
+  async get(url: string, opt: any): Promise<HTTPResponse>  {
+    await this.platform.ready();
+    try {
+      const data = await this.http.post(environment.baseURL + url, opt, this.header);
+      console.log("try success",data);
+      return data;
+    }
+    catch (error) {
+      console.log("catch error",error);
+      return error;
+    }
   }
 
-  postHTTP(url: string, body?: any) : Observable<any> {
-    return from(this.post(environment.baseURL + url, body, this.getHeaders(environment.baseURL)));
+  async post(url: string, body?: any) : Promise<HTTPResponse> {
+    await this.platform.ready();
+    try {
+      const data = await this.http.post(environment.baseURL + url, body, this.header);
+      console.log("try success",data);
+      return data;
+    }
+    catch (error) {
+      console.log("catch error",error);
+      return error;
+    }
   }
 
-  putHTTP(url: string, body: any) {
-    return from(this.put(environment.baseURL + url,body, this.getHeaders(environment.baseURL)));
+  async put(url: string, body: any) : Promise<Observable<HTTPResponse>> {
+    await this.platform.ready();
+    try {
+      const data = await this.http.put(environment.baseURL + url, body, this.header);
+      return of(data);
+    }
+    catch (error) {
+      return of(error);
+    }
   }
 
-  patchHTTP(url: string, body: any) {
-    return from(this.patch(environment.baseURL + url, body, this.getHeaders(environment.baseURL)));
+  async patch(url: string, body: any) : Promise<Observable<HTTPResponse>> {
+    await this.platform.ready();
+    try {
+      const data = await this.http.patch(environment.baseURL + url, body, this.header);
+      return of(data);
+    }
+    catch (error) {
+      return of(error);
+    }
   }
 
-  deleteHTTP(url: string, opt: any) {
-    return from(this.delete(environment.baseURL + url, opt, this.getHeaders(environment.baseURL)));
+  async delete(url: string, opt: any) : Promise<Observable<HTTPResponse>> {
+    await this.platform.ready();
+    try {
+      const data = await this.http.delete(environment.baseURL + url, opt, this.header);
+      return of(data);
+    }
+    catch (error) {
+      return of(error);
+    }
   }
 }

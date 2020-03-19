@@ -41,6 +41,10 @@ import { BrowserHttpService } from './services/http/browser-http/browser-http.se
     HTTP,
     { provide: StatusBarService, useClass: StatusBar },
     { provide: SplashScreenService, useClass: SplashScreen },
+
+    { provide: NativeHttpService, useFactory:HTTP },
+    { provide:HttpClient, useClass:BrowserHttpService},
+
     { 
       provide: BrowserHttpService,
       useFactory:(httpHandler : HttpHandler) => {
@@ -48,7 +52,13 @@ import { BrowserHttpService } from './services/http/browser-http/browser-http.se
       },
       deps:[HttpHandler]
     },
-    { provide:HttpClient, useClass:BrowserHttpService},
+    { 
+      provide: AuthService,
+      useFactory:(platform:Platform,http : HTTP) => {
+        return new AuthService(platform,http);
+      },
+      deps:[Platform,HTTP]
+    },
     { provide: PlatformService, useClass:Platform},
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

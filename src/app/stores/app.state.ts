@@ -1,7 +1,9 @@
 import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
 import { AuthService } from '../services/auth/auth.service';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Navigate } from '@ngxs/router-plugin';
+import { Observable } from 'rxjs';
+import { HTTPResponse } from '@ionic-native/http/ngx';
 
 export interface App {
     user : any
@@ -28,7 +30,6 @@ export class AppState {
         public authService: AuthService,
         public store : Store
     ) {
-        console.log(this.authService);
     }
 
     @Selector()
@@ -43,32 +44,22 @@ export class AppState {
 
     @Action(Login)
     async Login(states: StateContext<App>, action: Login) {
-        return (await this.authService.login(action.username, action.password))
-            .pipe(
-                map(
-                    (resData) => {
-                        states.patchState({
-                            user : resData
-                        });
-                        this.store.dispatch(new Navigate(['/','home']));
-                    }
-                )
-            );
+        const login = await this.authService.login(action.username, action.password);
+        console.log(login);
+        states.patchState({
+            user : JSON.parse(login.data)
+        });
+        this.store.dispatch(new Navigate(['/','home']));
     }
 
     @Action(Logout)
-    Logout(states : StateContext<App>,action : Logout){
-        return this.authService.logout()
-            .pipe(
-                map(
-                    (resData) => {
-                        states.patchState({
-                            user : null
-                        });
-                        this.store.dispatch(new Navigate(['/','auth','login']));
-                    }
-                )
-            );
+    async Logout(states : StateContext<App>,action : Logout){
+        const logout = await this.authService.logout();
+        console.log(logout);
+        states.patchState({
+            user : null
+        });
+        this.store.dispatch(new Navigate(['/','auth','login']));
     }
 
 }
