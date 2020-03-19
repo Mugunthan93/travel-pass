@@ -38,9 +38,9 @@ import { BrowserHttpService } from './services/http/browser-http/browser-http.se
     StateManagementModule
   ],
   providers: [
+    HTTP,
     { provide: StatusBarService, useClass: StatusBar },
     { provide: SplashScreenService, useClass: SplashScreen },
-    { provide: NativeHttpService, useClass:HTTP },
     { 
       provide: BrowserHttpService,
       useFactory:(httpHandler : HttpHandler) => {

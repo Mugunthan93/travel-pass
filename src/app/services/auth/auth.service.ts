@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { NativeHttpService } from '../http/native-http/native-http.service';
-import { BrowserHttpService } from '../http/browser-http/browser-http.service';
+import { Platform } from '@ionic/angular';
+import { Observable, from } from 'rxjs';
+import { HTTP } from '@ionic-native/http/ngx';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,35 +12,39 @@ import { BrowserHttpService } from '../http/browser-http/browser-http.service';
 export class AuthService {
 
   constructor(
-    private httpService : BrowserHttpService
+    public platform : Platform,
+    private http : HTTP
   ) {
-    console.log(this.httpService);
+    console.log(this.http);
+    this.http.setHeader(environment.baseURL, "Acenvironment.baseURL cess-Control-Allow-Origin", '*');
+    this.http.setHeader(environment.baseURL, "Access-Control-Allow-Headers", "Content-Type");
+    this.http.setHeader(environment.baseURL, "Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+    this.http.setHeader(environment.baseURL, "Content-Type:", "application/json; charset=utf-8");
   }
 
-  login(email: string, password: string) {
+  async login(email: string, password: string) : Promise<Observable<any>>{
 
     const login = {
       username : email,
       password : password
     }
-
-    if(this.httpService instanceof NativeHttpService){
-      this.httpService.setAuth(email,password);
-    }
-
-    return this.httpService.postHttp("/users/login",login)
-      .pipe(
-        map(resData => {
-          console.log(resData);
-          return  resData;
-        })
-      );
+    return this.platform.ready().then(
+      () => {
+      this.http.useBasicAuth(email, password);
+        return this.http.post(environment.baseURL + "/users/login", login, this.http.getHeaders(environment.baseURL))
+          .then()
+      }
+    )
   }
 
   logout() {
 
-    return this.httpService.postHttp("/users/logout")
+    return from(this.platform.ready())
       .pipe(
+        tap(
+          () => {
+            return this.http.post(environment.baseURL + "/users/logout", {}, this.http.getHeaders(environment.baseURL))
+          }),
         map(
           (logOutData) => {
             return logOutData;
@@ -52,8 +59,12 @@ export class AuthService {
       "city": reqCity
     }
 
-    return this.httpService.getHttp("/airlines/tboairlinecities", param)
+    return from(this.platform.ready())
       .pipe(
+        tap(
+          () => {
+            return this.http.get(environment.baseURL + "/airlines/tboairlinecities", param, this.http.getHeaders(environment.baseURL));
+          }),
         map(
           (resData: any) => {
             if (resData.status == 200) {
@@ -61,8 +72,7 @@ export class AuthService {
               return data;
             }
           }
-        )
-    );
+        ));
   }
 
 }

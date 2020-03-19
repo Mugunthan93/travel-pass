@@ -25,7 +25,6 @@ export class AuthGuard implements CanActivate  {
     else{
       this.store.dispatch(new Navigate(['/','auth','login']));
     }
-    return true;
   }
 
   

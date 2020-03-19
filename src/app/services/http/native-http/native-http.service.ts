@@ -6,42 +6,42 @@ import { Observable, from } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class NativeHttpService {
+export class NativeHttpService extends HTTP {
 
   constructor(
-    public nativeHttp: HTTP
   ) {
-      this.nativeHttp.setHeader(environment.baseURL, "Acenvironment.baseURL cess-Control-Allow-Origin", '*');
-      this.nativeHttp.setHeader(environment.baseURL, "Access-Control-Allow-Headers", "Content-Type");
-      this.nativeHttp.setHeader(environment.baseURL, "Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
-      this.nativeHttp.setHeader(environment.baseURL, "Content-Type:", "application/json; charset=utf-8");
+    super();
+      this.setHeader(environment.baseURL, "Acenvironment.baseURL cess-Control-Allow-Origin", '*');
+      this.setHeader(environment.baseURL, "Access-Control-Allow-Headers", "Content-Type");
+      this.setHeader(environment.baseURL, "Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+      this.setHeader(environment.baseURL, "Content-Type:", "application/json; charset=utf-8");
   }
 
   setAuth(username,password) : void {
-    this.nativeHttp.useBasicAuth(username,password);
+    this.useBasicAuth(username,password);
   }
 
   getAuth(username,password) {
-    return this.nativeHttp.getBasicAuthHeader(username, password);
+    return this.getBasicAuthHeader(username, password);
   }
 
-  get(url: string, opt: any): Observable<any>  {
-      return from(this.nativeHttp.get(environment.baseURL + url, opt, this.nativeHttp.getHeaders(environment.baseURL)));
+  getHTTP(url: string, opt: any): Observable<any>  {
+      return from(this.get(environment.baseURL + url, opt, this.getHeaders(environment.baseURL)));
   }
 
-  post(url: string, body?: any) : Observable<any> {
-    return from(this.nativeHttp.post(environment.baseURL + url, body, this.nativeHttp.getHeaders(environment.baseURL)));
+  postHTTP(url: string, body?: any) : Observable<any> {
+    return from(this.post(environment.baseURL + url, body, this.getHeaders(environment.baseURL)));
   }
 
-  put(url: string, body: any) {
-    return from(this.nativeHttp.put(environment.baseURL + url,body, this.nativeHttp.getHeaders(environment.baseURL)));
+  putHTTP(url: string, body: any) {
+    return from(this.put(environment.baseURL + url,body, this.getHeaders(environment.baseURL)));
   }
 
-  patch(url: string, body: any) {
-    return from(this.nativeHttp.patch(environment.baseURL + url, body, this.nativeHttp.getHeaders(environment.baseURL)));
+  patchHTTP(url: string, body: any) {
+    return from(this.patch(environment.baseURL + url, body, this.getHeaders(environment.baseURL)));
   }
 
-  delete(url: string, opt: any) {
-    return from(this.nativeHttp.delete(environment.baseURL + url, opt, this.nativeHttp.getHeaders(environment.baseURL)));
+  deleteHTTP(url: string, opt: any) {
+    return from(this.delete(environment.baseURL + url, opt, this.getHeaders(environment.baseURL)));
   }
 }

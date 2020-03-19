@@ -20,9 +20,7 @@ export class Logout {
 
 @State<App>({
     name : 'App',
-    defaults:{
-        user : null
-    }
+    defaults:null
 })
 export class AppState {
 
@@ -40,12 +38,12 @@ export class AppState {
 
     @Selector()
     static isUserAuthenticated(state: App): boolean {
-        return state.user.id;
+        return !!state.user.id;
     }
 
     @Action(Login)
-    Login(states: StateContext<App>, action: Login) {
-        return this.authService.login(action.username, action.password)
+    async Login(states: StateContext<App>, action: Login) {
+        return (await this.authService.login(action.username, action.password))
             .pipe(
                 map(
                     (resData) => {

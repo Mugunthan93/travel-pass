@@ -8,16 +8,20 @@ import { NgxsFormPluginModule } from '@ngxs/form-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
-import { SearchState } from 'src/app/stores/search.state';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
+
+import { CustomStorage } from 'src/app/stores/custom-storage';
+import { Platform } from '@ionic/angular';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-    NgxsModule.forRoot([AppState,SearchState], { developmentMode: !environment.production }),
+    NgxsModule.forRoot([AppState], { developmentMode: !environment.production }),
     NgxsStoragePluginModule.forRoot({
       key: [
+        'App',
+        'App.user.id',
         'App.user'
       ]
     }),
@@ -31,9 +35,6 @@ import { NativeStorage } from '@ionic-native/native-storage/ngx';
       name: 'App',
       disabled: true
     })
-  ],
-  providers: [
-    NativeStorage
   ]
 })
 export class StateManagementModule { }

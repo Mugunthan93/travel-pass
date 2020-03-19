@@ -27,7 +27,7 @@ export class CustomStorage implements StorageEngine{
                         .then(
                             (data) => {
                                 console.log(data);
-                                return data
+                                return data;
                             },
                             (error) => {
                                 console.log(error);
@@ -40,12 +40,15 @@ export class CustomStorage implements StorageEngine{
     }
 
     setItem(key: string, val: any) {
+        if (val == undefined) {
+            val = null
+        }
         if (key !== 'undefined' && typeof key !== 'undefined' && key !== null) {
             return this.platform.ready().then(() => {
-                if(this.platform.is("desktop") || this.platform.is("mobile")){
-                    return localStorage.setItem(key,val);
+                if (this.platform.is("desktop") || this.platform.is("mobile")) {
+                    return localStorage.setItem(key, val);
                 }
-                else if(this.platform.is("android")){
+                else if (this.platform.is("android")) {
                     return this.nativeStorage.setItem(key, val)
                         .then(
                             () => {
