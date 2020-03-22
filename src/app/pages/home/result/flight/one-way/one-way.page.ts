@@ -18,15 +18,14 @@ export interface flightList{
 })
 export class OneWayPage implements OnInit {
 
-  flightList : flightList[] = [
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"},
-    {type:"listItem",accordian : "baggageItem"}
+  flightList: flightList[] = [
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] }
   ];
   panelOpenState = false;
   multipanel = true;

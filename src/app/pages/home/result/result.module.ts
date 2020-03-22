@@ -9,18 +9,21 @@ import { ResultPageRoutingModule } from './result-routing.module';
 import { ResultPage } from './result.page';
 import { TripFilterComponent } from 'src/app/components/trip-filter/trip-filter.component';
 import { FlightBaggageComponent } from 'src/app/components/flight-baggage/flight-baggage.component';
-
+import { ResultListComponent } from 'src/app/components/result-list/result-list.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ResultPageRoutingModule
+    ResultPageRoutingModule,
+    // MatExpansionModule
   ],
   declarations: [
     ResultPage,
     TripFilterComponent,
-    FlightBaggageComponent
+    FlightBaggageComponent,
+    // ResultListComponent
   ],
   entryComponents: [
     TripFilterComponent,

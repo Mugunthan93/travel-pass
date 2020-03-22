@@ -19,21 +19,23 @@ export class RoundTripPage implements OnInit {
   selectedDepartureFlight : any = null;
   selectedReturnFlight : any = null;
   
-  departList : flightList[] = [
-    {type:"listItem1",accordian : "baggageItem1"},
-    {type:"listItem2",accordian : "baggageItem2"},
-    {type:"listItem3",accordian : "baggageItem3"},
-    {type:"listItem4",accordian : "baggageItem4"},
-    {type:"listItem5",accordian : "baggageItem5"},
-    {type:"listItem6",accordian : "baggageItem6"}
+  departList: flightList[] = [
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] }
   ];
-  returnList : flightList[] = [
-    {type:"listItem7",accordian : "baggageItem7"},
-    {type:"listItem8",accordian : "baggageItem8"},
-    {type:"listItem9",accordian : "baggageItem9"},
-    {type:"listItem10",accordian : "baggageItem10"},
-    {type:"listItem11",accordian : "baggageItem11"},
-    {type:"listItem12",accordian : "baggageItem12"}
+  returnList: flightList[] = [
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] }
   ];
 
   constructor(

@@ -16,41 +16,6 @@ export class OneWayPage implements OnInit {
 
   oneWaySearch: FormGroup;
   @ViewChild('select',{static : true}) select : IonSelect;
-  traveller = [
-    [
-      '1',
-      '2',
-      '3',
-      '4',
-      '5',
-      '6',
-      '7',
-      '8',
-      '9'
-    ],
-    [
-      '1',
-      '2',
-      '3',
-      '4',
-      '5',
-      '6',
-      '7',
-      '8',
-      '9'
-    ],
-    [
-      '1',
-      '2',
-      '3',
-      '4',
-      '5',
-      '6',
-      '7',
-      '8',
-      '9'
-    ]
-  ];
 
   constructor(
     public modalCtrl: ModalController,
@@ -131,106 +96,18 @@ export class OneWayPage implements OnInit {
   }
 
   searchFlight() {
-    console.log(this.oneWaySearch.value);
     this.booking.search('flight');
-  }
-
-  async selectPassenger(numColumns, numOptions) {
-    const pickr = await this.pickrCtrl.create({
-      columns: [
-      {
-        name: 'Adult',
-        options: [
-          { text: 'One', value: '1' },
-          { text: 'two', value: '2' },
-          { text: 'three', value: '3' },
-          { text: 'four', value: '4' },
-          { text: 'five', value: '5' },
-          { text: 'six', value: '6' },
-          { text: 'seven', value: '7' },
-          { text: 'eight', value: '8' },
-          { text: 'nine', value: '9' }
-        ],
-        selectedIndex:3
-      },
-      {
-        name: 'child',
-        options: [
-          { text: 'One', value: '1' },
-          { text: 'two', value: '2' },
-          { text: 'three', value: '3' },
-          { text: 'four', value: '4' },
-          { text: 'five', value: '5' },
-          { text: 'six', value: '6' },
-          { text: 'seven', value: '7' },
-          { text: 'eight', value: '8' },
-          { text: 'nine', value: '9' }
-        ],
-        selectedIndex:3
-        },
-        {
-          name: 'infant',
-          options: [
-            { text: 'One', value: '1' },
-            { text: 'two', value: '2' },
-            { text: 'three', value: '3' },
-            { text: 'four', value: '4' },
-            { text: 'five', value: '5' },
-            { text: 'six', value: '6' },
-            { text: 'seven', value: '7' },
-            { text: 'eight', value: '8' },
-            { text: 'nine', value: '9' }
-          ],
-          selectedIndex:3
-        }
-      ],
-      buttons: [
-        {
-          text: 'cancel',
-          role : 'cancel'
-        },
-        {
-          text: 'confirm',
-          role: 'confirm',
-          handler: (val) => {
-            console.log(val);
-          }
-        }
-      ],
-      cssClass :'passenger'
-    });
-
-    return await pickr.present();
-  }
-
-  getColumns(numColumns, numOptions, columnOptions) {
-  let columns = [];
-  for (let i = 0; i < numColumns; i++) {
-    columns.push({
-      name: `col-${i}`,
-      options: this.getColumnOptions(i, numOptions, columnOptions)
-    });
-  }
-
-  return columns;
-  }
-
-  getColumnOptions(columnIndex, numOptions, columnOptions) {
-    let options = [];
-    for (let i = 0; i < numOptions; i++) {
-      options.push({
-        text: columnOptions[columnIndex][i % numOptions],
-        value: i
-      })
-    }
   }
 
   async selectPassengers() {
     const modal = await this.modalCtrl.create({
       component: PassengerModalComponent,
+      componentProps: {
+        currentPassengers : this.oneWaySearch.controls['traveller'].value
+      },
       showBackdrop : true,
       backdropDismiss : true,
-      cssClass : 'passenger'
+      cssClass: 'passenger'
     });
 
     modal.onDidDismiss().then(
@@ -243,7 +120,6 @@ export class OneWayPage implements OnInit {
   }
 
   selectClass() {
-    console.log(this.oneWaySearch);
     this.select.open();
   }
 }

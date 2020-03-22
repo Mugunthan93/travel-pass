@@ -73,7 +73,14 @@ form{
                     }
                 }
                 ion-col:last-child{
+                    --ion-grid-column-padding:0px;
                     ion-row{
+                        ion-text{
+                            margin-left:auto;
+                        }
+                    }
+                    ion-col{
+                        --ion-grid-column-padding:0px;
                         ion-text{
                             margin-left:auto;
                         }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-multi-city',
@@ -10,10 +11,16 @@ export class MultiCityPage implements OnInit {
 
   oneWaySearch : FormGroup
 
-  constructor() { }
+  constructor(
+    public router : Router
+  ) { }
 
   ngOnInit() {
     this.oneWaySearch = new FormGroup({});
+  }
+
+  searchFlight() {
+    this.router.navigate(['/','home','result','flight','multi-city']);
   }
 
 }

@@ -8,7 +8,7 @@ import { FlightBaggageComponent } from '../flight-baggage/flight-baggage.compone
   selector: 'app-result-list',
   templateUrl: './result-list.component.html',
   styleUrls: ['./result-list.component.scss'],
-  animations : [matExpansionAnimations.bodyExpansion]
+  animations: [matExpansionAnimations.bodyExpansion]
 })
 export class ResultListComponent implements OnInit,OnChanges {
 
@@ -27,11 +27,16 @@ export class ResultListComponent implements OnInit,OnChanges {
   }
 
   ngOnInit() {
-    console.log(this.selectedFlights);
-    this.flightList.forEach(
-      (el) => {
-        this.flightHeight = el.item.length*60+"px"
-    });
+    console.log(this.flightList);
+      this.flightList.forEach(
+        (el) => {
+          if (el.item) {
+            this.flightHeight = el.item.length * 60 + "px";
+          }
+          else {
+            this.flightHeight = "60px";
+          }
+      });
   }
 
   selectFlight(panel : MatExpansionPanelHeader, flight: any, evt: Event) {

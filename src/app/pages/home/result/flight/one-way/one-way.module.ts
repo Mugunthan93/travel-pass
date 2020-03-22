@@ -7,8 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { OneWayPageRoutingModule } from './one-way-routing.module';
 
 import { OneWayPage } from './one-way.page';
-import { ResultListComponent } from 'src/app/components/result-list/result-list.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { ResultListComponent } from 'src/app/components/result-list/result-list.component';
 
 @NgModule({
   imports: [
@@ -16,11 +16,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
     FormsModule,
     IonicModule,
     OneWayPageRoutingModule,
-    MatExpansionModule
+    // MatExpansionModule
   ],
   declarations: [
     OneWayPage,
-    ResultListComponent
+    // ResultListComponent
   ]
 })
 export class OneWayPageModule {}
