@@ -1,21 +1,16 @@
-calendar{
-    ion-text{
-        font-size: small;
-    }
+ion-calendar{
+    padding:0px 0px 0px 0px;
+    height:100%;
+}
 
-    ::ng-deep {
-        td.monthview-selected {
-            background-color: rgb(5, 5, 77);
-            ion-text{
-                color:white !important;
-            }
-        }
-        td.text-muted{
-            background-color: rgb(252, 206, 206);
-            ion-text{
-                
-            }
+ion-grid{
+    --ion-grid-padding:0px;
+    height:100%;
+    ion-row{
+        height:100%;
+        ion-col{
+        height:100%;
+            --ion-grid-column-padding:0px;
         }
     }
-
 }

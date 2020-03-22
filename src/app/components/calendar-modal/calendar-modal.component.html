@@ -3,27 +3,18 @@
       <ion-title>
         <ion-text>select Date</ion-text>
       </ion-title>
-     <ion-buttons slot="end" (click)="close(this.myCalendar.currentDate)">
+     <ion-buttons slot="end" (click)="close(date)">
         <ion-icon size="large" name="close"></ion-icon>
      </ion-buttons>
    </ion-toolbar>
  </ion-header>
 <ion-content>
-
-   <calendar #myCalendar
-      [currentDate]="myCalendar.currentDate" 
-      step="60"
-      [monthviewDisplayEventTemplate]="monthviewDisplay">
-   </calendar>
+   <ion-grid>
+      <ion-row>
+         <ion-col>
+            <ion-calendar #calendar [(ngModel)]="date" [format]="'YYYY-MM-DD'" [options]="dateOptions"></ion-calendar>
+         </ion-col>
+      </ion-row>
+   </ion-grid>
 </ion-content>
 
-<ng-template #monthviewDisplay let-view="view" let-row="row" let-col="col">
-   <ion-row>
-      <ion-text>
-         {{view.dates[row*7+col].label}}
-      </ion-text>
-   </ion-row>
-   <ion-row>
-      <ion-text>$4000</ion-text>
-   </ion-row>
-</ng-template>

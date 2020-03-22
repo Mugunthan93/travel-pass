@@ -5,6 +5,7 @@ import { CityModalComponent } from 'src/app/components/city-modal/city-modal.com
 import { BookingService } from 'src/app/services/booking/booking.service';
 import { CalendarModalComponent } from 'src/app/components/calendar-modal/calendar-modal.component';
 import { PassengerModalComponent } from 'src/app/components/passenger-modal/passenger-modal.component';
+import { CalendarComponentOptions, CalendarOptions, CalendarModalOptions, CalendarModal, CalendarResult } from 'ion2-calendar';
 
 @Component({
   selector: 'app-one-way',
@@ -99,17 +100,34 @@ export class OneWayPage implements OnInit {
   }
 
   async selectDate() {
+    const options: CalendarModalOptions = {
+      title: 'DEPARTURE',
+      pickMode: 'single',
+      color: 'dark',
+      weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      weekStart: 1,
+      canBackwardsSelected: false,
+      closeLabel: 'Close',
+      doneLabel: 'OK',
+      defaultDate: this.oneWaySearch.controls['departure'].value
+    }
     const modal = await this.modalCtrl.create({
-      component: CalendarModalComponent
-    });
-
-    modal.onDidDismiss().then(
-      (selectedDate) => {
-        this.oneWaySearch.controls['departure'].patchValue(selectedDate.data);
+      component: CalendarModal,
+      componentProps: {
+        options
       }
-    );
+    });
+    
+    modal.present();
 
-    return await modal.present();
+    const event: any = await modal.onDidDismiss();
+    if (event.role == 'done') {
+      this.oneWaySearch.controls['departure'].patchValue(event.data.dateObj);
+    }
+    else if (event.role == 'cancel') {
+      return; 
+    }
+
   }
 
   searchFlight() {
