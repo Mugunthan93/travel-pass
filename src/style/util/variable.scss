@@ -1,3 +1,16 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 
-$mobile-font-family : 'Roboto',sans-serif;
+$mobile-grid-width : 320px;
+:root {
+    
+    $mobile-font-family : 'Roboto',sans-serif;
+
+    //grid section
+    $mobile-grid-width : (
+        "xs" : 320px,
+        "sm" : 360px,
+        "md" : 400px,
+        "lg" : 420px,
+        "xl" : 450px
+    );
+}

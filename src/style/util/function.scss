@@ -1,0 +1,10 @@
+@import "variable.scss";
+
+@function font-size(){
+    @if($mobile-grid-width <= 576){
+        @return 10px;
+    }
+    @else if($mobile-grid-width > 576){
+        @return 20px;
+    }
+}

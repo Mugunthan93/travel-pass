@@ -3,6 +3,10 @@ ion-grid#home-page{
     flex-flow: column;
     margin:0px 0px 0px 0px;
     height : 100%;
+    >ion-row:first-child{
+        margin-top:15px;
+        margin-bottom:15px;
+    }
     >ion-row:last-child{
         display: flex; 
         flex-flow: column;
@@ -13,14 +17,15 @@ ion-grid#home-page{
 ion-grid#carrier{
     --ion-grid-padding:10px;
 
-    ion-text{
-        text-transform: uppercase;
-        padding-left : 10px;
-        color:grey;
-        font-weight: bold;
-        font-size: small;
-    }
+    ion-label {
 
+        ion-icon{
+            padding-bottom: 10px;
+        }
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+    }
 
 }
 

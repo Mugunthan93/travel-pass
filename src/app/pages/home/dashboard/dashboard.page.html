@@ -6,52 +6,61 @@
   </ion-header>
   <ion-content>
     <ion-list>
-      <ion-item>Menu Item</ion-item>
-      <ion-item>Menu Item</ion-item>
-      <ion-item>Menu Item</ion-item>
-      <ion-item>Menu Item</ion-item>
-      <ion-item (click)="onLogout()">Log Out</ion-item>
+      <ion-item>
+        <ion-text>
+          Menu Item
+        </ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-text>
+          Menu Item
+        </ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-text>
+          Menu Item
+        </ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-text>
+          Menu Item
+        </ion-text>
+      </ion-item>
+      <ion-item (toggle)="onLogout()">
+        <ion-text>
+          Log Out
+        </ion-text>
+      </ion-item>
     </ion-list>
   </ion-content>
 </ion-menu>
 <ion-header id="sidebar">
   <ion-toolbar>
-    <ion-item lines="none" button slot="start" mode="md" (click)="openMenu()">
-      <ion-icon name="menu"></ion-icon>
-    </ion-item>
-    <ion-grid id="header">
-      <ion-row>
-        <ion-col size="8">
-          <ion-title>
-            <ion-item lines="none">
-              <ion-text>
-                Travellers Pass
-              </ion-text>
-            </ion-item>
-          </ion-title>
-        </ion-col>
-        <ion-col size="2">
-          <ion-item lines="none" button (click)="notification()">
-            <ion-avatar slot="start">
-              <ion-icon name="notifications-outline" size="large"></ion-icon>
-            </ion-avatar>
-          </ion-item>
-        </ion-col>
-        <ion-col size="2">
-          <ion-item lines="none" button (click)="profile()">
-            <ion-avatar slot="start">
-              <ion-icon src="../../../../../assets/ionicons/md-people-circle-outline.svg" size="large"></ion-icon>
-            </ion-avatar>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <ion-buttons  slot="start">
+      <ion-button (click)="openMenu()">
+        <ion-icon name="menu"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+        <ion-text>
+          Travellers Pass
+        </ion-text>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="notification()">
+        <ion-icon slot="icon-only" name="notifications-outline" size="large"></ion-icon>
+      </ion-button>
+      <ion-button (click)="profile()">
+        <ion-icon slot="icon-only" src="../../../../../assets/ionicons/md-people-circle-outline.svg" size="large">
+        </ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-tabs>
-    <ion-tab-bar slot="bottom">
+    <ion-tab-bar slot="bottom" class="ion-justify-content-around">
       <ion-tab-button tab="home-tab">
         <ion-icon name="briefcase"></ion-icon>
         <ion-label>Home</ion-label>
