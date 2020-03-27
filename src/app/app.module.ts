@@ -20,6 +20,7 @@ import { PlatformService } from './services/platform/platform.service';
 import { AuthService } from './services/auth/auth.service';
 import { NativeHttpService } from './services/http/native-http/native-http.service';
 import { BrowserHttpService } from './services/http/browser-http/browser-http.service';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { BrowserHttpService } from './services/http/browser-http/browser-http.se
   ],
   providers: [
     HTTP,
+    ScreenOrientation,
     { provide: StatusBarService, useClass: StatusBar },
     { provide: SplashScreenService, useClass: SplashScreen },
 

@@ -22,10 +22,10 @@
                   </ion-row>
                 </ion-col>
                 <!--exhange-->
-                <ion-col size="2">
+                <ion-col size="3">
                   <ion-row>
                     <ion-item button lines="none" (click)="swapTrip()">
-                      <ion-icon size="large" src="../../../../../../assets/icons/straight.svg"></ion-icon>
+                      <ion-icon src="../../../../../../assets/icons/straight.svg"></ion-icon>
                     </ion-item>
                   </ion-row>
                 </ion-col>
@@ -46,21 +46,22 @@
               <!--Date-->
               <ion-row class="ion-justify-content-between">
                 <!--depart-->
-                <ion-col size="4" (click)="selectDate()">
-                  <ion-input formControlName="departure" hidden></ion-input>
+                <ion-col size="5" (click)="selectDate()">
                   <ion-row>
                     <ion-text>Depart</ion-text>
                   </ion-row>
                   <ion-row>
                     <ion-text>{{this.oneWaySearch.value.departure !== null ? (this.oneWaySearch.value.departure | date : 'EEE,d LLL' | titlecase) : 'Tue,25 Feb'}}</ion-text>
                   </ion-row>
+                  <ion-row>
+                    <ion-text></ion-text>
+                  </ion-row>
                 </ion-col>
                 <ion-col size="1">
                   <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
                 </ion-col>
                 <!--traveller number-->
-                <ion-col size="4" (click)="selectPassengers()">
-                <ion-input formControlName="traveller" hidden></ion-input>
+                <ion-col size="5" (click)="selectPassengers()">
                   <ion-row>
                     <ion-text>Travellers</ion-text>
                   </ion-row>
@@ -117,6 +118,9 @@
                       </ion-row>
                     </ion-col>
                   </ion-row>
+                  <ion-row>
+                    <ion-text></ion-text>
+                  </ion-row>
                 </ion-col>
               </ion-row>
               <!--class-->
@@ -156,6 +160,8 @@
               </ion-row>
             </ion-col>
           </ion-row>
+          <ion-input formControlName="departure" hidden></ion-input>
+          <ion-input formControlName="traveller" hidden></ion-input>
         </form>
       </ion-col>
     </ion-row>

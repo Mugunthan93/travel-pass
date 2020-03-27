@@ -51,26 +51,30 @@ form {
 
                     ion-row {
                         ion-text {
-                            font-size: x-large;
+                            font-size: x-small;
                         }
                     }
 
+                    //from,to
                     >ion-row:first-child {
                         ion-text {
-                            font-size: small;
+                            font-size: large;
                         }
                     }
 
+                    //MAS
                     ion-row:nth-child(2) {
                         ion-text {
                             font-weight: 500;
+                            font-size:small;
                         }
                     }
 
+                    //chennai
                     >ion-row:last-child {
                         ion-text {
-                            font-size: large;
                             font-weight: 500;
+                            font-size: small;
                         }
 
                         ion-item {

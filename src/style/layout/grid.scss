@@ -1,0 +1,32 @@
+
+
+:root {
+
+    ion-grid{
+        --ion-grid-padding:0px !important;
+    }
+
+    ion-col{
+        --ion-grid-column-padding:0px !important;
+        --ion-grid-column-padding-sm:0px !important;
+        --ion-grid-column-padding-md:0px !important;
+        --ion-grid-column-padding-lg:0px !important;
+        --ion-grid-column-padding-xl:0px !important;
+    }
+}
+
+.ios {
+
+    ion-grid {
+        --ion-grid-width: 320px !important;
+    }
+
+}
+
+.md {
+
+    ion-grid {
+        --ion-grid-width: 360px !important;
+    }
+
+}

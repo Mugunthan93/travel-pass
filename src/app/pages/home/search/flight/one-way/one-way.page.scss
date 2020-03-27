@@ -27,7 +27,7 @@ form{
         flex-flow: column;
         height : 100%;
         >ion-col{
-            >ion-row{
+            ion-row{
                 height : 20%;
                 ion-col{
                     >ion-item{  
@@ -39,30 +39,29 @@ form{
                             color:white;
                         }
                     }
-                    margin-top:auto;
-                    margin-bottom:auto;
-                    ion-row{
+                    margin-top:auto !important;
+                    margin-bottom:auto !important;
+                    
+                    //from,to
+                    ion-row:nth-child(1){
                         ion-text{
-                            font-size: x-large;
+                            font-size:large;
                         }
                     }
-                    
-                    >ion-row:first-child{
+
+                    //MAS
+                    ion-row:nth-child(2){
                         ion-text{
+                            font-weight: 500;
                             font-size:small;
                         }
                     }
 
-                    ion-row:nth-child(2){
+                    //chennai
+                    ion-row:nth-child(3){
                         ion-text{
                             font-weight: 500;
-                        }
-                    }
-
-                    >ion-row:last-child{
-                        ion-text{
-                            font-size: large;
-                            font-weight: 500;
+                            font-size: small;
                         }
                         ion-item{
                             --inner-padding-start:0px;
@@ -74,11 +73,46 @@ form{
                 }
                 ion-col:last-child{
                     --ion-grid-column-padding:0px;
-                    ion-row{
-                        ion-text{
+
+                    ion-row:nth-child(1) {
+                        ion-text {
+                            font-size: large;
                             margin-left:auto;
                         }
                     }
+
+                    //MAS
+                    ion-row:nth-child(2) {
+                        ion-col{
+                            ion-text {
+                                float:right;
+                                font-weight: 500;
+                                font-size: small;
+                            }
+                        }
+                        ion-text {
+                            margin-left: auto;
+                            font-weight: 500;
+                            font-size: small;
+                        }
+                    }
+
+                    //chennai
+                    ion-row:nth-child(3) {
+                        ion-text {
+                            margin-left:auto;
+                            font-weight: 500;
+                            font-size: small;
+                        }
+
+                        ion-item {
+                            --inner-padding-start: 0px;
+                            --inner-padding-end: 0px;
+                            --padding-start: 0px;
+                            --padding-end: 0px;
+                        }
+                    }
+                    
                     ion-col{
                         --ion-grid-column-padding:0px;
                         ion-text{
@@ -90,11 +124,16 @@ form{
                     ion-row{
                         justify-content: center;
                     }
-                }       
+                }    
+                ion-col:nth-child(2){
+                    margin-top:0px !important;
+                    margin-bottom:0px !important;
+                }   
             }
             ion-row:not(:first-child){
                 ion-col:nth-child(2){
-                    margin:0px;
+                    margin-top:0px !important;
+                    margin-bottom:0px !important;
                     ion-icon{
                         height : 100%;
                     }
