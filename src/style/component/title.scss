@@ -1,0 +1,24 @@
+@import "../util/variable.scss";
+
+//variable 
+
+// $title-color:;
+
+.md{
+
+    ion-title {
+        color: $text-color;
+        font-size: $text-font-size;
+    }
+
+}
+
+.ios{
+
+    ion-title {
+        color: $text-color;
+        font-size: $text-font-size;
+        padding-right: 0px;
+    }
+
+}

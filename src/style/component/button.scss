@@ -1,0 +1,127 @@
+@import '../util/variable.scss';
+
+//BACKBUTTON
+
+// //variable
+$back-button-color:$btn2-bg;
+$back-button-opacity:$btn-opacity;
+// $back-button-ripple-color:;
+// $back-button-color-type:(
+//     "focused":,
+//     "hover":
+// );
+
+$back-button-background:$btn2-bg;
+// $back-button-background-type:(
+//     "focused":,
+//     "hover":,
+//     "focused-opacity":,
+//     "hover-opacity":
+// );
+
+// //box-model
+
+// $back-button-border-radius:;
+// $back-button-model-box:(
+//     "min-height":,
+//     "min-width":,
+//     "margin-bottom":,
+//     "margin-end":,
+//     "margin-start":,
+//     "margin-top":,
+//     "padding-bottom":,
+//     "padding-end":,
+//     "padding-start":,
+//     "padding-top":
+// );
+// $back-button-icon-model-box:(
+//     "margin-bottom":,
+//     "margin-end":,
+//     "margin-start":,
+//     "margin-top":,
+//     "padding-bottom":,
+//     "padding-end":,
+//     "padding-start":,
+//     "padding-top":
+// );
+
+// $back-button-icon-font-weight:;
+// $back-button-transition:;
+
+//BUTTON
+
+//variable
+
+$button-color:$btn-bg;
+$button-opacity:$btn-opacity;
+// $button-border:(
+//     "color":,
+//     "style":,
+//     "width":
+// );
+// $button-padding:(
+//     "bottom":,
+//     "end":,
+//     "start":,
+//     "top":
+// );
+// $button-background:;
+// $button-background-type:(
+//     "activated":,
+//     "focused":,
+//     "hover":,
+//     "activated-opacity":,
+//     "focused-opacity":,
+//     "hover-opacity":
+// );
+// $button-transition:;
+// $button-box-shadow:;
+
+//FABBUTTON
+
+//variable
+
+// $fab-color:;
+// $fab-background:;
+// $fab-color-type:(
+//     "activated":,
+//     "focused":,
+//     "hover":
+// );
+// $fab-background-type:(
+//     "activated":,
+//     "focused":,
+//     "hover":,
+//     "activated-opacity":,
+//     "focused-opacity":,
+//     "hover-opacity":
+// );
+// $fab-border:(
+//     "radius":,
+//     "style":,
+//     "width":
+// );
+// $fab-padding:(
+//     "bottom":,
+//     "end":,
+//     "start":,
+//     "top":
+// );
+// $fab-transition:;
+// $fab-box-shadow:;
+
+ion-button {
+    --opacity: #{$button-opacity};
+    --background: #{$button-color};
+}
+
+ion-back-button {
+    --color:#{$back-button-color};
+    --background: #{$back-button-background};
+    --padding-start: 0px;
+    --padding-end: 0px;
+    --icon-padding-start: 0px;
+    --icon-padding-end: 0px;
+}
+
+

@@ -3,11 +3,8 @@ ion-title {
 }
 
 ion-grid{
-    display: flex; 
-    flex-flow: column;
-    margin:0px 10px 0px 10px;
-    --ion-grid-padding : 15px;
-    height : 100%;
+    height:450px;
+    // --ion-grid-padding:8px !important;
     >ion-row:last-child{
         display: flex; 
         flex-flow: column;
@@ -15,6 +12,4 @@ ion-grid{
     }
 }
 
-ion-content{
-    background: transparent;
-}
+

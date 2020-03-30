@@ -27,67 +27,7 @@
 
 @import "style/main.scss";
 
-ion-content {
-    --background: url(./assets/ng-img/bg.jpeg);
-    --background-repeat: no-repeat;
-    --background-size: cover;
-}
-
 :root {
-
-    ion-icon,
-    ion-back-button {
-        padding-right: 0px;
-        color: #3d9ed7 !important;
-        // color : #90bd1c; approve button
-        // color : #e44b00; rejecrt button
-    }
-
-    ion-button {
-        --opacity: 0.4;
-        --background: #90bd1c;
-
-    }
-
-    button {
-        background: transparent;
-
-        ion-button {
-            --opacity: 0.4;
-            --background: #90bd1c;
-
-        }
-    }
-
-    ion-text,
-    ion-label,
-    ion-back-button,
-    ion-title {
-        color: grey;
-        font-size: small;
-    }
-
-    ion-item {
-        --background: transparent;
-
-    }
-
-    ion-back-button {
-        --padding-start: 0px;
-        --padding-end: 0px;
-        --icon-padding-start: 0px;
-        --icon-padding-end: 0px;
-    }
-
-    ion-toolbar {
-        --color: #ffffff;
-        --background: rgb(137, 247, 137);
-
-        * {
-            background: transparent;
-            --background: transparent;
-        }
-    }
 
     .passenger, .baggage {
         .modal-wrapper, .picker-wrapper{

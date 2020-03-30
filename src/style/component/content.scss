@@ -1,0 +1,22 @@
+
+
+//variable
+// $content-color:;
+$content-background:"./assets/ng-img/bg.jpeg";
+// $content-keyboard-offset:;
+// $content-offset-bottom:;
+// $content-offset-top:;
+
+// $content-padding:(
+//     "bottom":,
+//     "end":,
+//     "start":,
+//     "top":
+// );
+
+ion-content {
+    --background: url(#{$content-background});
+    --background-repeat: no-repeat;
+    --background-size: cover;
+
+}

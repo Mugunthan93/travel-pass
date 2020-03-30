@@ -1,0 +1,66 @@
+@import "../util/variable.scss";
+@import "../util/mixins.scss";
+
+//variable
+
+// $tab-bar-color:;
+// $tab-bar-background:;
+// $tab-bar-border:;
+
+// $tab-button-color:;
+// $tab-button-ripple-color:;
+// $rab-button-color-type:(
+//     "focused":,
+//     "selected":
+// );
+
+// $tab-button-background:;
+// $tab-button-background-type:(
+//     "focused":,
+//     "focused-opacity":
+// );
+
+// $tab-button-padding:(
+//     "bottom":,
+//     "end":,
+//     "start":,
+//     "top":
+// );
+
+ion-tab-bar{
+    --background:#{$transparent};
+    --border:#{$transparent};
+    // --color:
+    margin-left:15px;
+    margin-right:15px;
+    margin-top:20px;
+    margin-bottom:20px;
+    height:6vh;
+
+
+    @include first-tab-border("one-way", #{$selected-bg});
+    @include middle-tab-border("round-trip", #{$selected-bg});
+    @include last-tab-border("multi-city", #{$selected-bg});
+}
+
+ion-tab-button{
+    --color :#{$text-color};
+    // --color-focused :
+    // --color-selected :
+    // --ripple-color :
+    // --background :
+    // --background-focused : ;
+    // --background-focused-opacity :
+    // --padding-bottom : 50px !important;
+    // --padding-end : 50px !important;
+    // --padding-start : 50px !important;
+    // --padding-top : 50px !important;
+
+    &[aria-selected="true"] {
+        background: #{$selected-bg};
+    }
+
+}
+
+
+

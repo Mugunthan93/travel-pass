@@ -1,0 +1,16 @@
+@import "../util/variable.scss";
+
+//variable 
+
+// $label-color:;
+
+ion-label{
+    --color: #{$text-color};
+    font-size: #{$text-font-size};
+}
+
+[aria-selected="true"]{
+    ion-label{
+        color:#{$selected-color};
+    }
+}

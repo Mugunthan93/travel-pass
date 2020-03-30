@@ -1,16 +1,34 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 
-$mobile-grid-width : 320px;
-:root {
-    
-    $mobile-font-family : 'Roboto',sans-serif;
+$transparent:transparent !default;
 
-    //grid section
-    $mobile-grid-width : (
-        "xs" : 320px,
-        "sm" : 360px,
-        "md" : 400px,
-        "lg" : 420px,
-        "xl" : 450px
-    );
-}
+// $bar-bg:#4deb1a !default;
+$bar-color:#ffffff !default;
+$bar-bg:#89f789 !default;
+
+$btn-bg:#90bd1c !default;
+$btn2-bg:#3d9ed7 !default;
+$btn3-bg:#A6D2AE !default;
+$btn4-bg: #3566ee;
+$btn-opacity:0.4 !default;
+
+$item-bg:$transparent;
+
+$text-color:grey;
+$text-font-size:small;
+
+$selected-bg: #3566ee;
+$selected-color:white;
+
+
+
+//font
+$mobile-font-family : 'Roboto',sans-serif;
+
+
+
+
+
+
+
+

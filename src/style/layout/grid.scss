@@ -1,8 +1,37 @@
 
+//variable
+// $grid-columns:;
+// $grid-width:(
+//     "xs":,
+//     "sm":,
+//     "md":,
+//     "lg":,
+//     "xl":  
+// );
+// $grid-padding:(
+//     "xs":,
+//     "sm":,
+//     "md":,
+//     "lg":,
+//     "xl": 
+// );
+// $grid-col-padding:(
+//     "xs":,
+//     "sm":,
+//     "md":,
+//     "lg":,
+//     "xl":
+// );
+
+
+
 
 :root {
 
     ion-grid{
+        display: flex;
+        flex-flow: column;
+        height : 100%;
         --ion-grid-padding:0px !important;
     }
 
@@ -30,3 +59,5 @@
     }
 
 }
+
+

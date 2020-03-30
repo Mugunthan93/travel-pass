@@ -12,20 +12,9 @@ ion-grid{
                 margin-bottom : 50px;
             }
             >ion-row:last-child{
-                height:400px;
+                height:500px;
             }
         }
-    }
-}
-
-ion-tab-bar{
-    --background :transparent;
-    --border : none;
-}
-
-ion-tab-button{
-    >ion-label{
-        font-size:10px;
     }
 }
 

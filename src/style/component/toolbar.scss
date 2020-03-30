@@ -1,0 +1,36 @@
+@import "../util/variable.scss";
+
+//variable
+
+$toolbar-color:$bar-color;
+// $toolbar-opacity:;
+
+$toolbar-background:$bar-bg;
+
+// $toolbar-min-height:;
+// $toolbar-border:(
+//     "color":,
+//     "style":,
+//     "width":
+// );
+
+// $toolbar-padding:(
+//     "bottom":,
+//     "end":,
+//     "start":,
+//     "top":
+// );
+
+ion-toolbar {
+    --color: #{$toolbar-color};
+    --background: #{$toolbar-background};
+
+    ion-button{
+        --opacity: 1;
+        --background: #{$transparent};
+        ion-icon{
+            padding-right: 0px;
+            color:#{$btn2-bg} !important;
+        }
+    }
+}

@@ -1,17 +1,18 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button icon="chevron-back-outline" defaultHref="home">
-      </ion-back-button>
+      <ion-button>
+        <ion-icon src="../../../../assets/ionicons/chevron-back-outline.svg"></ion-icon>
+      </ion-button>
     </ion-buttons>
-    <ion-title>
+    <ion-title translucent="true">
       <ion-text>search {{'flight' | titlecase }}</ion-text>
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-grid>
+<ion-content [scrollX]="true">
+  <ion-grid fixed="true">
     <ion-row>
       <ion-col>
         <ion-router-outlet></ion-router-outlet>

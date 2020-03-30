@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { ModalController, PickerController, IonSelect } from '@ionic/angular';
+import { ModalController, PickerController, IonSelect, Platform } from '@ionic/angular';
 import { CityModalComponent } from 'src/app/components/city-modal/city-modal.component';
 import { BookingService } from 'src/app/services/booking/booking.service';
-import { CalendarModalComponent } from 'src/app/components/calendar-modal/calendar-modal.component';
 import { PassengerModalComponent } from 'src/app/components/passenger-modal/passenger-modal.component';
-import { CalendarComponentOptions, CalendarOptions, CalendarModalOptions, CalendarModal, CalendarResult } from 'ion2-calendar';
+import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
 
 @Component({
   selector: 'app-one-way',
@@ -15,17 +14,24 @@ import { CalendarComponentOptions, CalendarOptions, CalendarModalOptions, Calend
 export class OneWayPage implements OnInit {
 
   oneWaySearch: FormGroup;
-  @ViewChild('select',{static : true}) select : IonSelect;
+  @ViewChild('select', { static: true }) select: IonSelect;
+  isLandscape: boolean;
 
   constructor(
     public modalCtrl: ModalController,
     public pickrCtrl : PickerController,
     public fb : FormBuilder,
-    public booking : BookingService
+    public booking: BookingService,
+    public platform : Platform
   ) {
   }
 
   ngOnInit() {
+    this.platform.resize.subscribe(async () => {
+      this.isLandscape = this.platform.isLandscape();
+      console.log(this.isLandscape);
+    });
+
     this.oneWaySearch = new FormGroup({
       from: this.fb.control(null),
       to: this.fb.control(null),

@@ -1,3 +1,88 @@
+@import "../util/variable.scss";
+
+//variable
+
+// $item-color:;
+// $item-color:(
+//     "activated":,
+//     "focused":,
+//     "hover":
+// );
+// $item-border-color:;
+// $item-ripple-color:;
+// $item-detail-icon:(
+//     "color":,
+//     "opacity":
+// );
+// $item-highlight-color:(
+//     "focused":,
+//     "invalid":,
+//     "valid":
+// );
+
+$item-background:$item-bg;
+// $item-background-type:(
+//     "activated":,
+//     "focused":,
+//     "hover":,
+//     "activated-opacity":,
+//     "focused-opacity":,
+//     "hover-opacity":
+// );
+
+// $item-highlight-height:;
+// $item-inner-border-width:;
+// $item-min-height:;
+
+// $item-border:(
+//     "radius":,
+//     "style":,
+//     "width":
+// );
+
+// $item-padding:(
+//     "bottom":,
+//     "end":,
+//     "start":,
+//     "top":
+// );
+
+// $item-inner-padding:(
+//     "bottom":,
+//     "end":,
+//     "start":,
+//     "top":
+// );
+
+// $item-detail-icon-font-size:;
+// $item-transition:;
+// $item-inner-box-shadow:;
+
+// $item-divider-color:;
+// $item-divider-background:;
+
+// $item-divider-padding:(
+//     "bottom":,
+//     "end":,
+//     "start":,
+//     "top":
+// );
+// $item-divider-inner-padding:(
+//     "bottom":,
+//     "end":,
+//     "start":,
+//     "top":
+// );
+// $item-option-color:;
+// $item-option-background:;
+
+ion-item {
+    --background:$item-background;
+
+}
+
+
+
 ion-item{
     --padding-bottom:0px;
     --padding-top:0px;

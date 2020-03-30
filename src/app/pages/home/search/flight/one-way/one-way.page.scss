@@ -1,147 +1,47 @@
+@import "../../../../../../style/util/mixins.scss";
+@import "../../../../../../style/util/variable.scss";
+
 ion-grid{
     display: flex; 
     flex-flow: column;
-    --ion-grid-padding:0px;
-    height : 100%;
+    height :360px;
+    margin-left:5vw;
+    margin-right:5vw;
     >ion-row{
-        display: flex; 
-        flex-flow: column;
-        height : 100%;
-        margin-top:15px;
-        margin-bottom : 15px;
-        >ion-row{
-            --ion-grid-columns-padding:0px;
-            display: flex; 
-            flex-flow: column;
-            height : 100%;
-        }
+        @include flex-col-grid;
     }
 }
 
 form{
-    display: flex; 
-    flex-flow: column;
-    height : 100%;
+    @include flex-col-grid;
     >ion-row{
-        display: flex; 
-        flex-flow: column;
-        height : 100%;
+        @include flex-col-grid;
         >ion-col{
+            >ion-row{
+                  height:90px;
+            }
             ion-row{
-                height : 20%;
-                ion-col{
-                    >ion-item{  
-                        --background: #3566ee;
-                        --border-radius:5px;
-                        ion-text{
-                            margin-left:auto;
-                            margin-right:auto;
-                            color:white;
-                        }
-                    }
-                    margin-top:auto !important;
-                    margin-bottom:auto !important;
-                    
-                    //from,to
-                    ion-row:nth-child(1){
-                        ion-text{
-                            font-size:large;
-                        }
-                    }
-
-                    //MAS
-                    ion-row:nth-child(2){
-                        ion-text{
-                            font-weight: 500;
-                            font-size:small;
-                        }
-                    }
-
-                    //chennai
-                    ion-row:nth-child(3){
-                        ion-text{
-                            font-weight: 500;
-                            font-size: small;
-                        }
-                        ion-item{
-                            --inner-padding-start:0px;
-                            --inner-padding-end:0px;
-                            --padding-start: 0px;
-                            --padding-end: 0px;
-                        }
-                    }
+                ion-col:first-child{
+                    @include search-grid-input(right);
+                }
+                ion-col:nth-child(2){
+                    @include search-grid-switch();
                 }
                 ion-col:last-child{
-                    --ion-grid-column-padding:0px;
-
-                    ion-row:nth-child(1) {
-                        ion-text {
-                            font-size: large;
-                            margin-left:auto;
-                        }
-                    }
-
-                    //MAS
-                    ion-row:nth-child(2) {
-                        ion-col{
-                            ion-text {
-                                float:right;
-                                font-weight: 500;
-                                font-size: small;
-                            }
-                        }
-                        ion-text {
-                            margin-left: auto;
-                            font-weight: 500;
-                            font-size: small;
-                        }
-                    }
-
-                    //chennai
-                    ion-row:nth-child(3) {
-                        ion-text {
-                            margin-left:auto;
-                            font-weight: 500;
-                            font-size: small;
-                        }
-
-                        ion-item {
-                            --inner-padding-start: 0px;
-                            --inner-padding-end: 0px;
-                            --padding-start: 0px;
-                            --padding-end: 0px;
-                        }
-                    }
-                    
-                    ion-col{
-                        --ion-grid-column-padding:0px;
-                        ion-text{
-                            margin-left:auto;
-                        }
-                    }
-                }
-                ion-col:nth-of-type(2){
-                    ion-row{
-                        justify-content: center;
-                    }
-                }    
-                ion-col:nth-child(2){
-                    margin-top:0px !important;
-                    margin-bottom:0px !important;
-                }   
-            }
-            ion-row:not(:first-child){
-                ion-col:nth-child(2){
-                    margin-top:0px !important;
-                    margin-bottom:0px !important;
-                    ion-icon{
-                        height : 100%;
-                    }
+                    @include search-grid-input(left);
                 }
             }
             >ion-row:not(:last-child){
                 border-bottom : 0.5px solid grey;
             }
         }
+    }
+}
+
+ion-button{
+    --opacity:1;
+    --background:#{$btn4-bg};
+    ion-text{
+        color:white;
     }
 }
