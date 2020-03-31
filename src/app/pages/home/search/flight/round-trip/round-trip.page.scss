@@ -1,137 +1,61 @@
+@import "../../../../../../style/util/mixins.scss";
+@import "../../../../../../style/util/variable.scss";
+
+form {
+    @include flex-col-grid;
+}
+
 ion-grid {
-    display: flex;
-    flex-flow: column;
-    --ion-grid-padding: 0px;
-    height: 100%;
+    @include flex-col-grid;
+    margin-left: 5vw;
+    margin-right: 5vw;
 
     >ion-row {
-        display: flex;
-        flex-flow: column;
-        height: 100%;
-        margin-top: 15px;
-        margin-bottom: 15px;
+        @include flex-col-grid;
 
-        >ion-row {
-            --ion-grid-columns-padding: 0px;
-            display: flex;
-            flex-flow: column;
-            height: 100%;
+        >ion-col {
+            @include flex-col-grid;
+
+            >ion-row {
+                @include flex-col-grid;
+
+                >ion-col {
+                    >ion-row {
+                        height: 25%;
+                    }
+
+                    ion-row {
+                        ion-col:first-child {
+                            @include search-grid-input(left,right);
+                        }
+
+                        ion-col:nth-child(2) {
+                            @include search-grid-switch();
+                        }
+
+                        ion-col:last-child{
+                            @include search-grid-input(right,left);
+                        }
+                    }
+
+                    >ion-row:not(:last-child) {
+                        border-bottom: 0.5px solid grey;
+                    }
+                }
+            }
         }
     }
 }
 
-form {
-    display: flex;
-    flex-flow: column;
-    height: 100%;
+ion-text {
+    line-height: 20px;
+}
 
-    >ion-row {
-        display: flex;
-        flex-flow: column;
-        height: 100%;
+ion-button {
+    --opacity: 1;
+    --background:#{$btn4-bg};
 
-        >ion-col {
-            >ion-row {
-                height: 20%;
-
-                ion-col {
-                    >ion-item {
-                        --background: #3566ee;
-                        --border-radius: 5px;
-
-                        ion-text {
-                            margin-left: auto;
-                            margin-right: auto;
-                            color: white;
-                        }
-                    }
-
-                    margin-top:auto;
-                    margin-bottom:auto;
-
-                    ion-row {
-                        ion-text {
-                            font-size: x-small;
-                        }
-                    }
-
-                    //from,to
-                    >ion-row:first-child {
-                        ion-text {
-                            font-size: large;
-                        }
-                    }
-
-                    //MAS
-                    ion-row:nth-child(2) {
-                        ion-text {
-                            font-weight: 500;
-                            font-size:small;
-                        }
-                    }
-
-                    //chennai
-                    >ion-row:last-child {
-                        ion-text {
-                            font-weight: 500;
-                            font-size: small;
-                        }
-
-                        ion-item {
-                            --inner-padding-start: 0px;
-                            --inner-padding-end: 0px;
-                            --padding-start: 0px;
-                            --padding-end: 0px;
-                        }
-                    }
-                }
-
-                ion-col:last-child {
-                    ion-row {
-                        ion-text {
-                            margin-left: auto;
-                        }
-                    }
-                }
-
-                ion-col:nth-of-type(2) {
-                    ion-row {
-                        justify-content: center;
-                    }
-                }
-            }
-
-            ion-row:not(:first-child) {
-                ion-col:nth-child(2) {
-                    margin: 0px;
-
-                    ion-icon {
-                        height: 100%;
-                    }
-                }
-            }
-
-            >ion-row:not(:last-child) {
-                border-bottom: 0.5px solid grey;
-            }
-
-            ion-row:nth-child(3) {
-                >ion-col {
-                    --ion-grid-column-padding: 0px;
-
-                    ion-row {
-                        ion-col {
-                            --ion-grid-column-padding: 0px;
-                            ion-row{
-                                ion-text{
-                                    margin-right:auto;
-                                    margin-left:0px;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    ion-text {
+        color: white;
     }
 }

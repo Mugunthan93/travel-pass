@@ -17,7 +17,6 @@ export class RoundTripPage implements OnInit {
   roundTripSearch : FormGroup
   @ViewChild('select', { static: true }) select: IonSelect;
 
-
   constructor(
     public router: Router,
     public modalCtrl: ModalController,

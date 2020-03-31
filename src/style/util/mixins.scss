@@ -26,16 +26,17 @@
     }
 }
 
-@mixin search-grid-input($side){
+@mixin search-grid-input($side1,$side2){
     margin-top:auto !important;
     margin-bottom:auto !important;
     ion-row{
         ion-text {
-            margin-#{$side}:auto !important;
+            margin-#{$side2}:auto !important;
+            margin-#{$side1}:0 !important;
         }
     }
 
-    ion-row:nth-child(1){
+    >ion-row:nth-child(1){
         ion-text{
             font-size: large;
         }

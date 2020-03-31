@@ -1,43 +1,50 @@
 @import "../../../../../../style/util/mixins.scss";
 @import "../../../../../../style/util/variable.scss";
 
+form{
+    @include flex-col-grid;
+}
 ion-grid{
     @include flex-col-grid;
     margin-left:5vw;
     margin-right:5vw;
     >ion-row{
         @include flex-col-grid;
+        >ion-col{
+            @include flex-col-grid;
+            >ion-row {
+                @include flex-col-grid;
+
+                >ion-col {
+                    >ion-row {
+                        height: 25%;
+                    }
+
+                    ion-row {
+                        ion-col:first-child {
+                            @include search-grid-input(left,right);
+                        }
+
+                        ion-col:nth-child(2) {
+                            @include search-grid-switch();
+                        }
+
+                        ion-col:last-child {
+                            @include search-grid-input(right,left);
+                        }
+                    }
+
+                    >ion-row:not(:last-child) {
+                        border-bottom: 0.5px solid grey;
+                    }
+                }
+            }
+        }
     }
 }
 
 ion-text{
     line-height: 20px;
-}
-
-form{
-    @include flex-col-grid;
-    >ion-row{
-        @include flex-col-grid;
-        >ion-col{
-            >ion-row{
-                  height:25%;
-            }
-            ion-row{
-                ion-col:first-child{
-                    @include search-grid-input(right);
-                }
-                ion-col:nth-child(2){
-                    @include search-grid-switch();
-                }
-                ion-col:last-child{
-                    @include search-grid-input(left);
-                }
-            }
-            >ion-row:not(:last-child){
-                border-bottom : 0.5px solid grey;
-            }
-        }
-    }
 }
 
 ion-button{
