@@ -1,8 +1,9 @@
+@import "../../style/util/variable.scss";
 
 //variable
 
 // $input-color:;
-// $input-placeholder-color:;
+$input-placeholder-color:$text-color;
 // $input-background:;
 // $input-padding:(
 //     "bottom":,
@@ -21,7 +22,7 @@
 .md{
     ion-input {
         --color: red !important;
-        --placeholder-color: "";
+        --placeholder-color: #{$input-placeholder-color};
         --background: "";
         --padding-bottom: "";
         --padding-end: "";
@@ -36,7 +37,7 @@
 .ios{
     ion-input {
         --color: blue !important;
-        --placeholder-color: "";
+        --placeholder-color: #{$input-placeholder-color};
         --background: "";
         --padding-bottom: "";
         --padding-end: "";

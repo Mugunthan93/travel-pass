@@ -1,75 +1,40 @@
-app-custom-stepper{
-    height: 100%;
+@import '../../../../style/util/mixins.scss';
+
+ion-grid,
+ion-row,
+ion-col,
+form {
+    @include flex-col-grid;
 }
 
-ion-grid{
-    display: flex; 
-    flex-flow: column;
-    height: 100%;
-    margin: 0px 0px 0px 0px;
-    padding: 0px 0px 0px 0px;
+ion-grid {
+    margin-left: 15px;
+    margin-right: 15px;
+
     >ion-row {
-        padding : 0px 0px 0px 0px;
-    }
-    >ion-row:last-child{
-        flex-grow: 1;
-        height: 100%;
-        >ion-col{
-            display: flex; 
-            flex-flow: column;
-            >ion-row:last-child{
-                flex-grow: 1;
-                height: 100%;
-                >ion-col{
-                    padding : 0px 0px 0px 0px;
+        ion-col {
+            >ion-row {
+                height:15%;
+            }
+
+            >ion-row:last-child {
+                ion-col {
+                    margin-left: auto;
+                    margin-right: auto;
                 }
             }
         }
     }
 }
 
-ion-searchbar{
-    padding : 0px 0px 0px 0px;
+ion-button {
+    --background: #A6D2AE !important;
 }
 
-ion-item, ion-searchbar, ion-input {
-    --background:transparent;
+ion-icon {
+    padding-right: 10px;
 }
 
-ion-list {
-    background: transparent;
-}
-
-form {
-    >ion-item {
-        --inner-padding-top : 5px;
-        --inner-padding-bottom : 5px;
-    }
-}
-
-ion-button{
-    --opacity:0.4;
-    margin-top : 20px;
-    --background:#A6D2AE !important;
-}
-
-button {
-    padding : 0px 0px 0px 0px;
-    >ion-button {
-        margin : 0px 0px 0px 0px ;
-    }
-}
-
-ion-label,a {
-    font-size: x-small;
-}
-
-ion-icon{
-    padding-right : 10px;
-}
-
-//////////////////////////////////////////////////////
-
-ion-content{
-    --background: none;
+ion-item {
+    --inner-padding-end: 10px;
 }

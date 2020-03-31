@@ -1,23 +1,27 @@
+@import "../../../style/util/mixins.scss";
+
+ion-grid,
+ion-row,
+ion-col {
+    @include flex-col-grid;
+}
+
 ion-grid{
-    display: flex; 
-    flex-flow: column;
-    height: 100%;
     >ion-row{
-        flex-grow:1;
         >ion-col{
-            display: flex; 
-            flex-flow: column;
             >ion-row:first-child{
-                margin-top : 50px;
-                margin-bottom : 50px;
+                height:15%;
             }
             >ion-row:last-child{
-                height:500px;
+                height:85%;
             }
         }
     }
 }
 
+
 ion-img{
+    margin-top:auto;
+    margin-bottom:auto;
     height: 50px;
 }

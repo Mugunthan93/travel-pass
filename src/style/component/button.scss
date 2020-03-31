@@ -118,8 +118,8 @@ ion-button {
 ion-back-button {
     --color:#{$back-button-color};
     --background: #{$back-button-background};
-    --padding-start: 0px;
-    --padding-end: 0px;
+    --padding-start:auto !important;
+    --padding-end:auto !important;
     --icon-padding-start: 0px;
     --icon-padding-end: 0px;
 }

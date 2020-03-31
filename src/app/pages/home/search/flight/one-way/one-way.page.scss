@@ -2,14 +2,16 @@
 @import "../../../../../../style/util/variable.scss";
 
 ion-grid{
-    display: flex; 
-    flex-flow: column;
-    height :360px;
+    @include flex-col-grid;
     margin-left:5vw;
     margin-right:5vw;
     >ion-row{
         @include flex-col-grid;
     }
+}
+
+ion-text{
+    line-height: 20px;
 }
 
 form{
@@ -18,7 +20,7 @@ form{
         @include flex-col-grid;
         >ion-col{
             >ion-row{
-                  height:90px;
+                  height:25%;
             }
             ion-row{
                 ion-col:first-child{

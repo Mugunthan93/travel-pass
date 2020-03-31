@@ -1,44 +1,38 @@
-ion-grid#loginForm {
-    margin:0px 10px 0px 10px;
-    ion-row{
-        display: flex;
-        height : 100%;
-        >ion-col{
-            display: flex; 
-            flex-flow: column;
+@import '../../../../style/util/mixins.scss';
+
+ion-grid,
+ion-row,
+ion-col,
+form {
+    @include flex-col-grid;
+}
+
+ion-grid{
+    margin-left:15px;
+    margin-right:15px;
+    >ion-row{
+        ion-col{
             >ion-row{
-                flex-grow: 1;
+                height:20%;
+            }
+            >ion-row:last-child{
+                ion-col{
+                    margin-left:auto;
+                    margin-right:auto;
+                }
             }
         }
     }
 }
 
-
-ion-item {
-    --background:transparent;
-}
-
-form {
-    padding-bottom:100px;
-    >ion-item {
-        --inner-padding-top : 20px;
-        --inner-padding-bottom : 20px;
-    }
-}
-
-ion-button {
-    margin-top : 20px;
-    --padding-top : 20px;
-    --padding-bottom : 20px;
-    --opacity:0.4;
-    --background:#A6D2AE !important;
-}
-
-ion-label,a {
-    margin-top:10px;
-    font-size: x-small;
+ion-button{
+    --background: #A6D2AE !important;
 }
 
 ion-icon {
-    padding-right : 10px;
+    padding-right:10px;
+}
+
+ion-item{
+    --inner-padding-end:10px;
 }
