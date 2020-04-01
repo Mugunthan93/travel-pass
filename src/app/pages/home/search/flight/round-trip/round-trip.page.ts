@@ -62,6 +62,9 @@ export class RoundTripPage implements OnInit {
 
     modal.onDidDismiss().then(
       (selectedCity) => {
+        if (selectedCity.role == "backdrop") {
+          return;
+        }
         this.roundTripSearch.controls[field].patchValue(selectedCity.data);
       }
     );
@@ -121,6 +124,9 @@ export class RoundTripPage implements OnInit {
 
     modal.onDidDismiss().then(
       (selecetedPassenger) => {
+        if (selecetedPassenger.role == "backdrop") {
+          return;
+        }
         this.roundTripSearch.controls['traveller'].patchValue(selecetedPassenger.data);
       }
     );

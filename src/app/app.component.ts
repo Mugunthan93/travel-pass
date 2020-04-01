@@ -12,44 +12,17 @@ import { Subscription } from 'rxjs';
 })
 export class AppComponent implements OnInit, OnDestroy{
 
-  resizeSub: Subscription;
-  width: number;
-  height: number;
-
   constructor(
-    public platform: Platform,
     public screenOrientation: ScreenOrientation
   ) {
   }
 
   ngOnInit() {
-    
-    
-    this.platform.ready().then(
-      () => {
-        
-        // this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
-
-        this.width = this.platform.width();
-        this.height = this.platform.height();
-        console.log(this.width,this.height);
-        this.resizeSub = this.platform.resize.subscribe(
-          () => {
-            this.width = this.platform.width();
-            this.height = this.platform.height();
-            console.log(this.width,this.height);
-          }
-        );
-
-
-      }
-    );
+    console.log(this.screenOrientation);
+    this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
   }
 
   ngOnDestroy() {
-    if(this.resizeSub) {
-      this.resizeSub.unsubscribe();
-    }
   }
 
 

@@ -53,7 +53,7 @@ export class CityModalComponent implements OnInit, OnDestroy {
   }
 
   closeModal() {
-    this.modalCtrl.dismiss();
+    this.modalCtrl.dismiss(null);
   }
 
   ngOnDestroy() {

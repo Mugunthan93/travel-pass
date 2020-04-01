@@ -1,106 +1,126 @@
-ion-grid{
-    display: flex; 
-    flex-flow: column;
-    --ion-grid-padding:0px;
-    height : 100%;
-    >ion-row{
-        display: flex; 
-        flex-flow: column;
-        height : 100%;
-        margin-top:15px;
-        margin-bottom : 15px;
-        >ion-row{
-            --ion-grid-columns-padding:0px;
-            display: flex; 
-            flex-flow: column;
-            height : 100%;
+@import "../../../../../../style/util/mixins.scss";
+@import "../../../../../../style/util/variable.scss";
+
+@mixin multi-way-content {
+    >ion-content {
+        >ion-row {
+            margin-top:5px;
+            margin-bottom:5px;
+            margin-left:4vw;
+            margin-right:4vw;
+            >ion-col {
+                @include flex-col-grid;
+                >ion-row {
+                    border-bottom : 2px solid grey;
+                    padding:2px;
+                    >ion-col {
+                        margin-top:auto !important;
+                        margin-bottom:auto !important;
+                        @include flex-col-grid;
+                        >ion-row {
+                            height: 25%;
+                        }
+
+                        ion-row {
+                            ion-col:first-child {
+                                @include search-grid-input(left, right);
+                            }
+
+                            ion-col:nth-child(2) {
+                                @include search-grid-switch();
+                            }
+
+                            ion-col:last-child {
+                                @include search-grid-input(right, left);
+                            }
+                        }
+
+                        ion-icon {
+                            height: 50px;
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
 form{
-    display: flex; 
-    flex-flow: column;
-    height : 100%;
+    @include flex-col-grid;
+}
+ion-grid{
+    @include flex-col-grid;
+    margin-left:0px;
+    margin-right:0px;
+    margin-bottom:10px;
+
     >ion-row{
-        display: flex; 
-        flex-flow: column;
-        height : 100%;
+        @include flex-col-grid;
         >ion-col{
-            >ion-row{
-                height : 15%;
-                ion-col{
-                    >ion-item{  
-                        --background: #3566ee;
-                        --border-radius:5px;
-                        ion-icon{
-                            color:white !important;
-                        }
-                        ion-text{
-                            margin-left:auto;
-                            margin-right:auto;
-                            color:white;
-                        }
-                    }
+            @include flex-col-grid;
+
+            >ion-row:first-child {
+                @include flex-col-grid;
+                height: 50%;
+                >ion-col{
+                @include flex-col-grid;
+                @include multi-way-content;
+                }
+            }
+            >ion-row:nth-child(2) {
+                @include flex-col-grid;
+                height: 15%;
+                >ion-col {
+                    @include flex-col-grid;
                     margin-top:auto;
                     margin-bottom:auto;
-                    ion-row{
-                        ion-text{
-                            font-size: x-small;
-                        }
-                    }
-                    
-                    //from,to
-                    >ion-row:first-child{
-                        ion-text{
-                            font-size:large;
-                        }
-                    }
-
-                    //MAS
-                    ion-row:nth-child(2){
-                        ion-text{
-                            font-weight: 500;
-                            font-size: small;
-                        }
-                    }
-
-                    //chennai
-                    >ion-row:last-child{
-                        ion-text{
-                            font-weight: 500;
-                            font-size: small;
-
-                        }
-                    }
+                }
+            }
+            >ion-row:nth-child(3){
+                height: 20%;
+                margin-left:4vw;
+                margin-right:4vw;
+                ion-col:first-child {
+                    @include search-grid-input(left, right);
                 }
 
-                ion-col:last-child{
-                    ion-row{
-                        ion-text{
-                            margin-right:auto;
-                        }
-                    }
+                ion-col:nth-child(2) {
+                    @include search-grid-switch();
+                }
+
+                ion-col:last-child {
+                    @include search-grid-input(right, left);
+                }
+
+                border-bottom: 0.5px solid grey;
+            }
+            
+            >ion-row:nth-child(4) {
+                @include flex-col-grid;
+                height: 15%;
+
+                ion-col {
+                    margin-top:auto;
+                    margin-bottom:auto;
+                    @include flex-col-grid;
                 }
             }
 
-            ion-row:nth-child(1), ion-row:nth-child(2), ion-row:nth-child(4){
-                ion-col:nth-child(2), ion-col:nth-child(4){
-                    margin:0px;
-                    ion-icon{
-                        height : 100%;
-                    }
-                }
-            }
-            >ion-row:not(:last-child){
-                border-bottom : 0.5px solid grey;
-            }
+            
         }
     }
+
 }
 
-ion-content{
-    ion-content{
-        height :50%;
+ion-text{
+    line-height: 20px;
+}
+
+ion-button{
+    height:100%;
+    --opacity:1;
+    --background:#{$btn4-bg};
+    ion-text{
+        color:white;
     }
 }

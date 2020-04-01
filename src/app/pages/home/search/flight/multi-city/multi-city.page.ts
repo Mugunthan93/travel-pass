@@ -43,6 +43,13 @@ export class MultiCityPage implements OnInit {
   addTrip() {
     this.trips = this.multiCitySearch.get('trips') as FormArray;
     this.trips.push(this.createTrip());
+    console.log(this.multiCitySearch);
+  }
+
+  removeTrip(tripArray, tripElement) {
+    this.trips = this.multiCitySearch.controls['trips'] as FormArray;
+    this.trips.removeAt(tripElement);
+    console.log(tripArray,tripElement);
   }
 
   async selectCity(field: string, control: FormGroup) {
@@ -52,8 +59,10 @@ export class MultiCityPage implements OnInit {
 
     modal.onDidDismiss().then(
       (selectedCity) => {
+        if (selectedCity.role == "backdrop") {
+          return;
+        }
         control.controls[field].patchValue(selectedCity.data);
-        // this.multiCitySearch.controls['trips'].patchValue(selectedCity.data);
       }
     );
 
@@ -103,6 +112,9 @@ export class MultiCityPage implements OnInit {
 
     modal.onDidDismiss().then(
       (selecetedPassenger) => {
+        if (selecetedPassenger.role == "backdrop") {
+          return;
+        }
         this.multiCitySearch.controls['traveller'].patchValue(selecetedPassenger.data);
       }
     );

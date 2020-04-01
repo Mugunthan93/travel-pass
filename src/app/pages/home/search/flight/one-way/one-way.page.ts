@@ -56,6 +56,10 @@ export class OneWayPage implements OnInit {
 
     modal.onDidDismiss().then(
       (selectedCity) => {
+        console.log(selectedCity);
+        if (selectedCity.role == "backdrop") {
+          return;
+        }
         this.oneWaySearch.controls[field].patchValue(selectedCity.data);
       }
     );
@@ -118,6 +122,9 @@ export class OneWayPage implements OnInit {
 
     modal.onDidDismiss().then(
       (selecetedPassenger) => {
+        if (selecetedPassenger.role == "backdrop") {
+          return;
+        }
         this.oneWaySearch.controls['traveller'].patchValue(selecetedPassenger.data);
       }
     );

@@ -39,8 +39,12 @@ export class PassengerModalComponent implements OnInit, OnDestroy {
     );
   }
   
-  close() {
+  confirm() {
     this.modalCtrl.dismiss(this.traveller.value);
+  }
+
+  close() {
+    this.modalCtrl.dismiss(this.currentPassengers);
   }
 
   increase(person : string){
