@@ -1,10 +1,10 @@
-
+@import "../util/variable.scss";
 
 //variable
 
 // $segment-background:;
 
-// $segment-button-color:;
+$segment-button-color:$btn2-bg;
 // $segment-button-indicator-color:;
 // $segment-button-color-type:(
 //     "checked":,
@@ -48,3 +48,7 @@
 //     "transform":,
 //     "box-shadow":
 // );
+
+ion-segment-button{
+    --color:#{$segment-button-color};
+}

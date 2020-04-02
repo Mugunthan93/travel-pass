@@ -25,6 +25,16 @@ export class OneWayPage implements OnInit {
     { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
     { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
     { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
     { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] }
   ];
   panelOpenState = false;

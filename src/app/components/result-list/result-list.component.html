@@ -1,99 +1,65 @@
 <ion-content>
-  <ion-row>
-    <ion-col>
-      <mat-accordion multi="false">
-        <mat-expansion-panel [id]="" [hideToggle]="true"  *ngFor="let item of flightList">
-          <mat-expansion-panel-header [collapsedHeight]="flightHeight" [expandedHeight]="flightHeight" #panel>
-              <ion-row>
-                <ion-col (click)="selectFlight(panel,item,$event)" size="11">
-                  <ion-row class="ion-justify-content-between" *ngFor="let i of item.item">
-                    <ion-col size="2">
-                      <ion-row>
-                        <ion-img src="../../../../../../assets/site-image/D7.gif"></ion-img>
-                      </ion-row>
-                      <ion-row>
-                        <ion-text>
-                          Air Asia
-                        </ion-text>
-                      </ion-row>
-                    </ion-col>
-                    <ion-col size="3">
-                      <ion-row>
-                        <ion-text>
-                          15:40 - 17:50
-                        </ion-text>
-                      </ion-row>
-                      <ion-row>
-                        <ion-text>
-                          Economy
-                        </ion-text>
-                      </ion-row>
-                    </ion-col>
-                    <ion-col size="2">
-                      <ion-row>
-                        <ion-text>
-                          02h 10m
-                        </ion-text>
-                      </ion-row>
-                      <ion-row>
-                        <ion-text>
-                          non stop
-                        </ion-text>
-                      </ion-row>
-                    </ion-col>
-                    <ion-col size="3">
-                      <ion-row>
-                        <ion-text>
-                          $ 4800
-                        </ion-text>
-                      </ion-row>
-                      <ion-row>
-                        <ion-text>
-                          7 seat left
-                        </ion-text>
-                      </ion-row>
-                    </ion-col>
-                  </ion-row>
-                </ion-col>
-                <ion-col size="1">
-                  <ion-icon src="../../../../../../assets/ionicons/chevron-up-outline.svg"></ion-icon>
-                  <ion-icon src="../../../../../../assets/ionicons/chevron-down-outline.svg"></ion-icon>
-                </ion-col>
-              </ion-row>
-          </mat-expansion-panel-header>
-          <ion-row>
-            <ion-text>
-              Air-Asia 15-332
-            </ion-text>
-          </ion-row>
-          <ion-row>
-            <ion-col size="4" (click)="showBaggage(item.item)">
-              <ion-row>
-                <ion-text>icon</ion-text>
-              </ion-row>
-              <ion-row>
-                <ion-text>Baggage : 15kg</ion-text>
-              </ion-row>
-            </ion-col>
-            <ion-col size="4">
-              <ion-row>
+    <ion-row>
+      <ion-col>
+        <mat-accordion multi="false">
+          <mat-expansion-panel [id]="" [hideToggle]="true"  *ngFor="let item of flightList">
+            <mat-expansion-panel-header [collapsedHeight]="flightHeight" [expandedHeight]="flightHeight" #panel>
+            <ion-row>
+              <ion-col (click)="selectFlight(panel,item,$event)" size="11">
+                <ion-row class="ion-justify-content-between" *ngFor="let i of item.item">
+                  <ion-col size="2">
+                    <ion-img src="../../../../../../assets/site-image/D7.gif"></ion-img>
+                    <ion-text>Air Asia</ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                      <ion-text>15:40 - 17:50</ion-text>
+                      <ion-text>Economy</ion-text>
+                  </ion-col>
+                  <ion-col size="2">
+                    <ion-text>
+                      02h 10m
+                    </ion-text>
+                    <ion-text>
+                      non stop
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="3">
+                    <ion-text>
+                      $ 4800
+                    </ion-text>
+                    <ion-text>
+                      7 seat left
+                    </ion-text>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+              <ion-col size="1">
+                <ion-icon src="../../../../../../assets/ionicons/chevron-up-outline.svg"></ion-icon>
+                <!-- <ion-icon src="../../../../../../assets/ionicons/chevron-down-outline.svg"></ion-icon> -->
+              </ion-col>
+            </ion-row>
+            </mat-expansion-panel-header>
+            <ion-row>
+              <ion-text>
+                Air-Asia 15-332
+              </ion-text>
+            </ion-row>
+            <ion-row>
+              <ion-col size="4" (click)="showBaggage(item.item)">
                 <ion-icon size="large" name="briefcase"></ion-icon>
-              </ion-row>
-              <ion-row>
+                <ion-text>Baggage : 15kg</ion-text>
+              </ion-col>
+              <ion-col size="4">
+                <ion-icon size="large" name="briefcase"></ion-icon>
                 <ion-text>Cabin : 7kg</ion-text>
-              </ion-row>
-            </ion-col>
-            <ion-col size="4">
-              <ion-row>
+              </ion-col>
+              <ion-col size="4">
                 <ion-icon size="large" src="../../../../../../assets/icons/flying-fly.svg"></ion-icon>
-              </ion-row>
-              <ion-row>
                 <ion-text>Flight details</ion-text>
-              </ion-row>
-            </ion-col>
-          </ion-row>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </ion-col>
-  </ion-row>
+              </ion-col>
+            </ion-row>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </ion-col>
+    </ion-row>
 </ion-content>

@@ -7,6 +7,7 @@
 ion-label{
     --color: #{$text-color} !important;
     font-size: #{$text-font-size};
+    margin:0px;
 }
 
 [aria-selected="true"]{
