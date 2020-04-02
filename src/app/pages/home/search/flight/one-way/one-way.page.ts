@@ -5,6 +5,10 @@ import { CityModalComponent } from 'src/app/components/city-modal/city-modal.com
 import { BookingService } from 'src/app/services/booking/booking.service';
 import { PassengerModalComponent } from 'src/app/components/passenger-modal/passenger-modal.component';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
+import { Select, Store } from '@ngxs/store';
+import { SearchState } from 'src/app/stores/search.state';
+import { Observable } from 'rxjs';
+import { UpdateForm } from '@ngxs/form-plugin';
 
 @Component({
   selector: 'app-one-way',
@@ -15,23 +19,20 @@ export class OneWayPage implements OnInit {
 
   oneWaySearch: FormGroup;
   @ViewChild('select', { static: true }) select: IonSelect;
-  isLandscape: boolean;
+
+  @Select(SearchState.oneWayState) formState: Observable<any>;
 
   constructor(
     public modalCtrl: ModalController,
-    public pickrCtrl : PickerController,
-    public fb : FormBuilder,
+    public pickrCtrl: PickerController,
+    public fb: FormBuilder,
     public booking: BookingService,
-    public platform : Platform
+    public platform: Platform,
+    public store : Store
   ) {
   }
 
   ngOnInit() {
-    this.platform.resize.subscribe(async () => {
-      this.isLandscape = this.platform.isLandscape();
-      console.log(this.isLandscape);
-    });
-
     this.oneWaySearch = new FormGroup({
       from: this.fb.control(null),
       to: this.fb.control(null),
@@ -43,10 +44,16 @@ export class OneWayPage implements OnInit {
     this.oneWaySearch.valueChanges.subscribe(
       (value) => {
         console.log(value);
+
+        this.store.dispatch(new UpdateForm({
+          value: this.oneWaySearch.value,
+          dirty: this.oneWaySearch.dirty,
+          status: this.oneWaySearch.status,
+          errors: this.oneWaySearch.errors,
+          path: "search.oneWaySearch"
+        }));
       }
     );
-
-    console.log(this.oneWaySearch);
   }
 
   async selectCity(field) {
@@ -56,7 +63,6 @@ export class OneWayPage implements OnInit {
 
     modal.onDidDismiss().then(
       (selectedCity) => {
-        console.log(selectedCity);
         if (selectedCity.role == "backdrop") {
           return;
         }

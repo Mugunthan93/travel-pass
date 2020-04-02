@@ -17,7 +17,6 @@ export class FlightPage implements OnInit {
   }
   
   ngOnInit() {
-    console.log(this.tabs);
   }
 
 }

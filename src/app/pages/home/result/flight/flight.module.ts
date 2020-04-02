@@ -8,10 +8,7 @@ import { FlightPageRoutingModule } from './flight-routing.module';
 
 import { FlightPage } from './flight.page';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { ResultListComponent } from 'src/app/components/result-list/result-list.component';
-import { OneWayPage } from './one-way/one-way.page';
-import { RoundTripPage } from './round-trip/round-trip.page';
-import { MultiCityPage } from './multi-city/multi-city.page';
+import { SharedModule } from 'src/app/modules/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -22,11 +19,7 @@ import { MultiCityPage } from './multi-city/multi-city.page';
     MatExpansionModule
   ],
   declarations: [
-    FlightPage,
-    OneWayPage,
-    RoundTripPage,
-    MultiCityPage,
-    ResultListComponent
+    FlightPage
   ]
 })
 export class FlightPageModule {}

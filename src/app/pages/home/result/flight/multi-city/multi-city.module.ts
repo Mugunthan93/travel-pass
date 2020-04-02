@@ -7,8 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { MultiCityPageRoutingModule } from './multi-city-routing.module';
 
 import { MultiCityPage } from './multi-city.page';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { ResultListComponent } from 'src/app/components/result-list/result-list.component';
+import { SharedModule } from 'src/app/modules/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -16,11 +15,10 @@ import { ResultListComponent } from 'src/app/components/result-list/result-list.
     FormsModule,
     IonicModule,
     MultiCityPageRoutingModule,
-    MatExpansionModule
+    SharedModule
   ],
   declarations: [
-    MultiCityPage,
-    ResultListComponent
+    MultiCityPage
   ]
 })
 export class MultiCityPageModule {}

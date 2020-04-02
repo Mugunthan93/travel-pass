@@ -1,24 +1,46 @@
-import { State } from "@ngxs/store";
-import { city } from '../models/city';
-
-export interface flightsearch{
-  from: city
-  to: city
-  departure: Date
-  traveller: any
-  class: string
-}
+import { State, Selector } from "@ngxs/store";
+import { Injectable } from '@angular/core';
 
 export interface Search{
-  flight : flightsearch
+  oneWaySearch: any,
+  roundTripSearch: any,
+  multiCitySearch: any
 }
 
 @State<Search>({
-    name : 'search',
-    defaults: {
-        flight : null
-      }
+  name : 'search',
+  defaults: {
+    oneWaySearch: null,
+    roundTripSearch: {
+      model: [],
+      dirty: false,
+      status: '',
+      errors: {}
+    },
+    multiCitySearch: {
+      model: [],
+      dirty: false,
+      status: '',
+      errors: {}
+    }
+  }
 })
+  
+@Injectable()
 export class SearchState{
+
+  @Selector()
+  static oneWayState(state: any) {
+    return state.oneWaySearch;
+  }
+
+  @Selector()
+  static roundTripState(state: any) {
+    return state.roundTripSearch;
+  } @Selector()
+    
+  static multiCityState(state: any) {
+    return state.multiCitySearch;
+  }
   
 }

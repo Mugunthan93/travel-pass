@@ -8,7 +8,7 @@ import { FlightBaggageComponent } from '../flight-baggage/flight-baggage.compone
   selector: 'app-result-list',
   templateUrl: './result-list.component.html',
   styleUrls: ['./result-list.component.scss'],
-  animations: [matExpansionAnimations.bodyExpansion]
+  animations: [matExpansionAnimations.bodyExpansion],
 })
 export class ResultListComponent implements OnInit,OnChanges {
 

@@ -18,7 +18,6 @@ export class AppComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit() {
-    console.log(this.screenOrientation);
     this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
   }
 

@@ -29,7 +29,10 @@ export class MultiCityPage implements OnInit {
       traveller: this.fb.control(null),
       class:this.fb.control(null)
     });
+    
+    this.trips = this.multiCitySearch.get('trips') as FormArray;
     console.log(this.multiCitySearch);
+
   }
 
   createTrip(): FormGroup {
@@ -41,13 +44,11 @@ export class MultiCityPage implements OnInit {
   }
 
   addTrip() {
-    this.trips = this.multiCitySearch.get('trips') as FormArray;
     this.trips.push(this.createTrip());
     console.log(this.multiCitySearch);
   }
 
   removeTrip(tripArray, tripElement) {
-    this.trips = this.multiCitySearch.controls['trips'] as FormArray;
     this.trips.removeAt(tripElement);
     console.log(tripArray,tripElement);
   }

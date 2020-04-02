@@ -19,7 +19,6 @@ export class NativeHttpService {
     public platform : Platform,
     public http : HTTP
   ) {
-    console.log(http);
       this.http.setHeader(environment.baseURL, "Access-Control-Allow-Origin", '*');
       this.http.setHeader(environment.baseURL, "Access-Control-Allow-Headers", "Content-Type");
       this.http.setHeader(environment.baseURL, "Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");

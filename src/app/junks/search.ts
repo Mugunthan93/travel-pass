@@ -1,150 +1,150 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/services/auth/auth.service';
-import { user } from 'src/app/models/user';
-import { Subscription } from 'rxjs';
-import { PickerController, ModalController } from '@ionic/angular';
-import { CityModalComponent } from 'src/app/components/city-modal/city-modal.component';
-import { OneWayTrip, Picker, City } from 'src/app/models/search';
-import { FormGroup, FormControl } from '@angular/forms';
-import { BookingService } from 'src/app/services/booking/booking.service';
+// import { Component, OnInit } from '@angular/core';
+// import { AuthService } from 'src/app/services/auth/auth.service';
+// import { user } from 'src/app/models/user';
+// import { Subscription } from 'rxjs';
+// import { PickerController, ModalController } from '@ionic/angular';
+// import { CityModalComponent } from 'src/app/components/city-modal/city-modal.component';
+// import { OneWayTrip, Picker, City } from 'src/app/models/search';
+// import { FormGroup, FormControl } from '@angular/forms';
+// import { BookingService } from 'src/app/services/booking/booking.service';
 
-@Component({
-  selector: 'app-booking-way',
-  template:''
-})
-export class BookingWayComponent implements OnInit {
-
-
+// @Component({
+//   selector: 'app-booking-way',
+//   template:''
+// })
+// export class BookingWayComponent implements OnInit {
 
 
-  //local variable
-  // user: user;
-  // trip: OneWayTrip;
-  // searchTripForm: FormGroup;
-  // date = "2019-10-01T15:43:40.394Z";
-  // class = ['Economy', 'Premium Economy', 'Premium', 'First Class'];
-  // person = ['1', '2', '3', '4', '5', '6'];
 
 
-  //Subscription data
-  // userSub: Subscription;
-  // citySub: Subscription;
+//   //local variable
+//   // user: user;
+//   // trip: OneWayTrip;
+//   // searchTripForm: FormGroup;
+//   // date = "2019-10-01T15:43:40.394Z";
+//   // class = ['Economy', 'Premium Economy', 'Premium', 'First Class'];
+//   // person = ['1', '2', '3', '4', '5', '6'];
 
-  constructor(
-    // public authService: AuthService,
-    // public pickerCtrl: PickerController,
-    // public modalCtrl: ModalController
-  ) { 
 
-  }
+//   //Subscription data
+//   // userSub: Subscription;
+//   // citySub: Subscription;
 
-  ngOnInit() {
+//   constructor(
+//     // public authService: AuthService,
+//     // public pickerCtrl: PickerController,
+//     // public modalCtrl: ModalController
+//   ) { 
 
-    // this.searchTripForm = new FormGroup({
-    //   origin: new FormGroup({
-    //     city_code: new FormControl(),
-    //     city_name: new FormControl()
-    //   }),
-    //   destination: new FormGroup({
-    //     city_code: new FormControl(),
-    //     city_name: new FormControl()
-    //   }),
-    //   departure_date: new FormControl(),
-    //   arrival_date: new FormControl(),
-    //   persons: new FormControl(),
-    //   class: new FormControl()
-    // });
-  }
+//   }
 
-  selectTrip(evt) {
-    console.log(evt);
-  }
+//   ngOnInit() {
 
-  onSearchTrip() {
-    // console.log(this.searchTripForm);
-  }
+//     // this.searchTripForm = new FormGroup({
+//     //   origin: new FormGroup({
+//     //     city_code: new FormControl(),
+//     //     city_name: new FormControl()
+//     //   }),
+//     //   destination: new FormGroup({
+//     //     city_code: new FormControl(),
+//     //     city_name: new FormControl()
+//     //   }),
+//     //   departure_date: new FormControl(),
+//     //   arrival_date: new FormControl(),
+//     //   persons: new FormControl(),
+//     //   class: new FormControl()
+//     // });
+//   }
 
-  getPicker(data) {
-    // let pick = this.pickerCtrl.create({
-    //   columns: this.getColumns(1, 5, data),
-    //   buttons: [
-    //     {
-    //       text: 'Cancel',
-    //       role: 'cancel'
-    //     },
-    //     {
-    //       text: 'Confirm',
-    //       handler: (value) => {
-    //         console.log(value.Person.text, value.Person.value);
-    //       }
-    //     }
-    //   ]
-    // }).then(
-    //   (pickEl) => {
-    //     pickEl.present();
-    //     pickEl.dismiss(
-    //       (selectedVal) => {
-    //         console.log(selectedVal);
-    //       }
-    //     );
-    //   }
-    // );
-    // return pick;
-  }
+//   selectTrip(evt) {
+//     console.log(evt);
+//   }
 
-  getColumns(numColumns, numOptions, columnOptions) {
-    let columns = [];
-    for (let i = 0; i < numColumns; i++) {
-      columns.push({
-        name: `col-${i}`,
-        options: this.getColumnOptions(i, numOptions, columnOptions)
-      });
-    }
+//   onSearchTrip() {
+//     // console.log(this.searchTripForm);
+//   }
 
-    return columns;
-  }
+//   getPicker(data) {
+//     // let pick = this.pickerCtrl.create({
+//     //   columns: this.getColumns(1, 5, data),
+//     //   buttons: [
+//     //     {
+//     //       text: 'Cancel',
+//     //       role: 'cancel'
+//     //     },
+//     //     {
+//     //       text: 'Confirm',
+//     //       handler: (value) => {
+//     //         console.log(value.Person.text, value.Person.value);
+//     //       }
+//     //     }
+//     //   ]
+//     // }).then(
+//     //   (pickEl) => {
+//     //     pickEl.present();
+//     //     pickEl.dismiss(
+//     //       (selectedVal) => {
+//     //         console.log(selectedVal);
+//     //       }
+//     //     );
+//     //   }
+//     // );
+//     // return pick;
+//   }
 
-  getColumnOptions(columnIndex, numOptions, columnOptions) {
-    let options = [];
-    for (let i = 0; i < numOptions; i++) {
-      options.push({
-        text: columnOptions[columnIndex][i % numOptions],
-        value: i
-      })
-    }
+//   getColumns(numColumns, numOptions, columnOptions) {
+//     let columns = [];
+//     for (let i = 0; i < numColumns; i++) {
+//       columns.push({
+//         name: `col-${i}`,
+//         options: this.getColumnOptions(i, numOptions, columnOptions)
+//       });
+//     }
 
-    return options;
-  }
+//     return columns;
+//   }
 
-  getModal(location, point) {
-    // let modal = this.modalCtrl.create({
-    //   component: CityModalComponent,
-    //   componentProps: {
-    //     location: location,
-    //     point: point
-    //   }
-    // }).then(
-    //   (modalEl) => {
-    //     modalEl.present();
-    //     modalEl.dismiss(
-    //       (selectedCity: City, point: string) => {
-    //         if (point == 'from') {
-    //           this.trip.origin = selectedCity;
-    //         }
-    //         else if (point == 'to') {
-    //           this.trip.destination = selectedCity;
-    //         }
-    //       }
-    //     );
-    //   }
-    // )
+//   getColumnOptions(columnIndex, numOptions, columnOptions) {
+//     let options = [];
+//     for (let i = 0; i < numOptions; i++) {
+//       options.push({
+//         text: columnOptions[columnIndex][i % numOptions],
+//         value: i
+//       })
+//     }
 
-    // return modal;
-  }
+//     return options;
+//   }
 
-  ngOnDestroy() {
-    // this.userSub.unsubscribe();
-    // this.citySub.unsubscribe();
-  }
+//   getModal(location, point) {
+//     // let modal = this.modalCtrl.create({
+//     //   component: CityModalComponent,
+//     //   componentProps: {
+//     //     location: location,
+//     //     point: point
+//     //   }
+//     // }).then(
+//     //   (modalEl) => {
+//     //     modalEl.present();
+//     //     modalEl.dismiss(
+//     //       (selectedCity: City, point: string) => {
+//     //         if (point == 'from') {
+//     //           this.trip.origin = selectedCity;
+//     //         }
+//     //         else if (point == 'to') {
+//     //           this.trip.destination = selectedCity;
+//     //         }
+//     //       }
+//     //     );
+//     //   }
+//     // )
 
-}
+//     // return modal;
+//   }
+
+//   ngOnDestroy() {
+//     // this.userSub.unsubscribe();
+//     // this.citySub.unsubscribe();
+//   }
+
+// }

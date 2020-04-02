@@ -7,8 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { RoundTripPageRoutingModule } from './round-trip-routing.module';
 
 import { RoundTripPage } from './round-trip.page';
-import { ResultListComponent } from 'src/app/components/result-list/result-list.component';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { SharedModule } from 'src/app/modules/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -16,11 +15,10 @@ import { MatExpansionModule } from '@angular/material/expansion';
     FormsModule,
     IonicModule,
     RoundTripPageRoutingModule,
-    MatExpansionModule
+    SharedModule
   ],
   declarations: [
-    RoundTripPage,
-    ResultListComponent
+    RoundTripPage
   ]
 })
 export class RoundTripPageModule {}

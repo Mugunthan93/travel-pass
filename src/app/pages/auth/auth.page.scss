@@ -1,4 +1,5 @@
 @import "../../../style/util/mixins.scss";
+@import "../../../style/util/variable.scss";
 
 ion-grid,
 ion-row,
@@ -24,4 +25,34 @@ ion-img{
     margin-top:auto;
     margin-bottom:auto;
     height: 50px;
+}
+
+ion-tab-bar {
+    // --color: #{$transparent};
+    --background: #{$transparent};
+
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    height: 6vh;
+}
+
+ion-tab-button {
+    --color :#{$text-color};
+    // --color-focused :
+    // --color-selected :
+    // --ripple-color :
+    // --background :
+    // --background-focused : ;
+    // --background-focused-opacity :
+    // --padding-bottom : ;
+    // --padding-end : ;
+    // --padding-start : ;
+    // --padding-top : ;
+
+    &[aria-selected="true"] {
+        background: #{$selected-bg};
+    }
+
 }

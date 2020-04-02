@@ -35,8 +35,8 @@ export class LoginPage implements OnInit, OnDestroy {
   }
 
   onLogin() {
-    // this.store.dispatch(new Login(this.loginForm.value.email, this.loginForm.value.password));
-    this.router.navigate(['/','register']);
+    this.store.dispatch(new Login(this.loginForm.value.email, this.loginForm.value.password));
+    // this.router.navigate(['/','register']);
   }
 
   async presentLoading() {

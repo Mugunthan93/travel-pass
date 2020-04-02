@@ -1,3 +1,7 @@
+@import "../../../../style/util/variable.scss";
+@import "../../../../style/util/mixins.scss";
+
+
 ion-grid#header{
     --ion-grid-padding:0px;
     ion-row{
@@ -19,4 +23,8 @@ ion-title{
 
 ion-label{
     font-size: small;
+}
+
+ion-tab-bar {
+    --background: #{$bar-bg} !important;
 }

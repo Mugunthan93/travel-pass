@@ -5,7 +5,7 @@
 // $label-color:;
 
 ion-label{
-    --color: #{$text-color};
+    --color: #{$text-color} !important;
     font-size: #{$text-font-size};
 }
 

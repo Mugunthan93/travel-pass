@@ -8,21 +8,23 @@ import { NgxsFormPluginModule } from '@ngxs/form-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
-import { NativeStorage } from '@ionic-native/native-storage/ngx';
-
-import { CustomStorage } from 'src/app/stores/custom-storage';
-import { Platform } from '@ionic/angular';
+import { SearchState } from 'src/app/stores/search.state';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-    NgxsModule.forRoot([AppState], { developmentMode: !environment.production }),
+    NgxsModule.forRoot([
+      AppState,
+      SearchState
+    ], { developmentMode: !environment.production }
+    ),
     NgxsStoragePluginModule.forRoot({
       key: [
         'App',
         'App.user.id',
-        'App.user'
+        'App.user',
+        'search'
       ]
     }),
     NgxsFormPluginModule.forRoot(),
