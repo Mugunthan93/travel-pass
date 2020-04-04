@@ -34,7 +34,7 @@ export class ResultListComponent implements OnInit,OnChanges {
             this.flightHeight = el.item.length * 60 + "px";
           }
           else {
-            this.flightHeight = "60px";
+            this.flightHeight = "180px";
           }
       });
   }

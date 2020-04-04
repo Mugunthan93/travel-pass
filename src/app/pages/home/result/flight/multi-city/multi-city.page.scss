@@ -1,123 +1,69 @@
-ion-grid#list{  
-    display: flex; 
-    flex-flow: column;
-    --ion-grid-padding:0px;
-    height : 100%;
-    margin-left : 0px;
-    margin-right : 0px;
-    >ion-row{
-        display: flex; 
-        flex-flow: column;
-        height : 100%;
-        >ion-col{
-            padding : 0px 0px 0px 0px;
-            >ion-row:first-child{
-                --ion-grid-columns-padding:0px;
-                display: flex; 
-                flex-flow: column;
-                ion-segment {
-                    ion-col{
-                    padding : 0px 0px 0px 0px;
-                    ion-segment-bottom{
-                        --indicator-color : red;
-                        --color-checked : red;
-                        --border-color : red;
-                    }
-                    }
+@import "../../../../../../style/util/variable.scss";
+@import "../../../../../../style/util/mixins.scss";
 
-                }
-            }
-            >ion-row:nth-of-type(2){
-                display: flex; 
-                flex-flow: column;
-                flex-grow: 1;
-                height : 100%;
-                ion-col{
-                    padding : 0px 0px 0px 0px;
+ion-grid {
+    @include flex-col-grid;
+    margin:0px;
+    >ion-row:first-child{
+        @include flex-col-grid;
+        height:auto;
+        >ion-segment{
+            ion-col{
+                ion-segment-button {
+                    min-width: calc(100% / 4);
+
+                    ion-label {
+                        font-size:.70em;
+                    }
                 }
             }
         }
     }
-
-    ion-label{
-        font-size: x-small;
-        margin-bottom: 0px;
-    }
+    >ion-row:last-child{
+        @include flex-col-grid;
+        flex-grow: 1;
+            >app-result-list{
+                @include flex-col-grid;
+            }
+        }
 }
 
-ion-content{
-    ion-row:only-child{
-        border-bottom : 2px solid grey;
-    }
-    ion-row{
-        mat-accordion{
-            >mat-expansion-panel{
-                >mat-expansion-panel-header{
-                    padding-left: 0px;
-                    padding-right : 0px;
-                    display: flex; 
-                    flex-flow: column;
-                    height : 100%;
-                    >::ng-deep span{
-                        width : 100%;
-                        >ion-row{
-                            width : 100%;
-                        }
-                        ion-row{
-                            ion-col{
-                                display: flex; 
-                                flex-flow: column;
-                                height : 100%;
-                                align-items: stretch;
-                                ion-row{
-                                    margin : auto;
-                                    ion-text{
-                                        font-size: small;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                ::ng-deep .mat-expansion-panel-body{
-                    padding : 2px;
-                    border-bottom : 1px solid grey;
-                    >ion-row:first-child{
-                        margin : 5px;
-                        ion-text{
-                            font-size: small;
-                        }
-                    }
-                    >ion-row:last-child{
-                        margin : 5px;
-                            ion-col{
-                                display: flex; 
-                                flex-flow: column;
-                                height : 100%;
-                                align-items: stretch;
-                                ion-row{
-                                    margin : auto;
-                                    ion-text{
-                                        margin : 2px;
-                                        font-size: small;
-                                    }
-                                }
-                            }
-                    }
-                }
-            }
-        }
+ion-segment {
+    border-bottom:1px solid #{$text-color};
+}
+
+ion-segment-button {
+    @include flex-col-grid;
+
+    ion-text {
+        font-size:.70em;
     }
 }
 
 ion-footer{
-    ion-toolbar{
-        --background: rgb(218, 214, 214);
-        ion-button{
-            --background:blue;
+    background: rgb(218, 214, 214);
+    ion-row{
+        height:60px;
+        ion-col{
+            padding:3px;
+            ion-row{
+                height:50%;
+                ion-text, ion-img{
+                    margin-left:5px;
+                    margin-top:auto;
+                    margin-bottom:auto;
+                }
+                ion-button{
+                    height:auto;
+                    --background:blue;
+                    ion-text{
+                        color:white;
+                    }
+                }
+            }
         }
-        ion-text{
-            font-size: small;
-        }
+    }
+    ion-text{
+        font-size:.70em;
     }
 }

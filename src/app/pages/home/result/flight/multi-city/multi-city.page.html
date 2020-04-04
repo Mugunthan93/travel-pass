@@ -9,115 +9,104 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content scroll-y="false">
-  <ion-grid id="list">
-    <ion-row>
-      <ion-col>
-        <ion-row>
-          <ion-segment (ionChange)="sorting($event)">
-          <ion-col size="3">
-            <ion-segment-button value="departure" layout="end">
-              <ion-label>
-                {{'Departure' | uppercase}}
-                <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg" slot="end"></ion-icon>
-                <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg" slot="end"></ion-icon>
-              </ion-label>
-            </ion-segment-button>
-          </ion-col>
-          <ion-col size="3">
-            <ion-segment-button value="arrival" layout="end">
-              <ion-label>
-                {{'Arrival' | uppercase}}
-                <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg" slot="end"></ion-icon>
-                <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg" slot="end"></ion-icon>
-              </ion-label>
-            </ion-segment-button>
-          </ion-col>
-          <ion-col size="3">
-              <ion-segment-button value="duration" layout="end">
-                <ion-label>
-                  {{'Duration' | uppercase}}
-                <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg" slot="end"></ion-icon>
-                <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg" slot="end"></ion-icon>
-                </ion-label>
-              </ion-segment-button>
-          </ion-col>
-          <ion-col size="3">
-              <ion-segment-button value="price" layout="end">
-                <ion-label>
-                  {{'Price' | uppercase}}
-                <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg" slot="end"></ion-icon>
-                <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg" slot="end"></ion-icon>
-                </ion-label>
-              </ion-segment-button>
-          </ion-col>
-          </ion-segment>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <app-result-list  
-              [flightList]="flightList"
-              [selectedFlights]="selectedFlight"
-              (getFlightValue)="currentFlight($event)" 
-            ></app-result-list>
-          </ion-col>
-        </ion-row>
+<ion-grid>
+  <ion-row>
+    <ion-segment (ionChange)="sorting($event)">
+      <ion-col size="3">
+        <ion-segment-button value="departure" layout="icon-end">
+          <ion-label>
+            {{'Departure' | uppercase}}
+            <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
+            <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
+          </ion-label>
+        </ion-segment-button>
       </ion-col>
-    </ion-row>
-  </ion-grid>
-</ion-content>
+      <ion-col size="3">
+        <ion-segment-button value="arrival" layout="icon-end">
+          <ion-label>
+            {{'Arrival' | uppercase}}
+            <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
+            <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
+          </ion-label>
+        </ion-segment-button>
+      </ion-col>
+      <ion-col size="3">
+        <ion-segment-button value="duration" layout="icon-end">
+          <ion-label>
+            {{'Duration' | uppercase}}
+            <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
+            <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
+          </ion-label>
+        </ion-segment-button>
+      </ion-col>
+      <ion-col size="3">
+        <ion-segment-button value="price" layout="icon-end">
+          <ion-label>
+            {{'Price' | uppercase}}
+            <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
+            <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
+          </ion-label>
+        </ion-segment-button>
+      </ion-col>
+    </ion-segment>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <app-result-list [flightList]="flightList" [selectedFlights]="selectedFlight"
+        (getFlightValue)="currentFlight($event)"></app-result-list>
+    </ion-col>
+  </ion-row>
+</ion-grid>
 
 <ion-footer *ngIf="selectedFlight !== null">
-  <ion-toolbar>
-    <ion-grid>
+  <ion-row>
+    <ion-col size="3">
       <ion-row>
-        <ion-col size="3">
-          <ion-row>
-            <ion-img src="../../../../../../assets/site-image/D7.gif"></ion-img>
-          </ion-row>
-          <ion-row>
-            <ion-text>
-              Air Asia
-            </ion-text>
-          </ion-row>
-        </ion-col>
-        <ion-col size="3">
-          <ion-row>
-            <ion-text>
-              15:40 - 17:50
-            </ion-text>
-          </ion-row>
-          <ion-row>
-            <ion-text>
-              Economy
-            </ion-text>
-          </ion-row>
-        </ion-col>
-        <ion-col size="3">
-          <ion-row>
-            <ion-text>
-              02h 10m
-            </ion-text>
-          </ion-row>
-          <ion-row>
-            <ion-text>
-              non stop
-            </ion-text>
-          </ion-row>
-        </ion-col>
-        <ion-col size="3">
-          <ion-row>
-            <ion-text>
-              $ 4800
-            </ion-text>
-          </ion-row>
-          <ion-row>
-            <ion-button size="small" (click)="book()">
-              <ion-text>Book</ion-text>
-            </ion-button>
-          </ion-row>
-        </ion-col>
+        <ion-img src="../../../../../../assets/site-image/D7.gif"></ion-img>
       </ion-row>
-    </ion-grid>
-  </ion-toolbar>
+      <ion-row>
+        <ion-text>
+          Air Asia
+        </ion-text>
+      </ion-row>
+    </ion-col>
+    <ion-col size="3">
+      <ion-row>
+        <ion-text>
+          15:40 - 17:50
+        </ion-text>
+      </ion-row>
+      <ion-row>
+        <ion-text>
+          Economy
+        </ion-text>
+      </ion-row>
+    </ion-col>
+    <ion-col size="3">
+      <ion-row>
+
+        <ion-text>
+          02h 10m
+        </ion-text>
+      </ion-row>
+      <ion-row>
+
+        <ion-text>
+          non stop
+        </ion-text>
+      </ion-row>
+    </ion-col>
+    <ion-col size="3">
+      <ion-row>
+        <ion-text>
+          $ 4800
+        </ion-text>
+      </ion-row>
+      <ion-row>
+        <ion-button size="small" (click)="book()">
+          <ion-text>Book</ion-text>
+        </ion-button>
+      </ion-row>
+    </ion-col>
+  </ion-row>
 </ion-footer>
