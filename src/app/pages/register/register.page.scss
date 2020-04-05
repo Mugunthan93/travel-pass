@@ -1,80 +1,75 @@
-ion-grid{
-    display: flex; 
-    flex-flow: column;
-    height: 100%;
-    margin : 0px 0px 0px 0px;
-    >ion-row{
-        height : 100%;
-        >ion-col{
-            height : 100%;
-            display: flex; 
-            flex-flow: column;
-            >ion-row:first-child{
-                height:10%;
+@import "../../../style/util/mixins.scss";
+@import "../../../style/util/variable.scss";
+@import "../../../style/component/item.scss";
+
+ion-grid,
+ion-row,
+ion-col,
+app-custom-stepper,
+app-add-branch,
+app-add-user,
+app-add-profile,
+form {
+    @include flex-col-grid;
+}
+
+ion-grid {
+    >ion-row:first-child{
+        >ion-col {
+            >ion-row:first-child {
+                height: 10%;
+            }
+
+            >ion-row:last-child {
+                height: 90%;
+                >ion-col {
+                    >ion-row:first-child {
+                        height: 10%;
+                    }
+
+                    >ion-row:last-child {
+                        height: 90%;
+                    }
+                }
             }
         }
     }
-    ion-row:last-child{
-        flex-grow: 1;
+}
+
+form{
+    ion-row{
+        ion-col{
+            @include grid-col-padding(2em);
+            padding-top:0px !important;
+            ion-item {
+                height:calc(100vh/4);
+            }
+            ion-img{
+                width:24px;
+                height:24px;
+            }
+            ion-input{
+                --placeholder-font-weight: lighter;
+                font-size: 1em;
+            }
+        }
     }
 }
 
-
-ion-img{
+ion-img {
+    margin-top: auto;
+    margin-bottom: auto;
     height: 50px;
 }
 
-ion-item {
-    --background : transparent;
+ion-text{
+    margin-top: auto;
+    margin-bottom: auto;
+    font-size:3.5vh;
 }
 
-ion-text {
-    color : #7C7C7C;
-    font-size: x-large;
-}
-
-ion-item{
-    ion-img{
-    width: 25px;
-    }
-}
-
-
-
-ion-button{
-    margin-top : 20px;
-    height : 50px;
-}
-
-form {
-    >ion-item {
-        --inner-padding-top : 5px;
-        --inner-padding-bottom : 5px;
-    }
-}
-
-button {
-    width : 100%;
-    padding : 0px 0px 0px 0px;
-    margin-top : 20px;
-    >ion-button {
-        margin : 0px 0px 0px 0px ;
-    }
-}
-
-ion-fab-button {
-    >ion-icon{
+ion-fab-button{
+    ion-icon{
         color:white !important;
     }
-}
-
-ion-fab{
-    > button{
-        border-radius: 50px;
-    }
-}
-
-ion-content{
-    --background: transparent;
-
 }

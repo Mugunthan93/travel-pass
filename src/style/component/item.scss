@@ -1,5 +1,13 @@
 @import "../util/variable.scss";
 
+@mixin grid-col-padding($size){
+    --ion-grid-column-padding-xs:#{$size} !important;
+    --ion-grid-column-padding-sm:#{$size} !important;
+    --ion-grid-column-padding-md:#{$size} !important;
+    --ion-grid-column-padding-lg:#{$size} !important;
+    --ion-grid-column-padding-xl:#{$size} !important;
+}
+
 //variable
 
 // $item-color:;
@@ -78,7 +86,6 @@ $item-background:$item-bg;
 
 ion-item {
     --background:$item-background;
-
 }
 
 
@@ -90,4 +97,6 @@ ion-item{
     --inner-padding-end:0px;
     --inner-padding-start:0px;
     --inner-padding-top:0px;
+    --border-width:0px;
+    --inner-border-width:0px;
 }

@@ -1,31 +1,31 @@
-ion-item {
-    --background: transparent;
-}
+@import "../../../style/util/variable.scss";
+@import "../../../style/util/mixins.scss";
 
+ion-grid{
+    @include flex-col-grid;
+    margin-left:0px;
+    margin-right:0px;
+    padding:5px;
+    >ion-row:first-child{
+        >ion-segment {
+            ion-col {
+                ion-segment-button {
+                    min-width: calc(100% / 4);
 
+                    --padding-bottom:auto;
+                    --padding-end:auto;
+                    --padding-start:auto;
+                    --padding-top:auto;
 
-ion-grid {
-    display: flex;
-    flex-flow: column;
-    height: 100%;
-
-    >ion-row {
-        >ion-col {
-            padding: 0px 0px 0px 0px;
+                    ion-label {
+                        font-size:0.75em;
+                        width:21vw;
+                    }
+                }
+            }
         }
     }
-
-    >ion-row:last-child {
-        flex-grow: 1;
-        height: 100%;
-
-        >ion-col {
-            display: flex;
-            flex-flow: column;
-        }
+    >ion-row:last-child{
+        @include flex-col-grid;
     }
-}
-
-ion-icon {
-    margin: 0px 0px 0px 0px;
 }

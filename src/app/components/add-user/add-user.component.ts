@@ -28,4 +28,8 @@ export class AddUserComponent implements OnInit {
     this.closeUser.emit(false);
   }
 
+  closeuser() {
+    this.closeUser.emit(false);
+  }
+
 }

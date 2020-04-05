@@ -28,4 +28,8 @@ export class AddBranchComponent implements OnInit {
     this.closeBranch.emit(false);
   }
 
+  closebranch() {
+    this.closeBranch.emit(false);
+  }
+
 }

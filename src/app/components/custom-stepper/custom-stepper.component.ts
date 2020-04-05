@@ -26,4 +26,8 @@ export class CustomStepperComponent extends CdkStepper implements OnInit {
     console.log(this);
   }
 
+  sorting($event) {
+    
+  }
+
 }
