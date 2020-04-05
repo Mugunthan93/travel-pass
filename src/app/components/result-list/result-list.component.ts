@@ -17,7 +17,8 @@ export class ResultListComponent implements OnInit,OnChanges {
   @Output() getFlightValue: EventEmitter<any> = new EventEmitter<any>(null);
   
   selectedFlight = null;
-  flightHeight : any;
+  flightHeight: any;
+  itemList: number = 60;
   constructor(
     public modalCtrl : ModalController
   ) {
@@ -31,10 +32,10 @@ export class ResultListComponent implements OnInit,OnChanges {
       this.flightList.forEach(
         (el) => {
           if (el.item) {
-            this.flightHeight = el.item.length * 60 + "px";
+            this.flightHeight = el.item.length * this.itemList + "px";
           }
           else {
-            this.flightHeight = "180px";
+            this.flightHeight = this.itemList + "px";
           }
       });
   }

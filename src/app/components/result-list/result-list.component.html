@@ -7,7 +7,7 @@
           [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}">
           <ion-row>
             <ion-col (click)="selectFlight(panel,item,$event)" size="11">
-              <ion-row class="ion-justify-content-between" *ngFor="let i of item.item">
+              <ion-row class="ion-justify-content-between" *ngFor="let i of item.item" [ngStyle]="{'height':itemList+'px'}">
                 <ion-col size="2">
                   <ion-img src="../../../../../../assets/site-image/D7.gif"></ion-img>
                   <ion-text>Air Asia</ion-text>

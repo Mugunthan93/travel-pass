@@ -4,9 +4,9 @@
       <ion-back-button icon="chevron-back-outline" defaultHref="home">
       </ion-back-button>
     </ion-buttons>
-    <ion-title>search {{booking.type | titlecase }}</ion-title>
+    <ion-title>search {{'booking' | titlecase }}</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
+  <ion-router-outlet></ion-router-outlet>
 </ion-content>

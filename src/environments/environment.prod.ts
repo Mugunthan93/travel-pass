@@ -34,5 +34,6 @@ export const environment = {
   baseUrlMode: "PROD",
   idle: 1500,
   timeout: 10,
-  ping: 120
+  ping: 120,
+  places_api:"AIzaSyDx41OJtiCyWZsFl9PUtG5qz9uJ6mLonCA"
 };

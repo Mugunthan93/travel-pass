@@ -45,5 +45,6 @@ export const environment = {
   idle: 1500,
   timeout: 10,
   ping: 120,
-  number :0
+  number: 0,
+  places_api:"AIzaSyCMPgHkciJTa39UW1VME-U2UIGZX5UQSR4"
 };
