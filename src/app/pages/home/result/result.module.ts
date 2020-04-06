@@ -16,14 +16,12 @@ import { MatExpansionModule } from '@angular/material/expansion';
     CommonModule,
     FormsModule,
     IonicModule,
-    ResultPageRoutingModule,
-    // MatExpansionModule
+    ResultPageRoutingModule
   ],
   declarations: [
     ResultPage,
     TripFilterComponent,
-    FlightBaggageComponent,
-    // ResultListComponent
+    FlightBaggageComponent
   ],
   entryComponents: [
     TripFilterComponent,
