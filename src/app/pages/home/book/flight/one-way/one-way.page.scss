@@ -13,95 +13,120 @@ ion-grid{
         margin-top:5px;
         margin-bottom:5px;
         height:auto;
-        >mat-expansion-panel{
-            >mat-expansion-panel-header{
+        mat-expansion-panel {
+            margin-top: 3px;
+            margin-bottom: 3px;
+
+            >mat-expansion-panel-header {
                 background:#{$text-bg};
-                padding-left:10px;
-                padding-right:10px;
-                >::ng-deep span{
-                    ion-row{
-                        width:9em;
+                padding-left: 10px;
+                padding-right: 10px;
+
+                >::ng-deep span {
+                    >ion-row {
+                        width: 9em;
                     }
                 }
             }
-            ::ng-deep .mat-expansion-panel-body{
-                padding:0px;
-                height:100%;
-                margin:5px;
-                >ion-row:first-child{
-                    height:auto;
-                    margin:5px;
-                    >ion-col:first-child{
-                        width:100%;
-                        height:auto;
-                        ion-row{
-                            width:100;
+
+            ::ng-deep .mat-expansion-panel-body {
+                padding: 0px;
+                height: 100%;
+                margin: 5px;
+
+                >ion-row:first-child {
+                    height: auto;
+                    margin: 5px;
+
+                    >ion-col:first-child {
+                        width: 100%;
+                        height: auto;
+
+                        ion-row {
+                            width: 100;
                         }
-                        ion-img{
-                            height:20px;
-                            width:20px;
+
+                        ion-img {
+                            height: 20px;
+                            width: 20px;
                         }
-                        ion-text{
-                            margin:2px;
+
+                        ion-text {
+                            margin: 2px;
                         }
                     }
-                    >ion-col:last-child{
-                        width:100%;
-                        height:auto;
+
+                    >ion-col:last-child {
+                        width: 100%;
+                        height: auto;
+
                         ion-img {
-                            height:20px;
-                            width:20px;
+                            height: 20px;
+                            width: 20px;
                             float: right;
                         }
-    
+
                         ion-text {
                             padding-right: 5px;
                             font-size: small;
                         }
                     }
                 }
-                >ion-row:nth-of-type(2){
-                    height:auto;
-                    margin:5px;
+
+                >ion-row:nth-of-type(2) {
+                    height: auto;
+                    margin: 5px;
+
                     ion-col {
                         height: auto;
-                        ion-row{
-                            height:auto;
+
+                        ion-row {
+                            height: auto;
                         }
                     }
-                    ion-col:first-child{
-                        ion-row{
+
+                    ion-col:first-child {
+                        ion-row {
                             margin-top: 2px;
                             margin-bottom: 2px;
                         }
-                        ion-row:first-child{
-                            ion-text{
-                                font-size:medium;
+
+                        ion-row:first-child {
+                            ion-text {
+                                font-size: medium;
                             }
                         }
                     }
-                    ion-col:nth-of-type(2){
-                        ion-row{
-                            ion-icon,ion-text{
-                                margin:auto;
+
+                    ion-col:nth-of-type(2) {
+                        ion-row {
+
+                            ion-icon,
+                            ion-text {
+                                margin: auto;
                             }
                         }
-                        >ion-row:first-child{
-                            height:75%;
+
+                        >ion-row:first-child {
+                            height: 75%;
                         }
+
                         >ion-row:last-child {
                             height: 25%;
                         }
-    
+
                     }
-                    ion-col:last-child{
-                        ion-row{
+
+                    ion-col:last-child {
+                        ion-row {
                             margin-top: 2px;
                             margin-bottom: 2px;
-                            ion-text{
-                                margin-left:auto;
+
+                            ion-text {
+                                margin-left: auto;
                             }
                         }
+
                         ion-row:first-child {
                             ion-text {
                                 font-size: medium;
@@ -109,6 +134,10 @@ ion-grid{
                         }
                     }
                 }
+            }
+
+            ::ng-deep .mat-expansion-indicator {
+                color:#{$selected-bg};
             }
         }
     }
@@ -121,83 +150,6 @@ ion-grid{
             >ion-row:first-child{
                 ion-text{
                     font-size:medium;
-                }
-            }
-        }
-    }
-    
-    ion-row#fare{  
-        padding:5px;
-        >ion-col{
-            ion-row{
-                >ion-col{
-                    ion-row{
-                        margin-top:2px;
-                        margin-bottom:2px;
-                        padding-left:10px;
-                        padding-right:10px;
-                        ion-title{
-                            padding-left:0px;
-                            padding-right:0px;
-                        }
-                        >ion-col:last-child{
-                            ion-text{
-                                float:right;
-                            }
-                        }
-                    }
-                    
-                }
-            }
-            >ion-row:nth-child(3){
-                border-top: 1px solid #{$text-color};
-                border-bottom: 1px solid #{$text-color};
-                padding-top:4px;
-                padding-bottom:4px;
-            }
-            >ion-row:last-child{
-                >ion-col{
-                    ion-row:first-child{
-                        margin-top:5px;
-                        margin-bottom:5px;
-                    }
-                    ion-row:last-child{
-                        // padding-left:0px;
-                        // padding-right:0px;
-                        >ion-item {
-                            --min-height: 0px;
-                            width:100%;
-                            --padding-start: 0px;
-
-                            >ion-radio-group {
-                                width: -webkit-fill-available;
-                                // padding: 4px;
-
-                                >ion-row {
-                                    padding-left:0px;
-                                    padding-right:0px;
-                                    ion-col {
-                                        ion-item {
-                                            --min-height: 20px;
-                                            --padding-start: 0px;
-
-                                            ion-radio {
-                                                margin-right: 4px;
-                                                width: 12px;
-                                                height: 12px;
-                                                margin-top: 0px;
-                                                margin-bottom: 0px;
-                                            }
-
-                                            ion-label {
-                                                font-size: 10px;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
             }
         }

@@ -4,15 +4,22 @@
       <mat-accordion multi="false">
         <mat-expansion-panel>
           <mat-expansion-panel-header [collapsedHeight]="bookHeight" [expandedHeight]="bookHeight">
-            <ion-row class="ion-justify-content-between">
-              <ion-col size="4">
-                <ion-text>Chennai</ion-text>
-              </ion-col>
-              <ion-col size="1">
-                <ion-icon src="../../../../../../assets/icons/flight.svg"></ion-icon>
-              </ion-col>
-              <ion-col size="4">
-                <ion-text>Delhi</ion-text>
+            <ion-row>
+              <ion-col>
+                <ion-row>
+                  <ion-text></ion-text>
+                </ion-row>
+                <ion-row class="ion-justify-content-between">
+                  <ion-col size="4">
+                    <ion-text>Chennai</ion-text>
+                  </ion-col>
+                  <ion-col size="1">
+                    <ion-icon src="../../../../../../assets/icons/flight.svg"></ion-icon>
+                  </ion-col>
+                  <ion-col size="4">
+                    <ion-text>Delhi</ion-text>
+                  </ion-col>
+                </ion-row>
               </ion-col>
             </ion-row>
           </mat-expansion-panel-header>
@@ -81,93 +88,7 @@
         </ion-row>
       </ion-col>
     </ion-row>
-    <ion-row id="fare">
-      <ion-col>
-        <!-- summary -->
-        <ion-row *ngFor="let summary of summaries">
-          <ion-col>
-            <ion-row>
-              <ion-title>{{ summary.title | uppercase }}</ion-title>
-            </ion-row>
-            <ion-row class="ion-justify-content-between" *ngFor="let fare of summary.fares">
-              <ion-col size="5">
-                <ion-text>{{ fare.name }}</ion-text>
-              </ion-col>
-              <ion-col size="5">
-                <ion-row class="ion-justify-content-end">
-                  <ion-col size="9">
-                    <ion-text>{{ fare.amount | currency : "INR" }}</ion-text>
-                  </ion-col>
-                  <ion-col size="3">
-                    <ion-text>INR</ion-text>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-          </ion-col>
-        </ion-row>
-        <!--total-->
-        <ion-row>
-          <ion-col>
-            <ion-row class="ion-justify-content-between">
-              <ion-col size="5">
-                <ion-text>{{'grand total' | uppercase}}</ion-text>
-              </ion-col>
-              <ion-col size="5">
-                <ion-row class="ion-justify-content-end">
-                  <ion-col size="9">
-                    <ion-text>{{ '40000' | currency : "INR" }}</ion-text>
-                  </ion-col>
-                  <ion-col size="3">
-                    <ion-text>INR</ion-text>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-          </ion-col>
-        </ion-row>
-        <!-- cancelation -->
-        <ion-row>
-          <ion-col>
-            <ion-row>
-              <ion-title>{{ 'Cancelation Risk' | uppercase }}</ion-title>
-            </ion-row>
-            <ion-row>
-              <ion-item>
-                <ion-radio-group value="admin">
-                  <ion-row class="ion-justify-content-around">
-                    <ion-col size="3">
-                      <ion-item>
-                        <ion-label>0 - 25%</ion-label>
-                        <ion-radio slot="start" formControlname="role" value="admin"></ion-radio>
-                      </ion-item>
-                    </ion-col>
-                    <ion-col size="3">
-                      <ion-item>
-                        <ion-label>25 - 50%</ion-label>
-                        <ion-radio slot="start" formControlname="role" value="approver"></ion-radio>
-                      </ion-item>
-                    </ion-col>
-                    <ion-col size="3">
-                      <ion-item>
-                        <ion-label>50 - 75%</ion-label>
-                        <ion-radio slot="start" formControlname="role" value="user"></ion-radio>
-                      </ion-item>
-                    </ion-col>
-                    <ion-col size="3">
-                      <ion-item>
-                        <ion-label>75 - 100%</ion-label>
-                        <ion-radio slot="start" formControlname="role" value="accounts"></ion-radio>
-                      </ion-item>
-                    </ion-col>
-                  </ion-row>
-                </ion-radio-group>
-              </ion-item>
-            </ion-row>
-          </ion-col>
-        </ion-row>
-      </ion-col>
-    </ion-row>
+    <app-fair-summary (fairValue) = FairValue($event)></app-fair-summary>
   </ion-grid>
 </ion-content>
 <ion-footer>

@@ -21,7 +21,7 @@ $input-placeholder-color:$text-color;
 
 .md{
     ion-input {
-        --color: red !important;
+        --color: #{$text-color} !important;
         --placeholder-color: #{$input-placeholder-color};
         --background: "";
         --padding-bottom: "";

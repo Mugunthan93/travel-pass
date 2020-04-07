@@ -1,0 +1,177 @@
+@import "../../../../../../style/util/variable.scss";
+@import "../../../../../../style/util/mixins.scss";
+
+
+
+ion-grid {
+    @include flex-col-grid;
+    margin-left: 0px;
+    margin-right: 0px;
+
+    mat-accordion {
+        @include flex-col-grid;
+        width: 100%;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        height: auto;
+
+        mat-expansion-panel {
+            margin-top:3px;
+            margin-bottom:3px;
+            >mat-expansion-panel-header {
+                background:#{$text-bg};
+                padding-left: 10px;
+                padding-right: 10px;
+
+                >::ng-deep span {
+                    >ion-row {
+                        width: 9em;
+                    }
+                }
+            }
+
+            ::ng-deep .mat-expansion-panel-body{
+                padding: 0px;
+                height: 100%;
+                margin: 5px;
+
+                >ion-row:first-child {
+                    height: auto;
+                    margin: 5px;
+
+                    >ion-col:first-child {
+                        width: 100%;
+                        height: auto;
+
+                        ion-row {
+                            width: 100;
+                        }
+
+                        ion-img {
+                            height: 20px;
+                            width: 20px;
+                        }
+
+                        ion-text {
+                            margin: 2px;
+                        }
+                    }
+
+                    >ion-col:last-child {
+                        width: 100%;
+                        height: auto;
+
+                        ion-img {
+                            height: 20px;
+                            width: 20px;
+                            float: right;
+                        }
+
+                        ion-text {
+                            padding-right: 5px;
+                            font-size: small;
+                        }
+                    }
+                }
+
+                >ion-row:nth-of-type(2) {
+                    height: auto;
+                    margin: 5px;
+
+                    ion-col {
+                        height: auto;
+
+                        ion-row {
+                            height: auto;
+                        }
+                    }
+
+                    ion-col:first-child {
+                        ion-row {
+                            margin-top: 2px;
+                            margin-bottom: 2px;
+                        }
+
+                        ion-row:first-child {
+                            ion-text {
+                                font-size: medium;
+                            }
+                        }
+                    }
+
+                    ion-col:nth-of-type(2) {
+                        ion-row {
+
+                            ion-icon,
+                            ion-text {
+                                margin: auto;
+                            }
+                        }
+
+                        >ion-row:first-child {
+                            height: 75%;
+                        }
+
+                        >ion-row:last-child {
+                            height: 25%;
+                        }
+
+                    }
+
+                    ion-col:last-child {
+                        ion-row {
+                            margin-top: 2px;
+                            margin-bottom: 2px;
+
+                            ion-text {
+                                margin-left: auto;
+                            }
+                        }
+
+                        ion-row:first-child {
+                            ion-text {
+                                font-size: medium;
+                            }
+                        }
+                    }
+                }
+            }
+
+            ::ng-deep .mat-expansion-indicator{
+                color:#{$selected-bg};
+            }
+        }
+    }
+
+    ion-row#passenger {
+        background:#{$text-bg};
+        padding: 5px;
+        border-radius: 4px;
+
+        >ion-col {
+            >ion-row:first-child {
+                ion-text {
+                    font-size: medium;
+                }
+            }
+        }
+    }
+}
+
+ion-footer {
+    >ion-row#book-button {
+        width: 100%;
+
+        >ion-col {
+            ion-button {
+                width: -webkit-fill-available;
+                --opacity: 1;
+                --background:#{$btn4-bg};
+
+                ion-text {
+                    color: white;
+                }
+            }
+        }
+    }
+}

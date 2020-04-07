@@ -1,0 +1,105 @@
+@import "../../../style/util/variable.scss";
+@import "../../../style/util/mixins.scss";
+
+
+ion-row#fare {
+    padding: 5px;
+
+    >ion-col {
+        ion-row {
+            >ion-col {
+                ion-row {
+                    margin-top: 2px;
+                    margin-bottom: 2px;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    min-height: 18px;
+
+                    ion-title {
+                        padding-left: 0px;
+                        padding-right: 0px;
+                    }
+
+                    >ion-col:last-child {
+
+                        >ion-row{
+                            ion-col:first-child{
+                                ion-input{
+                                    --background:rgb(235, 235, 235);
+                                    border:.5px solid rgb(145, 144, 144);
+                                    border-radius:3.5px;
+                                    font-size: small;
+
+                                    --padding-top: 5px;
+                                    --padding-start: 5px;
+                                    --padding-bottom: 5px;
+                                    --padding-end: 5px;
+                                }
+                            }
+                        }
+                        ion-text {
+                            float: right;
+                        }
+                    }
+                }
+
+            }
+        }
+
+        >ion-row:nth-child(3) {
+            border-top: 1px solid #{$text-color};
+            border-bottom: 1px solid #{$text-color};
+            padding-top: 4px;
+            padding-bottom: 4px;
+        }
+
+        >ion-row:last-child {
+            >ion-col {
+                ion-row:first-child {
+                    margin-top: 5px;
+                    margin-bottom: 5px;
+                }
+
+                ion-row:last-child {
+
+                    // padding-left:0px;
+                    // padding-right:0px;
+                    >ion-item {
+                        --min-height: 0px;
+                        width: 100%;
+                        --padding-start: 0px;
+
+                        >ion-radio-group {
+                            width: -webkit-fill-available;
+                            // padding: 4px;
+
+                            >ion-row {
+                                padding-left: 0px;
+                                padding-right: 0px;
+
+                                ion-col {
+                                    ion-item {
+                                        --min-height: 20px;
+                                        --padding-start: 0px;
+
+                                        ion-radio {
+                                            margin-right: 4px;
+                                            width: 12px;
+                                            height: 12px;
+                                            margin-top: 0px;
+                                            margin-bottom: 0px;
+                                        }
+
+                                        ion-label {
+                                            font-size: 10px;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -7,9 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RoundTripPage implements OnInit {
 
+  bookHeight: string = "45px";
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  FairValue(value: any) {
+    console.log(value);
   }
 
 }

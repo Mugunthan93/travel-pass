@@ -1,9 +1,108 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>multi-city</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
-
+  <ion-grid>
+    <ion-row>
+      <mat-accordion multi="false">
+        <mat-expansion-panel *ngFor="let panel of panels">
+          <mat-expansion-panel-header [collapsedHeight]="bookHeight" [expandedHeight]="bookHeight">
+            <ion-row>
+              <ion-col>
+                <ion-row>
+                  <ion-text>{{ panel }}</ion-text>
+                </ion-row>
+                <ion-row class="ion-justify-content-between">
+                  <ion-col size="4">
+                    <ion-text>Chennai</ion-text>
+                  </ion-col>
+                  <ion-col size="1">
+                    <ion-icon src="../../../../../../assets/icons/flight.svg"></ion-icon>
+                  </ion-col>
+                  <ion-col size="4">
+                    <ion-text>Delhi</ion-text>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+          </mat-expansion-panel-header>
+          <ion-row class="ion-justify-content-between">
+            <ion-col size="6">
+              <ion-row class="ion-justify-content-start">
+                <ion-img src="../../../../../../assets/site-image/D7.gif"></ion-img>
+                <ion-text>Indigo 6E 2622</ion-text>
+              </ion-row>
+            </ion-col>
+            <ion-col size="6">
+              <ion-row class="ion-justify-content-end">
+                <ion-text>Fare rules</ion-text>
+                <ion-img src="../../../../../../assets/site-image/D7.gif"></ion-img>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-justify-content-between">
+            <ion-col size="4">
+              <ion-row>
+                <ion-text>(MAA) 00:10</ion-text>
+              </ion-row>
+              <ion-row>
+                <ion-text>Fri,01 May</ion-text>
+              </ion-row>
+              <ion-row>
+                <ion-text>Chennai</ion-text>
+              </ion-row>
+              <ion-row>
+                <ion-text>Terminal 1</ion-text>
+              </ion-row>
+            </ion-col>
+            <ion-col size="3">
+              <ion-row>
+                <ion-icon size="large" src="../../../../../../assets/icons/passage-of-time.svg"></ion-icon>
+              </ion-row>
+              <ion-row>
+                <ion-text>02h 05m</ion-text>
+              </ion-row>
+            </ion-col>
+            <ion-col size="4">
+              <ion-row>
+                <ion-text>(MAA) 00:10</ion-text>
+              </ion-row>
+              <ion-row>
+                <ion-text>Fri,01 May</ion-text>
+              </ion-row>
+              <ion-row>
+                <ion-text>Chennai</ion-text>
+              </ion-row>
+              <ion-row>
+                <ion-text>Terminal 1</ion-text>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </ion-row>
+    <ion-row id="passenger">
+      <ion-col>
+        <ion-row>
+          <ion-text>Passenger Details</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-text>1 Adult,1 Children,1 Infant</ion-text>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <app-fair-summary (fairValue)=FairValue($event)></app-fair-summary>
+  </ion-grid>
 </ion-content>
+<ion-footer>
+  <ion-row id="book-button">
+    <ion-col>
+      <ion-button>
+        <ion-text>Offline Request</ion-text>
+      </ion-button>
+    </ion-col>
+    <ion-col>
+      <ion-button>
+        <ion-text>Book Now</ion-text>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>
+
