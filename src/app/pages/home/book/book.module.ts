@@ -7,6 +7,9 @@ import { IonicModule } from '@ionic/angular';
 import { BookPageRoutingModule } from './book-routing.module';
 
 import { BookPage } from './book.page';
+import { PassengerInfoComponent } from 'src/app/components/passenger-info/passenger-info.component';
+import { PassengerDetailComponent } from 'src/app/components/passenger-detail/passenger-detail.component';
+import { MealBaggageComponent } from 'src/app/components/meal-baggage/meal-baggage.component';
 
 @NgModule({
   imports: [
@@ -16,7 +19,15 @@ import { BookPage } from './book.page';
     BookPageRoutingModule
   ],
   declarations: [
-    BookPage
+    BookPage,
+    PassengerInfoComponent,
+    PassengerDetailComponent,
+    MealBaggageComponent
+  ],
+  entryComponents: [
+    PassengerInfoComponent,
+    PassengerDetailComponent,
+    MealBaggageComponent
   ]
 })
 export class BookPageModule {}
