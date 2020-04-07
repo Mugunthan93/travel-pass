@@ -8,7 +8,7 @@ import { OneWayPageRoutingModule } from './one-way-routing.module';
 
 import { OneWayPage } from './one-way.page';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { FairSummaryComponent } from 'src/app/components/fair-summary/fair-summary.component';
+import { SharedModule } from 'src/app/modules/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -17,11 +17,11 @@ import { FairSummaryComponent } from 'src/app/components/fair-summary/fair-summa
     ReactiveFormsModule,
     IonicModule,
     OneWayPageRoutingModule,
-    MatExpansionModule
+    MatExpansionModule,
+    SharedModule
   ],
   declarations: [
-    OneWayPage,
-    FairSummaryComponent
+    OneWayPage
   ]
 })
 export class OneWayPageModule {}

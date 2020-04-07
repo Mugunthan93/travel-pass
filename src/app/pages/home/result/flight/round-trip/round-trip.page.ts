@@ -87,7 +87,7 @@ export class RoundTripPage implements OnInit {
   }
 
   book() {
-    this.router.navigate(['/','home','book','flight','one-way']);
+    this.router.navigate(['/','home','book','flight','round-trip']);
   }
 
   currentFlight(flight){

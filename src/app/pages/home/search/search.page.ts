@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BookingService, booking } from 'src/app/services/booking/booking.service';
 import { Platform } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search',
@@ -9,27 +10,17 @@ import { Platform } from '@ionic/angular';
 })
 export class SearchPage implements OnInit {
 
-  booking : booking;
-  isLandscape: boolean;
-
   constructor(
-    public bookingService: BookingService,
-    public platform : Platform
+    public platform: Platform,
+    public router : Router
   ) {
-    if (this.bookingService) {
-      this.booking = this.bookingService.getBooking;
-    }
-    else {
-      this.booking.type = 'flight';
-    }
-
-    this.platform.resize.subscribe(async () => {
-      this.isLandscape = this.platform.isLandscape();
-      console.log(this.isLandscape);
-    });
   }
 
   ngOnInit() {
+  }
+
+  back() {
+    this.router.navigate(['/','home','dashboard','home-tab']);
   }
 
 }

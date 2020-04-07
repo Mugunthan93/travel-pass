@@ -3,25 +3,25 @@
     <ion-col size="12">
       <ion-grid id="carrier">
         <ion-row class="ion-justify-content-around">
-            <ion-col size="2">
-              <ion-label>
-                <ion-icon size="large" src="../../../../../assets/icons/airport.svg"></ion-icon>
-                Flight
-              </ion-label>
+          <ion-col size="2" (click)="searchFlight()">
+            <ion-label>
+              <ion-icon size="large" src="../../../../../assets/icons/airport.svg"></ion-icon>
+              Flight
+            </ion-label>
           </ion-col>
-          <ion-col size="2">
+          <ion-col size="2" (click)="searchBus()">
               <ion-label>
                 <ion-icon size="large" src="../../../../../assets/icons/transportation.svg"></ion-icon>
                 Bus
               </ion-label>
           </ion-col>
-          <ion-col size="2">
+          <ion-col size="2" (click)="searchHotel()">
               <ion-label>
                 <ion-icon size="large" src="../../../../../assets/icons/bed.svg"></ion-icon>
                 Hotel
               </ion-label>
           </ion-col>
-          <ion-col size="2">
+          <ion-col size="2" (click)="searchCab()">
               <ion-label>
                 <ion-icon size="large" src="../../../../../assets/icons/taxi.svg"></ion-icon>
                 Cab

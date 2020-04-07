@@ -9,14 +9,21 @@ import { IonTabs } from '@ionic/angular';
 })
 export class FlightPage implements OnInit {
 
-  @ViewChild('tabs', { static: true, read: IonTabs })  tabs : IonTabs;
+  @ViewChild('tabs', { static: true, read: IonTabs }) tabs: IonTabs;
+  currentTab: string;
 
   constructor(
     public ionTabs : IonTabs
   ) {
+
   }
   
   ngOnInit() {
+    console.log(this.ionTabs);
+  }
+
+  tabTransition(tabs) {
+    this.currentTab = tabs.tab;
   }
 
 }

@@ -8,7 +8,7 @@ import { RoundTripPageRoutingModule } from './round-trip-routing.module';
 
 import { RoundTripPage } from './round-trip.page';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { FairSummaryComponent } from 'src/app/components/fair-summary/fair-summary.component';
+import { SharedModule } from 'src/app/modules/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -17,11 +17,11 @@ import { FairSummaryComponent } from 'src/app/components/fair-summary/fair-summa
     ReactiveFormsModule,
     IonicModule,
     RoundTripPageRoutingModule,
-    MatExpansionModule
+    MatExpansionModule,
+    SharedModule
   ],
   declarations: [
-    RoundTripPage,
-    FairSummaryComponent
+    RoundTripPage
   ]
 })
 export class RoundTripPageModule {}

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BookingService } from 'src/app/services/booking/booking.service';
 import { MenuController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home-tab',
@@ -10,14 +11,26 @@ import { MenuController } from '@ionic/angular';
 export class HomeTabPage implements OnInit {
 
   constructor(
-    public bookingService: BookingService
+    public router : Router
   ) { }
 
   ngOnInit() {
   }
 
-  select(type: string) {
-    this.bookingService.select(type);
+  searchFlight() {
+    this.router.navigate(['/', 'home', 'search', 'flight','one-way']);
+  }
+
+  searchBus() {
+    
+  }
+
+  searchHotel() {
+    
+  }
+
+  searchCab() {
+    
   }
 
 }

@@ -3,20 +3,26 @@ import { CommonModule } from '@angular/common';
 import { ResultListComponent } from 'src/app/components/result-list/result-list.component';
 import { IonicModule } from '@ionic/angular';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { FairSummaryComponent } from 'src/app/components/fair-summary/fair-summary.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 
 
 @NgModule({
   declarations: [
-    ResultListComponent
+    ResultListComponent,
+    FairSummaryComponent
   ],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     IonicModule,
-    MatExpansionModule
+    MatExpansionModule,
   ],
   exports: [
-    ResultListComponent
+    ResultListComponent,
+    FairSummaryComponent
   ]
 })
 export class SharedModule { }
