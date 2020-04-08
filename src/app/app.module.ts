@@ -21,6 +21,7 @@ import { AuthService } from './services/auth/auth.service';
 import { NativeHttpService } from './services/http/native-http/native-http.service';
 import { BrowserHttpService } from './services/http/browser-http/browser-http.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { Keyboard } from '@ionic-native/keyboard/ngx';
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
     StateManagementModule
   ],
   providers: [
+    Keyboard,
     HTTP,
     ScreenOrientation,
     { provide: StatusBarService, useClass: StatusBar },

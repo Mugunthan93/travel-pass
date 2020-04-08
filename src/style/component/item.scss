@@ -22,11 +22,11 @@
 //     "color":,
 //     "opacity":
 // );
-// $item-highlight-color:(
-//     "focused":,
-//     "invalid":,
-//     "valid":
-// );
+$item-highlight-color:(
+    "focused":$text-color,
+    "invalid":$text-color,
+    "valid":$text-color
+);
 
 $item-background:$item-bg;
 // $item-background-type:(
@@ -84,8 +84,15 @@ $item-background:$item-bg;
 // $item-option-color:;
 // $item-option-background:;
 
+@mixin highlight-color{
+    --highlight-color-focused:#{$text-color};
+    --highlight-color-valid:#{$text-color};
+    --highlight-color-invalid:#{$text-color};
+}
+
 ion-item {
     --background:$item-background;
+    @include highlight-color;
 }
 
 
