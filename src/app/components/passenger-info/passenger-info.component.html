@@ -5,5 +5,53 @@
 </ion-header>
 
 <ion-content>
-  <ion-button (click)="getDetail()">Add Detail</ion-button>
+  <!-- <ion-button (click)="getDetail()">Add Detail</ion-button> -->
+  <ion-grid>
+    <!--passenger type-->
+    <ion-row *ngFor="let passenger of passengers">
+      <ion-col>
+        <!--name-->
+        <ion-row>
+          <ion-col size="12">
+            <ion-text>{{passenger.name | titlecase}}</ion-text>
+            <ion-text>1/1 Selected</ion-text>
+          </ion-col>
+        </ion-row>
+        <!--list-->
+        <ion-row>
+          <ion-list>
+            <ion-row *ngFor="let pass of passenger.value">
+              <ion-col size="2">
+                <ion-checkbox></ion-checkbox>
+              </ion-col>
+              <ion-col siez="10">
+                <ion-row>
+                  <ion-col size="12">
+                    <ion-text>Mari Durai</ion-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col size="12">
+                    <ion-text>Male</ion-text>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+              <ion-col size="2">
+                <ion-text (click)="getDetail()">Edit</ion-text>
+              </ion-col>
+            </ion-row>
+          </ion-list>
+        </ion-row>
+        <!--button-->
+        <ion-row>
+          <ion-col size="4" (click)="getDetail()">
+            <ion-row>
+              <ion-icon name="add"></ion-icon>
+              <ion-text>Add {{passenger.name | titlecase}}</ion-text>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

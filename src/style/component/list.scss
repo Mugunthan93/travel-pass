@@ -1,4 +1,4 @@
-
+@import "../util/variable.scss";
 
 //variable
 
@@ -12,3 +12,7 @@
 //     "style":,
 //     "width":
 // );
+
+ion-list{
+    background:#{$transparent} !important;
+}

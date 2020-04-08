@@ -9,11 +9,19 @@ import { PassengerDetailComponent } from '../passenger-detail/passenger-detail.c
 })
 export class PassengerInfoComponent implements OnInit {
 
+  passengers: any[];
+
   constructor(
     public modalCtrl : ModalController
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.passengers = [
+      { name: "adults", value: ['1', '2', '4', '6'] },
+      { name: "children", value: ['1', '2', '4', '6'] },
+      { name: "infants", value: ['1', '2', '4', '6'] }
+    ];
+   }
   
   async getDetail() {
       const modal = await this.modalCtrl.create({

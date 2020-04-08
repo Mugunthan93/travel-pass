@@ -1,7 +1,62 @@
 <ion-header>
-  <ion-toolbar>Passenger Details</ion-toolbar>
+  <ion-toolbar>
+    <ion-text>Passenger Details</ion-text>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-button (click)="addMeal()">Add Meal</ion-button>
+  <!-- <ion-button (click)="addMeal()">Add Meal</ion-button> -->
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-row>
+          <ion-text>
+            Enter your name as it is mentioned on your passport.For
+            international Travel,passport should be valid for
+            minimun 6 months from the date of travel. if you are
+            travelling to the USA and/or Canada.please ensure that
+            you enter the correct password details for every
+            passenger, in case you fail to do so,you may not be
+            allowed to enter the USA and/or canada.
+          </ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-text>
+          Meals are subject to availability with the airlines,Please
+            check with the Airlines before travel
+          </ion-text>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-row>
+          <ion-item>
+            <ion-select placeholder="Title">
+              <ion-select-option value="f">Female</ion-select-option>
+              <ion-select-option value="m">Male</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-input placeholder="First & Middle Name"></ion-input>
+          </ion-item>
+        </ion-row>
+        <ion-row>
+          <ion-item>
+            <ion-input placeholder="Last Name"></ion-input>
+          </ion-item>
+        </ion-row>
+        <ion-row>
+          <ion-item>
+            <ion-input placeholder="Date of Birth"></ion-input>
+          </ion-item>
+        </ion-row>
+        <ion-row></ion-row>
+        <ion-row></ion-row>
+        <ion-row></ion-row>
+        <ion-row></ion-row>
+        <ion-row></ion-row>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

@@ -1,0 +1,62 @@
+@import "../../../style/util/variable.scss";
+
+ion-grid{
+    >ion-row:first-child{
+        height:20%;
+        margin: 10px;
+        border: 1px solid #{$text-color};
+        border-radius:5px;
+        ion-col{
+            height:100%;
+            background:#{$selected-item};
+            ion-row{
+                height:auto;
+                margin:10px;
+                ion-text{
+                    text-align: justify;
+                    word-break: keep-all;
+                    font-size:10px;
+                }
+            }
+        }
+    }
+    >ion-row:last-child{
+        margin: 10px;
+        height:80%;
+        >ion-col{
+            height:100%;
+            ion-row{
+                height:12.5%;
+                padding:4px;
+                ion-item{
+                    --padding-start:0px;
+                    width: 100%;
+                }
+                ion-select {
+                    padding: 0px;
+                    color:#{$text-color};
+                    opacity:1;
+                    --placeholder-color:#{$text-color};
+                }
+            }
+            >ion-row:first-child{
+                >ion-item {
+                    &:first-child{
+                        width: 30%;
+                        ion-select {
+                            padding: 0px;
+                            max-width:100%;
+                            // height: -webkit-fill-available;
+                        }
+                    }
+                    &:last-child{
+                        width: 70%;
+                        ion-input{
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

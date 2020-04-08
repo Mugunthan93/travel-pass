@@ -1,0 +1,78 @@
+@import "../../../style/util/variable.scss";
+@import "../../../style/util/mixins.scss";
+
+ion-grid{
+    >ion-row {
+        margin: 5px;
+
+        >ion-col {
+            >ion-row:nth-child(1) {
+                ion-col {
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    padding-top: 5px;
+                    padding-top: 5px;
+
+                    ion-text:first-child {
+                        float: left;
+                    }
+
+                    ion-text:last-child {
+                        float: right;
+                        color:#{$btn-bg};
+                    }
+                }
+            }
+
+            >ion-row:nth-child(2) {
+                ion-list {
+                    width: 100%;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    padding-top: 5px;
+                    padding-top: 5px;
+
+                    >ion-row {
+                        border: 1px solid #{$text-color};
+                        border-radius: 5px;
+                        border-color: #{$text-color};
+                        margin-top:10px;
+                        margin-bottom:10px;
+
+                        >ion-col:first-child {
+                            padding: 8px;
+
+                            ion-checkbox {
+                                color:#{$btn2-bg};
+                                --background: #{$transparent};
+                            }
+                        }
+
+                        >ion-col:last-child {
+                            padding: 8px;
+
+                            ion-text {
+                                color:#{$btn2-bg};
+                            }
+                        }
+                    }
+                }
+            }
+
+            >ion-row:nth-child(3) {
+                padding-left: 10px;
+                padding-right: 10px;
+                padding-top: 5px;
+                padding-top: 5px;
+
+                >ion-col {
+                    >ion-row {
+                        ion-text {
+                            color:#{$btn2-bg};
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
