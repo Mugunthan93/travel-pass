@@ -93,6 +93,7 @@ $item-background:$item-bg;
 ion-item {
     --background:$item-background;
     @include highlight-color;
+    border-bottom: 2px solid grey;
 }
 
 

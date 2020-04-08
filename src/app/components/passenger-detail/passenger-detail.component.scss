@@ -1,4 +1,5 @@
 @import "../../../style/util/variable.scss";
+@import "../../../style/util/mixins.scss";
 
 ion-grid{
     >ion-row:first-child{
@@ -26,13 +27,15 @@ ion-grid{
         >ion-col{
             height:100%;
             ion-row{
-                height:12.5%;
+                height:10%;
                 padding:4px;
                 ion-item{
-                    --padding-start:0px;
+                    @include flex-col-grid;
+                    --padding-start:5px;
                     width: 100%;
                 }
                 ion-select {
+                    width:100%;
                     padding: 0px;
                     color:#{$text-color};
                     opacity:1;
@@ -40,21 +43,52 @@ ion-grid{
                 }
             }
             >ion-row:first-child{
+                ion-col{
+                    height:100%;
+                }
                 >ion-item {
                     &:first-child{
-                        width: 30%;
+                        width: 77px;
+                        margin-right:2%;
                         ion-select {
                             padding: 0px;
+                            width:100%;
                             max-width:100%;
-                            // height: -webkit-fill-available;
                         }
                     }
                     &:last-child{
-                        width: 70%;
+                        width: auto;
+                        justify-self: stretch;
                         ion-input{
                             width: 100%;
                         }
                     }
+                }
+            }
+
+            ion-row:nth-child(5){
+                ion-col{
+                    height:100%;
+                }
+                >ion-col:first-child{
+                    padding-right:2%;
+                }
+            }
+
+            ion-row:nth-child(6){
+                ion-col{
+                    height:100%;
+                }
+                ion-text{
+                    margin-top:3px;
+                    margin-bottom:3px;
+                    font-size:10px;
+                }
+            }
+            ion-row:nth-child(7){
+                margin-top:20px;
+                ion-text{
+                    align-self:center;
                 }
             }
         }

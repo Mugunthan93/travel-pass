@@ -5,7 +5,6 @@
 </ion-header>
 
 <ion-content>
-  <!-- <ion-button (click)="addMeal()">Add Meal</ion-button> -->
   <ion-grid>
     <ion-row>
       <ion-col>
@@ -37,9 +36,11 @@
               <ion-select-option value="m">Male</ion-select-option>
             </ion-select>
           </ion-item>
-          <ion-item>
-            <ion-input placeholder="First & Middle Name"></ion-input>
-          </ion-item>
+          <ion-col>
+            <ion-item>
+              <ion-input placeholder="First & Middle Name"></ion-input>
+            </ion-item>
+          </ion-col>
         </ion-row>
         <ion-row>
           <ion-item>
@@ -47,15 +48,48 @@
           </ion-item>
         </ion-row>
         <ion-row>
-          <ion-item>
+          <ion-item (click)="getCalendar()">
             <ion-input placeholder="Date of Birth"></ion-input>
+            <ion-icon name="calendar" slot="end"></ion-icon>
           </ion-item>
         </ion-row>
-        <ion-row></ion-row>
-        <ion-row></ion-row>
-        <ion-row></ion-row>
-        <ion-row></ion-row>
-        <ion-row></ion-row>
+        <ion-row>
+           <ion-item>
+             <ion-input placeholder="Passport Number"></ion-input>
+           </ion-item>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+            <ion-item>
+              <ion-input placeholder="Nationality"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="8">
+            <ion-item (click)="getCalendar()">
+              <ion-input type="text" placeholder="Passport Expiry Date"></ion-input>
+              <ion-icon name="calendar" slot="end"></ion-icon>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-input placeholder="Frequent Traveller Number"></ion-input>
+            </ion-item>
+            <ion-text>Frequent Flyer Number is subject to airline acceptance</ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-justify-content-center">
+          <ion-text (click)="addMeal()">
+            <ion-icon name="add"></ion-icon>
+            Meal & Baggage
+          </ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            
+          </ion-col>
+        </ion-row>
       </ion-col>
     </ion-row>
   </ion-grid>

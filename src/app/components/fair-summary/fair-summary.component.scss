@@ -68,6 +68,7 @@ ion-row#fare {
                         --min-height: 0px;
                         width: 100%;
                         --padding-start: 0px;
+                        border:0px;
 
                         >ion-radio-group {
                             width: -webkit-fill-available;
@@ -81,6 +82,7 @@ ion-row#fare {
                                     ion-item {
                                         --min-height: 20px;
                                         --padding-start: 0px;
+                                            border:0px;
 
                                         ion-radio {
                                             margin-right: 4px;
