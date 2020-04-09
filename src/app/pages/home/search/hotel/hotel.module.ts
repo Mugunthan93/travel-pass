@@ -7,13 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { HotelPageRoutingModule } from './hotel-routing.module';
 
 import { HotelPage } from './hotel.page';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HotelPageRoutingModule
+    MatDividerModule,
+    HotelPageRoutingModule,
+    
   ],
   declarations: [HotelPage]
 })
