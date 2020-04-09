@@ -1,0 +1,40 @@
+@import "../../../style/util/variable.scss";
+
+
+ion-content{
+    height:100%;
+    >ion-row{
+        height:100%;
+        width: max-content;
+        >ion-col {
+            padding: 7px;
+    
+            >ion-row {
+                background: white;
+                border: 1px solid grey;
+                border-radius: 4px;
+                padding: 2px;
+    
+                >ion-col {
+                    padding: 6px;
+    
+                    >ion-row {
+                        height: 50%;
+    
+                        ion-text {
+                            font-size: 10px;
+                        }
+                    }
+                }
+            }
+    
+            >ion-row.selected {
+                background:#{$btn2-bg};
+    
+                ion-text {
+                    color: white;
+                }
+            }
+        }
+    }
+}

@@ -8,14 +8,25 @@ import { ModalController } from '@ionic/angular';
 })
 export class MealBaggageComponent implements OnInit {
 
+  type: string = null; 
+
+  meals: any[] = ["1", "2", "3", "4", "5"];
+  baggages: any[] = ["1", "2", "3", "4", "5"];
+
   constructor(
     public modalCtrl : ModalController
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.type = "meal";
+   }
   
   dismissMeal() {
     this.modalCtrl.dismiss(null,null,'passenger-meal');
+  }
+
+  change(type) {
+    this.type = type.detail.value;
   }
 
 }
