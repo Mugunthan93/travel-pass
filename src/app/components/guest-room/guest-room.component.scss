@@ -11,7 +11,7 @@ ion-grid{
                     margin-top:5px;
                     margin-bottom:5px;
                     >mat-expansion-panel-header{
-                        ::ng-deep span{
+                        >::ng-deep span.mat-content{
                             >ion-row {
                                 >ion-col {
                                     >ion-row {
@@ -21,13 +21,16 @@ ion-grid{
                                 }
                             }
                         }
+
                     }
+
+                    
                     ::ng-deep .mat-expansion-panel-body {
                         ion-row {
                             border-radius: 4px;
                             padding-top: 7px;
                             padding-bottom: 7px;
-    
+                            
                             >ion-col {
                                 margin: auto;
                                 >ion-row{
@@ -39,12 +42,12 @@ ion-grid{
                             >ion-col:last-child {
                                 >ion-row {
                                     height: 100%;
-
+                                    
                                     >ion-col {
                                         width:100%;
                                         height: 100%;
                                         padding: 7px;
-
+                                        
                                         ion-select {
                                             width: 100%;
                                             padding: 0px;
@@ -56,7 +59,7 @@ ion-grid{
                                         }
                                     }
                                 }
-                        }
+                            }
                         }
                     }
                 }

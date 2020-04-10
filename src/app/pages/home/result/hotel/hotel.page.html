@@ -1,0 +1,174 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button icon="arrow-back-outline" defaultHref="home">
+      </ion-back-button>
+    </ion-buttons>
+    <ion-title>Chennai</ion-title>
+    <ion-title>25 sep - 27 sep | 1 Guest | 618 Hotels</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon name="search"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [scrollY]="'true'">
+  <ion-grid>
+    <ion-row>
+      <ion-segment (ionChange)="sorting($event)">
+        <ion-col size="3">
+          <ion-segment-button value="departure" layout="icon-end">
+            <ion-label>
+              {{'suggested' | uppercase}}
+              <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
+              <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
+            </ion-label>
+          </ion-segment-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-segment-button value="arrival" layout="icon-end">
+            <ion-label>
+              {{'stars' | uppercase}}
+              <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
+              <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
+            </ion-label>
+          </ion-segment-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-segment-button value="duration" layout="icon-end">
+            <ion-label>
+              {{'rating' | uppercase}}
+              <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
+              <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
+            </ion-label>
+          </ion-segment-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-segment-button value="price" layout="icon-end">
+            <ion-label>
+              {{'price' | uppercase}}
+              <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
+              <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
+            </ion-label>
+          </ion-segment-button>
+        </ion-col>
+      </ion-segment>
+    </ion-row>
+    <ion-row *ngFor="let hotel of hotelList">
+      <ion-col>
+        <ion-row>
+          <ion-col>
+            <ion-row>
+              <ion-icon size="large" name="star"></ion-icon>
+              <ion-icon size="large" name="star"></ion-icon>
+              <ion-icon size="large" name="star"></ion-icon>
+              <ion-icon size="large" name="star"></ion-icon>
+              <ion-icon size="large" name="star-half"></ion-icon>
+            </ion-row>
+            <ion-row>
+              <ion-col size="8">
+                <ion-row>
+                  <ion-text>The Residency Hotel</ion-text>
+                </ion-row>
+                <ion-row>
+                  <ion-col size="5">
+                    <ion-text>T.Nagar</ion-text>
+                  </ion-col>
+                  <ion-col size="5">
+                    <ion-text>2 room left</ion-text>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+              <ion-col size="4">
+                <ion-row>
+                  <ion-col>
+                    <ion-text>{{'10000' | currency:'INR'}}</ion-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <ion-text>For 2 nights</ion-text>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-img src="../../../../../assets/img/hotel.png"></ion-img>
+          </ion-col>
+          <ion-col>
+            <ion-row>
+              <ion-col>
+                <ion-text>4.5/5 Excellent</ion-text>
+              </ion-col>
+              <ion-col>
+                <ion-text>2173 reviews</ion-text>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="6">
+                <ion-row>
+                  <ion-icon name="wifi"></ion-icon>
+                  <ion-text>Free Wifi</ion-text>
+                </ion-row>
+              </ion-col>
+              <ion-col size="6">
+                <ion-row>
+                  <ion-icon name="wifi"></ion-icon>
+                  <ion-text>Free Wifi</ion-text>
+                </ion-row>
+              </ion-col>
+              <ion-col size="6">
+                <ion-row>
+                  <ion-icon name="wifi"></ion-icon>
+                  <ion-text>Free Wifi</ion-text>
+                </ion-row>
+              </ion-col>
+              <ion-col size="6">
+                <ion-row>
+                  <ion-icon name="wifi"></ion-icon>
+                  <ion-text>Free Wifi</ion-text>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <ion-icon src="../../../../../assets/ionicons/md-filter-outline.svg"></ion-icon>
+      </ion-button>
+      <ion-text>Filter</ion-text>
+    </ion-buttons>
+    <ion-buttons>
+      <ion-button>
+        <ion-icon src="../../../../../assets/icons/hotel/india (1).svg"></ion-icon>
+      </ion-button>
+      <ion-text>Price</ion-text>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon name="map"></ion-icon>
+      </ion-button>
+      <ion-text>Map</ion-text>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+
+
+<!-- <mat-accordion [hideToggle]="'true'">
+  <mat-expansion-panel *ngFor="let hoteItem of hotelList">
+    <mat-expansion-panel-header [collapsedHeight]="hotelHeight" [expandedHeight]="hotelHeight">
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+</mat-accordion> -->

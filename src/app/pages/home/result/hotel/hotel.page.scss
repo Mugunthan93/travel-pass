@@ -1,0 +1,151 @@
+@import "../../../../../style/util/variable.scss";
+@import "../../../../../style/util/mixins.scss";
+
+ion-header{
+    >ion-toolbar{
+        ion-title:last-of-type{
+            font-size:xx-small !important;
+        }
+    }
+}
+
+ion-grid{
+    >ion-row:first-child{
+        @include flex-col-grid;
+        height: auto;
+        width:100%;
+    }
+    >ion-row:not(:first-child) {
+        margin:8px;
+        >ion-col{
+            border:1px solid grey;
+
+            >ion-row:first-child{
+                width: 100%;
+
+                >ion-col {
+
+                    >ion-row {
+                        width: auto;
+                        margin: 5px;
+
+                        >ion-icon {
+                            color: gold !important;
+                        }
+                    }
+
+                    >ion-row:last-child {
+                        >ion-col:first-child {
+                            >ion-row:last-child {
+                                >ion-col:last-child {
+                                    ion-text {
+                                        float: right;
+                                    }
+                                }
+                            }
+                        }
+
+                        >ion-col:last-child {
+                            ion-row {
+                                ion-col {
+                                    ion-text {
+                                        float: right;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            >ion-row:last-child{
+                padding: 5px;
+                height: 90px;
+                background: #e4e4e4;
+
+                >ion-col:first-child {
+                    max-width: fit-content;
+                    height: 100%;
+
+                    ion-img {
+                        height: 100%;
+                        max-width: 80px;
+                    }
+                }
+
+                >ion-col:last-child {
+                    >ion-row {
+                        margin-left: 3px;
+                        margin-right: 3px;
+                    }
+
+                    >ion-row:first-child {
+                        height: 30%;
+
+                        >ion-col:first-child {
+                            ion-text {
+                                float: left;
+                            }
+                        }
+
+                        >ion-col:last-child {
+                            ion-text {
+                                float: right;
+                            }
+                        }
+                    }
+
+                    >ion-row:last-child {
+                        height: 70%;
+
+                        ion-col {
+                            >ion-row {
+                                margin: auto;
+
+                                >ion-text {
+                                    margin-left: 3px;
+                                    font-size: 10px;
+                                    margin-top: auto;
+                                    margin-bottom: auto;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                ion-icon {
+                    color: green !important;
+                }
+            }
+        }
+    }
+}
+
+ion-segment {
+    border-bottom:1px solid #{$text-color};
+}
+
+ion-segment-button {
+    @include flex-col-grid;
+
+    ion-label {
+        font-size: xx-small;
+    }
+}
+
+ion-footer{
+    >ion-toolbar{
+    
+        >ion-buttons{
+            height: 56px;
+            display: flex;
+            flex-direction: column;
+        }
+        >ion-buttons:nth-of-type(2){
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+}
+
