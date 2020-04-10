@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ResultListComponent } from 'src/app/components/result-list/result-list.component';
 import { IonicModule } from '@ionic/angular';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { MatExpansionModule, MatExpansionPanelHeader, MatExpansionPanel, MatAccordion } from '@angular/material/expansion';
 import { FairSummaryComponent } from 'src/app/components/fair-summary/fair-summary.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
@@ -18,11 +18,12 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    MatExpansionModule,
+    MatExpansionModule
   ],
   exports: [
     ResultListComponent,
-    FairSummaryComponent
+    FairSummaryComponent,
+    MatExpansionModule
   ]
 })
 export class SharedModule { }
