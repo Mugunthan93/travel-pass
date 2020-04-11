@@ -10,12 +10,7 @@ ion-header{
 }
 
 ion-grid{
-    >ion-row:first-child{
-        @include flex-col-grid;
-        height: auto;
-        width:100%;
-    }
-    >ion-row:not(:first-child) {
+    >ion-row {
         margin:8px;
         >ion-col{
             border:1px solid grey;
