@@ -1,0 +1,136 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button icon="back"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Sort & Filter</ion-title>
+    <ion-title>Showing 1280 of 1280 Properties</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-text>RESET</ion-text>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-row>
+          <ion-text>Price(Per Night)</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-text>{{'0' | currency:'INR'}} to {{'3000' | currency:'INR'}}</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-range min="-200" max="200" color="secondary">
+                <ion-icon slot="start" name="sunny"></ion-icon>
+                <ion-icon slot="end" name="sunny"></ion-icon>
+              </ion-range>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-row>
+          <ion-text>Set Budget</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-chip *ngFor="let budget of options.budget;let i = index" (click)="chipSelection(budget,i)">
+              <ion-text>{{ budget.min | currency:'INR'}} - {{ budget.max | currency:'INR'}}</ion-text>
+              <ion-icon name="close" *ngIf="budget.selection"></ion-icon>
+            </ion-chip>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-row>
+          <ion-col>
+            <ion-item (click)="selectLocation()">
+              <ion-label>Location</ion-label>
+              <ion-icon src="../../../assets/ionicons/chevron-forward-outline.svg" slot="end"></ion-icon>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-chip *ngFor="let location of options.location;let i = index" (click)="chipSelection(location,i)">
+              <!-- <ion-text>{{ budget.min | currency:'INR'}} - {{ budget.max | currency:'INR'}}</ion-text> -->
+              <ion-icon name="close" *ngIf="budget.selection"></ion-icon>
+            </ion-chip>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-row>
+          <ion-text>Property Types</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-chip *ngFor="let property of options.property_type;let i = index" (click)="chipSelection(property,i)">
+              <ion-text>{{ property.name }}({{property.value}})</ion-text>
+              <ion-icon name="close" *ngIf="property.selection"></ion-icon>
+            </ion-chip>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-row>
+          <ion-text>Amenities</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-chip *ngFor="let amenities of options.amenities;let i = index" (click)="chipSelection(amenities,i)">
+              <ion-text>{{ amenities.name }}({{amenities.value}})</ion-text>
+              <ion-icon name="close" *ngIf="amenities.selection"></ion-icon>
+            </ion-chip>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-row>
+          <ion-text>User Rating</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-chip *ngFor="let rating of options.user_rating;let i = index" (click)="chipSelection(rating,i)">
+              <ion-text>{{ rating.rate }} & Above({{rating.value}})</ion-text>
+              <ion-icon name="close" *ngIf="rating.selection"></ion-icon>
+            </ion-chip>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+</ion-content>
+
+<ion-footer>
+  <ion-row id="book-button">
+    <ion-col>
+      <ion-button>
+        <ion-text>Cancel</ion-text>
+      </ion-button>
+    </ion-col>
+    <ion-col>
+      <ion-button>
+        <ion-text>Apply</ion-text>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

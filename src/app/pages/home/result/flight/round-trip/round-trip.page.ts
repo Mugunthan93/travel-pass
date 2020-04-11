@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TripFilterComponent } from 'src/app/components/trip-filter/trip-filter.component';
 import { ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
@@ -7,7 +7,7 @@ import { flightList } from '../one-way/one-way.page';
 @Component({
   selector: 'app-round-trip',
   templateUrl: './round-trip.page.html',
-  styleUrls: ['./round-trip.page.scss'],
+  styleUrls: ['./round-trip.page.scss']
 })
 export class RoundTripPage implements OnInit {
 

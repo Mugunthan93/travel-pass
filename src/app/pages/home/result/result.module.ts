@@ -11,6 +11,8 @@ import { TripFilterComponent } from 'src/app/components/trip-filter/trip-filter.
 import { FlightBaggageComponent } from 'src/app/components/flight-baggage/flight-baggage.component';
 import { ResultListComponent } from 'src/app/components/result-list/result-list.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { HotelFilterComponent } from 'src/app/components/hotel-filter/hotel-filter.component';
+import { LocationComponent } from 'src/app/components/location/location.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -21,11 +23,15 @@ import { MatExpansionModule } from '@angular/material/expansion';
   declarations: [
     ResultPage,
     TripFilterComponent,
-    FlightBaggageComponent
+    FlightBaggageComponent,
+    HotelFilterComponent,
+    LocationComponent
   ],
   entryComponents: [
     TripFilterComponent,
-    FlightBaggageComponent
+    FlightBaggageComponent,
+    HotelFilterComponent,
+    LocationComponent
   ]
 })
 export class ResultPageModule {}
