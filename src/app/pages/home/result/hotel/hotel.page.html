@@ -56,7 +56,7 @@
 
 <ion-content [scrollY]="'true'">
   <ion-grid>
-    <ion-row *ngFor="let hotel of hotelList">
+    <ion-row *ngFor="let hotel of hotelList" (click)="viewHotel()">
       <ion-col>
         <ion-row>
           <ion-col>

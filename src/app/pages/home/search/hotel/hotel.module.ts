@@ -8,7 +8,7 @@ import { HotelPageRoutingModule } from './hotel-routing.module';
 
 import { HotelPage } from './hotel.page';
 import { MatDividerModule } from '@angular/material/divider';
-import { GuestRoomComponent } from 'src/app/components/guest-room/guest-room.component';
+import { GuestRoomComponent } from 'src/app/components/hotel/guest-room/guest-room.component';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 
 @NgModule({

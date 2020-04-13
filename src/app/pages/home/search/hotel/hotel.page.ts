@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { GuestRoomComponent } from 'src/app/components/guest-room/guest-room.component';
+import { GuestRoomComponent } from 'src/app/components/hotel/guest-room/guest-room.component';
 
 @Component({
   selector: 'app-hotel',

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TripFilterComponent } from 'src/app/components/trip-filter/trip-filter.component';
+import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
 import { ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { flightList } from '../one-way/one-way.page';

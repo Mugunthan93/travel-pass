@@ -7,11 +7,11 @@ import { IonicModule } from '@ionic/angular';
 import { RegisterPageRoutingModule } from './register-routing.module';
 
 import { RegisterPage } from './register.page';
-import { CustomStepperComponent } from 'src/app/components/custom-stepper/custom-stepper.component';
+import { CustomStepperComponent } from 'src/app/components/register/custom-stepper/custom-stepper.component';
 import { CdkStepperModule } from '@angular/cdk/stepper';
-import { AddBranchComponent } from 'src/app/components/add-branch/add-branch.component';
-import { AddUserComponent } from 'src/app/components/add-user/add-user.component';
-import { AddProfileComponent } from 'src/app/components/add-profile/add-profile.component';
+import { AddBranchComponent } from 'src/app/components/register/add-branch/add-branch.component';
+import { AddUserComponent } from 'src/app/components/register/add-user/add-user.component';
+import { AddProfileComponent } from 'src/app/components/register/add-profile/add-profile.component';
 
 @NgModule({
   imports: [

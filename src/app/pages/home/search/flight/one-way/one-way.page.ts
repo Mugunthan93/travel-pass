@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ModalController, PickerController, IonSelect, Platform } from '@ionic/angular';
-import { CityModalComponent } from 'src/app/components/city-modal/city-modal.component';
-import { PassengerModalComponent } from 'src/app/components/passenger-modal/passenger-modal.component';
+import { CityModalComponent } from 'src/app/components/shared/city-modal/city-modal.component';
+import { PassengerModalComponent } from 'src/app/components/flight/passenger-modal/passenger-modal.component';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
 import { Select, Store } from '@ngxs/store';
 import { SearchState } from 'src/app/stores/search.state';

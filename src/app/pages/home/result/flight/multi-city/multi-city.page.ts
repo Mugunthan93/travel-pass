@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { flightList } from '../one-way/one-way.page';
 import { ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { TripFilterComponent } from 'src/app/components/trip-filter/trip-filter.component';
+import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
 
 @Component({
   selector: 'app-multi-city',

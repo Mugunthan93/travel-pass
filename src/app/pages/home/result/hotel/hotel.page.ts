@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { matExpansionAnimations } from '@angular/material/expansion';
 import { ModalController } from '@ionic/angular';
-import { HotelFilterComponent } from 'src/app/components/hotel-filter/hotel-filter.component';
+import { HotelFilterComponent } from 'src/app/components/hotel/hotel-filter/hotel-filter.component';
 
 @Component({
   selector: 'app-hotel',

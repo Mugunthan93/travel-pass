@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { PassengerInfoComponent } from 'src/app/components/passenger-info/passenger-info.component';
+import { PassengerInfoComponent } from 'src/app/components/flight/passenger-info/passenger-info.component';
 
 @Component({
   selector: 'app-multi-city',

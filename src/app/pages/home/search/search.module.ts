@@ -8,9 +8,9 @@ import { IonicModule } from '@ionic/angular';
 import { SearchPageRoutingModule } from './search-routing.module';
 
 import { SearchPage } from './search.page';
-import { CityModalComponent } from 'src/app/components/city-modal/city-modal.component';
-import { CalendarModalComponent } from 'src/app/components/calendar-modal/calendar-modal.component';
-import { PassengerModalComponent } from 'src/app/components/passenger-modal/passenger-modal.component';
+import { CityModalComponent } from 'src/app/components/shared/city-modal/city-modal.component';
+import { CalendarModalComponent } from 'src/app/components/shared/calendar-modal/calendar-modal.component';
+import { PassengerModalComponent } from 'src/app/components/flight/passenger-modal/passenger-modal.component';
 
 @NgModule({
   imports: [

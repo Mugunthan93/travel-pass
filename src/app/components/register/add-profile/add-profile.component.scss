@@ -1,10 +1,10 @@
-@import "../../../style/util/mixins.scss";
-@import "../../../style/util/variable.scss";
-@import "../../../style/component/item.scss";
+@import "../../../../style/util/mixins.scss";
+@import "../../../../style/util/variable.scss";
+@import "../../../../style/component/item.scss";
 
 
 ion-button {
-    margin-top : 20px;
+    margin-top: 20px;
 }
 
 form {
@@ -14,7 +14,7 @@ form {
             padding-top: 0px !important;
 
             ion-item {
-                height: calc(100vh/10);
+                height: calc(100vh/15);
             }
 
             ion-img {
@@ -26,13 +26,15 @@ form {
                 --placeholder-font-weight: lighter;
                 font-size: 1em;
             }
-            ion-row{
-                ion-col{
+
+            ion-row {
+                ion-col {
                     @include grid-col-padding(0px);
                 }
-                ion-text{
-                    font-size:1em;
-                    color:white;
+
+                ion-text {
+                    font-size: 1em;
+                    color: white;
                 }
             }
         }

@@ -7,11 +7,11 @@ import { IonicModule } from '@ionic/angular';
 import { BookPageRoutingModule } from './book-routing.module';
 
 import { BookPage } from './book.page';
-import { PassengerInfoComponent } from 'src/app/components/passenger-info/passenger-info.component';
-import { PassengerDetailComponent } from 'src/app/components/passenger-detail/passenger-detail.component';
-import { MealBaggageComponent } from 'src/app/components/meal-baggage/meal-baggage.component';
+import { PassengerInfoComponent } from 'src/app/components/flight/passenger-info/passenger-info.component';
+import { PassengerDetailComponent } from 'src/app/components/flight/passenger-detail/passenger-detail.component';
+import { MealBaggageComponent } from 'src/app/components/flight/meal-baggage/meal-baggage.component';
 import { CalendarModule } from 'ion2-calendar';
-import { FlightListComponent } from 'src/app/components/flight-list/flight-list.component';
+import { FlightListComponent } from 'src/app/components/flight/flight-list/flight-list.component';
 
 @NgModule({
   imports: [

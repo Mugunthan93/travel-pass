@@ -1,5 +1,5 @@
-@import "../../../style/util/variable.scss";
-@import "../../../style/util/mixins.scss";
+@import "../../../../style/util/variable.scss";
+@import "../../../../style/util/mixins.scss";
 
 @function flight-row-height($row){
     $row-height:100/$row;

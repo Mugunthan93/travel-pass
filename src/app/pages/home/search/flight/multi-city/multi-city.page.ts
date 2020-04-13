@@ -2,9 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ModalController, IonSelect } from '@ionic/angular';
-import { CityModalComponent } from 'src/app/components/city-modal/city-modal.component';
+import { CityModalComponent } from 'src/app/components/shared/city-modal/city-modal.component';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
-import { PassengerModalComponent } from 'src/app/components/passenger-modal/passenger-modal.component';
+import { PassengerModalComponent } from 'src/app/components/flight/passenger-modal/passenger-modal.component';
 
 @Component({
   selector: 'app-multi-city',
