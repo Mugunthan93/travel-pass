@@ -9,10 +9,10 @@ import { ResultPageRoutingModule } from './result-routing.module';
 import { ResultPage } from './result.page';
 import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
 import { FlightBaggageComponent } from 'src/app/components/flight/flight-baggage/flight-baggage.component';
-import { ResultListComponent } from 'src/app/components/flight/result-list/result-list.component';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { HotelFilterComponent } from 'src/app/components/hotel/hotel-filter/hotel-filter.component';
 import { LocationComponent } from 'src/app/components/hotel/location/location.component';
+import { ViewHotelComponent } from 'src/app/components/hotel/view-hotel/view-hotel.component';
+import { AboutHotelComponent } from 'src/app/components/hotel/about-hotel/about-hotel.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -25,13 +25,17 @@ import { LocationComponent } from 'src/app/components/hotel/location/location.co
     TripFilterComponent,
     FlightBaggageComponent,
     HotelFilterComponent,
-    LocationComponent
+    LocationComponent,
+    ViewHotelComponent,
+    AboutHotelComponent
   ],
   entryComponents: [
     TripFilterComponent,
     FlightBaggageComponent,
     HotelFilterComponent,
-    LocationComponent
+    LocationComponent,
+    ViewHotelComponent,
+    AboutHotelComponent
   ]
 })
 export class ResultPageModule {}

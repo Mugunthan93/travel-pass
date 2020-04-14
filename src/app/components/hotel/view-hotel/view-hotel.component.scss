@@ -1,0 +1,48 @@
+@import "../../../../style/util/variable.scss";
+
+ion-content {
+    >ion-card:nth-of-type(1){
+        >ion-card-content{
+            >ion-row:last-child {
+                >ion-col{
+                    >ion-text {
+                        color: #{$btn2-bg};
+                    }
+                }
+            }
+        }
+    }
+    
+    >ion-card:nth-of-type(2) {
+        >ion-card-content{
+            >ion-row:not(:last-child){
+                margin-top:4px;
+                margin-bottom:4px;
+            }
+            >ion-row{
+                >ion-col{
+                    >ion-row:first-child {
+                        >ion-col {
+                            margin-left: 0px;
+                            border-bottom: 1px solid grey;
+                        }
+                    }
+
+                    >ion-row {
+                        >ion-col {
+                            margin-left: 10px;
+                        }
+                    }
+                }
+            }
+
+            >ion-row:last-child {
+                >ion-col{
+                    >ion-text {
+                        color: #{$btn2-bg};
+                    }
+                }
+            }
+        }
+    }
+}

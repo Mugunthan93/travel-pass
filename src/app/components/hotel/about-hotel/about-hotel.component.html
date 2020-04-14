@@ -1,0 +1,151 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Important Information</ion-title>
+  </ion-toolbar>
+  <ion-segment (ionChange)="tabChange($event)" [value]="selectedSegement">
+    <ion-segment-button value="about-hotel">About Hotel</ion-segment-button>
+    <ion-segment-button value="hotel-rules">Hotel Rules</ion-segment-button>
+  </ion-segment>
+</ion-header>
+
+<ion-content>
+  <ion-card *ngIf="selectedSegement == 'about-hotel'">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-text>
+          About the Hotel
+        </ion-text>
+      </ion-card-title>
+      <ion-card-subtitle>
+        <ion-text>Check-In 12PM - Check-Out 12PM</ion-text>
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row>
+        <ion-col>
+          <ion-text>
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum expedita maxime rerum repellendus ex
+            tenetur
+            qui vitae ratione et perferendis? Blanditiis, quibusdam eligendi possimus cupiditate veniam facilis
+            accusamus assumenda aliquid!
+
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium doloremque ea minima! Id velit enim, amet cupiditate odit animi aliquam voluptatum sint? A similique eaque blanditiis aperiam officiis doloribus eos
+
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsa temporibus laudantium aperiam quidem id quibusdam sed? Porro rem consequatur cum ad, culpa quo non dolorem natus dicta quam, repellat mollitia
+          </ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+  <ion-card *ngIf="selectedSegement == 'hotel-rules'" class="rules">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-text>Hotel Rules</ion-text>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row>
+        <ion-col>
+          <ion-row>
+            <ion-col>
+              <ion-text>Guest Rules</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>Pokémon Yellow</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>Mega Man X</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>The Legend of Zelda</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>Pac-Man</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>Super Mario World</ion-text>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-row>
+            <ion-col>
+              <ion-text>Guest Rules</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>Pokémon Yellow</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>Mega Man X</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>The Legend of Zelda</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>Pac-Man</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>Super Mario World</ion-text>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-row>
+            <ion-col>
+              <ion-text>Guest Rules</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>Pokémon Yellow</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>Mega Man X</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>The Legend of Zelda</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>Pac-Man</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>Super Mario World</ion-text>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

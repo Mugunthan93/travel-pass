@@ -1,0 +1,90 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button icon="arrow-back-outline" defaultHref="home">
+      </ion-back-button>
+    </ion-buttons>
+    <ion-title>Chennai</ion-title>
+    <ion-title>25 sep - 27 sep | 1 Guest | 618 Hotels</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scroll-y="true">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        <ion-text>
+          About the Hotel
+        </ion-text>
+      </ion-card-title>
+      <ion-card-subtitle>
+        <ion-text>Check-In 12PM - Check-Out 12PM</ion-text>
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row>
+        <ion-col>
+          <ion-text>
+            {{'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum expedita maxime rerum repellendus ex
+            tenetur
+            qui vitae ratione et perferendis? Blanditiis, quibusdam eligendi possimus cupiditate veniam facilis
+            accusamus assumenda aliquid!' | slice : 0 : 200}}...
+          </ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col (click)="readMore()">
+          <ion-text>Read More</ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        <ion-text>Hotel Rules</ion-text>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row *ngFor="let rule of rules | slice:0 : 2">
+        <ion-col>
+          <ion-row>
+            <ion-col>
+              <ion-text>Guest Rules</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>Pokémon Yellow</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>Mega Man X</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>The Legend of Zelda</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>Pac-Man</ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text>Super Mario World</ion-text>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="3" (click)="showAll()">
+          <ion-text>Show All</ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

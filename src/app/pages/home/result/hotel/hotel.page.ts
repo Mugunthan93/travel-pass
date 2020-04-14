@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { matExpansionAnimations } from '@angular/material/expansion';
 import { ModalController } from '@ionic/angular';
 import { HotelFilterComponent } from 'src/app/components/hotel/hotel-filter/hotel-filter.component';
+import { ViewHotelComponent } from 'src/app/components/hotel/view-hotel/view-hotel.component';
 
 @Component({
   selector: 'app-hotel',
@@ -38,6 +39,21 @@ export class HotelPage implements OnInit {
         console.log(filterData);
       }
     );
+
+    return await modal.present();
+  }
+
+  async viewHotel() {
+    const modal = await this.modalCtrl.create({
+      component: ViewHotelComponent,
+      id: 'view-hotel'
+    });
+
+    // modal.onDidDismiss().then(
+    //   (filterData) => {
+    //     console.log(filterData);
+    //   }
+    // );
 
     return await modal.present();
   }
