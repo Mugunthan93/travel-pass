@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Location</ion-title>
+    <ion-title>The Radison Blu Hotel</ion-title>
+    <ion-buttons slot="end">
+      <ion-button name="close"></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-searchbar></ion-searchbar>
+    <ion-card-header>
+      <ion-segment (ionChange)="locationChange($event)" value="restaurant">
+        <ion-segment-button value="landmark">
+          <ion-text>Key Land Mark</ion-text>
+        </ion-segment-button>
+        <ion-segment-button value="restaurant">
+          <ion-text>Restaurants</ion-text>
+        </ion-segment-button>
+      </ion-segment>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row class="ion-justify-content-between" *ngFor="let landmark of landmarks">
+        <ion-col size="6">
+          <ion-row>
+            <ion-text>Mayajaal</ion-text>
+          </ion-row>
+          <ion-row>
+            <ion-text>key Landmarks</ion-text>
+          </ion-row>
+        </ion-col>
+        <ion-col size="2">
+          <ion-text>1.1 Km</ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

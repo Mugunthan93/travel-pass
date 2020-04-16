@@ -1,0 +1,16 @@
+ion-card-content{
+    >ion-row{
+        border: 1px solid grey;
+        border-radius: 3px;
+        >ion-col:first-child {
+            margin-top: auto;
+            margin-bottom: auto;
+            margin-left: 10px;
+        }
+        >ion-col:last-child{
+            margin-top: auto;
+            margin-bottom: auto;
+            margin-right: 10px;
+        }
+    }
+}

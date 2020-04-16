@@ -14,6 +14,7 @@ import { LocationComponent } from 'src/app/components/hotel/location/location.co
 import { ViewHotelComponent } from 'src/app/components/hotel/view-hotel/view-hotel.component';
 import { AboutHotelComponent } from 'src/app/components/hotel/about-hotel/about-hotel.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { HotelLocationComponent } from 'src/app/components/hotel/hotel-location/hotel-location.component';
 
 @NgModule({
   imports: [
@@ -30,7 +31,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
     HotelFilterComponent,
     LocationComponent,
     ViewHotelComponent,
-    AboutHotelComponent
+    AboutHotelComponent,
+    HotelLocationComponent
   ],
   entryComponents: [
     TripFilterComponent,
@@ -38,7 +40,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
     HotelFilterComponent,
     LocationComponent,
     ViewHotelComponent,
-    AboutHotelComponent
+    AboutHotelComponent,
+    HotelLocationComponent
   ]
 })
 export class ResultPageModule {}

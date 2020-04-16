@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { AboutHotelComponent } from '../about-hotel/about-hotel.component';
+import { HotelLocationComponent } from '../hotel-location/hotel-location.component';
 
 @Component({
   selector: 'app-view-hotel',
@@ -46,6 +47,13 @@ export class ViewHotelComponent implements OnInit {
       }
     });
 
+    return await modal.present();
+  }
+
+  async viewLocation() {
+    const modal = await this.modalCtrl.create({
+      component: HotelLocationComponent
+    });
     return await modal.present();
   }
 
