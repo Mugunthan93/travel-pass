@@ -13,12 +13,15 @@ import { HotelFilterComponent } from 'src/app/components/hotel/hotel-filter/hote
 import { LocationComponent } from 'src/app/components/hotel/location/location.component';
 import { ViewHotelComponent } from 'src/app/components/hotel/view-hotel/view-hotel.component';
 import { AboutHotelComponent } from 'src/app/components/hotel/about-hotel/about-hotel.component';
+import { MatGridListModule } from '@angular/material/grid-list';
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ResultPageRoutingModule
+    ResultPageRoutingModule,
+    MatGridListModule
   ],
   declarations: [
     ResultPage,

@@ -9,7 +9,17 @@ import { AboutHotelComponent } from '../about-hotel/about-hotel.component';
 })
 export class ViewHotelComponent implements OnInit {
 
-  rules: any[] = ["1","2","3","4"];
+  tiles : any = [
+    { cols: 1, rows: 3, img: "../../../../assets/img/hotel/hotel-1.jpeg" },
+    { cols: 1, rows: 1, img: "../../../../assets/img/hotel/hotel-2.jpeg" },
+    { cols: 1, rows: 1, img: "../../../../assets/img/hotel/hotel-3.jpeg" },
+    { cols: 1, rows: 1, img: "../../../../assets/img/hotel/hotel-4.jpeg" },
+    { cols: 1, rows: 1, img: "../../../../assets/img/hotel/hotel-5.jpeg" },
+    { cols: 1, rows: 1, img: "../../../../assets/img/hotel/hotel-6.jpeg" },
+    { cols: 1, rows: 1, color: '#3d9ed7' }
+  ];
+
+  rules: any[] = ["1", "2", "3", "4"];
 
   constructor(
     public modalCtrl : ModalController

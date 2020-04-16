@@ -1,7 +1,138 @@
 @import "../../../../style/util/variable.scss";
 
 ion-content {
-    >ion-card:nth-of-type(1){
+    >ion-card:nth-child(1){
+        height:calc(50vh + 20vw);
+        >ion-card-header{
+            padding:10px;
+            height:15%;
+        }
+        >ion-card-content{
+            height:85%;
+            >mat-grid-list {
+                height: 60%;
+                ion-text{
+                    font-size:medium;
+                    color: white;
+                    text-align: center;
+                }
+                mat-grid-tile{
+                    border-radius: 12px;
+                }
+            }
+            >ion-row:nth-of-type(1){
+                height:10%;
+                margin-top:3px;
+                >ion-col{
+                    height:100%;
+                    max-width: fit-content;
+                    margin:auto;
+                    margin-left: 0px;
+                    >ion-button{
+                        margin-bottom:auto;
+                        --opacity:1;
+                        --background: transparent !important;
+                    }
+
+                }
+            }
+            >ion-row:nth-of-type(2){
+                height:10%;
+                margin-top:3px;
+                >ion-col {
+                    height: 100%;
+                    max-width: fit-content;
+                    margin-left: 0px;
+                }
+                >ion-col:nth-child(1){
+                    margin-right:15px;
+                    >ion-text {
+                        vertical-align: -webkit-baseline-middle;
+                    }
+                }
+                >ion-col:nth-child(2){
+                    >ion-row{
+                        height:100%;
+                        >ion-text{
+                            height:auto;
+                            margin-top: auto;
+                            margin-bottom: auto;
+                            color:#{$btn2-bg};
+                        }
+                        >ion-icon{
+                            height:auto;
+                            vertical-align: middle;
+                            font-size: 160%;
+                        }
+                    }
+                }
+            }
+            >ion-row:nth-of-type(3){
+                height:18%;
+                ion-col{
+                    >ion-row{
+                       justify-content: center; 
+                    }
+                    ion-icon {
+                        width:100%;
+                        font-size: 160%;
+                        color:black !important;
+                    }
+                    ion-text {
+                        font-size:10px;
+                        text-align:center;
+                    }
+                }
+                >ion-col:last-child{
+                    max-width: fit-content;
+                    padding-left: 5px;
+                    padding-right: 5px;
+                    >ion-row:first-child{
+                        ion-text {
+                            margin: auto;
+                            margin-bottom:0px;
+                            color: #{$btn2-bg};
+                        }
+                    }
+                    >ion-row:last-child {
+                        ion-text {
+                            margin: auto;
+                            margin-top:0px;
+                            color: #{$btn2-bg};
+                        }
+                    }
+                }
+            }
+        }
+    }
+    >ion-card:nth-child(2){
+        >ion-card-header{
+            >ion-row{
+                >ion-col:last-child{
+                    margin: auto;
+                    padding: 3px;
+                }
+            }
+        }
+        >ion-card-content{
+            >ion-row{
+                height:6vh;
+                >ion-col{
+                    height:100%;
+                }
+                >ion-col:first-child{
+                    >ion-row:first-child{
+                    }
+                    >ion-row:last-child{
+                        ion-text{
+                            font-size: 2.50vw;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    >ion-card:nth-of-type(3){
         >ion-card-content{
             >ion-row:last-child {
                 >ion-col{
@@ -12,8 +143,7 @@ ion-content {
             }
         }
     }
-    
-    >ion-card:nth-of-type(2) {
+    >ion-card:nth-of-type(4) {
         >ion-card-content{
             >ion-row:not(:last-child){
                 margin-top:4px;
@@ -45,4 +175,13 @@ ion-content {
             }
         }
     }
+}
+
+ion-thumbnail {
+    height: 100%;
+    width: auto;
+}
+
+ion-range{
+    padding:0px;
 }
