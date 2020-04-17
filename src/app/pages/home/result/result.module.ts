@@ -15,6 +15,7 @@ import { ViewHotelComponent } from 'src/app/components/hotel/view-hotel/view-hot
 import { AboutHotelComponent } from 'src/app/components/hotel/about-hotel/about-hotel.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { HotelLocationComponent } from 'src/app/components/hotel/hotel-location/hotel-location.component';
+import { GoogleMaps } from '@ionic-native/google-maps/ngx';
 
 @NgModule({
   imports: [

@@ -26,7 +26,7 @@ export class HomeTabPage implements OnInit {
   }
 
   searchHotel() {
-    this.router.navigate(['/', 'home', 'search', 'hotel', 'one-way']);
+    this.router.navigate(['/', 'home', 'search', 'hotel']);
   }
 
   searchCab() {

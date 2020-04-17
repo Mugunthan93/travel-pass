@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { GuestRoomComponent } from 'src/app/components/hotel/guest-room/guest-room.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-hotel',
@@ -10,7 +11,8 @@ import { GuestRoomComponent } from 'src/app/components/hotel/guest-room/guest-ro
 export class HotelPage implements OnInit {
 
   constructor(
-    public modalCtrl : ModalController
+    public modalCtrl: ModalController,
+    public router : Router
   ) { }
 
   ngOnInit() {
@@ -28,6 +30,10 @@ export class HotelPage implements OnInit {
     );
 
     return await modal.present();
+  }
+
+  searchRoom() {
+    this.router.navigate(['/','home','result','hotel']);
   }
 
 }

@@ -10,6 +10,10 @@
 
 <ion-content>
   <ion-card>
+    <ion-row>
+      <ion-col id="map" #map>
+      </ion-col>
+    </ion-row>
     <ion-searchbar></ion-searchbar>
     <ion-card-header>
       <ion-segment (ionChange)="locationChange($event)" value="restaurant">

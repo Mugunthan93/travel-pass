@@ -46,5 +46,5 @@ export const environment = {
   timeout: 10,
   ping: 120,
   number: 0,
-  places_api:"AIzaSyCMPgHkciJTa39UW1VME-U2UIGZX5UQSR4"
+  map_js_key: 'AIzaSyDVaJa4N9N1qM8OglHSt5BKsqPn8LikZJk'
 };

@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
-import { Keyboard } from '@ionic-native/keyboard/ngx';
+import { environment } from 'src/environments/environment';
+import { Environment } from '@ionic-native/google-maps/ngx';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-root',
@@ -9,13 +10,13 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 })
 export class AppComponent implements OnInit, OnDestroy{
 
-
   constructor(
-    public keyboard : Keyboard
+    public platform : Platform
   ) {
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.platform.ready();
   }
 
   ngOnDestroy() {
