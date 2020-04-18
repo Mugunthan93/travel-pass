@@ -15,7 +15,9 @@ import { ViewHotelComponent } from 'src/app/components/hotel/view-hotel/view-hot
 import { AboutHotelComponent } from 'src/app/components/hotel/about-hotel/about-hotel.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { HotelLocationComponent } from 'src/app/components/hotel/hotel-location/hotel-location.component';
-import { GoogleMaps } from '@ionic-native/google-maps/ngx';
+import { AgmCoreModule } from '@agm/core';
+import { environment } from 'src/environments/environment';
+
 
 @NgModule({
   imports: [
@@ -23,7 +25,12 @@ import { GoogleMaps } from '@ionic-native/google-maps/ngx';
     FormsModule,
     IonicModule,
     ResultPageRoutingModule,
-    MatGridListModule
+    MatGridListModule,
+    AgmCoreModule.forRoot({
+      // please get your own API key here:
+      // https://developers.google.com/maps/documentation/javascript/get-api-key?hl=en
+      apiKey: environment.map_js_key
+    })
   ],
   declarations: [
     ResultPage,
