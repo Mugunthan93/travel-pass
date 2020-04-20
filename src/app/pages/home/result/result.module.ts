@@ -17,6 +17,9 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { HotelLocationComponent } from 'src/app/components/hotel/hotel-location/hotel-location.component';
 import { AgmCoreModule } from '@agm/core';
 import { environment } from 'src/environments/environment';
+import { ViewRoomComponent } from 'src/app/components/hotel/view-room/view-room.component';
+import { SimilarHotelsComponent } from 'src/app/components/hotel/similar-hotels/similar-hotels.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 @NgModule({
@@ -26,6 +29,7 @@ import { environment } from 'src/environments/environment';
     IonicModule,
     ResultPageRoutingModule,
     MatGridListModule,
+    MatDividerModule,
     AgmCoreModule.forRoot({
       // please get your own API key here:
       // https://developers.google.com/maps/documentation/javascript/get-api-key?hl=en
@@ -40,7 +44,9 @@ import { environment } from 'src/environments/environment';
     LocationComponent,
     ViewHotelComponent,
     AboutHotelComponent,
-    HotelLocationComponent
+    HotelLocationComponent,
+    ViewRoomComponent,
+    SimilarHotelsComponent
   ],
   entryComponents: [
     TripFilterComponent,
@@ -49,7 +55,8 @@ import { environment } from 'src/environments/environment';
     LocationComponent,
     ViewHotelComponent,
     AboutHotelComponent,
-    HotelLocationComponent
+    HotelLocationComponent,
+    ViewRoomComponent
   ]
 })
 export class ResultPageModule {}

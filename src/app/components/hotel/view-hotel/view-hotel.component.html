@@ -9,7 +9,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content scroll-y="true">
+<ion-content scrollY="true" scrollX="true" (ionScroll)="scrolling($event)" scrollEvents="true">
   <ion-card>
     <ion-card-header>
       <ion-card-title>
@@ -251,4 +251,28 @@
       </ion-row>
     </ion-card-content>
   </ion-card>
+  <ion-row>
+    <ion-col>
+      <ion-row>
+        <ion-text>Similar Hotels</ion-text>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <app-similar-hotels></app-similar-hotels>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="selectRoom()">
+        <ion-text>
+          Continue
+        </ion-text>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

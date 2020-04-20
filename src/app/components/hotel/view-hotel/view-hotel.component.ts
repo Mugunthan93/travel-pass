@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ModalController, IonContent } from '@ionic/angular';
 import { AboutHotelComponent } from '../about-hotel/about-hotel.component';
 import { HotelLocationComponent } from '../hotel-location/hotel-location.component';
+import { ViewRoomComponent } from '../view-room/view-room.component';
 
 @Component({
   selector: 'app-view-hotel',
@@ -9,6 +10,8 @@ import { HotelLocationComponent } from '../hotel-location/hotel-location.compone
   styleUrls: ['./view-hotel.component.scss'],
 })
 export class ViewHotelComponent implements OnInit {
+
+  @ViewChild(IonContent, {static : true}) content: IonContent;
 
   tiles : any = [
     { cols: 1, rows: 3, img: "../../../../assets/img/hotel/hotel-1.jpeg" },
@@ -26,7 +29,9 @@ export class ViewHotelComponent implements OnInit {
     public modalCtrl : ModalController
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    console.log(this.content);
+   }
   
   async showAll() {
     const modal = await this.modalCtrl.create({
@@ -55,6 +60,17 @@ export class ViewHotelComponent implements OnInit {
       component: HotelLocationComponent
     });
     return await modal.present();
+  }
+
+  async selectRoom() {
+    const modal = await this.modalCtrl.create({
+      component: ViewRoomComponent
+    });
+    return await modal.present();
+  }
+
+  scrolling(evt) {
+    console.log(evt);
   }
 
 }
