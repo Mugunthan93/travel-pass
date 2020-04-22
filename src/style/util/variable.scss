@@ -27,6 +27,7 @@ $selected-item:rgb(255, 232, 232) !important;
 
 //font
 $mobile-font-family : 'Roboto',sans-serif;
+$mobile-font-size: calc(1.3rem + 3.6vw);
 
 //css variale
 
@@ -36,7 +37,6 @@ $mobile-font-family : 'Roboto',sans-serif;
     --ion-safe-area-bottom:0px !important;
     --ion-safe-area-left:0px !important;
 }
-
 
 
 

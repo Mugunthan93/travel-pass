@@ -3,6 +3,7 @@ import { matExpansionAnimations } from '@angular/material/expansion';
 import { ModalController } from '@ionic/angular';
 import { HotelFilterComponent } from 'src/app/components/hotel/hotel-filter/hotel-filter.component';
 import { ViewHotelComponent } from 'src/app/components/hotel/view-hotel/view-hotel.component';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-hotel',
@@ -17,7 +18,9 @@ export class HotelPage implements OnInit {
   hotelList: any[] = ["1", "2", "3", "4", "5", "6","1", "2", "3", "4", "5", "6"];
 
   constructor(
-    public modalCtrl : ModalController
+    public modalCtrl: ModalController,
+    public router: Router,
+    public activatedRoute : ActivatedRoute
   ) { }
 
   ngOnInit() {
@@ -44,18 +47,7 @@ export class HotelPage implements OnInit {
   }
 
   async viewHotel() {
-    const modal = await this.modalCtrl.create({
-      component: ViewHotelComponent,
-      id: 'view-hotel'
-    });
-
-    // modal.onDidDismiss().then(
-    //   (filterData) => {
-    //     console.log(filterData);
-    //   }
-    // );
-
-    return await modal.present();
+    this.router.navigate(['view'], {relativeTo:this.activatedRoute});
   }
 
 }

@@ -7,22 +7,14 @@ import { IonicModule } from '@ionic/angular';
 import { HotelPageRoutingModule } from './hotel-routing.module';
 
 import { HotelPage } from './hotel.page';
-import { SharedModule } from 'src/app/modules/shared/shared.module';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HotelPageRoutingModule,
-    MatGridListModule,
-    MatDividerModule,
-    SharedModule
+    HotelPageRoutingModule
   ],
-  declarations: [
-    HotelPage
-  ]
+  declarations: [HotelPage]
 })
 export class HotelPageModule {}

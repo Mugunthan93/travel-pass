@@ -28,6 +28,12 @@
 
 :root {
 
+    --ion-grid-width-xs: 100%;
+    --ion-grid-width-sm: 320px;
+    --ion-grid-width-md: 375px;
+    --ion-grid-width-lg: 425px;
+    --ion-grid-width-xl: 768px;
+
     ion-grid{
         display: flex;
         flex-flow: column;

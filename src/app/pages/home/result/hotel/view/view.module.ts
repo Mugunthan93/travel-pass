@@ -4,25 +4,25 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { HotelPageRoutingModule } from './hotel-routing.module';
+import { ViewPageRoutingModule } from './view-routing.module';
 
-import { HotelPage } from './hotel.page';
-import { SharedModule } from 'src/app/modules/shared/shared.module';
+import { ViewPage } from './view.page';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDividerModule } from '@angular/material/divider';
+import { SimilarHotelsComponent } from 'src/app/components/hotel/similar-hotels/similar-hotels.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HotelPageRoutingModule,
+    ViewPageRoutingModule,
     MatGridListModule,
-    MatDividerModule,
-    SharedModule
+    MatDividerModule
   ],
   declarations: [
-    HotelPage
+    ViewPage,
+    SimilarHotelsComponent
   ]
 })
-export class HotelPageModule {}
+export class ViewPageModule {}

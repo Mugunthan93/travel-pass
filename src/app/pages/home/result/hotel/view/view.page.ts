@@ -1,19 +1,20 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { AboutHotelComponent } from 'src/app/components/hotel/about-hotel/about-hotel.component';
 import { ModalController, IonContent } from '@ionic/angular';
-import { AboutHotelComponent } from '../about-hotel/about-hotel.component';
-import { HotelLocationComponent } from '../hotel-location/hotel-location.component';
-import { ViewRoomComponent } from '../view-room/view-room.component';
+import { HotelLocationComponent } from 'src/app/components/hotel/hotel-location/hotel-location.component';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-view-hotel',
-  templateUrl: './view-hotel.component.html',
-  styleUrls: ['./view-hotel.component.scss'],
+  selector: 'app-view',
+  templateUrl: './view.page.html',
+  styleUrls: ['./view.page.scss'],
 })
-export class ViewHotelComponent implements OnInit {
+export class ViewPage implements OnInit {
 
-  @ViewChild(IonContent, {static : true}) content: IonContent;
 
-  tiles : any = [
+  @ViewChild(IonContent, { static: true }) content: IonContent;
+
+  tiles: any = [
     { cols: 1, rows: 3, img: "../../../../assets/img/hotel/hotel-1.jpeg" },
     { cols: 1, rows: 1, img: "../../../../assets/img/hotel/hotel-2.jpeg" },
     { cols: 1, rows: 1, img: "../../../../assets/img/hotel/hotel-3.jpeg" },
@@ -26,18 +27,20 @@ export class ViewHotelComponent implements OnInit {
   rules: any[] = ["1", "2", "3", "4"];
 
   constructor(
-    public modalCtrl : ModalController
+    public modalCtrl: ModalController,
+    public router: Router,
+    public activatedRoute : ActivatedRoute
   ) { }
 
   ngOnInit() {
     console.log(this.content);
-   }
-  
+  }
+
   async showAll() {
     const modal = await this.modalCtrl.create({
       component: AboutHotelComponent,
       componentProps: {
-        selectedSegement:'hotel-rules'
+        selectedSegement: 'hotel-rules'
       }
     });
 
@@ -63,10 +66,7 @@ export class ViewHotelComponent implements OnInit {
   }
 
   async selectRoom() {
-    const modal = await this.modalCtrl.create({
-      component: ViewRoomComponent
-    });
-    return await modal.present();
+    this.router.navigate(['room'], {relativeTo:this.activatedRoute});
   }
 
   scrolling(evt) {
