@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-text>Add Guest</ion-text>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-row>
+          <ion-col size="3">
+            <ion-select value="Mr" okText="Okay" cancelText="Dismiss">
+              <ion-select-option value="Mr">Mr</ion-select-option>
+              <ion-select-option value="Ms">Ms</ion-select-option>
+              <ion-select-option value="Mrs">Mrs</ion-select-option>
+            </ion-select>
+          </ion-col>
+          <ion-col size="9">
+            <ion-input placeholder="First Name"></ion-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-input placeholder="Last Name"></ion-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-input placeholder="PAN Number"></ion-input>
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-justify-content-center">
+          <ion-col>
+              <ion-button expand="block">
+                <ion-text>Confirm</ion-text>
+              </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

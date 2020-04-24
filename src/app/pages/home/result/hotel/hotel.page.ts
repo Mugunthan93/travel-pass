@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { matExpansionAnimations } from '@angular/material/expansion';
 import { ModalController } from '@ionic/angular';
 import { HotelFilterComponent } from 'src/app/components/hotel/hotel-filter/hotel-filter.component';
-import { ViewHotelComponent } from 'src/app/components/hotel/view-hotel/view-hotel.component';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({

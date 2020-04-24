@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { HotelPage } from './hotel.page';
-import { ViewHotelComponent } from 'src/app/components/hotel/view-hotel/view-hotel.component';
-import { RoomListComponent } from 'src/app/components/hotel/room-list/room-list.component';
 
 const routes: Routes = [
   {

@@ -1,0 +1,21 @@
+@import "../../../../style/util/variable.scss";
+
+ion-grid{
+    >ion-row{
+        >ion-col{
+            margin:5px;
+            >ion-row:first-child{
+                height: 50px;
+                background: #{$text-bg};
+                border-radius: 8px;
+                >ion-col{
+                        align-self: center;
+                        >ion-text{
+                            margin-left:5px;
+                            font-weight:bold;
+                        }
+                }
+            }
+        }
+    }
+}

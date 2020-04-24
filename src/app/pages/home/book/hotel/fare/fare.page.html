@@ -1,0 +1,86 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>fare</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list lines="full">
+    <ion-item>
+      <ion-label slot="start">
+        1 X Studio Apartment
+        <br>
+        <ion-text slot="start">BreakFast</ion-text>
+      </ion-label>
+      <ion-text slot="end">
+        2 Adults
+      </ion-text>
+    </ion-item>
+    <ion-item>
+      <ion-label slot="start">
+        19-06-2020
+        <br>
+        <ion-text slot="start">CHECKIN</ion-text>
+      </ion-label>
+      <ion-label slot="end">
+        20-06-2020
+        <br>
+        <ion-text slot="end">CHECKOUT</ion-text>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-text slot="start">Basic Room Price</ion-text>
+      <ion-text slot="end">{{'1510' | currency : 'INR'}}</ion-text>
+    </ion-item>
+    <ion-item>
+      <ion-text slot="start">Service Charge</ion-text>
+      <ion-text slot="end">{{'1510' | currency : 'INR'}}</ion-text>
+    </ion-item>
+    <ion-item>
+      <ion-text slot="start">Other Charge</ion-text>
+      <ion-text slot="end">{{'1510' | currency : 'INR'}}</ion-text>
+    </ion-item>
+    <ion-item>
+      <ion-text slot="start">SGST</ion-text>
+      <ion-text slot="end">{{'1510' | currency : 'INR'}}</ion-text>
+    </ion-item>
+    <ion-item>
+      <ion-text slot="start">CGST</ion-text>
+      <ion-text slot="end">{{'1510' | currency : 'INR'}}</ion-text>
+    </ion-item>
+    <ion-item>
+      <ion-text slot="start">IGST</ion-text>
+      <ion-text slot="end">{{'1510' | currency : 'INR'}}</ion-text>
+    </ion-item>
+    <ion-item>
+      <ion-text slot="start">Additional Mark-up</ion-text>
+      <ion-input slot="end">
+      </ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label slot="start">
+        TOTAL<br>
+        <ion-text>Total Price 1 Night with Taxes</ion-text>
+      </ion-label>
+      <ion-text slot="end">
+        {{'1510' | currency : 'INR'}}
+      </ion-text>
+    </ion-item>
+  </ion-list>
+
+</ion-content>
+
+<ion-footer>
+  <ion-row id="book-button">
+    <ion-col>
+      <ion-button>
+        <ion-text>Offline Request</ion-text>
+      </ion-button>
+    </ion-col>
+    <ion-col>
+      <ion-button>
+        <ion-text>Book Now</ion-text>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

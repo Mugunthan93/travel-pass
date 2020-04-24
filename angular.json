@@ -47,13 +47,26 @@
             ],
             "styles": [
               {
+                "input": "node_modules/bootstrap/scss/bootstrap.scss"
+              },
+              {
                 "input": "src/theme/variables.scss"
               },
               {
                 "input": "src/global.scss"
               }
             ],
-            "scripts": []
+            "scripts": [
+              {
+                "input": "node_modules/popper.js/dist/umd/popper.min.js"
+              },
+              {
+                "input": "node_modules/jquery/dist/jquery.min.js"
+              },
+              {
+                "input": "node_modules/bootstrap/dist/js/bootstrap.min.js"
+              }
+            ]
           },
           "configurations": {
             "production": {

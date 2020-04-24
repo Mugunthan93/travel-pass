@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-label>Special Request</ion-label>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-icon slot="start" name="alert-circle" mode="md"></ion-icon>
+    <ion-text>Special Request are subject to each hotel'savailability may be chargeable and can't be guaranteed</ion-text>
+  </ion-item>
+  <ion-list lines="full">
+    <ion-item *ngFor="let req of request">
+      <ion-text slot="start">{{req}}</ion-text>
+      <ion-checkbox slot="end"></ion-checkbox>
+    </ion-item>
+    <ion-text>Any Others Requests?</ion-text>
+    <ion-textarea rows="4" cols="15" 
+    placeholder="In case of any issues, Please get in touch with the  hotelier directly">
+    </ion-textarea>
+  </ion-list>
+  <ion-row class="ion-justify-content-center">
+    <ion-col size="4">
+      <ion-button expand="block">
+        <ion-text>Done</ion-text>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-content>
