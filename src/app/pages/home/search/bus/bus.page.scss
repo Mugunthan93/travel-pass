@@ -1,0 +1,99 @@
+@import "../../../../../style/util/variable.scss";
+
+ion-grid{
+    >ion-row{
+        margin-top: 15px;
+        margin-bottom: 15px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    >ion-row:nth-of-type(1){
+        >ion-col:nth-child(2){
+            >ion-button{
+                --opacity: 1;
+                --background: #{$transparent};
+
+                ion-icon {
+                    height: 25px;
+                    width: 100%;
+                }
+            }
+        }
+        >ion-col:nth-child(3){
+            >ion-row{
+                >ion-text, ion-label{
+                    margin-left: auto;
+                }
+            }
+        }
+    }
+    >ion-row:nth-of-type(2){
+        >ion-col{
+            max-width: fit-content;
+            >ion-row:nth-child(2) {
+                >ion-col{
+                    margin:auto;
+                }
+                >ion-col:first-child{
+                    max-width: fit-content;
+                    >ion-text{
+                        font-size: xx-large;
+                    }
+                }
+                >ion-col:last-child{
+                    margin-left: 5px;
+                }
+            }
+        }
+    }
+    >ion-row:nth-of-type(4){
+        >ion-col{
+            max-width: fit-content;
+            >ion-text{
+                padding-left: 8px;
+                padding-right: 8px;
+                padding-top: 4px;
+                padding-bottom: 4px;
+            }
+            >ion-text.selected{
+                border:1px solid grey;
+                border-radius:50%;
+                -moz-border-radius:50%;
+                -webkit-border-radius:50%;
+            }
+        }
+    }
+    >ion-row:nth-of-type(5){
+        >ion-col{
+            max-width: fit-content;
+            >ion-button{
+                width: -webkit-fill-available;
+                --opacity:1;
+                --background:#{$btn4-bg};
+                ion-text {
+                    color: white;
+                }
+            }
+        }
+    }
+}
+
+
+ion-card{
+    >ion-card-content{
+        >ion-row{
+            >ion-col{
+                max-width: fit-content;
+            }
+        }
+        >ion-row:last-child{
+            >ion-icon{
+                align-self: center;
+                font-size: large;
+            }
+            >ion-text{
+                margin-left:4px;
+            }
+        }
+    }
+}

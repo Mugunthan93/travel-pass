@@ -22,7 +22,7 @@ export class HomeTabPage implements OnInit {
   }
 
   searchBus() {
-    
+    this.router.navigate(['/', 'home', 'search', 'bus']);
   }
 
   searchHotel() {

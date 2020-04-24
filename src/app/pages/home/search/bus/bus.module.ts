@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { BusPageRoutingModule } from './bus-routing.module';
 
 import { BusPage } from './bus.page';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    BusPageRoutingModule
+    BusPageRoutingModule,
+    MatDividerModule
   ],
   declarations: [BusPage]
 })
