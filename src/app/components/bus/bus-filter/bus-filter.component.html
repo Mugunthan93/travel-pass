@@ -1,0 +1,90 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <ion-text>Sort & Filter</ion-text>
+    </ion-title>
+    <ion-title>
+      <ion-text>4 buses found</ion-text>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-segment value="sortby" (ionChange)="selectTab($event)">
+    <ion-segment-button value="sortby">
+      <ion-text>SORT BY</ion-text>
+    </ion-segment-button>
+    <ion-segment-button value="filter">
+      <ion-text>FILTER</ion-text>
+    </ion-segment-button>
+  </ion-segment>
+  <ion-list *ngIf="this.Tabs == 'sortby'">
+    <ion-item *ngFor="let item of sort">
+      <ion-label>{{item.name}}</ion-label>
+      <ion-select [placeholder]="item.selected == null ? 'None' : item.selected.name">
+        <ion-select-option *ngFor="let i of item.value" [value]="i.name">{{i.name}}</ion-select-option>
+        <ion-select-option value="none">None</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+  <ion-row *ngIf="this.Tabs == 'filter'">
+    <ion-col>
+      <ion-list *ngFor="let filter of filter1">
+        <ion-list-header>{{filter.name}}</ion-list-header>
+        <ion-item>
+          <ion-row>
+            <ion-col>
+              <ion-chip *ngFor="let item of filter.chips" (click)="chipSelection(item)">
+                <ion-label>{{item.name}}</ion-label>
+                <ion-icon name="close" *ngIf="item.selection"></ion-icon>
+              </ion-chip>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+  </ion-row>
+  <ion-row *ngIf="this.Tabs == 'filter'">
+    <ion-col size="12">
+      <ion-list *ngFor="let filter of filter2">
+        <ion-list-header>{{filter.name}}</ion-list-header>
+        <ion-row class="ion-justify-content-around">
+          <ion-col *ngFor="let item of filter.duration" (click)="chipSelection(item)">
+            <ion-chip>
+              <ion-row>
+                <ion-col>
+                  <ion-icon src="item.icon"></ion-icon>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-text>{{item.name}}</ion-text>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-text>{{item.value}}</ion-text>
+                </ion-col>
+              </ion-row>
+            </ion-chip>
+          </ion-col>
+        </ion-row>
+      </ion-list>
+    </ion-col>
+  </ion-row>
+</ion-content>
+
+<ion-footer>
+  <ion-row id="book-button">
+    <ion-col>
+      <ion-button>
+        <ion-text>Cancel</ion-text>
+      </ion-button>
+    </ion-col>
+    <ion-col>
+      <ion-button>
+        <ion-text>Apply</ion-text>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

@@ -1,0 +1,45 @@
+@import "../../../../style/util/variable.scss";
+
+
+ion-item{
+    --padding-end:16px;
+}
+
+ion-content{
+    >ion-row:last-child{
+        >ion-col{
+            max-width: fit-content;
+            >ion-list{
+                >ion-row{
+                    >ion-col{
+                        max-width: fit-content;
+                        ion-chip{
+                            display: flex;
+                            flex-direction: column;
+                            height: fit-content;
+                            width: fit-content;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+ion-footer {
+    >ion-row#book-button {
+        width: 100%;
+
+        >ion-col {
+            ion-button {
+                width: -webkit-fill-available;
+                --opacity: 1;
+                --background:#{$btn4-bg};
+
+                ion-text {
+                    color: white;
+                }
+            }
+        }
+    }
+}

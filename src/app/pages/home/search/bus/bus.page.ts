@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-bus',
@@ -10,7 +11,9 @@ export class BusPage implements OnInit {
   seats: any[];
   recent_searches: any[];
 
-  constructor() { }
+  constructor(
+    public router : Router
+  ) { }
 
   ngOnInit() {
     this.seats = [
@@ -31,6 +34,10 @@ export class BusPage implements OnInit {
       }
     );
     seat.selection = !seat.selection;
+  }
+
+  search() {
+    this.router.navigate(['/','home','result','bus']);
   }
 
 }

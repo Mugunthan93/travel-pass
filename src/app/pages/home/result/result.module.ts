@@ -18,6 +18,7 @@ import { AgmCoreModule } from '@agm/core';
 import { environment } from 'src/environments/environment';
 import { SimilarHotelsComponent } from 'src/app/components/hotel/similar-hotels/similar-hotels.component';
 import { MatDividerModule } from '@angular/material/divider';
+import { BusFilterComponent } from 'src/app/components/bus/bus-filter/bus-filter.component';
 
 
 @NgModule({
@@ -38,16 +39,16 @@ import { MatDividerModule } from '@angular/material/divider';
     FlightBaggageComponent,
     HotelFilterComponent,
     LocationComponent,
-    AboutHotelComponent,
-    HotelLocationComponent
+    HotelLocationComponent,
+    BusFilterComponent
   ],
   entryComponents: [
     TripFilterComponent,
     FlightBaggageComponent,
     HotelFilterComponent,
     LocationComponent,
-    AboutHotelComponent,
-    HotelLocationComponent
+    HotelLocationComponent,
+    BusFilterComponent
   ]
 })
 export class ResultPageModule {}

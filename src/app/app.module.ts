@@ -1,4 +1,4 @@
-import { NgModule, Injectable } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
@@ -22,7 +22,6 @@ import { NativeHttpService } from './services/http/native-http/native-http.servi
 import { BrowserHttpService } from './services/http/browser-http/browser-http.service';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
-import { GoogleMaps } from '@ionic-native/google-maps/ngx';
 
 
 @NgModule({
@@ -32,7 +31,11 @@ import { GoogleMaps } from '@ionic-native/google-maps/ngx';
   entryComponents: [],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot({
+      mode:'md',
+      scrollPadding: false,
+      scrollAssist: false
+    }),
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,

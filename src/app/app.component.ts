@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { environment } from 'src/environments/environment';
-import { Environment } from '@ionic-native/google-maps/ngx';
-import { Platform } from '@ionic/angular';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Platform, IonInput } from '@ionic/angular';
+import { Keyboard } from '@ionic-native/keyboard/ngx';
 
 @Component({
   selector: 'app-root',
@@ -10,13 +9,21 @@ import { Platform } from '@ionic/angular';
 })
 export class AppComponent implements OnInit, OnDestroy{
 
+  @ViewChild(IonInput,{static:true,read:IonInput}) input: IonInput;
+
   constructor(
-    public platform : Platform
+    public platform: Platform,
+    private keyboard : Keyboard
   ) {
   }
 
   async ngOnInit() {
     await this.platform.ready();
+  }
+
+  ionViewDidLoad(){
+    this.keyboard.disableScroll(true);
+    console.log(this.input);
   }
 
   ngOnDestroy() {
