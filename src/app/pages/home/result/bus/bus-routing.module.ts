@@ -7,6 +7,14 @@ const routes: Routes = [
   {
     path: '',
     component: BusPage
+  },
+  {
+    path: 'select-seat',
+    loadChildren: () => import('./select-seat/select-seat.module').then( m => m.SelectSeatPageModule)
+  },
+  {
+    path: 'select-drop-and-pickup',
+    loadChildren: () => import('./select-drop-and-pickup/select-drop-and-pickup.module').then( m => m.SelectDropAndPickupPageModule)
   }
 ];
 

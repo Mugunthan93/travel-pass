@@ -9,7 +9,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-card *ngFor="let item of result">
+  <ion-card *ngFor="let item of result" (click)="selectBus()">
     <ion-card-header>
       <ion-row class="ion-justify-content-between">
         <ion-col>

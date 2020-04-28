@@ -9,7 +9,7 @@ import { PassengerInfoComponent } from 'src/app/components/flight/passenger-info
 })
 export class RoundTripPage implements OnInit {
 
-  bookHeight: string = "45px";
+  bookHeight: string = "60px";
   passengers: any;
 
   constructor(

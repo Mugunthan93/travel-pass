@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { BusFilterComponent } from 'src/app/components/bus/bus-filter/bus-filter.component';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-bus',
@@ -12,7 +13,9 @@ export class BusPage implements OnInit {
   result: any[];
 
   constructor(
-    public modalCtrl : ModalController
+    public modalCtrl: ModalController,
+    public router: Router,
+    public activatedRoute : ActivatedRoute
   ) { }
 
   ngOnInit() {
@@ -25,6 +28,10 @@ export class BusPage implements OnInit {
     });
 
     return await modal.present();
+  }
+
+  selectBus() {
+    this.router.navigate(['./select-seat'], {relativeTo:this.activatedRoute});
   }
 
 }

@@ -26,6 +26,11 @@ ion-grid {
                 >::ng-deep span {
                     >ion-row {
                         width: 9em;
+                        >ion-col{
+                            >ion-row:last-child{
+                                min-width: 150px;
+                            }
+                        }
                     }
                 }
             }

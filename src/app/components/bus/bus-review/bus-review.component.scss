@@ -1,0 +1,49 @@
+@import "../../../../style/util/variable.scss";
+
+ion-content{
+    ion-card{
+        >ion-card-header {
+            >ion-row {
+                >ion-col {
+                    max-width: fit-content;
+                }
+        
+                >ion-col:first-child {
+                    ion-text {
+                        font-size: x-small;
+                    }
+                }
+        
+                >ion-col:last-child {
+                    ion-text {
+                        font-size: xx-small;
+                    }
+                }
+            }
+        }
+        >ion-card-content{
+            >ion-row{
+                >ion-col:first-child{
+                    max-width: fit-content;
+                    ion-text {
+                        font-size: x-small;
+                    }
+                }
+                >ion-button{
+                    --background:transparent;
+                }
+                >ion-text{
+                    color:#{$btn2-bg};
+                }
+            }
+        }
+    }
+}
+
+ion-list{
+    ion-item{
+        ion-row{
+            min-width: -webkit-fill-available;
+        }
+    }
+}

@@ -1,0 +1,117 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Bus Review</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-row class="ion-justify-content-between">
+        <ion-col>
+          <ion-card-title>
+            <ion-label>
+              Overall Rating
+            </ion-label>
+          </ion-card-title>
+        </ion-col>
+        <ion-col>
+          <ion-badge>3.1</ion-badge>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-between">
+        <ion-col>
+          <ion-card-subtitle>
+            <ion-text>
+              34+ rating
+            </ion-text>
+          </ion-card-subtitle>
+        </ion-col>
+        <ion-col>
+          <ion-text>Out of 5</ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row class="ion-justify-content-between" *ngFor="let review of reviews">
+        <ion-col>
+          <ion-row>
+            <ion-card-title>
+              <ion-label>
+                EXECELLENT
+              </ion-label>
+            </ion-card-title>
+          </ion-row>
+          <ion-row>
+            <ion-card-subtitle>
+              <ion-text>
+                11 rating
+              </ion-text>
+            </ion-card-subtitle>
+          </ion-row>
+        </ion-col>
+        <ion-col>
+          <ion-range></ion-range>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-row class="ion-justify-content-between">
+        <ion-col>
+          <ion-card-title>
+            <ion-label>
+              REVIEWS
+            </ion-label>
+          </ion-card-title>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-between">
+        <ion-col>
+          <ion-card-subtitle>
+            <ion-text>
+              13 Reviews
+            </ion-text>
+          </ion-card-subtitle>
+        </ion-col>
+        <ion-col>
+          <ion-label>sorted by :</ion-label>
+          <ion-text> MOST RECENT</ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row>
+        <ion-button size="small" fill="outline">All Reviews</ion-button>
+        <ion-button size="small" fill="outline">AC</ion-button>
+        <ion-button size="small" fill="outline">Blanket</ion-button>
+        <ion-button size="small" fill="outline">Boarding Point</ion-button>
+        <ion-text>Show More</ion-text>
+      </ion-row>
+      <ion-list lines="full">
+        <ion-item *ngFor="let review of reviews">
+          <ion-badge slot="start">3.1</ion-badge>
+          <ion-row>
+            <ion-col>
+              <ion-row>
+                <ion-label>Superb</ion-label>
+              </ion-row>
+              <ion-row>
+                <ion-text>Mugunthan</ion-text>
+                <ion-text>|</ion-text>
+                <ion-text>19-03-2020</ion-text>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
+
+<ion-footer>
+
+</ion-footer>
