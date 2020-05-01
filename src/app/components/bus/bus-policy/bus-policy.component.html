@@ -1,3 +1,67 @@
-<p>
-  bus-policy works!
-</p>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <ion-text>Bus Policies</ion-text>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-row slot="start">
+            <ion-label>Cancellation Time</ion-label>
+            <ion-text>before departure</ion-text>
+          </ion-row>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-row class="ion-justify-content-around">
+          <ion-col>
+            <ion-text>Penalty %</ion-text>
+          </ion-col>
+          <ion-col>
+            <ion-text>Penalty $</ion-text>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngFor="let policy of policies">
+      <ion-col>
+        <ion-item>
+          <ion-row slot="start">
+            <ion-text>{{ policy.title }}</ion-text>
+          </ion-row>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-row class="ion-justify-content-around">
+          <ion-col>
+            <ion-text>{{ policy.percentage + ' %' }}</ion-text>
+          </ion-col>
+          <ion-col>
+            <ion-text>{{ policy.value | currency : 'INR'}}</ion-text>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-item>
+        <ion-text>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sequi, nihil. Consequuntur exercitationem molestiae ipsum quis qui laboriosam nam dolor vel, velit similique placeat laudantium hic sed? Veniam animi doloremque aperiam.</ion-text>
+      </ion-item>
+    </ion-row>
+    <ion-row>
+      <ion-item>
+        <ion-text>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sequi, nihil. Consequuntur exercitationem
+          molestiae ipsum quis qui laboriosam nam dolor vel, velit similique placeat laudantium hic sed? Veniam animi
+          doloremque aperiam.</ion-text>
+      </ion-item>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-footer>
+
+</ion-footer>

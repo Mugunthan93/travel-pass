@@ -19,8 +19,7 @@ import { BusSeatlayoutComponent } from 'src/app/components/bus/bus-seatlayout/bu
     CommonModule,
     FormsModule,
     IonicModule,
-    SelectSeatPageRoutingModule,
-    MatGridListModule
+    SelectSeatPageRoutingModule
   ],
   declarations: [
     SelectSeatPage,
