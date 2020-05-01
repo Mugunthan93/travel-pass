@@ -1,0 +1,26 @@
+<ion-grid>
+  <ion-row>
+    <ion-col>
+      <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-label>Parveen Travels</ion-label>
+        </ion-card-title>
+        <ion-card-subtitle>
+          <ion-text>Non A/C Semi Sleeper</ion-text>
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-row *ngFor="let lowerseat of lowerSeats;let i = index" class="ion-justify-content-between"
+          [ngStyle]="{'height' : 'calc(100% / '+lowerSeats.length+')' }">
+          <ion-col *ngFor="let seat of lowerseat">
+            <ion-text>
+              {{seat ? seat.id : ''}}
+            </ion-text>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-grid>

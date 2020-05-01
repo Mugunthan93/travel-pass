@@ -12,6 +12,7 @@ import { BusPhotoComponent } from 'src/app/components/bus/bus-photo/bus-photo.co
 import { BusPolicyComponent } from 'src/app/components/bus/bus-policy/bus-policy.component';
 import { BusAmentiesComponent } from 'src/app/components/bus/bus-amenties/bus-amenties.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { BusSeatlayoutComponent } from 'src/app/components/bus/bus-seatlayout/bus-seatlayout.component';
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
     BusReviewComponent,
     BusPhotoComponent,
     BusPolicyComponent,
-    BusAmentiesComponent
+    BusAmentiesComponent,
+    BusSeatlayoutComponent
   ],
   entryComponents: [
     BusReviewComponent,
