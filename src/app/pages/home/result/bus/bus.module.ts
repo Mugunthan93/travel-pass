@@ -8,6 +8,7 @@ import { BusPageRoutingModule } from './bus-routing.module';
 
 import { BusPage } from './bus.page';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { MatDividerModule } from '@angular/material/divider';
     FormsModule,
     IonicModule,
     BusPageRoutingModule,
-    MatDividerModule
+    MatDividerModule,
+    MatExpansionModule
   ],
   declarations: [BusPage]
 })
