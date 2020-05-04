@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content>
-  <app-bus-seatlayout></app-bus-seatlayout>
+  <app-bus-seatlayout (seat)="selectedSeat($event)"></app-bus-seatlayout>
 </ion-content>
 
 <ion-footer>
@@ -22,6 +22,15 @@
       </ion-button>
       <ion-button (click)="busPolicy()">
         <ion-text>POLICIES</ion-text>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar *ngIf="continue">
+    <ion-buttons slot="end">
+      <ion-button (click)="pickupdrop()">
+        <ion-text>
+          Continue
+        </ion-text>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>

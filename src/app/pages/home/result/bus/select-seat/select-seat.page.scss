@@ -1,11 +1,13 @@
 
 
 ion-footer{
-    ion-toolbar{
+    ion-toolbar:first-child{
         --background: white;
         ion-buttons{
+            max-width: 100vw;
             ion-button{
-                max-width: 24vw;
+                min-width: 25%;
+                margin: 0px;
             }
         }
     }

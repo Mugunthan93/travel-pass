@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import * as _ from 'lodash';
-import { calcPossibleSecurityContexts } from '@angular/compiler/src/template_parser/binding_parser';
+import { ViewEncapsulation } from '@angular/compiler/src/core';
 
 export interface responseData {
   apiStatus: status
@@ -60,9 +60,11 @@ export interface seat{
 @Component({
   selector: 'app-bus-seatlayout',
   templateUrl: './bus-seatlayout.component.html',
-  styleUrls: ['./bus-seatlayout.component.scss'],
+  styleUrls: ['./bus-seatlayout.component.scss']
 })
 export class BusSeatlayoutComponent implements OnInit {
+
+  @Output() seat: EventEmitter<any> = new EventEmitter<any>(null);
 
   data: responseData = {
     apiStatus: {
@@ -1251,5 +1253,9 @@ export class BusSeatlayoutComponent implements OnInit {
     }
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
+  
+  selectedSeat() {
+    this.seat.emit(true);
+  }
 }

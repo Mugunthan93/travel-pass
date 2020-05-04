@@ -7,9 +7,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SelectDropAndPickupPage implements OnInit {
 
+  points: any[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  selectPoint: boolean = false;
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  selectpoint() {
+    this.selectPoint = true;
+  }
+
+  showDate(point, points) {
+    console.log(point,points);
+    return true;
   }
 
 }

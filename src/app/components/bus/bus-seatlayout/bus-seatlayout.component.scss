@@ -7,14 +7,17 @@ ion-grid{
                 margin: 0px;
                 height: 100%;
                 >ion-card-header{
-                    height: 15%;
+                    height: 10%;
                 }
                 >ion-card-content{
-                    height: 85%;
+                    height: 90%;
                     >ion-row{
                         >ion-col{
                             margin:auto;
-                            max-width: fit-content;
+                            max-width: 32px;
+                            >ion-icon{
+                                font-size: 64px;
+                            }
                         }
                     }
                 }

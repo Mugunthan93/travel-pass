@@ -5,5 +5,62 @@
 </ion-header>
 
 <ion-content>
-
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="11">
+        <ion-card class="tab">
+          <ion-card-content>
+            <ion-row>
+              <ion-col>
+                <ion-chip color="secondary">
+                  <ion-icon name="checkmark-circle"></ion-icon>
+                  <ion-text>Pickup Point</ion-text>
+                </ion-chip>
+              </ion-col>
+              <ion-col>
+                <ion-chip color="secondary">
+                  <ion-icon name="checkmark-circle"></ion-icon>
+                  <ion-text>Drop Point</ion-text>
+                </ion-chip>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-list lines="full">
+        <ion-row *ngFor="let point of points">
+          <ion-col>
+            <!-- <ion-row *ngIf="showDate(point,points)">
+              <ion-text>20-05-2020</ion-text>
+            </ion-row> -->
+            <ion-item (click)="selectpoint()">
+              <ion-text slot="start">14:30</ion-text>
+              <ion-row>
+                <ion-title>Rajapalayam</ion-title>
+                <ion-text>53A, Railway Feeder Road,Near Nadar High School,Rajapalayam</ion-text>
+              </ion-row>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-list>
+    </ion-row>
+  </ion-grid>
 </ion-content>
+
+<ion-footer *ngIf="selectPoint">
+  <ion-toolbar>
+    <ion-item>
+      <ion-row>
+        <ion-title>{{'1150' | currency : 'INR'}}</ion-title>
+        <ion-text>For 1 Seat</ion-text>
+      </ion-row>
+    </ion-item>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-text>Next</ion-text>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

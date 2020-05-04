@@ -13,10 +13,11 @@
       <ion-card-content>
         <ion-row *ngFor="let lowerseat of lowerSeats;let i = index" class="ion-justify-content-between"
           [ngStyle]="{'height' : 'calc(100% / '+lowerSeats.length+')' }">
-          <ion-col *ngFor="let seat of lowerseat">
-            <ion-text>
+          <ion-col *ngFor="let seat of lowerseat" (click)="selectedSeat()">
+            <ion-icon *ngIf="seat" src="../../../../assets/icons/bus/bus seats/s1.svg"></ion-icon>
+            <!-- <ion-text>
               {{seat ? seat.id : ''}}
-            </ion-text>
+            </ion-text> -->
           </ion-col>
         </ion-row>
       </ion-card-content>
