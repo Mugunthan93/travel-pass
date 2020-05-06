@@ -1,0 +1,204 @@
+@import "../../../../../style/util/variable.scss";
+@import "../../../../../style/util/mixins.scss";
+
+ion-content{
+    >ion-card:nth-child(1){
+        >mat-accordion{
+            >mat-expansion-panel{
+                >mat-expansion-panel-header{
+                    >::ng-deep span{
+                        flex-direction: column;
+                        >ion-title{
+                            padding-left:0px;
+                        }
+                    }
+                }
+                ::ng-deep .mat-expansion-panel-body{
+                    >ion-row{
+                        >ion-col{
+                            max-width: fit-content;
+                        }
+                        >ion-col:first-child{
+                            >ion-card-title{
+                                padding-left: 0px;
+                                font-size: small;
+                            }
+                        }
+                        >ion-col:last-child{
+                            margin-left:auto;
+                            >ion-card-title {
+                                padding-right: 0px;
+                                text-align: end;
+                                font-size: small;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    >ion-card:nth-child(2){
+        ion-card-content{
+            >ion-row:nth-of-type(1){
+                >ion-col:first-child{
+                    margin: auto 0;
+                    >ion-card-title{
+                        font-size: 12px;
+                    }
+                }
+                >ion-col:last-child{
+                    flex-direction: column;
+                    text-align: end;
+                    >ion-card-title {
+                        font-size: 12px;
+                    }
+                }
+            }
+            >ion-item{
+                --padding-start:0px;
+                height: auto;
+                line-height: normal;
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+            >ion-row:nth-of-type(2){
+                >ion-col{
+                    padding:0 2px;
+                    >ion-card-title {
+                        font-size: 12px;
+                        margin: 5px auto;
+                    }
+                    >ion-row{
+                        >ion-item {
+                            --padding-start: 0px;
+                            height: auto;
+                            line-height: normal;
+                            padding-top: 0px;
+                            padding-bottom: 0px;
+                        }
+                        >ion-segment {
+
+                            >ion-segment-button {
+                                min-height: 20px;
+                                height: 50px;
+
+                                white-space: normal;
+                                --padding-start: 0px;
+                                --padding-end: 0px;
+                                --background: white;
+                                --background-checked: #a2a2a2;
+                                --color-checked: #a2a2a2;
+
+                                >ion-text {
+                                    font-size: 7px;
+                                }
+
+                                @include middle-segment-button(grey);
+                            }
+
+                            ion-segment-button.segment-button-checked {
+                                >ion-text {
+                                    color: white;
+                                }
+                            }
+
+                            >ion-segment-button:first-child {
+                                @include first-segment-button(grey);
+                            }
+
+                            >ion-segment-button:last-child {
+                                @include last-segment-button(grey);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    >ion-card:nth-child(3){
+        >ion-card-header{
+            >ion-item{
+                --padding-start:0px;
+                >ion-row{
+                    max-width: fit-content;
+                    >ion-card-title:last-child{
+                        font-size: 12px;
+                    }
+                }
+            }
+        }
+        >ion-card-content{
+            >ion-card-title{
+                font-size: 12px;
+                margin: 5px auto;
+            }
+            >ion-item{
+                --padding-start:0px;
+                height: auto;
+                line-height: normal;
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+        }
+    }
+    >ion-card:nth-child(4) {
+        >ion-card-header {
+            >ion-item {
+                --padding-start: 0px;
+
+                >ion-row {
+                    max-width: fit-content;
+
+                    >ion-card-title:last-child {
+                        font-size: 12px;
+                    }
+                    >ion-text{
+                        align-self: flex-end;
+                        margin-left: 3px;
+                    }
+                }
+            }
+        }
+
+        >ion-card-content {
+            >ion-card-title {
+                font-size: 12px;
+                margin: 5px auto;
+            }
+
+            >ion-item {
+                --padding-start: 0px;
+                height: auto;
+                line-height: normal;
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+        }
+    }
+}
+
+ion-footer {
+    >ion-toolbar {
+        --background: #{$toolbar-bg};
+
+        >ion-item {
+            >ion-row {
+                flex-direction: column;
+
+                >ion-title {
+                    padding: 0px;
+                }
+            }
+        }
+
+        ion-button {
+            width: -webkit-fill-available;
+            --opacity: 1;
+            --background:#{$btn4-bg};
+
+            ion-text {
+                color: white;
+            }
+        }
+    }
+}
