@@ -1,0 +1,107 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>payment</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-card>
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header collapsedHeight="60px" expandedHeight="60px">
+            <ion-title>
+              Parveen Travels
+            </ion-title>
+            <ion-text>
+              Non AC Semi Sleeper(2+2)
+            </ion-text>
+          </mat-expansion-panel-header>
+          <ion-row class="ion-justify-content-between">
+            <ion-col>
+              <ion-card-title>
+                17:45 <ion-text>20 may</ion-text>
+              </ion-card-title>
+              <ion-text>
+                Adyar Perungalathur
+              </ion-text>
+            </ion-col>
+            <ion-col>
+              <ion-card-title>
+                17:45 <ion-text>20 may</ion-text>
+              </ion-card-title>
+              <ion-text>
+                Adyar Perungalathur
+              </ion-text>
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-justify-content-between">
+            <ion-col>
+              <ion-text>
+                Borading Point
+              </ion-text>
+              <ion-card-title>Tondiarpet Near Eci</ion-card-title>
+              <ion-card-title>Ph : 044 - 345755</ion-card-title>
+            </ion-col>
+            <ion-col>
+              <ion-text>
+                Time
+              </ion-text>
+              <ion-card-title>17:45 PM</ion-card-title>
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-justify-content-between">
+            <ion-col>
+              <ion-text>
+                Seat Selected
+              </ion-text>
+              <ion-card-title>1</ion-card-title>
+            </ion-col>
+          </ion-row>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </ion-card>
+    <ion-card>
+      <ion-card-header>
+        <ion-row class="ion-justify-content-between">
+          <ion-col>
+            <ion-text>Travellers Details</ion-text>
+            <ion-card-title>Marriappan</ion-card-title>
+          </ion-col>
+          <ion-col>
+            <ion-text>Seat Number</ion-text>
+            <ion-card-title>S12</ion-card-title>
+          </ion-col>
+        </ion-row>
+        <mat-divider></mat-divider>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <div *ngFor="let fare of fares">
+            <ion-item>
+              <ion-row slot="start">
+                <ion-text>{{fare.name}}</ion-text>
+              </ion-row>
+              <ion-row slot="end">
+                <ion-text>{{ fare.value | currency : 'INR'}}</ion-text>
+              </ion-row>
+            </ion-item>
+            <mat-divider *ngIf="fares.indexOf(fare) == fares.length - 2"></mat-divider>
+          </div>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-item>
+      <ion-label>Travellerspass Wallet</ion-label>
+      <ion-checkbox slot="start"></ion-checkbox>
+    </ion-item>
+    <ion-buttons slot="end">
+      <ion-button (click)="bookBus()">
+        <ion-text>Book Now</ion-text>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
