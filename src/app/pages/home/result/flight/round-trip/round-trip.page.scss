@@ -80,17 +80,17 @@ ion-grid {
     }
 }
 
-ion-segment {
-    border-bottom:1px solid #{$text-color};
-}
+// ion-segment {
+//     border-bottom:1px solid #{$text-color};
+// }
 
-ion-segment-button {
-    @include flex-col-grid;
+// ion-segment-button {
+//     @include flex-col-grid;
 
-    ion-text {
-        font-size: xx-small;
-    }
-}
+//     ion-text {
+//         font-size: xx-small;
+//     }
+// }
 
 app-result-list {
     @include flex-col-grid;
@@ -260,3 +260,31 @@ ion-footer {
 //         }
 //     }
 // }
+
+
+ion-row{
+    height: -webkit-fill-available;
+    max-width: calc(100vw + 4px);
+    >app-result-list:first-child{
+        border:2px solid grey;
+        transition: width 20ms linear 0s ;
+        &.depart-shrink {
+            width: 30vw;
+        }
+
+        &.depart-grow {
+            width: 70vw;
+        }
+    }
+    >app-result-list:last-child {
+        border: 2px solid grey;
+        transition: width 20ms linear 0s;
+
+        &.return-grow {
+            width: 70vw;
+        }
+        &.return-shrink {
+            width:30vw;
+        }
+    }
+}

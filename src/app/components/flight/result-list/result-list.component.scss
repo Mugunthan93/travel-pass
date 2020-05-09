@@ -1,11 +1,6 @@
 @import "../../../../style/util/variable.scss";
 @import "../../../../style/util/mixins.scss";
 
-@function flight-row-height($row){
-    $row-height:100/$row;
-    @return #{$row-height}+"%";
-}
-
 ion-content{
     ion-row {
         width: 100%;
@@ -22,6 +17,7 @@ ion-content{
     
                     >mat-expansion-panel-header {
                         @include flex-col-grid;
+                        max-height: fit-content;
                         padding: 0px;
     
                         >::ng-deep span {
@@ -30,20 +26,25 @@ ion-content{
     
                             >ion-row {
                                 width: 100%;
-                                height: 100%;
+                                height: fit-content;
+
+                                ion-text{
+                                    font-size: calc(1vw + 6px);
+                                    white-space: nowrap;
+                                }
     
                                 >ion-col {
-                                    height:100%;
+                                    max-width: fit-content !important;
+                                    margin: 5px 0px;
 
+                                    ion-img {
+                                        width: 25px;
+                                        height: 25px;
+                                    }
                                     >ion-row {
                                         width: 100%;
     
                                         ion-col {
-                                            ion-img:first-child {
-                                                margin-top: auto;
-                                                width: 100% !important;
-                                                height: 50% !important;
-                                            }
     
                                             ion-text:first-child {
                                                 text-align: center;
@@ -57,12 +58,10 @@ ion-content{
                                         }
                                     }
                                 }
-    
-                                >ion-col:last-child {
-                                    ion-icon {
-                                        margin: auto;
-                                    }
-                                }
+                            }
+                            >ion-button{
+                                margin:0px;
+                                height: min-content;
                             }
                         }
                     }

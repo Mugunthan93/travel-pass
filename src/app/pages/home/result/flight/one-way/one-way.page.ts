@@ -8,7 +8,8 @@ export interface flightList{
   accordian : string,
   item? : {
     val : string
-  }[]
+  }[],
+  state:string
 }
 
 @Component({
@@ -19,23 +20,22 @@ export interface flightList{
 export class OneWayPage implements OnInit {
 
   flightList: flightList[] = [
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }] }
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state: 'default' },
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state: 'default'}
   ];
   panelOpenState = false;
   multipanel = true;

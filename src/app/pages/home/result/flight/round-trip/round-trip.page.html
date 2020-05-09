@@ -9,7 +9,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-grid id="list">
+<!-- <ion-grid id="list">
   <ion-row>
     <ion-col>
       <ion-row>
@@ -37,7 +37,6 @@
               <ion-label>
                 {{'Departure' | uppercase}}
                 <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-                <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
               </ion-label>
             </ion-segment-button>
           </ion-col>
@@ -46,7 +45,6 @@
               <ion-label>
                 {{'Arrival' | uppercase}}
                 <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-                <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
               </ion-label>
             </ion-segment-button>
           </ion-col>
@@ -55,7 +53,6 @@
               <ion-label>
                 {{'Duration' | uppercase}}
                 <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-                <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
               </ion-label>
             </ion-segment-button>
           </ion-col>
@@ -64,7 +61,6 @@
               <ion-label>
                 {{'Price' | uppercase}}
                 <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-                <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
               </ion-label>
             </ion-segment-button>
           </ion-col>
@@ -81,7 +77,13 @@
       </ion-row>
     </ion-col>
   </ion-row>
-</ion-grid>
+</ion-grid> -->
+<ion-row #content>
+  <app-result-list class="depart-shrink" #departure [flightList]="departList" [selectedFlights]="selectedFlight"
+    (getFlightValue)="currentFlight($event)"></app-result-list>
+  <app-result-list class="return-grow" #return [flightList]="returnList" [selectedFlights]="selectedFlight"
+    (getFlightValue)="currentFlight($event)"></app-result-list>
+</ion-row>
 
 <ion-footer *ngIf="selectedDepartureFlight !== null || selectedReturnFlight !== null">
   <ion-toolbar>

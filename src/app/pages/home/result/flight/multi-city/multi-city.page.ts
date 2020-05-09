@@ -12,14 +12,16 @@ import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-
 export class MultiCityPage implements OnInit {
 
   flightList : flightList[] = [
-    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}]},
-    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}]},
-    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}]},
-    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}]},
-    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}]},
-    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}]},
-    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}]}
-
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }, { val: "item2" }, { val: "item3" }], state: 'default' },
+    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}], state:'default'},
+    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}], state:'default'},
+    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}], state:'default'},
+    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}], state:'default'},
+    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}], state:'default'},
+    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}], state:'default'},
+    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}], state:'default'},
+    {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}], state:'default'},
+    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }, { val: "item2" }, { val: "item3" }], state: 'default' }
   ];
   panelOpenState = false;
   multipanel = true;

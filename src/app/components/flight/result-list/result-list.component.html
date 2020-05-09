@@ -2,43 +2,41 @@
   <ion-row>
     <ion-col>
       <mat-accordion multi="false">
-        <mat-expansion-panel [id]="" [hideToggle]="true"  *ngFor="let item of flightList">
-          <mat-expansion-panel-header [collapsedHeight]="flightHeight" [expandedHeight]="flightHeight" #panel
-          [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}">
-          <ion-row>
-            <ion-col (click)="selectFlight(panel,item,$event)" size="11">
-              <ion-row class="ion-justify-content-between" *ngFor="let i of item.item" [ngStyle]="{'height':itemList+'px'}">
-                <ion-col size="2">
-                  <ion-img src="../../../../../../assets/site-image/D7.gif"></ion-img>
-                  <ion-text>Air Asia</ion-text>
-                </ion-col>
-                <ion-col size="3">
-                    <ion-text>15:40 - 17:50</ion-text>
-                    <ion-text>Economy</ion-text>
-                </ion-col>
-                <ion-col size="2">
-                  <ion-text>
-                    02h 10m
-                  </ion-text>
-                  <ion-text>
-                    non stop
-                  </ion-text>
-                </ion-col>
-                <ion-col size="3">
-                  <ion-text>
-                    $ 4800
-                  </ion-text>
-                  <ion-text>
-                    7 seat left
-                  </ion-text>
-                </ion-col>
-              </ion-row>
+        <mat-expansion-panel [hideToggle]="true"  *ngFor="let item of flightList" #panel>
+          <mat-expansion-panel-header [collapsedHeight]="'fit-content'" [expandedHeight]="'fit-content'"
+          (click)="selectFlight(panel,item,$event)">
+          <ion-row class="ion-justify-content-around"
+            [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}"
+            *ngFor="let i of item.item" [ngStyle]="{'height':'fit-content'}">
+            <ion-col size="2">
+              <ion-img src="../../../../../../assets/site-image/D7.gif"></ion-img>
+              <ion-text>Air Asia</ion-text>
             </ion-col>
-            <ion-col size="1">
-              <ion-icon src="../../../../../../assets/ionicons/chevron-up-outline.svg"></ion-icon>
-              <!-- <ion-icon src="../../../../../../assets/ionicons/chevron-down-outline.svg"></ion-icon> -->
+            <ion-col size="3">
+                <ion-text>15:40 - 17:50</ion-text>
+                <ion-text>Economy</ion-text>
+            </ion-col>
+            <ion-col size="2">
+              <ion-text>
+                02h 10m
+              </ion-text>
+              <ion-text>
+                non stop
+              </ion-text>
+            </ion-col>
+            <ion-col size="3">
+              <ion-text>
+                $ 4800
+              </ion-text>
+              <ion-text>
+                7 seat left
+              </ion-text>
             </ion-col>
           </ion-row>
+          <ion-button slot="icon-only" class="panel-button" expand="full" size="small" (click)="rotate(item)">
+            <ion-icon [@rotatedState]="item.state" src="../../../../../../assets/ionicons/chevron-up-outline.svg">
+            </ion-icon>
+          </ion-button>
           </mat-expansion-panel-header>
           <ion-row>
             <ion-text>

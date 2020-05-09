@@ -1,20 +1,39 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { flightList } from 'src/app/pages/home/result/flight/one-way/one-way.page';
-import { MatExpansionPanelHeader, matExpansionAnimations } from '@angular/material/expansion';
+import { MatExpansionPanelHeader, matExpansionAnimations, MatExpansionPanel } from '@angular/material/expansion';
 import { ModalController } from '@ionic/angular';
 import { FlightBaggageComponent } from '../flight-baggage/flight-baggage.component';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-result-list',
   templateUrl: './result-list.component.html',
   styleUrls: ['./result-list.component.scss'],
-  animations: [matExpansionAnimations.bodyExpansion],
+  animations: [
+    matExpansionAnimations.bodyExpansion,
+    trigger('rotatedState', [
+      state('default', style({ transform: 'rotate(0)' })),
+      state('rotated', style({ transform: 'rotate(180deg)' })),
+      transition('rotated => default', animate('225ms ease-out')),
+      transition('default => rotated', animate('225ms ease-in'))
+    ])
+  ],
 })
 export class ResultListComponent implements OnInit,OnChanges {
 
   @Input() flightList : flightList[];
   @Input() selectedFlights : any;
   @Output() getFlightValue: EventEmitter<any> = new EventEmitter<any>(null);
+
+  rotate(item: flightList) {
+    console.log(item);
+    if (item.state == 'default') {
+      item.state = 'rotated'
+    }
+    else if (item.state == 'rotated') {
+      item.state = 'default'
+    }
+  }
   
   selectedFlight = null;
   flightHeight: any;
@@ -29,55 +48,35 @@ export class ResultListComponent implements OnInit,OnChanges {
 
   ngOnInit() {
     console.log(this.flightList);
-      this.flightList.forEach(
-        (el) => {
-          if (el.item) {
-            this.flightHeight = el.item.length * this.itemList + "px";
-          }
-          else {
-            this.flightHeight = this.itemList + "px";
-          }
-      });
   }
 
-  selectFlight(panel : MatExpansionPanelHeader, flight: any, evt: Event) {
+  selectFlight(panel: MatExpansionPanel, flight: any, evt: Event) {
     
-    if (!this._isExpansionIndicator(evt.target)) {
+    if ((evt.target as HTMLElement).classList.contains('panel-button')) {
+      panel.expanded ? panel.open() : panel.close();
+    }
+    else {
+      panel.expanded ? panel.close() : panel.open();
+      if (this.selectedFlights == null) {
 
-      evt.stopPropagation();
+        this.selectedFlights = flight;
+        this.getFlightValue.emit(flight);
 
-      if (!this._isExpansionIndicator(evt.target)) {
+      }
+      else if (this.selectedFlights !== null) {
 
-        evt.stopPropagation();
-  
-        if (this.selectedFlights == null) {
-  
+        if (this.selectedFlights == flight) {
+          this.selectedFlights = null;
+          this.getFlightValue.emit(null);
+        }
+        else if (this.selectedFlights !== flight) {
+
           this.selectedFlights = flight;
           this.getFlightValue.emit(flight);
-  
         }
-        else if (this.selectedFlights !== null) {
-  
-          if(this.selectedFlights == flight){
-            this.selectedFlights = null;
-            this.getFlightValue.emit(null);
-          }
-          else if(this.selectedFlights !== flight){
-  
-            this.selectedFlights = flight;
-            this.getFlightValue.emit(flight);
-          }
-        }
-  
       }
-
     }
 
-  }
-
-  private _isExpansionIndicator(target : EventTarget) : boolean {
-    const expansionIndicatorClass = 'expandcol';
-    return ((target as HTMLElement).classList && (target as HTMLElement).classList.contains(expansionIndicatorClass) );
   }
 
   async showBaggage(flight){
