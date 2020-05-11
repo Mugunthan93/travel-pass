@@ -80,9 +80,9 @@
 </ion-grid> -->
 <ion-row #content>
   <app-result-list class="depart-shrink" #departure [flightList]="departList" [selectedFlights]="selectedFlight"
-    (getFlightValue)="currentFlight($event)"></app-result-list>
+    (getFlightValue)="currentFlight($event)" [flightType]="'departure'" (getsColumns)="departuredColumns($event)"></app-result-list>
   <app-result-list class="return-grow" #return [flightList]="returnList" [selectedFlights]="selectedFlight"
-    (getFlightValue)="currentFlight($event)"></app-result-list>
+    (getFlightValue)="currentFlight($event)" [flightType]="'return'" (getsColumns)="returnedColumns($event)"></app-result-list>
 </ion-row>
 
 <ion-footer *ngIf="selectedDepartureFlight !== null || selectedReturnFlight !== null">

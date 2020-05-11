@@ -269,11 +269,11 @@ ion-row{
         border:2px solid grey;
         transition: width 20ms linear 0s ;
         &.depart-shrink {
-            width: 30vw;
+            width: 35vw;
         }
 
         &.depart-grow {
-            width: 70vw;
+            width: 65vw;
         }
     }
     >app-result-list:last-child {
@@ -281,10 +281,10 @@ ion-row{
         transition: width 20ms linear 0s;
 
         &.return-grow {
-            width: 70vw;
+            width: 65vw;
         }
         &.return-shrink {
-            width:30vw;
+            width:35vw;
         }
     }
 }

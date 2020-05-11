@@ -18,5 +18,5 @@ ion-content {
     --background: url(#{$content-background});
     --background-repeat: no-repeat;
     --background-size: cover;
-    --offset-bottom:200px;
+    // --offset-bottom:200px !important;
 }

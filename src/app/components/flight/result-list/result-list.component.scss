@@ -31,30 +31,46 @@ ion-content{
                                 ion-text{
                                     font-size: calc(1vw + 6px);
                                     white-space: nowrap;
+                                    margin: auto;
                                 }
     
                                 >ion-col {
-                                    max-width: fit-content !important;
                                     margin: 5px 0px;
+                                    height:auto;
 
                                     ion-img {
+                                        margin:auto;
                                         width: 25px;
                                         height: 25px;
                                     }
-                                    >ion-row {
+
+                                    &:nth-child(2){
                                         width: 100%;
-    
-                                        ion-col {
-    
-                                            ion-text:first-child {
-                                                text-align: center;
-                                                margin-top: auto;
-                                            }
-    
-                                            ion-text:last-child {
-                                                text-align: center;
-                                                margin-bottom: auto;
-                                            }
+                                        opacity:1;
+                                        transition:all 20ms linear 0s;
+                                        &.col-grow {
+                                            width: 100%;
+                                            opacity: 1;
+                                        }
+
+                                        &.col-shrink {
+                                            max-width: 0px;
+                                            opacity: 0;
+                                        }
+                                    }
+
+                                    &:nth-child(3) {
+                                        width: 100%;
+                                        opacity:1;
+                                        transition:all 20ms linear 0s;
+                                        &.col-grow {
+                                            width: 100%;
+                                            opacity: 1;
+                                        }
+
+                                        &.col-shrink {
+                                            max-width: 0px;
+                                            opacity: 0;
                                         }
                                     }
                                 }

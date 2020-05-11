@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, QueryList, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
 import { Animation, ModalController, AnimationController, GestureController, Gesture, GestureDetail } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { flightList } from '../one-way/one-way.page';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-round-trip',
   templateUrl: './round-trip.page.html',
@@ -44,12 +45,20 @@ export class RoundTripPage implements OnInit {
   @ViewChild('content', { static: true, read: ElementRef }) contentEl: ElementRef;
   @ViewChild('departure', { static: true, read: ElementRef }) departureEl: ElementRef;
   @ViewChild('return', { static: true, read: ElementRef }) returnEl: ElementRef;
+  departureColumns: QueryList<ElementRef>;
+  returnColumns: QueryList<ElementRef>;
 
   departureGrow: Animation;
   returnShrink: Animation;
 
   departureShrink: Animation;
   returnGrow: Animation;
+
+  depColumnGrow: Animation;
+  depColumnShrink: Animation;
+
+  reColumnGrow: Animation;
+  reColumnShrink: Animation;
 
   swipeLeft: Animation;
   swipeRight: Animation;
@@ -68,7 +77,6 @@ export class RoundTripPage implements OnInit {
   ngOnInit() {
     this.flightList = this.departList;
     this.animation();
-    console.log(this.departureEl);
   }
 
   animation() {
@@ -100,7 +108,8 @@ export class RoundTripPage implements OnInit {
     this.swipeLeft = this.animationCtrl.create()
       .duration(1000)
       .iterations(Infinity)
-      .addAnimation([this.departureShrink, this.returnGrow])
+      .addAnimation([this.departureShrink, this.returnGrow]);
+    
 
     this.gesture = this.gestureCtrl.create({
       el: this.contentEl.nativeElement,
@@ -108,11 +117,22 @@ export class RoundTripPage implements OnInit {
       threshold: 10,
       gestureName: 'square-drag',
       direction: 'x',
+      onStart:(ev) => this.onStart(ev),
       onMove: (ev) => this.onMove(ev),
       onEnd: (ev) => this.onEnd(ev)
     })
 
     this.gesture.enable(true);
+  }
+
+  onStart(ev: GestureDetail) {
+    console.log(ev);
+    if ((ev.deltaX > ev.deltaY) && ev.deltaX > 10) {
+      this.swipeRight.play();
+    }
+    else if ((ev.deltaX < ev.deltaY) && ev.deltaX < -10) {
+      this.swipeLeft.play();
+    }
   }
 
   onMove(ev: GestureDetail) {
@@ -186,5 +206,50 @@ export class RoundTripPage implements OnInit {
     else if(this.listType == 'return'){
       this.selectedReturnFlight = flight;
     }
+  }
+
+  departuredColumns(evt: QueryList<ElementRef>) {
+    console.log(evt);
+    this.departureColumns = evt;
+    this.departureColumns.forEach(
+      (column) => {
+        this.depColumnGrow = this.animationCtrl.create()
+          .addElement(column.nativeElement)
+          .afterAddClass(['col-grow'])
+          .afterRemoveClass(['col-shrink']);
+
+        this.depColumnShrink = this.animationCtrl.create()
+          .addElement(column.nativeElement)
+          .afterAddClass(['col-shrink'])
+          .afterRemoveClass(['col-grow']);
+        
+        this.swipeLeft.addAnimation([this.depColumnShrink]);
+        this.swipeRight.addAnimation([this.depColumnGrow]);
+      }
+    );
+    console.log(this.swipeLeft,this.swipeRight);
+  }
+
+  returnedColumns(evt: QueryList<ElementRef>) {
+    console.log(evt);
+    this.returnColumns = evt;
+    this.returnColumns.forEach(
+      (column) => {
+        this.reColumnGrow = this.animationCtrl.create()
+          .addElement(column.nativeElement)
+          .afterAddClass(['col-grow'])
+          .afterRemoveClass(['col-shrink']);
+
+        this.reColumnShrink = this.animationCtrl.create()
+          .addElement(column.nativeElement)
+          .afterAddClass(['col-shrink'])
+          .afterRemoveClass(['col-grow']);
+        
+        this.swipeLeft.addAnimation([this.reColumnGrow]);
+        this.swipeRight.addAnimation([this.reColumnShrink]);
+      }
+    );
+    console.log(this.swipeLeft,this.swipeRight);
+
   }
 }

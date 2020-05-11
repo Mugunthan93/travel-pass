@@ -8,15 +8,15 @@
           <ion-row class="ion-justify-content-around"
             [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}"
             *ngFor="let i of item.item" [ngStyle]="{'height':'fit-content'}">
-            <ion-col size="2">
+            <ion-col>
               <ion-img src="../../../../../../assets/site-image/D7.gif"></ion-img>
               <ion-text>Air Asia</ion-text>
             </ion-col>
-            <ion-col size="3">
+            <ion-col #colref [ngClass]="{'col-grow': flightType == 'return', 'col-shrink': flightType == 'departure'}">
                 <ion-text>15:40 - 17:50</ion-text>
                 <ion-text>Economy</ion-text>
             </ion-col>
-            <ion-col size="2">
+            <ion-col #colref [ngClass]="{'col-grow': flightType == 'return', 'col-shrink': flightType == 'departure'}">
               <ion-text>
                 02h 10m
               </ion-text>
@@ -24,7 +24,7 @@
                 non stop
               </ion-text>
             </ion-col>
-            <ion-col size="3">
+            <ion-col>
               <ion-text>
                 $ 4800
               </ion-text>

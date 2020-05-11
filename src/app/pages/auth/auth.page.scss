@@ -1,58 +1,29 @@
 @import "../../../style/util/mixins.scss";
 @import "../../../style/util/variable.scss";
 
-ion-grid,
-ion-row,
-ion-col {
-    @include flex-col-grid;
-}
+ion-content{
+    >ion-img{
+        width: 220px;
+        height: 70px;
+        margin: 6vh auto;
+    }
+    >ion-tabs {
+        position: relative;
+        max-height: 450px;
+        >ion-tab-bar {
+            --background: #{$transparent};
+            border: 2px solid #{$selected-bg};
+            --border:#{$selected-bg};
+            margin: auto;
+            height: 45px;
+            min-width: 75vw;
 
-ion-grid{
-    >ion-row{
-        >ion-col{
-            >ion-row:first-child{
-                height:15%;
-            }
-            >ion-row:last-child{
-                height:85%;
+            >ion-tab-button {
+                --color :#{$text-color};
+                &[aria-selected="true"] {
+                    background: #{$selected-bg};
+                }
             }
         }
     }
-}
-
-
-ion-img{
-    margin-top:auto;
-    margin-bottom:auto;
-    height: 50px;
-}
-
-ion-tab-bar {
-    // --color: #{$transparent};
-    --background: #{$transparent};
-
-    margin-left: 15px;
-    margin-right: 15px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    height: 6vh;
-}
-
-ion-tab-button {
-    --color :#{$text-color};
-    // --color-focused :
-    // --color-selected :
-    // --ripple-color :
-    // --background :
-    // --background-focused : ;
-    // --background-focused-opacity :
-    // --padding-bottom : ;
-    // --padding-end : ;
-    // --padding-start : ;
-    // --padding-top : ;
-
-    &[aria-selected="true"] {
-        background: #{$selected-bg};
-    }
-
 }

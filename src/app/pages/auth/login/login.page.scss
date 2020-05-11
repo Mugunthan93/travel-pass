@@ -1,38 +1,14 @@
 @import '../../../../style/util/mixins.scss';
 
-ion-grid,
-ion-row,
-ion-col,
 form {
-    @include flex-col-grid;
-}
+    padding: 0px 10px;
+    min-height: -webkit-fill-available;
 
-ion-grid{
-    margin-left:15px;
-    margin-right:15px;
-    >ion-row{
-        ion-col{
-            >ion-row{
-                height:20%;
-            }
-            >ion-row:last-child{
-                ion-col{
-                    margin-left:auto;
-                    margin-right:auto;
-                }
-            }
-        }
+    >ion-item {
+        margin: 20px auto;
     }
-}
 
-ion-button{
-    --background: #A6D2AE !important;
-}
-
-ion-icon {
-    padding-right:10px;
-}
-
-ion-item{
-    --inner-padding-end:10px;
+    >ion-button {
+        --background: #A6D2AE !important;
+    }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, QueryList, ElementRef, ViewChild, ViewChildren, AfterViewInit } from '@angular/core';
 import { flightList } from 'src/app/pages/home/result/flight/one-way/one-way.page';
 import { MatExpansionPanelHeader, matExpansionAnimations, MatExpansionPanel } from '@angular/material/expansion';
 import { ModalController } from '@ionic/angular';
@@ -19,11 +19,35 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
     ])
   ],
 })
-export class ResultListComponent implements OnInit,OnChanges {
+export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
+  
+  @ViewChildren('colref', { read: ElementRef }) columns: QueryList<ElementRef>;
 
   @Input() flightList : flightList[];
-  @Input() selectedFlights : any;
+  @Input() selectedFlights: any;
+  @Input() flightType: string;
   @Output() getFlightValue: EventEmitter<any> = new EventEmitter<any>(null);
+  @Output() getsColumns: EventEmitter<QueryList<ElementRef>> = new EventEmitter<QueryList<ElementRef>>(true);
+  
+  selectedFlight = null;
+  flightHeight: any;
+  itemList: number = 60;
+
+  constructor(
+    public modalCtrl : ModalController
+  ) {
+  }
+
+  ngOnInit() {
+    console.log(this.flightList);
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
+  }
+
+  ngAfterViewInit(): void {
+    this.getsColumns.emit(this.columns);
+  }
 
   rotate(item: flightList) {
     console.log(item);
@@ -33,21 +57,6 @@ export class ResultListComponent implements OnInit,OnChanges {
     else if (item.state == 'rotated') {
       item.state = 'default'
     }
-  }
-  
-  selectedFlight = null;
-  flightHeight: any;
-  itemList: number = 60;
-  constructor(
-    public modalCtrl : ModalController
-  ) {
-  }
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
-  }
-
-  ngOnInit() {
-    console.log(this.flightList);
   }
 
   selectFlight(panel: MatExpansionPanel, flight: any, evt: Event) {
