@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonSelect, ModalController, PickerController } from '@ionic/angular';
-import { BookingService } from 'src/app/services/booking/booking.service';
 import { CityModalComponent } from 'src/app/components/shared/city-modal/city-modal.component';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
 import { PassengerModalComponent } from 'src/app/components/flight/passenger-modal/passenger-modal.component';
@@ -22,7 +21,6 @@ export class RoundTripPage implements OnInit {
     public modalCtrl: ModalController,
     public pickrCtrl: PickerController,
     public fb: FormBuilder,
-    public booking: BookingService
   ) { }
 
   ngOnInit() {

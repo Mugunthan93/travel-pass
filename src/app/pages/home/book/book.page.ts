@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { BookingService, booking } from 'src/app/services/booking/booking.service';
 
 @Component({
   selector: 'app-book',
@@ -8,13 +7,10 @@ import { BookingService, booking } from 'src/app/services/booking/booking.servic
 })
 export class BookPage implements OnInit {
 
-  booking : booking;
   bookData : any;
 
   constructor(
-    public bookingService: BookingService
   ) {
-    this.booking = this.bookingService.getBooking;
    }
 
   ngOnInit() {

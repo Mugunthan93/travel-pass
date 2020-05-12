@@ -4,10 +4,7 @@ import { ModalController, PickerController, IonSelect, Platform } from '@ionic/a
 import { CityModalComponent } from 'src/app/components/shared/city-modal/city-modal.component';
 import { PassengerModalComponent } from 'src/app/components/flight/passenger-modal/passenger-modal.component';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
-import { Select, Store } from '@ngxs/store';
-import { SearchState } from 'src/app/stores/search.state';
-import { Observable } from 'rxjs';
-import { UpdateForm } from '@ngxs/form-plugin';
+import { Store } from '@ngxs/store';
 import { Router } from '@angular/router';
 
 @Component({
@@ -19,8 +16,6 @@ export class OneWayPage implements OnInit {
 
   oneWaySearch: FormGroup;
   @ViewChild('select', { static: true }) select: IonSelect;
-
-  @Select(SearchState.oneWayState) formState: Observable<any>;
 
   constructor(
     public modalCtrl: ModalController,
@@ -40,20 +35,6 @@ export class OneWayPage implements OnInit {
       traveller : this.fb.control(null),
       class : this.fb.control(null)
     });
-
-    this.oneWaySearch.valueChanges.subscribe(
-      (value) => {
-        console.log(value);
-
-        this.store.dispatch(new UpdateForm({
-          value: this.oneWaySearch.value,
-          dirty: this.oneWaySearch.dirty,
-          status: this.oneWaySearch.status,
-          errors: this.oneWaySearch.errors,
-          path: "search.oneWaySearch"
-        }));
-      }
-    );
   }
 
   async selectCity(field) {

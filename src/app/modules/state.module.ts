@@ -1,31 +1,27 @@
 import { NgModule } from '@angular/core';
-import { CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NgxsModule } from '@ngxs/store';
-import { AppState } from 'src/app/stores/app.state';
+import { AppState } from '../stores/app.state';
 import { environment } from 'src/environments/environment';
-import { NgxsStoragePluginModule, STORAGE_ENGINE } from '@ngxs/storage-plugin';
+import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { NgxsFormPluginModule } from '@ngxs/form-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
-import { SearchState } from 'src/app/stores/search.state';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
     NgxsModule.forRoot([
-      AppState,
-      SearchState
+      AppState
     ], { developmentMode: !environment.production }
     ),
     NgxsStoragePluginModule.forRoot({
       key: [
-        'App',
-        'App.user.id',
-        'App.user',
-        'search'
-      ]
+        'App.user'
+      ],
+      storage: 1
     }),
     NgxsFormPluginModule.forRoot(),
     NgxsRouterPluginModule.forRoot(),
@@ -39,4 +35,5 @@ import { SearchState } from 'src/app/stores/search.state';
     })
   ]
 })
-export class StateManagementModule { }
+  
+export class StateModule { }

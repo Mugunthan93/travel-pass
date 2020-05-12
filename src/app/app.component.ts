@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Platform, IonInput } from '@ionic/angular';
-import { Keyboard } from '@ionic-native/keyboard/ngx';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Platform } from '@ionic/angular';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 
 @Component({
   selector: 'app-root',
@@ -9,27 +9,35 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 })
 export class AppComponent implements OnInit, OnDestroy{
 
-  @ViewChild(IonInput,{static:true,read:IonInput}) input: IonInput;
-
   constructor(
     public platform: Platform,
-    private keyboard : Keyboard
+    private androidPermissions: AndroidPermissions
   ) {
   }
 
   async ngOnInit() {
-    await this.platform.ready();
+    console.log(this.androidPermissions.PERMISSION);
   }
 
-  ionViewDidLoad(){
-    this.keyboard.disableScroll(true);
-    console.log(this.input);
+  async writeAccess() {
+    try {
+      const writeExtStorage = this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE;
+      const permission = await this.androidPermissions.hasPermission(writeExtStorage);
+      if (!permission) {
+        await this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE);
+      }
+    }
+    catch (error) {
+      console.log(error);
+    }
+    finally {
+
+    }
   }
 
   ngOnDestroy() {
     
   }
-
 
 }
 

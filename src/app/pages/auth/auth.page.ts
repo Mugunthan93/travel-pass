@@ -66,8 +66,4 @@ export class AuthPage implements OnInit {
     }
   }
 
-  authTab(evt){
-
-  }
-
 }

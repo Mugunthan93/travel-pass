@@ -1,9 +1,6 @@
 import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
 import { AuthService } from '../services/auth/auth.service';
-import { map, tap } from 'rxjs/operators';
 import { Navigate } from '@ngxs/router-plugin';
-import { Observable } from 'rxjs';
-import { HTTPResponse } from '@ionic-native/http/ngx';
 
 export interface App {
     user : any
@@ -39,7 +36,7 @@ export class AppState {
 
     @Selector()
     static isUserAuthenticated(state: App): boolean {
-        return !!state.user.id;
+        return !!state.user;
     }
 
     @Action(Login)

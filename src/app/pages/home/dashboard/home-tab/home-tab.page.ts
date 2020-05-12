@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { BookingService } from 'src/app/services/booking/booking.service';
-import { MenuController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 @Component({

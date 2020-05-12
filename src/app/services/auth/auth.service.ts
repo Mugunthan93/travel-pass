@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
 import { NativeHttpService } from '../http/native-http/native-http.service';
-import { HTTPResponse, HTTP } from '@ionic-native/http/ngx';
+import { HTTPResponse } from '@ionic-native/http/ngx';
 import { Platform } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService extends NativeHttpService {
+export class AuthService {
 
   constructor(
     public platform:Platform,
-    public http : HTTP
+    public http : NativeHttpService
   ) {
-    super(platform,http);
   }
 
   login(email: string, password: string) : Promise<HTTPResponse> {
@@ -20,19 +19,19 @@ export class AuthService extends NativeHttpService {
       username : email,
       password : password
     }
-      this.setAuth(email, password);
-      return this.post("/users/login", login);
+      this.http.setAuth(email, password);
+      return this.http.post("/users/login", login);
   }
 
   logout() : Promise<HTTPResponse> {
-      return this.post("/users/logout");
+      return this.http.post("/users/logout");
   }
 
   searchCity(reqCity: string) : Promise<HTTPResponse> {
     const param: { [key: string]: string | string[] } = {
       "city": reqCity
     }
-    return this.get("/airlines/tboairlinecities", param);
+    return this.http.get("/airlines/tboairlinecities", param);
   }
 
 }
