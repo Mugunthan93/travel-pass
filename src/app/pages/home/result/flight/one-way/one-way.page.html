@@ -1,56 +1,26 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>flight</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="back()">
+        <ion-icon src="../../../../assets/ionicons/arrow-back-outline.svg"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-text>Result Page</ion-text>
+    </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="filter()">
         <ion-icon src="../../../../../assets/ionicons/md-filter-outline.svg"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
+  <app-result-sorting [buttons]="sortButtons"></app-result-sorting>
 </ion-header>
 
 <ion-grid>
   <ion-row>
     <ion-col>
       <ion-row>
-        <ion-segment (ionChange)="sorting($event)">
-        <ion-col size="3">
-          <ion-segment-button value="departure" layout="icon-end">
-            <ion-label>
-              {{'Departure' | uppercase}}
-              <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-              <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
-            </ion-label>
-          </ion-segment-button>
-        </ion-col>
-        <ion-col size="3">
-          <ion-segment-button value="arrival" layout="icon-end">
-            <ion-label>
-              {{'Arrival' | uppercase}}
-              <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-              <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
-            </ion-label>
-          </ion-segment-button>
-        </ion-col>
-        <ion-col size="3">
-            <ion-segment-button value="duration" layout="icon-end">
-              <ion-label>
-                {{'Duration' | uppercase}}
-              <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-              <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
-              </ion-label>
-            </ion-segment-button>
-        </ion-col>
-        <ion-col size="3">
-            <ion-segment-button value="price" layout="icon-end">
-              <ion-label>
-                {{'Price' | uppercase}}
-              <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-              <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
-              </ion-label>
-            </ion-segment-button>
-        </ion-col>
-        </ion-segment>
       </ion-row>
       <ion-row>
         <ion-col>

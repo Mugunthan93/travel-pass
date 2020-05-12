@@ -2,70 +2,37 @@
 @import "../../../style/util/variable.scss";
 @import "../../../style/component/item.scss";
 
-ion-grid,
-ion-row,
-ion-col,
-app-custom-stepper,
-app-add-branch,
-app-add-user,
-app-add-profile,
-form {
-    @include flex-col-grid;
-}
-
-ion-grid {
-    >ion-row:first-child{
-        >ion-col {
-            >ion-row:first-child {
-                height: 10%;
-            }
-
-            >ion-row:last-child {
-                height: 90%;
-                >ion-col {
-                    >ion-row:first-child {
-                        height: 10%;
-                    }
-
-                    >ion-row:last-child {
-                        height: 90%;
-                    }
+ion-content{
+    text-align: center;
+    >ion-img{
+        width: 220px;
+        height: 70px;
+        margin: 1vh auto;
+    }
+    >ion-text{
+        font-size: 20px;
+    }
+    >app-custom-stepper{
+        form, div, app-add-branch, app-add-user, app-add-profile{
+            width: -webkit-fill-available;
+            >button{
+                width: -webkit-fill-available;
+                >ion-button {
+                    --background: #A6D2AE !important;
                 }
             }
-        }
-    }
-}
-
-form{
-    ion-row{
-        ion-col{
-            @include grid-col-padding(2em);
-            padding-top:0px !important;
-            ion-item {
-                height:calc(100vh/4);
+            >ion-item{
+                --padding-start:0px;
+                >ion-img{
+                    width: 24px;
+                    height: 24px;
+                }
             }
-            ion-img{
-                width:24px;
-                height:24px;
-            }
-            ion-input{
-                --placeholder-font-weight: lighter;
-                font-size: 1em;
+            >ion-searchbar, ion-searchbar:focus{
+                text-align-last: justify;
             }
         }
     }
-}
-
-ion-img {
-    margin-top: auto;
-    margin-bottom: auto;
-    height: 50px;
-}
-
-ion-text{
-    margin-top: auto;
-    margin-bottom: auto;
-    font-size:3.5vh;
 }
 
 ion-fab-button{

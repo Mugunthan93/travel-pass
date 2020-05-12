@@ -2,80 +2,39 @@
 @import "../../../../style/util/variable.scss";
 @import "../../../../style/component/item.scss";
 
+form{
+    height: 100%;
+    >ion-card{
+        height: inherit;
+        background: transparent;
+        margin:0px;
+        >ion-card-header{
 
-ion-button {
-    margin-top: 20px;
-}
-
-form {
-    @include flex-col-grid;
-    >ion-row {
-        @include flex-col-grid;
-        >ion-col {
-            @include flex-col-grid;
-            ion-card {
-                @include flex-col-grid;
-                padding-bottom:5px;
-                ion-card-header {
-                    height:10%;
-                    padding:3px;
-                    ion-row{
-                        @include flex-col-grid;
-                        ion-text{
-                            margin:auto;
-                            font-size:large;
-                        }
+        }
+        >ion-card-content{
+            >ion-item{
+                --padding-start:0px;
+            }
+            >ion-radio-group{
+                display: flex;
+                flex-wrap: wrap;
+                >ion-item{
+                    width:100px;
+                    --padding-start: 0px;
+                    --padding-end: 15px;
+                    >ion-radio{
+                        margin-right: 4px;
+                        --border-radius: 20px;
+                        --inner-border-radius: 20px;
                     }
                 }
-                ion-card-content {
-                    height:90%;
-                    padding:3px;
+            }
+            >ion-row{
+                >ion-col{
+                    >ion-button {
+                        --background: #A6D2AE !important;
 
-                    ion-item {
-                        height: calc(100vh/15);
-                        >ion-radio-group {
-                            width: -webkit-fill-available;
-                            @include flex-col-grid;
-                            padding:4px;
-                            >ion-row {
-                                ion-col {
-                                    ion-item{
-                                        --padding-start:0px;
-                                        ion-radio{
-                                            margin-right:4px;
-                                            width:12px;
-                                            height: 12px;
-                                        }
-                                        ion-label{
-                                            font-size: 2.8vw;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    ion-item:last-of-type{
-                        --padding-start:0px;
-                    }
-
-                    ion-img {
-                        width: 24px;
-                        height: 24px;
-                    }
-
-                    ion-input {
-                        --placeholder-font-weight: lighter;
-                        font-size: 1em;
-                    }
-
-                    >ion-row:last-child{
-                        ion-col {
-                            @include grid-col-padding(0px);
-                        }
-
-                        ion-text {
-                            font-size: 1em;
+                        >ion-text {
                             color: white;
                         }
                     }

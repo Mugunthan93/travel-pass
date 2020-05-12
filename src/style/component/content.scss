@@ -19,4 +19,6 @@ ion-content {
     --background-repeat: no-repeat;
     --background-size: cover;
     // --offset-bottom:200px !important;
+    max-width:100vw;
+    max-height: 100vh;
 }

@@ -7,38 +7,23 @@ ion-button {
 }
 
 form {
-    ion-row {
-        ion-col {
-            @include grid-col-padding(2em);
-            padding-top: 0px !important;
-
-            ion-item {
-                height: calc(100vh/10);
-            }
-
-            ion-img {
-                width: 24px;
-                height: 24px;
-            }
-
-            ion-input {
-                --placeholder-font-weight: lighter;
-                font-size: 1em;
-            }
-            ion-row{
-                ion-col{
-                    @include grid-col-padding(0px);
-                }
-                ion-text{
-                    font-size:1em;
+    >ion-item {
+        --padding-start:0px;
+        >ion-input {
+        }
+        >ion-img {
+            width: 24px;
+            height: 24px;
+        }
+    }
+    >ion-row{
+        ion-col{
+            >ion-button{
+                --background: #A6D2AE !important;
+                >ion-text{
                     color:white;
                 }
             }
         }
     }
-}
-
-ion-img {
-    width: 24px;
-    height: 24px;
 }

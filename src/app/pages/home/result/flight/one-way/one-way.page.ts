@@ -19,6 +19,14 @@ export interface flightList{
 })
 export class OneWayPage implements OnInit {
 
+  sortButtons: any[] = [
+    { value: 'departure', state: 'default' },
+    { value: 'arrival', state: 'default' },
+    { value: 'duration', state: 'default' },
+    { value: 'price', state: 'default' }
+  ];
+  
+
   flightList: flightList[] = [
     { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state: 'default' },
     { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},

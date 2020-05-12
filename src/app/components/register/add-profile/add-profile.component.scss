@@ -2,46 +2,12 @@
 @import "../../../../style/util/variable.scss";
 @import "../../../../style/component/item.scss";
 
-
-ion-button {
-    margin-top: 20px;
-}
-
-form {
-    ion-row {
-        ion-col {
-            @include grid-col-padding(2em);
-            padding-top: 0px !important;
-
-            ion-item {
-                height: calc(100vh/15);
-            }
-
-            ion-img {
-                width: 24px;
-                height: 24px;
-            }
-
-            ion-input {
-                --placeholder-font-weight: lighter;
-                font-size: 1em;
-            }
-
-            ion-row {
-                ion-col {
-                    @include grid-col-padding(0px);
-                }
-
-                ion-text {
-                    font-size: 1em;
-                    color: white;
-                }
-            }
-        }
+form{
+    >ion-item{
+        --padding-start:0px;
     }
-}
-
-ion-img {
-    width: 24px;
-    height: 24px;
+    >ion-button {
+        width: -webkit-fill-available;
+        --background: #A6D2AE !important;
+    }
 }

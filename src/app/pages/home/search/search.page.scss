@@ -1,9 +1,5 @@
 @import "../../../../style/util/mixins.scss";
 
-ion-title {
-    padding-left: 0px;
-}
-
 ion-grid{
     @include flex-col-grid;
     // --ion-grid-padding:8px !important;

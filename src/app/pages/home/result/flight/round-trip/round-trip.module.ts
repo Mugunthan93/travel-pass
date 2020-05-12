@@ -8,6 +8,7 @@ import { RoundTripPageRoutingModule } from './round-trip-routing.module';
 
 import { RoundTripPage } from './round-trip.page';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
+import { ResultSortingComponent } from 'src/app/components/shared/result-sorting/result-sorting.component';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { SharedModule } from 'src/app/modules/shared/shared.module';
     SharedModule
   ],
   declarations: [
-    RoundTripPage
+    RoundTripPage,
+    ResultSortingComponent
   ]
 })
 export class RoundTripPageModule {}

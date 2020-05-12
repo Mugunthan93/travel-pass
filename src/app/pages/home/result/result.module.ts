@@ -11,13 +11,9 @@ import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-
 import { FlightBaggageComponent } from 'src/app/components/flight/flight-baggage/flight-baggage.component';
 import { HotelFilterComponent } from 'src/app/components/hotel/hotel-filter/hotel-filter.component';
 import { LocationComponent } from 'src/app/components/hotel/location/location.component';
-import { AboutHotelComponent } from 'src/app/components/hotel/about-hotel/about-hotel.component';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { HotelLocationComponent } from 'src/app/components/hotel/hotel-location/hotel-location.component';
 import { AgmCoreModule } from '@agm/core';
 import { environment } from 'src/environments/environment';
-import { SimilarHotelsComponent } from 'src/app/components/hotel/similar-hotels/similar-hotels.component';
-import { MatDividerModule } from '@angular/material/divider';
 import { BusFilterComponent } from 'src/app/components/bus/bus-filter/bus-filter.component';
 
 

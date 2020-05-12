@@ -4,40 +4,13 @@
 ion-grid {
     @include flex-col-grid;
     margin:0px;
-    >ion-row:first-child{
-        @include flex-col-grid;
-        height:auto;
-        >ion-segment{
-            ion-col{
-                ion-segment-button {
-                    min-width: calc(100% / 4);
-
-                    ion-label {
-                        font-size:.70em;
-                    }
-                }
-            }
-        }
-    }
-    >ion-row:last-child{
+    >ion-row{
         @include flex-col-grid;
         flex-grow: 1;
             >app-result-list{
                 @include flex-col-grid;
             }
         }
-}
-
-ion-segment {
-    border-bottom:1px solid #{$text-color};
-}
-
-ion-segment-button {
-    @include flex-col-grid;
-
-    ion-text {
-        font-size:.70em;
-    }
 }
 
 ion-footer{

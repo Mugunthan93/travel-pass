@@ -2,30 +2,48 @@
 @import "../../../../style/util/mixins.scss";
 
 ion-grid{
-    @include flex-col-grid;
-    margin-left:0px;
-    margin-right:0px;
-    padding:5px;
+    height: fit-content;
+    margin: auto 10px;
     >ion-row:first-child{
-        >ion-segment {
-            ion-col {
-                ion-segment-button {
-                    min-width: calc(100% / 4);
+         >ion-segment {
+            max-width: 90vw;
+            margin: 10px 0px;
+            min-height: auto;
+            height: 30px;
 
-                    --padding-bottom:auto;
-                    --padding-end:auto;
-                    --padding-start:auto;
-                    --padding-top:auto;
+             >ion-segment-button {
+                min-width: 16vw;
+                min-height: max-content;
+                width: 16vw;
+                white-space: normal;
+                --padding-start: 0px;
+                --padding-end: 25px;
+                --background: transparent;
+                --background-checked:transparent;
+                --color-checked:transparent;
+                 >ion-text {
+                     font-size: 7px;
+                 }
 
-                    ion-label {
-                        font-size:0.75em;
-                        width:21vw;
+                 >ion-icon {
+                     font-size: 12px;
+                         margin: auto;
+                 }
+
+                 &.segment-button-checked{
+                     --background-checked:#{$selected-bg};
+                    >ion-icon{
+                        color:white !important;
                     }
-                }
-            }
-        }
+                    >ion-text{
+                        color:white;
+                    }
+                 }
+             }
+         }
     }
     >ion-row:last-child{
-        @include flex-col-grid;
+        min-height: 450px;
+        >ng-template {}
     }
 }

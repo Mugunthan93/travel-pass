@@ -1,44 +1,26 @@
 <ion-grid cdkStepper labelPosition="bottom">
   <ion-row>
     <ion-segment (ionChange)="sorting($event)" cdkStepHeader>
-      <ion-col size="3">
-        <ion-segment-button value="departure" layout="icon-start" cdkStepperNext (click)="onClick(0)">
-          <ion-label>
-            {{'Company' | uppercase}}
-            <ion-icon name="briefcase" slot="start"></ion-icon>
-          </ion-label>
-        </ion-segment-button>
-      </ion-col>
-      <ion-col size="3">
-        <ion-segment-button value="arrival" layout="icon-start" cdkStepperNext (click)="onClick(1)">
-          <ion-label>
-            {{'Branch' | uppercase}}
-            <ion-icon name="git-branch"></ion-icon>
-          </ion-label>
-        </ion-segment-button>
-      </ion-col>
-      <ion-col size="3">
-        <ion-segment-button value="duration" layout="icon-start" cdkStepperNext (click)="onClick(2)">
-          <ion-label>
-            {{'People' | uppercase}}
-            <ion-icon name="people-circle-outline"></ion-icon>
-          </ion-label>
-        </ion-segment-button>
-      </ion-col>
-      <ion-col size="3">
-        <ion-segment-button value="price" layout="icon-start" cdkStepperNext (click)="onClick(3)">
-          <ion-label>
-            {{'Profile' | uppercase}}
-            <ion-icon name="person"></ion-icon>
-          </ion-label>
-        </ion-segment-button>
-      </ion-col>
+      <ion-segment-button value="departure" layout="icon-start" cdkStepperNext (click)="onClick(0)">
+        <ion-text>{{'Company' | uppercase}}</ion-text>
+        <ion-icon name="briefcase" slot="start"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="arrival" layout="icon-start" cdkStepperNext (click)="onClick(1)">
+        <ion-text>{{'Branch' | uppercase}}</ion-text>
+        <ion-icon name="git-branch"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="duration" layout="icon-start" cdkStepperNext (click)="onClick(2)">
+        <ion-text>{{'People' | uppercase}}</ion-text>
+        <ion-icon name="people-circle-outline"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="price" layout="icon-start" cdkStepperNext (click)="onClick(3)">
+        <ion-text>{{'Profile' | uppercase}}</ion-text>
+        <ion-icon name="person"></ion-icon>
+      </ion-segment-button>
     </ion-segment>
   </ion-row>
   <ion-row>
-    <ion-col size="12">
-      <ng-template [ngTemplateOutlet]="selected.content">
-      </ng-template>
-    </ion-col>
+    <ng-template [ngTemplateOutlet]="selected.content">
+    </ng-template>
   </ion-row>
 </ion-grid>

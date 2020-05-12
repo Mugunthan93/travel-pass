@@ -1,242 +1,187 @@
 <ion-content>
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <ion-row>
-          <ion-col>
-            <ion-img src="../../../../assets/ng-img/logo.jpeg"></ion-img>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-row>
-              <ion-col class="ion-text-center">
-                <ion-text>
-                  Register
-                </ion-text>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col>
-                <app-custom-stepper [linear]="false" [selected]="" [selectedIndex]="" #stepper>
-                  <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="companyForm">
-                    <form [formGroup]="companyForm" (ngSubmit)="onSubmit()">
-                      <ion-row>
-                        <ion-col>
-                          <ion-item>
-                            <ion-icon src="../../../assets/icons/name.svg" slot="start"></ion-icon>
-                            <ion-input type="text" formControlName="company_name" placeholder="Company Name" required>
-                            </ion-input>
-                          </ion-item>
-                          <!-- <ion-label 
-                        *ngIf="loginForm.controls['email'].touched && 
-                              loginForm.controls['email'].dirty && 
-                              loginForm.controls['email'].hasError('required')" 
-                              color="danger">
-                              Email Address Required
-                      </ion-label>
-                      <ion-label 
-                        *ngIf="loginForm.controls['email'].touched && 
-                              loginForm.controls['email'].dirty && 
-                              loginForm.controls['email'].hasError('pattern')" 
-                              color="danger">
-                              Invalid Email Address
-                      </ion-label> -->
-
-                          <ion-item>
-                            <ion-icon src="../../../assets/icons/address.svg" slot="start"></ion-icon>
-                            <ion-input type="text" formControlName="company_address" placeholder="Company Address">
-                            </ion-input>
-                          </ion-item>
-                          <!-- <ion-label 
-                        *ngIf="loginForm.controls['password'].touched && 
-                              loginForm.controls['password'].dirty && 
-                              loginForm.controls['password'].hasError('required')" 
-                              color="danger">
-                              Password Required
-                      </ion-label> -->
-
-                          <ion-item>
-                            <ion-icon src="../../../assets/icons/name.svg" slot="start"></ion-icon>
-                            <ion-input type="text" formControlName="auth_sign_name"
-                              placeholder="Authorized Signatory Name">
-                            </ion-input>
-                          </ion-item>
-                          <!-- <ion-label 
-                        *ngIf="loginForm.controls['password'].touched && 
-                              loginForm.controls['password'].dirty && 
-                              loginForm.controls['password'].hasError('required')" 
-                              color="danger">
-                              Password Required
-                      </ion-label> -->
-
-                          <ion-item>
-                            <ion-icon src="../../../assets/icons/password.svg" slot="start"></ion-icon>
-                            <ion-input type="text" formControlName="company_phone_number"
-                              placeholder="Company Phone Number">
-                            </ion-input>
-                          </ion-item>
-                          <!-- <ion-label 
-                        *ngIf="loginForm.controls['password'].touched && 
-                              loginForm.controls['password'].dirty && 
-                              loginForm.controls['password'].hasError('required')" 
-                              color="danger">
-                              Password Required
-                      </ion-label> -->
-
-                          <ion-item>
-                            <ion-img src="../../../assets/icons/GST.jpg" slot="start"></ion-img>
-                            <ion-input type="text" formControlName="gst_number" placeholder="GST Number"></ion-input>
-                          </ion-item>
-                          <!-- <ion-label 
-                        *ngIf="loginForm.controls['password'].touched && 
-                              loginForm.controls['password'].dirty && 
-                              loginForm.controls['password'].hasError('required')" 
-                              color="danger">
-                              Password Required
-                      </ion-label> -->
-
-                          <ion-item>
-                            <ion-icon src="../../../../assets/ng-img/icons/mail.svg" slot="start"></ion-icon>
-                            <ion-input type="text" formControlName="gst_email" placeholder="GST Email"></ion-input>
-                          </ion-item>
-                          <!-- <ion-label 
-                        *ngIf="loginForm.controls['password'].touched && 
-                              loginForm.controls['password'].dirty && 
-                              loginForm.controls['password'].hasError('required')" 
-                              color="danger">
-                              Password Required
-                      </ion-label> -->
-
-                          <ion-item>
-                            <ion-icon name="phone-portrait" slot="start"></ion-icon>
-                            <ion-input type="text" formControlName="gst_phone_number" placeholder="GST Phone Number">
-                            </ion-input>
-                          </ion-item>
-                          <!-- <ion-label 
-                        *ngIf="loginForm.controls['password'].touched && 
-                              loginForm.controls['password'].dirty && 
-                              loginForm.controls['password'].hasError('required')" 
-                              color="danger">
-                              Password Required
-                      </ion-label> -->
-
-                          <ion-item>
-                            <ion-icon name="git-branch" slot="start"></ion-icon>
-                            <ion-input type="text" formControlName="branch" placeholder="Branch"></ion-input>
-                          </ion-item>
-                          <!-- <ion-label 
-                        *ngIf="loginForm.controls['password'].touched && 
-                              loginForm.controls['password'].dirty && 
-                              loginForm.controls['password'].hasError('required')" 
-                              color="danger">
-                              Password Required
-                      </ion-label> -->
-                          <button type="button" cdkStepperNext>
-                            <ion-button expand="block" fill="solid">
-                              Next
-                            </ion-button>
-                          </button>
-                        </ion-col>
-                      </ion-row>
-                    </form>
-                  </cdk-step>
-                  <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="branchForm">
-                    <app-add-branch *ngIf="showBranchForm" (closeBranch)="closeBranch($event)"></app-add-branch>
-                    <ion-content *ngIf="!showBranchForm">
-                      <ion-grid class="list">
-                        <ion-row>
-                          <ion-col size="12">
-                            <ion-searchbar></ion-searchbar>
-                          </ion-col>
-                        </ion-row>
-                        <ion-row>
-                          <ion-col size="12" class="ion-align-self-center">
-                            <ion-text *ngIf="user.length == 0" class="ion-text-center">Add atleast one Branch
-                            </ion-text>
-                            <ion-list *ngIf="user.length > 0">
-                              <ion-item lines="none">
-                              </ion-item>
-                            </ion-list>
-                          </ion-col>
-                        </ion-row>
-                      </ion-grid>
-                      <ion-fab vertical="bottom" horizontal="center" slot="fixed">
-                        <button type="submit" (click)="addBranch()">
-                          <ion-fab-button>
-                            <ion-icon name="add"></ion-icon>
-                          </ion-fab-button>
-                        </button>
-                      </ion-fab>
-                      <ion-fab vertical="bottom" horizontal="start" slot="fixed">
-                        <button type="button" cdkStepperPrevious>
-                          <ion-fab-button>
-                            <ion-icon name="arrow-back"></ion-icon>
-                          </ion-fab-button>
-                        </button>
-                      </ion-fab>
-                      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-                        <button type="submit" cdkStepperNext>
-                          <ion-fab-button>
-                            <ion-icon name="arrow-forward"></ion-icon>
-                          </ion-fab-button>
-                        </button>
-                      </ion-fab>
-                    </ion-content>
-                  </cdk-step>
-                  <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="userForm">
-                    <app-add-user *ngIf="showUserForm" (closeUser)="closeUser($event)"></app-add-user>
-                    <ion-content *ngIf="!showUserForm">
-                      <ion-grid>
-                        <ion-row>
-                          <ion-col size="12">
-                            <ion-searchbar></ion-searchbar>
-                          </ion-col>
-                        </ion-row>
-                        <ion-row>
-                          <ion-col size="12" class="ion-align-self-center">
-                            <ion-text *ngIf="user.length == 0" class="ion-text-center">Add atleast one user
-                            </ion-text>
-                            <ion-list *ngIf="user.length > 0">
-                              <ion-item lines="none">
-                              </ion-item>
-                            </ion-list>
-                          </ion-col>
-                        </ion-row>
-                      </ion-grid>
-                      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-                        <button type="button" cdkStepperNext>
-                          <ion-fab-button>
-                            <ion-icon name="arrow-forward"></ion-icon>
-                          </ion-fab-button>
-                        </button>
-                      </ion-fab>
-                      <ion-fab vertical="bottom" horizontal="center" slot="fixed">
-                        <button type="button" (click)="addUser()">
-                          <ion-fab-button>
-                            <ion-icon name="add"></ion-icon>
-                          </ion-fab-button>
-                        </button>
-                      </ion-fab>
-                      <ion-fab vertical="bottom" horizontal="start" slot="fixed">
-                        <button type="button" cdkStepperPrevious>
-                          <ion-fab-button>
-                            <ion-icon name="arrow-back"></ion-icon>
-                          </ion-fab-button>
-                        </button>
-                      </ion-fab>
-                    </ion-content>
-                  </cdk-step>
-                  <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="profileForm">
-                    <app-add-profile (closeProfile)="finishSignup()"></app-add-profile>
-                  </cdk-step>
-                </app-custom-stepper>
-              </ion-col>
-            </ion-row>
-          </ion-col>
-        </ion-row>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <ion-img src="../../../../assets/ng-img/logo.jpeg"></ion-img>
+  <ion-text>
+    Register
+  </ion-text>
+  <app-custom-stepper [linear]="false" [selected]="" [selectedIndex]="" #stepper>
+    <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="companyForm">
+      <form [formGroup]="companyForm" (ngSubmit)="onSubmit()">
+        <ion-item>
+          <ion-icon src="../../../assets/icons/name.svg" slot="start"></ion-icon>
+          <ion-input type="text" formControlName="company_name" placeholder="Company Name" required>
+          </ion-input>
+        </ion-item>
+        <!-- <ion-label 
+          *ngIf="loginForm.controls['email'].touched && 
+                loginForm.controls['email'].dirty && 
+                loginForm.controls['email'].hasError('required')" 
+                color="danger">
+                Email Address Required
+        </ion-label>
+        <ion-label 
+          *ngIf="loginForm.controls['email'].touched && 
+                loginForm.controls['email'].dirty && 
+                loginForm.controls['email'].hasError('pattern')" 
+                color="danger">
+                Invalid Email Address
+        </ion-label> -->
+        <ion-item>
+          <ion-icon src="../../../assets/icons/address.svg" slot="start"></ion-icon>
+          <ion-input type="text" formControlName="company_address" placeholder="Company Address">
+          </ion-input>
+        </ion-item>
+        <!-- <ion-label 
+          *ngIf="loginForm.controls['password'].touched && 
+                loginForm.controls['password'].dirty && 
+                loginForm.controls['password'].hasError('required')" 
+                color="danger">
+                Password Required
+        </ion-label> -->
+        <ion-item>
+          <ion-icon src="../../../assets/icons/name.svg" slot="start"></ion-icon>
+          <ion-input type="text" formControlName="auth_sign_name"
+            placeholder="Authorized Signatory Name">
+          </ion-input>
+        </ion-item>
+        <!-- <ion-label 
+          *ngIf="loginForm.controls['password'].touched && 
+                loginForm.controls['password'].dirty && 
+                loginForm.controls['password'].hasError('required')" 
+                color="danger">
+                Password Required
+        </ion-label> -->
+        <ion-item>
+          <ion-icon src="../../../assets/icons/password.svg" slot="start"></ion-icon>
+          <ion-input type="text" formControlName="company_phone_number"
+            placeholder="Company Phone Number">
+          </ion-input>
+        </ion-item>
+        <!-- <ion-label 
+          *ngIf="loginForm.controls['password'].touched && 
+                loginForm.controls['password'].dirty && 
+                loginForm.controls['password'].hasError('required')" 
+                color="danger">
+                Password Required
+        </ion-label> -->
+        <ion-item>
+          <ion-img src="../../../assets/icons/GST.jpg" slot="start"></ion-img>
+          <ion-input type="text" formControlName="gst_number" placeholder="GST Number"></ion-input>
+        </ion-item>
+        <!-- <ion-label 
+          *ngIf="loginForm.controls['password'].touched && 
+                loginForm.controls['password'].dirty && 
+                loginForm.controls['password'].hasError('required')" 
+                color="danger">
+                Password Required
+        </ion-label> -->
+        <ion-item>
+          <ion-icon src="../../../../assets/ng-img/icons/mail.svg" slot="start"></ion-icon>
+          <ion-input type="text" formControlName="gst_email" placeholder="GST Email"></ion-input>
+        </ion-item>
+        <!-- <ion-label 
+          *ngIf="loginForm.controls['password'].touched && 
+                loginForm.controls['password'].dirty && 
+                loginForm.controls['password'].hasError('required')" 
+                color="danger">
+                Password Required
+        </ion-label> -->
+        <!-- <ion-label 
+          *ngIf="loginForm.controls['password'].touched && 
+                loginForm.controls['password'].dirty && 
+                loginForm.controls['password'].hasError('required')" 
+                color="danger">
+                Password Required
+        </ion-label> -->
+        <ion-item>
+          <ion-icon name="phone-portrait" slot="start"></ion-icon>
+          <ion-input type="text" formControlName="gst_phone_number" placeholder="GST Phone Number">
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="git-branch" slot="start"></ion-icon>
+          <ion-input type="text" formControlName="branch" placeholder="Branch"></ion-input>
+        </ion-item>
+        <!-- <ion-label 
+          *ngIf="loginForm.controls['password'].touched && 
+                loginForm.controls['password'].dirty && 
+                loginForm.controls['password'].hasError('required')" 
+                color="danger">
+                Password Required
+        </ion-label> -->
+        <button type="button" cdkStepperNext>
+          <ion-button expand="block" fill="solid">
+            Next
+          </ion-button>
+        </button>
+      </form>
+    </cdk-step>
+    <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="branchForm">
+      <app-add-branch *ngIf="showBranchForm" (closeBranch)="closeBranch($event)"></app-add-branch>
+      <div *ngIf="!showBranchForm">
+        <ion-searchbar></ion-searchbar>
+        <ion-text *ngIf="user.length == 0" class="ion-text-center">Add atleast one Branch</ion-text>
+        <ion-list *ngIf="user.length > 0">
+          <ion-item lines="none">
+          </ion-item>
+        </ion-list>
+        <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+          <button type="submit" (click)="addBranch()">
+            <ion-fab-button size="small">
+              <ion-icon name="add"></ion-icon>
+            </ion-fab-button>
+          </button>
+        </ion-fab>
+        <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+          <button type="button" cdkStepperPrevious>
+            <ion-fab-button size="small">
+              <ion-icon name="arrow-back"></ion-icon>
+            </ion-fab-button>
+          </button>
+        </ion-fab>
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+          <button type="submit" cdkStepperNext>
+            <ion-fab-button size="small">
+              <ion-icon name="arrow-forward"></ion-icon>
+            </ion-fab-button>
+          </button>
+        </ion-fab>
+      </div>
+    </cdk-step>
+    <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="userForm">
+      <app-add-user *ngIf="showUserForm" (closeUser)="closeUser($event)"></app-add-user>
+      <div *ngIf="!showUserForm">
+        <ion-searchbar></ion-searchbar>
+        <ion-text *ngIf="user.length == 0" class="ion-text-center">Add atleast one user</ion-text>
+        <ion-list *ngIf="user.length > 0">
+          <ion-item lines="none">
+          </ion-item>
+        </ion-list>
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+          <button type="button" cdkStepperNext>
+            <ion-fab-button size="small">
+              <ion-icon name="arrow-forward"></ion-icon>
+            </ion-fab-button>
+          </button>
+        </ion-fab>
+        <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+          <button type="button" (click)="addUser()">
+            <ion-fab-button size="small">
+              <ion-icon name="add"></ion-icon>
+            </ion-fab-button>
+          </button>
+        </ion-fab>
+        <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+          <button type="button" cdkStepperPrevious>
+            <ion-fab-button size="small">
+              <ion-icon name="arrow-back"></ion-icon>
+            </ion-fab-button>
+          </button>
+        </ion-fab>
+      </div>
+    </cdk-step>
+    <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="profileForm">
+      <app-add-profile (closeProfile)="finishSignup()"></app-add-profile>
+    </cdk-step>
+  </app-custom-stepper>
 </ion-content>
 

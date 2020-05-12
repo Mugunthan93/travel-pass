@@ -1,0 +1,19 @@
+ion-segment{
+    max-width:100vw;
+    >ion-segment-button{
+        min-width: 25vw;
+        width:25vw;
+        white-space: normal;
+        --padding-start:0px;
+        --padding-end:0px;
+        --indicator-color:transparent;
+        >ion-label{
+            font-size:8px;
+        }
+        >ion-icon{
+            font-size:12px;
+        }
+
+
+    }
+}

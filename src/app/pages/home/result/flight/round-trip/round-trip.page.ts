@@ -11,6 +11,13 @@ import { Observable } from 'rxjs';
 })
 export class RoundTripPage implements OnInit {
 
+  sortButtons: any[] = [
+    { value: 'departure', state: 'default' },
+    { value: 'arrival', state: 'default' },
+    { value: 'duration', state: 'default' },
+    { value: 'price', state: 'default' }
+  ];
+
   flightList : flightList[];
   flightState : boolean;
   listType: string = 'departure';
@@ -116,7 +123,6 @@ export class RoundTripPage implements OnInit {
       disableScroll: false,
       threshold: 10,
       gestureName: 'square-drag',
-      direction: 'x',
       onStart:(ev) => this.onStart(ev),
       onMove: (ev) => this.onMove(ev),
       onEnd: (ev) => this.onEnd(ev)

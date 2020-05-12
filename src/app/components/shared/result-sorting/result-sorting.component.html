@@ -1,0 +1,6 @@
+<ion-segment (ionChange)="sorting($event)">
+  <ion-segment-button [value]="button" layout="icon-end" *ngFor="let button of buttons" (click)="rotate(button)">
+    <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg" [@rotatedState]="button.state"></ion-icon>
+    <ion-label>{{button.value | uppercase}}</ion-label>
+  </ion-segment-button>
+</ion-segment>
