@@ -35,17 +35,7 @@ export class LoginPage implements OnInit, OnDestroy {
   }
 
   onLogin() {
-    // this.store.dispatch(new Login(this.loginForm.value.email, this.loginForm.value.password));
-    this.router.navigate(['/','register']);
-  }
-
-  async presentLoading() {
-    const loading = await this.loadingCtrl.create({
-      message: 'Loading... Please wait',
-      spinner: 'dots'
-    });
-
-    return await loading.present();
+    this.store.dispatch(new Login(this.loginForm.value.email, this.loginForm.value.password));
   }
 
   ngOnDestroy(): void {

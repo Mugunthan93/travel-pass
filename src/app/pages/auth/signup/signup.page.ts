@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LoadingController, ToastController } from '@ionic/angular';
+import { AuthService } from 'src/app/services/auth/auth.service';
+import { CompanyService } from 'src/app/services/company/company.service';
+import { BranchService } from 'src/app/services/branch/branch.service';
+import { UserService } from 'src/app/services/user/user.service';
+import { Store } from '@ngxs/store';
+import { Signup } from 'src/app/stores/app.state';
 
 
 @Component({
@@ -15,7 +22,8 @@ export class SignupPage implements OnInit {
   
 
   constructor(
-    public router: Router
+    public router: Router,
+    public store : Store
   ) {
     
     this.personalForm = new FormGroup({
@@ -31,12 +39,10 @@ export class SignupPage implements OnInit {
   ngOnInit() {
   }
 
-  ionViewDidEnter() {
-
-  }
-
   onSignup() {
-    this.router.navigate(['/','auth','login']);
+    this.store.dispatch(new Signup(this.personalForm.value));
   }
+
+
 
 }

@@ -16,6 +16,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { StateModule } from './modules/state.module';
+import { AuthService } from './services/auth/auth.service';
 
 
 @NgModule({
@@ -42,7 +43,14 @@ import { StateModule } from './modules/state.module';
     StatusBar,
     SplashScreen,
     AndroidPermissions,
-    { provide: NativeHttpService, useFactory:HTTP },
+    HTTP,
+    {
+      provide: NativeHttpService,
+      useFactory: (http : HTTP) => {
+        return new NativeHttpService(http);
+      },
+      deps:[HTTP]
+    },
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

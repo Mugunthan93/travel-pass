@@ -9,12 +9,11 @@ import { Platform } from '@ionic/angular';
 export class AuthService {
 
   constructor(
-    public platform:Platform,
     public http : NativeHttpService
   ) {
   }
 
-  login(email: string, password: string) : Promise<HTTPResponse> {
+  async login(email: string, password: string) : Promise<HTTPResponse> {
     const login = {
       username : email,
       password : password
