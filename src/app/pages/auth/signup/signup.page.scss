@@ -4,7 +4,14 @@ form{
     padding: 0px 10px;
     min-height: -webkit-fill-available;
     >ion-item{
-        margin: 10px auto;
+        margin: 10px auto 0px;
+        >ion-row{
+            flex-direction: column;
+            width: -webkit-fill-available;
+            >ion-label{
+                font-size: 10px;
+            }
+        }
     }
     >ion-button{
         --background: #A6D2AE !important;

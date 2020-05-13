@@ -16,7 +16,6 @@ export class AppComponent implements OnInit, OnDestroy{
   }
 
   async ngOnInit() {
-    console.log(this.androidPermissions.PERMISSION);
   }
 
   async writeAccess() {

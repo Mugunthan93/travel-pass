@@ -16,6 +16,7 @@ export class CompanyService {
     const companyObject = {
       company_name: companyDetails.company_name,
       company_address_line1: companyDetails.company_address,
+      company_email: companyDetails.bussiness_email_id,
       gst_details: {
         gstNo: companyDetails.gst_number
       }

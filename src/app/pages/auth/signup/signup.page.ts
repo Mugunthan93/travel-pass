@@ -1,13 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController, ToastController } from '@ionic/angular';
-import { AuthService } from 'src/app/services/auth/auth.service';
-import { CompanyService } from 'src/app/services/company/company.service';
-import { BranchService } from 'src/app/services/branch/branch.service';
-import { UserService } from 'src/app/services/user/user.service';
 import { Store } from '@ngxs/store';
-import { Signup } from 'src/app/stores/app.state';
+import { PhoneNumberValidator } from 'src/app/validator/phone_number';
 
 
 @Component({
@@ -18,21 +13,23 @@ import { Signup } from 'src/app/stores/app.state';
 })
 export class SignupPage implements OnInit {
 
-  personalForm : FormGroup;
-  
+  personalForm: FormGroup;
+  onlyalphaRegex: string = '^[a-zA-Z]+$';
+  emailRegex: string = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+  gstRegex: string = "^([0][1-9]|[1-2][0-9]|[3][0-7])([a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[zZ]{1}[0-9a-zA-Z]{1})+$";
+  phoenNumberRegex: string = "^[0-9]{10}$";
 
   constructor(
     public router: Router,
     public store : Store
   ) {
-    
     this.personalForm = new FormGroup({
-      name: new FormControl(),
-      mobile_number: new FormControl(),
-      bussiness_email_id: new FormControl(),
-      company_name: new FormControl(),
-      company_address: new FormControl(),
-      gst_number: new FormControl()
+      name: new FormControl(null, [Validators.required, Validators.pattern(this.onlyalphaRegex)]),
+      mobile_number: new FormControl(null, [Validators.required, Validators.pattern(this.phoenNumberRegex)]),
+      bussiness_email_id: new FormControl(null, [Validators.required,Validators.email, Validators.pattern(this.emailRegex)]),
+      company_name: new FormControl(null, [Validators.required, Validators.pattern(this.onlyalphaRegex)]),
+      company_address: new FormControl(null, [Validators.required]),
+      gst_number: new FormControl(null, [Validators.required, Validators.pattern(this.gstRegex)])
     });
   }
 
@@ -40,7 +37,8 @@ export class SignupPage implements OnInit {
   }
 
   onSignup() {
-    this.store.dispatch(new Signup(this.personalForm.value));
+    console.log(this.personalForm);
+    // this.store.dispatch(new Signup(this.personalForm.value));
   }
 
 
