@@ -3,7 +3,7 @@ import { MenuController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
 import { Navigation } from 'swiper/js/swiper.esm';
 import { Navigate } from '@ngxs/router-plugin';
-import { Login, Logout } from 'src/app/stores/app.state';
+import { Login, Logout } from 'src/app/stores/auth.state';
 
 @Component({
   selector: 'app-dashboard',

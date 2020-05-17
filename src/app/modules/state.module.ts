@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxsModule } from '@ngxs/store';
-import { AppState } from '../stores/app.state';
+import { AuthState } from '../stores/auth.state';
 import { environment } from 'src/environments/environment';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { NgxsFormPluginModule } from '@ngxs/form-plugin';
@@ -14,14 +14,13 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
   imports: [
     CommonModule,
     NgxsModule.forRoot([
-      AppState
+      AuthState
     ], { developmentMode: !environment.production }
     ),
     NgxsStoragePluginModule.forRoot({
       key: [
-        'App.user'
-      ],
-      storage: 1
+        'Auth.user'
+      ]
     }),
     NgxsFormPluginModule.forRoot(),
     NgxsRouterPluginModule.forRoot(),
@@ -30,7 +29,7 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
       collapsed: true
     }),
     NgxsReduxDevtoolsPluginModule.forRoot({
-      name: 'App',
+      name: 'Auth',
       disabled: true
     })
   ]

@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { NativeHttpService } from '../http/native-http/native-http.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
-import { Platform } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -18,12 +17,13 @@ export class AuthService {
       username : email,
       password : password
     }
-      this.http.setAuth(email, password);
+    console.log(login);
+      // this.http.setAuth(email, password);
       return this.http.post("/users/login", login);
   }
 
   logout() : Promise<HTTPResponse> {
-      return this.http.post("/users/logout");
+    return this.http.post("/users/logout", {});
   }
 
   searchCity(reqCity: string) : Promise<HTTPResponse> {

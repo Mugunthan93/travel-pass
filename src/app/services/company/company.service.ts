@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ɵSWITCH_CHANGE_DETECTOR_REF_FACTORY__POST_R3__ } from '@angular/core';
 import { NativeHttpService } from '../http/native-http/native-http.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 
@@ -12,19 +12,36 @@ export class CompanyService {
   ) {
    }
 
-  async createCompany(companyDetails) : Promise<HTTPResponse> {
+  async createCompany(signupData : any): Promise<HTTPResponse> {
     const companyObject = {
-      company_name: companyDetails.company_name,
-      company_address_line1: companyDetails.company_address,
-      company_email: companyDetails.bussiness_email_id,
+      company_name: signupData.company_name,
+      phone_number: signupData.mobile_number,
+      company_address_line1: signupData.company_address,
+      company_email: signupData.bussiness_email_id,
       gst_details: {
-        gstNo: companyDetails.gst_number
-      }
+        gstNo: signupData.gst_number
+      },
+      company_type: "corporate",
+      status: false
     }
-    return await this.http.post("/customers/", companyObject);
+    console.log(signupData,companyObject);
+    return await this.http.post("/customers", companyObject);
+  }
+
+  async getCompany(companyId) {
+    return await this.http.get("/customers/" + companyId, {
+      customer_id : companyId
+    });
   }
 }
 
+// web mandatory field
+// name
+// phone number
+// email
+// city
+// credit limit
+// service charges
 
 
 

@@ -7,15 +7,32 @@ import { NativeHttpService } from '../http/native-http/native-http.service';
 export class UserService {
 
   constructor(
-    private htttp : NativeHttpService
+    public http : NativeHttpService
   ) { }
 
-  async createUser(userDetails, branchID) {
+  async createMainUser(signupData,companyDetails) {
     const userObj = {
-      name: userDetails.name,
-      email: userDetails.bussiness_email_id,
-      phone_number: userDetails.mobile_number
+      name: signupData.name,
+      email: signupData.bussiness_email_id,
+      phone_number: signupData.mobile_number,
+      password: signupData.mobile_number,
+      role: "admin",
+      customer_id: companyDetails.id
     }
-    return await this.htttp.post("/users/" + branchID,userObj);
+    return await this.http.post("/users/" + companyDetails.id, userObj);
   }
+
+  async createBranchUser(signupData, branchDetails) {
+    const userObj = {
+      name: signupData.name,
+      email: signupData.bussiness_email_id,
+      phone_number: signupData.mobile_number,
+      password: signupData.mobile_number,
+      role: "management",
+      customer_id: branchDetails.id
+    }
+    return await this.http.post("/users/" + branchDetails.id, userObj);
+  }
+
+
 }

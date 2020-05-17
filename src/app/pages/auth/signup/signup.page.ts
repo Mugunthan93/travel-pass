@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { PhoneNumberValidator } from 'src/app/validator/phone_number';
+import { Signup } from 'src/app/stores/auth.state';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 
 @Component({
@@ -21,7 +22,8 @@ export class SignupPage implements OnInit {
 
   constructor(
     public router: Router,
-    public store : Store
+    public authService : AuthService,
+    public store: Store,
   ) {
     this.personalForm = new FormGroup({
       name: new FormControl(null, [Validators.required, Validators.pattern(this.onlyalphaRegex)]),
@@ -36,9 +38,9 @@ export class SignupPage implements OnInit {
   ngOnInit() {
   }
 
-  onSignup() {
+  async onSignup() {
     console.log(this.personalForm);
-    // this.store.dispatch(new Signup(this.personalForm.value));
+    this.store.dispatch(new Signup(this.personalForm.value));
   }
 
 

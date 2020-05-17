@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
-import { Login } from 'src/app/stores/app.state';
+import { Login } from 'src/app/stores/auth.state';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +17,6 @@ export class LoginPage implements OnInit, OnDestroy {
   cmpLogo: string = "../assets/logo.jpeg";
   emailPattern: string = '[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,63}';
   loginForm: FormGroup;
-  loginSub: Subscription;
 
   constructor(
     public authService: AuthService,
@@ -39,9 +38,6 @@ export class LoginPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.loginSub) {
-      this.loginSub.unsubscribe();
-    }
   }
 
 }

@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { HTTP, HTTPResponse } from '@ionic-native/http/ngx';
 import { environment } from 'src/environments/environment';
+import { Platform } from '@ionic/angular';
 
 export interface auth{
   Authorization: string;
@@ -9,23 +10,30 @@ export interface auth{
 @Injectable({
   providedIn: 'root'
 })
-export class NativeHttpService {
+export class NativeHttpService implements OnInit{
 
   private header : any;
 
   constructor(
+    public platform : Platform,
     public http : HTTP
   ) {
-      this.http.setHeader(environment.baseURL, "Access-Control-Allow-Origin", '*');
-      this.http.setHeader(environment.baseURL, "Access-Control-Allow-Headers", "Content-Type");
-      this.http.setHeader(environment.baseURL, "Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
-      this.http.setHeader(environment.baseURL, "Content-Type:", "application/json; charset=utf-8");
-
-      this.header = this.http.getHeaders(environment.baseURL);
+    console.log(http);
   }
 
-  setAuth(username : string,password : string) : void  {
-    console.log("platform ready");
+  async ngOnInit() {
+    await this.platform.ready();
+    this.http.setHeader(environment.baseURL, "Access-Control-Allow-Origin", '*');
+    this.http.setHeader(environment.baseURL, "Access-Control-Allow-Headers", "Content-Type");
+    this.http.setHeader(environment.baseURL, "Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+    this.http.setHeader(environment.baseURL, "Content-Type", "application/x-www-form-urlencoded");
+    this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
+    this.http.setHeader(environment.baseURL, "withCredentials", "true");
+    this.http.setDataSerializer('json');
+  }
+
+  setAuth(username: string, password: string): void  {
+    this.header = this.http.getHeaders(environment.baseURL);
     this.http.useBasicAuth(username,password);
   }
 
@@ -51,5 +59,13 @@ export class NativeHttpService {
 
   async delete(url: string, opt: any) : Promise<HTTPResponse> {
     return await this.http.delete(environment.baseURL + url, opt, this.header);
+  }
+
+  async setCookie(url : string,session : any) {
+    return await this.http.setCookie(url, session);
+  }
+
+  async  getCookie(url) {
+    return await this.http.getCookieString(url);
   }
 }
