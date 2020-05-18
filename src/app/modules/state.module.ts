@@ -19,7 +19,7 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
     ),
     NgxsStoragePluginModule.forRoot({
       key: [
-        'Auth.user'
+        AuthState
       ]
     }),
     NgxsFormPluginModule.forRoot(),

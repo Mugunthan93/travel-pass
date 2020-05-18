@@ -3,7 +3,6 @@ import { AuthService } from '../services/auth/auth.service';
 import { Navigate } from '@ngxs/router-plugin';
 import { LoadingController, ToastController, AlertController } from '@ionic/angular';
 import { CompanyService } from '../services/company/company.service';
-import { BranchService } from '../services/branch/branch.service';
 import { UserService } from '../services/user/user.service';
 
 export interface Auth {
@@ -30,7 +29,7 @@ export class Signup{
 }
 
 @State<Auth>({
-    name : 'App',
+    name : 'Auth',
     defaults:null
 })
 export class AuthState {
@@ -61,7 +60,6 @@ export class AuthState {
         const loading = await this.loadingCtrl.create({
             spinner: "crescent"
         });
-
         const failedAlert = await this.alertCtrl.create({
             header: 'Signup Failed',
             buttons: [{
@@ -69,7 +67,6 @@ export class AuthState {
                 role: 'ok',
                 cssClass: 'danger',
                 handler: (res) => {
-                    console.log(res);
                     failedAlert.dismiss({
                         data: false,
                         role: 'failed'
@@ -90,15 +87,11 @@ export class AuthState {
             const userLoginResponse = await this.authService.login(action.username, action.password);
             const JSONdata = userLoginResponse.data;
             sessionStorage.setItem('session', JSONdata);
-            console.log(userLoginResponse);
             const userResponse = JSON.parse(userLoginResponse.data);
-            console.log(userResponse);
             data.user = userResponse; 
         }
         catch (error) {
             console.log(error);
-            // const err = JSON.parse(error.error);
-            // console.log(err.message);
             failedAlert.message = error;
             loading.dismiss();
             failedAlert.present();
@@ -107,30 +100,39 @@ export class AuthState {
         try {
             const getCompanyResponse = await this.companyService.getCompany(data.user.customer_id);
             console.log(getCompanyResponse);
-            const comapnyResponse = JSON.parse(getCompanyResponse.data);
-            console.log(comapnyResponse);
-            data.company = comapnyResponse.data;
+            const comapanyResponse = JSON.parse(getCompanyResponse.data);
+            data.company = comapanyResponse[0];
 
             states.patchState(data);
             loading.dismiss();
-            this.store.dispatch(new Navigate(['/','register']));
         }
         catch (error) {
-            console.log(error); 
-            // const err = JSON.parse(error.error);
-            // console.log(err.message);
+            console.log(error);
             failedAlert.message = error;
             loading.dismiss();
             failedAlert.present();
+        }
+
+        if (data.user.role !== 'admin') {
+            this.store.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']));
+        }
+        else if (data.user.role == 'admin') {
+            if (data.company.status) {
+                this.store.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']));
+            }
+            else if (!data.company.status){
+                this.store.dispatch(new Navigate(['/', 'register']));
+            }
         }
     }
 
     @Action(Logout)
     async Logout(states: StateContext<Auth>, action: Logout) {
         const logout = await this.authService.logout();
-        console.log(logout);
+        sessionStorage.clear();
         states.patchState({
-            user : null
+            user: null,
+            company: null
         });
         this.store.dispatch(new Navigate(['/','auth','login']));
     }
@@ -177,6 +179,7 @@ export class AuthState {
                 cssClass: 'primary',
                 handler: (res) => {
                     successAlert.dismiss();
+                    sessionStorage.clear();
                     this.store.dispatch(new Navigate(['/','auth','login']));
                 }
             }]
@@ -195,13 +198,11 @@ export class AuthState {
             toastr.message = "company Created";
             const companyResponse = JSON.parse(createCompanyResponse.data);
             data.company = companyResponse.data;
-            console.log(data);
             await toastr.present();
         }
         catch (error) {
             console.log(error);
             const err = JSON.parse(error.error);
-            console.log(err.message);
             failedAlert.message = err.message;
             loading.dismiss();
             failedAlert.present();
@@ -213,20 +214,17 @@ export class AuthState {
             toastr.message = "user Created";
             const userResponse = JSON.parse(createUserResponse.data);
             data.user = userResponse.data;
-            console.log(data);
             await toastr.present();
         }
         catch (error) {
             console.log(error);
             const err = JSON.parse(error.error);
-            console.log(err.message);
             loading.dismiss();
             failedAlert.message = err.message;
             loading.dismiss();
             failedAlert.present();
         }
 
-        states.setState(data); 
         loading.dismiss();
         successAlert.present();
 

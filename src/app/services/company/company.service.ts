@@ -24,14 +24,14 @@ export class CompanyService {
       company_type: "corporate",
       status: false
     }
-    console.log(signupData,companyObject);
     return await this.http.post("/customers", companyObject);
   }
 
-  async getCompany(companyId) {
-    return await this.http.get("/customers/" + companyId, {
-      customer_id : companyId
-    });
+  async getCompany(companyId : number) {
+    const id: { [key: string]: string | string[] } = {
+      "customer_id": companyId.toString()
+    }
+    return await this.http.get("/customers/" + companyId, undefined );
   }
 }
 

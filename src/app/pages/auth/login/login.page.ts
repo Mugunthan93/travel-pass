@@ -4,8 +4,8 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
-import { Store } from '@ngxs/store';
-import { Login } from 'src/app/stores/auth.state';
+import { Store, ofActionSuccessful } from '@ngxs/store';
+import { Login, AuthState } from 'src/app/stores/auth.state';
 
 @Component({
   selector: 'app-login',

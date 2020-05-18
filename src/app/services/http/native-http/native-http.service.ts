@@ -42,7 +42,7 @@ export class NativeHttpService implements OnInit{
   }
 
   async get(url: string, opt: any): Promise<HTTPResponse>  {
-    return await this.http.post(environment.baseURL + url, opt, this.header);
+    return await this.http.get(environment.baseURL + url, opt, this.header);
   }
 
   async post(url: string, body?: any) : Promise<HTTPResponse> {

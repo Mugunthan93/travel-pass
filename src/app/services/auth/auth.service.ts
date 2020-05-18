@@ -17,9 +17,8 @@ export class AuthService {
       username : email,
       password : password
     }
-    console.log(login);
-      // this.http.setAuth(email, password);
-      return this.http.post("/users/login", login);
+    this.http.setAuth(email, password);
+    return this.http.post("/users/login", login);
   }
 
   logout() : Promise<HTTPResponse> {
