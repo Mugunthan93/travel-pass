@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { PassengerModalComponent } from './passenger-modal.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('PassengerModalComponent', () => {
   let component: PassengerModalComponent;
@@ -10,7 +11,10 @@ describe('PassengerModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ PassengerModalComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [
+        IonicModule.forRoot(),
+        ReactiveFormsModule
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PassengerModalComponent);

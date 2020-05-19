@@ -2,6 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { OneWayPage } from './one-way.page';
+import { ResultSortingComponent } from 'src/app/components/shared/result-sorting/result-sorting.component';
+import { ResultListComponent } from 'src/app/components/flight/result-list/result-list.component';
 
 describe('OneWayPage', () => {
   let component: OneWayPage;
@@ -9,7 +11,11 @@ describe('OneWayPage', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OneWayPage ],
+      declarations: [
+        OneWayPage,
+        ResultSortingComponent,
+        ResultListComponent
+      ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 

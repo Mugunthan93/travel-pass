@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { environment } from 'src/environments/environment';
 
@@ -22,8 +22,7 @@ export class HotelLocationComponent implements OnInit,AfterViewInit {
   landmarks: any[] = ["1","2","3","4","5"];
 
   constructor(
-    public platform: Platform,
-    private renderer : Renderer2
+    public platform: Platform
   ) { 
   }
 

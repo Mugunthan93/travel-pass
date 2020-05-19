@@ -2,6 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { PaymentPage } from './payment.page';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDividerModule } from '@angular/material/divider';
 
 describe('PaymentPage', () => {
   let component: PaymentPage;
@@ -10,7 +12,11 @@ describe('PaymentPage', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ PaymentPage ],
-      imports: [IonicModule.forRoot()]
+      imports: [
+        IonicModule.forRoot(),
+        MatExpansionModule,
+        MatDividerModule
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PaymentPage);

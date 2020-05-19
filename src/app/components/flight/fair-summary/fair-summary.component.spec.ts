@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { FairSummaryComponent } from './fair-summary.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('FairSummaryComponent', () => {
   let component: FairSummaryComponent;
@@ -10,7 +11,10 @@ describe('FairSummaryComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ FairSummaryComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [
+        IonicModule.forRoot(),
+        ReactiveFormsModule
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(FairSummaryComponent);

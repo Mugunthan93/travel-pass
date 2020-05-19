@@ -10,7 +10,10 @@ describe('ResultPage', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ ResultPage ],
-      imports: [IonicModule.forRoot()]
+      imports: [
+        IonicModule.forRoot()
+
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ResultPage);

@@ -2,6 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { HotelPage } from './hotel.page';
+import { MatDividerModule } from '@angular/material/divider';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('HotelPage', () => {
   let component: HotelPage;
@@ -10,7 +12,11 @@ describe('HotelPage', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ HotelPage ],
-      imports: [IonicModule.forRoot()]
+      imports: [
+        IonicModule.forRoot(),
+        MatDividerModule,
+        RouterTestingModule
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(HotelPage);

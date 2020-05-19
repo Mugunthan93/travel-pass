@@ -2,6 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { HomeTabPage } from './home-tab.page';
+import { TripListComponent } from 'src/app/components/trip-list/trip-list.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('HomeTabPage', () => {
   let component: HomeTabPage;
@@ -9,8 +11,14 @@ describe('HomeTabPage', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HomeTabPage ],
-      imports: [IonicModule.forRoot()]
+      declarations: [
+        HomeTabPage,
+        TripListComponent
+      ],
+      imports: [
+        IonicModule.forRoot(),
+        RouterTestingModule
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomeTabPage);

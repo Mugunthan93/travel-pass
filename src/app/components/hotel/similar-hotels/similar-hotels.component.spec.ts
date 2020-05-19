@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { SimilarHotelsComponent } from './similar-hotels.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 describe('SimilarHotelsComponent', () => {
   let component: SimilarHotelsComponent;
@@ -9,8 +10,13 @@ describe('SimilarHotelsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SimilarHotelsComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [
+        SimilarHotelsComponent,
+      ],
+      imports: [
+        IonicModule.forRoot(),
+        MatDividerModule
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SimilarHotelsComponent);

@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { RoundTripPage } from './round-trip.page';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('RoundTripPage', () => {
   let component: RoundTripPage;
@@ -10,7 +11,10 @@ describe('RoundTripPage', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ RoundTripPage ],
-      imports: [IonicModule.forRoot()]
+      imports: [
+        IonicModule.forRoot(),
+        ReactiveFormsModule
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(RoundTripPage);

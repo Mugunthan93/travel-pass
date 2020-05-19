@@ -14,7 +14,6 @@ export class AppComponent implements OnInit, OnDestroy{
   constructor(
     public platform: Platform,
     private androidPermissions: AndroidPermissions,
-    private authService: AuthService,
     private network: Network
   ) {
   }
