@@ -2,8 +2,6 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { Subscription } from 'rxjs';
 import { ModalController, NavParams } from '@ionic/angular';
-import { City } from 'src/app/models/search';
-import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-city-modal',
@@ -13,7 +11,7 @@ import { FormControl } from '@angular/forms';
 export class CityModalComponent implements OnInit, OnDestroy {
 
   citySub: Subscription;
-  cities: City[] = [];
+  cities: any[] = [];
 
   constructor(
     public authService: AuthService,
@@ -33,7 +31,7 @@ export class CityModalComponent implements OnInit, OnDestroy {
 
   }
 
-  selectCity(city: City) {
+  selectCity(city: any) {
     this.modalCtrl.dismiss(city);
   }
 

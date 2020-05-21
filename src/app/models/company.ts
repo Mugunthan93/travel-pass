@@ -1,9 +1,4 @@
-import { response } from './response';
 import { user } from './user';
-
-export interface companyResponse extends response {
-    data : company[]
-}
 
 export interface company {
     id:number
@@ -24,44 +19,73 @@ export interface company {
     company_type: string
     agency_id: number
     company_logo: string
+    corp_code:corpCode[]
     permissions: string
     consolidator: consolidator[]
-    credit_req: creditReq2[]
-    PCC: null
-    queue_number: null
-    target_branch: null
-    vendor_type: null
-    pincode: null
-    pan_number: null
-    invoice_prefix: null
-    expense: null
+    credit_req: creditReq[]
+    expense: boolean
     rights_to_book: boolean
-    travel_type: null
-    leg: null
-    need_approval: null
+    travel_type: travelType
+    leg: Leg
+    need_approval: boolean
     tm_credit_online: number
-    outsource_to_tripmidas: null
+    outsource_to_tripmidas: boolean
     createdAt: string
     updatedAt: string
-    Users : user
+    Users: user[]
+    
+    CCODE: any
+    SCODE: any
+    PCC: any
+    queue_number: any
+    target_branch: any
+    vendor_type: any
+    pincode: any
+    pan_number: any
+    invoice_prefix: any
 }
 
 export interface cashLimit{
-
+    amount: number
+    days: string
 }
 
 export interface gstDetails{
-
+    cancellation_at_risk: string
+    email: string
+    gstNo: string
+    phoneNumber: string
 }
 
 export interface charges{
-
+    domesticCharge: number
+    internationalCharge: number
+    serviceBusCharge: number
+    serviceCarCharge: number
+    serviceHotelCharge: number
+    state_name: string
 }
 
 export interface consolidator{
 
 }
 
-export interface creditReq2{
+export interface creditReq{
     
+}
+
+export interface corpCode{
+    airlineCode: string
+    airlineName: string
+    corpCode: string
+}
+
+export interface Leg {
+    isMultileg: boolean
+    isSingleleg: boolean
+}
+
+export interface travelType {
+    isDomestic: boolean
+    isInternational: boolean
 }
