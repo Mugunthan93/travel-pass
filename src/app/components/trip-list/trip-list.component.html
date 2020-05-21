@@ -1,4 +1,23 @@
-<ion-grid id="upcoming-trip">
+<ion-content>
+  <ion-virtual-scroll [items]="items" approxItemHeight="70px">
+    <ion-item lines="none" *virtualItem="let item">
+      <ion-icon slot="start" src="../../../assets/icons/flying-fly.svg"></ion-icon>
+      <ion-icon slot="end" src="../../../assets/ionicons/md-alert-circle.svg"></ion-icon>
+      <ion-row>
+        <ion-row>
+          <ion-text>{{ item.from }}</ion-text>
+          <ion-icon src="../../../assets/icons/straight.svg"></ion-icon>
+          <ion-text>{{ item.to }}</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-text>{{ item.date | date }} | {{ item.time | date : 'shortTime' }}</ion-text>
+        </ion-row>
+      </ion-row>
+    </ion-item>
+  </ion-virtual-scroll>
+</ion-content>
+
+<!-- <ion-grid id="upcoming-trip">
   <ion-row class="ion-justify-content-start">
     <ion-col size="12">
       <ion-item>
@@ -48,4 +67,4 @@
       </ion-content>
     </ion-col>
   </ion-row>
-</ion-grid>
+</ion-grid> -->

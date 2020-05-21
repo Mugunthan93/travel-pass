@@ -4,3 +4,13 @@
 
 // $thumbnail-size:;
 // $thumbnail-border-radius:;
+
+ion-thumbnail{
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 6px 10px #2174A5B3;
+    --border-radius: 18px;
+    opacity: 1;
+    ion-icon{
+        margin:8px !important;
+    }
+}

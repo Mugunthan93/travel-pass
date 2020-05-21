@@ -5,7 +5,7 @@
 $toolbar-color:$bar-color;
 // $toolbar-opacity:;
 
-$toolbar-background:$bar-bg;
+$toolbar-background:$bar-bg2;
 
 // $toolbar-min-height:;
 // $toolbar-border:(
@@ -24,6 +24,7 @@ $toolbar-background:$bar-bg;
 ion-toolbar {
     --color: #{$toolbar-color};
     --background: #{$toolbar-background};
+    opacity:1;
 
     ion-button{
         --opacity: 1;
@@ -31,6 +32,22 @@ ion-toolbar {
         ion-icon{
             padding-right: 0px;
             color:#{$btn2-bg} !important;
+        }
+    }
+
+    >ion-buttons{
+        >ion-button{
+            >ion-icon{
+                color:white !important;
+            }
+        }
+    }
+
+    >ion-title{
+        >ion-text{
+            color: white !important;
+            font-weight: bold !important;
+            font-size: 17px !important;
         }
     }
 }

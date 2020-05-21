@@ -5,12 +5,15 @@ $transparent:transparent !default;
 // $bar-bg:#4deb1a !default;
 $bar-color:#ffffff !default;
 $bar-bg:#89f789 !default;
+$bar-bg2:#5BACDC 0% 0% no-repeat padding-box !default;
+$bar-opacity: 1;
 
 $btn-bg:#90bd1c !default;
 $btn2-bg:#3d9ed7 !default;
 $btn3-bg:#A6D2AE !default;
 $btn4-bg: #3566ee;
 $btn-opacity:0.4 !default;
+
 
 $item-bg:$transparent;
 
@@ -26,6 +29,14 @@ $selected-color:white;
 $selected-item:rgb(255, 232, 232) !important;
 
 $toolbar-bg:#dedede;
+
+$white-icon:white;
+$white-text:white;
+
+//icons
+
+$icon-color:grey;
+$icon-color2:#5BACDC;
 
 //font
 $mobile-font-family : 'Roboto',sans-serif;

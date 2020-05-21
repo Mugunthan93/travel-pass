@@ -28,7 +28,7 @@
 
 ion-tab-bar{
     // --color: #{$transparent};
-    --background: #{$transparent};
+    --background: white;
 
     // margin-left:15px;
     // margin-right:15px;
@@ -58,3 +58,29 @@ ion-tab-bar{
 
 
 
+ion-tabs{
+    >ion-tab-bar{
+        >ion-tab-button{
+
+            >ion-icon{
+                color:#{$icon-color} !important;
+
+            }
+            >ion-label{
+                color:#{$text-color} !important;
+            }
+
+            &[aria-selected="true"] {
+
+                >ion-icon {
+                    color:#{$icon-color2} !important;
+                }
+
+                >ion-label {
+                    color:#{$text-color} !important;
+                }
+                
+            }
+        }
+    }
+}
