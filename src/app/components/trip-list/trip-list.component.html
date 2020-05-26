@@ -1,7 +1,8 @@
 <ion-content>
   <ion-virtual-scroll [items]="items" approxItemHeight="70px">
-    <ion-item lines="none" *virtualItem="let item">
-      <ion-icon slot="start" src="../../../assets/icons/flying-fly.svg"></ion-icon>
+    <ion-item class="ion-activatable ripple-parent" lines="none" *virtualItem="let item">
+      <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+      <ion-icon slot="start" src="../../../assets/icons/dashboard/trip-flight.svg"></ion-icon>
       <ion-icon slot="end" src="../../../assets/ionicons/md-alert-circle.svg"></ion-icon>
       <ion-row>
         <ion-row>
@@ -16,55 +17,3 @@
     </ion-item>
   </ion-virtual-scroll>
 </ion-content>
-
-<!-- <ion-grid id="upcoming-trip">
-  <ion-row class="ion-justify-content-start">
-    <ion-col size="12">
-      <ion-item>
-        <ion-text>Upcoming Trips</ion-text>
-      </ion-item>
-    </ion-col>
-  </ion-row>
-  <ion-row class="ion-justify-content-around">
-    <ion-col size="12">
-      <ion-content scrollX="false" scrollY="true">
-        <ion-virtual-scroll [items]="items" approxItemHeight="50px">
-          <ion-item lines="none" *virtualItem="let item">
-            <ion-grid id="trip-items">
-              <ion-row>
-                <ion-col size="12">
-                  <ion-row class="ion-justify-content-start">
-                    <ion-col size="1">
-                      <ion-icon src="../../../assets/icons/flying-fly.svg"></ion-icon>
-                    </ion-col>
-                    <ion-col size="2" class="ion-text-nowrap">
-                      <ion-text>{{ item.from }}</ion-text>
-                    </ion-col>
-                    <ion-col size="1">
-                      <ion-icon src="../../../assets/icons/straight.svg"></ion-icon>
-                    </ion-col>
-                    <ion-col size="2" class="ion-text-nowrap">
-                      <ion-text>{{ item.to }}</ion-text>
-                    </ion-col>
-                  </ion-row>
-                </ion-col>
-              </ion-row>
-              <ion-row>
-                <ion-col size="12">
-                  <ion-row class="ion-justify-content-between">
-                    <ion-col size="7" class="ion-text-start ion-text-nowrap">
-                      <ion-text>{{ item.date | date }} | {{ item.time | date : 'shortTime' }}</ion-text>
-                    </ion-col>
-                    <ion-col size="2">
-                      <ion-icon class="ion-float-right" src="../../../assets/ionicons/md-alert-circle.svg" size="large"></ion-icon>
-                    </ion-col>
-                  </ion-row>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-item>
-        </ion-virtual-scroll>
-      </ion-content>
-    </ion-col>
-  </ion-row>
-</ion-grid> -->

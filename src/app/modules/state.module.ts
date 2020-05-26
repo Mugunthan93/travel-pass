@@ -9,8 +9,8 @@ import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { UserState } from '../stores/user.state';
-import { CompanyService } from '../services/company/company.service';
 import { CompanyState } from '../stores/company.state';
+import { BranchState } from '../stores/branch.state';
 
 @NgModule({
   declarations: [],
@@ -19,13 +19,15 @@ import { CompanyState } from '../stores/company.state';
     NgxsModule.forRoot([
       AuthState,
       UserState,
-      CompanyState
+      CompanyState,
+      BranchState
     ], { developmentMode: !environment.production }
     ),
     NgxsStoragePluginModule.forRoot({
       key: [
         UserState,
-        CompanyState
+        CompanyState,
+        BranchState
       ]
     }),
     NgxsFormPluginModule.forRoot(),

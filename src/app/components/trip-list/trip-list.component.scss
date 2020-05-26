@@ -14,19 +14,29 @@ ion-content{
                 &[slot="start"]{
                     margin-top: 0px;
                     margin-right: 16px;
+                    color:#E87474 !important;
                 }
                 &[slot="end"]{
                     margin-bottom: 0px;
+
                 }
     
             }
             >ion-row{
+                >ion-row{
+                    width:-webkit-fill-available;
+                }
                 >ion-row:first-child{
                     *:first-child{
                         margin-left: 0px;
                     }
                     *{
                         margin:0px 5px;
+                    }
+                    ion-text{
+                        color:black;
+                        font-size: 17px;
+                        font-weight: 500;
                     }
                 }
             }

@@ -29,6 +29,11 @@ ion-grid{
             margin: 0px 22px;
             --padding-start: 0px;
             height: fit-content;
+            >ion-text{
+                color:black;
+                font-size: 17px;
+                font-weight: 500;
+            }
         }
         >app-trip-list{
             width: -webkit-fill-available;

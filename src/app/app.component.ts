@@ -3,6 +3,7 @@ import { Platform } from '@ionic/angular';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { AuthService } from './services/auth/auth.service';
 import { Network } from '@ionic-native/network/ngx';
+import { AndroidFullScreen } from '@ionic-native/android-full-screen/ngx';
 
 @Component({
   selector: 'app-root',
@@ -14,15 +15,14 @@ export class AppComponent implements OnInit, OnDestroy{
   constructor(
     public platform: Platform,
     private androidPermissions: AndroidPermissions,
-    private network: Network
+    private network: Network,
+    private androidFullScreen: AndroidFullScreen
   ) {
   }
 
   async ngOnInit() {
     await this.platform.ready();
-    console.log(this.androidPermissions.PERMISSION);
-    await this.networkAccess();
-    console.log(this.network);
+    await this.androidFullScreen.immersiveMode();
   }
 
   async networkAccess() {

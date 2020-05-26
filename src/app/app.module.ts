@@ -17,6 +17,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { StateModule } from './modules/state.module';
 import { Network } from '@ionic-native/network/ngx';
+import { AndroidFullScreen } from '@ionic-native/android-full-screen/ngx';
 
 
 @NgModule({
@@ -44,6 +45,7 @@ import { Network } from '@ionic-native/network/ngx';
     SplashScreen,
     AndroidPermissions,
     Network,
+    AndroidFullScreen,
     HTTP,
     {
       provide: NativeHttpService,

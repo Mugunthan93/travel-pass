@@ -1,6 +1,7 @@
 import { Injectable, ɵSWITCH_CHANGE_DETECTOR_REF_FACTORY__POST_R3__ } from '@angular/core';
 import { NativeHttpService } from '../http/native-http/native-http.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
+import { company } from 'src/app/models/company';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,20 @@ export class CompanyService {
       "customer_id": companyId.toString()
     }
     return await this.http.get("/customers/" + companyId, undefined );
+  }
+
+  async updateCompany(companyId: number, companyData: any): Promise<HTTPResponse> {
+    const companyObject = {
+      company_name: companyData.company_name,
+      company_address_line1: companyData.company_address,
+      phone_number: companyData.company_phone_number,
+      gst_details: {
+        gstNo: companyData.gst_number,
+        email: companyData.gst_email,
+        phoneNumber: companyData.gst_phone_number
+      },
+    }
+    return await this.http.put("/customers/" + companyId, companyObject);
   }
 }
 

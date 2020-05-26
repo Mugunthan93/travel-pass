@@ -3,23 +3,20 @@
 @import "../../../style/component/item.scss";
 
 ion-content{
-    text-align: center;
     >ion-img{
         width: 220px;
         height: 70px;
         margin: 1vh auto;
     }
-    >ion-text{
+    >ion-title{
         font-size: 20px;
+        text-align: center;
     }
     >app-custom-stepper{
         form, div, app-add-branch, app-add-user, app-add-profile{
             width: -webkit-fill-available;
-            >button{
-                width: -webkit-fill-available;
-                >ion-button {
-                    --background: #A6D2AE !important;
-                }
+            >ion-button {
+                --background: #A6D2AE !important;
             }
             >ion-item{
                 --padding-start:0px;
@@ -28,8 +25,11 @@ ion-content{
                     height: 24px;
                 }
             }
-            >ion-searchbar, ion-searchbar:focus{
-                text-align-last: justify;
+            >app-branch-list{
+
+            }
+            >app-user-list{
+                
             }
         }
     }

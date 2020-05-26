@@ -12,6 +12,8 @@ import { CdkStepperModule } from '@angular/cdk/stepper';
 import { AddBranchComponent } from 'src/app/components/register/add-branch/add-branch.component';
 import { AddUserComponent } from 'src/app/components/register/add-user/add-user.component';
 import { AddProfileComponent } from 'src/app/components/register/add-profile/add-profile.component';
+import { BranchListComponent } from 'src/app/components/register/branch-list/branch-list.component';
+import { UserListComponent } from 'src/app/components/register/user-list/user-list.component';
 
 @NgModule({
   imports: [
@@ -27,7 +29,9 @@ import { AddProfileComponent } from 'src/app/components/register/add-profile/add
     CustomStepperComponent,
     AddBranchComponent,
     AddUserComponent,
-    AddProfileComponent
+    AddProfileComponent,
+    BranchListComponent,
+    UserListComponent
   ]
 })
 export class RegisterPageModule {}

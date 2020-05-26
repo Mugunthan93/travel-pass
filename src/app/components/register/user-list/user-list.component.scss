@@ -1,0 +1,39 @@
+
+ion-content {
+    max-height: calc(100% - 72px);
+    text-align: center;
+    --background: transparent !important;
+    >ion-virtual-scroll {
+        >ion-item {
+            --min-height: 60px;
+            --padding-end: 16px;
+            margin: 5px 22px;
+            background: #FFFFFF 0% 0% no-repeat padding-box;
+            box-shadow: 0px 2px 6px #00000029;
+            border-radius: 8px;
+            opacity: 1;
+
+            >ion-row {
+                >ion-row {
+                    width: -webkit-fill-available;
+                }
+
+                >ion-row:first-child {
+                    *:first-child {
+                        margin-left: 0px;
+                    }
+
+                    * {
+                        margin: 0px 5px;
+                    }
+
+                    ion-text {
+                        color: black;
+                        font-size: 17px;
+                        font-weight: 500;
+                    }
+                }
+            }
+        }
+    }
+}

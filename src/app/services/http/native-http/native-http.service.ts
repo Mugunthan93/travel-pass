@@ -18,7 +18,7 @@ export class NativeHttpService implements OnInit{
     public platform : Platform,
     public http : HTTP
   ) {
-    console.log(http);
+    console.log(this.http);
   }
 
   async ngOnInit() {
@@ -29,7 +29,6 @@ export class NativeHttpService implements OnInit{
     this.http.setHeader(environment.baseURL, "Content-Type", "application/x-www-form-urlencoded");
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setHeader(environment.baseURL, "withCredentials", "true");
-    this.http.setDataSerializer('json');
   }
 
   setAuth(username: string, password: string): void  {
@@ -37,7 +36,7 @@ export class NativeHttpService implements OnInit{
     this.http.useBasicAuth(username,password);
   }
 
-  async getAuth(username,password) : Promise<auth> {
+  async getAuth(username: string,password: string) : Promise<auth> {
     return this.http.getBasicAuthHeader(username, password);
   }
 
@@ -67,5 +66,9 @@ export class NativeHttpService implements OnInit{
 
   async  getCookie(url) {
     return await this.http.getCookieString(url);
+  }
+
+  async setReqTimeout(number : number) {
+    return await this.http.setRequestTimeout(number);
   }
 }

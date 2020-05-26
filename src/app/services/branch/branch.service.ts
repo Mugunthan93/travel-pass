@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NativeHttpService } from '../http/native-http/native-http.service';
+import { HTTPResponse } from '@ionic-native/http/ngx';
 
 @Injectable({
   providedIn: 'root'
@@ -10,19 +11,35 @@ export class BranchService {
     private http : NativeHttpService
   ) { }
 
-  async createBranch(signupData, companyDetails) {
+  async createBranch(branchDetail, companyId : number): Promise<HTTPResponse> {
     const branchObject = {
-      company_name: signupData.company_name,
-      phone_number: signupData.mobile_number,
-      company_address_line1: signupData.company_address,
-      company_email: signupData.bussiness_email_id,
+      company_name: branchDetail.name,
+      company_address_line1: branchDetail.address,
+      phone_number: branchDetail.mobile_number,
       gst_details: {
-        gstNo: signupData.gst_number
+        gstNo: branchDetail.gst_number
       },
-      agency_id: companyDetails.id,
-      company_type: "corporate_branch"
+      agency_id: companyId,
+      company_type: "corporate_branch",
+      status: false
     }
-    return this.http.post("/customers", branchObject);
+    console.log(branchObject);
+    try {
+      let createBranchResponse = await this.http.post("/customers/", branchObject);
+      console.log(createBranchResponse);
+      return createBranchResponse;
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getBranch(companyId : number) {
+    return await this.http.get("/customers/get/getallbranches/corporate/corporate_branch/" + companyId,undefined);
+  }
+
+  async updateBranch() {
+    
   }
 }
 

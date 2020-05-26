@@ -1,16 +1,20 @@
-import { State, Action, StateContext, Selector } from '@ngxs/store';
+import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
 import { user } from '../models/user';
 
 export class GetUser {
     static readonly type = '[User] GetUser';
-    constructor(public user : any) {
+    constructor(public user : user) {
 
     }
 }
 
+export class GetUsers {
+    static readonly type = '[User] GetUsers';
+}
+
 export class UpdateUser {
     static readonly type = '[User] UpdateUser';
-    constructor(public user : any) {
+    constructor(public user : user) {
 
     }
 }
@@ -21,18 +25,25 @@ export class UpdateUser {
 })
 export class UserState {
 
-    constructor() {
+    constructor(
+        private store:Store
+    ) {
 
     }
 
     @Selector()
-    static getUser(state: user) {
+    static user(state: user) {
         return state;
     }
 
     @Selector()
     static isUserAuthenticated(state: user): boolean {
         return !!state;
+    }
+
+    @Action(GetUsers)
+    getUsers(states: StateContext<user>, action: GetUsers) {
+        // this.store.dispatch()
     }
 
     @Action(GetUser)

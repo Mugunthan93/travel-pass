@@ -1,11 +1,11 @@
 <ion-content>
   <ion-img src="../../../../assets/ng-img/logo.jpeg"></ion-img>
-  <ion-text>
+  <ion-title>
     Register
-  </ion-text>
+  </ion-title>
   <app-custom-stepper [linear]="false" [selected]="" [selectedIndex]="" #stepper>
-    <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="companyForm">
-      <form [formGroup]="companyForm" (ngSubmit)="onSubmit()">
+    <cdk-step [completed]="companyForm?.valid" [editable]="" [state]="" [stepControl]="companyForm">
+      <form [formGroup]="companyForm" (ngSubmit)="updateCompany()">
         <ion-item>
           <ion-icon src="../../../assets/icons/name.svg" slot="start"></ion-icon>
           <ion-input type="text" formControlName="company_name" placeholder="Company Name" required>
@@ -108,22 +108,18 @@
                 color="danger">
                 Password Required
         </ion-label> -->
-        <button type="button" cdkStepperNext>
-          <ion-button expand="block" fill="solid">
-            Next
-          </ion-button>
+        <ion-button expand="block" fill="solid" type="submit">
+          Update
+        </ion-button>
+        <button type="button" cdkStepperNext #branchList hidden="true">
         </button>
       </form>
     </cdk-step>
-    <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="branchForm">
+    <cdk-step [completed]="branchForm?.valid" [editable]="" [state]="" [stepControl]="branchForm">
       <app-add-branch *ngIf="showBranchForm" (closeBranch)="closeBranch($event)"></app-add-branch>
       <div *ngIf="!showBranchForm">
         <ion-searchbar></ion-searchbar>
-        <ion-text *ngIf="user.length == 0" class="ion-text-center">Add atleast one Branch</ion-text>
-        <ion-list *ngIf="user.length > 0">
-          <ion-item lines="none">
-          </ion-item>
-        </ion-list>
+        <app-branch-list></app-branch-list>
         <ion-fab vertical="bottom" horizontal="center" slot="fixed">
           <button type="submit" (click)="addBranch()">
             <ion-fab-button size="small">
@@ -147,15 +143,11 @@
         </ion-fab>
       </div>
     </cdk-step>
-    <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="userForm">
+    <cdk-step [completed]="userForm?.valid" [editable]="" [state]="" [stepControl]="userForm">
       <app-add-user *ngIf="showUserForm" (closeUser)="closeUser($event)"></app-add-user>
       <div *ngIf="!showUserForm">
         <ion-searchbar></ion-searchbar>
-        <ion-text *ngIf="user.length == 0" class="ion-text-center">Add atleast one user</ion-text>
-        <ion-list *ngIf="user.length > 0">
-          <ion-item lines="none">
-          </ion-item>
-        </ion-list>
+        <app-user-list></app-user-list>
         <ion-fab vertical="bottom" horizontal="end" slot="fixed">
           <button type="button" cdkStepperNext>
             <ion-fab-button size="small">
@@ -179,7 +171,7 @@
         </ion-fab>
       </div>
     </cdk-step>
-    <cdk-step [completed]="" [editable]="" [state]="" [stepControl]="profileForm">
+    <cdk-step [completed]="profileForm?.valid" [editable]="" [state]="" [stepControl]="profileForm">
       <app-add-profile (closeProfile)="finishSignup()"></app-add-profile>
     </cdk-step>
   </app-custom-stepper>

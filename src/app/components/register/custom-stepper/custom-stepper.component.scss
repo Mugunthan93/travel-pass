@@ -43,7 +43,7 @@ ion-grid{
          }
     }
     >ion-row:last-child{
-        min-height: 450px;
+        min-height:fit-content;
         >ng-template {}
     }
 }
