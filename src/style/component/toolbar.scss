@@ -29,13 +29,8 @@ ion-toolbar {
     ion-button{
         --opacity: 1;
         --background: #{$transparent};
-    }
-
-    >ion-buttons{
-        >ion-button{
-            >ion-icon{
-                filter: invert(100%) sepia(100%) saturate(100%) hue-rotate(100deg) brightness(100%) contrast(100%);
-            }
+        >ion-icon{
+            color:#{$white-icon} !important;
         }
     }
 

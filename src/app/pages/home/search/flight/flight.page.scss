@@ -12,27 +12,34 @@ ion-tab-bar {
     margin-bottom: 20px;
     height: 6vh;
 
+    @include first-tab-border("one-way", #{$tab-border});
+    @include middle-tab-border("round-trip", #{$tab-border});
+    @include last-tab-border("multi-city", #{$tab-border});
 
-    @include first-tab-border("one-way", #{$selected-bg});
-    @include middle-tab-border("round-trip", #{$selected-bg});
-    @include last-tab-border("multi-city", #{$selected-bg});
-}
+    >ion-tab-button {
+        background:#{$tab-background};
+        color:#{$tab-color};
 
-ion-tab-button {
-    --color :#{$text-color};
-    // --color-focused :
-    // --color-selected :
-    // --ripple-color :
-    // --background :
-    // --background-focused : ;
-    // --background-focused-opacity :
-    // --padding-bottom : 50px !important;
-    // --padding-end : 50px !important;
-    // --padding-start : 50px !important;
-    // --padding-top : 50px !important;
+        >ion-icon {
+            color:#{$icon-color} !important;
+        }
 
-    &[aria-selected="true"] {
-        background: #{$selected-bg};
+        >ion-label {
+            color:#{$tab-color} !important;
+        }
+
+        &[aria-selected="true"] {
+            background:#{$tab-selected-background};
+            color:#{$tab-selected-color};
+
+            >ion-icon {
+                color:#{$icon-color2} !important;
+            }
+
+            >ion-label {
+                color:#{$tab-selected-color} !important;
+            }
+
+        }
     }
-
 }

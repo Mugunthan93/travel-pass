@@ -20,20 +20,7 @@
                         >ion-row {
                             height: 25%;
                         }
-
-                        ion-row {
-                            ion-col:first-child {
-                                @include search-grid-input(left, right);
-                            }
-
-                            ion-col:nth-child(2) {
-                                @include search-grid-switch();
-                            }
-
-                            ion-col:last-child {
-                                @include search-grid-input(right, left);
-                            }
-                        }
+                        @include search-grid-input(left, right);
 
                         ion-icon {
                             height: 50px;
@@ -116,11 +103,6 @@ ion-text{
     line-height: 20px;
 }
 
-ion-button{
-    height:100%;
-    --opacity:1;
-    --background:#{$btn4-bg};
-    ion-text{
-        color:white;
-    }
+ion-button {
+    --opacity: 1;
 }

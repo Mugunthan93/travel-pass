@@ -38,7 +38,9 @@
 
     >ion-row:nth-child(1){
         ion-text{
-            font-size: large;
+            color: black;
+            font-size: 17px;
+            font-weight: 500;
         }
     }
     ion-row:nth-child(2){

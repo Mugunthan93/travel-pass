@@ -19,9 +19,9 @@ export interface company {
     company_type: string
     agency_id: number
     company_logo: string
-    corp_code:corpCode[]
+    corp_code:any[]
     permissions: string
-    consolidator: consolidator[]
+    consolidator: any[]
     credit_req: creditReq[]
     expense: boolean
     rights_to_book: boolean

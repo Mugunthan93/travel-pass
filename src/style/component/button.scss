@@ -52,7 +52,7 @@ $back-button-background:$btn2-bg;
 
 //variable
 
-$button-color:$btn-bg;
+$button-color:$btn3-bg;
 $button-opacity:$btn-opacity;
 // $button-border:(
 //     "color":,
@@ -111,8 +111,10 @@ $button-opacity:$btn-opacity;
 // $fab-box-shadow:;
 
 ion-button {
-    --opacity: #{$button-opacity};
     --background: #{$button-color};
+    >ion-text{
+        color:#{$white-text};
+    }
 }
 
 ion-back-button {

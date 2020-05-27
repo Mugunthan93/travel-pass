@@ -1,4 +1,5 @@
 @import "../util/variable.scss";
+@import "../util/mixins.scss";
 
 //variable
 
@@ -61,23 +62,20 @@ ion-tab-bar{
 ion-tabs{
     >ion-tab-bar{
         >ion-tab-button{
-
             >ion-icon{
                 color:#{$icon-color} !important;
-
             }
             >ion-label{
-                color:#{$text-color} !important;
+                color:#{$icon-color} !important;
             }
 
             &[aria-selected="true"] {
-
                 >ion-icon {
                     color:#{$icon-color2} !important;
                 }
 
                 >ion-label {
-                    color:#{$text-color} !important;
+                    color:#{$icon-color2} !important;
                 }
                 
             }

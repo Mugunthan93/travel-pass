@@ -1,5 +1,5 @@
 
-
+//request flight
 export interface flightSearchPayload{
     AdultCount: string
     ChildCount: string
@@ -7,18 +7,20 @@ export interface flightSearchPayload{
     //type of journey oneway=1;roundtrip=2;multicity=3
     JourneyType: number
     //flight departure and return details array
-    Segments: segments[]
+    Segments: segmentsPayload[]
     prefferedAirline: any[]
     sources: string[]
 }
 
-export interface segments{
+export interface segmentsPayload{
     Destination: string
     FlightCabinClass: string
     Origin: string
     PreferredArrivalTime: string
     PreferredDepartureTime: string
 }
+
+//response flight
 
 export interface flightSearchResponse{
     response : flightSearchResult
@@ -29,7 +31,7 @@ export interface flightSearchResult{
     Error: flightSearchError
     Origin: string
     ResponseStatus: number
-    Results: flightResult[]
+    Results: flightResult[][]
     TraceId: string
 }
 
@@ -57,7 +59,7 @@ export interface flightResult {
     IsRefundable: boolean
     LastTicketDate: any
     ResultIndex: string
-    Segments: segments
+    Segments: segments[][]
     Source: number
     TicketAdvisory: any
     ValidatingAirline: string
@@ -123,6 +125,55 @@ export interface fareRule{
     Origin: string
 }
 
-export class segments{
-    
+export interface segments{
+    Airline: airLine
+    Baggage: string
+    CabinBaggage: string
+    CabinClass: string
+    Craft: string
+    Destination: destination
+    Duration: number
+    FlightInfoIndex: string
+    FlightStatus: string
+    GroundTime: number
+    IsETicketEligible: boolean
+    Mile: number
+    NoOfSeatAvailable: number
+    Origin: origin
+    Remark: any
+    SegmentIndicator: number
+    Status: string
+    StopOver: boolean
+    StopPoint: string
+    StopPointArrivalTime: any
+    StopPointDepartureTime: any
+    TripIndicator: number
+}
+
+export interface airLine{
+    AirlineCode: string
+    AirlineName: string
+    FareClass: string
+    FlightNumber: string
+    OperatingCarrier: string
+}
+
+export interface destination{
+    Airport: airport
+    ArrTime: string
+}
+
+export interface origin {
+    Airport: airport
+    ArrTime: string
+}
+
+export interface airport {
+    AirportCode: string
+    AirportName: string
+    CityCode: string
+    CityName: string
+    CountryCode: string
+    CountryName: string
+    Terminal: string
 }

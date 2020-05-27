@@ -39,6 +39,7 @@ export class DashboardState{
     @Action(SearchFlight)
     searchFlight(states: StateContext<any>, action: SearchFlight) {
         this.store.dispatch(new SearchType('Flight'));
+        
         this.store.dispatch(new Navigate(['/', 'home', 'search', 'flight', 'one-way']));
         
     }

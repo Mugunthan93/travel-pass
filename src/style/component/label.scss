@@ -8,6 +8,8 @@ ion-label{
     --color: #{$text-color} !important;
     font-size: #{$text-font-size};
     margin:0px;
+    font-weight: bold !important;
+    font-size: 12px !important;
 }
 
 [aria-selected="true"]{
