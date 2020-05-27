@@ -7,23 +7,20 @@ ion-content{
         height: 70px;
         margin: 6vh auto;
     }
-    >ion-tabs {
-        position: relative;
-        max-height: 450px;
-        >ion-tab-bar {
-            --background: #{$transparent};
-            border: 2px solid #{$selected-bg};
-            --border:#{$selected-bg};
-            margin: auto;
-            height: 45px;
-            min-width: 75vw;
+    >ion-title{
+        text-align: center;
+        font-size: large;
+    }
+    >form {
+        padding: 0px 10px;
+        min-height: -webkit-fill-available;
 
-            >ion-tab-button {
-                --color :#{$text-color};
-                &[aria-selected="true"] {
-                    background: #{$selected-bg};
-                }
-            }
+        >ion-item {
+            margin: 20px auto;
+        }
+
+        >ion-button {
+            --background: #A6D2AE !important;
         }
     }
 }

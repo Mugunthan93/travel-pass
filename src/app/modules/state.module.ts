@@ -9,8 +9,12 @@ import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { UserState } from '../stores/user.state';
-import { CompanyState } from '../stores/company.state';
-import { BranchState } from '../stores/branch.state';
+import { DashboardState } from '../stores/dashboard.state';
+import { SearchState } from '../stores/search.state';
+import { FLightState } from '../stores/search/flight.state';
+import { OneWayState } from '../stores/search/flight/oneway.state';
+import { RoundTripState } from '../stores/search/flight/roundtrip.state';
+import { MultiCityState } from '../stores/search/flight/multicity.state';
 
 @NgModule({
   declarations: [],
@@ -19,15 +23,24 @@ import { BranchState } from '../stores/branch.state';
     NgxsModule.forRoot([
       AuthState,
       UserState,
-      CompanyState,
-      BranchState
+      DashboardState,
+      SearchState,
+      FLightState,
+      OneWayState,
+      RoundTripState,
+      MultiCityState
     ], { developmentMode: !environment.production }
     ),
     NgxsStoragePluginModule.forRoot({
       key: [
+        AuthState,
         UserState,
-        CompanyState,
-        BranchState
+        DashboardState,
+        SearchState,
+        FLightState,
+        OneWayState,
+        RoundTripState,
+        MultiCityState
       ]
     }),
     NgxsFormPluginModule.forRoot(),

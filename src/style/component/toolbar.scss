@@ -29,16 +29,12 @@ ion-toolbar {
     ion-button{
         --opacity: 1;
         --background: #{$transparent};
-        ion-icon{
-            padding-right: 0px;
-            color:#{$btn2-bg} !important;
-        }
     }
 
     >ion-buttons{
         >ion-button{
             >ion-icon{
-                color:white !important;
+                filter: invert(100%) sepia(100%) saturate(100%) hue-rotate(100deg) brightness(100%) contrast(100%);
             }
         }
     }

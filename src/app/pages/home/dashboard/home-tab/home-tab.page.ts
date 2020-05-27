@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngxs/store';
+import { SearchFlight, SearchHotel, SearchBus } from 'src/app/stores/dashboard.state';
 
 @Component({
   selector: 'app-home-tab',
@@ -9,22 +11,22 @@ import { Router } from '@angular/router';
 export class HomeTabPage implements OnInit {
 
   constructor(
-    public router : Router
+    private store : Store
   ) { }
 
   ngOnInit() {
   }
 
   searchFlight() {
-    this.router.navigate(['/', 'home', 'search', 'flight','one-way']);
+    this.store.dispatch(new SearchFlight());
   }
 
   searchBus() {
-    this.router.navigate(['/', 'home', 'search', 'bus']);
+    this.store.dispatch(new SearchBus());
   }
 
   searchHotel() {
-    this.router.navigate(['/', 'home', 'search', 'hotel']);
+    this.store.dispatch(new SearchHotel());
   }
 
   searchCab() {

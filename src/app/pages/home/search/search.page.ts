@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { SearchState } from 'src/app/stores/search.state';
 
 @Component({
   selector: 'app-search',
@@ -9,17 +12,25 @@ import { Router } from '@angular/router';
 })
 export class SearchPage implements OnInit {
 
+  searchType$: Observable<any>;
+  search: string;
+  searchSub: Subscription;
+
   constructor(
-    public platform: Platform,
-    public router : Router
+    private store : Store
   ) {
   }
 
   ngOnInit() {
+    this.searchType$ = this.store.select(SearchState.getSearchType);
+    this.searchSub = this.searchType$.subscribe(
+      (search) => {
+        this.search = search;
+      }
+    );
   }
 
   back() {
-    this.router.navigate(['/','home','dashboard','home-tab']);
   }
 
 }
