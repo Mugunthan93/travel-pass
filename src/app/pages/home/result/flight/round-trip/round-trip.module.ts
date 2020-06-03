@@ -19,8 +19,7 @@ import { ResultSortingComponent } from 'src/app/components/shared/result-sorting
     SharedModule
   ],
   declarations: [
-    RoundTripPage,
-    ResultSortingComponent
+    RoundTripPage
   ]
 })
 export class RoundTripPageModule {}

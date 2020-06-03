@@ -31,7 +31,7 @@ export interface flightSearchResult{
     Error: flightSearchError
     Origin: string
     ResponseStatus: number
-    Results: flightResult[][]
+    Results?: flightResult[][]
     TraceId: string
 }
 
@@ -176,4 +176,33 @@ export interface airport {
     CountryCode: string
     CountryName: string
     Terminal: string
+}
+
+//metrixboard
+
+export interface metrixBoard{
+    sector: metrixSector
+    type_of_booking: string
+}
+
+export interface metrixSector {
+    Destination: string
+    Origin: string
+}
+
+export interface metricBoardResponse {
+    data: metrixboardData
+    message: string
+    status: string
+    status_code: number
+}
+
+export interface metrixboardData {
+    createdAt: string
+    customer_id: number
+    id: number
+    sector: metrixSector
+    type_of_booking: string
+    updatedAt: string
+    user_id: number
 }

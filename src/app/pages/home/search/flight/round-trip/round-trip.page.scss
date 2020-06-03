@@ -3,46 +3,44 @@
 
 form {
     @include flex-col-grid;
-}
 
-ion-grid {
-    @include flex-col-grid;
-    margin-left: 5vw;
-    margin-right: 5vw;
+    ion-grid {
+        margin-left: 5vw;
+        margin-right: 5vw;
 
-    >ion-row {
-        @include flex-col-grid;
+        >ion-row {
+            height: 25%;
+            justify-content: space-between;
 
-        >ion-col {
-            @include flex-col-grid;
-
-            >ion-row {
-                @include flex-col-grid;
-
-                >ion-col {
-                    >ion-row {
-                        height: 25%;
-                    }
-
-                    ion-row {
-                        ion-col:first-child {
-                            @include search-grid-input(left,right);
-                        }
-
-                        ion-col:nth-child(2) {
-                            @include search-grid-switch();
-                        }
-
-                        ion-col:last-child{
-                            @include search-grid-input(right,left);
-                        }
-                    }
-
-                    >ion-row:not(:last-child) {
-                        border-bottom: 0.5px solid grey;
-                    }
-                }
+            ion-col {
+                align-self: center;
             }
+
+            ion-icon {
+                align-self: center;
+                height: -webkit-fill-available;
+            }
+
+            ion-col:first-child {
+                @include search-grid-input(left, right);
+            }
+
+            ion-col:nth-child(2) {
+                @include search-grid-switch();
+            }
+
+            ion-col:last-child {
+                @include search-grid-input(right, left);
+            }
+        }
+
+        >ion-row:last-child {
+            justify-content: center;
+            align-content: center;
+        }
+
+        >ion-row:not(:last-child) {
+            border-bottom: 0.5px solid grey;
         }
     }
 }

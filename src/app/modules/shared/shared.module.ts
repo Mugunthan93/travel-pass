@@ -5,11 +5,13 @@ import { IonicModule } from '@ionic/angular';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { FairSummaryComponent } from 'src/app/components/flight/fair-summary/fair-summary.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ResultSortingComponent } from 'src/app/components/shared/result-sorting/result-sorting.component';
 
 
 
 @NgModule({
   declarations: [
+    ResultSortingComponent,
     ResultListComponent,
     FairSummaryComponent
   ],
@@ -21,6 +23,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     MatExpansionModule,
   ],
   exports: [
+    ResultSortingComponent,
     ResultListComponent,
     FairSummaryComponent,
     MatExpansionModule

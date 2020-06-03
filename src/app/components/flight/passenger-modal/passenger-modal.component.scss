@@ -4,69 +4,19 @@ ion-grid{
     ion-row{
         height: 25%;
     }
-    ion-row:not(:last-child){
-        >ion-col{
-            margin:auto;
-            ion-text{
-                padding:10px;
-                margin-left:auto;
-                font-size: large;
-                font-weight: 500;
-            }
-        }
-        >ion-col:last-child{
-            ion-button{
-                margin : 0px;
-                --background: transparent;
-                --box-shadow: transparent;
-                ion-icon{
-                    color: #3566ee !important;
-                }
-            }
-            ion-row{
-                ion-col:nth-of-type(2){
-                    margin:auto;
-                    align-self: center;
-                    display: flex;
-                    ion-text{
-                        margin:auto;
-                    }
-                }
-            }
-        }
-    }
-    ion-row:nth-of-type(4){
-        ion-col:first-child{
-            padding-left:30px;
-            padding-right:30px;
-            display: flex; 
-            flex-flow: column;
-            height : 100%;
-            ion-button{
-                --background: #3566ee;
-                border-radius: 10px;
-                ion-text{
-                    color:white;
-                }
-            }
-        }
-        ion-col:last-child{
-            padding-left:30px;
-            padding-right:30px;
-            display: flex; 
-            flex-flow: column;
-            height : 100%;
-            ion-button{
-                border-radius: 10px;
-                --background: #3566ee;
-                ion-text{
-                    color:white;
-                }
-            }
-        }
-    }
 }
 
 form{
     height: 100%;
+    >ion-row{
+        margin: auto 10px;
+        justify-content: space-between;
+        align-content: center;
+    }
+}
+
+ion-text {
+    font-size: large;
+    font-weight: 500;
+    margin: auto 0px;
 }

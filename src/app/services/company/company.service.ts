@@ -13,40 +13,11 @@ export class CompanyService {
   ) {
    }
 
-  async createCompany(signupData : any): Promise<HTTPResponse> {
-    const companyObject = {
-      company_name: signupData.company_name,
-      phone_number: signupData.mobile_number,
-      company_address_line1: signupData.company_address,
-      company_email: signupData.bussiness_email_id,
-      gst_details: {
-        gstNo: signupData.gst_number
-      },
-      company_type: "corporate",
-      status: false
-    }
-    return await this.http.post("/customers", companyObject);
-  }
-
   async getCompany(companyId : number) {
     const id: { [key: string]: string | string[] } = {
       "customer_id": companyId.toString()
     }
     return await this.http.get("/customers/" + companyId, undefined );
-  }
-
-  async updateCompany(companyId: number, companyData: any): Promise<HTTPResponse> {
-    const companyObject = {
-      company_name: companyData.company_name,
-      company_address_line1: companyData.company_address,
-      phone_number: companyData.company_phone_number,
-      gst_details: {
-        gstNo: companyData.gst_number,
-        email: companyData.gst_email,
-        phoneNumber: companyData.gst_phone_number
-      },
-    }
-    return await this.http.put("/customers/" + companyId, companyObject);
   }
 }
 

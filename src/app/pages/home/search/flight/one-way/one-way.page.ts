@@ -1,11 +1,18 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ModalController, PickerController, IonSelect, Platform } from '@ionic/angular';
 import { CityModalComponent } from 'src/app/components/shared/city-modal/city-modal.component';
 import { PassengerModalComponent } from 'src/app/components/flight/passenger-modal/passenger-modal.component';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
 import { Store } from '@ngxs/store';
-import { Router } from '@angular/router';
+import { OneWaySearch } from 'src/app/stores/search/flight.state';
+import { OverlayEventDetail, AlertOptions } from '@ionic/core';
+
+export interface passengerInput{
+  adult: number
+  child: number
+  infant: number
+}
 
 @Component({
   selector: 'app-one-way',
@@ -16,12 +23,14 @@ export class OneWayPage implements OnInit {
 
   oneWaySearch: FormGroup;
   @ViewChild('select', { static: true }) select: IonSelect;
+  formSubmit: boolean = false;
+  newDate: Date;
+  customAlertOptions: AlertOptions;
 
   constructor(
     public modalCtrl: ModalController,
     public pickrCtrl: PickerController,
     public fb: FormBuilder,
-    public router : Router,
     public platform: Platform,
     public store : Store
   ) {
@@ -29,12 +38,18 @@ export class OneWayPage implements OnInit {
 
   ngOnInit() {
     this.oneWaySearch = new FormGroup({
-      from: this.fb.control(null),
-      to: this.fb.control(null),
-      departure: this.fb.control(new Date()),
-      traveller : this.fb.control(null),
-      class : this.fb.control(null)
+      from: this.fb.control(null,[Validators.required]),
+      to: this.fb.control(null, [Validators.required]),
+      departure: this.fb.control(null, [Validators.required]),
+      traveller: this.fb.control(null, [Validators.required]),
+      class: this.fb.control(null, [Validators.required])
     });
+
+    this.newDate = new Date();
+
+    this.customAlertOptions = {
+      cssClass:'cabinClass'
+    }
   }
 
   async selectCity(field) {
@@ -62,6 +77,7 @@ export class OneWayPage implements OnInit {
   }
 
   async selectDate() {
+    console.log(this.oneWaySearch.controls['departure'].value);
     const options: CalendarModalOptions = {
       title: 'DEPARTURE',
       pickMode: 'single',
@@ -71,7 +87,9 @@ export class OneWayPage implements OnInit {
       canBackwardsSelected: false,
       closeLabel: 'Close',
       doneLabel: 'OK',
-      defaultDate: this.oneWaySearch.controls['departure'].value
+      defaultDate: this.oneWaySearch.controls['departure'].value,
+      from: this.newDate,
+      to: 0
     }
     const modal = await this.modalCtrl.create({
       component: CalendarModal,
@@ -93,7 +111,11 @@ export class OneWayPage implements OnInit {
   }
 
   searchFlight() {
-    this.router.navigate(['/','home','result','flight','one-way']);
+    this.formSubmit = true;
+    console.log(this.oneWaySearch);
+    if (this.oneWaySearch.valid) {
+      this.store.dispatch(new OneWaySearch(this.oneWaySearch.value));
+    }
   }
 
   async selectPassengers() {
@@ -108,11 +130,18 @@ export class OneWayPage implements OnInit {
     });
 
     modal.onDidDismiss().then(
-      (selecetedPassenger) => {
-        if (selecetedPassenger.role == "backdrop") {
+      (selectedPassenger: OverlayEventDetail<passengerInput>) => {
+        if (selectedPassenger.role == "backdrop") {
           return;
         }
-        this.oneWaySearch.controls['traveller'].patchValue(selecetedPassenger.data);
+        if (selectedPassenger.data.adult == 0 &&
+          selectedPassenger.data.child == 0 &&
+          selectedPassenger.data.infant == 0) {
+          this.oneWaySearch.controls['traveller'].patchValue(null);
+        }
+        else {  
+          this.oneWaySearch.controls['traveller'].patchValue(selectedPassenger.data);
+        }
       }
     );
 
@@ -121,5 +150,22 @@ export class OneWayPage implements OnInit {
 
   selectClass() {
     this.select.open();
+  }
+
+  changeClass(evt: CustomEvent) {
+    console.log(evt);
+    this.oneWaySearch.controls['class'].setValue(evt.detail.value);
+  }
+
+  errorClass(name : string) {
+    return {
+      'initial': (this.oneWaySearch.controls[name].value == null) && !this.formSubmit,
+      'valid':
+        this.oneWaySearch.controls[name].value !== null ||
+        (this.oneWaySearch.controls[name].valid && !this.formSubmit) ||
+        (this.oneWaySearch.controls[name].valid && this.formSubmit),
+      'invalid':
+        (this.oneWaySearch.controls[name].invalid && this.formSubmit)
+    }
   }
 }

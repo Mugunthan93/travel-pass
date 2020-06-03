@@ -1,7 +1,8 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { AuthService } from 'src/app/services/auth/auth.service';
-import { Subscription } from 'rxjs';
-import { ModalController, NavParams } from '@ionic/angular';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription, Observable } from 'rxjs';
+import { ModalController } from '@ionic/angular';
+import { city, SharedState, GetCity, ClearCity } from 'src/app/stores/shared.state';
+import { Store, ofActionDispatched, ofActionSuccessful, ofActionCanceled, ofActionErrored, ofActionCompleted, ofAction } from '@ngxs/store';
 
 @Component({
   selector: 'app-city-modal',
@@ -11,24 +12,23 @@ import { ModalController, NavParams } from '@ionic/angular';
 export class CityModalComponent implements OnInit, OnDestroy {
 
   citySub: Subscription;
-  cities: any[] = [];
+  cities$: Observable<city[]>;
+  cities: city[] = new Array(0);
 
   constructor(
-    public authService: AuthService,
-    public modalCtrl: ModalController,
-    public navParams : NavParams
+    private store: Store,
+    public modalCtrl: ModalController
   ) {
-    this.cities = [
-      {airport_code: '',airport_name: '',city_code: 'MAS',city_name: 'Chennai',country_code: '',country_name: '',currency: '',nationalty: ''},
-      {airport_code: '',airport_name: '',city_code: 'MAD',city_name: 'Madurai',country_code: '',country_name: '',currency: '',nationalty: ''},
-      {airport_code: '',airport_name: '',city_code: 'CBE',city_name: 'Coimbatore',country_code: '',country_name: '',currency: '',nationalty: ''},
-      {airport_code: '',airport_name: '',city_code: 'BAN',city_name: 'Bangalore',country_code: '',country_name: '',currency: '',nationalty: ''},
-      {airport_code: '',airport_name: '',city_code: 'DEL',city_name: 'New Delhi',country_code: '',country_name: '',currency: '',nationalty: ''}
-    ];
    }
 
   ngOnInit() {
-
+    this.cities$ = this.store.select(SharedState.cities);
+    this.citySub = this.cities$.subscribe(
+      (resData: city[]) => {
+        this.cities = [];
+        this.cities = resData;
+      }
+    );
   }
 
   selectCity(city: any) {
@@ -36,21 +36,14 @@ export class CityModalComponent implements OnInit, OnDestroy {
   }
 
   searchCity(cityString: string) {
-    let currentCityString = cityString;
-    this.cities = [];
-    // this.citySub = this.authService.searchCity(currentCityString).subscribe(
-    //   (resData) => {
-    //     console.log(resData);
-    //     if (this.cities.length > 0) {
-    //       this.cities = [];
-    //     }
-    //     this.cities = resData.data;
-    //     console.log(this.cities);
-    //   }
-    // );
+    console.log(cityString);
+    if (cityString.length >= 3) {  
+      this.store.dispatch(new GetCity(cityString));
+    }
   }
 
   closeModal() {
+    this.store.dispatch(new ClearCity());
     this.modalCtrl.dismiss(null);
   }
 

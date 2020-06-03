@@ -1,149 +1,118 @@
-<form [formGroup]="multiCitySearch" ngxsForm="search.multiCitySearch">
+<form [formGroup]="multiCitySearch" (ngSubmit)="searchFlight()">
   <ion-grid>
     <ion-row>
-      <ion-col>
-        <ion-row>
-          <ion-col>
-            <ion-content>
-              <ion-row class="ion-justify-content-between" formArrayName="trips"
-                *ngFor="let trip of trips.controls; let i = index;">
-                <ion-col size="12" [formGroupName]="i">
-                  <ion-row class="ion-justify-content-between">
-                    <!--from-->
-                    <ion-col size="3" (click)="selectCity('from',trip)">
-                      <ion-row>
-                        <ion-text>From</ion-text>
-                      </ion-row>
-                      <ion-row>
-                        <ion-text>
-                          {{trip.value.from !== null ? trip.value.from.city_code : 'MAS'}}
-                        </ion-text>
-                      </ion-row>
-                      <ion-row>
-                        <ion-text>
-                          {{trip.value.from !== null ? trip.value.from.city_name : 'Chennai'}}
-                        </ion-text>
-                      </ion-row>
-                    </ion-col>
-                    <ion-col>
-                      <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
-                    </ion-col>
-                    <!--exhange-->
-                    <ion-col size="3" (click)="selectCity('to',trip)">
-                      <ion-row>
-                        <ion-text>To</ion-text>
-                      </ion-row>
-                      <ion-row>
-                        <ion-text>
-                          {{trip.value.to !== null ? trip.value.to.city_code : 'BAN'}}
-                        </ion-text>
-                      </ion-row>
-                      <ion-row>
-                        <ion-text>
-                          {{trip.value.to !== null ? trip.value.to.city_name : 'Bangalore'}}
-                        </ion-text>
-                      </ion-row>
-                    </ion-col>
-                    <ion-col>
-                      <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
-                    </ion-col>
-                    <!--to-->
-                    <ion-col size="3" (click)="selectDate(trip)">
-                      <ion-row>
-                        <ion-text>Depart</ion-text>
-                      </ion-row>
-                      <ion-row>
-                        <ion-text>
-                          {{trip.value.departure !== null ? (trip.value.departure | date : 'd LLL' | titlecase) : '25 Feb'}}
-                        </ion-text>
-                      </ion-row>
-                      <ion-row>
-                        <ion-text>
-                          {{trip.value.departure !== null ? (trip.value.departure | date : 'EEE yyyy' | titlecase) : 'Tue,2020'}}
-                        </ion-text>
-                      </ion-row>
-                    </ion-col>
-                    <ion-col>
-                      <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
-                    </ion-col>
-                    <ion-col>
-                      <ion-icon name="close" (click)="removeTrip(trips.controls,i)"></ion-icon>
-                    </ion-col>
-                  </ion-row>
-                  <ion-input formControlName="from" hidden></ion-input>
-                  <ion-input formControlName="to" hidden></ion-input>
-                  <ion-input formControlName="departure" hidden></ion-input>
-                </ion-col>
-              </ion-row>
-            </ion-content>
+      <ion-content>
+        <ion-row formArrayName="trips" *ngFor="let trip of trips.controls; let i = index;">
+          <ion-col [formGroupName]="i">
+            <ion-row>
+              <ion-col (click)="selectCity('from',trips.controls,i)">
+                <ion-row>
+                  <ion-text>From</ion-text>
+                  <ion-text [ngClass]="errorArrayClass('from',trip)">
+                    {{trip.value.from !== null ? trip.value.from.city_code : 'Select'}}
+                  </ion-text>
+                  <ion-text [ngClass]="errorArrayClass('from',trip)">
+                    {{trip.value.from !== null ? trip.value.from.city_name : 'Origin'}}
+                  </ion-text>
+                </ion-row>
+              </ion-col>
+              <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
+              <ion-col (click)="selectCity('to',trips.controls,i)">
+                <ion-row>
+                  <ion-text>To</ion-text>
+                  <ion-text [ngClass]="errorArrayClass('to',trip)">
+                    {{trip.value.to !== null ? trip.value.to.city_code : 'Select'}}
+                  </ion-text>
+                  <ion-text [ngClass]="errorArrayClass('to',trip)">
+                    {{trip.value.to !== null ? trip.value.to.city_name : 'Destination'}}
+                  </ion-text>
+                </ion-row>
+              </ion-col>
+              <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
+              <ion-col (click)="selectDate(trips.controls,i)">
+                <ion-row>
+                  <ion-text>Depart</ion-text>
+                  <ion-text [ngClass]="errorArrayClass('departure',trip)">
+                    {{trip.value.departure !== null ? (trip.value.departure | date : 'd LLL' | titlecase) : 'Select'}}
+                  </ion-text>
+                  <ion-text [ngClass]="errorArrayClass('departure',trip)">
+                    {{trip.value.departure !== null ? (trip.value.departure | date : 'EEE yyyy' | titlecase) : 'Date'}}
+                  </ion-text>
+                </ion-row>
+              </ion-col>
+              <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
+              <ion-icon name="close" (click)="removeTrip(trips.controls,i)"></ion-icon>
+            </ion-row>
+            <ion-input formControlName="from" hidden></ion-input>
+            <ion-input formControlName="to" hidden></ion-input>
+            <ion-input formControlName="departure" hidden></ion-input>
           </ion-col>
         </ion-row>
+      </ion-content>
+    </ion-row>
+    <ion-row>
+      <ion-button expand="full" (click)="addTrip()">
+        <ion-text>{{'Add city' | titlecase}}</ion-text>
+      </ion-button>
+    </ion-row>
+    <ion-row>
+      <!--class-->
+      <ion-col (click)="selectPassengers()">
         <ion-row>
-          <ion-col size="6" offset="3">
-            <ion-button expand="full" (click)="addTrip()">
-              <ion-text>{{'Add city' | titlecase}}</ion-text>
-            </ion-button>
-          </ion-col>
-        </ion-row>
-        <ion-row class="ion-justify-content-between">
-          <!--class-->
-          <ion-col size="5" (click)="selectPassengers()">
-            <ion-row>
-              <ion-text>Travellers</ion-text>
-            </ion-row>
-            <ion-row>
-              <ion-text *ngIf="(this.multiCitySearch.value.traveller == null) ||
-                      (this.multiCitySearch.value.traveller?.adult <= 0 &&
-                        this.multiCitySearch.value.traveller?.child <=0 &&
-                        this.multiCitySearch.value.traveller.infant <=0)">
-                Select Passengers
-              </ion-text>
-              <ion-text
-                *ngIf="this.multiCitySearch.value.traveller !== null && this.multiCitySearch.value.traveller.adult > 0">
-                {{this.multiCitySearch.value.traveller.adult+'   Adult'}}
-              </ion-text>
-              <ion-text
-                *ngIf="this.multiCitySearch.value.traveller !== null && this.multiCitySearch.value.traveller.child > 0">
-                {{this.multiCitySearch.value.traveller.child+'   Child'}}
-              </ion-text>
-              <ion-text *ngIf="this.multiCitySearch.value.traveller !== null && this.multiCitySearch.value.traveller.infant >
-            0">
-                {{this.multiCitySearch.value.traveller.infant+'   Infant'}}
-              </ion-text>
-            </ion-row>
-          </ion-col>
-          <ion-col size="1">
-            <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
-          </ion-col>
-          <!--blank-->
-          <ion-col size="5">
-            <ion-row>
-              <ion-text>Class</ion-text>
-            </ion-row>
-            <ion-row>
-              <ion-text (click)="selectClass()">
-                {{(this.multiCitySearch.value.class !== null ? this.multiCitySearch.value.class : 'Economy') | titlecase}}
-              </ion-text>
-              <ion-item hidden="true">
-                <ion-label>Class</ion-label>
-                <ion-select #select formControlName="class" cancelText="Cancel" okText="Confirm">
-                  <ion-select-option value="economy">Economy</ion-select-option>
-                  <ion-select-option value="premium economy">Premium Economy</ion-select-option>
-                  <ion-select-option value="bussiness">Bussiness</ion-select-option>
-                  <ion-select-option value="first class">First Class</ion-select-option>
-                </ion-select>
-              </ion-item>
-            </ion-row>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size="6" offset="3">
-            <ion-button expand="full" (click)="searchFlight()">
-              <ion-text>{{'Search Flight' | titlecase}}</ion-text>
-            </ion-button>
-          </ion-col>
+          <ion-text>Travellers</ion-text>
+          <ion-text [ngClass]="errorClass('traveller')"
+           *ngIf="(this.multiCitySearch.value.traveller == null) ||
+                  (this.multiCitySearch.value.traveller?.adult <= 0 &&
+                    this.multiCitySearch.value.traveller?.child <=0 &&
+                    this.multiCitySearch.value.traveller.infant <=0)">
+            Select Passengers
+          </ion-text
+          >
+          <ion-text [ngClass]="errorClass('traveller')"
+            *ngIf="this.multiCitySearch.value.traveller !== null && this.multiCitySearch.value.traveller.adult > 0">
+            {{this.multiCitySearch.value.traveller.adult+'   Adult'}}
+          </ion-text>
+          <ion-text [ngClass]="errorClass('traveller')"
+            *ngIf="this.multiCitySearch.value.traveller !== null && this.multiCitySearch.value.traveller.child > 0">
+            {{this.multiCitySearch.value.traveller.child+'   Child'}}
+          </ion-text>
+          <ion-text [ngClass]="errorClass('traveller')"
+          *ngIf="this.multiCitySearch.value.traveller !== null && this.multiCitySearch.value.traveller.infant >
+        0">
+            {{this.multiCitySearch.value.traveller.infant+'   Infant'}}
+          </ion-text>
         </ion-row>
       </ion-col>
+      <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
+      <ion-col>
+        <ion-row>
+          <ion-text>Class</ion-text>
+          <ion-text (click)="selectClass()" [ngClass]="errorClass('class')">
+            {{(this.multiCitySearch.value.class !== null ? this.multiCitySearch.value.class : 'Select Class') | titlecase}}
+          </ion-text>
+          <ion-item hidden="true">
+            <ion-label>Class</ion-label>
+            <ion-select 
+              #select 
+              formControlName="class" 
+              cancelText="Cancel" 
+              okText="Confirm"
+              [interfaceOptions]="customAlertOptions"
+              (ionChange)="changeClass($event)"
+              >
+              <ion-select-option value="economy">Economy</ion-select-option>
+              <ion-select-option value="premium economy">Premium Economy</ion-select-option>
+              <ion-select-option value="bussiness">Bussiness</ion-select-option>
+              <ion-select-option value="first class">First Class</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-button expand="full" type="submit">
+        <ion-text>{{'Search Flight' | titlecase}}</ion-text>
+      </ion-button>
     </ion-row>
   </ion-grid>
   <ion-input formControlName="traveller" hidden></ion-input>

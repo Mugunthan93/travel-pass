@@ -1,5 +1,9 @@
 import { State, Action, StateContext, Selector } from "@ngxs/store";
-import { FLightState } from './search/flight.state';
+import { FlightSearchState } from './search/flight.state';
+
+export interface search{
+    mode : string
+}
 
 export class SearchType {
     static readonly type = '[Search] SearchType';
@@ -9,18 +13,20 @@ export class SearchType {
 }
 
 
-@State<any>({
+@State<search>({
     name: 'Search',
-    defaults: null,
+    defaults: {
+        mode : null
+    },
     children: [
-        FLightState
+        FlightSearchState
     ]
 })
 export class SearchState {
 
     @Selector()
-    static getSearchType(state: string) {
-        return state;
+    static getSearchType(state: search) {
+        return state.mode;
     }
 
     constructor() {
@@ -28,8 +34,10 @@ export class SearchState {
     }
 
     @Action(SearchType)
-    searchType(states: StateContext<any>, action: SearchType) {
-        states.setState(action.search);
+    searchType(states: StateContext<search>, action: SearchType) {
+        states.setState({
+            mode : action.search
+        });
     }
 
 }

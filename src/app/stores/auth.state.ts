@@ -3,6 +3,7 @@ import { AuthService } from '../services/auth/auth.service';
 import { Navigate } from '@ngxs/router-plugin';
 import { LoadingController, ToastController, AlertController } from '@ionic/angular';
 import { GetUser } from './user.state';
+import { HTTPResponse } from '@ionic-native/http/ngx';
 
 export class Login {
     static readonly type = '[App] LoginUser';
@@ -67,6 +68,7 @@ export class AuthState {
 
         try {
             const userLoginResponse = await this.authService.login(action.username, action.password);
+            console.log(userLoginResponse);
             const JSONdata = userLoginResponse.data;
             console.log(JSON.parse(JSONdata));
             sessionStorage.setItem('session', JSONdata);
@@ -74,6 +76,10 @@ export class AuthState {
             data.user = userResponse; 
         }
         catch (error) {
+            if (error.error) {
+                const errMsg = JSON.parse(error.error);
+                console.log(errMsg);
+            }
             console.log(error);
             failedAlert.message = error;
             loading.dismiss();

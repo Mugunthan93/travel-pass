@@ -1,105 +1,90 @@
 @import "../../../../../../style/util/mixins.scss";
 @import "../../../../../../style/util/variable.scss";
 
-@mixin multi-way-content {
-    >ion-content {
-        >ion-row {
-            margin-top:5px;
-            margin-bottom:5px;
-            margin-left:4vw;
-            margin-right:4vw;
-            >ion-col {
-                @include flex-col-grid;
-                >ion-row {
-                    border-bottom : 2px solid grey;
-                    padding:2px;
-                    >ion-col {
-                        margin-top:auto !important;
-                        margin-bottom:auto !important;
-                        @include flex-col-grid;
-                        >ion-row {
-                            height: 25%;
-                        }
-                        @include search-grid-input(left, right);
+form {
+    @include flex-col-grid;
 
-                        ion-icon {
-                            height: 50px;
+    ion-grid {
+        margin-left: 5vw;
+        margin-right: 5vw;
+
+        >ion-row {
+            &{
+                justify-content: center;
+                align-content: center;
+            }
+            &:first-child{
+                height:75%;
+                >ion-content{
+                    >ion-row{
+                        justify-content: space-between;
+                        >ion-col{
+                            >ion-row{
+                                justify-content: space-between;
+                                flex-direction: row;
+                                margin-bottom: 5px;
+                                >ion-col:nth-of-type(1) {
+                                    @include search-grid-input(left, right);
+                                }
+
+                                ion-col:nth-of-type(2) {
+                                    @include search-grid-input(left, right);
+                                }
+
+                                ion-col:nth-of-type(3) {
+                                    @include search-grid-input(left, right);
+                                }
+
+                                >ion-col:nth-of-type(4) {
+                                    @include search-grid-switch();
+                                }
+                                >ion-icon{
+                                    height:60px;
+                                }
+                            }
                         }
                     }
                 }
             }
+            &:not(:first-child){
+                height: 25%;
+            }
+            justify-content: space-between;
+
+            ion-col {
+                align-self: center;
+            }
+
+            ion-icon {
+                align-self: center;
+                height: -webkit-fill-available;
+            }
+
+            ion-col:first-child {
+                @include search-grid-input(left, right);
+            }
+
+            ion-col:nth-child(2) {
+                @include search-grid-switch();
+            }
+
+            ion-col:last-child {
+                @include search-grid-input(right, left);
+            }
+        }
+
+        >ion-row:last-child {
+            justify-content: center;
+            align-content: center;
+        }
+
+        >ion-row:not(:last-child) {
+            border-bottom: 0.5px solid grey;
         }
     }
 }
 
-form{
-    @include flex-col-grid;
-}
-ion-grid{
-    @include flex-col-grid;
-    margin-left:0px;
-    margin-right:0px;
-    margin-bottom:10px;
-
-    >ion-row{
-        @include flex-col-grid;
-        >ion-col{
-            @include flex-col-grid;
-
-            >ion-row:first-child {
-                @include flex-col-grid;
-                height: 50%;
-                >ion-col{
-                @include flex-col-grid;
-                @include multi-way-content;
-                }
-            }
-            >ion-row:nth-child(2) {
-                @include flex-col-grid;
-                height: 15%;
-                >ion-col {
-                    @include flex-col-grid;
-                    margin-top:auto;
-                    margin-bottom:auto;
-                }
-            }
-            >ion-row:nth-child(3){
-                height: 20%;
-                margin-left:4vw;
-                margin-right:4vw;
-                ion-col:first-child {
-                    @include search-grid-input(left, right);
-                }
-
-                ion-col:nth-child(2) {
-                    @include search-grid-switch();
-                }
-
-                ion-col:last-child {
-                    @include search-grid-input(right, left);
-                }
-
-                border-bottom: 0.5px solid grey;
-            }
-            
-            >ion-row:nth-child(4) {
-                @include flex-col-grid;
-                height: 15%;
-
-                ion-col {
-                    margin-top:auto;
-                    margin-bottom:auto;
-                    @include flex-col-grid;
-                }
-            }
-
-            
-        }
-    }
-
-}
-
-ion-text{
+ion-text {
     line-height: 20px;
 }
 

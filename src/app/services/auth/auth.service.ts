@@ -17,19 +17,12 @@ export class AuthService {
       username : email,
       password : password
     }
-    this.http.setAuth(email, password);
+    // this.http.setAuth(email, password);
     return this.http.post("/users/login", login);
   }
 
   logout() : Promise<HTTPResponse> {
     return this.http.post("/users/logout", {});
-  }
-
-  searchCity(reqCity: string) : Promise<HTTPResponse> {
-    const param: { [key: string]: string | string[] } = {
-      "city": reqCity
-    }
-    return this.http.get("/airlines/tboairlinecities", param);
   }
 
 }

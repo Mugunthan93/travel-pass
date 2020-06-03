@@ -1,22 +1,27 @@
 <ion-header>
     <ion-toolbar>
-        <ion-item lines="none" button (click)="closeModal()" slots="end">
-            <ion-title>Search City</ion-title>
-            <ion-icon name="close"></ion-icon>
-        </ion-item>
+        <ion-title>
+            <ion-text>Search City</ion-text>
+        </ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="closeModal()">
+                <ion-icon name="close-outline" size="large"></ion-icon>
+            </ion-button>
+        </ion-buttons>
     </ion-toolbar>
-</ion-header>
-<ion-content>
-    <ion-item>
+    <ion-item lines="full">
         <ion-label position="floating">Select City</ion-label>
         <ion-input type="text" (input)="searchCity($event.target.value)"></ion-input>
     </ion-item>
-    <ion-spinner *ngIf="cities.length == 0"></ion-spinner>
-    <div *ngIf="cities.length > 0">
-    <ion-list *ngFor="let city of cities">
-        <ion-item lines="none" (click)="selectCity(city)">
-            <ion-text>{{city.city_name}}[{{city.city_code}}]</ion-text>
+</ion-header>
+<ion-content>
+    <ion-list *ngIf="cities.length > 0">
+        <ion-item lines="none" *ngFor="let city of cities" (click)="selectCity(city)">
+            <ion-label>{{city.city_name}}</ion-label>
+            <ion-text>{{city.city_code}}</ion-text>
+        </ion-item>
+        <ion-item lines="none">
+            <ion-skeleton-text animated></ion-skeleton-text>
         </ion-item>
     </ion-list>
-    </div>
 </ion-content>

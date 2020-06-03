@@ -27,30 +27,23 @@
 }
 
 @mixin search-grid-input($side1,$side2){
-    margin-top:auto !important;
-    margin-bottom:auto !important;
     ion-row{
+        flex-direction: column;
         ion-text {
             margin-#{$side2}:auto !important;
             margin-#{$side1}:0 !important;
+            
         }
-    }
-
-    >ion-row:nth-child(1){
-        ion-text{
+        ion-text:nth-child(1) {
             color: black;
             font-size: 17px;
             font-weight: 500;
         }
-    }
-    ion-row:nth-child(2){
-        ion-text{
+        ion-text:nth-child(2) {
             font-weight: 500;
-            font-size:small;
+            font-size: small;
         }
-    }
-    ion-row:nth-child(3){
-        ion-text {
+        ion-text:nth-child(3) {
             font-weight: 500;
             font-size: small;
         }
@@ -58,8 +51,6 @@
 }
 
 @mixin search-grid-switch(){
-    margin-top:auto !important;
-    margin-bottom:auto !important;
     &>ion-button{
         --opacity: 1;
         --background: #{$transparent};

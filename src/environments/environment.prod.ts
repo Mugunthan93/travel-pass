@@ -1,6 +1,8 @@
 export const environment = {
   production: true,
   baseURL: "https://api.business.travellerspass.com/V1.0",
+  host: "api.business.travellerspass.com",
+  origin: "https://business.travellerspass.com",
   tbobaseURL: "https://api.prod.booking.travellerspass.com/V1.0",
   pay_baseURL: "https://test.instamojo.com/api/1.1",
   razorpaykey: "rzp_test_hQbSVXzkMOCiRW",

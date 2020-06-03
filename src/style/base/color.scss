@@ -2,6 +2,16 @@
 
 :root {
 
-    
+    .initial {
+        color: grey;
+    }
+
+    .invalid {
+        color: #E87474 !important;
+    }
+
+    .valid {
+        color: #5BACDC !important;
+    }
 
 }

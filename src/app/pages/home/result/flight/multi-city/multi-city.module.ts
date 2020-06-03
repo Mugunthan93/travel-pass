@@ -19,8 +19,7 @@ import { ResultSortingComponent } from 'src/app/components/shared/result-sorting
     SharedModule
   ],
   declarations: [
-    MultiCityPage,
-    ResultSortingComponent
+    MultiCityPage
   ]
 })
 export class MultiCityPageModule {}

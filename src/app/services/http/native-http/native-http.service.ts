@@ -3,6 +3,24 @@ import { HTTP, HTTPResponse } from '@ionic-native/http/ngx';
 import { environment } from 'src/environments/environment';
 import { Platform } from '@ionic/angular';
 
+export interface options { 
+  method: 'get' | 'post' | 'put' | 'patch' | 'head' | 'delete' | 'options' | 'upload' | 'download';
+  data?: {
+    [index: string]: any;
+  };
+  params?: {
+    [index: string]: string | number;
+  };
+  serializer?: 'json' | 'urlencoded' | 'utf8' | 'multipart';
+  timeout?: number;
+  headers?: {
+    [index: string]: string;
+  };
+  filePath?: string | string[];
+  name?: string | string[];
+  responseType?: 'text' | 'arraybuffer' | 'blob' | 'json';
+}
+
 export interface auth{
   Authorization: string;
 }
@@ -12,7 +30,7 @@ export interface auth{
 })
 export class NativeHttpService implements OnInit{
 
-  private header : any;
+  public header : any;
 
   constructor(
     public platform : Platform,
@@ -26,7 +44,6 @@ export class NativeHttpService implements OnInit{
     this.http.setHeader(environment.baseURL, "Access-Control-Allow-Origin", '*');
     this.http.setHeader(environment.baseURL, "Access-Control-Allow-Headers", "Content-Type");
     this.http.setHeader(environment.baseURL, "Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
-    this.http.setHeader(environment.baseURL, "Content-Type", "application/x-www-form-urlencoded");
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setHeader(environment.baseURL, "withCredentials", "true");
   }
@@ -44,7 +61,9 @@ export class NativeHttpService implements OnInit{
     return await this.http.get(environment.baseURL + url, opt, this.header);
   }
 
-  async post(url: string, body?: any) : Promise<HTTPResponse> {
+  async post(url: string, body?: any): Promise<HTTPResponse> {
+    this.setHeader(environment.baseURL, "Content-Type", "application/json");
+    this.setData('json');
     return await this.http.post(environment.baseURL + url, body, this.header);
   }
 
@@ -68,7 +87,19 @@ export class NativeHttpService implements OnInit{
     return await this.http.getCookieString(url);
   }
 
-  async setReqTimeout(number : number) {
-    return await this.http.setRequestTimeout(number);
+  setData(name){
+    this.http.setDataSerializer(name);
+  }
+
+  setHeader(host: string, header: string, value: string) {
+    this.http.setHeader(host,header,value);
+  }
+
+  setReqTimeout(number : number) {
+    return this.http.setRequestTimeout(number);
+  }
+
+  getReqTimeout() {
+    return this.http.getRequestTimeout();
   }
 }

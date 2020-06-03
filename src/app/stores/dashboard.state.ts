@@ -1,6 +1,7 @@
 import { State, Action, StateContext, Store } from "@ngxs/store";
 import { Navigate } from '@ngxs/router-plugin';
 import { SearchState, SearchType } from './search.state';
+import { JourneyType } from './search/flight.state';
 
 export class SearchFlight{
     static readonly type = '[Dashboard] SearchFlight';
@@ -39,7 +40,7 @@ export class DashboardState{
     @Action(SearchFlight)
     searchFlight(states: StateContext<any>, action: SearchFlight) {
         this.store.dispatch(new SearchType('Flight'));
-        
+        this.store.dispatch(new JourneyType('one-way'));
         this.store.dispatch(new Navigate(['/', 'home', 'search', 'flight', 'one-way']));
         
     }

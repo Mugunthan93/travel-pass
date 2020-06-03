@@ -11,10 +11,10 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { UserState } from '../stores/user.state';
 import { DashboardState } from '../stores/dashboard.state';
 import { SearchState } from '../stores/search.state';
-import { FLightState } from '../stores/search/flight.state';
-import { OneWayState } from '../stores/search/flight/oneway.state';
-import { RoundTripState } from '../stores/search/flight/roundtrip.state';
-import { MultiCityState } from '../stores/search/flight/multicity.state';
+import { FlightSearchState } from '../stores/search/flight.state';
+import { SharedState } from '../stores/shared.state';
+import { ResultState } from '../stores/result.state';
+import { FlightResultState } from '../stores/result/flight.state';
 
 @NgModule({
   declarations: [],
@@ -25,22 +25,18 @@ import { MultiCityState } from '../stores/search/flight/multicity.state';
       UserState,
       DashboardState,
       SearchState,
-      FLightState,
-      OneWayState,
-      RoundTripState,
-      MultiCityState
+      ResultState,
+      FlightSearchState,
+      FlightResultState,
+      SharedState
     ], { developmentMode: !environment.production }
     ),
     NgxsStoragePluginModule.forRoot({
       key: [
-        AuthState,
         UserState,
-        DashboardState,
         SearchState,
-        FLightState,
-        OneWayState,
-        RoundTripState,
-        MultiCityState
+        SharedState,
+        ResultState
       ]
     }),
     NgxsFormPluginModule.forRoot(),

@@ -1,122 +1,120 @@
-<form [formGroup]="oneWaySearch">
+<form [formGroup]="oneWaySearch" (ngSubmit)="searchFlight()">
   <ion-grid>
     <ion-row>
+      <!--from-->
+      <ion-col (click)="selectCity('from')">
+        <ion-row>
+          <ion-text>From</ion-text>
+          <ion-text [ngClass]="errorClass('from')">
+            {{this.oneWaySearch.value.from !== null ? this.oneWaySearch.value.from.city_code : 'Select'}}
+          </ion-text>
+          <ion-text [ngClass]="errorClass('from')">
+            {{this.oneWaySearch.value.from !== null ? this.oneWaySearch.value.from.city_name : 'Origin'}}
+          </ion-text>
+        </ion-row>
+      </ion-col>
+      <!--exhange-->
       <ion-col>
-          <ion-row>
-            <ion-col>
-              <ion-row class="ion-justify-content-between">
-                <!--from-->
-                <ion-col size="4" (click)="selectCity('from')">
-                  <ion-row>
-                    <ion-text>From</ion-text>
-                  </ion-row>
-                  <ion-row>
-                    <ion-text>{{this.oneWaySearch.value.from !== null ? this.oneWaySearch.value.from.city_code : 'MAS'}}</ion-text>
-                  </ion-row>
-                  <ion-row>
-                    <ion-text>{{this.oneWaySearch.value.from !== null ? this.oneWaySearch.value.from.city_name : 'Chennai'}}</ion-text>
-                  </ion-row>
-                </ion-col>
-                <!--exhange-->
-                <ion-col size="3">
-                  <ion-button expand=full fill="clear" (click)="swapTrip()">
-                    <ion-icon src="../../../../../../assets/icons/straight.svg"></ion-icon>
-                  </ion-button>
-                </ion-col>
-                <!--to-->
-                <ion-col size="4" (click)="selectCity('to')">
-                  <ion-row>
-                    <ion-text>To</ion-text>
-                  </ion-row>
-                  <ion-row>
-                    <ion-text>{{this.oneWaySearch.value.to !== null ? this.oneWaySearch.value.to.city_code : 'BAN'}}</ion-text>
-                  </ion-row>
-                  <ion-row>
-                    <ion-text>{{this.oneWaySearch.value.to !== null ? this.oneWaySearch.value.to.city_name : 'Bangalore'}}</ion-text>
-                  </ion-row>
-                </ion-col>
-              </ion-row>
-              <ion-row class="ion-justify-content-between">
-                <!--depart-->
-                <ion-col size="5" (click)="selectDate()">
-                  <ion-row>
-                    <ion-text>Depart</ion-text>
-                  </ion-row>
-                  <ion-row>
-                    <ion-text>{{this.oneWaySearch.value.departure !== null ? (this.oneWaySearch.value.departure | date : 'EEE,d LLL' | titlecase) : 'Tue,25 Feb'}}</ion-text>
-                  </ion-row>
-                  <ion-row>
-                    <ion-text></ion-text>
-                  </ion-row>
-                </ion-col>
-                <ion-col size="1">
-                  <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
-                </ion-col>
-                <!--traveller number-->
-                <ion-col size="5" (click)="selectPassengers()">
-                  <ion-row>
-                    <ion-text>Travellers</ion-text>
-                  </ion-row>
-                  <ion-row>
-                    <ion-text *ngIf="(this.oneWaySearch.value.traveller == null) ||
-                          (this.oneWaySearch.value.traveller?.adult <= 0 &&
-                            this.oneWaySearch.value.traveller?.child <=0 &&
-                            this.oneWaySearch.value.traveller.infant <=0)">
-                      Select Passengers
-                    </ion-text>
-                    <ion-text
-                      *ngIf="this.oneWaySearch.value.traveller !== null && this.oneWaySearch.value.traveller.adult > 0">
-                      {{this.oneWaySearch.value.traveller.adult+'   Adult'}}
-                    </ion-text>
-                    <ion-text *ngIf="this.oneWaySearch.value.traveller !== null && this.oneWaySearch.value.traveller.child > 0">
-                      {{this.oneWaySearch.value.traveller.child+'   Child'}}
-                    </ion-text>
-                    <ion-text *ngIf="this.oneWaySearch.value.traveller !== null && this.oneWaySearch.value.traveller.infant > 0">
-                      {{this.oneWaySearch.value.traveller.infant+'   Infant'}}
-                    </ion-text>
-                  </ion-row>
-                </ion-col>
-              </ion-row>
-              <ion-row class="ion-justify-content-between">
-                <!--class-->
-                <ion-col size="5">
-                  <ion-row>
-                    <ion-text>Class</ion-text>
-                  </ion-row>
-                  <ion-row>
-                    <ion-text (click)="selectClass()">{{(this.oneWaySearch.value.class !== null ? this.oneWaySearch.value.class : 'Economy') | titlecase}}</ion-text>
-                    <ion-item hidden="true">
-                      <ion-label>Class</ion-label>
-                      <ion-select #select formControlName="class" cancelText="Cancel" okText="Confirm">
-                        <ion-select-option value="economy">Economy</ion-select-option>
-                        <ion-select-option value="premium economy">Premium Economy</ion-select-option>
-                        <ion-select-option value="bussiness">Bussiness</ion-select-option>
-                        <ion-select-option value="first class">First Class</ion-select-option>
-                      </ion-select>
-                    </ion-item>
-                  </ion-row>
-                </ion-col>
-                <ion-col size="1">
-                  <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
-                </ion-col>
-                <!--blank-->
-                <ion-col size="5">
-                </ion-col>
-              </ion-row>
-              <ion-row>
-                <ion-col size="6" offset="3">
-                  <ion-button expand="full" (click)="searchFlight()">
-                    <ion-text>{{'Search Flight' | titlecase}}</ion-text>
-                  </ion-button>
-                </ion-col>
-              </ion-row>
-            </ion-col>
-          </ion-row>
-        </ion-col>
+        <ion-button expand=full fill="clear" (click)="swapTrip()">
+          <ion-icon src="../../../../../../assets/icons/straight.svg"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <!--to-->
+      <ion-col (click)="selectCity('to')">
+        <ion-row>
+          <ion-text>To</ion-text>
+          <ion-text [ngClass]="errorClass('to')">
+            {{this.oneWaySearch.value.to !== null ? this.oneWaySearch.value.to.city_code : 'Select'}}
+          </ion-text>
+          <ion-text [ngClass]="errorClass('to')">
+            {{this.oneWaySearch.value.to !== null ? this.oneWaySearch.value.to.city_name : 'Destination'}}
+          </ion-text>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <!--depart-->
+      <ion-col (click)="selectDate()">
+        <ion-row>
+          <ion-text>Depart</ion-text>
+          <ion-text [ngClass]="errorClass('departure')">
+            {{this.oneWaySearch.value.departure !== null ? 
+              (this.oneWaySearch.value.departure | date : 'EEE,d LLL' | titlecase) : 
+              'Select Date'}}
+          </ion-text>
+        </ion-row>
+      </ion-col>
+      <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
+      <!--traveller number-->
+      <ion-col (click)="selectPassengers()">
+        <ion-row>
+          <ion-text>Travellers</ion-text>
+          <ion-text 
+           [ngClass]="errorClass('traveller')"
+            *ngIf="(this.oneWaySearch.value.traveller == null) ||
+                  (this.oneWaySearch.value.traveller?.adult <= 0 &&
+                    this.oneWaySearch.value.traveller?.child <=0 &&
+                    this.oneWaySearch.value.traveller.infant <=0)"
+          >
+            Select Passengers
+          </ion-text>
+          <ion-text
+            [ngClass]="errorClass('traveller')"
+            *ngIf="this.oneWaySearch.value.traveller !== null && this.oneWaySearch.value.traveller.adult > 0">
+            {{this.oneWaySearch.value.traveller.adult+'   Adult'}}
+          </ion-text>
+          <ion-text 
+            [ngClass]="errorClass('traveller')"
+            *ngIf="this.oneWaySearch.value.traveller !== null && this.oneWaySearch.value.traveller.child > 0">
+            {{this.oneWaySearch.value.traveller.child+'   Child'}}
+          </ion-text>
+          <ion-text
+            [ngClass]="errorClass('traveller')"
+            *ngIf="this.oneWaySearch.value.traveller !== null && this.oneWaySearch.value.traveller.infant > 0">
+            {{this.oneWaySearch.value.traveller.infant+'   Infant'}}
+          </ion-text>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <!--class-->
+      <ion-col>
+        <ion-row>
+          <ion-text>Class</ion-text>
+          <ion-text 
+            [ngClass]="errorClass('class')"
+            (click)="selectClass()">{{(this.oneWaySearch.value.class !== null ? this.oneWaySearch.value.class : 'Select Class') | titlecase}}</ion-text>
+          <ion-item hidden="true">
+            <ion-label>Class</ion-label>
+            <ion-select 
+              #select 
+              formControlName="class" 
+              cancelText="Cancel" 
+              okText="Confirm"
+              [interfaceOptions]="customAlertOptions"
+              (ionChange)="changeClass($event)"
+              >
+              <ion-select-option value="economy">Economy</ion-select-option>
+              <ion-select-option value="premium economy">Premium Economy</ion-select-option>
+              <ion-select-option value="bussiness">Bussiness</ion-select-option>
+              <ion-select-option value="first class">First Class</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-row>
+      </ion-col>
+      <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
+      <!--blank-->
+      <ion-col>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-button expand="full" type="submit">
+        <ion-text>{{'Search Flight' | titlecase}}</ion-text>
+      </ion-button>
     </ion-row>
   </ion-grid>
-  <ion-input formControlName="from" hidden></ion-input>
-  <ion-input formControlName="to" hidden></ion-input>
-  <ion-input formControlName="departure" hidden></ion-input>
-  <ion-input formControlName="traveller" hidden></ion-input>
+  <ion-input formControlName="from" hidden required></ion-input>
+  <ion-input formControlName="to" hidden required></ion-input>
+  <ion-input formControlName="departure" hidden required></ion-input>
+  <ion-input formControlName="traveller" hidden required></ion-input>
 </form>

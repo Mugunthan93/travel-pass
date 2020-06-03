@@ -5,6 +5,8 @@
 export const environment = {
   production: false,
   baseURL: "https://api.dev.travellerspass.com/V1.0",
+  host: "api.dev.travellerspass.com",
+  origin:"https://demo.travellerspass.com",
   tbobaseURL: "https://api.dev.travellerspass.com/V1.0",
   pay_baseURL: "https://test.instamojo.com/api/1.1",
   razorpaykey: null,

@@ -1,4 +1,4 @@
-
+@import "../util/variable.scss";
 
 //variable
 
@@ -13,10 +13,41 @@
 //     "start":,
 //     "top":
 // );
+$content-background:"./assets/ng-img/bg.jpeg";
 
 ion-select{
     --padding-top: 0px;
     --padding-bottom: 0px;
     --padding-start: 0px;
     align-items: center;
+}
+
+.cabinClass{
+    div.alert-head{
+        background:#5BACDC;
+        --ion-text-color:white;
+    }
+    div.alert-radio-group{
+        background: url(#{$content-background});
+        button{
+            div.alert-button-inner{
+                div.alert-radio-icon{
+                    border-color:#5BACDC;
+                    div.alert-radio-inner{
+                        background-color: #5BACDC;
+                    }
+                }
+            }
+        }
+    }
+    div.alert-button-group{
+        justify-content: space-around;
+        background:#5BACDC;
+        button {
+            background: #5BACDC;
+            span {
+                color:#{$white-text};
+            }
+        }
+    }
 }

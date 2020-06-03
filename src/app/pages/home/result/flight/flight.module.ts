@@ -8,6 +8,7 @@ import { FlightPageRoutingModule } from './flight-routing.module';
 
 import { FlightPage } from './flight.page';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { SharedModule } from 'src/app/modules/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     FormsModule,
     IonicModule,
     FlightPageRoutingModule,
-    MatExpansionModule
+    MatExpansionModule,
+    SharedModule
   ],
   declarations: [
     FlightPage
