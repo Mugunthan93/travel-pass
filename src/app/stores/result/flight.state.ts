@@ -1,10 +1,30 @@
 import { State, Selector, Action, StateContext } from '@ngxs/store';
-import { flightSearchResult } from 'src/app/models/search/flight';
+import { flightSearchResult, flightResult } from 'src/app/models/search/flight';
 
 export interface flight{
-    onewayResponse: flightSearchResult
-    roundtripResponse: flightSearchResult
-    multicityResponse: flightSearchResult
+    oneway: onewayResult
+    roundtrip: roundtripResult
+    multicity: multicityResult
+}
+
+export interface onewayResult{
+    value: flightResult[]
+    traceId: string
+}
+
+export interface roundtripResult {
+    value: rountripValue
+    traceId: string
+}
+
+export interface rountripValue{
+    departure: flightResult[],
+    return: flightResult[]
+}
+
+export interface multicityResult {
+    value: flightResult[]
+    traceId: string
 }
 
 export class OneWayResponse{
@@ -30,11 +50,11 @@ export class MultiCityResponse {
 
 
 @State<flight>({
-    name: 'Flight',
+    name: 'FlightResult',
     defaults: {
-        onewayResponse: null,
-        roundtripResponse: null,
-        multicityResponse: null
+        oneway: null,
+        roundtrip: null,
+        multicity: null
     }
 })
 export class FlightResultState{
@@ -43,24 +63,55 @@ export class FlightResultState{
 
     }
 
+    @Selector() 
+    static getOneWay(states: flight): flightResult[]{
+        return states.oneway.value;
+    }
+
+    @Selector()
+    static getRoundTrip(states: flight): rountripValue {
+        return states.roundtrip.value;
+    }
+
+    @Selector()
+    static getMultiWay(states: flight): flightResult[] {
+        return states.multicity.value;
+    }
+
+
+
     @Action(OneWayResponse)
     onewayResponse(states: StateContext<flight>, action: OneWayResponse) {
+        console.log(action);
         states.patchState({
-            onewayResponse: action.response
+            oneway: {
+                value: action.response.Results[0],
+                traceId: action.response.TraceId
+            }
         });
+        console.log(states.getState());
     }
 
     @Action(RoundTripResponse)
     roundtripResponse(states: StateContext<flight>, action: RoundTripResponse) {
         states.patchState({
-            roundtripResponse: action.response
+            roundtrip: {
+                value: {
+                    departure: action.response.Results[0],
+                    return: action.response.Results[1]
+                },
+                traceId: action.response.TraceId
+            }
         });
     }
 
     @Action(MultiCityResponse)
     multicityResponse(states: StateContext<flight>, action: MultiCityResponse) {
         states.patchState({
-            multicityResponse: action.response
+            multicity: {
+                value: action.response.Results[0],
+                traceId: action.response.TraceId
+            }
         });
     }
 

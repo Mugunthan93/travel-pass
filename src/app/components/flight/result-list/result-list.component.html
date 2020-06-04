@@ -3,11 +3,8 @@
     <ion-col>
       <mat-accordion multi="false">
         <mat-expansion-panel [hideToggle]="true"  *ngFor="let item of flightList" #panel>
-          <mat-expansion-panel-header [collapsedHeight]="'fit-content'" [expandedHeight]="'fit-content'"
-          (click)="selectFlight(panel,item,$event)">
-          <ion-row class="ion-justify-content-around"
-            [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}"
-            *ngFor="let i of item.item" [ngStyle]="{'height':'fit-content'}">
+          <mat-expansion-panel-header [collapsedHeight]="'fit-content'" [expandedHeight]="'fit-content'" (click)="selectFlight(panel,item,$event)">
+          <ion-row class="ion-justify-content-around" [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}" *ngFor="let i of item.item" [ngStyle]="{'height':'fit-content'}">
             <ion-col>
               <ion-img src="../../../../../../assets/site-image/D7.gif"></ion-img>
               <ion-text>Air Asia</ion-text>

@@ -5,6 +5,7 @@ import { FlightService } from 'src/app/services/flight/flight.service';
 import { LoadingController, AlertController } from '@ionic/angular';
 import { Navigate } from '@ngxs/router-plugin';
 import { OneWayResponse, RoundTripResponse, MultiCityResponse } from '../result/flight.state';
+import { ResultType, ResultMode } from '../result.state';
 
 //interfaces
 
@@ -230,8 +231,8 @@ export class FlightSearchState {
         try {
             const flightResponse = await this.flightService.searchFlight(searchData.onewaySearch);
             console.log(flightResponse);
-            const data = JSON.parse(flightResponse.data);
-            this.store.dispatch(new OneWayResponse(data));
+            const data: flightSearchResponse = JSON.parse(flightResponse.data);
+            this.store.dispatch(new OneWayResponse(data.response));
             console.log(data);
         }
         catch (error) {
@@ -247,22 +248,20 @@ export class FlightSearchState {
             }
             //502 => proxy error
             if (error.status == 502) {
-                const htmltemplate = JSON.parse(error.error);
-                console.log(htmltemplate);
                 failedAlert.message = "Server failed to get correct information";
                 loading.dismiss();
                 failedAlert.present();
             }
             //503 => service unavailable, Maintanence downtime
             if (error.status == 503) {
-                const htmltemplate = JSON.parse(error.error);
-                console.log(htmltemplate);
                 failedAlert.message = "Server Maintanence Try again Later";
                 loading.dismiss();
                 failedAlert.present();
             }
         }
 
+        this.store.dispatch(new ResultMode('flight'));
+        this.store.dispatch(new ResultType('one-way'));
         loading.dismiss();
         this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'one-way']));
 
@@ -345,28 +344,63 @@ export class FlightSearchState {
         try {
             const flightResponse = await this.flightService.searchFlight(searchData.roundtripSearch);
             console.log(flightResponse);
-            const data = JSON.parse(flightResponse.data);
-            this.store.dispatch(new RoundTripResponse(data));
+            const data: flightSearchResponse = JSON.parse(flightResponse.data);
+            this.store.dispatch(new RoundTripResponse(data.response));
             console.log(flightResponse);
         }
         catch (error) {
             console.log(error);
-            // //502 => proxy error
-            // if (error.status == 502) {
-            //     const htmltemplate = JSON.parse(error.error);
-            //     console.log(htmltemplate);
-            // }
-            // //503 => service unavailable, Maintanence downtime
-            // if (error.status == 503) {
-            //     const htmltemplate = JSON.parse(error.error);
-            //     console.log(htmltemplate);
-            // }
+            //no reesult error
+            if (error.status == 400) {
+                const errorString = JSON.parse(error.error);
+                const err: flightSearchResponse = JSON.parse(errorString.message);
+                console.log(err);
+                failedAlert.message = err.response.Error.ErrorMessage;
+                loading.dismiss();
+                failedAlert.present();
+            }
+            //502 => proxy error
+            if (error.status == 502) {
+                failedAlert.message = "Server failed to get correct information";
+                loading.dismiss();
+                failedAlert.present();
+            }
+            //503 => service unavailable, Maintanence downtime
+            if (error.status == 503) {
+                failedAlert.message = "Server Maintanence Try again Later";
+                loading.dismiss();
+                failedAlert.present();
+            }
         }
+
+
+        this.store.dispatch(new ResultMode('flight'));
+        this.store.dispatch(new ResultType('one-way'));
+        loading.dismiss();
+        this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'round-trip']));
 
     }
 
     @Action(MulticitySearch)
     async MulticitySearch(states: StateContext<flight>, action: MulticitySearch) {
+
+        const loading = await this.loadingCtrl.create({
+            spinner: "crescent"
+        });
+        const failedAlert = await this.alertCtrl.create({
+            header: 'Search Failed',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                cssClass: 'danger',
+                handler: (res) => {
+                    failedAlert.dismiss({
+                        data: false,
+                        role: 'failed'
+                    });
+                }
+            }]
+        });
 
         let currentState = states.getState();
 
@@ -385,7 +419,7 @@ export class FlightSearchState {
         );
 
         states.patchState({
-            roundtripSearch: {
+            multicitySearch: {
                 AdultCount: action.flightPayload.traveller.adult.toString(),
                 ChildCount: action.flightPayload.traveller.child.toString(),
                 InfantCount: action.flightPayload.traveller.infant.toString(),
@@ -420,22 +454,38 @@ export class FlightSearchState {
         try {
             const flightResponse = await this.flightService.searchFlight(searchData.multicitySearch);
             console.log(flightResponse);
-            const data = JSON.parse(flightResponse.data);
-            this.store.dispatch(new MultiCityResponse(data));
+            const data: flightSearchResponse = JSON.parse(flightResponse.data);
+            this.store.dispatch(new MultiCityResponse(data.response));
         }
         catch (error) {
             console.log(error);
-            // //502 => proxy error
-            // if (error.status == 502) {
-            //     const htmltemplate = JSON.parse(error.error);
-            //     console.log(htmltemplate);
-            // }
-            // //503 => service unavailable, Maintanence downtime
-            // if (error.status == 503) {
-            //     const htmltemplate = JSON.parse(error.error);
-            //     console.log(htmltemplate);
-            // }
+            //no reesult error
+            if (error.status == 400) {
+                const errorString = JSON.parse(error.error);
+                const err: flightSearchResponse = JSON.parse(errorString.message);
+                console.log(err);
+                failedAlert.message = err.response.Error.ErrorMessage;
+                loading.dismiss();
+                failedAlert.present();
+            }
+            //502 => proxy error
+            if (error.status == 502) {
+                failedAlert.message = "Server failed to get correct information";
+                loading.dismiss();
+                failedAlert.present();
+            }
+            //503 => service unavailable, Maintanence downtime
+            if (error.status == 503) {
+                failedAlert.message = "Server Maintanence Try again Later";
+                loading.dismiss();
+                failedAlert.present();
+            }
         }
+
+        this.store.dispatch(new ResultMode('flight'));
+        this.store.dispatch(new ResultType('multi-city'));
+        loading.dismiss();
+        this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'multi-city']));
     
     }
     

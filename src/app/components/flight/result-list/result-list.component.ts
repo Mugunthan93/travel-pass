@@ -22,12 +22,12 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
   
   @ViewChildren('colref', { read: ElementRef }) columns: QueryList<ElementRef>;
+  @Output() getsColumns: EventEmitter<QueryList<ElementRef>> = new EventEmitter<QueryList<ElementRef>>(true);
+  @Input() flightType: string;
 
   @Input() flightList : flightList[];
   @Input() selectedFlights: any;
-  @Input() flightType: string;
   @Output() getFlightValue: EventEmitter<any> = new EventEmitter<any>(null);
-  @Output() getsColumns: EventEmitter<QueryList<ElementRef>> = new EventEmitter<QueryList<ElementRef>>(true);
   
   selectedFlight = null;
   flightHeight: any;

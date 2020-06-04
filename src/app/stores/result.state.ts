@@ -1,14 +1,23 @@
-import { State, Selector, Action, StateContext } from '@ngxs/store';
+import { State, Selector, Action, StateContext, Store } from '@ngxs/store';
 import { FlightResultState } from './result/flight.state';
+import { SearchState } from './search.state';
 
 export interface result{
-    mode : string
+    mode: string,
+    type:string
+}
+
+export class ResultMode {
+    static readonly type = '[Result] ResultMode';
+    constructor(public mode : string) {
+        
+    }
 }
 
 export class ResultType {
     static readonly type = '[Result] ResultType';
-    constructor(public result: string) {
-
+    constructor(public type: string) {
+        
     }
 }
 
@@ -16,7 +25,8 @@ export class ResultType {
 @State<result>({
     name: 'Result',
     defaults: {
-        mode: null
+        mode: null,
+        type:null
     },
     children: [
         FlightResultState
@@ -25,18 +35,34 @@ export class ResultType {
 export class ResultState {
 
     @Selector()
-    static getSearchType(state: result) {
+    static getResultMode(state: result) {
         return state.mode;
     }
 
-    constructor() {
+    @Selector()
+    static getResultType(state: result) {
+        return state.type;
+    }
+
+    constructor(
+        private store: Store
+    ) {
 
     }
 
     @Action(ResultType)
-    searchType(states: StateContext<result>, action: ResultType) {
-        states.setState({
-            mode: action.result
+    resultType(states: StateContext<result>, action: ResultType) {
+        states.patchState({
+            type: action.type
+        });
+
+    }
+
+
+    @Action(ResultMode)
+    resultMode(states: StateContext<result>, action: ResultMode) {
+        states.patchState({
+            mode: action.mode
         });
     }
     

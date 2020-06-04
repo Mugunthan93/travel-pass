@@ -12,7 +12,7 @@ import { SearchState } from 'src/app/stores/search.state';
 })
 export class SearchPage implements OnInit {
 
-  searchType$: Observable<any>;
+  searchMode$: Observable<any>;
   search: string;
   searchSub: Subscription;
 
@@ -22,10 +22,10 @@ export class SearchPage implements OnInit {
   }
 
   ngOnInit() {
-    this.searchType$ = this.store.select(SearchState.getSearchType);
-    this.searchSub = this.searchType$.subscribe(
-      (search) => {
-        this.search = search;
+    this.searchMode$ = this.store.select(SearchState.getSearchMode);
+    this.searchSub = this.searchMode$.subscribe(
+      (mode : string) => {
+        this.search = mode;
       }
     );
   }
