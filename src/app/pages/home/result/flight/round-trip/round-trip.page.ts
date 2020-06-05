@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef, QueryList, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, QueryList } from '@angular/core';
 import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
 import { Animation, ModalController, AnimationController, GestureController, Gesture, GestureDetail } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { flightList } from '../one-way/one-way.page';
-import { Observable } from 'rxjs';
 @Component({
   selector: 'app-round-trip',
   templateUrl: './round-trip.page.html',
@@ -49,6 +48,53 @@ export class RoundTripPage implements OnInit {
     { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state: 'default' }
   ];
 
+  constructor(
+    public modalCtrl : ModalController,
+    public router: Router,
+    public animationCtrl: AnimationController,
+    public gestureCtrl:GestureController
+  ) {
+  }
+  
+  ngOnInit() {
+    this.flightList = this.departList;
+    this.animation();
+  }
+
+  async filter() {
+    const modal = await this.modalCtrl.create({
+      component: TripFilterComponent,
+      componentProps: {
+        list: this.flightList,
+        lisType: this.listType
+      }
+    });
+
+    modal.onDidDismiss().then(
+      (filteredData) => {
+        console.log(filteredData);
+        this.flightList = filteredData.data;
+      }
+    );
+
+    return await modal.present();
+  }
+
+  book() {
+    this.router.navigate(['/', 'home', 'book', 'flight', 'round-trip']);
+  }
+
+  currentFlight(flight) {
+
+    if (this.listType == 'departure') {
+      this.selectedDepartureFlight = flight;
+    }
+    else if (this.listType == 'return') {
+      this.selectedReturnFlight = flight;
+    }
+  }
+
+  //animation
   @ViewChild('content', { static: true, read: ElementRef }) contentEl: ElementRef;
   @ViewChild('departure', { static: true, read: ElementRef }) departureEl: ElementRef;
   @ViewChild('return', { static: true, read: ElementRef }) returnEl: ElementRef;
@@ -71,20 +117,6 @@ export class RoundTripPage implements OnInit {
   swipeRight: Animation;
 
   gesture: Gesture;
-  
-
-  constructor(
-    public modalCtrl : ModalController,
-    public router: Router,
-    public animationCtrl: AnimationController,
-    public gestureCtrl:GestureController
-  ) {
-  }
-  
-  ngOnInit() {
-    this.flightList = this.departList;
-    this.animation();
-  }
 
   animation() {
     this.departureGrow = this.animationCtrl.create()
@@ -161,58 +193,6 @@ export class RoundTripPage implements OnInit {
       this.swipeLeft.stop();
     }
   }
-  
-  sorting(evt){
-    console.log(evt);
-  }
-
-  changeListType(ListType){
-    if(ListType.detail.value == 'departure')
-    {
-      this.flightList = this.departList;
-      this.listType = ListType.detail.value;
-      this.selectedFlight = this.selectedDepartureFlight;
-    }
-    else if(ListType.detail.value == 'return')
-    {
-      this.flightList = this.returnList;
-      this.listType = ListType.detail.value;
-      this.selectedFlight = this.selectedReturnFlight;
-    }
-  }
-
-  async filter() {
-    const modal = await this.modalCtrl.create({
-      component: TripFilterComponent,
-      componentProps: {
-        list: this.flightList,
-        lisType : this.listType
-      }
-    });
-
-    modal.onDidDismiss().then(
-      (filteredData) => {
-        console.log(filteredData);
-        this.flightList = filteredData.data;
-      }
-    );
-
-    return await modal.present();
-  }
-
-  book() {
-    this.router.navigate(['/','home','book','flight','round-trip']);
-  }
-
-  currentFlight(flight){
-    
-    if(this.listType == 'departure'){
-      this.selectedDepartureFlight = flight;
-    }
-    else if(this.listType == 'return'){
-      this.selectedReturnFlight = flight;
-    }
-  }
 
   departuredColumns(evt: QueryList<ElementRef>) {
     console.log(evt);
@@ -228,12 +208,12 @@ export class RoundTripPage implements OnInit {
           .addElement(column.nativeElement)
           .afterAddClass(['col-shrink'])
           .afterRemoveClass(['col-grow']);
-        
+
         this.swipeLeft.addAnimation([this.depColumnShrink]);
         this.swipeRight.addAnimation([this.depColumnGrow]);
       }
     );
-    console.log(this.swipeLeft,this.swipeRight);
+    console.log(this.swipeLeft, this.swipeRight);
   }
 
   returnedColumns(evt: QueryList<ElementRef>) {
@@ -250,12 +230,12 @@ export class RoundTripPage implements OnInit {
           .addElement(column.nativeElement)
           .afterAddClass(['col-shrink'])
           .afterRemoveClass(['col-grow']);
-        
+
         this.swipeLeft.addAnimation([this.reColumnGrow]);
         this.swipeRight.addAnimation([this.reColumnShrink]);
       }
     );
-    console.log(this.swipeLeft,this.swipeRight);
+    console.log(this.swipeLeft, this.swipeRight);
 
   }
 }

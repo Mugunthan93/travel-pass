@@ -17,7 +17,6 @@ export class MultiCityPage implements OnInit {
     { value: 'duration', state: 'default' },
     { value: 'price', state: 'default' }
   ];
-
   flightList : flightList[] = [
     { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }, { val: "item2" }, { val: "item3" }], state: 'default' },
     {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}], state:'default'},
@@ -30,9 +29,6 @@ export class MultiCityPage implements OnInit {
     {type:"listItem",accordian : "baggageItem", item:[{ val:"item1"},{val:"item2"},{val:"item3"}], state:'default'},
     { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }, { val: "item2" }, { val: "item3" }], state: 'default' }
   ];
-  panelOpenState = false;
-  multipanel = true;
-
   selectedFlight : any = null;
 
   constructor(
@@ -42,10 +38,6 @@ export class MultiCityPage implements OnInit {
   }
   
   ngOnInit() {
-  }
-
-  sorting(evt){
-    console.log(evt);
   }
 
   async filter() {

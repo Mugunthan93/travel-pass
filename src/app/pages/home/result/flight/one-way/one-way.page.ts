@@ -25,8 +25,6 @@ export class OneWayPage implements OnInit {
     { value: 'duration', state: 'default' },
     { value: 'price', state: 'default' }
   ];
-  
-
   flightList: flightList[] = [
     { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state: 'default' },
     { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
@@ -45,13 +43,7 @@ export class OneWayPage implements OnInit {
     { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
     { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state: 'default'}
   ];
-
-  panelOpenState = false;
-  multipanel = true;
-
   selectedFlight: any = null;
-  
-  
 
   constructor(
     public modalCtrl : ModalController,
@@ -59,14 +51,7 @@ export class OneWayPage implements OnInit {
   ) {
   }
   
-  ngOnInit() {
-
-
-    
-  }
-
-  sorting(evt){
-    console.log(evt);
+  ngOnInit() { 
   }
 
   async filter() {
