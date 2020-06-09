@@ -1,23 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
 import { Router } from '@angular/router';
-
-export interface flightList{
-  type : string,
-  accordian : string,
-  item? : {
-    val : string
-  }[],
-  state:string
-}
+import { flightResult } from 'src/app/models/search/flight';
+import { Observable, Subscription } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { FlightResultState } from 'src/app/stores/result/flight.state';
+import { ResultState } from 'src/app/stores/result.state';
 
 @Component({
   selector: 'app-one-way',
   templateUrl: './one-way.page.html',
   styleUrls: ['./one-way.page.scss'],
 })
-export class OneWayPage implements OnInit {
+export class OneWayPage implements OnInit,OnDestroy {
 
   sortButtons: any[] = [
     { value: 'departure', state: 'default' },
@@ -25,33 +21,40 @@ export class OneWayPage implements OnInit {
     { value: 'duration', state: 'default' },
     { value: 'price', state: 'default' }
   ];
-  flightList: flightList[] = [
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state: 'default' },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default'},
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state: 'default'}
-  ];
   selectedFlight: any = null;
+
+  flightList: any[];
+  flightList$: Observable<any[]>;
+  flightListSub: Subscription;
+
+  resultType: string;
+  resultType$: Observable<string>;
+  resultTypeSub: Subscription;
 
   constructor(
     public modalCtrl : ModalController,
-    public router : Router
+    public router: Router,
+    private store:Store
   ) {
   }
   
-  ngOnInit() { 
+  ngOnInit() {
+
+    this.resultType$ = this.store.select(ResultState.getResultType);
+    this.resultTypeSub = this.resultType$.subscribe(
+      (result: string) => {
+        this.resultType = result;
+        console.log(this.resultType);
+      }
+    );
+
+    this.flightList$ = this.store.select(FlightResultState.getOneWay);
+    this.flightListSub = this.flightList$.subscribe(
+      (res: any[]) => {
+        console.log(res);
+        this.flightList = res;
+      }
+    );
   }
 
   async filter() {
@@ -77,5 +80,14 @@ export class OneWayPage implements OnInit {
 
   currentFlight(flight){
     this.selectedFlight = flight;
+  }
+
+  ngOnDestroy() {
+    if(this.flightListSub){
+      this.flightListSub.unsubscribe();
+    }
+    if (this.resultTypeSub) {
+      this.resultTypeSub.unsubscribe();
+    }
   }
 }

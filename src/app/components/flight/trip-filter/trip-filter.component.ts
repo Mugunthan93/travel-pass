@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { flightList } from 'src/app/pages/home/result/flight/one-way/one-way.page';
 import { ModalController } from '@ionic/angular';
+import { flightResult } from 'src/app/models/search/flight';
 
 @Component({
   selector: 'app-trip-filter',
@@ -9,7 +9,7 @@ import { ModalController } from '@ionic/angular';
 })
 export class TripFilterComponent implements OnInit {
 
-  @Input() list: flightList[];
+  @Input() list: flightResult[];
   @Input() lisType : string;
 
   airlines : string[] = [

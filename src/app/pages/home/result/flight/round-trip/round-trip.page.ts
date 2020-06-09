@@ -2,7 +2,10 @@ import { Component, OnInit, ViewChild, ElementRef, QueryList } from '@angular/co
 import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
 import { Animation, ModalController, AnimationController, GestureController, Gesture, GestureDetail } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { flightList } from '../one-way/one-way.page';
+import { flightResult } from 'src/app/models/search/flight';
+import { Observable, Subscription } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { FlightResultState, rountripValue } from 'src/app/stores/result/flight.state';
 @Component({
   selector: 'app-round-trip',
   templateUrl: './round-trip.page.html',
@@ -17,47 +20,38 @@ export class RoundTripPage implements OnInit {
     { value: 'price', state: 'default' }
   ];
 
-  flightList : flightList[];
   flightState : boolean;
   listType: string = 'departure';
-
+  
   selectedFlight : any = null;
   selectedDepartureFlight : any = null;
   selectedReturnFlight : any = null;
   
-  departList: flightList[] = [
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state: 'default' },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default' },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default' },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default' },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default' },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default' },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default' },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state:'default' },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state: 'default' }
-  ];
-  returnList: flightList[] = [
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state: 'default' },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state: 'default' },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state: 'default' },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state: 'default' },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state: 'default' },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state: 'default' },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state: 'default' },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state: 'default' },
-    { type: "listItem", accordian: "baggageItem", item: [{ val: "item1" }], state: 'default' }
-  ];
+  departList: flightResult[];
+  returnList: flightResult[];
+  
+  flightList: rountripValue;
+  flightList$: Observable<rountripValue>;
+  flightListSub: Subscription;
 
   constructor(
     public modalCtrl : ModalController,
     public router: Router,
     public animationCtrl: AnimationController,
-    public gestureCtrl:GestureController
+    public gestureCtrl: GestureController,
+    private store:Store
   ) {
   }
   
   ngOnInit() {
-    this.flightList = this.departList;
+    this.flightList$ = this.store.select(FlightResultState.getRoundTrip);
+    this.flightListSub = this.flightList$.subscribe(
+      (res: rountripValue) => {
+        console.log(res);
+        this.departList = res.departure;
+        this.returnList = res.return;
+      }
+    );
     this.animation();
   }
 
@@ -237,5 +231,11 @@ export class RoundTripPage implements OnInit {
     );
     console.log(this.swipeLeft, this.swipeRight);
 
+  }
+
+  ngOnDestroy() {
+    if (this.flightListSub) {
+      this.flightListSub.unsubscribe();
+    }
   }
 }

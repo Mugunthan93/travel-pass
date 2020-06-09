@@ -25,6 +25,7 @@
       <ion-row>
         <ion-col>
           <app-result-list 
+            [type]="resultType"
             [flightList]="flightList"
             [selectedFlights]="selectedFlight"
             (getFlightValue)="currentFlight($event)" 

@@ -20,8 +20,12 @@
 <ion-grid>
   <ion-row>
     <ion-col>
-      <app-result-list [flightList]="flightList" [selectedFlights]="selectedFlight"
-        (getFlightValue)="currentFlight($event)"></app-result-list>
+      <app-result-list
+      [type]="resultType"
+      [flightList]="flightList" 
+      [selectedFlights]="selectedFlight"
+      (getFlightValue)="currentFlight($event)"></app-result-list
+        >
     </ion-col>
   </ion-row>
 </ion-grid>

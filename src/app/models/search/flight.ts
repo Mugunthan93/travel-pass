@@ -1,4 +1,3 @@
-
 //request flight
 export interface flightSearchPayload{
     AdultCount: string
@@ -59,7 +58,7 @@ export interface flightResult {
     IsRefundable: boolean
     LastTicketDate: any
     ResultIndex: string
-    Segments: segments[][]
+    Segments: segment[]
     Source: number
     TicketAdvisory: any
     ValidatingAirline: string
@@ -125,7 +124,11 @@ export interface fareRule{
     Origin: string
 }
 
-export interface segments{
+export interface segment{
+    [connectingFlight:number] : flightData[]
+}
+
+export interface flightData{
     Airline: airLine
     Baggage: string
     CabinBaggage: string
@@ -165,7 +168,7 @@ export interface destination{
 
 export interface origin {
     Airport: airport
-    ArrTime: string
+    DepTime: string
 }
 
 export interface airport {
