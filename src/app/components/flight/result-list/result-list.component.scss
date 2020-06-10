@@ -2,13 +2,13 @@
 @import "../../../../style/util/mixins.scss";
 
 ion-content{
-    ion-row {
+    >ion-row {
         width: 100%;
     
-        ion-col {
+        >ion-col {
             @include flex-col-grid;
     
-            mat-accordion {
+            >mat-accordion {
                 @include flex-col-grid;
                 height:100%;
                 flex-grow:1;
@@ -23,18 +23,55 @@ ion-content{
                         >::ng-deep span {
                             width: 100%;
                             @include flex-col-grid;
+
+                            >ion-row:first-child {
+                                padding: 5px 0px;
+                                justify-content: space-between;
+
+                                >ion-label {
+                                    margin: auto 10px;
+                                    font-size: 20px !important;
+                                    list-style: upper-alpha;
+                                }
+
+                                >ion-row{
+                                    >ion-row:first-of-type{
+                                        width: auto;
+                                        flex-direction: column;
+                                        margin: auto 10px;
+                                    }
+                                    >ion-row:last-of-type{
+                                        justify-content: flex-end;
+                                        padding: 6px 0px;
+                                        width: fit-content;
     
-                            >ion-row {
+                                        ion-label {
+                                            margin: 0px 10px;
+                                            align-self: center;
+                                        }
+    
+                                        ion-checkbox {
+                                            margin: 0px 5px;
+                                        }
+                                    }
+                                }
+
+                            }
+    
+                            >ion-row{
                                 width: 100%;
                                 height: fit-content;
 
-                                ion-text{
+                                >ion-text{
                                     font-size: calc(1vw + 6px);
                                     white-space: nowrap;
                                     margin: auto;
                                 }
     
                                 >ion-col {
+                                    display: flex;
+                                    flex-direction: column;
+                                    max-width: fit-content;
                                     margin: 5px 0px;
                                     height:auto;
 
@@ -75,9 +112,24 @@ ion-content{
                                     }
                                 }
                             }
+
+                            >ion-row:last-of-type{
+                                justify-content: flex-end;
+                                padding: 6px 0px;
+                                ion-label {
+                                    margin: 0px 10px;
+                                    align-self: center;
+                                }
+
+                                ion-checkbox {
+                                    margin: 0px 5px;
+                                }
+                            }
+
                             >ion-button{
                                 margin:0px;
                                 height: min-content;
+                                
                             }
                         }
                     }
@@ -113,7 +165,7 @@ ion-content{
 
 .selectedItem{
     background: rgb(229, 173, 173) !important;
-    ion-text{
+    ion-text,ion-label{
         color:white;
     }
 }

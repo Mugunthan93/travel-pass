@@ -2,44 +2,69 @@
   <ion-row>
     <ion-col>
       <mat-accordion multi="false">
-        <mat-expansion-panel [hideToggle]="true"  *ngFor="let item of flightList" #panel>
-          <mat-expansion-panel-header [collapsedHeight]="'fit-content'" [expandedHeight]="'fit-content'" (click)="selectFlight(panel,item,$event)">
-          <ion-row class="ion-justify-content-around" [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}" *ngFor="let i of item.item" [ngStyle]="{'height':'fit-content'}">
-            <ion-col>
-              <ion-img src="../../../../../../assets/site-image/D7.gif"></ion-img>
-              <ion-text>Air Asia</ion-text>
-            </ion-col>
-            <ion-col #colref [ngClass]="{'col-grow': flightType == 'return', 'col-shrink': flightType == 'departure'}">
-                <ion-text>15:40 - 17:50</ion-text>
-                <ion-text>Economy</ion-text>
-            </ion-col>
-            <ion-col #colref [ngClass]="{'col-grow': flightType == 'return', 'col-shrink': flightType == 'departure'}">
-              <ion-text>
-                02h 10m
-              </ion-text>
-              <ion-text>
-                non stop
-              </ion-text>
-            </ion-col>
-            <ion-col>
-              <ion-text>
-                $ 4800
-              </ion-text>
-              <ion-text>
-                7 seat left
-              </ion-text>
-            </ion-col>
-          </ion-row>
-          <ion-button slot="icon-only" class="panel-button" expand="full" size="small" (click)="rotate(item)">
-            <ion-icon [@rotatedState]="item.state" src="../../../../../../assets/ionicons/chevron-up-outline.svg">
-            </ion-icon>
-          </ion-button>
+        <mat-expansion-panel 
+          [hideToggle]="true"  
+            *ngFor="let item of resultObj"
+            #panel>
+          <mat-expansion-panel-header 
+            [collapsedHeight]="'fit-content'" 
+            [expandedHeight]="'fit-content'" 
+            (click)="selectFlight(panel,item,$event)">
+              <ion-row *ngIf="item.type == 'multi-city'"
+              [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}">
+                <ion-label>{{item.name}}</ion-label>
+                <ion-row>
+                  <ion-row>
+                    <ion-text>{{item.fare | currency : item.currency}}</ion-text>
+                    <ion-text>{{item.seats}} Seats Left</ion-text>
+                  </ion-row>
+                  <ion-row>
+                    <ion-checkbox class="email"></ion-checkbox>
+                    <ion-label>Email</ion-label>
+                  </ion-row>
+                </ion-row>
+              </ion-row>
+              <ion-row 
+                class="ion-justify-content-around" 
+                [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}"
+                *ngFor="let i of item.trips" [ngStyle]="{'height':'fit-content'}">
+                <ion-col>
+                  <ion-img src="../../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
+                  <ion-text>{{i.tripinfo.airline.name}}|{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
+                </ion-col>
+                <ion-col #colref [ngClass]="{'col-grow': flightType == 'return', 'col-shrink': flightType == 'departure'}">
+                    <ion-text>
+                      {{i.tripinfo.depTime | date : 'HH:mm'}} - {{i.tripinfo.arrTime | date : 'HH:mm'}}
+                    </ion-text>
+                    <ion-text>{{i.tripinfo.class}}</ion-text>
+                </ion-col>
+                <ion-col #colref [ngClass]="{'col-grow': flightType == 'return', 'col-shrink': flightType == 'departure'}">
+                  <ion-text>
+                    {{i.tripinfo.duration}}
+                  </ion-text>
+                  <ion-text>
+                    {{i.tripinfo.stops}}
+                  </ion-text>
+                </ion-col>
+                <ion-col *ngIf="i.tripinfo.type !== 'multi-city'">
+                  <ion-text>
+                    {{i.tripinfo.fare | currency : i.tripinfo.currency }}
+                  </ion-text>
+                  <ion-text>
+                    {{i.tripinfo.seats}} seat left
+                  </ion-text>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngIf="item.type !== 'multi-city'"
+                [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}">
+                <ion-checkbox class="email"></ion-checkbox>
+                <ion-label>Email</ion-label>
+              </ion-row>
+              <ion-button slot="icon-only" class="panel-button" expand="full" size="small" (click)="rotate(item)">
+                <ion-icon [@rotatedState]="item.state" src="../../../../../../assets/ionicons/chevron-up-outline.svg">
+                </ion-icon>
+              </ion-button>
           </mat-expansion-panel-header>
-          <ion-row>
-            <ion-text>
-              Air-Asia 15-332
-            </ion-text>
-          </ion-row>
           <ion-row>
             <ion-col size="4" (click)="showBaggage(item.item)">
               <ion-icon size="large" name="briefcase"></ion-icon>

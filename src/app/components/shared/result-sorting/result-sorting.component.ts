@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
@@ -16,24 +16,34 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 })
 export class ResultSortingComponent implements OnInit {
 
-  @Input() buttons: string[];
+  @Input() buttons: any[];
+  currentButton: any;
 
   constructor() { }
 
   ngOnInit() { }
   
-  sorting(evt) {
-    
+  sorting(evt : CustomEvent) {
+    this.currentButton = evt.detail.value;
+    this.buttons.forEach(
+      (el) => {
+        if (el !== this.currentButton) {
+          el.state = "default";
+        }
+      }
+    );
+    console.log(evt);
   }
 
   rotate(item: any) {
-    console.log(item);
     if (item.state == 'default') {
       item.state = 'rotated'
     }
     else if (item.state == 'rotated') {
       item.state = 'default'
     }
+
+    
   }
 
 }

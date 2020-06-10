@@ -1,3 +1,5 @@
+@import "../../../../style/util/variable.scss";
+
 ion-segment{
     max-width:100vw;
     >ion-segment-button{
@@ -7,13 +9,27 @@ ion-segment{
         --padding-start:0px;
         --padding-end:0px;
         --indicator-color:transparent;
+
         >ion-label{
             font-size:8px;
+            color:#{$icon-color2};
         }
+
+        >[aria-selected="true"] {
+            ion-label {
+                color:#{$icon-color2};
+            }
+        }
+
+
         >ion-icon{
             font-size:12px;
         }
+    }
+}
 
-
+.selectedItem{
+    >ion-icon{
+        filter:invert(86%) sepia(35%) saturate(5749%) hue-rotate(174deg) brightness(92%) contrast(87%);
     }
 }

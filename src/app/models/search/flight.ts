@@ -30,7 +30,7 @@ export interface flightSearchResult{
     Error: flightSearchError
     Origin: string
     ResponseStatus: number
-    Results?: flightResult[][]
+    Results?: flightResult[]
     TraceId: string
 }
 
@@ -58,7 +58,7 @@ export interface flightResult {
     IsRefundable: boolean
     LastTicketDate: any
     ResultIndex: string
-    Segments: segment[]
+    Segments: flightData[][]
     Source: number
     TicketAdvisory: any
     ValidatingAirline: string
@@ -122,10 +122,6 @@ export interface fareRule{
     FareRuleDetail: string
     FareRuleIndex: string
     Origin: string
-}
-
-export interface segment{
-    [connectingFlight:number] : flightData[]
 }
 
 export interface flightData{
