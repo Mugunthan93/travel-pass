@@ -4,13 +4,13 @@
       <mat-accordion multi="false">
         <mat-expansion-panel 
           [hideToggle]="true"  
-            *ngFor="let item of resultObj"
+            *ngFor="let item of flightList"
             #panel>
           <mat-expansion-panel-header 
             [collapsedHeight]="'fit-content'" 
             [expandedHeight]="'fit-content'" 
             (click)="selectFlight(panel,item,$event)">
-              <ion-row *ngIf="item.type == 'multi-city'"
+              <ion-row *ngIf="(type == 'multi-city' || 'round-trip') && (type !== 'animated-round-trip')"
               [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}">
                 <ion-label>{{item.name}}</ion-label>
                 <ion-row>
@@ -27,10 +27,12 @@
               <ion-row 
                 class="ion-justify-content-around" 
                 [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}"
-                *ngFor="let i of item.trips" [ngStyle]="{'height':'fit-content'}">
+                *ngFor="let i of item.trips" [ngStyle]="{'height':'80px'}">
                 <ion-col>
                   <ion-img src="../../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
-                  <ion-text>{{i.tripinfo.airline.name}}|{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
+                  <!-- <ion-text *ngFor="let name of (i.tripinfo.airline.name | wordwrap)">{{name}}</ion-text> -->
+                  <ion-text>{{i.tripinfo.airline.name}}</ion-text>
+                  <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
                 </ion-col>
                 <ion-col #colref [ngClass]="{'col-grow': flightType == 'return', 'col-shrink': flightType == 'departure'}">
                     <ion-text>
@@ -46,7 +48,7 @@
                     {{i.tripinfo.stops}}
                   </ion-text>
                 </ion-col>
-                <ion-col *ngIf="i.tripinfo.type !== 'multi-city'">
+                <ion-col *ngIf="(type == 'one-way' || 'animated-round-trip') && (type !== 'round-trip')">
                   <ion-text>
                     {{i.tripinfo.fare | currency : i.tripinfo.currency }}
                   </ion-text>
@@ -55,7 +57,7 @@
                   </ion-text>
                 </ion-col>
               </ion-row>
-              <ion-row *ngIf="item.type !== 'multi-city'"
+              <ion-row *ngIf="(type == 'one-way' || 'animated-round-trip') && (type !== 'round-trip')"
                 [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}">
                 <ion-checkbox class="email"></ion-checkbox>
                 <ion-label>Email</ion-label>

@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { flightResult } from 'src/app/models/search/flight';
 import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { FlightResultState } from 'src/app/stores/result/flight.state';
+import { FlightResultState, resultObj } from 'src/app/stores/result/flight.state';
 import { ResultState } from 'src/app/stores/result.state';
 
 @Component({
@@ -23,8 +23,8 @@ export class OneWayPage implements OnInit,OnDestroy {
   ];
   selectedFlight: any = null;
 
-  flightList: any[];
-  flightList$: Observable<any[]>;
+  flightList: resultObj[];
+  flightList$: Observable<resultObj[]>;
   flightListSub: Subscription;
 
   resultType: string;
@@ -50,7 +50,7 @@ export class OneWayPage implements OnInit,OnDestroy {
 
     this.flightList$ = this.store.select(FlightResultState.getOneWay);
     this.flightListSub = this.flightList$.subscribe(
-      (res: any[]) => {
+      (res: resultObj[]) => {
         console.log(res);
         this.flightList = res;
       }
@@ -89,5 +89,9 @@ export class OneWayPage implements OnInit,OnDestroy {
     if (this.resultTypeSub) {
       this.resultTypeSub.unsubscribe();
     }
+  }
+
+  back() {
+    
   }
 }

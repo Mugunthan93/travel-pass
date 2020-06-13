@@ -36,6 +36,10 @@ export class HotelFilterComponent implements OnInit {
     location: []
   }
 
+  budget = {
+    selection: null
+  }
+
   constructor(
     public modalCtrl : ModalController
   ) { }

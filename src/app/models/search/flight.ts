@@ -30,7 +30,7 @@ export interface flightSearchResult{
     Error: flightSearchError
     Origin: string
     ResponseStatus: number
-    Results?: flightResult[]
+    Results?: flightResult[][]
     TraceId: string
 }
 

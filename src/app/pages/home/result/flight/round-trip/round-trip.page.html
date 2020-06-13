@@ -17,83 +17,11 @@
   <app-result-sorting [buttons]="sortButtons"></app-result-sorting>
 </ion-header>
 
-<!-- <ion-grid id="list">
-  <ion-row>
-    <ion-col>
-      <ion-row>
-        <ion-segment (ionChange)="changeListType($event)" [value]="listType">
-          <ion-col size="6">
-            <ion-segment-button value="departure" layout="end">
-              <ion-label>
-                {{'Departure' | uppercase}}
-              </ion-label>
-            </ion-segment-button>
-          </ion-col>
-          <ion-col size="6">
-            <ion-segment-button value="return" layout="end">
-              <ion-label>
-                {{'Return' | uppercase}}
-              </ion-label>
-            </ion-segment-button>
-          </ion-col>
-        </ion-segment>
-      </ion-row>
-      <ion-row>
-        <ion-segment (ionChange)="sorting($event)">
-          <ion-col size="3">
-            <ion-segment-button value="departure" layout="icon-end">
-              <ion-label>
-                {{'Departure' | uppercase}}
-                <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-              </ion-label>
-            </ion-segment-button>
-          </ion-col>
-          <ion-col size="3">
-            <ion-segment-button value="arrival" layout="icon-end">
-              <ion-label>
-                {{'Arrival' | uppercase}}
-                <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-              </ion-label>
-            </ion-segment-button>
-          </ion-col>
-          <ion-col size="3">
-            <ion-segment-button value="duration" layout="icon-end">
-              <ion-label>
-                {{'Duration' | uppercase}}
-                <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-              </ion-label>
-            </ion-segment-button>
-          </ion-col>
-          <ion-col size="3">
-            <ion-segment-button value="price" layout="icon-end">
-              <ion-label>
-                {{'Price' | uppercase}}
-                <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-              </ion-label>
-            </ion-segment-button>
-          </ion-col>
-        </ion-segment>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <app-result-list  
-            [flightList]="flightList"
-            [selectedFlights]="selectedFlight"
-            (getFlightValue)="currentFlight($event)" 
-          ></app-result-list>
-        </ion-col>
-      </ion-row>
-    </ion-col>
-  </ion-row>
-</ion-grid> -->
-<ion-row #content>
-  <app-result-list class="depart-shrink" #departure [flightList]="departList" [selectedFlights]="selectedFlight"
-    (getFlightValue)="currentFlight($event)" [flightType]="'departure'" (getsColumns)="departuredColumns($event)"></app-result-list>
-  <app-result-list class="return-grow" #return [flightList]="returnList" [selectedFlights]="selectedFlight"
-    (getFlightValue)="currentFlight($event)" [flightType]="'return'" (getsColumns)="returnedColumns($event)"></app-result-list>
-</ion-row>
+<ion-content>
+  <ion-router-outlet></ion-router-outlet>
+</ion-content>
 
-<ion-footer *ngIf="selectedDepartureFlight !== null || selectedReturnFlight !== null">
+<!-- <ion-footer *ngIf="selectedDepartureFlight !== null || selectedReturnFlight !== null">
   <ion-toolbar>
     <ion-row>
       <ion-col size="4">
@@ -138,4 +66,4 @@
       </ion-col>
     </ion-row>
   </ion-toolbar>
-</ion-footer>
+</ion-footer> -->

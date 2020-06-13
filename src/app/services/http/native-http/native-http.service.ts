@@ -62,8 +62,6 @@ export class NativeHttpService implements OnInit{
   }
 
   async post(url: string, body?: any): Promise<HTTPResponse> {
-    this.setHeader(environment.baseURL, "Content-Type", "application/json");
-    this.setData('json');
     return await this.http.post(environment.baseURL + url, body, this.header);
   }
 

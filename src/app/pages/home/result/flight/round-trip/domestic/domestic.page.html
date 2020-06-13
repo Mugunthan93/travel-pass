@@ -1,0 +1,22 @@
+<ion-row #content>
+  <app-result-list 
+    [type]="resultType"
+    class="depart-shrink" 
+    #departure 
+    [flightList]="departList" 
+    [selectedFlights]="selectedFlight"
+    (getFlightValue)="currentFlight($event)" 
+    [flightType]="'departure'" 
+    (getsColumns)="departuredColumns($event)">
+  </app-result-list>
+  <app-result-list 
+    [type]="resultType"
+    class="return-grow" 
+    #return 
+    [flightList]="returnList" 
+    [selectedFlights]="selectedFlight"
+    (getFlightValue)="currentFlight($event)" 
+    [flightType]="'return'" 
+    (getsColumns)="returnedColumns($event)">
+  </app-result-list>
+</ion-row>

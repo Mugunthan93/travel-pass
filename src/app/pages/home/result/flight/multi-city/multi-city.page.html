@@ -6,7 +6,7 @@
       </ion-button>
     </ion-buttons>
     <ion-title>
-      <ion-text>Result Page</ion-text>
+      <ion-text>Multi-City Result</ion-text>
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="filter()">
@@ -24,8 +24,7 @@
       [type]="resultType"
       [flightList]="flightList" 
       [selectedFlights]="selectedFlight"
-      (getFlightValue)="currentFlight($event)"></app-result-list
-        >
+      (getFlightValue)="currentFlight($event)"></app-result-list>
     </ion-col>
   </ion-row>
 </ion-grid>

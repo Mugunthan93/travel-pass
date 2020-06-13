@@ -49,4 +49,8 @@ export class HotelPage implements OnInit {
     this.router.navigate(['view'], {relativeTo:this.activatedRoute});
   }
 
+  sorting(evt : CustomEvent) {
+    
+  }
+
 }

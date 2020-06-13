@@ -65,54 +65,18 @@ export class JourneyType {
 export class OneWaySearch {
     static readonly type = "[FlightSearch] OneWaySearch";
     constructor(public flightPayload: oneWayForm) {
-        if (flightPayload.class == "economy") {
-            flightPayload.class = "1";
-        }
-        else if (flightPayload.class == "premium economy") {
-            flightPayload.class = "2";
-        }
-        else if (flightPayload.class == "bussiness") {
-            flightPayload.class = "3";
-        }
-        else if (flightPayload.class == "first class") {
-            flightPayload.class = "4";
-        }
     }
 }
 
 export class RoundTripSearch {
     static readonly type = "[FlightSearch] RoundTripSearch";
     constructor(public flightPayload: roundTripForm) {
-        if (flightPayload.class == "economy") {
-            flightPayload.class = "1";
-        }
-        else if (flightPayload.class == "premium economy") {
-            flightPayload.class = "2";
-        }
-        else if (flightPayload.class == "bussiness") {
-            flightPayload.class = "3";
-        }
-        else if (flightPayload.class == "first class") {
-            flightPayload.class = "4";
-        }
     }
 }
 
 export class MulticitySearch {
     static readonly type = "[FlightSearch] MulticitySearch";
     constructor(public flightPayload: multicityForm) {
-        if (flightPayload.class == "economy") {
-            flightPayload.class = "1";
-        }
-        else if (flightPayload.class == "premium economy") {
-            flightPayload.class = "2";
-        }
-        else if (flightPayload.class == "bussiness") {
-            flightPayload.class = "3";
-        }
-        else if (flightPayload.class == "first class") {
-            flightPayload.class = "4";
-        }
     }
 }
 
@@ -197,7 +161,7 @@ export class FlightSearchState {
                     {
                         Origin: action.flightPayload.from.city_code,
                         Destination: action.flightPayload.to.city_code,
-                        FlightCabinClass: action.flightPayload.class,
+                        FlightCabinClass: this.getCabinClass(action.flightPayload.class),
                         PreferredArrivalTime: action.flightPayload.departure.toJSON(),
                         PreferredDepartureTime: action.flightPayload.departure.toJSON()
                     }
@@ -234,15 +198,19 @@ export class FlightSearchState {
             const data: flightSearchResponse = JSON.parse(flightResponse.data);
             this.store.dispatch(new OneWayResponse(data.response));
             console.log(data);
+
+            this.store.dispatch(new ResultMode('flight'));
+            this.store.dispatch(new ResultType('one-way'));
+            loading.dismiss();
+            this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'one-way']));
+
         }
         catch (error) {
             console.log(error);
             //no reesult error
             if (error.status == 400) {
                 const errorString = JSON.parse(error.error);
-                const err: flightSearchResponse = JSON.parse(errorString.message);
-                console.log(err);
-                failedAlert.message = err.response.Error.ErrorMessage;
+                failedAlert.message = errorString.message.response.Error.ErrorMessage;
                 loading.dismiss();
                 failedAlert.present();
             }
@@ -259,11 +227,6 @@ export class FlightSearchState {
                 failedAlert.present();
             }
         }
-
-        this.store.dispatch(new ResultMode('flight'));
-        this.store.dispatch(new ResultType('one-way'));
-        loading.dismiss();
-        this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'one-way']));
 
     }
 
@@ -303,14 +266,14 @@ export class FlightSearchState {
                     {
                         Origin: action.flightPayload.from.city_code,
                         Destination: action.flightPayload.to.city_code,
-                        FlightCabinClass: action.flightPayload.class,
+                        FlightCabinClass: this.getCabinClass(action.flightPayload.class),
                         PreferredArrivalTime: action.flightPayload.departure.toJSON(),
                         PreferredDepartureTime: action.flightPayload.departure.toJSON()
                     },
                     {
                         Origin: action.flightPayload.to.city_code,
                         Destination: action.flightPayload.from.city_code,
-                        FlightCabinClass: action.flightPayload.class,
+                        FlightCabinClass: this.getCabinClass(action.flightPayload.class),
                         PreferredArrivalTime: action.flightPayload.return.toJSON(),
                         PreferredDepartureTime: action.flightPayload.return.toJSON()
                     }
@@ -345,17 +308,25 @@ export class FlightSearchState {
             const flightResponse = await this.flightService.searchFlight(searchData.roundtripSearch);
             console.log(flightResponse);
             const data: flightSearchResponse = JSON.parse(flightResponse.data);
+            console.log(data);
+            this.store.dispatch(new ResultMode('flight'));
+            if (data.response.Results.length == 1) { 
+                this.store.dispatch(new ResultType('round-trip'));
+            }
+            else if (data.response.Results.length == 2) {
+                this.store.dispatch(new ResultType('animated-round-trip'));
+            }
             this.store.dispatch(new RoundTripResponse(data.response));
             console.log(flightResponse);
+
+            loading.dismiss();
         }
         catch (error) {
             console.log(error);
             //no reesult error
             if (error.status == 400) {
                 const errorString = JSON.parse(error.error);
-                const err: flightSearchResponse = JSON.parse(errorString.message);
-                console.log(err);
-                failedAlert.message = err.response.Error.ErrorMessage;
+                failedAlert.message = errorString.message.response.Error.ErrorMessage;
                 loading.dismiss();
                 failedAlert.present();
             }
@@ -372,12 +343,6 @@ export class FlightSearchState {
                 failedAlert.present();
             }
         }
-
-
-        this.store.dispatch(new ResultMode('flight'));
-        this.store.dispatch(new ResultType('one-way'));
-        loading.dismiss();
-        this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'round-trip']));
 
     }
 
@@ -402,6 +367,9 @@ export class FlightSearchState {
             }]
         });
 
+        loading.message = "Searching Flight...";
+        await loading.present();
+
         let currentState = states.getState();
 
         const segs: segmentsPayload[] = [];
@@ -411,7 +379,7 @@ export class FlightSearchState {
                 segs.push({
                     Origin: el.from.city_code,
                     Destination: el.to.city_code,
-                    FlightCabinClass: action.flightPayload.class,
+                    FlightCabinClass: this.getCabinClass(action.flightPayload.class),
                     PreferredDepartureTime: el.departure.toJSON(),
                     PreferredArrivalTime: el.departure.toJSON()
                 });
@@ -456,15 +424,18 @@ export class FlightSearchState {
             console.log(flightResponse);
             const data: flightSearchResponse = JSON.parse(flightResponse.data);
             this.store.dispatch(new MultiCityResponse(data.response));
+
+            this.store.dispatch(new ResultMode('flight'));
+            this.store.dispatch(new ResultType('multi-city'));
+            loading.dismiss();
+            this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'multi-city']));
         }
         catch (error) {
             console.log(error);
             //no reesult error
             if (error.status == 400) {
                 const errorString = JSON.parse(error.error);
-                const err: flightSearchResponse = JSON.parse(errorString.message);
-                console.log(err);
-                failedAlert.message = err.response.Error.ErrorMessage;
+                failedAlert.message = errorString.message.response.Error.ErrorMessage;
                 loading.dismiss();
                 failedAlert.present();
             }
@@ -481,12 +452,25 @@ export class FlightSearchState {
                 failedAlert.present();
             }
         }
-
-        this.store.dispatch(new ResultMode('flight'));
-        this.store.dispatch(new ResultType('multi-city'));
-        loading.dismiss();
-        this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'multi-city']));
     
+    }
+
+    getCabinClass(cls : string) {
+        if (cls == "all") {
+            return "1";
+        }
+        if (cls == "economy") {
+            return "2";
+        }
+        else if (cls == "premium economy") {
+            return "3";
+        }
+        else if (cls == "bussiness") {
+            return "4";
+        }
+        else if (cls == "first class") {
+            return "6";
+        }
     }
     
 }

@@ -5,7 +5,7 @@ import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-
 import { flightResult } from 'src/app/models/search/flight';
 import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { FlightResultState } from 'src/app/stores/result/flight.state';
+import { FlightResultState, resultObj } from 'src/app/stores/result/flight.state';
 import { ResultState } from 'src/app/stores/result.state';
 
 @Component({
@@ -23,8 +23,8 @@ export class MultiCityPage implements OnInit {
   ];
   selectedFlight: any = null;
   
-  flightList: flightResult[];
-  flightList$: Observable<flightResult[]>;
+  flightList: resultObj[];
+  flightList$: Observable<resultObj[]>;
   flightListSub: Subscription;
 
 
@@ -51,7 +51,7 @@ export class MultiCityPage implements OnInit {
 
     this.flightList$ = this.store.select(FlightResultState.getMultiWay);
     this.flightListSub = this.flightList$.subscribe(
-      (res: flightResult[]) => {
+      (res: resultObj[]) => {
         console.log(res);
         this.flightList = res;
       }
@@ -87,6 +87,10 @@ export class MultiCityPage implements OnInit {
     if (this.flightListSub) {
       this.flightListSub.unsubscribe();
     }
+  }
+
+  back() {
+
   }
 
 }

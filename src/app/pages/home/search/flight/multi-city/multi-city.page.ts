@@ -67,7 +67,7 @@ export class MultiCityPage implements OnInit {
     console.log(tripArray,tripElement);
   }
 
-  async selectCity(field: string, control: FormArray, i: number) {
+  async selectCity(field: string, control: any, i: number) {
     console.log(control,i);
     const modal = await this.modalCtrl.create({
       component: CityModalComponent
@@ -91,7 +91,7 @@ export class MultiCityPage implements OnInit {
     return await modal.present();
   }
 
-  async selectDate(trips: FormArray,i:number) {
+  async selectDate(trips: any,i:number) {
     console.log(trips,i);
     let FromDate: Date = this.newDate;
     if (i < 0) {

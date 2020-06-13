@@ -4,43 +4,7 @@ import { ModalController } from '@ionic/angular';
 import { FlightBaggageComponent } from '../flight-baggage/flight-baggage.component';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { flightResult, flightData } from 'src/app/models/search/flight';
-import * as moment from 'moment';
-
-export interface resultObj {
-  type:string
-  fare: number
-  name: string
-  currency:string
-  trips: trips[]
-  state: string
-  seats: number
-  Duration: number
-  departure: string
-  arrival:string
-}
-
-export interface trips {
-  tripinfo: flightDetail,
-  connectingTrips?:any[]
-}
-
-export interface flightDetail{
-  logo: string,
-  airline: {
-    name: string,
-    code: string,
-    number : string
-  },
-  depTime: string,
-  arrTime: string,
-  class: string,
-  duration: string,
-  stops: string,
-  seats: number,
-  fare: number,
-  currency: string
-  type:string
-}
+import { resultObj } from 'src/app/stores/result/flight.state';
 
 @Component({
   selector: 'app-result-list',
@@ -54,7 +18,7 @@ export interface flightDetail{
       transition('rotated => default', animate('225ms ease-out')),
       transition('default => rotated', animate('225ms ease-in'))
     ])
-  ],
+  ]
 })
 export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
   
@@ -71,67 +35,13 @@ export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
   flightHeight: any;
   itemList: number = 60;
 
-  resultObj: resultObj[];
-
   constructor(
     public modalCtrl : ModalController
   ) {
   }
 
   ngOnInit() {
-    this.resultObj = new Array(this.flightList.length);
-    this.flightList.forEach(
-      (element: flightResult, index, array) => {
-
-        let trips: trips[] = new Array(element.Segments.length);
-        let totalDuration: number;
-        let lastArrival: string;
-        
-        element.Segments.forEach(
-          (el, ind, arr) => {
-
-            lastArrival = el[el.length - 1].Destination.ArrTime;
-            totalDuration += this.getDuration(el);
-
-            trips[ind] = {
-              tripinfo: {
-                logo: el[0].Airline.AirlineCode,
-                airline: {
-                  name: el[0].Airline.AirlineName,
-                  code: el[0].Airline.AirlineCode,
-                  number: el[0].Airline.FlightNumber
-                },
-                depTime: el[0].Origin.DepTime,
-                arrTime: el[el.length - 1].Destination.ArrTime,
-                class: this.getCabinClass(el[0].CabinClass),
-                duration: moment.duration(this.getDuration(el), 'minutes').hours() + "h " + moment.duration(this.getDuration(el), 'minutes').minutes() + "m",
-                stops: el.length == 1 ? 'Non Stop' : el.length - 1 +" Stop",
-                seats: el[0].NoOfSeatAvailable,
-                fare: element.Fare.PublishedFare,
-                currency: element.Fare.Currency,
-                type:this.type
-              },
-              connectingTrips:el
-            }
-        });
-
-        this.resultObj[index] = {
-          type: this.type,
-          state: "default",
-          name: element.Segments[0][0].Airline.AirlineName,
-          fare: element.Fare.PublishedFare,//price
-          Duration: totalDuration,
-          departure: element.Segments[0][0].Origin.DepTime,
-          arrival: lastArrival,
-          currency: element.Fare.Currency,
-          seats:element.Segments[0][0].NoOfSeatAvailable,
-          trips: trips
-        };
-      
-      }
-    );
-
-    console.log(this.resultObj);
+    console.log(this.type);
   }
   ngOnChanges(changes: SimpleChanges): void {
     // console.log(changes);
@@ -195,31 +105,6 @@ export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
     });
 
     return await modal.present();
-  }
-
-  getCabinClass(cls : string) {
-    if (cls == "1" || "2") {
-      return "economy"
-    }
-    else if (cls == "3") {
-      return "premium economy";
-    }
-    else if (cls == "4") {
-      return "bussiness";
-    }
-    else if (cls == "5") {
-      return "first class";
-    }
-  }
-
-  getDuration(data: flightData[]) : number {
-    let time: number = 0;
-    data.forEach(
-      (e,i,a) => {
-        time += (e.GroundTime + e.Duration);
-      }
-    );
-    return time;
   }
 
 }
