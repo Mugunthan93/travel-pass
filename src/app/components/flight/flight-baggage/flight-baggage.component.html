@@ -5,36 +5,46 @@
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="closeBaggage()">
-        <ion-icon name="close" size="large"></ion-icon>
+        <ion-icon name="close-sharp"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
 <ion-content>
-  <ion-row>
-    <ion-col>
-      <ion-row *ngFor="let bag of list">
-        <ion-col>
-          <ion-row>
-            <ion-text>New Delhi - Mumbai</ion-text>
-          </ion-row>
-          <ion-row>
-            <ion-col>Travellers</ion-col>
-            <ion-col>Cabin</ion-col>
-            <ion-col>Check-in</ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>Adult</ion-col>
-            <ion-col>5-7 Kgs</ion-col>
-            <ion-col>15 Kgs</ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>Infant</ion-col>
-            <ion-col>5-7 Kgs</ion-col>
-            <ion-col>0 Kgs</ion-col>
-          </ion-row>
-        </ion-col>
-      </ion-row>
-    </ion-col>
+  <ion-row *ngFor="let bag of baggage">
+    <ion-item>
+      <ion-label>
+      Trip {{1 + baggage.indexOf(bag)}}
+      </ion-label>
+    </ion-item>
+    <ion-card *ngFor="let b of bag">
+      <ion-card-header>
+        <ion-item>
+          <ion-img slot="start" src="../../../../../../assets/AirlineLogo/{{b.Airline.AirlineCode}}.gif"></ion-img>
+          <ion-card-title>
+            <ion-label>{{b.Origin.Airport.CityName}} - {{b.Destination.Airport.CityName}}</ion-label>
+          </ion-card-title>
+        </ion-item>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-row class="justify-content-between">
+          <ion-col>
+            <ion-label>Baggage</ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-text>{{b.Baggage == null ? 'Not Available' : b.Baggage}}</ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row class="justify-content-between">
+          <ion-col>
+            <ion-label>Cabin</ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-text>{{b.CabinBaggage == null ? 'Not Available' : b.CabinBaggage}}</ion-text>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
   </ion-row>
 </ion-content>

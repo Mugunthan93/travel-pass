@@ -3,8 +3,8 @@ import { matExpansionAnimations, MatExpansionPanel } from '@angular/material/exp
 import { ModalController } from '@ionic/angular';
 import { FlightBaggageComponent } from '../flight-baggage/flight-baggage.component';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { flightResult, flightData } from 'src/app/models/search/flight';
-import { resultObj } from 'src/app/stores/result/flight.state';
+import { flightData } from 'src/app/models/search/flight';
+import { resultObj, fareRule } from 'src/app/stores/result/flight.state';
 
 @Component({
   selector: 'app-result-list',
@@ -27,13 +27,15 @@ export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() flightType: string;
 
   @Input() type: string;
-  @Input() flightList : flightResult[];
+  @Input() flightList: resultObj[];
   @Input() selectedFlights: any;
   @Output() getFlightValue: EventEmitter<any> = new EventEmitter<any>(null);
   
+  currentList: resultObj[];
   selectedFlight = null;
   flightHeight: any;
   itemList: number = 60;
+  state: string[] = [];
 
   constructor(
     public modalCtrl : ModalController
@@ -41,7 +43,12 @@ export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnInit() {
-    console.log(this.type);
+    this.currentList = this.flightList;
+    this.currentList.forEach(
+      (el, ind, arr) => {
+        this.state[ind] = "default";
+      }
+    );
   }
   ngOnChanges(changes: SimpleChanges): void {
     // console.log(changes);
@@ -51,13 +58,12 @@ export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
     this.getsColumns.emit(this.columns);
   }
 
-  rotate(item: resultObj) {
-    console.log(item);
-    if (item.state == 'default') {
-      item.state = 'rotated'
+  rotate(index: number) {
+    if (this.state[index] == 'default') {
+      this.state[index] = 'rotated'
     }
-    else if (item.state == 'rotated') {
-      item.state = 'default'
+    else if (this.state[index] == 'rotated') {
+      this.state[index] = 'default'
     }
   }
 
@@ -95,16 +101,24 @@ export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
 
   }
 
-  async showBaggage(flight){
+  async showBaggage(baggage: flightData[][]){
     const modal = await this.modalCtrl.create({
       component: FlightBaggageComponent,
       componentProps: {
-        list: flight
+        'baggage': baggage
       },
       cssClass:'baggage'
     });
 
     return await modal.present();
+  }
+
+  showFareRule(fareRule: fareRule) {
+    
+  }
+
+  async showFlightDetail(connectingFlights: flightData[][]) {
+    
   }
 
 }

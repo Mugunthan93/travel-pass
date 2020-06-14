@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { flightData } from 'src/app/models/search/flight';
 
 @Component({
   selector: 'app-flight-baggage',
@@ -8,14 +9,14 @@ import { ModalController } from '@ionic/angular';
 })
 export class FlightBaggageComponent implements OnInit {
 
-  @Input() list : any;
+  @Input() baggage: flightData[][];
 
   constructor(
     public modalCtrl : ModalController
   ) { }
 
   ngOnInit() {
-    console.log(this.list);
+    console.log(this.baggage);
   }
 
   closeBaggage() {

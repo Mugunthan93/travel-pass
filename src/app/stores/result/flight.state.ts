@@ -2,7 +2,6 @@ import { State, Selector, Action, StateContext, Store } from '@ngxs/store';
 import { flightSearchResult, flightResult, flightData } from 'src/app/models/search/flight';
 import * as moment from "moment";
 import { Navigate } from '@ngxs/router-plugin';
-import { ResultType, ResultState } from '../result.state';
 
 export interface flight{
     oneway: onewayResult
@@ -36,16 +35,17 @@ export interface resultObj {
     name: string
     currency: string
     trips: trips[]
-    state: string
     seats: number
     Duration: number
     departure: string
     arrival: string
+    baggage: flightData[][],
+    connectingFlights: flightData[][],
+    fareRule:fareRule
 }
 
 export interface trips {
-    tripinfo: flightDetail,
-    connectingTrips?: any[]
+    tripinfo: flightDetail
 }
 
 export interface flightDetail {
@@ -63,6 +63,11 @@ export interface flightDetail {
     seats: number,
     fare: number,
     currency: string
+}
+
+export interface fareRule {
+    ResultIndex: string
+    TraceId: string
 }
 
 export class OneWayResponse{
@@ -119,12 +124,11 @@ export class FlightResultState{
     }
 
 
-
     @Action(OneWayResponse)
     onewayResponse(states: StateContext<flight>, action: OneWayResponse) {
         states.patchState({
             oneway: {
-                value: this.responseDate(action.response.Results[0]),
+                value: this.responseDate(action.response.Results[0], action.response.TraceId),
                 traceId: action.response.TraceId
             }
         });
@@ -136,7 +140,7 @@ export class FlightResultState{
         if (action.response.Results.length == 1) {
             states.patchState({
                 roundtrip: {
-                    value: this.responseDate(action.response.Results[0]),
+                    value: this.responseDate(action.response.Results[0], action.response.TraceId),
                     values: {
                         departure: null,
                         return:null
@@ -152,8 +156,8 @@ export class FlightResultState{
                 roundtrip: {
                     value:null,
                     values: {
-                        departure: this.responseDate(action.response.Results[0]),
-                        return: this.responseDate(action.response.Results[1])
+                        departure: this.responseDate(action.response.Results[0], action.response.TraceId),
+                        return: this.responseDate(action.response.Results[1], action.response.TraceId)
                     },
                     traceId: action.response.TraceId
                 }
@@ -167,13 +171,13 @@ export class FlightResultState{
     multicityResponse(states: StateContext<flight>, action: MultiCityResponse) {
         states.patchState({
             multicity: {
-                value: this.responseDate(action.response.Results[0]),
+                value: this.responseDate(action.response.Results[0], action.response.TraceId),
                 traceId: action.response.TraceId
             }
         });
     }
 
-    responseDate(response: flightResult[]): resultObj[] {
+    responseDate(response: flightResult[],traceId : string): resultObj[] {
 
         let resultObj: resultObj[] = new Array(response.length);
 
@@ -181,7 +185,7 @@ export class FlightResultState{
             (element: flightResult, index, array) => {
 
                 let trips: trips[] = new Array(element.Segments.length);
-                let totalDuration: number;
+                let totalDuration: number = 0;
                 let lastArrival: string;
 
                 element.Segments.forEach(
@@ -206,13 +210,16 @@ export class FlightResultState{
                                 seats: el[0].NoOfSeatAvailable,
                                 fare: element.Fare.PublishedFare,
                                 currency: element.Fare.Currency
-                            },
-                            connectingTrips: el
+                            }
                         }
                     });
+                
+                let fareRule: fareRule = {
+                    ResultIndex: element.ResultIndex,
+                    TraceId: traceId
+                }
 
                 resultObj[index] = {
-                    state: "default",
                     name: element.Segments[0][0].Airline.AirlineName,
                     fare: element.Fare.PublishedFare,//price
                     Duration: totalDuration,
@@ -220,7 +227,10 @@ export class FlightResultState{
                     arrival: lastArrival,
                     currency: element.Fare.Currency,
                     seats: element.Segments[0][0].NoOfSeatAvailable,
-                    trips: trips
+                    trips: trips,
+                    baggage: element.Segments,
+                    connectingFlights: element.Segments,
+                    fareRule: fareRule
                 };
 
             }

@@ -4,7 +4,7 @@
       <mat-accordion multi="false">
         <mat-expansion-panel 
           [hideToggle]="true"  
-            *ngFor="let item of flightList"
+            *ngFor="let item of currentList;let i = index"
             #panel>
           <mat-expansion-panel-header 
             [collapsedHeight]="'fit-content'" 
@@ -62,21 +62,21 @@
                 <ion-checkbox class="email"></ion-checkbox>
                 <ion-label>Email</ion-label>
               </ion-row>
-              <ion-button slot="icon-only" class="panel-button" expand="full" size="small" (click)="rotate(item)">
-                <ion-icon [@rotatedState]="item.state" src="../../../../../../assets/ionicons/chevron-up-outline.svg">
+              <ion-button slot="icon-only" class="panel-button" expand="full" size="small" (click)="rotate(i)">
+                <ion-icon [@rotatedState]="state[i]" src="../../../../../../assets/ionicons/chevron-up-outline.svg">
                 </ion-icon>
               </ion-button>
           </mat-expansion-panel-header>
           <ion-row>
-            <ion-col size="4" (click)="showBaggage(item.item)">
+            <ion-col size="4" (click)="showBaggage(item.baggage)">
               <ion-icon size="large" name="briefcase"></ion-icon>
-              <ion-text>Baggage : 15kg</ion-text>
+              <ion-text>Baggage</ion-text>
             </ion-col>
             <ion-col size="4">
-              <ion-icon size="large" name="briefcase"></ion-icon>
-              <ion-text>Cabin : 7kg</ion-text>
+              <ion-icon size="large" name="briefcase" (click)="showFareRule(item.fareRule)"></ion-icon>
+              <ion-text>Fare Rule</ion-text>
             </ion-col>
-            <ion-col size="4">
+            <ion-col size="4" (click)="showFlightDetail(item.connectingFlights)">
               <ion-icon size="large" src="../../../../../../assets/icons/flying-fly.svg"></ion-icon>
               <ion-text>Flight details</ion-text>
             </ion-col>
