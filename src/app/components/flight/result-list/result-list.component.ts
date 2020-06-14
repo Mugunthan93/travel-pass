@@ -30,8 +30,7 @@ export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() flightList: resultObj[];
   @Input() selectedFlights: any;
   @Output() getFlightValue: EventEmitter<any> = new EventEmitter<any>(null);
-  
-  currentList: resultObj[];
+
   selectedFlight = null;
   flightHeight: any;
   itemList: number = 60;
@@ -43,15 +42,14 @@ export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnInit() {
-    this.currentList = this.flightList;
-    this.currentList.forEach(
+    this.flightList.forEach(
       (el, ind, arr) => {
         this.state[ind] = "default";
       }
     );
   }
   ngOnChanges(changes: SimpleChanges): void {
-    // console.log(changes);
+    console.log(changes);
   }
 
   ngAfterViewInit(): void {

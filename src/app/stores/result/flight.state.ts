@@ -1,4 +1,4 @@
-import { State, Selector, Action, StateContext, Store } from '@ngxs/store';
+import { State, Selector, Action, StateContext, Store, StateStream } from '@ngxs/store';
 import { flightSearchResult, flightResult, flightData } from 'src/app/models/search/flight';
 import * as moment from "moment";
 import { Navigate } from '@ngxs/router-plugin';
@@ -91,6 +91,34 @@ export class MultiCityResponse {
     }
 }
 
+export class DurationSort {
+    static readonly type = '[FlightResult] DurationSort';
+    constructor(public type: string,public order:string) {
+
+    }
+}
+
+export class ArrivalSort {
+    static readonly type = '[FlightResult] ArrivalSort';
+    constructor(public type: string, public order: string) {
+
+    }
+}
+
+export class DepartureSort {
+    static readonly type = '[FlightResult] DepartureSort';
+    constructor(public type: string, public order: string) {
+
+    }
+}
+
+export class PriceSort {
+    static readonly type = '[FlightResult] PriceSort';
+    constructor(public type: string, public order: string) {
+
+    }
+}
+
 
 @State<flight>({
     name: 'FlightResult',
@@ -123,6 +151,213 @@ export class FlightResultState{
         return states.multicity.value;
     }
 
+    @Action(DurationSort)
+    durationSort(states: StateContext<flight>, action: DurationSort) {
+        if (action.type == 'one-way') {
+            const traceId: string = states.getState().oneway.traceId;
+            const currentState: resultObj[] = states.getState().oneway.value;
+            
+            states.patchState({
+                oneway: {
+                    value: this.sortByDuration(action, currentState),
+                    traceId: traceId
+                }
+            });
+        }
+        else if (action.type == 'round-trip') {
+            const traceId: string = states.getState().roundtrip.traceId;
+            const currentState: resultObj[] = states.getState().roundtrip.value;
+
+            states.patchState({
+                roundtrip: {
+                    value: this.sortByDuration(action, currentState),
+                    traceId: traceId
+                }
+            });
+        }
+        else if (action.type == 'animated-round-trip') {
+            const traceId: string = states.getState().roundtrip.traceId;
+            const currentDepState: resultObj[] = states.getState().roundtrip.values.departure;
+            const currentReState: resultObj[] = states.getState().roundtrip.values.return;
+
+            states.patchState({
+                roundtrip: {
+                    values: {
+                        departure: this.sortByDuration(action, currentDepState),
+                        return: this.sortByDuration(action, currentReState)
+                    },
+                    traceId: traceId
+                }
+            });
+        }
+        else if (action.type == 'multi-city') {
+            const traceId: string = states.getState().multicity.traceId;
+            const currentState: resultObj[] = states.getState().multicity.value;
+
+            states.patchState({
+                multicity: {
+                    value: this.sortByDuration(action, currentState),
+                    traceId: traceId
+                }
+            });
+        }
+    }
+
+    @Action(ArrivalSort)
+    arrivalSort(states: StateContext<flight>, action: ArrivalSort) {
+        if (action.type == 'one-way') {
+            const traceId: string = states.getState().oneway.traceId;
+            const currentState: resultObj[] = states.getState().oneway.value;
+
+            states.patchState({
+                oneway: {
+                    value: this.sortbyArrival(action, currentState),
+                    traceId: traceId
+                }
+            });
+        }
+        else if (action.type == 'round-trip') {
+            const traceId: string = states.getState().roundtrip.traceId;
+            const currentState: resultObj[] = states.getState().roundtrip.value;
+
+            states.patchState({
+                roundtrip: {
+                    value: this.sortbyArrival(action, currentState),
+                    traceId: traceId
+                }
+            });
+        }
+        else if (action.type == 'animated-round-trip') {
+            const traceId: string = states.getState().roundtrip.traceId;
+            const currentDepState: resultObj[] = states.getState().roundtrip.values.departure;
+            const currentReState: resultObj[] = states.getState().roundtrip.values.return;
+
+            states.patchState({
+                roundtrip: {
+                    values: {
+                        departure: this.sortbyArrival(action, currentDepState),
+                        return: this.sortbyArrival(action, currentReState)
+                    },
+                    traceId: traceId
+                }
+            });
+        }
+        else if (action.type == 'multi-city') {
+            const traceId: string = states.getState().multicity.traceId;
+            const currentState: resultObj[] = states.getState().multicity.value;
+
+            states.patchState({
+                multicity: {
+                    value: this.sortbyArrival(action, currentState),
+                    traceId: traceId
+                }
+            });
+        }
+    }
+
+    @Action(DepartureSort)
+    departureSort(states: StateContext<flight>, action: DepartureSort) {
+        if (action.type == 'one-way') {
+            const traceId: string = states.getState().oneway.traceId;
+            const currentState: resultObj[] = states.getState().oneway.value;
+
+            states.patchState({
+                oneway: {
+                    value: this.sortByDeparture(action, currentState),
+                    traceId: traceId
+                }
+            });
+        }
+        else if (action.type == 'round-trip') {
+            const traceId: string = states.getState().roundtrip.traceId;
+            const currentState: resultObj[] = states.getState().roundtrip.value;
+
+            states.patchState({
+                roundtrip: {
+                    value: this.sortByDeparture(action, currentState),
+                    traceId: traceId
+                }
+            });
+        }
+        else if (action.type == 'animated-round-trip') {
+            const traceId: string = states.getState().roundtrip.traceId;
+            const currentDepState: resultObj[] = states.getState().roundtrip.values.departure;
+            const currentReState: resultObj[] = states.getState().roundtrip.values.return;
+
+            states.patchState({
+                roundtrip: {
+                    values: {
+                        departure: this.sortByDeparture(action, currentDepState),
+                        return: this.sortByDeparture(action, currentReState)
+                    },
+                    traceId: traceId
+                }
+            });
+        }
+        else if (action.type == 'multi-city') {
+            const traceId: string = states.getState().multicity.traceId;
+            const currentState: resultObj[] = states.getState().multicity.value;
+
+            states.patchState({
+                multicity: {
+                    value: this.sortByDeparture(action, currentState),
+                    traceId: traceId
+                }
+            });
+        }
+    }
+
+    @Action(PriceSort)
+    priceSort(states: StateContext<flight>, action: PriceSort) {
+        if (action.type == 'one-way') {
+            const traceId: string = states.getState().oneway.traceId;
+            const currentState: resultObj[] = states.getState().oneway.value;
+
+            states.patchState({
+                oneway: {
+                    value: this.sortbyPrice(action, currentState),
+                    traceId: traceId
+                }
+            });
+        }
+        else if (action.type == 'round-trip') {
+            const traceId: string = states.getState().roundtrip.traceId;
+            const currentState: resultObj[] = states.getState().roundtrip.value;
+
+            states.patchState({
+                roundtrip: {
+                    value: this.sortbyPrice(action, currentState),
+                    traceId: traceId
+                }
+            });
+        }
+        else if (action.type == 'animated-round-trip') {
+            const traceId: string = states.getState().roundtrip.traceId;
+            const currentDepState: resultObj[] = states.getState().roundtrip.values.departure;
+            const currentReState: resultObj[] = states.getState().roundtrip.values.return;
+
+            states.patchState({
+                roundtrip: {
+                    values: {
+                        departure: this.sortbyPrice(action, currentDepState),
+                        return: this.sortbyPrice(action, currentReState)
+                    },
+                    traceId: traceId
+                }
+            });
+        }
+        else if (action.type == 'multi-city') {
+            const traceId: string = states.getState().multicity.traceId;
+            const currentState: resultObj[] = states.getState().multicity.value;
+
+            states.patchState({
+                multicity: {
+                    value: this.sortbyPrice(action, currentState),
+                    traceId: traceId
+                }
+            });
+        }
+    }
 
     @Action(OneWayResponse)
     onewayResponse(states: StateContext<flight>, action: OneWayResponse) {
@@ -205,7 +440,7 @@ export class FlightResultState{
                                 depTime: el[0].Origin.DepTime,
                                 arrTime: el[el.length - 1].Destination.ArrTime,
                                 class: this.getCabinClass(el[0].CabinClass),
-                                duration: moment.duration(this.getDuration(el), 'minutes').hours() + "h " + moment.duration(this.getDuration(el), 'minutes').minutes() + "m",
+                                duration: moment.duration(this.getDuration(el), 'minutes').days() + "d " + moment.duration(this.getDuration(el), 'minutes').hours() + "h " + moment.duration(this.getDuration(el), 'minutes').minutes() + "m",
                                 stops: el.length == 1 ? 'Non Stop' : el.length - 1 + " Stop",
                                 seats: el[0].NoOfSeatAvailable,
                                 fare: element.Fare.PublishedFare,
@@ -262,6 +497,139 @@ export class FlightResultState{
             }
         );
         return time;
+    }
+
+    sortByDuration(action: DurationSort, currentState: resultObj[]): resultObj[] {
+        if (action.order == 'default') {
+            let state: resultObj[] = currentState.slice().sort(
+                (a: resultObj, b: resultObj) => {
+                    if (b.Duration < a.Duration) {
+                        return -1;
+                    }
+                    else if (b.Duration > a.Duration) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            );
+            return state;
+        }
+        else if (action.order == 'rotated') {
+            let state: resultObj[] = currentState.slice().sort(
+                (a: resultObj, b: resultObj) => {
+                    if (b.Duration > a.Duration) {
+                        return -1;
+                    }
+                    else if (b.Duration < a.Duration) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            );
+            return state;
+        }
+
+    }
+
+    sortByDeparture(action: ArrivalSort, currentState: resultObj[]): resultObj[] {  
+        if (action.order == 'default') {
+            let state: resultObj[] = currentState.slice().sort(
+                (a: resultObj, b: resultObj) => {
+                    if (moment(b.departure).isBefore(a.departure)) {
+                        return -1;
+                    }
+                    else if (moment(b.departure).isAfter(a.departure)) {
+                        return 1;
+                    }
+                    else if (moment(b.departure).isSame(a.departure)) {
+                        return 0;
+                    }
+                }
+            );
+            return state;
+        }
+        else if (action.order == 'rotated') {
+            let state: resultObj[] = currentState.slice().sort(
+                (a: resultObj, b: resultObj) => {
+                    if (moment(b.departure).isAfter(a.departure)) {
+                        return -1;
+                    }
+                    else if (moment(b.departure).isBefore(a.departure)) {
+                        return 1;
+                    }
+                    else if (moment(b.departure).isSame(a.departure)) {
+                        return 0;
+                    }
+                }
+            );
+            return state;
+        }
+    }
+
+    sortbyArrival(action: ArrivalSort, currentState: resultObj[]): resultObj[] {
+        if (action.order == 'default') {
+            let state: resultObj[] = currentState.slice().sort(
+                (a: resultObj, b: resultObj) => {
+                    if (moment(b.arrival).isBefore(a.arrival)) {
+                        return -1;
+                    }
+                    else if (moment(b.arrival).isAfter(a.arrival)) {
+                        return 1;
+                    }
+                    else if (moment(b.arrival).isSame(a.arrival)) {
+                        return 0;
+                    }
+                }
+            );
+            return state;
+        }
+        else if (action.order == 'rotated') {
+            let state: resultObj[] = currentState.slice().sort(
+                (a: resultObj, b: resultObj) => {
+                    if (moment(b.arrival).isAfter(a.arrival)) {
+                        return -1;
+                    }
+                    else if (moment(b.arrival).isBefore(a.arrival)) {
+                        return 1;
+                    }
+                    else if (moment(b.arrival).isSame(a.arrival)) {
+                        return 0;
+                    }
+                }
+            );
+            return state;
+        }
+    }
+
+    sortbyPrice(action: ArrivalSort, currentState: resultObj[]): resultObj[]{
+        if (action.order == 'default') {
+            let state: resultObj[] = currentState.slice().sort(
+                (a: resultObj, b: resultObj) => {
+                    if (b.fare < a.fare) {
+                        return -1;
+                    }
+                    else if (b.fare > a.fare) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            );
+            return state;
+        }
+        else if (action.order == 'rotated') {
+            let state: resultObj[] = currentState.slice().sort(
+                (a: resultObj, b: resultObj) => {
+                    if (b.fare > a.fare) {
+                        return -1;
+                    }
+                    else if (b.fare < a.fare) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            );
+            return state;
+        }
     }
 
 }

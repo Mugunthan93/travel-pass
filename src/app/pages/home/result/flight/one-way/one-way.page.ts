@@ -21,6 +21,7 @@ export class OneWayPage implements OnInit,OnDestroy {
     { value: 'duration', state: 'default' },
     { value: 'price', state: 'default' }
   ];
+
   selectedFlight: any = null;
 
   flightList: resultObj[];
@@ -42,8 +43,8 @@ export class OneWayPage implements OnInit,OnDestroy {
 
     this.resultType$ = this.store.select(ResultState.getResultType);
     this.resultTypeSub = this.resultType$.subscribe(
-      (result: string) => {
-        this.resultType = result;
+      (type: string) => {
+        this.resultType = type;
         console.log(this.resultType);
       }
     );

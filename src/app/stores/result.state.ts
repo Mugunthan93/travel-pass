@@ -1,11 +1,11 @@
 import { State, Selector, Action, StateContext, Store } from '@ngxs/store';
 import { FlightResultState } from './result/flight.state';
-import { SearchState } from './search.state';
 
 export interface result{
     mode: string,
-    type:string
+    type: string
 }
+
 
 export class ResultMode {
     static readonly type = '[Result] ResultMode';
@@ -20,7 +20,6 @@ export class ResultType {
         
     }
 }
-
 
 @State<result>({
     name: 'Result',

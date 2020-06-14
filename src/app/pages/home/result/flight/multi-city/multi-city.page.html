@@ -14,7 +14,10 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <app-result-sorting [buttons]="sortButtons"></app-result-sorting>
+  <app-result-sorting 
+    [type]="resultType"
+    [buttons]="sortButtons">
+  </app-result-sorting>
 </ion-header>
 
 <ion-grid>
