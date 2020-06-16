@@ -200,6 +200,10 @@ export class DomesticPage implements OnInit {
 
   }
 
+  currentFlight(evt) {
+    
+  }
+
   ngOnDestroy() {
     if (this.flightListSub) {
       this.flightListSub.unsubscribe();

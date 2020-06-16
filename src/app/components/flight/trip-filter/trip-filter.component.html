@@ -1,3 +1,4 @@
+
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -5,7 +6,7 @@
         <ion-icon size="large" src="../../../../../assets/ionicons/md-arrow-back-outline.svg"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Flight filter</ion-title>
+    <ion-label>Flight filter</ion-label>
     <ion-buttons slot="end">
       <ion-button (click)="reset()">
         <ion-text>RESET</ion-text>
@@ -13,150 +14,90 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-content>
-  <ion-grid>
-    <!--stop row-->
-    <ion-row>
-      <ion-col>
-        <!--heading-->
-        <ion-row>
-          <ion-text>Stops</ion-text>
-        </ion-row>
-        <!--segment-->
-        <ion-row>
-          <ion-segment mode="ios" (ionChange)="chooseStop($event)">
-            <ion-segment-button value="home">
-              <ion-text>All</ion-text>
-            </ion-segment-button>
-            <ion-segment-button value="heart">
-              <ion-text>Non-Stop</ion-text>
-            </ion-segment-button>
-            <ion-segment-button value="pin">
-              <ion-text>1 Stop</ion-text>
-            </ion-segment-button>
-            <ion-segment-button value="star">
-              <ion-text>2 Stops</ion-text>
-            </ion-segment-button>
-          </ion-segment>
-        </ion-row>
-      </ion-col>
-    </ion-row>
 
-    <!--departure row-->
-    <ion-row>
-      <ion-col>
-        <!--heading-->
-        <ion-row>
-          <ion-text>Onward Departure Time</ion-text>
-        </ion-row>
-        <!--range row-->
-        <ion-row>
-          <ion-range min="-200" max="200" color="secondary"></ion-range>
-        </ion-row>
-         <!--value row-->
-         <ion-row>
-          <ion-col>
-            <ion-text>0 Hours</ion-text>
-          </ion-col>
-          <ion-col>
-            <ion-text>24 Hours</ion-text>
-          </ion-col>
-        </ion-row>
-      </ion-col>
-    </ion-row>
+<form [formGroup]="filterForm" (ngSubmit)="filter()">
+  <ion-content>
+      <ion-grid>
+    
+        <ion-label>Stops</ion-label>
+        <ion-segment mode="ios" (ionChange)="chooseStop($event)" formControlName="stops">
+          <ion-segment-button value="null">
+            <ion-text>All</ion-text>
+          </ion-segment-button>
+          <ion-segment-button value="1">
+            <ion-text>Non-Stop</ion-text>
+          </ion-segment-button>
+          <ion-segment-button value="2">
+            <ion-text>1 Stop</ion-text>
+          </ion-segment-button>
+          <ion-segment-button value="3">
+            <ion-text>2 Stops</ion-text>
+          </ion-segment-button>
+        </ion-segment>
+    
+        <ion-label>Departure Time</ion-label>
+        <ion-range (ionChange)="depRange($event)" min="0" max="24" color="secondary" pin="true" ticks="true" snaps="true">
+        </ion-range>
 
-    <!--return row-->
-    <ion-row>
-      <ion-col>
-        <!--heading-->
         <ion-row>
-          <ion-text>Onward Return Time</ion-text>
+          <ion-label>0 Hours</ion-label>
+          <ion-label>24 Hours</ion-label>
         </ion-row>
-        <!--range row-->
+    
+        <ion-label>Arrival Time</ion-label>
+        <ion-range (ionChange)="reRange($event)" min="0" max="24" color="secondary" pin="true" ticks="true" snaps="true">
+        </ion-range>
+
         <ion-row>
-          <ion-range min="-200" max="200" color="secondary"></ion-range>
+          <ion-label>0 Hours</ion-label>
+          <ion-label>24 Hours</ion-label>
         </ion-row>
-         <!--value row-->
-         <ion-row>
-          <ion-col>
-            <ion-text>0 Hours</ion-text>
-          </ion-col>
-          <ion-col>
-            <ion-text>24 Hours</ion-text>
-          </ion-col>
-        </ion-row>
-      </ion-col>
-    </ion-row>
 
-    <!--price row-->
-    <ion-row>
-      <ion-col>
-        <!--heading-->
+        <ion-label>Price</ion-label>
+        <ion-range (ionChange)="priceRange($event)" min="1" max="100" color="secondary" step="10"
+          value="{lower:1000;upper:100000000}"
+          pin="true" ticks="true" snaps="true">
+        </ion-range>
+
         <ion-row>
-          <ion-text>Price</ion-text>
+          <ion-label>1000</ion-label>
+          <ion-label>10,00,00,000</ion-label>
         </ion-row>
-        <!--range row-->
-        <ion-row>
-          <ion-range min="-200" max="200" color="secondary"></ion-range>
-        </ion-row>
-        <!--value row-->
-        <ion-row>
-          <ion-col>
-            <ion-text>1,000</ion-text>
-          </ion-col>
-          <ion-col>
-            <ion-text>1,00,00,000</ion-text>
-          </ion-col>
-        </ion-row>
-      </ion-col>
-    </ion-row>
 
-    <!--fare row-->
-    <ion-row>
-      <ion-col>
-        <ion-text>Corporate Fare</ion-text>
-      </ion-col>
-      <ion-col>
-        <ion-checkbox></ion-checkbox>
-      </ion-col>
-    </ion-row>
+        <ion-item>
+          <ion-label>Corporate Fare</ion-label>
+          <ion-checkbox (ionChange)="corpFare($event)" slot="end"></ion-checkbox>
+        </ion-item>
 
-    <!--airline heading row-->
-    <ion-row>
-      <ion-col>
-        <ion-text>Preferred Airlines</ion-text>
-      </ion-col>
-      <ion-col>
+        <ion-label>Preferred Airlines</ion-label>
 
-      </ion-col>
-    </ion-row>
+        <ion-list formGroupName="airlines">
+          <div *ngFor="let airline of inputs.airlines">
+            <ion-item>
+              <ion-label>{{airline}}</ion-label>
+              <ion-checkbox slot="end" formControlName="{{airline}}"></ion-checkbox>
+            </ion-item>
+          </div>
+        </ion-list>
+      </ion-grid>
+      <ion-input formControlName="depHours" hidden></ion-input>
+      <ion-input formControlName="arrHours" hidden></ion-input>
+      <ion-input formControlName="price" hidden></ion-input>
+      <ion-input formControlName="corpFare" hidden></ion-input>
+  </ion-content>
+  
+  <ion-footer>
+    <ion-toolbar>
+      <ion-button size="large" (click)="close()">
+        <ion-text>Cancel</ion-text>
+      </ion-button>
+      <ion-button size="large" type="submit">
+        <ion-text>Apply</ion-text>
+      </ion-button>
+    </ion-toolbar>
+  </ion-footer>
+</form>
 
-    <!--airlines row-->
-    <ion-row>
-      <ion-col>
-        <!--airline row-->
-        <ion-row *ngFor="let airline of airlines">
-          <!--airline name-->
-          <ion-col>
-            <ion-text>{{airline}}</ion-text>
-          </ion-col>
-          <!--chekcbox-->
-          <ion-col>
-            <ion-checkbox></ion-checkbox>
-          </ion-col>
-        </ion-row>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</ion-content>
 
-<ion-footer>
-  <ion-toolbar>
-    <ion-button size="large" (click)="close()">
-      <ion-text>Cancel</ion-text>
-    </ion-button>
-    <ion-button size="large" (click)="close()">
-      <ion-text>Apply</ion-text>
-    </ion-button>
-  </ion-toolbar>
-</ion-footer>
+
+

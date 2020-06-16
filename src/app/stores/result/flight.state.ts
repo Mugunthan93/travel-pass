@@ -1,12 +1,14 @@
-import { State, Selector, Action, StateContext, Store, StateStream } from '@ngxs/store';
+import { State, Selector, Action, StateContext, Store } from '@ngxs/store';
 import { flightSearchResult, flightResult, flightData } from 'src/app/models/search/flight';
 import * as moment from "moment";
+import * as _ from "lodash";
 import { Navigate } from '@ngxs/router-plugin';
 
 export interface flight{
     oneway: onewayResult
     roundtrip: roundtripResult
     multicity: multicityResult
+    filterInputs:filterInput
 }
 
 export interface onewayResult{
@@ -41,7 +43,8 @@ export interface resultObj {
     arrival: string
     baggage: flightData[][],
     connectingFlights: flightData[][],
-    fareRule:fareRule
+    fareRule: fareRule,
+    stops: number
 }
 
 export interface trips {
@@ -68,6 +71,14 @@ export interface flightDetail {
 export interface fareRule {
     ResultIndex: string
     TraceId: string
+}
+
+export interface filterInput{
+    stops: number
+    depatureHours: number
+    arrivalHours: number
+    corporateFare:boolean
+    airlines : string[]
 }
 
 export class OneWayResponse{
@@ -119,15 +130,22 @@ export class PriceSort {
     }
 }
 
-
 @State<flight>({
     name: 'FlightResult',
     defaults: {
         oneway: null,
         roundtrip: null,
-        multicity: null
+        multicity: null,
+        filterInputs: {
+            stops: null,
+            depatureHours: 24,
+            arrivalHours: 24,
+            corporateFare: false,
+            airlines:[]
+        }
     }
 })
+
 export class FlightResultState{
 
     constructor(
@@ -138,7 +156,14 @@ export class FlightResultState{
 
     @Selector() 
     static getOneWay(states: flight): resultObj[]{
-        return states.oneway.value;
+        console.log(states.oneway.value, states.filterInputs);
+        return states.oneway.value.filter(
+            el =>
+                (states.filterInputs.stops !== null ? el.stops == states.filterInputs.stops : el) &&
+                moment(el.departure).hour() <= states.filterInputs.depatureHours &&
+                moment(el.arrival).hour() <= states.filterInputs.arrivalHours &&
+                states.filterInputs.airlines.includes(el.name)
+            );
     }
 
     @Selector()
@@ -149,6 +174,11 @@ export class FlightResultState{
     @Selector()
     static getMultiWay(states: flight): resultObj[] {
         return states.multicity.value;
+    }
+
+    @Selector()
+    static getFilter(states: flight) {
+        return states.filterInputs;
     }
 
     @Action(DurationSort)
@@ -367,7 +397,24 @@ export class FlightResultState{
                 traceId: action.response.TraceId
             }
         });
-        console.log(states.getState());
+
+        const currentState = states.getState().oneway.value;
+        let airlines: string[] = [];
+        currentState.forEach(
+            (el) => {
+                airlines.push(el.name);
+            }
+        );
+
+        states.patchState({
+            filterInputs: {
+                stops: null,
+                depatureHours: 24,
+                arrivalHours: 24,
+                corporateFare: false,
+                airlines: _.sortedUniq(airlines)
+            }
+        })
     }
 
     @Action(RoundTripResponse)
@@ -378,11 +425,30 @@ export class FlightResultState{
                     value: this.responseDate(action.response.Results[0], action.response.TraceId),
                     values: {
                         departure: null,
-                        return:null
+                        return: null
                     },
                     traceId: action.response.TraceId
                 }
             });
+
+            const currentState = states.getState().roundtrip.value;
+            let airlines: string[] = [];
+            currentState.forEach(
+                (el) => {
+                    airlines.push(el.name);
+                }
+            );
+
+            states.patchState({
+                filterInputs: {
+                    stops: null,
+                    depatureHours: 24,
+                    arrivalHours: 24,
+                    corporateFare: false,
+                    airlines: _.sortedUniq(airlines)
+                }
+            })
+
             this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'round-trip','international']));
 
         }
@@ -397,6 +463,32 @@ export class FlightResultState{
                     traceId: action.response.TraceId
                 }
             });
+
+            const currentDepState = states.getState().roundtrip.values.departure;
+            const currentReState = states.getState().roundtrip.values.return;
+            let Depairlines: string[] = [];
+            let Reairlines: string[] = [];
+            currentDepState.forEach(
+                (el) => {
+                    Depairlines.push(el.name);
+                }
+            );
+            currentReState.forEach(
+                (el) => {
+                    Reairlines.push(el.name);
+                }
+            );
+            
+            states.patchState({
+                filterInputs: {
+                    stops: null,
+                    depatureHours: 24,
+                    arrivalHours: 24,
+                    corporateFare: false,
+                    airlines: _.sortedUniq(_.union(Depairlines, Reairlines))
+                }
+            })
+
             this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'round-trip','domestic']));
 
         }
@@ -410,6 +502,23 @@ export class FlightResultState{
                 traceId: action.response.TraceId
             }
         });
+
+        const currentState = states.getState().multicity.value;
+        let airlines: string[] = [];
+        currentState.forEach(
+            (el) => {
+                airlines.push(el.name);
+            }
+        );
+        states.patchState({
+            filterInputs: {
+                stops: null,
+                depatureHours: 24,
+                arrivalHours: 24,
+                corporateFare: false,
+                airlines: _.sortedUniq(airlines)
+            }
+        })
     }
 
     responseDate(response: flightResult[],traceId : string): resultObj[] {
@@ -422,12 +531,15 @@ export class FlightResultState{
                 let trips: trips[] = new Array(element.Segments.length);
                 let totalDuration: number = 0;
                 let lastArrival: string;
+                let stops: number = 0;
 
                 element.Segments.forEach(
                     (el, ind, arr) => {
 
+
                         lastArrival = el[el.length - 1].Destination.ArrTime;
                         totalDuration += this.getDuration(el);
+                        stops = stops < el.length ? el.length : stops;
 
                         trips[ind] = {
                             tripinfo: {
@@ -465,7 +577,8 @@ export class FlightResultState{
                     trips: trips,
                     baggage: element.Segments,
                     connectingFlights: element.Segments,
-                    fareRule: fareRule
+                    fareRule: fareRule,
+                    stops: stops
                 };
 
             }
@@ -601,7 +714,7 @@ export class FlightResultState{
         }
     }
 
-    sortbyPrice(action: ArrivalSort, currentState: resultObj[]): resultObj[]{
+    sortbyPrice(action: PriceSort, currentState: resultObj[]): resultObj[]{
         if (action.order == 'default') {
             let state: resultObj[] = currentState.slice().sort(
                 (a: resultObj, b: resultObj) => {

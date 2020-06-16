@@ -127,30 +127,25 @@ ion-content{
 
                             >ion-button{
                                 margin:0px;
-                                height: min-content;
-                                
+                                height: 30px;
                             }
                         }
                     }
     
                     ::ng-deep .mat-expansion-panel-body {
                         border-top: 1px solid grey;
-                        padding: 3px;
-    
-                        >ion-row:first-child {
-                            ion-text {
-                                margin-top: 2px;
-                                margin-bottom: 2px;
-                            }
-                        }
-    
-                        >ion-row:last-child {
-    
-                            ion-col {
-                                @include flex-col-grid;
-    
-                                * {
-                                    margin: auto;
+                        padding: 0px;
+
+                        ion-row:first-child {
+                            background: #{$bar-bg2};
+                            height: fit-content;
+                            padding: 10px 0px 28px 0px;
+
+                            >ion-thumbnail {
+                                >ion-title {
+                                    color:#{$white-text};
+                                    padding: 0px;
+                                    text-align: center;
                                 }
                             }
                         }

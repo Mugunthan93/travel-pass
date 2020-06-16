@@ -62,7 +62,7 @@ export class OneWayPage implements OnInit,OnDestroy {
     const modal = await this.modalCtrl.create({
       component: TripFilterComponent,
       componentProps: {
-        list: this.flightList
+        type: this.resultType
       }
     });
 

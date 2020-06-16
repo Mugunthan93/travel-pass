@@ -5,6 +5,7 @@ import { FlightBaggageComponent } from '../flight-baggage/flight-baggage.compone
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { flightData } from 'src/app/models/search/flight';
 import { resultObj, fareRule } from 'src/app/stores/result/flight.state';
+import { FairRuleComponent } from '../fair-rule/fair-rule.component';
 
 @Component({
   selector: 'app-result-list',
@@ -111,8 +112,16 @@ export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
     return await modal.present();
   }
 
-  showFareRule(fareRule: fareRule) {
-    
+  async showFareRule(fareRule: fareRule) {
+    const modal = await this.modalCtrl.create({
+      component: FairRuleComponent,
+      componentProps: {
+        'fareRule': fareRule
+      },
+      cssClass:'fareRule'
+    });
+
+    return await modal.present();
   }
 
   async showFlightDetail(connectingFlights: flightData[][]) {

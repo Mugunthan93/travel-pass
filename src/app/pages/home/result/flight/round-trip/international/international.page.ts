@@ -44,4 +44,8 @@ export class InternationalPage implements OnInit {
     );
   }
 
+  currentFlight(evt) {
+    
+  }
+
 }

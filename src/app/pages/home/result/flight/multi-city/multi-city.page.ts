@@ -62,7 +62,7 @@ export class MultiCityPage implements OnInit {
     const modal = await this.modalCtrl.create({
       component: TripFilterComponent,
       componentProps: {
-        list: this.flightList
+        type: this.resultType
       }
     });
 

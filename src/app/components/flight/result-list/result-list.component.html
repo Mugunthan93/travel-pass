@@ -67,19 +67,23 @@
                 </ion-icon>
               </ion-button>
           </mat-expansion-panel-header>
-          <ion-row>
-            <ion-col size="4" (click)="showBaggage(item.baggage)">
-              <ion-icon size="large" name="briefcase"></ion-icon>
-              <ion-text>Baggage</ion-text>
-            </ion-col>
-            <ion-col size="4">
-              <ion-icon size="large" name="briefcase" (click)="showFareRule(item.fareRule)"></ion-icon>
-              <ion-text>Fare Rule</ion-text>
-            </ion-col>
-            <ion-col size="4" (click)="showFlightDetail(item.connectingFlights)">
-              <ion-icon size="large" src="../../../../../../assets/icons/flying-fly.svg"></ion-icon>
-              <ion-text>Flight details</ion-text>
-            </ion-col>
+          <ion-row class="ion-justify-content-around">
+            <ion-thumbnail>
+              <ion-icon size="large" name="briefcase" (click)="showBaggage(item.baggage)">
+              </ion-icon>
+              <ion-title>Baggage</ion-title>
+            </ion-thumbnail>
+            <ion-thumbnail>
+              <ion-icon size="large" name="briefcase" (click)="showFareRule(item.fareRule)">
+              </ion-icon>
+              <ion-title>Fare Rule</ion-title>
+            </ion-thumbnail>
+            <ion-thumbnail>
+              <ion-icon size="large" src="../../../../../../assets/icons/flying-fly.svg"
+                (click)="showFlightDetail(item.connectingFlights)">
+              </ion-icon>
+              <ion-title>Flight details</ion-title>
+            </ion-thumbnail>
           </ion-row>
         </mat-expansion-panel>
       </mat-accordion>

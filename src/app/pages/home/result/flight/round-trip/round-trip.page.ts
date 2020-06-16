@@ -45,6 +45,9 @@ export class RoundTripPage implements OnInit {
   async filter() {
     const modal = await this.modalCtrl.create({
       component: TripFilterComponent,
+      componentProps: {
+        type: this.resultType
+      }
     });
 
     modal.onDidDismiss().then(
@@ -59,5 +62,9 @@ export class RoundTripPage implements OnInit {
 
   book() {
     this.router.navigate(['/', 'home', 'book', 'flight', 'round-trip']);
+  }
+
+  back() {
+    
   }
 }

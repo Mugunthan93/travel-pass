@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -15,12 +15,14 @@ import { HotelLocationComponent } from 'src/app/components/hotel/hotel-location/
 import { AgmCoreModule } from '@agm/core';
 import { environment } from 'src/environments/environment';
 import { BusFilterComponent } from 'src/app/components/bus/bus-filter/bus-filter.component';
+import { FairRuleComponent } from 'src/app/components/flight/fair-rule/fair-rule.component';
 
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     IonicModule,
     ResultPageRoutingModule,
     AgmCoreModule.forRoot({
@@ -36,7 +38,8 @@ import { BusFilterComponent } from 'src/app/components/bus/bus-filter/bus-filter
     HotelFilterComponent,
     LocationComponent,
     HotelLocationComponent,
-    BusFilterComponent
+    BusFilterComponent,
+    FairRuleComponent
   ],
   entryComponents: [
     TripFilterComponent,
@@ -44,7 +47,8 @@ import { BusFilterComponent } from 'src/app/components/bus/bus-filter/bus-filter
     HotelFilterComponent,
     LocationComponent,
     HotelLocationComponent,
-    BusFilterComponent
+    BusFilterComponent,
+    FairRuleComponent
   ]
 })
 export class ResultPageModule {}
