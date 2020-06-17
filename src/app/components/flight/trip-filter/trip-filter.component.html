@@ -1,3 +1,4 @@
+<form [formGroup]="filterForm" (ngSubmit)="filter()">
 
 <ion-header>
   <ion-toolbar>
@@ -15,22 +16,21 @@
   </ion-toolbar>
 </ion-header>
 
-<form [formGroup]="filterForm" (ngSubmit)="filter()">
   <ion-content>
       <ion-grid>
     
         <ion-label>Stops</ion-label>
         <ion-segment mode="ios" (ionChange)="chooseStop($event)" formControlName="stops">
-          <ion-segment-button value="null">
+          <ion-segment-button value="-1">
             <ion-text>All</ion-text>
           </ion-segment-button>
-          <ion-segment-button value="1">
+          <ion-segment-button value="0">
             <ion-text>Non-Stop</ion-text>
           </ion-segment-button>
-          <ion-segment-button value="2">
+          <ion-segment-button value="1">
             <ion-text>1 Stop</ion-text>
           </ion-segment-button>
-          <ion-segment-button value="3">
+          <ion-segment-button value="2">
             <ion-text>2 Stops</ion-text>
           </ion-segment-button>
         </ion-segment>

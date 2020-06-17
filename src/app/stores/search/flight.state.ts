@@ -199,7 +199,7 @@ export class FlightSearchState {
             this.store.dispatch(new OneWayResponse(data.response));
             console.log(data);
 
-            this.store.dispatch(new ResultMode('flight'));
+            this.store.dispatch(new ResultMode('Flight'));
             this.store.dispatch(new ResultType('one-way'));
             loading.dismiss();
             this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'one-way']));
@@ -309,7 +309,7 @@ export class FlightSearchState {
             console.log(flightResponse);
             const data: flightSearchResponse = JSON.parse(flightResponse.data);
             console.log(data);
-            this.store.dispatch(new ResultMode('flight'));
+            this.store.dispatch(new ResultMode('Flight'));
             if (data.response.Results.length == 1) { 
                 this.store.dispatch(new ResultType('round-trip'));
             }
@@ -425,7 +425,7 @@ export class FlightSearchState {
             const data: flightSearchResponse = JSON.parse(flightResponse.data);
             this.store.dispatch(new MultiCityResponse(data.response));
 
-            this.store.dispatch(new ResultMode('flight'));
+            this.store.dispatch(new ResultMode('Flight'));
             this.store.dispatch(new ResultType('multi-city'));
             loading.dismiss();
             this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'multi-city']));

@@ -10,7 +10,7 @@
             [collapsedHeight]="'fit-content'" 
             [expandedHeight]="'fit-content'" 
             (click)="selectFlight(panel,item,$event)">
-              <ion-row *ngIf="(type == 'multi-city' || 'round-trip') && (type !== 'animated-round-trip')"
+              <ion-row *ngIf="flightName"
               [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}">
                 <ion-label>{{item.name}}</ion-label>
                 <ion-row>
@@ -19,7 +19,7 @@
                     <ion-text>{{item.seats}} Seats Left</ion-text>
                   </ion-row>
                   <ion-row>
-                    <ion-checkbox class="email"></ion-checkbox>
+                    <ion-checkbox class="email" [value]="item" (ionChange)="getFlight($event)"></ion-checkbox>
                     <ion-label>Email</ion-label>
                   </ion-row>
                 </ion-row>
@@ -48,7 +48,8 @@
                     {{i.tripinfo.stops}}
                   </ion-text>
                 </ion-col>
-                <ion-col *ngIf="(type == 'one-way' || 'animated-round-trip') && (type !== 'round-trip')">
+                <ion-col
+                  *ngIf="flightPrice">
                   <ion-text>
                     {{i.tripinfo.fare | currency : i.tripinfo.currency }}
                   </ion-text>
@@ -57,9 +58,9 @@
                   </ion-text>
                 </ion-col>
               </ion-row>
-              <ion-row *ngIf="(type == 'one-way' || 'animated-round-trip') && (type !== 'round-trip')"
+              <ion-row *ngIf="flightMail"
                 [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}">
-                <ion-checkbox class="email"></ion-checkbox>
+                <ion-checkbox class="email" [value]="item" (ionChange)="getFlight($event)"></ion-checkbox>
                 <ion-label>Email</ion-label>
               </ion-row>
               <ion-button slot="icon-only" class="panel-button" expand="full" size="small" (click)="rotate(i)">

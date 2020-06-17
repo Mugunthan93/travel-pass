@@ -4,8 +4,10 @@ import { ModalController } from '@ionic/angular';
 import { FlightBaggageComponent } from '../flight-baggage/flight-baggage.component';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { flightData } from 'src/app/models/search/flight';
-import { resultObj, fareRule } from 'src/app/stores/result/flight.state';
+import { resultObj, fareRule, AddEmailDetail, RemoveEmailDetail, FlightResultState } from 'src/app/stores/result/flight.state';
 import { FairRuleComponent } from '../fair-rule/fair-rule.component';
+import { Store } from '@ngxs/store';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-result-list',
@@ -30,6 +32,8 @@ export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() type: string;
   @Input() flightList: resultObj[];
   @Input() selectedFlights: any;
+
+  @Output() mailStatus$: EventEmitter<Observable<boolean>> = new EventEmitter<Observable<boolean>>(false);
   @Output() getFlightValue: EventEmitter<any> = new EventEmitter<any>(null);
 
   selectedFlight = null;
@@ -37,8 +41,13 @@ export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
   itemList: number = 60;
   state: string[] = [];
 
+  flightName: boolean;
+  flightPrice: boolean;
+  flightMail: boolean;
+
   constructor(
-    public modalCtrl : ModalController
+    public modalCtrl: ModalController,
+    private store : Store
   ) {
   }
 
@@ -49,15 +58,18 @@ export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
       }
     );
   }
+
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
+    if (changes.type) { 
+      this.changeType(changes.type.currentValue);
+    }
   }
 
   ngAfterViewInit(): void {
     this.getsColumns.emit(this.columns);
   }
 
-  rotate(index: number) {
+  rotate(index: number) : void {
     if (this.state[index] == 'default') {
       this.state[index] = 'rotated'
     }
@@ -66,9 +78,20 @@ export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
 
+  changeType(type: string): void {
+    if (type == 'one-way' || type == 'animated-round-trip') {
+      this.flightName = false;
+      this.flightPrice = true;
+      this.flightMail = true;
+    }
+    else if (type == 'round-trip' || type == 'multi-city') {
+      this.flightName = true;
+      this.flightPrice = false;
+      this.flightMail = false;
+    }
+  }
+
   selectFlight(panel: MatExpansionPanel, flight: any, evt: Event) {
-    
-    console.log((evt.target as HTMLElement).classList);
 
     if ((evt.target as HTMLElement).classList.contains('panel-button')) {
       panel.expanded ? panel.open() : panel.close();
@@ -98,6 +121,16 @@ export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
       }
     }
 
+  }
+
+  getFlight(evt : CustomEvent) {
+    if (evt.detail.checked) {
+      this.store.dispatch(new AddEmailDetail(evt.detail.value));
+    }
+    else if (!evt.detail.checked) {
+      this.store.dispatch(new RemoveEmailDetail(evt.detail.value));
+    }
+    this.mailStatus$.emit(this.store.select(FlightResultState.mailStatus));
   }
 
   async showBaggage(baggage: flightData[][]){

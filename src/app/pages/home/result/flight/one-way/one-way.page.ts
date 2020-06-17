@@ -2,10 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
 import { Router } from '@angular/router';
-import { flightResult } from 'src/app/models/search/flight';
 import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { FlightResultState, resultObj } from 'src/app/stores/result/flight.state';
+import { FlightResultState, resultObj, ResetEmailDetail } from 'src/app/stores/result/flight.state';
 import { ResultState } from 'src/app/stores/result.state';
 
 @Component({
@@ -32,6 +31,8 @@ export class OneWayPage implements OnInit,OnDestroy {
   resultType$: Observable<string>;
   resultTypeSub: Subscription;
 
+  mailStatus$: Observable<boolean>;
+
   constructor(
     public modalCtrl : ModalController,
     public router: Router,
@@ -41,18 +42,18 @@ export class OneWayPage implements OnInit,OnDestroy {
   
   ngOnInit() {
 
+    this.store.dispatch(new ResetEmailDetail());
+
     this.resultType$ = this.store.select(ResultState.getResultType);
     this.resultTypeSub = this.resultType$.subscribe(
       (type: string) => {
         this.resultType = type;
-        console.log(this.resultType);
       }
     );
 
     this.flightList$ = this.store.select(FlightResultState.getOneWay);
     this.flightListSub = this.flightList$.subscribe(
       (res: resultObj[]) => {
-        console.log(res);
         this.flightList = res;
       }
     );
@@ -75,6 +76,11 @@ export class OneWayPage implements OnInit,OnDestroy {
     return await modal.present();
   }
 
+  changeStatus(status : Observable<boolean>) {
+    this.mailStatus$ = status;
+    this.mailStatus$.subscribe(status => console.log(status));
+  }
+
   book() {
     this.router.navigate(['/','home','book','flight','one-way']);
   }
@@ -93,6 +99,10 @@ export class OneWayPage implements OnInit,OnDestroy {
   }
 
   back() {
+    
+  }
+
+  mailTicket() {
     
   }
 }

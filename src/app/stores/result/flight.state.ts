@@ -8,7 +8,8 @@ export interface flight{
     oneway: onewayResult
     roundtrip: roundtripResult
     multicity: multicityResult
-    filterInputs:filterInput
+    filterInputs: filterInput
+    emailItinerary: resultObj[]
 }
 
 export interface onewayResult{
@@ -130,6 +131,24 @@ export class PriceSort {
     }
 }
 
+export class AddEmailDetail {
+    static readonly type = '[FlightResult] AddEmailDetail';
+    constructor(public flightItem : resultObj) {
+        
+    }
+}
+
+export class RemoveEmailDetail {
+    static readonly type = '[FlightResult] RemoveEmailDetail';
+    constructor(public flightItem: resultObj) {
+
+    }
+}
+
+export class ResetEmailDetail {
+    static readonly type = '[FlightResult] ResetEmailDetail';
+}
+
 @State<flight>({
     name: 'FlightResult',
     defaults: {
@@ -142,7 +161,8 @@ export class PriceSort {
             arrivalHours: 24,
             corporateFare: false,
             airlines:[]
-        }
+        },
+        emailItinerary: []
     }
 })
 
@@ -156,7 +176,6 @@ export class FlightResultState{
 
     @Selector() 
     static getOneWay(states: flight): resultObj[]{
-        console.log(states.oneway.value, states.filterInputs);
         return states.oneway.value.filter(
             el =>
                 (states.filterInputs.stops !== null ? el.stops == states.filterInputs.stops : el) &&
@@ -179,6 +198,11 @@ export class FlightResultState{
     @Selector()
     static getFilter(states: flight) {
         return states.filterInputs;
+    }
+
+    @Selector()
+    static mailStatus(states: flight): boolean {
+        return states.emailItinerary.length == 0 ? false : true; 
     }
 
     @Action(DurationSort)
@@ -519,6 +543,34 @@ export class FlightResultState{
                 airlines: _.sortedUniq(airlines)
             }
         })
+    }
+
+    @Action(AddEmailDetail) 
+    addEmailDetail(states: StateContext<flight>, action: AddEmailDetail) {
+        let emailArray = states.getState().emailItinerary;
+        if (emailArray == null) {
+            emailArray = [];
+        }
+        emailArray.push(action.flightItem);
+        states.patchState({
+            emailItinerary: emailArray
+        });
+    }
+    
+    @Action(RemoveEmailDetail)
+    removeEmailDetail(states: StateContext<flight>, action: RemoveEmailDetail) {
+        const emailArray = states.getState().emailItinerary;
+        const currentArray = emailArray.filter(el => el !== action.flightItem);
+        states.patchState({
+            emailItinerary: currentArray
+        });
+    }
+
+    @Action(ResetEmailDetail)
+    resetEmailDetail(states: StateContext<flight>, action: ResetEmailDetail) {
+        states.patchState({
+            emailItinerary:null
+        });
     }
 
     responseDate(response: flightResult[],traceId : string): resultObj[] {
