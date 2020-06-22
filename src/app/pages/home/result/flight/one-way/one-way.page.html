@@ -45,37 +45,35 @@
 
 <ion-footer *ngIf="selectedFlight !== null">
   <ion-toolbar>
-      <ion-row>
-        <ion-col size="3">
-          <ion-img src="../../../../../../assets/site-image/D7.gif"></ion-img>
-          <ion-text>
-            Air Asia
-          </ion-text>
-        </ion-col>
-        <ion-col size="3">
-          <ion-text>
-            15:40 - 17:50
-          </ion-text>
-          <ion-text>
-            Economy
-          </ion-text>
-        </ion-col>
-        <ion-col size="3">
-          <ion-text>
-            02h 10m
-          </ion-text>
-          <ion-text>
-            non stop
-          </ion-text>
-        </ion-col>
-        <ion-col size="3">
-          <ion-text>
-            $ 4800
-          </ion-text>
-          <ion-button size="small" (click)="book()">
-            <ion-text>Book</ion-text>
-          </ion-button>
-        </ion-col>
-      </ion-row>
+    <ion-row class="ion-justify-content-around" *ngFor="let i of selectedFlight.trips">
+      <ion-col>
+        <ion-img src="../../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
+        <!-- <ion-text *ngFor="let name of (i.tripinfo.airline.name | wordwrap)">{{name}}</ion-text> -->
+        <ion-text>{{i.tripinfo.airline.name}}</ion-text>
+        <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
+      </ion-col>
+      <ion-col>
+        <ion-text>
+          {{i.tripinfo.depTime | date : 'HH:mm'}} - {{i.tripinfo.arrTime | date : 'HH:mm'}}
+        </ion-text>
+        <ion-text>{{i.tripinfo.class}}</ion-text>
+      </ion-col>
+      <ion-col>
+        <ion-text>
+          {{i.tripinfo.duration}}
+        </ion-text>
+        <ion-text>
+          {{i.tripinfo.stops}}
+        </ion-text>
+      </ion-col>
+      <ion-col>
+        <ion-text>
+          {{i.tripinfo.fare | currency : i.tripinfo.currency }}
+        </ion-text>
+        <ion-button size="small" (click)="book()">
+          <ion-text>Book</ion-text>
+        </ion-button>
+      </ion-col>
+    </ion-row>
   </ion-toolbar>
 </ion-footer>

@@ -29,7 +29,7 @@
       #departure 
       [flightList]="departList" 
       [selectedFlights]="selectedFlight"
-      (getFlightValue)="currentFlight($event)" 
+      (getFlightValue)="currentDepartureFlight($event)" 
       [flightType]="'departure'" 
       (getsColumns)="departuredColumns($event)"
       (mailStatus$)="changeStatus($event)">
@@ -40,10 +40,68 @@
       #return 
       [flightList]="returnList" 
       [selectedFlights]="selectedFlight"
-      (getFlightValue)="currentFlight($event)" 
+      (getFlightValue)="currentReturnFlight($event)" 
       [flightType]="'return'" 
       (getsColumns)="returnedColumns($event)"
       (mailStatus$)="changeStatus($event)">
     </app-result-list>
   </ion-row>
 </ion-content>
+
+<ion-footer *ngIf="selectedDepartureFlight !== null || selectedReturnFlight !== null">
+  <ion-toolbar>
+    <ion-row *ngIf="selectedDepartureFlight !== null">
+      <ion-row class="ion-justify-content-around" *ngFor="let i of selectedDepartureFlight.trips">
+        <ion-col>
+          <ion-img src="../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
+          <!-- <ion-text *ngFor="let name of (i.tripinfo.airline.name | wordwrap)">{{name}}</ion-text> -->
+          <ion-text>{{i.tripinfo.airline.name}}</ion-text>
+          <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
+        </ion-col>
+        <ion-col>
+          <ion-text>
+            {{i.tripinfo.depTime | date : 'HH:mm'}} - {{i.tripinfo.arrTime | date : 'HH:mm'}}
+          </ion-text>
+          <ion-text>{{i.tripinfo.class}}</ion-text>
+        </ion-col>
+        <ion-col>
+          <ion-text>
+            {{i.tripinfo.duration}}
+          </ion-text>
+          <ion-text>
+            {{i.tripinfo.stops}}
+          </ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-row>
+    <ion-row *ngIf="selectedReturnFlight !== null">
+      <ion-row class="ion-justify-content-around" *ngFor="let i of selectedReturnFlight.trips">
+        <ion-col>
+          <ion-img src="../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
+          <!-- <ion-text *ngFor="let name of (i.tripinfo.airline.name | wordwrap)">{{name}}</ion-text> -->
+          <ion-text>{{i.tripinfo.airline.name}}</ion-text>
+          <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
+        </ion-col>
+        <ion-col>
+          <ion-text>
+            {{i.tripinfo.depTime | date : 'HH:mm'}} - {{i.tripinfo.arrTime | date : 'HH:mm'}}
+          </ion-text>
+          <ion-text>{{i.tripinfo.class}}</ion-text>
+        </ion-col>
+        <ion-col>
+          <ion-text>
+            {{i.tripinfo.duration}}
+          </ion-text>
+          <ion-text>
+            {{i.tripinfo.stops}}
+          </ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-row>
+    <ion-buttons slot="end">
+      <ion-button (click)="book()" disabled="selectedDepartureFlight !== null && selectedReturnFlight !== null">
+        <ion-text>Book</ion-text>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

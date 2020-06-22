@@ -89,7 +89,7 @@ export class MultiCityPage implements OnInit {
     this.router.navigate(['/','home','book','flight','multi-city']);
   }
 
-  currentFlight(flight){
+  currentFlight(flight : resultObj){
     this.selectedFlight = flight;
   }
 

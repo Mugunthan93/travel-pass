@@ -1,3 +1,6 @@
+@import "../../../../../../../style/util/variable.scss";
+@import "../../../../../../../style/util/mixins.scss";
+
 ion-content{
     >ion-row {
         height: -webkit-fill-available;
@@ -28,5 +31,143 @@ ion-content{
                 width: 35vw;
             }
         }
+    }
+}
+
+ion-footer {
+    ion-toolbar {
+        --background:#{$text-color};
+        --opacity: 0.5;
+
+        >ion-row{
+
+            >ion-row:first-child {
+                padding: 5px 0px;
+                justify-content: space-between;
+    
+                >ion-label {
+                    margin: auto 10px;
+                    font-size: 20px !important;
+                    list-style: upper-alpha;
+                }
+    
+                >ion-row {
+                    >ion-row:first-of-type {
+                        width: auto;
+                        flex-direction: column;
+                        margin: auto 10px;
+                    }
+    
+                    >ion-row:last-of-type {
+                        justify-content: flex-end;
+                        padding: 6px 0px;
+                        width: fit-content;
+    
+                        ion-label {
+                            margin: 0px 10px;
+                            align-self: center;
+                        }
+    
+                        ion-checkbox {
+                            margin: 0px 5px;
+                        }
+                    }
+                }
+    
+            }
+    
+            >ion-row:not(:first-child) {
+                padding: 5px 0px;
+                justify-content: space-between;
+    
+                >ion-label {
+                    margin: auto 10px;
+                    font-size: 20px !important;
+                    list-style: upper-alpha;
+                }
+    
+                >ion-row {
+                    >ion-row:first-of-type {
+                        width: auto;
+                        flex-direction: column;
+                        margin: auto 10px;
+                    }
+    
+                    >ion-row:last-of-type {
+                        justify-content: flex-end;
+                        padding: 6px 0px;
+                        width: fit-content;
+    
+                        ion-label {
+                            margin: 0px 10px;
+                            align-self: center;
+                        }
+    
+                        ion-checkbox {
+                            margin: 0px 5px;
+                        }
+                    }
+                }
+    
+            }
+    
+            >ion-row {
+                width: 100%;
+                height: fit-content;
+    
+                >ion-text {
+                    font-size: calc(1vw + 6px);
+                    white-space: nowrap;
+                    margin: auto;
+                }
+    
+                >ion-col {
+                    display: flex;
+                    flex-direction: column;
+                    max-width: fit-content;
+                    margin: 5px 0px;
+                    height: auto;
+    
+                    ion-img {
+                        width: 25px;
+                        height: 25px;
+                    }
+    
+                    &:nth-child(2) {
+                        width: 100%;
+                        opacity: 1;
+                        transition: all 20ms linear 0s;
+    
+                        &.col-grow {
+                            width: 100%;
+                            opacity: 1;
+                        }
+    
+                        &.col-shrink {
+                            max-width: 0px;
+                            opacity: 0;
+                        }
+                    }
+    
+                    &:nth-child(3) {
+                        width: 100%;
+                        opacity: 1;
+                        transition: all 20ms linear 0s;
+    
+                        &.col-grow {
+                            width: 100%;
+                            opacity: 1;
+                        }
+    
+                        &.col-shrink {
+                            max-width: 0px;
+                            opacity: 0;
+                        }
+                    }
+                }
+            }
+            
+        }
+
     }
 }

@@ -92,8 +92,8 @@ export class InternationalPage implements OnInit {
     return modal.present();
   }
 
-  currentFlight(evt) {
-    
+  currentFlight(result : resultObj) {
+    this.selectedFlight = result;
   }
 
   changeStatus(status: Observable<boolean>) {

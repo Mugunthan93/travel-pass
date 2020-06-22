@@ -86,7 +86,7 @@ export class OneWayPage implements OnInit,OnDestroy {
     this.router.navigate(['/','home','book','flight','one-way']);
   }
 
-  currentFlight(flight){
+  currentFlight(flight : resultObj) {
     this.selectedFlight = flight;
   }
 

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, QueryList } from '@angular/co
 import { Gesture, GestureDetail } from '@ionic/core';
 import { AnimationController, Animation, GestureController, ModalController } from '@ionic/angular';
 import { roundtripResult, FlightResultState, resultObj } from 'src/app/stores/result/flight.state';
-import { Observable, Subscription, forkJoin } from 'rxjs';
+import { Observable, Subscription, forkJoin, concat, of } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { ResultState } from 'src/app/stores/result.state';
 import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
@@ -24,9 +24,11 @@ export class DomesticPage implements OnInit {
 
   departList: resultObj[];
   departList$: Observable<resultObj[]>;
+  departListSub: Subscription;
   
   returnList: resultObj[];
   returnList$: Observable<resultObj[]>;
+  returnListSub: Subscription;
 
   selectedFlight: any = null;
   selectedDepartureFlight: any = null;
@@ -43,7 +45,11 @@ export class DomesticPage implements OnInit {
     public gestureCtrl: GestureController,
     public modalCtrl : ModalController,
     private store : Store
-  ) { }
+  ) {
+
+    
+
+  }
 
   ngOnInit() {
 
@@ -56,25 +62,26 @@ export class DomesticPage implements OnInit {
     );
 
     this.departList$ = this.store.select(FlightResultState.getDomesticDepartureRoundTrip);
-    this.returnList$ = this.store.select(FlightResultState.getDomesticReturnRoundTrip);
-
-    let animation$ = forkJoin({
-      depature: this.departList$,
-      return: this.returnList$
-    })
-    
-    animation$.subscribe({
-      next: (res: {
-        depature: resultObj[],
-        return: resultObj[]
-      }) => {
-        this.departList = res.depature;
-        this.returnList = res.return;
-      },
-      complete: () => {
-        this.animation();
+    this.departListSub = this.departList$.subscribe(
+      (res : resultObj[]) => {
+        this.departList = res;
       }
-    });
+    );
+
+    this.returnList$ = this.store.select(FlightResultState.getDomesticReturnRoundTrip);
+    this.returnListSub = this.returnList$.subscribe(
+      (res: resultObj[]) => {
+        this.returnList = res;
+      }
+    );
+
+    of(!this.departListSub.closed && !this.returnListSub.closed).subscribe(
+      (res : boolean) => {
+        if (res) {
+          this.animation();
+        }
+      }
+    );
 
   }
 
@@ -267,8 +274,12 @@ export class DomesticPage implements OnInit {
 
   }
 
-  currentFlight(evt) {
-    
+  currentDepartureFlight(flight : resultObj) {
+    this.selectedDepartureFlight = flight;
+  }
+
+  currentReturnFlight(flight: resultObj) {
+    this.selectedReturnFlight = flight;
   }
 
   ngOnDestroy() {

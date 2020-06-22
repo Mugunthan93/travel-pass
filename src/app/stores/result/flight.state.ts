@@ -4,6 +4,7 @@ import * as moment from "moment";
 import * as _ from "lodash";
 import { Navigate } from '@ngxs/router-plugin';
 import { FilterState, filter, GetAirlines } from './filter.state';
+import { state } from '@angular/animations';
 
 export interface flight{
     oneway: onewayResult
@@ -11,6 +12,7 @@ export interface flight{
     multicity: multicityResult
     emailtrip :emailtrip
     emailItinerary: itinerarytrip[]
+    selectedFlight: resultObj
 }
 
 export interface onewayResult{
@@ -201,6 +203,13 @@ export class ResetEmailDetail {
     static readonly type = '[FlightResult] ResetEmailDetail';
 }
 
+export class SelectedFlight {
+    static readonly type = '[FlightResult] SelectedFlight';
+    constructor(public currentFlight: resultObj) {
+
+    }
+}
+
 @State<flight>({
     name: 'FlightResult',
     defaults: {
@@ -208,7 +217,8 @@ export class ResetEmailDetail {
         roundtrip: null,
         multicity: null,
         emailtrip:null,
-        emailItinerary: []
+        emailItinerary: [],
+        selectedFlight:null
     }
 })
 
@@ -266,7 +276,7 @@ export class FlightResultState{
 
     @Selector([FilterState])
     static getMultiWay(states: flight, filterState: filter): resultObj[] {
-        return states.oneway.value.filter(
+        return states.multicity.value.filter(
             el =>
                 (filterState.stops !== null ? el.stops == filterState.stops : el) &&
                 moment(el.departure).hour() <= filterState.depatureHours &&
@@ -592,6 +602,13 @@ export class FlightResultState{
         });
     }
 
+    @Action(SelectedFlight)
+    selectedFlight(states: StateContext<flight>, action: SelectedFlight) {
+        states.patchState({
+            selectedFlight: action.currentFlight
+        });
+    }
+
     responseDate(response: flightResult[],traceId : string): resultObj[] {
 
         let resultObj: resultObj[] = new Array(response.length);
@@ -885,5 +902,7 @@ export class FlightResultState{
             return state;
         }
     }
+
+
 
 }
