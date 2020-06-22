@@ -4,7 +4,7 @@ import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { FlightResultState, resultObj, ResetEmailDetail } from 'src/app/stores/result/flight.state';
+import { FlightResultState, resultObj, ResetEmailDetail, SelectedFlight } from 'src/app/stores/result/flight.state';
 import { ResultState } from 'src/app/stores/result.state';
 import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 
@@ -22,7 +22,8 @@ export class OneWayPage implements OnInit,OnDestroy {
     { value: 'price', state: 'default' }
   ];
 
-  selectedFlight: any = null;
+  selectedFlight: Observable<resultObj>;
+  selectedFlightSub: Subscription;
 
   flightList: resultObj[];
   flightList$: Observable<resultObj[]>;
@@ -44,6 +45,7 @@ export class OneWayPage implements OnInit,OnDestroy {
   ngOnInit() {
 
     this.store.dispatch(new ResetEmailDetail());
+    this.selectedFlight = this.store.select(FlightResultState.getSelectedFlight);
 
     this.resultType$ = this.store.select(ResultState.getResultType);
     this.resultTypeSub = this.resultType$.subscribe(
@@ -87,7 +89,7 @@ export class OneWayPage implements OnInit,OnDestroy {
   }
 
   currentFlight(flight : resultObj) {
-    this.selectedFlight = flight;
+    this.store.dispatch(new SelectedFlight(flight));
   }
 
   ngOnDestroy() {

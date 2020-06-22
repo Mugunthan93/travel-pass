@@ -43,9 +43,9 @@
   </ion-row>
 </ion-grid>
 
-<ion-footer *ngIf="selectedFlight !== null">
+<ion-footer *ngIf="(selectedFlight | async) !== null">
   <ion-toolbar>
-    <ion-row class="ion-justify-content-around" *ngFor="let i of selectedFlight.trips">
+    <ion-row class="ion-justify-content-around" *ngFor="let i of (selectedFlight | async).trips">
       <ion-col>
         <ion-img src="../../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
         <!-- <ion-text *ngFor="let name of (i.tripinfo.airline.name | wordwrap)">{{name}}</ion-text> -->
