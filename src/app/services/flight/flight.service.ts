@@ -4,6 +4,7 @@ import { flightSearchPayload, metrixBoard } from 'src/app/models/search/flight';
 import { HTTPResponse, HTTP } from '@ionic-native/http/ngx';
 import { environment } from 'src/environments/environment';
 import { fareRule } from '../../stores/result/flight.state';
+import { itineraryPayload } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,10 @@ export class FlightService {
   constructor(
     private http: NativeHttpService
   ) { }
+  
+  async metrixboard(metrixData: metrixBoard) {
+    return await this.http.post("/metrixdashboard", metrixData);
+  }
 
   async searchFlight(searchData: flightSearchPayload): Promise<HTTPResponse> {
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
@@ -24,7 +29,8 @@ export class FlightService {
     return await this.http.post("/airlines/airlineFareRule", fareRule);
   }
 
-  async metrixboard(metrixData: metrixBoard) {
-    return await this.http.post("/metrixdashboard", metrixData);
+  async emailItinerary(itinerary: itineraryPayload): Promise<HTTPResponse> {
+    return await this.http.post("/emailTemplate/", itinerary);
   }
+
 }

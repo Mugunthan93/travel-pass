@@ -125,6 +125,7 @@ export interface fareRule{
 }
 
 export interface flightData{
+    AccumulatedDuration?:number
     Airline: airLine
     Baggage: string
     CabinBaggage: string

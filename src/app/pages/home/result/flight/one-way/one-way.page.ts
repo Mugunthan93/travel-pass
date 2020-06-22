@@ -6,6 +6,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { FlightResultState, resultObj, ResetEmailDetail } from 'src/app/stores/result/flight.state';
 import { ResultState } from 'src/app/stores/result.state';
+import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 
 @Component({
   selector: 'app-one-way',
@@ -73,7 +74,7 @@ export class OneWayPage implements OnInit,OnDestroy {
       }
     );
 
-    return await modal.present();
+    return modal.present();
   }
 
   changeStatus(status : Observable<boolean>) {
@@ -102,7 +103,20 @@ export class OneWayPage implements OnInit,OnDestroy {
     
   }
 
-  mailTicket() {
-    
+  async mailTicket() {
+    const modal = await this.modalCtrl.create({
+      component: EmailItineraryComponent,
+      componentProps: {
+        type: this.resultType
+      }
+    });
+
+    // modal.onDidDismiss().then(
+    //   (filteredFlightList) => {
+    //     this.flightList = filteredFlightList.data;
+    //   }
+    // );
+
+    return modal.present();
   }
 }

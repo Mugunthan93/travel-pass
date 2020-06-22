@@ -1,10 +1,12 @@
 import { Component, OnInit, ViewChild, ElementRef, QueryList } from '@angular/core';
 import { Gesture, GestureDetail } from '@ionic/core';
-import { AnimationController, Animation, GestureController } from '@ionic/angular';
+import { AnimationController, Animation, GestureController, ModalController } from '@ionic/angular';
 import { roundtripResult, FlightResultState, resultObj } from 'src/app/stores/result/flight.state';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, forkJoin } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { ResultState } from 'src/app/stores/result.state';
+import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
+import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 
 @Component({
   selector: 'app-domestic',
@@ -13,24 +15,33 @@ import { ResultState } from 'src/app/stores/result.state';
 })
 export class DomesticPage implements OnInit {
 
+  sortButtons: any[] = [
+    { value: 'departure', state: 'default' },
+    { value: 'arrival', state: 'default' },
+    { value: 'duration', state: 'default' },
+    { value: 'price', state: 'default' }
+  ];
+
   departList: resultObj[];
+  departList$: Observable<resultObj[]>;
+  
   returnList: resultObj[];
+  returnList$: Observable<resultObj[]>;
 
   selectedFlight: any = null;
   selectedDepartureFlight: any = null;
   selectedReturnFlight: any = null;
 
-  flightList: roundtripResult;
-  flightList$: Observable<roundtripResult>;
-  flightListSub: Subscription;
-
   resultType: string;
   resultType$: Observable<string>;
   resultTypeSub: Subscription;
 
+  mailStatus$: Observable<boolean>;
+
   constructor(
     public animationCtrl: AnimationController,
     public gestureCtrl: GestureController,
+    public modalCtrl : ModalController,
     private store : Store
   ) { }
 
@@ -44,15 +55,71 @@ export class DomesticPage implements OnInit {
       }
     );
 
-    this.flightList$ = this.store.select(FlightResultState.getRoundTrip);
-    this.flightListSub = this.flightList$.subscribe(
-      (res: roundtripResult) => {
-        console.log(res);
-        this.departList = res.values.departure;
-        this.returnList = res.values.return;
+    this.departList$ = this.store.select(FlightResultState.getDomesticDepartureRoundTrip);
+    this.returnList$ = this.store.select(FlightResultState.getDomesticReturnRoundTrip);
+
+    let animation$ = forkJoin({
+      depature: this.departList$,
+      return: this.returnList$
+    })
+    
+    animation$.subscribe({
+      next: (res: {
+        depature: resultObj[],
+        return: resultObj[]
+      }) => {
+        this.departList = res.depature;
+        this.returnList = res.return;
+      },
+      complete: () => {
         this.animation();
       }
+    });
+
+  }
+
+  async filter() {
+    const modal = await this.modalCtrl.create({
+      component: TripFilterComponent,
+      componentProps: {
+        type: this.resultType
+      }
+    });
+
+    modal.onDidDismiss().then(
+      (filteredData) => {
+        console.log(filteredData);
+        // this.flightList = filteredData.data;
+      }
     );
+
+    return await modal.present();
+  }
+
+  async mailTicket() {
+    const modal = await this.modalCtrl.create({
+      component: EmailItineraryComponent,
+      componentProps: {
+        type: this.resultType
+      }
+    });
+
+    // modal.onDidDismiss().then(
+    //   (filteredFlightList) => {
+    //     this.flightList = filteredFlightList.data;
+    //   }
+    // );
+
+    return modal.present();
+  }
+
+  changeStatus(status: Observable<boolean>) {
+    this.mailStatus$ = status;
+    this.mailStatus$.subscribe(status => console.log(status));
+  }
+
+  back() {
+
   }
   
   //animation
@@ -205,9 +272,6 @@ export class DomesticPage implements OnInit {
   }
 
   ngOnDestroy() {
-    if (this.flightListSub) {
-      this.flightListSub.unsubscribe();
-    }
   }
 
 }

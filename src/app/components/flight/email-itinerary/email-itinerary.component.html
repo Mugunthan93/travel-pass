@@ -1,0 +1,26 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>Send Email Itinerary</ion-title>
+    </ion-toolbar>
+    <ion-item lines="full">
+        <ion-label position="floating">To:</ion-label>
+        <ion-input type="text"></ion-input>
+    </ion-item>
+</ion-header>
+<ion-content>
+
+</ion-content>
+<ion-footer>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="dismiss()">
+                <ion-label>Cancel</ion-label>
+            </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-button (click)="sendMail()">
+                <ion-label>Send</ion-label>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-footer>

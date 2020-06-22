@@ -21,9 +21,9 @@
     <ion-card *ngFor="let b of bag">
       <ion-card-header>
         <ion-item>
-          <ion-img slot="start" src="../../../../../../assets/AirlineLogo/{{b.Airline.AirlineCode}}.gif"></ion-img>
+          <ion-img slot="start" src="../../../../../../assets/AirlineLogo/{{b.logo}}.gif"></ion-img>
           <ion-card-title>
-            <ion-label>{{b.Origin.Airport.CityName}} - {{b.Destination.Airport.CityName}}</ion-label>
+            <ion-label>{{b.originName}} - {{b.destinationName}}</ion-label>
           </ion-card-title>
         </ion-item>
       </ion-card-header>
@@ -33,7 +33,7 @@
             <ion-label>Baggage</ion-label>
           </ion-col>
           <ion-col>
-            <ion-text>{{b.Baggage == null ? 'Not Available' : b.Baggage}}</ion-text>
+            <ion-text>{{b.baggage == null ? 'Not Available' : b.baggage}}</ion-text>
           </ion-col>
         </ion-row>
         <ion-row class="justify-content-between">
@@ -41,7 +41,7 @@
             <ion-label>Cabin</ion-label>
           </ion-col>
           <ion-col>
-            <ion-text>{{b.CabinBaggage == null ? 'Not Available' : b.CabinBaggage}}</ion-text>
+            <ion-text>{{b.cabinBaggage == null ? 'Not Available' : b.cabinBaggage}}</ion-text>
           </ion-col>
         </ion-row>
       </ion-card-content>

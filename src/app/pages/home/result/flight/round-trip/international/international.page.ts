@@ -3,6 +3,9 @@ import { resultObj, FlightResultState, roundtripResult } from 'src/app/stores/re
 import { Observable, Subscription } from 'rxjs';
 import { ResultState } from 'src/app/stores/result.state';
 import { Store } from '@ngxs/store';
+import { ModalController } from '@ionic/angular';
+import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
+import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 
 @Component({
   selector: 'app-international',
@@ -11,19 +14,29 @@ import { Store } from '@ngxs/store';
 })
 export class InternationalPage implements OnInit {
 
+  sortButtons: any[] = [
+    { value: 'departure', state: 'default' },
+    { value: 'arrival', state: 'default' },
+    { value: 'duration', state: 'default' },
+    { value: 'price', state: 'default' }
+  ];
+
   constructor(
-    private store : Store
+    private store: Store,
+    public modalCtrl: ModalController
   ) { }
 
   selectedFlight: any = null;
 
   flightList: resultObj[];
-  flightList$: Observable<roundtripResult>;
+  flightList$: Observable<resultObj[]>;
   flightListSub: Subscription;
 
   resultType: string;
   resultType$: Observable<string>;
   resultTypeSub: Subscription;
+
+  mailStatus$: Observable<boolean>;
 
   ngOnInit() {
 
@@ -35,17 +48,61 @@ export class InternationalPage implements OnInit {
       }
     );
 
-    this.flightList$ = this.store.select(FlightResultState.getRoundTrip);
+    this.flightList$ = this.store.select(FlightResultState.getInternationalRoundTrip);
     this.flightListSub = this.flightList$.subscribe(
-      (res: roundtripResult) => {
+      (res: resultObj[]) => {
         console.log(res);
-        this.flightList = res.value;
+        this.flightList = res;
       }
     );
   }
 
+  async filter() {
+    const modal = await this.modalCtrl.create({
+      component: TripFilterComponent,
+      componentProps: {
+        type: this.resultType
+      }
+    });
+
+    modal.onDidDismiss().then(
+      (filteredData) => {
+        console.log(filteredData);
+        // this.flightList = filteredData.data;
+      }
+    );
+
+    return await modal.present();
+  }
+
+  async mailTicket() {
+    const modal = await this.modalCtrl.create({
+      component: EmailItineraryComponent,
+      componentProps: {
+        type: this.resultType
+      }
+    });
+
+    // modal.onDidDismiss().then(
+    //   (filteredFlightList) => {
+    //     this.flightList = filteredFlightList.data;
+    //   }
+    // );
+
+    return modal.present();
+  }
+
   currentFlight(evt) {
     
+  }
+
+  changeStatus(status: Observable<boolean>) {
+    this.mailStatus$ = status;
+    this.mailStatus$.subscribe(status => console.log(status));
+  }
+
+  back() {
+
   }
 
 }

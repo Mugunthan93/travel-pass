@@ -1,28 +1,4 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button (click)="back()">
-        <ion-icon src="../../../../assets/ionicons/arrow-back-outline.svg"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>
-      <ion-text>Result Page</ion-text>
-    </ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="filter()">
-        <ion-icon src="../../../../../assets/ionicons/md-filter-outline.svg"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-  <app-result-sorting 
-    [type]="resultType"
-    [buttons]="sortButtons">
-  </app-result-sorting>
-</ion-header>
-
-<ion-content>
-  <ion-router-outlet></ion-router-outlet>
-</ion-content>
+<ion-router-outlet></ion-router-outlet>
 
 <!-- <ion-footer *ngIf="selectedDepartureFlight !== null || selectedReturnFlight !== null">
   <ion-toolbar>

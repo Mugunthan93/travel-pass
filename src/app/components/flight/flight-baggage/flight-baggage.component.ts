@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { flightData } from 'src/app/models/search/flight';
+import { baggage } from 'src/app/stores/result/flight.state';
 
 @Component({
   selector: 'app-flight-baggage',
@@ -9,7 +9,7 @@ import { flightData } from 'src/app/models/search/flight';
 })
 export class FlightBaggageComponent implements OnInit {
 
-  @Input() baggage: flightData[][];
+  @Input() baggage: baggage[][];
 
   constructor(
     public modalCtrl : ModalController

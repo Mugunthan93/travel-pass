@@ -2,8 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
 import { Observable, Subscription } from 'rxjs';
-import { filterInput, FlightResultState } from 'src/app/stores/result/flight.state';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { FilterState, filter } from 'src/app/stores/result/filter.state';
 
 @Component({
   selector: 'app-trip-filter',
@@ -16,8 +16,8 @@ export class TripFilterComponent implements OnInit {
   filterForm: FormGroup;
   airlines: FormGroup;
 
-  inputs: filterInput = null;
-  inputs$: Observable<filterInput>;
+  inputs: filter = null;
+  inputs$: Observable<filter>;
   inputsSub: Subscription;
 
   constructor(
@@ -43,9 +43,9 @@ export class TripFilterComponent implements OnInit {
     console.log(this.filterForm);
 
 
-    this.inputs$ = this.store.select(FlightResultState.getFilter);
+    this.inputs$ = this.store.select(FilterState.getFilter);
     this.inputsSub = this.inputs$.subscribe(
-      (res: filterInput) => {
+      (res: filter) => {
         this.addAirlines(res);
         this.inputs = res; 
         console.log(this.filterForm);
@@ -54,7 +54,7 @@ export class TripFilterComponent implements OnInit {
 
   }
 
-  addAirlines(res: filterInput) {
+  addAirlines(res: filter) {
     res.airlines.forEach((el) => {
       this.airlines.addControl(el,this.fb.control(false));
     });

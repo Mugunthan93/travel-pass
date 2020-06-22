@@ -3,13 +3,14 @@ import { flightSearchResult, flightResult, flightData } from 'src/app/models/sea
 import * as moment from "moment";
 import * as _ from "lodash";
 import { Navigate } from '@ngxs/router-plugin';
+import { FilterState, filter, GetAirlines } from './filter.state';
 
 export interface flight{
     oneway: onewayResult
     roundtrip: roundtripResult
     multicity: multicityResult
-    filterInputs: filterInput
-    emailItinerary: resultObj[]
+    emailtrip :emailtrip
+    emailItinerary: itinerarytrip[]
 }
 
 export interface onewayResult{
@@ -42,10 +43,11 @@ export interface resultObj {
     Duration: number
     departure: string
     arrival: string
-    baggage: flightData[][],
+    baggage: baggage[][],
     connectingFlights: flightData[][],
     fareRule: fareRule,
-    stops: number
+    stops: number,
+    email: itinerarytrip
 }
 
 export interface trips {
@@ -74,13 +76,63 @@ export interface fareRule {
     TraceId: string
 }
 
-export interface filterInput{
-    stops: number
-    depatureHours: number
-    arrivalHours: number
-    corporateFare:boolean
-    airlines : string[]
+export interface baggage {
+    originName: string,
+    destinationName: string,
+    baggage:string,
+    cabinBaggage: string,
+    
 }
+
+export interface emailtrip {
+    departure: {
+        name: string,
+        code: string
+    },
+    arrival: {
+        name: string,
+        code: string
+    }
+}
+
+export interface itinerarytrip {
+    class: string,
+    refundable: string,
+    fare: number
+    flights: itineraryFlight[]
+}
+
+export interface itineraryFlight {
+    origin: {
+        name: string,
+        code: string
+    },
+    destination: {
+        name: string,
+        code : string
+    },
+    passenger_detail:string,
+    connecting_flight: itineraryconnectingflight[]
+}
+
+export interface itineraryconnectingflight {
+    airlineCode: string,
+    airlineName: string,
+    airlineNumber: string,
+    origin: {
+        name: string,
+        code: string,
+        date : string
+    },
+    destination: {
+        name: string,
+        code: string,
+        date : string
+    },
+    duration : string
+}
+
+//classes ----------------------------------------->>>>>>
 
 export class OneWayResponse{
     static readonly type = '[FlightResult] OneWayResponse';
@@ -133,14 +185,14 @@ export class PriceSort {
 
 export class AddEmailDetail {
     static readonly type = '[FlightResult] AddEmailDetail';
-    constructor(public flightItem : resultObj) {
+    constructor(public flightItem : itinerarytrip) {
         
     }
 }
 
 export class RemoveEmailDetail {
     static readonly type = '[FlightResult] RemoveEmailDetail';
-    constructor(public flightItem: resultObj) {
+    constructor(public flightItem: itinerarytrip) {
 
     }
 }
@@ -155,13 +207,7 @@ export class ResetEmailDetail {
         oneway: null,
         roundtrip: null,
         multicity: null,
-        filterInputs: {
-            stops: null,
-            depatureHours: 24,
-            arrivalHours: 24,
-            corporateFare: false,
-            airlines:[]
-        },
+        emailtrip:null,
         emailItinerary: []
     }
 })
@@ -174,35 +220,74 @@ export class FlightResultState{
 
     }
 
-    @Selector() 
-    static getOneWay(states: flight): resultObj[]{
+    @Selector([FilterState]) 
+    static getOneWay(states: flight,filterState:filter): resultObj[]{
         return states.oneway.value.filter(
             el =>
-                (states.filterInputs.stops !== null ? el.stops == states.filterInputs.stops : el) &&
-                moment(el.departure).hour() <= states.filterInputs.depatureHours &&
-                moment(el.arrival).hour() <= states.filterInputs.arrivalHours &&
-                states.filterInputs.airlines.includes(el.name)
-            );
+                (filterState.stops !== null ? el.stops == filterState.stops : el) &&
+                moment(el.departure).hour() <= filterState.depatureHours &&
+                moment(el.arrival).hour() <= filterState.arrivalHours &&
+                filterState.airlines.includes(el.name)
+        );
     }
 
-    @Selector()
-    static getRoundTrip(states: flight): roundtripResult {
-        return states.roundtrip;
+    @Selector([FilterState])
+    static getDomesticDepartureRoundTrip(states: flight, filterState: filter): resultObj[] {
+        return states.roundtrip.values.departure.filter(
+            el =>
+                (filterState.stops !== null ? el.stops == filterState.stops : el) &&
+                moment(el.departure).hour() <= filterState.depatureHours &&
+                moment(el.arrival).hour() <= filterState.arrivalHours &&
+                filterState.airlines.includes(el.name)
+        );
     }
 
-    @Selector()
-    static getMultiWay(states: flight): resultObj[] {
-        return states.multicity.value;
+    @Selector([FilterState])
+    static getDomesticReturnRoundTrip(states: flight, filterState: filter): resultObj[] {
+        return states.roundtrip.values.return.filter(
+            el =>
+                (filterState.stops !== null ? el.stops == filterState.stops : el) &&
+                moment(el.departure).hour() <= filterState.depatureHours &&
+                moment(el.arrival).hour() <= filterState.arrivalHours &&
+                filterState.airlines.includes(el.name)
+        );
     }
 
-    @Selector()
-    static getFilter(states: flight) {
-        return states.filterInputs;
+    @Selector([FilterState])
+    static getInternationalRoundTrip(states: flight, filterState: filter): resultObj[] {
+        return states.roundtrip.value.filter(
+            el =>
+                (filterState.stops !== null ? el.stops == filterState.stops : el) &&
+                moment(el.departure).hour() <= filterState.depatureHours &&
+                moment(el.arrival).hour() <= filterState.arrivalHours &&
+                filterState.airlines.includes(el.name)
+        );
+    }
+
+    @Selector([FilterState])
+    static getMultiWay(states: flight, filterState: filter): resultObj[] {
+        return states.oneway.value.filter(
+            el =>
+                (filterState.stops !== null ? el.stops == filterState.stops : el) &&
+                moment(el.departure).hour() <= filterState.depatureHours &&
+                moment(el.arrival).hour() <= filterState.arrivalHours &&
+                filterState.airlines.includes(el.name)
+        );
     }
 
     @Selector()
     static mailStatus(states: flight): boolean {
         return states.emailItinerary.length == 0 ? false : true; 
+    }
+
+    @Selector()
+    static getItinerary(states: flight): itinerarytrip[] {
+        return states.emailItinerary;
+    }
+
+    @Selector()
+    static getemailTrip(states: flight): emailtrip {
+        return states.emailtrip;
     }
 
     @Action(DurationSort)
@@ -419,26 +504,12 @@ export class FlightResultState{
             oneway: {
                 value: this.responseDate(action.response.Results[0], action.response.TraceId),
                 traceId: action.response.TraceId
-            }
+            },
+            emailtrip: this.emailTrips(action.response.Results[0])
         });
 
-        const currentState = states.getState().oneway.value;
-        let airlines: string[] = [];
-        currentState.forEach(
-            (el) => {
-                airlines.push(el.name);
-            }
-        );
 
-        states.patchState({
-            filterInputs: {
-                stops: null,
-                depatureHours: 24,
-                arrivalHours: 24,
-                corporateFare: false,
-                airlines: _.sortedUniq(airlines)
-            }
-        })
+        this.store.dispatch(new GetAirlines(states.getState().oneway.value));
     }
 
     @Action(RoundTripResponse)
@@ -452,27 +523,11 @@ export class FlightResultState{
                         return: null
                     },
                     traceId: action.response.TraceId
-                }
+                },
+                emailtrip: this.emailTrips(action.response.Results[0])
             });
 
-            const currentState = states.getState().roundtrip.value;
-            let airlines: string[] = [];
-            currentState.forEach(
-                (el) => {
-                    airlines.push(el.name);
-                }
-            );
-
-            states.patchState({
-                filterInputs: {
-                    stops: null,
-                    depatureHours: 24,
-                    arrivalHours: 24,
-                    corporateFare: false,
-                    airlines: _.sortedUniq(airlines)
-                }
-            })
-
+            this.store.dispatch(new GetAirlines(states.getState().roundtrip.value));
             this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'round-trip','international']));
 
         }
@@ -485,34 +540,12 @@ export class FlightResultState{
                         return: this.responseDate(action.response.Results[1], action.response.TraceId)
                     },
                     traceId: action.response.TraceId
-                }
+                },
+                emailtrip: this.emailTrips(action.response.Results[0])
             });
 
-            const currentDepState = states.getState().roundtrip.values.departure;
-            const currentReState = states.getState().roundtrip.values.return;
-            let Depairlines: string[] = [];
-            let Reairlines: string[] = [];
-            currentDepState.forEach(
-                (el) => {
-                    Depairlines.push(el.name);
-                }
-            );
-            currentReState.forEach(
-                (el) => {
-                    Reairlines.push(el.name);
-                }
-            );
-            
-            states.patchState({
-                filterInputs: {
-                    stops: null,
-                    depatureHours: 24,
-                    arrivalHours: 24,
-                    corporateFare: false,
-                    airlines: _.sortedUniq(_.union(Depairlines, Reairlines))
-                }
-            })
-
+            this.store.dispatch(new GetAirlines(states.getState().roundtrip.values.departure));
+            this.store.dispatch(new GetAirlines(states.getState().roundtrip.values.return));
             this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'round-trip','domestic']));
 
         }
@@ -524,30 +557,16 @@ export class FlightResultState{
             multicity: {
                 value: this.responseDate(action.response.Results[0], action.response.TraceId),
                 traceId: action.response.TraceId
-            }
+            },
+            emailtrip: this.emailTrips(action.response.Results[0])
         });
 
-        const currentState = states.getState().multicity.value;
-        let airlines: string[] = [];
-        currentState.forEach(
-            (el) => {
-                airlines.push(el.name);
-            }
-        );
-        states.patchState({
-            filterInputs: {
-                stops: null,
-                depatureHours: 24,
-                arrivalHours: 24,
-                corporateFare: false,
-                airlines: _.sortedUniq(airlines)
-            }
-        })
+        this.store.dispatch(new GetAirlines(states.getState().multicity.value));
     }
 
     @Action(AddEmailDetail) 
     addEmailDetail(states: StateContext<flight>, action: AddEmailDetail) {
-        let emailArray = states.getState().emailItinerary;
+        let emailArray = Object.assign([], states.getState().emailItinerary);
         if (emailArray == null) {
             emailArray = [];
         }
@@ -559,7 +578,7 @@ export class FlightResultState{
     
     @Action(RemoveEmailDetail)
     removeEmailDetail(states: StateContext<flight>, action: RemoveEmailDetail) {
-        const emailArray = states.getState().emailItinerary;
+        let emailArray = Object.assign([], states.getState().emailItinerary);
         const currentArray = emailArray.filter(el => el !== action.flightItem);
         states.patchState({
             emailItinerary: currentArray
@@ -584,9 +603,61 @@ export class FlightResultState{
                 let totalDuration: number = 0;
                 let lastArrival: string;
                 let stops: number = 0;
+                let baggage: baggage[][] = [];
+                let email: itinerarytrip = {
+                    class: this.getCabinClass(element.Segments[0][0].CabinClass),
+                    refundable: element.IsRefundable == true ? 'refund' : 'non-refund',
+                    fare: element.Fare.PublishedFare,
+                    flights:[]
+                };
 
                 element.Segments.forEach(
                     (el, ind, arr) => {
+
+                        baggage[ind] = [];
+
+                        let lastFlight = el.length - 1;
+                        email.flights[ind] = {
+                            origin: {
+                                name:el[0].Origin.Airport.CityName,
+                                code:el[0].Origin.Airport.CityCode
+                            },
+                            destination: {
+                                name: el[lastFlight].Destination.Airport.CityName,
+                                code: el[lastFlight].Destination.Airport.CityCode
+                            },
+                            passenger_detail: "1 Adult",
+                            connecting_flight:[]
+                        }
+
+                        el.forEach(
+                            (e, i, a) => {
+                                
+                                email.flights[ind].connecting_flight[i] = {
+                                    airlineCode:e.Airline.AirlineCode,
+                                    airlineName:e.Airline.AirlineName,
+                                    airlineNumber:e.Airline.FlightNumber,
+                                    origin: {
+                                        name:e.Origin.Airport.CityName,
+                                        code:e.Origin.Airport.CityCode,
+                                        date:e.Origin.DepTime
+                                    },
+                                    destination: {
+                                        name:e.Destination.Airport.CityName,
+                                        code:e.Destination.Airport.CityCode,
+                                        date:e.Destination.ArrTime
+                                    },
+                                    duration: moment.duration(e.Duration, 'minutes').days() + "d " + moment.duration(e.Duration, 'minutes').hours() + "h " + moment.duration(e.Duration, 'minutes').minutes() + "m"
+                                }
+
+                                baggage[ind][i] = {
+                                    originName: e.Origin.Airport.CityName,
+                                    destinationName:e.Destination.Airport.CityName,
+                                    baggage: e.Baggage,
+                                    cabinBaggage:e.CabinBaggage
+                                }
+                            }
+                        );
 
 
                         lastArrival = el[el.length - 1].Destination.ArrTime;
@@ -620,23 +691,41 @@ export class FlightResultState{
 
                 resultObj[index] = {
                     name: element.Segments[0][0].Airline.AirlineName,
-                    fare: element.Fare.PublishedFare,//price
+                    fare: element.Fare.PublishedFare,
                     Duration: totalDuration,
                     departure: element.Segments[0][0].Origin.DepTime,
                     arrival: lastArrival,
                     currency: element.Fare.Currency,
                     seats: element.Segments[0][0].NoOfSeatAvailable,
                     trips: trips,
-                    baggage: element.Segments,
+                    baggage: baggage,
                     connectingFlights: element.Segments,
                     fareRule: fareRule,
-                    stops: stops
+                    stops: stops,
+                    email : email
                 };
 
             }
         );
 
         return resultObj;
+    }
+
+    emailTrips(response: flightResult[]): emailtrip {
+
+        let lastSegment = response[0].Segments.length - 1;
+        let lastconnectingflight = response[0].Segments[lastSegment].length - 1;
+
+        return {
+            departure: {
+                name: response[0].Segments[0][0].Origin.Airport.CityName,
+                code: response[0].Segments[0][0].Origin.Airport.CityCode
+            },
+            arrival: {
+                name: response[0].Segments[lastSegment][lastconnectingflight].Destination.Airport.CityName,
+                code: response[0].Segments[lastSegment][lastconnectingflight].Destination.Airport.CityCode
+            }
+        }
     }
 
     getCabinClass(cls: string) {

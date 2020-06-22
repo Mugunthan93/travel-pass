@@ -1,22 +1,49 @@
-<ion-row #content>
-  <app-result-list 
-    [type]="resultType"
-    class="depart-shrink" 
-    #departure 
-    [flightList]="departList" 
-    [selectedFlights]="selectedFlight"
-    (getFlightValue)="currentFlight($event)" 
-    [flightType]="'departure'" 
-    (getsColumns)="departuredColumns($event)">
-  </app-result-list>
-  <app-result-list 
-    [type]="resultType"
-    class="return-grow" 
-    #return 
-    [flightList]="returnList" 
-    [selectedFlights]="selectedFlight"
-    (getFlightValue)="currentFlight($event)" 
-    [flightType]="'return'" 
-    (getsColumns)="returnedColumns($event)">
-  </app-result-list>
-</ion-row>
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="back()">
+        <ion-icon src="../../../../../assets/ionicons/arrow-back-outline.svg"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-text>Domestic Result Page</ion-text>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="mailTicket()" *ngIf="mailStatus$ | async">
+        <ion-icon slot="icon-only" src="../../../../../../assets/ionicons/mail-outline.svg"></ion-icon>
+      </ion-button>
+      <ion-button (click)="filter()">
+        <ion-icon src="../../../../../../assets/ionicons/md-filter-outline.svg"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <app-result-sorting [type]="resultType" [buttons]="sortButtons">
+  </app-result-sorting>
+</ion-header>
+
+<ion-content>
+  <ion-row #content>
+    <app-result-list 
+      [type]="resultType"
+      class="depart-shrink" 
+      #departure 
+      [flightList]="departList" 
+      [selectedFlights]="selectedFlight"
+      (getFlightValue)="currentFlight($event)" 
+      [flightType]="'departure'" 
+      (getsColumns)="departuredColumns($event)"
+      (mailStatus$)="changeStatus($event)">
+    </app-result-list>
+    <app-result-list 
+      [type]="resultType"
+      class="return-grow" 
+      #return 
+      [flightList]="returnList" 
+      [selectedFlights]="selectedFlight"
+      (getFlightValue)="currentFlight($event)" 
+      [flightType]="'return'" 
+      (getsColumns)="returnedColumns($event)"
+      (mailStatus$)="changeStatus($event)">
+    </app-result-list>
+  </ion-row>
+</ion-content>

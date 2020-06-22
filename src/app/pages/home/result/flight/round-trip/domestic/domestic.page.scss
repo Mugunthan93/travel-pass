@@ -1,30 +1,32 @@
-ion-row {
-    height: -webkit-fill-available;
-    max-width: calc(100vw + 4px);
-
-    >app-result-list:first-child {
-        border: 2px solid grey;
-        transition: width 20ms linear 0s;
-
-        &.depart-shrink {
-            width: 35vw;
+ion-content{
+    >ion-row {
+        height: -webkit-fill-available;
+        max-width: calc(100vw + 4px);
+    
+        >app-result-list:first-child {
+            border: 2px solid grey;
+            transition: width 20ms linear 0s;
+    
+            &.depart-shrink {
+                width: 35vw;
+            }
+    
+            &.depart-grow {
+                width: 65vw;
+            }
         }
-
-        &.depart-grow {
-            width: 65vw;
-        }
-    }
-
-    >app-result-list:last-child {
-        border: 2px solid grey;
-        transition: width 20ms linear 0s;
-
-        &.return-grow {
-            width: 65vw;
-        }
-
-        &.return-shrink {
-            width: 35vw;
+    
+        >app-result-list:last-child {
+            border: 2px solid grey;
+            transition: width 20ms linear 0s;
+    
+            &.return-grow {
+                width: 65vw;
+            }
+    
+            &.return-shrink {
+                width: 35vw;
+            }
         }
     }
 }

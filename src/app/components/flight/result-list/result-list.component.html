@@ -19,7 +19,7 @@
                     <ion-text>{{item.seats}} Seats Left</ion-text>
                   </ion-row>
                   <ion-row>
-                    <ion-checkbox class="email" [value]="item" (ionChange)="getFlight($event)"></ion-checkbox>
+                    <ion-checkbox class="email" [value]="item.email" (ionChange)="getFlight($event)"></ion-checkbox>
                     <ion-label>Email</ion-label>
                   </ion-row>
                 </ion-row>
@@ -60,7 +60,7 @@
               </ion-row>
               <ion-row *ngIf="flightMail"
                 [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}">
-                <ion-checkbox class="email" [value]="item" (ionChange)="getFlight($event)"></ion-checkbox>
+                <ion-checkbox class="email" [value]="item.email" (ionChange)="getFlight($event)"></ion-checkbox>
                 <ion-label>Email</ion-label>
               </ion-row>
               <ion-button slot="icon-only" class="panel-button" expand="full" size="small" (click)="rotate(i)">

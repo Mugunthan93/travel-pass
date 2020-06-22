@@ -5,8 +5,9 @@ import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-
 import { flightResult } from 'src/app/models/search/flight';
 import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { FlightResultState, resultObj } from 'src/app/stores/result/flight.state';
+import { FlightResultState, resultObj, ResetEmailDetail } from 'src/app/stores/result/flight.state';
 import { ResultState } from 'src/app/stores/result.state';
+import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 
 @Component({
   selector: 'app-multi-city',
@@ -32,6 +33,8 @@ export class MultiCityPage implements OnInit {
   resultTypeSub: Subscription;
   resultType: string;
 
+  mailStatus$: Observable<boolean>;
+
   constructor(
     public modalCtrl : ModalController,
     public router: Router,
@@ -40,6 +43,8 @@ export class MultiCityPage implements OnInit {
   }
   
   ngOnInit() {
+
+    this.store.dispatch(new ResetEmailDetail());
 
     this.resultType$ = this.store.select(ResultState.getResultType);
     this.resultTypeSub = this.resultType$.subscribe(
@@ -56,6 +61,11 @@ export class MultiCityPage implements OnInit {
         this.flightList = res;
       }
     );
+  }
+
+  changeStatus(status: Observable<boolean>) {
+    this.mailStatus$ = status;
+    this.mailStatus$.subscribe(status => console.log(status));
   }
 
   async filter() {
@@ -91,6 +101,23 @@ export class MultiCityPage implements OnInit {
 
   back() {
 
+  }
+
+  async mailTicket() {
+    const modal = await this.modalCtrl.create({
+      component: EmailItineraryComponent,
+      componentProps: {
+        type: this.resultType
+      }
+    });
+
+    // modal.onDidDismiss().then(
+    //   (filteredFlightList) => {
+    //     this.flightList = filteredFlightList.data;
+    //   }
+    // );
+
+    return modal.present();
   }
 
 }

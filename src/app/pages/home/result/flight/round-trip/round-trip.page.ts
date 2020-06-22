@@ -5,19 +5,13 @@ import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { ResultState } from 'src/app/stores/result.state';
+import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 @Component({
   selector: 'app-round-trip',
   templateUrl: './round-trip.page.html',
   styleUrls: ['./round-trip.page.scss']
 })
 export class RoundTripPage implements OnInit {
-
-  sortButtons: any[] = [
-    { value: 'departure', state: 'default' },
-    { value: 'arrival', state: 'default' },
-    { value: 'duration', state: 'default' },
-    { value: 'price', state: 'default' }
-  ];
 
   resultType: string;
   resultType$: Observable<string>;
@@ -42,29 +36,7 @@ export class RoundTripPage implements OnInit {
 
   }
 
-  async filter() {
-    const modal = await this.modalCtrl.create({
-      component: TripFilterComponent,
-      componentProps: {
-        type: this.resultType
-      }
-    });
-
-    modal.onDidDismiss().then(
-      (filteredData) => {
-        console.log(filteredData);
-        // this.flightList = filteredData.data;
-      }
-    );
-
-    return await modal.present();
-  }
-
   book() {
     this.router.navigate(['/', 'home', 'book', 'flight', 'round-trip']);
-  }
-
-  back() {
-    
   }
 }

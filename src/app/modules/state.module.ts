@@ -15,6 +15,7 @@ import { FlightSearchState } from '../stores/search/flight.state';
 import { SharedState } from '../stores/shared.state';
 import { ResultState } from '../stores/result.state';
 import { FlightResultState } from '../stores/result/flight.state';
+import { FilterState } from '../stores/result/filter.state';
 
 @NgModule({
   declarations: [],
@@ -28,6 +29,7 @@ import { FlightResultState } from '../stores/result/flight.state';
       ResultState,
       FlightSearchState,
       FlightResultState,
+      FilterState,
       SharedState
     ], { developmentMode: !environment.production }
     ),
@@ -36,7 +38,8 @@ import { FlightResultState } from '../stores/result/flight.state';
         UserState,
         SearchState,
         SharedState,
-        ResultState
+        ResultState,
+        FilterState
       ]
     }),
     NgxsFormPluginModule.forRoot(),

@@ -16,6 +16,7 @@ import { AgmCoreModule } from '@agm/core';
 import { environment } from 'src/environments/environment';
 import { BusFilterComponent } from 'src/app/components/bus/bus-filter/bus-filter.component';
 import { FairRuleComponent } from 'src/app/components/flight/fair-rule/fair-rule.component';
+import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { FairRuleComponent } from 'src/app/components/flight/fair-rule/fair-rule
     LocationComponent,
     HotelLocationComponent,
     BusFilterComponent,
-    FairRuleComponent
+    FairRuleComponent,
+    EmailItineraryComponent
   ],
   entryComponents: [
     TripFilterComponent,
@@ -48,7 +50,8 @@ import { FairRuleComponent } from 'src/app/components/flight/fair-rule/fair-rule
     LocationComponent,
     HotelLocationComponent,
     BusFilterComponent,
-    FairRuleComponent
+    FairRuleComponent,
+    EmailItineraryComponent
   ]
 })
 export class ResultPageModule {}
