@@ -4,7 +4,7 @@ import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { FlightResultState, resultObj, ResetEmailDetail, SelectedFlight } from 'src/app/stores/result/flight.state';
+import { FlightResultState, resultObj, ResetEmailDetail, SelectedFlight, BookTicket } from 'src/app/stores/result/flight.state';
 import { ResultState } from 'src/app/stores/result.state';
 import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 
@@ -85,7 +85,7 @@ export class OneWayPage implements OnInit,OnDestroy {
   }
 
   book() {
-    this.router.navigate(['/','home','book','flight','one-way']);
+    this.store.dispatch(new BookTicket());
   }
 
   currentFlight(flight : resultObj) {

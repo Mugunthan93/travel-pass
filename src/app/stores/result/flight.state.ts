@@ -4,7 +4,8 @@ import * as moment from "moment";
 import * as _ from "lodash";
 import { Navigate } from '@ngxs/router-plugin';
 import { FilterState, filter, GetAirlines } from './filter.state';
-import { state } from '@angular/animations';
+import { FlightService } from 'src/app/services/flight/flight.service';
+import { GetFlightDetail } from '../book/flight.state';
 
 export interface flight{
     oneway: onewayResult
@@ -134,6 +135,16 @@ export interface itineraryconnectingflight {
     duration : string
 }
 
+export interface SSR {
+    Baggage: any[][]
+    Error: { ErrorCode: number, ErrorMessage: string }
+    MealDynamic: any[][]
+    ResponseStatus: number
+    SeatDynamic: any[]
+    specialServices:any[]
+    TraceId: string
+}
+
 //classes ----------------------------------------->>>>>>
 
 export class OneWayResponse{
@@ -210,6 +221,10 @@ export class SelectedFlight {
     }
 }
 
+export class BookTicket {
+    static readonly type = '[FlightResult] BookTicket';
+}
+
 @State<flight>({
     name: 'FlightResult',
     defaults: {
@@ -225,7 +240,8 @@ export class SelectedFlight {
 export class FlightResultState{
 
     constructor(
-        private store : Store
+        private store: Store,
+        private flightService : FlightService
     ) {
 
     }
@@ -298,6 +314,11 @@ export class FlightResultState{
     @Selector()
     static getemailTrip(states: flight): emailtrip {
         return states.emailtrip;
+    }
+
+    @Selector()
+    static getSelectedFlight(states: flight): resultObj {
+        return states.selectedFlight;
     }
 
     @Action(DurationSort)
@@ -607,6 +628,48 @@ export class FlightResultState{
         states.patchState({
             selectedFlight: action.currentFlight
         });
+    }
+
+    @Action(BookTicket)
+    async bookTicket(states: StateContext<flight>, action: BookTicket) {
+
+        let fairQuote : flightResult = null;
+        let ssr: SSR = null;
+
+        try {
+            const fairQuoteResponse = await this.flightService.fairQuote(states.getState().selectedFlight.fareRule);
+            console.log(fairQuoteResponse);
+            if (fairQuoteResponse.status = 200) {
+                fairQuote = JSON.parse(fairQuoteResponse.data).response.Results;
+                console.log(fairQuote);
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+
+        try {
+            const SSRResponse = await this.flightService.SSR(states.getState().selectedFlight.fareRule);
+            console.log(SSRResponse);
+            if (SSRResponse.status = 200) {
+                ssr = JSON.parse(SSRResponse.data).response;
+                console.log(ssr);
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+
+        this.store.dispatch(new GetFlightDetail(fairQuote, ssr));
+        this.store.dispatch(new Navigate(['/', 'home', 'book', 'flight', 'one-way']));
+        // try {
+        //     const agencyBalanceResponse = await this.flightService.agencyBalance();
+        //     console.log(agencyBalanceResponse);
+        // }
+        // catch (error) {
+        //     console.log(error);
+        // }
+
     }
 
     responseDate(response: flightResult[],traceId : string): resultObj[] {

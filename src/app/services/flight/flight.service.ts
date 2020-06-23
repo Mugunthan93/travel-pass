@@ -33,4 +33,16 @@ export class FlightService {
     return await this.http.post("/emailTemplate/", itinerary);
   }
 
+  async agencyBalance(): Promise<HTTPResponse> {
+    return await this.http.get("/airlines/agencyBalance",{});
+  }
+
+  async fairQuote(trace : fareRule): Promise<HTTPResponse> {
+    return await this.http.post("/airlines/airlineFareQuote", trace);
+  }
+
+  async SSR(trace: fareRule): Promise<HTTPResponse> {
+    return await this.http.post("/airlines/airlineSSR", trace);
+  }
+
 }
