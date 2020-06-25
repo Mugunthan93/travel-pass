@@ -16,4 +16,8 @@ export class BookPage implements OnInit {
   ngOnInit() {
   }
 
+  back() {
+    
+  }
+
 }

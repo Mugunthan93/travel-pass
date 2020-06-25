@@ -24,10 +24,10 @@
 <ion-content>
   <ion-row #content>
     <app-result-list 
-      [type]="resultType"
+      [type]="(resultType$ | async)"
       class="depart-shrink" 
       #departure 
-      [flightList]="departList" 
+      [flightList]="(departList$ | async)" 
       [selectedFlights]="selectedFlight"
       (getFlightValue)="currentDepartureFlight($event)" 
       [flightType]="'departure'" 
@@ -35,10 +35,10 @@
       (mailStatus$)="changeStatus($event)">
     </app-result-list>
     <app-result-list 
-      [type]="resultType"
+      [type]="(resultType$ | async)"
       class="return-grow" 
       #return 
-      [flightList]="returnList" 
+      [flightList]="(returnList$ | async)" 
       [selectedFlights]="selectedFlight"
       (getFlightValue)="currentReturnFlight($event)" 
       [flightType]="'return'" 
@@ -48,58 +48,32 @@
   </ion-row>
 </ion-content>
 
-<ion-footer *ngIf="selectedDepartureFlight !== null || selectedReturnFlight !== null">
+<ion-footer *ngIf="(selectedDepartureFlight$ | async) !== null && (selectedReturnFlight$ | async) !== null">
   <ion-toolbar>
-    <ion-row *ngIf="selectedDepartureFlight !== null">
-      <ion-row class="ion-justify-content-around" *ngFor="let i of selectedDepartureFlight.trips">
-        <ion-col>
+    <ion-row>
+      <ion-row>
+        <ion-label>DEPARTURE</ion-label>
+        <ion-row class="ion-justify-content-around" *ngFor="let i of (selectedDepartureFlight$ | async).trips">
           <ion-img src="../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
-          <!-- <ion-text *ngFor="let name of (i.tripinfo.airline.name | wordwrap)">{{name}}</ion-text> -->
-          <ion-text>{{i.tripinfo.airline.name}}</ion-text>
-          <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
-        </ion-col>
-        <ion-col>
-          <ion-text>
-            {{i.tripinfo.depTime | date : 'HH:mm'}} - {{i.tripinfo.arrTime | date : 'HH:mm'}}
-          </ion-text>
-          <ion-text>{{i.tripinfo.class}}</ion-text>
-        </ion-col>
-        <ion-col>
-          <ion-text>
-            {{i.tripinfo.duration}}
-          </ion-text>
-          <ion-text>
-            {{i.tripinfo.stops}}
-          </ion-text>
-        </ion-col>
+          <ion-row>
+            <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
+            <ion-text>{{i.tripinfo.fare}}</ion-text>
+          </ion-row>
+        </ion-row>
       </ion-row>
-    </ion-row>
-    <ion-row *ngIf="selectedReturnFlight !== null">
-      <ion-row class="ion-justify-content-around" *ngFor="let i of selectedReturnFlight.trips">
-        <ion-col>
+      <ion-row>
+        <ion-label>RETURN</ion-label>
+        <ion-row class="ion-justify-content-around" *ngFor="let i of (selectedReturnFlight$ | async).trips">
           <ion-img src="../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
-          <!-- <ion-text *ngFor="let name of (i.tripinfo.airline.name | wordwrap)">{{name}}</ion-text> -->
-          <ion-text>{{i.tripinfo.airline.name}}</ion-text>
-          <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
-        </ion-col>
-        <ion-col>
-          <ion-text>
-            {{i.tripinfo.depTime | date : 'HH:mm'}} - {{i.tripinfo.arrTime | date : 'HH:mm'}}
-          </ion-text>
-          <ion-text>{{i.tripinfo.class}}</ion-text>
-        </ion-col>
-        <ion-col>
-          <ion-text>
-            {{i.tripinfo.duration}}
-          </ion-text>
-          <ion-text>
-            {{i.tripinfo.stops}}
-          </ion-text>
-        </ion-col>
+          <ion-row>
+            <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
+            <ion-text>{{i.tripinfo.fare}}</ion-text>
+          </ion-row>
+        </ion-row>
       </ion-row>
     </ion-row>
     <ion-buttons slot="end">
-      <ion-button (click)="book()" disabled="selectedDepartureFlight !== null && selectedReturnFlight !== null">
+      <ion-button (click)="book()">
         <ion-text>Book</ion-text>
       </ion-button>
     </ion-buttons>

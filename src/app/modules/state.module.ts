@@ -18,6 +18,7 @@ import { FlightResultState } from '../stores/result/flight.state';
 import { FilterState } from '../stores/result/filter.state';
 import { BookState } from '../stores/book.state';
 import { FLightBookState } from '../stores/book/flight.state';
+import { CompanyState } from '../stores/company.state';
 
 @NgModule({
   declarations: [],
@@ -26,6 +27,7 @@ import { FLightBookState } from '../stores/book/flight.state';
     NgxsModule.forRoot([
       AuthState,
       UserState,
+      CompanyState,
       DashboardState,
       SearchState,
       ResultState,
@@ -40,6 +42,7 @@ import { FLightBookState } from '../stores/book/flight.state';
     NgxsStoragePluginModule.forRoot({
       key: [
         UserState,
+        CompanyState,
         SearchState,
         SharedState,
         ResultState,

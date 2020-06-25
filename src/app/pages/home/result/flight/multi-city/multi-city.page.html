@@ -40,11 +40,11 @@
 <ion-footer *ngIf="(selectedFlight | async) !== null">
   <ion-toolbar>
     <ion-row>
-      <ion-label>{{selectedFlight.name}}</ion-label>
+      <ion-label>{{(selectedFlight | async).name}}</ion-label>
       <ion-row>
         <ion-row>
-          <ion-text>{{selectedFlight.fare | currency : selectedFlight.currency}}</ion-text>
-          <ion-text>{{selectedFlight.seats}} Seats Left</ion-text>
+          <ion-text>{{(selectedFlight | async).fare | currency : (selectedFlight | async).currency}}</ion-text>
+          <ion-text>{{(selectedFlight | async).seats}} Seats Left</ion-text>
         </ion-row>
         <ion-row>
           <ion-button size="small" (click)="book()">

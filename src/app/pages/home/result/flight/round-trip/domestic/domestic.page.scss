@@ -4,6 +4,7 @@
 ion-content{
     >ion-row {
         height: -webkit-fill-available;
+        min-height: 100%;
         max-width: calc(100vw + 4px);
     
         >app-result-list:first-child {
@@ -35,139 +36,38 @@ ion-content{
 }
 
 ion-footer {
+    --background:none;
     ion-toolbar {
         --background:#{$text-color};
         --opacity: 0.5;
-
         >ion-row{
-
-            >ion-row:first-child {
-                padding: 5px 0px;
-                justify-content: space-between;
+            flex-direction: row;
+            justify-content: space-around;
+            >ion-row{
+                margin: 5px 0px;
+                flex-direction: column;
+                width: fit-content;
     
-                >ion-label {
-                    margin: auto 10px;
-                    font-size: 20px !important;
-                    list-style: upper-alpha;
+                >ion-label{
+                    margin: 4px 0px;
                 }
     
-                >ion-row {
-                    >ion-row:first-of-type {
-                        width: auto;
+                >ion-row{
+                    margin: 4px 0px;
+                    >ion-img{
+                        margin: 0px 8px 0px 0px;
+                    }
+    
+                    >ion-row{
                         flex-direction: column;
-                        margin: auto 10px;
-                    }
-    
-                    >ion-row:last-of-type {
-                        justify-content: flex-end;
-                        padding: 6px 0px;
-                        width: fit-content;
-    
-                        ion-label {
-                            margin: 0px 10px;
-                            align-self: center;
-                        }
-    
-                        ion-checkbox {
-                            margin: 0px 5px;
+                        >ion-text {
+                            font-size: 17px;
                         }
                     }
+    
                 }
-    
-            }
-    
-            >ion-row:not(:first-child) {
-                padding: 5px 0px;
-                justify-content: space-between;
-    
-                >ion-label {
-                    margin: auto 10px;
-                    font-size: 20px !important;
-                    list-style: upper-alpha;
-                }
-    
-                >ion-row {
-                    >ion-row:first-of-type {
-                        width: auto;
-                        flex-direction: column;
-                        margin: auto 10px;
-                    }
-    
-                    >ion-row:last-of-type {
-                        justify-content: flex-end;
-                        padding: 6px 0px;
-                        width: fit-content;
-    
-                        ion-label {
-                            margin: 0px 10px;
-                            align-self: center;
-                        }
-    
-                        ion-checkbox {
-                            margin: 0px 5px;
-                        }
-                    }
-                }
-    
-            }
-    
-            >ion-row {
-                width: 100%;
-                height: fit-content;
-    
-                >ion-text {
-                    font-size: calc(1vw + 6px);
-                    white-space: nowrap;
-                    margin: auto;
-                }
-    
-                >ion-col {
-                    display: flex;
-                    flex-direction: column;
-                    max-width: fit-content;
-                    margin: 5px 0px;
-                    height: auto;
-    
-                    ion-img {
-                        width: 25px;
-                        height: 25px;
-                    }
-    
-                    &:nth-child(2) {
-                        width: 100%;
-                        opacity: 1;
-                        transition: all 20ms linear 0s;
-    
-                        &.col-grow {
-                            width: 100%;
-                            opacity: 1;
-                        }
-    
-                        &.col-shrink {
-                            max-width: 0px;
-                            opacity: 0;
-                        }
-                    }
-    
-                    &:nth-child(3) {
-                        width: 100%;
-                        opacity: 1;
-                        transition: all 20ms linear 0s;
-    
-                        &.col-grow {
-                            width: 100%;
-                            opacity: 1;
-                        }
-    
-                        &.col-shrink {
-                            max-width: 0px;
-                            opacity: 0;
-                        }
-                    }
-                }
-            }
-            
+                
+            } 
         }
-
     }
 }

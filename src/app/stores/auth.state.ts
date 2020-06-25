@@ -4,6 +4,8 @@ import { Navigate } from '@ngxs/router-plugin';
 import { LoadingController, ToastController, AlertController } from '@ionic/angular';
 import { GetUser } from './user.state';
 import { HTTPResponse } from '@ionic-native/http/ngx';
+import { GetCompany } from './company.state';
+import { user } from '../models/user';
 
 export class Login {
     static readonly type = '[App] LoginUser';
@@ -60,11 +62,7 @@ export class AuthState {
         loading.message = "Login User...";
         await loading.present();
 
-        let data = {
-            user: null,
-            company: null,
-            branch: null
-        }
+        let data : user = null;
 
         try {
             const userLoginResponse = await this.authService.login(action.username, action.password);
@@ -72,8 +70,8 @@ export class AuthState {
             const JSONdata = userLoginResponse.data;
             console.log(JSON.parse(JSONdata));
             sessionStorage.setItem('session', JSONdata);
-            const userResponse = JSON.parse(userLoginResponse.data);
-            data.user = userResponse; 
+            const userResponse : user = JSON.parse(userLoginResponse.data);
+            data = userResponse; 
         }
         catch (error) {
             if (error.error) {
@@ -86,7 +84,8 @@ export class AuthState {
             failedAlert.present();
         }
         
-        this.store.dispatch(new GetUser(data.user));
+        this.store.dispatch(new GetUser(data));
+        this.store.dispatch(new GetCompany(data.customer_id));
         loading.dismiss();
         this.store.dispatch(new Navigate(['/', 'home','dashboard','home-tab']));
     }

@@ -8,10 +8,6 @@ export class GetUser {
     }
 }
 
-export class GetUsers {
-    static readonly type = '[User] GetUsers';
-}
-
 export class UpdateUser {
     static readonly type = '[User] UpdateUser';
     constructor(public user : user) {
@@ -20,9 +16,10 @@ export class UpdateUser {
 }
 
 @State<user>({
-    name: 'User',
+    name: 'user',
     defaults: null
 })
+
 export class UserState {
 
     constructor(
@@ -37,13 +34,13 @@ export class UserState {
     }
 
     @Selector()
-    static isUserAuthenticated(state: user): boolean {
-        return !!state;
+    static getcompanyId(state: user) {
+        return state.customer_id
     }
 
-    @Action(GetUsers)
-    getUsers(states: StateContext<user>, action: GetUsers) {
-        // this.store.dispatch()
+    @Selector()
+    static isUserAuthenticated(state: user): boolean {
+        return !!state;
     }
 
     @Action(GetUser)

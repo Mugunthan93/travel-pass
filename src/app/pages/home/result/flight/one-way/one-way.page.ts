@@ -23,7 +23,6 @@ export class OneWayPage implements OnInit,OnDestroy {
   ];
 
   selectedFlight: Observable<resultObj>;
-  selectedFlightSub: Subscription;
 
   flightList: resultObj[];
   flightList$: Observable<resultObj[]>;

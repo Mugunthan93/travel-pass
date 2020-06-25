@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { resultObj, FlightResultState, roundtripResult } from 'src/app/stores/result/flight.state';
+import { resultObj, FlightResultState, roundtripResult, BookTicket } from 'src/app/stores/result/flight.state';
 import { Observable, Subscription } from 'rxjs';
 import { ResultState } from 'src/app/stores/result.state';
 import { Store } from '@ngxs/store';
@@ -103,6 +103,10 @@ export class InternationalPage implements OnInit {
 
   back() {
 
+  }
+
+  book() {
+    this.store.dispatch(new BookTicket());
   }
 
 }

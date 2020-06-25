@@ -6,6 +6,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { FilterState, filter, GetAirlines } from './filter.state';
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { GetFlightDetail } from '../book/flight.state';
+import { Observable, Subscriber } from 'rxjs';
 
 export interface flight{
     oneway: onewayResult
@@ -14,6 +15,8 @@ export interface flight{
     emailtrip :emailtrip
     emailItinerary: itinerarytrip[]
     selectedFlight: resultObj
+    selectedDepartureFlight: resultObj
+    selectedReturnFlight: resultObj
 }
 
 export interface onewayResult{
@@ -221,6 +224,20 @@ export class SelectedFlight {
     }
 }
 
+export class SelectedDepartureFlight {
+    static readonly type = '[FlightResult] SelectedDepartureFlight';
+    constructor(public currentFlight: resultObj) {
+
+    }
+}
+
+export class SelectedReturnFlight {
+    static readonly type = '[FlightResult] SelectedReturnFlight';
+    constructor(public currentFlight: resultObj) {
+
+    }
+}
+
 export class BookTicket {
     static readonly type = '[FlightResult] BookTicket';
 }
@@ -233,7 +250,9 @@ export class BookTicket {
         multicity: null,
         emailtrip:null,
         emailItinerary: [],
-        selectedFlight:null
+        selectedFlight: null,
+        selectedDepartureFlight: null,
+        selectedReturnFlight: null
     }
 })
 
@@ -319,6 +338,16 @@ export class FlightResultState{
     @Selector()
     static getSelectedFlight(states: flight): resultObj {
         return states.selectedFlight;
+    }
+
+    @Selector()
+    static getSelectedDepartureFlight(states: flight): resultObj {
+        return states.selectedDepartureFlight;
+    }
+
+    @Selector()
+    static getSelectedReturnFlight(states: flight): resultObj {
+        return states.selectedReturnFlight;
     }
 
     @Action(DurationSort)
@@ -575,9 +604,26 @@ export class FlightResultState{
                 emailtrip: this.emailTrips(action.response.Results[0])
             });
 
-            this.store.dispatch(new GetAirlines(states.getState().roundtrip.values.departure));
-            this.store.dispatch(new GetAirlines(states.getState().roundtrip.values.return));
-            this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'round-trip','domestic']));
+            let newObs = new Observable(
+                (Subscriber) => {
+                    Subscriber.next(this.store.dispatch(new GetAirlines(states.getState().roundtrip.values.departure)))
+                    Subscriber.next(this.store.dispatch(new GetAirlines(states.getState().roundtrip.values.return)))
+                    Subscriber.complete();
+                }
+            );
+
+            newObs.subscribe({
+                next: (res:Observable<any>) => {
+                    res.subscribe(res => console.log(res));
+                },
+                complete: () => {
+                    this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'round-trip', 'domestic']));
+                }
+            })
+
+            // this.store.dispatch(new GetAirlines(states.getState().roundtrip.values.departure));
+            // this.store.dispatch(new GetAirlines(states.getState().roundtrip.values.return));
+            // this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'round-trip','domestic']));
 
         }
     }
@@ -630,6 +676,20 @@ export class FlightResultState{
         });
     }
 
+    @Action(SelectedDepartureFlight)
+    selectedDepartureFlight(states: StateContext<flight>, action: SelectedDepartureFlight) {
+        states.patchState({
+            selectedDepartureFlight: action.currentFlight
+        });
+    }
+
+    @Action(SelectedReturnFlight)
+    selectedReturnFlight(states: StateContext<flight>, action: SelectedReturnFlight) {
+        states.patchState({
+            selectedReturnFlight: action.currentFlight
+        });
+    }
+
     @Action(BookTicket)
     async bookTicket(states: StateContext<flight>, action: BookTicket) {
 
@@ -640,8 +700,14 @@ export class FlightResultState{
             const fairQuoteResponse = await this.flightService.fairQuote(states.getState().selectedFlight.fareRule);
             console.log(fairQuoteResponse);
             if (fairQuoteResponse.status = 200) {
-                fairQuote = JSON.parse(fairQuoteResponse.data).response.Results;
-                console.log(fairQuote);
+                let response = JSON.parse(fairQuoteResponse.data).response;
+                if (response.Results) {
+                    console.log(response.Results);
+                    fairQuote = response.Results;
+                }
+                else if (response.Error.ErrorCode == 6) {
+                    console.log(response.Error.ErrorMessage);
+                }
             }
         }
         catch (error) {
@@ -678,115 +744,121 @@ export class FlightResultState{
 
         response.forEach(
             (element: flightResult, index, array) => {
-
-                let trips: trips[] = new Array(element.Segments.length);
-                let totalDuration: number = 0;
-                let lastArrival: string;
-                let stops: number = 0;
-                let baggage: baggage[][] = [];
-                let email: itinerarytrip = {
-                    class: this.getCabinClass(element.Segments[0][0].CabinClass),
-                    refundable: element.IsRefundable == true ? 'refund' : 'non-refund',
-                    fare: element.Fare.PublishedFare,
-                    flights:[]
-                };
-
-                element.Segments.forEach(
-                    (el, ind, arr) => {
-
-                        baggage[ind] = [];
-
-                        let lastFlight = el.length - 1;
-                        email.flights[ind] = {
-                            origin: {
-                                name:el[0].Origin.Airport.CityName,
-                                code:el[0].Origin.Airport.CityCode
-                            },
-                            destination: {
-                                name: el[lastFlight].Destination.Airport.CityName,
-                                code: el[lastFlight].Destination.Airport.CityCode
-                            },
-                            passenger_detail: "1 Adult",
-                            connecting_flight:[]
-                        }
-
-                        el.forEach(
-                            (e, i, a) => {
-                                
-                                email.flights[ind].connecting_flight[i] = {
-                                    airlineCode:e.Airline.AirlineCode,
-                                    airlineName:e.Airline.AirlineName,
-                                    airlineNumber:e.Airline.FlightNumber,
-                                    origin: {
-                                        name:e.Origin.Airport.CityName,
-                                        code:e.Origin.Airport.CityCode,
-                                        date:e.Origin.DepTime
-                                    },
-                                    destination: {
-                                        name:e.Destination.Airport.CityName,
-                                        code:e.Destination.Airport.CityCode,
-                                        date:e.Destination.ArrTime
-                                    },
-                                    duration: moment.duration(e.Duration, 'minutes').days() + "d " + moment.duration(e.Duration, 'minutes').hours() + "h " + moment.duration(e.Duration, 'minutes').minutes() + "m"
-                                }
-
-                                baggage[ind][i] = {
-                                    originName: e.Origin.Airport.CityName,
-                                    destinationName:e.Destination.Airport.CityName,
-                                    baggage: e.Baggage,
-                                    cabinBaggage:e.CabinBaggage
-                                }
-                            }
-                        );
-
-
-                        lastArrival = el[el.length - 1].Destination.ArrTime;
-                        totalDuration += this.getDuration(el);
-                        stops = stops < el.length ? el.length : stops;
-
-                        trips[ind] = {
-                            tripinfo: {
-                                logo: el[0].Airline.AirlineCode,
-                                airline: {
-                                    name: el[0].Airline.AirlineName,
-                                    code: el[0].Airline.AirlineCode,
-                                    number: el[0].Airline.FlightNumber
-                                },
-                                depTime: el[0].Origin.DepTime,
-                                arrTime: el[el.length - 1].Destination.ArrTime,
-                                class: this.getCabinClass(el[0].CabinClass),
-                                duration: moment.duration(this.getDuration(el), 'minutes').days() + "d " + moment.duration(this.getDuration(el), 'minutes').hours() + "h " + moment.duration(this.getDuration(el), 'minutes').minutes() + "m",
-                                stops: el.length == 1 ? 'Non Stop' : el.length - 1 + " Stop",
-                                seats: el[0].NoOfSeatAvailable,
-                                fare: element.Fare.PublishedFare,
-                                currency: element.Fare.Currency
-                            }
-                        }
-                    });
-                
-                let fareRule: fareRule = {
-                    ResultIndex: element.ResultIndex,
-                    TraceId: traceId
-                }
-
-                resultObj[index] = {
-                    name: element.Segments[0][0].Airline.AirlineName,
-                    fare: element.Fare.PublishedFare,
-                    Duration: totalDuration,
-                    departure: element.Segments[0][0].Origin.DepTime,
-                    arrival: lastArrival,
-                    currency: element.Fare.Currency,
-                    seats: element.Segments[0][0].NoOfSeatAvailable,
-                    trips: trips,
-                    baggage: baggage,
-                    connectingFlights: element.Segments,
-                    fareRule: fareRule,
-                    stops: stops,
-                    email : email
-                };
-
+                resultObj[index] = this.resultObj(element, traceId);
             }
         );
+
+        return resultObj;
+    }
+
+    resultObj(result: flightResult, traceId: string): resultObj {
+        
+        let resultObj: resultObj;
+        let trips: trips[] = new Array(result.Segments.length);
+        let totalDuration: number = 0;
+        let lastArrival: string;
+        let stops: number = 0;
+        let baggage: baggage[][] = [];
+        let email: itinerarytrip = {
+            class: this.getCabinClass(result.Segments[0][0].CabinClass),
+            refundable: result.IsRefundable == true ? 'refund' : 'non-refund',
+            fare: result.Fare.PublishedFare,
+            flights: []
+        };
+
+        result.Segments.forEach(
+            (el, ind, arr) => {
+
+                baggage[ind] = [];
+
+                let lastFlight = el.length - 1;
+                email.flights[ind] = {
+                    origin: {
+                        name: el[0].Origin.Airport.CityName,
+                        code: el[0].Origin.Airport.CityCode
+                    },
+                    destination: {
+                        name: el[lastFlight].Destination.Airport.CityName,
+                        code: el[lastFlight].Destination.Airport.CityCode
+                    },
+                    passenger_detail: "1 Adult",
+                    connecting_flight: []
+                }
+
+                el.forEach(
+                    (e, i, a) => {
+
+                        email.flights[ind].connecting_flight[i] = {
+                            airlineCode: e.Airline.AirlineCode,
+                            airlineName: e.Airline.AirlineName,
+                            airlineNumber: e.Airline.FlightNumber,
+                            origin: {
+                                name: e.Origin.Airport.CityName,
+                                code: e.Origin.Airport.CityCode,
+                                date: e.Origin.DepTime
+                            },
+                            destination: {
+                                name: e.Destination.Airport.CityName,
+                                code: e.Destination.Airport.CityCode,
+                                date: e.Destination.ArrTime
+                            },
+                            duration: moment.duration(e.Duration, 'minutes').days() + "d " + moment.duration(e.Duration, 'minutes').hours() + "h " + moment.duration(e.Duration, 'minutes').minutes() + "m"
+                        }
+
+                        baggage[ind][i] = {
+                            originName: e.Origin.Airport.CityName,
+                            destinationName: e.Destination.Airport.CityName,
+                            baggage: e.Baggage,
+                            cabinBaggage: e.CabinBaggage
+                        }
+                    }
+                );
+
+
+                lastArrival = el[el.length - 1].Destination.ArrTime;
+                totalDuration += this.getDuration(el);
+                stops = stops < el.length ? el.length : stops;
+
+                trips[ind] = {
+                    tripinfo: {
+                        logo: el[0].Airline.AirlineCode,
+                        airline: {
+                            name: el[0].Airline.AirlineName,
+                            code: el[0].Airline.AirlineCode,
+                            number: el[0].Airline.FlightNumber
+                        },
+                        depTime: el[0].Origin.DepTime,
+                        arrTime: el[el.length - 1].Destination.ArrTime,
+                        class: this.getCabinClass(el[0].CabinClass),
+                        duration: moment.duration(this.getDuration(el), 'minutes').days() + "d " + moment.duration(this.getDuration(el), 'minutes').hours() + "h " + moment.duration(this.getDuration(el), 'minutes').minutes() + "m",
+                        stops: el.length == 1 ? 'Non Stop' : el.length - 1 + " Stop",
+                        seats: el[0].NoOfSeatAvailable,
+                        fare: result.Fare.PublishedFare,
+                        currency: result.Fare.Currency
+                    }
+                }
+            });
+
+        let fareRule: fareRule = {
+            ResultIndex: result.ResultIndex,
+            TraceId: traceId
+        }
+
+        resultObj = {
+            name: result.Segments[0][0].Airline.AirlineName,
+            fare: result.Fare.PublishedFare,
+            Duration: totalDuration,
+            departure: result.Segments[0][0].Origin.DepTime,
+            arrival: lastArrival,
+            currency: result.Fare.Currency,
+            seats: result.Segments[0][0].NoOfSeatAvailable,
+            trips: trips,
+            baggage: baggage,
+            connectingFlights: result.Segments,
+            fareRule: fareRule,
+            stops: stops,
+            email: email
+        };
 
         return resultObj;
     }

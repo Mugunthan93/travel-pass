@@ -1,10 +1,13 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button icon="chevron-back-outline" defaultHref="home">
-      </ion-back-button>
+      <ion-button (click)="back()">
+        <ion-icon src="../../../../assets/ionicons/arrow-back-outline.svg"></ion-icon>
+      </ion-button>
     </ion-buttons>
-    <ion-title>search {{'booking' | titlecase }}</ion-title>
+    <ion-title>
+      <ion-text>One-Way Book</ion-text>
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>

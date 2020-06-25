@@ -22,7 +22,7 @@ export class MultiCityPage implements OnInit {
     { value: 'duration', state: 'default' },
     { value: 'price', state: 'default' }
   ];
-  selectedFlight: Observable<resultObj> = null;
+  selectedFlight: Observable<resultObj>;
   
   flightList: resultObj[];
   flightList$: Observable<resultObj[]>;

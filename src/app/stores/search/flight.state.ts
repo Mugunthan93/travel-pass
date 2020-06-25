@@ -10,10 +10,8 @@ import { ResultType, ResultMode } from '../result.state';
 //interfaces
 
 export interface flight{
-    JourneyType: number
-    onewaySearch: flightSearchPayload
-    roundtripSearch: flightSearchPayload
-    multicitySearch: flightSearchPayload
+    searchpayload: flightSearchPayload
+    tripType:"domestic" | "international"
     metrixpayload: metrixBoard
 }
 
@@ -83,10 +81,16 @@ export class MulticitySearch {
 @State<flight>({
     name: 'FlightSearch',
     defaults: {
-        JourneyType: null,
-        onewaySearch: null,
-        roundtripSearch: null,
-        multicitySearch: null,
+        searchpayload: {
+            AdultCount: null,
+            ChildCount: null,
+            InfantCount: null,
+            JourneyType: null,
+            Segments: [],
+            prefferedAirline: [],
+            sources: []
+        },
+        tripType:null,
         metrixpayload: null
     }
 })
@@ -103,24 +107,63 @@ export class FlightSearchState {
 
     @Selector()
     static getJourneyType(states: flight) : number {
-        return states.JourneyType;
+        return states.searchpayload.JourneyType;
+    }
+
+    @Selector()
+    static getAdult(states: flight): string {
+        return states.searchpayload.AdultCount
+    }
+
+    @Selector()
+    static getChild(states: flight): string {
+        return states.searchpayload.ChildCount
+    }
+
+    @Selector()
+    static getInfant(states: flight): string {
+        return states.searchpayload.InfantCount
     }
 
     @Action(JourneyType)
     journeyType(states: StateContext<flight>, action: JourneyType) {
         if (action.type == "one-way") {
             states.patchState({
-                JourneyType : 1
+                searchpayload: {
+                    AdultCount: null,
+                    ChildCount: null,
+                    InfantCount: null,
+                    JourneyType: 1,
+                    Segments: [],
+                    prefferedAirline: [],
+                    sources: []
+                }
             });
         }
         else if (action.type == "round-trip") {
             states.patchState({
-                JourneyType: 2
+                searchpayload: {
+                    AdultCount: null,
+                    ChildCount: null,
+                    InfantCount: null,
+                    JourneyType: 2,
+                    Segments: [],
+                    prefferedAirline: [],
+                    sources: []
+                }
             });
         }
         else if (action.type == "multi-city") {
             states.patchState({
-                JourneyType: 3
+                searchpayload: {
+                    AdultCount: null,
+                    ChildCount: null,
+                    InfantCount: null,
+                    JourneyType: 3,
+                    Segments: [],
+                    prefferedAirline: [],
+                    sources: []
+                }
             });
         }
     }
@@ -152,11 +195,11 @@ export class FlightSearchState {
         let currentState = states.getState();
 
         states.patchState({
-            onewaySearch: {
+            searchpayload: {
                 AdultCount: action.flightPayload.traveller.adult.toString(),
                 ChildCount: action.flightPayload.traveller.child.toString(),
                 InfantCount: action.flightPayload.traveller.infant.toString(),
-                JourneyType: currentState.JourneyType,
+                JourneyType: currentState.searchpayload.JourneyType,
                 Segments: [
                     {
                         Origin: action.flightPayload.from.city_code,
@@ -193,7 +236,7 @@ export class FlightSearchState {
         const searchData = states.getState();
 
         try {
-            const flightResponse = await this.flightService.searchFlight(searchData.onewaySearch);
+            const flightResponse = await this.flightService.searchFlight(searchData.searchpayload);
             console.log(flightResponse);
             const data: flightSearchResponse = JSON.parse(flightResponse.data);
             this.store.dispatch(new OneWayResponse(data.response));
@@ -207,6 +250,11 @@ export class FlightSearchState {
         }
         catch (error) {
             console.log(error);
+            if (error.status == -4) {
+                failedAlert.message = "Search Timeout, Try Again";
+                loading.dismiss();
+                failedAlert.present();
+            }
             //no reesult error
             if (error.status == 400) {
                 const errorString = JSON.parse(error.error);
@@ -257,11 +305,11 @@ export class FlightSearchState {
         let currentState = states.getState();
 
         states.patchState({
-            roundtripSearch: {
+            searchpayload: {
                 AdultCount: action.flightPayload.traveller.adult.toString(),
                 ChildCount: action.flightPayload.traveller.child.toString(),
                 InfantCount: action.flightPayload.traveller.infant.toString(),
-                JourneyType: currentState.JourneyType,
+                JourneyType: currentState.searchpayload.JourneyType,
                 Segments: [
                     {
                         Origin: action.flightPayload.from.city_code,
@@ -305,7 +353,7 @@ export class FlightSearchState {
         const searchData = states.getState();
 
         try {
-            const flightResponse = await this.flightService.searchFlight(searchData.roundtripSearch);
+            const flightResponse = await this.flightService.searchFlight(searchData.searchpayload);
             console.log(flightResponse);
             const data: flightSearchResponse = JSON.parse(flightResponse.data);
             console.log(data);
@@ -387,11 +435,11 @@ export class FlightSearchState {
         );
 
         states.patchState({
-            multicitySearch: {
+            searchpayload: {
                 AdultCount: action.flightPayload.traveller.adult.toString(),
                 ChildCount: action.flightPayload.traveller.child.toString(),
                 InfantCount: action.flightPayload.traveller.infant.toString(),
-                JourneyType: currentState.JourneyType,
+                JourneyType: currentState.searchpayload.JourneyType,
                 Segments: segs,
                 prefferedAirline: [null],
                 sources: ['']
@@ -420,7 +468,7 @@ export class FlightSearchState {
         const searchData = states.getState();
 
         try {
-            const flightResponse = await this.flightService.searchFlight(searchData.multicitySearch);
+            const flightResponse = await this.flightService.searchFlight(searchData.searchpayload);
             console.log(flightResponse);
             const data: flightSearchResponse = JSON.parse(flightResponse.data);
             this.store.dispatch(new MultiCityResponse(data.response));

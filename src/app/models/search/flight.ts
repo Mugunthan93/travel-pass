@@ -17,6 +17,10 @@ export interface segmentsPayload{
     Origin: string
     PreferredArrivalTime: string
     PreferredDepartureTime: string
+    OriginName?: string
+    OriginCountryCode?: string
+    DestinationName?: string
+    DestinationCountryCode?: string
 }
 
 //response flight
@@ -80,7 +84,7 @@ export interface resultFare{
     PublishedFare: number
     ServiceFee: number
     Tax: number
-    TaxBreakup: TaxBreakup
+    TaxBreakup: TaxBreakup[]
     TdsOnCommission: number
     TdsOnIncentive: number
     TdsOnPLB: number
@@ -148,6 +152,7 @@ export interface flightData{
     StopPointArrivalTime: any
     StopPointDepartureTime: any
     TripIndicator: number
+    Terminal:number
 }
 
 export interface airLine{

@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { PassengerInfoComponent } from 'src/app/components/flight/passenger-info/passenger-info.component';
+import { Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { resultObj } from 'src/app/stores/result/flight.state';
+import { FLightBookState, bookObj } from 'src/app/stores/book/flight.state';
+import { FlightSearchState } from 'src/app/stores/search/flight.state';
 
 @Component({
   selector: 'app-one-way',
@@ -8,16 +13,26 @@ import { PassengerInfoComponent } from 'src/app/components/flight/passenger-info
   styleUrls: ['./one-way.page.scss'],
 })
 export class OneWayPage implements OnInit {
-
-  bookHeight: string = "45px";
-  passengers: any;
+  
+  flightDetail: Observable<bookObj>;
+  adult: string;
+  child: string;
+  infant: string;
 
   constructor(
-    public modalCtrl : ModalController
+    public modalCtrl: ModalController,
+    private store : Store
   ) {
   }
 
   ngOnInit() {
+
+    this.adult = this.store.selectSnapshot(FlightSearchState.getAdult);
+    this.child = this.store.selectSnapshot(FlightSearchState.getChild);
+    this.infant = this.store.selectSnapshot(FlightSearchState.getInfant);
+
+    this.flightDetail = this.store.select(FLightBookState.getFlightDetail);
+    this.flightDetail.subscribe(flight => console.log(flight));
   }
 
   FairValue(value : any) {
@@ -27,9 +42,6 @@ export class OneWayPage implements OnInit {
   async addPassengerDetails() {
     const modal = await this.modalCtrl.create({
       component: PassengerInfoComponent,
-      componentProps: {
-        passengers: this.passengers
-      },
       id:'passenger-info'
     });
 
@@ -40,6 +52,10 @@ export class OneWayPage implements OnInit {
     );
 
     return await modal.present();
+  }
+
+  bookNow() {
+
   }
 
 }
