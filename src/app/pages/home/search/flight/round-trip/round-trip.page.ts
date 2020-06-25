@@ -6,8 +6,8 @@ import { CityModalComponent } from 'src/app/components/shared/city-modal/city-mo
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
 import { PassengerModalComponent } from 'src/app/components/flight/passenger-modal/passenger-modal.component';
 import { Store } from '@ngxs/store';
-import { RoundTripSearch } from 'src/app/stores/search/flight.state';
 import { AlertOptions } from '@ionic/core';
+import { RoundTripSearch, RoundTripForm } from 'src/app/stores/search/flight/round-trip.state';
 
 @Component({
   selector: 'app-round-trip',
@@ -59,7 +59,8 @@ export class RoundTripPage implements OnInit {
     this.formSubmit = true;
     console.log(this.roundTripSearch);
     if (this.roundTripSearch.valid) {
-      this.store.dispatch(new RoundTripSearch(this.roundTripSearch.value));
+      this.store.dispatch(new RoundTripForm(this.roundTripSearch.value));
+      this.store.dispatch(new RoundTripSearch());
     }
   }
 

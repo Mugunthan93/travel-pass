@@ -5,8 +5,8 @@ import { CityModalComponent } from 'src/app/components/shared/city-modal/city-mo
 import { PassengerModalComponent } from 'src/app/components/flight/passenger-modal/passenger-modal.component';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
 import { Store } from '@ngxs/store';
-import { OneWaySearch } from 'src/app/stores/search/flight.state';
 import { OverlayEventDetail, AlertOptions } from '@ionic/core';
+import { OneWaySearch, OneWayForm } from 'src/app/stores/search/flight/oneway.state';
 
 export interface passengerInput{
   adult: number
@@ -50,6 +50,7 @@ export class OneWayPage implements OnInit {
     this.customAlertOptions = {
       cssClass:'cabinClass'
     }
+
   }
 
   async selectCity(field) {
@@ -114,7 +115,8 @@ export class OneWayPage implements OnInit {
     this.formSubmit = true;
     console.log(this.oneWaySearch);
     if (this.oneWaySearch.valid) {
-      this.store.dispatch(new OneWaySearch(this.oneWaySearch.value));
+      this.store.dispatch(new OneWayForm(this.oneWaySearch.value));
+      this.store.dispatch(new OneWaySearch());
     }
   }
 

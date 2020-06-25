@@ -19,12 +19,17 @@ import { FilterState } from '../stores/result/filter.state';
 import { BookState } from '../stores/book.state';
 import { FLightBookState } from '../stores/book/flight.state';
 import { CompanyState } from '../stores/company.state';
+import { OneWaySearchState } from '../stores/search/flight/oneway.state';
+import { RoundTripSearchState } from '../stores/search/flight/round-trip.state';
+import { MultiCitySearchState } from '../stores/search/flight/multi-city.state';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
     NgxsModule.forRoot([
+
+      //lvl 1
       AuthState,
       UserState,
       CompanyState,
@@ -32,9 +37,14 @@ import { CompanyState } from '../stores/company.state';
       SearchState,
       ResultState,
       BookState,
+      //lvl 2
       FlightSearchState,
       FlightResultState,
       FLightBookState,
+      //lvl 3
+      OneWaySearchState,
+      RoundTripSearchState,
+      MultiCitySearchState,
       FilterState,
       SharedState
     ], { developmentMode: !environment.production }

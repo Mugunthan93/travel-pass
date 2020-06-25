@@ -5,9 +5,9 @@ import { ModalController, IonSelect } from '@ionic/angular';
 import { CityModalComponent } from 'src/app/components/shared/city-modal/city-modal.component';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
 import { PassengerModalComponent } from 'src/app/components/flight/passenger-modal/passenger-modal.component';
-import { MulticitySearch } from 'src/app/stores/search/flight.state';
 import { Store } from '@ngxs/store';
 import { AlertOptions } from '@ionic/core';
+import { MultiCityForm, MultiCitySearch } from 'src/app/stores/search/flight/multi-city.state';
 
 @Component({
   selector: 'app-multi-city',
@@ -189,7 +189,8 @@ export class MultiCityPage implements OnInit {
     this.formSubmit = true;
     console.log(this.multiCitySearch);
     if (this.multiCitySearch.valid) {
-      this.store.dispatch(new MulticitySearch(this.multiCitySearch.value));
+      this.store.dispatch(new MultiCityForm(this.multiCitySearch.value));
+      this.store.dispatch(new MultiCitySearch());
     }
   }
 

@@ -57,6 +57,9 @@ export interface resultObj {
 }
 
 export interface trips {
+    from: any;
+    to: any;
+    departure: any;
     tripinfo: flightDetail
 }
 
@@ -820,6 +823,9 @@ export class FlightResultState{
                 stops = stops < el.length ? el.length : stops;
 
                 trips[ind] = {
+                    from: "null",
+                    to: "null",
+                    departure: "null",
                     tripinfo: {
                         logo: el[0].Airline.AirlineCode,
                         airline: {
