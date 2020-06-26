@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { resultObj, FlightResultState, roundtripResult, BookTicket } from 'src/app/stores/result/flight.state';
+import { resultObj, sortButton } from 'src/app/stores/result/flight.state';
 import { Observable, Subscription } from 'rxjs';
 import { ResultState } from 'src/app/stores/result.state';
 import { Store } from '@ngxs/store';
 import { ModalController } from '@ionic/angular';
 import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
 import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
+import { InternationalResultState, DepartureSort, ArrivalSort, DurationSort, PriceSort } from 'src/app/stores/result/flight/international.state';
 
 @Component({
   selector: 'app-international',
@@ -48,7 +49,7 @@ export class InternationalPage implements OnInit {
       }
     );
 
-    this.flightList$ = this.store.select(FlightResultState.getInternationalRoundTrip);
+    this.flightList$ = this.store.select(InternationalResultState.getInternationalRoundTrip);
     this.flightListSub = this.flightList$.subscribe(
       (res: resultObj[]) => {
         console.log(res);
@@ -106,7 +107,24 @@ export class InternationalPage implements OnInit {
   }
 
   book() {
-    this.store.dispatch(new BookTicket());
+    // this.store.dispatch(new BookTicket());
+  }
+
+  getSort(item: sortButton) {
+    if (item.value == 'departure') {
+      this.store.dispatch(new DepartureSort(item.state));
+    }
+    else if (item.value == 'arrival') {
+      this.store.dispatch(new ArrivalSort(item.state));
+
+    }
+    else if (item.value == 'duration') {
+      this.store.dispatch(new DurationSort(item.state));
+
+    }
+    else if (item.value == 'price') {
+      this.store.dispatch(new PriceSort(item.state));
+    }
   }
 
 }

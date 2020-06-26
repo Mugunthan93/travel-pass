@@ -4,7 +4,7 @@ import { ModalController } from '@ionic/angular';
 import { FlightBaggageComponent } from '../flight-baggage/flight-baggage.component';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { flightData } from 'src/app/models/search/flight';
-import { resultObj, fareRule, AddEmailDetail, RemoveEmailDetail, FlightResultState } from 'src/app/stores/result/flight.state';
+import { resultObj, fareRule, FlightResultState, AddEmailDetail, RemoveEmailDetail } from 'src/app/stores/result/flight.state';
 import { FairRuleComponent } from '../fair-rule/fair-rule.component';
 import { Store } from '@ngxs/store';
 import { Observable, Subscription } from 'rxjs';

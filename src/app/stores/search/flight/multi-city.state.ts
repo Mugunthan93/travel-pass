@@ -1,10 +1,13 @@
 import { State, Action, StateContext, Store } from '@ngxs/store';
 import { flightSearchPayload, metrixBoard, segmentsPayload, flightSearchResponse } from 'src/app/models/search/flight';
-import { trips, MultiCityResponse } from '../../result/flight.state';
+import { trips } from '../../result/flight.state';
 import { traveller, FlightSearchState } from '../flight.state';
 import { LoadingController, AlertController } from '@ionic/angular';
 import { ResultMode, ResultType } from '../../result.state';
 import { Navigate } from '@ngxs/router-plugin';
+import { FlightService } from 'src/app/services/flight/flight.service';
+import { MultiCityResponse } from '../../result/flight/multi-city.state';
+import { BaseFlightSearch } from './filght-search';
 
 
 export interface multicitySearch {
@@ -31,7 +34,7 @@ export class MultiCitySearch {
 }
 
 @State<multicitySearch>({
-    name: 'MultiCity',
+    name: 'multicity_search',
     defaults: {
         formData: {
             trips: [],
@@ -43,15 +46,15 @@ export class MultiCitySearch {
     }
 })
 
-export class MultiCitySearchState{
-    flightService: any;
+export class MultiCitySearchState extends BaseFlightSearch {
 
     constructor(
         private store: Store,
         public loadingCtrl: LoadingController,
-        public alertCtrl : AlertController
+        public alertCtrl: AlertController,
+        private flightService : FlightService
     ) {
-
+        super();
     }
 
     @Action(MultiCityForm)
@@ -169,24 +172,6 @@ export class MultiCitySearchState{
             }
         }
 
-    }
-
-    getCabinClass(cls: string) {
-        if (cls == "all") {
-            return "1";
-        }
-        if (cls == "economy") {
-            return "2";
-        }
-        else if (cls == "premium economy") {
-            return "3";
-        }
-        else if (cls == "bussiness") {
-            return "4";
-        }
-        else if (cls == "first class") {
-            return "6";
-        }
     }
 
 }

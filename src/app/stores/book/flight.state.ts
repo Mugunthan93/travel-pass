@@ -2,15 +2,10 @@ import { State, Action, StateContext, Selector, StateStream, Store } from '@ngxs
 import { SSR } from '../result/flight.state';
 import { flightResult, flightData, flightSearchPayload } from 'src/app/models/search/flight';
 import * as moment from 'moment';
-import { CompanyState } from '../company.state';
+import { OneWayBookState } from './flight/oneway.state';
 
 
 export interface flight{
-    flight: bookObj,
-    baggage: baggageresponse[][],
-    meal: mealDynamic[][],
-    seat: SegmentSeat[],
-    specialServices: any[]
 }
 
 export interface sendRequest {
@@ -318,54 +313,27 @@ export interface seat{
     SeatWayType: number
 }
 
-export class GetFlightDetail{
-    static readonly type = "[flight] GetFlightDetail";
-    constructor(public fairQuote: flightResult, public ssr: SSR) {
-
-    }
-}
-
 @State<flight>({
-    name: 'flight',
-    defaults: {
-        flight: null,
-        baggage: null,
-        meal: null,
-        seat: null,
-        specialServices:null
-    }
+    name: 'flight_book',
+    defaults: null,
+    children: [
+        OneWayBookState
+    ]
 })
 
 export class FLightBookState {
 
-    @Selector()
-    static getFlightDetail(states: flight): bookObj {
-        return states.flight;
-    }
-
     constructor(
-        private store : Store
+        public store : Store
     ) {
 
-    }
-
-    @Action(GetFlightDetail)
-    getFlightDetail(states: StateContext<flight>, action: GetFlightDetail) {
-        
-        states.patchState({
-            flight: this.bookData(action.fairQuote),
-            baggage: action.ssr.Baggage,
-            meal: action.ssr.MealDynamic,
-            seat: action.ssr.SeatDynamic,
-            specialServices:action.ssr.specialServices
-        });
     }
 
     bookData(data: flightResult): bookObj {
 
         let flightFare: number = data.Fare.PublishedFare - (data.Fare.TaxBreakup[0].value - data.Fare.OtherCharges);
-        let domesticCharge: number = this.store.selectSnapshot(CompanyState.getDomesticCharge);
-        let internationalCharge: number = this.store.selectSnapshot(CompanyState.getInternationalCharge);
+        let domesticCharge: number = this.store.selectSnapshot(state => state.CompanyState.getDomesticCharge);
+        let internationalCharge: number = this.store.selectSnapshot(state => state.CompanyState.getInternationalCharge);
 
         let book: bookObj = {
             summary: {

@@ -3,7 +3,7 @@
   <ion-segment-button 
     [value]="button" 
     layout="icon-end" 
-    *ngFor="let button of buttons" 
+    *ngFor="let button of (buttons$ | async)" 
     (click)="sorting(button)"
     [ngClass]="{'selectedItem':currentButton == button,'':currentButton !==button}">
     <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg" [@rotatedState]="button.state"></ion-icon>

@@ -22,6 +22,11 @@ import { CompanyState } from '../stores/company.state';
 import { OneWaySearchState } from '../stores/search/flight/oneway.state';
 import { RoundTripSearchState } from '../stores/search/flight/round-trip.state';
 import { MultiCitySearchState } from '../stores/search/flight/multi-city.state';
+import { OneWayResultState } from '../stores/result/flight/oneway.state';
+import { DomesticResultState } from '../stores/result/flight/domestic.state';
+import { InternationalResultState } from '../stores/result/flight/international.state';
+import { MultiCityResultState } from '../stores/result/flight/multi-city.state';
+import { OneWayBookState } from '../stores/book/flight/oneway.state';
 
 @NgModule({
   declarations: [],
@@ -29,7 +34,6 @@ import { MultiCitySearchState } from '../stores/search/flight/multi-city.state';
     CommonModule,
     NgxsModule.forRoot([
 
-      //lvl 1
       AuthState,
       UserState,
       CompanyState,
@@ -37,14 +41,23 @@ import { MultiCitySearchState } from '../stores/search/flight/multi-city.state';
       SearchState,
       ResultState,
       BookState,
+
       //lvl 2
       FlightSearchState,
       FlightResultState,
       FLightBookState,
-      //lvl 3
+
       OneWaySearchState,
       RoundTripSearchState,
       MultiCitySearchState,
+      
+      OneWayResultState,
+      DomesticResultState,
+      InternationalResultState,
+      MultiCityResultState,
+      
+      OneWayBookState,
+      
       FilterState,
       SharedState
     ], { developmentMode: !environment.production }
@@ -53,11 +66,13 @@ import { MultiCitySearchState } from '../stores/search/flight/multi-city.state';
       key: [
         UserState,
         CompanyState,
+
         SearchState,
-        SharedState,
         ResultState,
+        BookState,
+        
         FilterState,
-        BookState
+        SharedState,
       ]
     }),
     NgxsFormPluginModule.forRoot(),

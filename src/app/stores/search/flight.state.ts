@@ -33,7 +33,7 @@ export class JourneyType {
 }
 
 @State<flight>({
-    name: 'Flight',
+    name: 'flight_search',
     defaults: {
         JourneyType : null
     },

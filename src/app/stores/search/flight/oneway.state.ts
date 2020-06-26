@@ -6,7 +6,8 @@ import { traveller, FlightSearchState } from '../flight.state';
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { ResultMode, ResultType } from '../../result.state';
 import { Navigate } from '@ngxs/router-plugin';
-import { OneWayResponse } from '../../result/flight.state';
+import { OneWayResponse } from '../../result/flight/oneway.state';
+import { BaseFlightSearch } from './filght-search';
 
 export interface onewaySearch {
     formData: oneWayForm,
@@ -33,7 +34,7 @@ export class OneWaySearch {
 }
 
 @State<onewaySearch>({
-    name: 'OneWay',
+    name: 'oneway_search',
     defaults: {
         formData: {
             from: null,
@@ -47,7 +48,7 @@ export class OneWaySearch {
     }
 })
 
-export class OneWaySearchState {
+export class OneWaySearchState extends BaseFlightSearch{
 
     constructor(
         private store : Store,
@@ -55,6 +56,8 @@ export class OneWaySearchState {
         public alertCtrl: AlertController,
         private flightService : FlightService
     ) {
+
+        super();
     }
 
     @Selector()
@@ -186,24 +189,6 @@ export class OneWaySearchState {
             }
         }
 
-    }
-
-    getCabinClass(cls: string) {
-        if (cls == "all") {
-            return "1";
-        }
-        if (cls == "economy") {
-            return "2";
-        }
-        else if (cls == "premium economy") {
-            return "3";
-        }
-        else if (cls == "bussiness") {
-            return "4";
-        }
-        else if (cls == "first class") {
-            return "6";
-        }
     }
 
 }

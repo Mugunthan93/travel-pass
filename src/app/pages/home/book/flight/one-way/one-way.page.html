@@ -60,13 +60,13 @@
     <ion-item>
       <ion-label slot="start">Base Fare</ion-label>
       <ion-text slot="end">
-        {{flightDetail.summary.fare.base}}
+        {{(flightDetail | async).summary.fare.base}}
       </ion-text>
     </ion-item>
     <ion-item>
       <ion-label slot="start">Taxes</ion-label>
       <ion-text slot="end">
-        {{flightDetail.summary.fare.taxes}}
+        {{(flightDetail | async).summary.fare.taxes}}
       </ion-text>
     </ion-item>
   </ion-list>
@@ -81,7 +81,7 @@
         Service Charges
       </ion-label>
       <ion-text slot="end">
-        {{flightDetail.summary.total.serviceCharge}}
+        {{(flightDetail | async).summary.total.serviceCharge}}
       </ion-text>
     </ion-item>
     <!-- gst -->
@@ -117,7 +117,7 @@
         Flight Fare
       </ion-label>
       <ion-text slot="end">
-        {{flightDetail.summary.total.flight}}
+        {{(flightDetail | async).summary.total.flight}}
       </ion-text>
     </ion-item>
     <!-- k3 -->
@@ -126,7 +126,7 @@
         K3
       </ion-label>
       <ion-text slot="end">
-        {{flightDetail.summary.total.k3}}
+        {{(flightDetail | async).summary.total.k3}}
       </ion-text>
     </ion-item>
     <!--other taxes-->
@@ -135,7 +135,7 @@
         Other Taxes
       </ion-label>
       <ion-text slot="end">
-        {{flightDetail.summary.total.other}}
+        {{(flightDetail | async).summary.total.other}}
       </ion-text>
     </ion-item>
     <!-- meals -->

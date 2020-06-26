@@ -4,9 +4,11 @@ import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { FlightResultState, resultObj, ResetEmailDetail, SelectedFlight, BookTicket } from 'src/app/stores/result/flight.state';
+import { FlightResultState, resultObj, sortButton, ResetEmailDetail } from 'src/app/stores/result/flight.state';
 import { ResultState } from 'src/app/stores/result.state';
 import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
+import { DepartureSort, ArrivalSort, DurationSort, PriceSort, OneWayResultState, SelectedFlight } from 'src/app/stores/result/flight/oneway.state';
+import { BookTicket } from 'src/app/stores/book/flight/oneway.state';
 
 @Component({
   selector: 'app-one-way',
@@ -14,13 +16,6 @@ import { EmailItineraryComponent } from 'src/app/components/flight/email-itinera
   styleUrls: ['./one-way.page.scss'],
 })
 export class OneWayPage implements OnInit,OnDestroy {
-
-  sortButtons: any[] = [
-    { value: 'departure', state: 'default' },
-    { value: 'arrival', state: 'default' },
-    { value: 'duration', state: 'default' },
-    { value: 'price', state: 'default' }
-  ];
 
   selectedFlight: Observable<resultObj>;
 
@@ -44,7 +39,7 @@ export class OneWayPage implements OnInit,OnDestroy {
   ngOnInit() {
 
     this.store.dispatch(new ResetEmailDetail());
-    this.selectedFlight = this.store.select(FlightResultState.getSelectedFlight);
+    this.selectedFlight = this.store.select(OneWayResultState.getSelectedFlight);
 
     this.resultType$ = this.store.select(ResultState.getResultType);
     this.resultTypeSub = this.resultType$.subscribe(
@@ -53,7 +48,7 @@ export class OneWayPage implements OnInit,OnDestroy {
       }
     );
 
-    this.flightList$ = this.store.select(FlightResultState.getOneWay);
+    this.flightList$ = this.store.select(OneWayResultState.getOneWay);
     this.flightListSub = this.flightList$.subscribe(
       (res: resultObj[]) => {
         this.flightList = res;
@@ -119,5 +114,22 @@ export class OneWayPage implements OnInit,OnDestroy {
     // );
 
     return modal.present();
+  }
+
+  getSort(item : sortButton) {
+    if (item.value == 'departure') {
+      this.store.dispatch(new DepartureSort(item.state));
+    }
+    else if (item.value == 'arrival') {
+      this.store.dispatch(new ArrivalSort(item.state));
+
+    }
+    else if (item.value == 'duration') {
+      this.store.dispatch(new DurationSort(item.state));
+
+    }
+    else if (item.value == 'price') {
+      this.store.dispatch(new PriceSort(item.state));
+    }
   }
 }

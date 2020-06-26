@@ -17,8 +17,7 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <app-result-sorting [type]="resultType" [buttons]="sortButtons">
-  </app-result-sorting>
+  <app-result-sorting (sort)="getSort($event)"></app-result-sorting>
 </ion-header>
 
 <ion-content>
@@ -28,7 +27,7 @@
       class="depart-shrink" 
       #departure 
       [flightList]="(departList$ | async)" 
-      [selectedFlights]="selectedFlight"
+      [selectedFlights]="(selectedDepartureFlight$ | async)"
       (getFlightValue)="currentDepartureFlight($event)" 
       [flightType]="'departure'" 
       (getsColumns)="departuredColumns($event)"
@@ -39,7 +38,7 @@
       class="return-grow" 
       #return 
       [flightList]="(returnList$ | async)" 
-      [selectedFlights]="selectedFlight"
+      [selectedFlights]="(selectedDepartureFlight$ | async)"
       (getFlightValue)="currentReturnFlight($event)" 
       [flightType]="'return'" 
       (getsColumns)="returnedColumns($event)"

@@ -1,7 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Store } from '@ngxs/store';
-import { DurationSort, DepartureSort, ArrivalSort, PriceSort } from 'src/app/stores/result/flight.state';
+import { Observable } from 'rxjs';
+import { sortButton, FlightResultState } from 'src/app/stores/result/flight.state';
 
 @Component({
   selector: 'app-result-sorting',
@@ -18,48 +19,26 @@ import { DurationSort, DepartureSort, ArrivalSort, PriceSort } from 'src/app/sto
 })
 export class ResultSortingComponent implements OnInit {
 
-  @Input() buttons: any[];
-  @Input() type: string;
-  currentButton: any;
+  buttons$: Observable<sortButton[]>;
+  currentButton: sortButton;
+
+  @Output() sort: EventEmitter<sortButton> = new EventEmitter<sortButton>(null);
 
   constructor(
     private store : Store
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.buttons$ = this.store.select(FlightResultState.getButtons);
+  }
   
-  sortChange(evt : CustomEvent) {
+  sortChange(evt: CustomEvent) {
     this.currentButton = evt.detail.value;
-    this.buttons.forEach(
-      (el) => {
-        if (el !== this.currentButton) {
-          el.state = "default";
-        }
-      }
-    );
-    console.log(evt);
+    this.store.dispatch(new this.sortChange(evt.detail.value));
   }
 
-  sorting(item: any) {
-    if (item.value == 'departure') {
-      this.store.dispatch(new DepartureSort(this.type, item.state));
-    }
-    else if (item.value == 'duration') {
-      this.store.dispatch(new DurationSort(this.type, item.state));
-    }
-    else if (item.value == 'arrival') {
-      this.store.dispatch(new ArrivalSort(this.type, item.state));
-    }
-    else if (item.value == 'price') {
-      this.store.dispatch(new PriceSort(this.type, item.state));
-    }
-
-    if (item.state == 'default') {
-      item.state = 'rotated'
-    }
-    else if (item.state == 'rotated') {
-      item.state = 'default'
-    }
+  sorting(item: sortButton) {
+    this.sort.emit(item);
   }
 
 }

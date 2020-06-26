@@ -1,11 +1,13 @@
 import { city } from '../../shared.state';
-import { traveller, FlightSearchState } from '../flight.state';
+import { traveller } from '../flight.state';
 import { flightSearchPayload, metrixBoard, flightSearchResponse } from 'src/app/models/search/flight';
 import { State, Action, StateContext, Store } from '@ngxs/store';
 import { LoadingController, AlertController } from '@ionic/angular';
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { ResultMode, ResultType } from '../../result.state';
-import { RoundTripResponse } from '../../result/flight.state';
+import { InternationalResponse } from '../../result/flight/international.state';
+import { DomesticResponse } from '../../result/flight/domestic.state';
+import { BaseFlightSearch } from './filght-search';
 
 
 export interface roundtripSearch {
@@ -34,7 +36,7 @@ export class RoundTripSearch {
 }
 
 @State<roundtripSearch>({
-    name: 'RoundTrip',
+    name: 'roundtrip_search',
     defaults: {
         formData: {
             from: null,
@@ -50,7 +52,7 @@ export class RoundTripSearch {
 })
 
 
-export class RoundTripSearchState {
+export class RoundTripSearchState extends BaseFlightSearch {
 
     constructor(
         private store : Store,
@@ -59,6 +61,7 @@ export class RoundTripSearchState {
         public flightService : FlightService
     ) {
 
+        super();
     }
 
     @Action(RoundTripForm)
@@ -151,11 +154,13 @@ export class RoundTripSearchState {
             this.store.dispatch(new ResultMode('Flight'));
             if (data.response.Results.length == 1) {
                 this.store.dispatch(new ResultType('round-trip'));
+                this.store.dispatch(new InternationalResponse(data.response));
             }
             else if (data.response.Results.length == 2) {
                 this.store.dispatch(new ResultType('animated-round-trip'));
+                this.store.dispatch(new DomesticResponse (data.response));
+
             }
-            this.store.dispatch(new RoundTripResponse(data.response));
             console.log(flightResponse);
 
             loading.dismiss();
@@ -183,24 +188,7 @@ export class RoundTripSearchState {
             }
         }
 
-    }
 
-    getCabinClass(cls: string) {
-        if (cls == "all") {
-            return "1";
-        }
-        if (cls == "economy") {
-            return "2";
-        }
-        else if (cls == "premium economy") {
-            return "3";
-        }
-        else if (cls == "bussiness") {
-            return "4";
-        }
-        else if (cls == "first class") {
-            return "6";
-        }
     }
 
 }

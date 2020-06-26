@@ -1,13 +1,14 @@
 import { Component, OnInit, ViewChild, ElementRef, QueryList } from '@angular/core';
 import { Gesture, GestureDetail } from '@ionic/core';
 import { AnimationController, Animation, GestureController, ModalController } from '@ionic/angular';
-import { roundtripResult, FlightResultState, resultObj, BookTicket, SelectedDepartureFlight, SelectedReturnFlight } from 'src/app/stores/result/flight.state';
-import { Observable, Subscription, forkJoin, concat, of } from 'rxjs';
+import { resultObj, sortButton } from 'src/app/stores/result/flight.state';
+import { Observable, Subscription, concat } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { ResultState } from 'src/app/stores/result.state';
 import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
 import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
+import { DomesticResultState, SelectedDepartureFlight, SelectedReturnFlight, DepartureSort, ArrivalSort, DurationSort, PriceSort } from 'src/app/stores/result/flight/domestic.state';
 
 @Component({
   selector: 'app-domestic',
@@ -53,12 +54,12 @@ export class DomesticPage implements OnInit {
 
   ngOnInit() {
 
-    this.selectedDepartureFlight$ = this.store.select(FlightResultState.getSelectedDepartureFlight);
-    this.selectedReturnFlight$ = this.store.select(FlightResultState.getSelectedReturnFlight);
+    this.selectedDepartureFlight$ = this.store.select(DomesticResultState.getSelectedDepartureFlight);
+    this.selectedReturnFlight$ = this.store.select(DomesticResultState.getSelectedReturnFlight);
     this.resultType$ = this.store.select(ResultState.getResultType);
 
-    this.departList$ = this.store.select(FlightResultState.getDomesticDepartureRoundTrip);
-    this.returnList$ = this.store.select(FlightResultState.getDomesticReturnRoundTrip);
+    this.departList$ = this.store.select(DomesticResultState.getDomesticDepartureRoundTrip);
+    this.returnList$ = this.store.select(DomesticResultState.getDomesticReturnRoundTrip);
 
     let animation: Observable<boolean> = concat(this.departList$, this.returnList$).pipe(map(el => true));
     let animationSub: Subscription = animation.subscribe((res: boolean) => res ? this.animation() : null);
@@ -107,6 +108,23 @@ export class DomesticPage implements OnInit {
 
   back() {
 
+  }
+
+  getSort(item : sortButton) {
+    if (item.value == 'departure') {
+      this.store.dispatch(new DepartureSort(item.state));
+    }
+    else if (item.value == 'arrival') {
+      this.store.dispatch(new ArrivalSort(item.state));
+
+    }
+    else if (item.value == 'duration') {
+      this.store.dispatch(new DurationSort(item.state));
+
+    }
+    else if (item.value == 'price') {
+      this.store.dispatch(new PriceSort(item.state));
+    }
   }
   
   //animation
@@ -263,7 +281,7 @@ export class DomesticPage implements OnInit {
   }
 
   book() {
-    this.store.dispatch(new BookTicket());
+    // this.store.dispatch(new BookTicket());
   }
 
   ngOnDestroy() {

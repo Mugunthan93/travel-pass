@@ -5,9 +5,10 @@ import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-
 import { flightResult } from 'src/app/models/search/flight';
 import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { FlightResultState, resultObj, ResetEmailDetail, SelectedFlight } from 'src/app/stores/result/flight.state';
+import { FlightResultState, resultObj, ResetEmailDetail, sortButton } from 'src/app/stores/result/flight.state';
 import { ResultState } from 'src/app/stores/result.state';
 import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
+import { MultiCityResultState, SelectedFlight, DepartureSort, ArrivalSort, DurationSort, PriceSort } from 'src/app/stores/result/flight/multi-city.state';
 
 @Component({
   selector: 'app-multi-city',
@@ -45,7 +46,7 @@ export class MultiCityPage implements OnInit {
   ngOnInit() {
 
     this.store.dispatch(new ResetEmailDetail());
-    this.selectedFlight = this.store.select(FlightResultState.getSelectedFlight);
+    this.selectedFlight = this.store.select(MultiCityResultState.getSelectedFlight);
 
     this.resultType$ = this.store.select(ResultState.getResultType);
     this.resultTypeSub = this.resultType$.subscribe(
@@ -55,7 +56,7 @@ export class MultiCityPage implements OnInit {
       }
     );
 
-    this.flightList$ = this.store.select(FlightResultState.getMultiWay);
+    this.flightList$ = this.store.select(MultiCityResultState.getMultiWay);
     this.flightListSub = this.flightList$.subscribe(
       (res: resultObj[]) => {
         console.log(res);
@@ -87,7 +88,7 @@ export class MultiCityPage implements OnInit {
   }
 
   book() {
-    this.router.navigate(['/','home','book','flight','multi-city']);
+    // this.store.dispatch(new BookTicket());
   }
 
   currentFlight(flight : resultObj){
@@ -119,6 +120,23 @@ export class MultiCityPage implements OnInit {
     // );
 
     return modal.present();
+  }
+
+  getSort(item: sortButton) {
+    if (item.value == 'departure') {
+      this.store.dispatch(new DepartureSort(item.state));
+    }
+    else if (item.value == 'arrival') {
+      this.store.dispatch(new ArrivalSort(item.state));
+
+    }
+    else if (item.value == 'duration') {
+      this.store.dispatch(new DurationSort(item.state));
+
+    }
+    else if (item.value == 'price') {
+      this.store.dispatch(new PriceSort(item.state));
+    }
   }
 
 }

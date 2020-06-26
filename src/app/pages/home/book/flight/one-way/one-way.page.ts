@@ -7,6 +7,7 @@ import { resultObj } from 'src/app/stores/result/flight.state';
 import { FLightBookState, bookObj } from 'src/app/stores/book/flight.state';
 import { FlightSearchState } from 'src/app/stores/search/flight.state';
 import { OneWaySearchState } from 'src/app/stores/search/flight/oneway.state';
+import { OneWayBookState } from 'src/app/stores/book/flight/oneway.state';
 
 @Component({
   selector: 'app-one-way',
@@ -32,7 +33,7 @@ export class OneWayPage implements OnInit {
     this.child = this.store.selectSnapshot(state => state.OneWaySearchState.getChild);
     this.infant = this.store.selectSnapshot(state => state.OneWaySearchState.getInfant);
 
-    this.flightDetail = this.store.select(FLightBookState.getFlightDetail);
+    this.flightDetail = this.store.select(OneWayBookState.getFlightDetail);
     this.flightDetail.subscribe(flight => console.log(flight));
   }
 
