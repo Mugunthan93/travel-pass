@@ -1,12 +1,12 @@
-import { State, Action, StateContext, Selector, StateStream, Store } from '@ngxs/store';
-import { SSR } from '../result/flight.state';
-import { flightResult, flightData, flightSearchPayload } from 'src/app/models/search/flight';
-import * as moment from 'moment';
+import { State, Store } from '@ngxs/store';
+import { flightResult, flightSearchPayload } from 'src/app/models/search/flight';
 import { OneWayBookState } from './flight/oneway.state';
 
 
 export interface flight{
 }
+
+//////////////////////////////////////////////
 
 export interface sendRequest {
     passenger_details: passenger_details
@@ -18,6 +18,7 @@ export interface sendRequest {
     customer_id: number
     transaction_id: any
     user_id: number
+    traveller_id: number
     managers:managers
     trip_type: string
     comments: string
@@ -29,7 +30,7 @@ export interface passenger_details {
     kioskRequest: kioskRequest
     passenger:passenger[]
     flight_details: flightResult[]
-    country_flag:number
+    country_flag:string
     user_eligibility: user_eligibility
     published_fare: number
     uapi_params: uapi_params
@@ -47,7 +48,7 @@ export interface kioskRequest {
     infantsType: number
     travelType: number
     travelType2: number
-    countryFlag: number
+    countryFlag: string
     tour: number
 }
 
@@ -200,6 +201,8 @@ export interface managers{
     mail : string
 }
 
+/////////////////////////////////////////////////////////
+
 export interface bookObj{ 
     summary:summary
     trip : trip[]
@@ -249,11 +252,15 @@ export interface totalsummary {
     other: number
     extraMeals: number
     extraBaggage: number
+    total: number
+    currency: string
 }
 
 export interface totalsummary {
 
 }
+
+/////////////////////////////////////////////////////////
 
 export interface baggageresponse {
     AirlineCode: string
@@ -327,72 +334,5 @@ export class FLightBookState {
         public store : Store
     ) {
 
-    }
-
-    bookData(data: flightResult): bookObj {
-
-        let flightFare: number = data.Fare.PublishedFare - (data.Fare.TaxBreakup[0].value - data.Fare.OtherCharges);
-        let domesticCharge: number = this.store.selectSnapshot(state => state.CompanyState.getDomesticCharge);
-        let internationalCharge: number = this.store.selectSnapshot(state => state.CompanyState.getInternationalCharge);
-
-        let book: bookObj = {
-            summary: {
-                fare: {
-                    base: data.Fare.BaseFare,
-                    taxes:data.Fare.Tax
-                },
-                total: {
-                    serviceCharge: null,
-                    SGST: null,
-                    CGST: null,
-                    IGST: null,
-                    flight: flightFare,
-                    k3: data.Fare.TaxBreakup[0].value,
-                    other: data.Fare.OtherCharges,
-                    extraMeals: null,
-                    extraBaggage: null,
-                }
-                
-            },
-            trip : []
-        };
-
-        data.Segments.forEach(
-            (element: flightData[], index: number, arr: flightData[][]) => {
-                book.trip[index] = {
-                    origin: element[index].Origin.Airport.CityName,
-                    destination: element[index].Destination.Airport.CityName,
-                    connecting_flight: []
-                }
-
-                element.forEach(
-                    (el: flightData, ind: number, arr: flightData[]) => {
-
-                        book.trip[index].connecting_flight[ind] = {
-                            airline: {
-                                name: el.Airline.AirlineName,
-                                code: el.Airline.AirlineCode,
-                                number: el.Airline.FlightNumber
-                            },
-                            origin: {
-                                name: el.Origin.Airport.CityName,
-                                code: el.Origin.Airport.CityCode,
-                                date: el.Origin.DepTime,
-                                terminal:el.Origin.Airport.Terminal
-                            },
-                            destination: {
-                                name: el.Destination.Airport.CityName,
-                                code: el.Destination.Airport.CityCode,
-                                date: el.Destination.ArrTime,
-                                terminal: el.Destination.Airport.Terminal
-                            },
-                            duration: moment.duration(el.Duration, 'minutes').days() + "d " + moment.duration(el.Duration, 'minutes').hours() + "h " + moment.duration(el.Duration, 'minutes').minutes() + "m"
-                        }
-                    }
-                );
-            }
-        );
-
-        return book;
     }
 }

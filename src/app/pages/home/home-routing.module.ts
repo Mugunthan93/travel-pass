@@ -35,6 +35,10 @@ const routes: Routes = [
     path: '',
     redirectTo: '/home/dashboard/home-tab',
     pathMatch: 'full'
+  },
+  {
+    path: 'my-booking',
+    loadChildren: () => import('./my-booking/my-booking.module').then( m => m.MyBookingPageModule)
   }
 ];
 

@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <ion-text>Send Request</ion-text>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-item>
+      <ion-label slot="start">Approver</ion-label>
+      <ion-label slot="end">Approver Name</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Mail CC</ion-label>
+      <ion-select okText="Okay" cancelText="Dismiss" multiple="true"
+        [interfaceOptions]="ccAlertOptions" (ionChange)="mail($event)">
+        <ion-select-option value=""></ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Purpose</ion-label>
+      <ion-select okText="Okay" cancelText="Dismiss"
+      [interfaceOptions]="purposeAlertOptions" (ionChange)="purpose($event)">
+        <ion-select-option value=""></ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Comments</ion-label>
+      <ion-textarea rows="8" (ionChange)="comment($event)"></ion-textarea>
+    </ion-item>
+  </ion-content>
+  <ion-footer>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="dismiss()">
+          <ion-title>
+            <ion-text>Cancel</ion-text>
+          </ion-title>
+        </ion-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-button type="submit">
+          <ion-title>
+            <ion-text>Send</ion-text>
+          </ion-title>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+</ion-footer>

@@ -7,7 +7,8 @@ import { resultObj } from 'src/app/stores/result/flight.state';
 import { FLightBookState, bookObj } from 'src/app/stores/book/flight.state';
 import { FlightSearchState } from 'src/app/stores/search/flight.state';
 import { OneWaySearchState } from 'src/app/stores/search/flight/oneway.state';
-import { OneWayBookState } from 'src/app/stores/book/flight/oneway.state';
+import { OneWayBookState, CancellationRisk } from 'src/app/stores/book/flight/oneway.state';
+import { BookConfirmationComponent } from 'src/app/components/flight/book-confirmation/book-confirmation.component';
 
 @Component({
   selector: 'app-one-way',
@@ -17,9 +18,7 @@ import { OneWayBookState } from 'src/app/stores/book/flight/oneway.state';
 export class OneWayPage implements OnInit {
   
   flightDetail: Observable<bookObj>;
-  adult: string;
-  child: string;
-  infant: string;
+  adult: Observable<number>;
 
   constructor(
     public modalCtrl: ModalController,
@@ -28,11 +27,7 @@ export class OneWayPage implements OnInit {
   }
 
   ngOnInit() {
-
-    this.adult = this.store.selectSnapshot(state => state.OneWaySearchState.getAdult);
-    this.child = this.store.selectSnapshot(state => state.OneWaySearchState.getChild);
-    this.infant = this.store.selectSnapshot(state => state.OneWaySearchState.getInfant);
-
+    this.adult = this.store.select(OneWaySearchState.getAdult);
     this.flightDetail = this.store.select(OneWayBookState.getFlightDetail);
     this.flightDetail.subscribe(flight => console.log(flight));
   }
@@ -56,8 +51,16 @@ export class OneWayPage implements OnInit {
     return await modal.present();
   }
 
-  bookNow() {
+  radioSelect(evt: CustomEvent) {
+    this.store.dispatch(new CancellationRisk(evt.detail.value));
+  }
 
+  async confirmRequest() {
+    const modal = await this.modalCtrl.create({
+      component: BookConfirmationComponent
+    });
+
+    return await modal.present();
   }
 
 }

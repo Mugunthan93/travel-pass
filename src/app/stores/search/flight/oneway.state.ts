@@ -8,11 +8,13 @@ import { ResultMode, ResultType } from '../../result.state';
 import { Navigate } from '@ngxs/router-plugin';
 import { OneWayResponse } from '../../result/flight/oneway.state';
 import { BaseFlightSearch } from './filght-search';
+import * as moment from 'moment';
 
 export interface onewaySearch {
     formData: oneWayForm,
     payload: flightSearchPayload
     metrix: metrixBoard
+    tripTrip:'domestic' | 'international' | null
 }
 
 export interface oneWayForm {
@@ -44,7 +46,8 @@ export class OneWaySearch {
             class: null
         },
         payload: null,
-        metrix: null
+        metrix: null,
+        tripTrip:null
     }
 })
 
@@ -61,22 +64,40 @@ export class OneWaySearchState extends BaseFlightSearch{
     }
 
     @Selector()
-    static getAdult(states: onewaySearch): string {
-        return states.payload.AdultCount
+    static getAdult(states: onewaySearch): number {
+        return states.formData.traveller.adult;
     }
 
     @Selector()
-    static getChild(states: onewaySearch): string {
-        return states.payload.ChildCount
+    static getTripType(states: onewaySearch): string {
+        return states.tripTrip;
     }
 
     @Selector()
-    static getInfant(states: onewaySearch): string {
-        return states.payload.InfantCount
+    static getTravelDate(states: onewaySearch): string {
+        return moment(states.formData.departure).format('YYY:MM:DD');
+    }
+
+    @Selector()
+    static getTripRequest(states: onewaySearch): flightSearchPayload {
+        return states.payload;
     }
 
     @Action(OneWayForm)
     onewayForm(states: StateContext<onewaySearch>, action: OneWayForm) {
+
+        if (action.flightform.from.country_code == action.flightform.to.country_code)
+        {
+            states.patchState({
+                tripTrip : 'domestic'
+            })
+        }
+        else if (action.flightform.from.country_code != action.flightform.to.country_code) {
+            states.patchState({
+                tripTrip: 'international'
+            })
+        }
+
         states.patchState({
             formData: action.flightform
         });
@@ -108,6 +129,8 @@ export class OneWaySearchState extends BaseFlightSearch{
         await loading.present();
 
         let currentState = states.getState();
+        let departureTime = typeof currentState.formData.departure == 'string' ? currentState.formData.departure : currentState.formData.departure.toJSON();
+
         states.patchState({
             payload: {
                 AdultCount: currentState.formData.traveller.adult.toString(),
@@ -119,8 +142,8 @@ export class OneWaySearchState extends BaseFlightSearch{
                         Origin: currentState.formData.from.city_code,
                         Destination: currentState.formData.to.city_code,
                         FlightCabinClass: this.getCabinClass(currentState.formData.class),
-                        PreferredArrivalTime: currentState.formData.departure.toJSON(),
-                        PreferredDepartureTime: currentState.formData.departure.toJSON()
+                        PreferredArrivalTime: departureTime,
+                        PreferredDepartureTime: departureTime
                     }
                 ],
                 prefferedAirline: [null],

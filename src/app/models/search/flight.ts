@@ -115,6 +115,7 @@ export interface fareBreakDown{
     PassengerType: number
     Tax: number
     YQTax: number
+    TaxBreakUp: TaxBreakup[]
 }
 
 export interface fareRule{

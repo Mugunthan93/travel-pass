@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -17,11 +17,13 @@ import { SpecialRequestComponent } from 'src/app/components/hotel/special-reques
 import { PoliciesComponent } from 'src/app/components/hotel/policies/policies.component';
 import { AddGuestComponent } from 'src/app/components/hotel/add-guest/add-guest.component';
 import { TermsConditionsComponent } from 'src/app/components/hotel/terms-conditions/terms-conditions.component';
+import { BookConfirmationComponent } from 'src/app/components/flight/book-confirmation/book-confirmation.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     IonicModule,
     BookPageRoutingModule,
     CalendarModule
@@ -35,7 +37,8 @@ import { TermsConditionsComponent } from 'src/app/components/hotel/terms-conditi
     SpecialRequestComponent,
     PoliciesComponent,
     AddGuestComponent,
-    TermsConditionsComponent
+    TermsConditionsComponent,
+    BookConfirmationComponent
   ],
   entryComponents: [
     PassengerInfoComponent,
@@ -44,7 +47,8 @@ import { TermsConditionsComponent } from 'src/app/components/hotel/terms-conditi
     SpecialRequestComponent,
     PoliciesComponent,
     AddGuestComponent,
-    TermsConditionsComponent
+    TermsConditionsComponent,
+    BookConfirmationComponent
   ]
 })
 export class BookPageModule {}

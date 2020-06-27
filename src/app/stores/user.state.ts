@@ -1,5 +1,6 @@
 import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
 import { user } from '../models/user';
+import { managers } from './book/flight.state';
 
 export class GetUser {
     static readonly type = '[User] GetUser';
@@ -34,7 +35,21 @@ export class UserState {
     }
 
     @Selector()
-    static getcompanyId(state: user) {
+    static getUserId(state: user) : number {
+        return state.id;
+    }
+
+    @Selector()
+    static getApprover(state: user) : managers {
+        return {
+            id: state.approver.id,
+            name: state.approver.name,
+            mail: state.approver.approver.email
+        }
+    }
+
+    @Selector()
+    static getcompanyId(state: user) : number {
         return state.customer_id
     }
 

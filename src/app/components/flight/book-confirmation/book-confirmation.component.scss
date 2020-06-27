@@ -1,0 +1,15 @@
+
+
+ion-content{
+    >ion-item{
+        --padding-end: 16px;
+        ion-label[slot="end"]{
+            text-align: end;
+        }
+    }
+    >ion-item:nth-child(4) {
+        border: 2px solid grey;
+        margin: 8px;
+        border-radius: 10px;
+    }
+}

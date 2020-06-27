@@ -33,6 +33,14 @@ ion-toolbar {
             color:#{$white-icon} !important;
             filter: invert(100%) sepia(100%) saturate(100%) hue-rotate(100deg) brightness(100%) contrast(100%);
         }
+
+        >ion-title {
+            >ion-text {
+                color: white !important;
+                font-weight: bold !important;
+                font-size: 17px !important;
+            }
+        }
     }
 
     >ion-title{

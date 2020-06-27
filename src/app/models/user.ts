@@ -30,7 +30,7 @@ export interface user {
   customer_id: number;
   role: string;
   grade: string;
-  approver: approver;
+  approver: user;
   sales_id: string;
   credit_req: creditReq;
   designation: string;
@@ -42,15 +42,6 @@ export interface user {
   service_charge: string;
   is_rightsto_book: string;
 
-}
-
-export interface approver{
-  id:number
-  name : string
-  email : string
-  label : string
-  customer_id : number
-  customer_name:string
 }
 
 export  interface creditReq{

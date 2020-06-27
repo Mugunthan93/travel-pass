@@ -1,18 +1,57 @@
 import { State, Action, Selector, Store, StateContext } from "@ngxs/store";
-import { bookObj, baggageresponse, mealDynamic, SegmentSeat, flight, FLightBookState } from '../flight.state';
-import { flightResult } from 'src/app/models/search/flight';
+import { bookObj, baggageresponse, mealDynamic, SegmentSeat, flight, FLightBookState, sendRequest } from '../flight.state';
+import { flightResult, flightSearchResult } from 'src/app/models/search/flight';
 import { SSR } from '../../result/flight.state';
 import { Navigate } from '@ngxs/router-plugin';
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { OneWayResultState } from '../../result/flight/oneway.state';
+import { BaseFlightBook } from './flight-book';
+import { OneWaySearch } from '../../search/flight/oneway.state';
 
 
 export interface onewayBook {
+    fareQuote: flightResult,
+    isPriceChanged: boolean,
+    ssr: SSR,
     flight: bookObj,
-    baggage: baggageresponse[][],
-    meal: mealDynamic[][],
-    seat: SegmentSeat[],
-    specialServices: any[]
+    risk: string,
+    mail: string[],
+    purpose: string,
+    comment: string
+}
+
+export interface confirmRequest {
+    cc: string[]
+    purpose: string,
+    comment: string
+}
+
+export class CancellationRisk {
+    static readonly type = "[OneWay] CancellationRisk";
+    constructor(public risk : string) {
+    }
+
+}
+
+export class MailCC {
+    static readonly type = "[OneWay] MailCC";
+    constructor(public mail : string[]) {
+
+    }
+}
+
+export class Purpose {
+    static readonly type = "[OneWay] Purpose";
+    constructor(public purpose : string) {
+
+    }
+}
+
+export class Comment {
+    static readonly type = "[OneWay] Comment";
+    constructor(public comment : string) {
+
+    }
 }
 
 export class BookTicket {
@@ -20,26 +59,37 @@ export class BookTicket {
 
 }
 
+export class SendRequest {
+    static readonly type = "[OneWay] SendRequest";
+    constructor(public value: confirmRequest) {
+
+    }
+}
+
 @State<onewayBook>({
     name: 'oneway_book',
     defaults: {
+        fareQuote: null,
+        isPriceChanged : null,
+        ssr: null,
         flight: {
             summary: null,
             trip: []
         },
-        baggage: [],
-        meal: [],
-        seat: [],
-        specialServices: []
+        risk: null,
+        mail: [],
+        purpose: null,
+        comment: null
     }
 })
 
-export class OneWayBookState {
+export class OneWayBookState extends BaseFlightBook{
 
     constructor(
         public store: Store,
         private flightService : FlightService
     ) {
+        super(store);
     }
 
     @Selector()
@@ -48,22 +98,23 @@ export class OneWayBookState {
     }
 
     @Action(BookTicket)
-    async bookTicket(states: StateContext<flight>) {
-
-        let fairQuote: flightResult = null;
-        let ssr: SSR = null;
+    async bookTicket(states: StateContext<onewayBook>) {
 
         try {
             const fairQuoteResponse = await this.flightService.fairQuote(this.store.selectSnapshot(OneWayResultState.getSelectedFlight).fareRule);
-            console.log(fairQuoteResponse);
             if (fairQuoteResponse.status = 200) {
                 let response = JSON.parse(fairQuoteResponse.data).response;
                 if (response.Results) {
-                    console.log(response.Results);
-                    fairQuote = response.Results;
+                    states.patchState({
+                        fareQuote: response.Results,
+                        isPriceChanged: response.IsPriceChanged
+                    });
+
                 }
                 else if (response.Error.ErrorCode == 6) {
                     console.log(response.Error.ErrorMessage);
+                    this.store.dispatch(new OneWaySearch());
+                    return;
                 }
             }
         }
@@ -73,10 +124,11 @@ export class OneWayBookState {
 
         try {
             const SSRResponse = await this.flightService.SSR(this.store.selectSnapshot(OneWayResultState.getSelectedFlight).fareRule);
-            console.log(SSRResponse);
             if (SSRResponse.status = 200) {
-                ssr = JSON.parse(SSRResponse.data).response;
-                console.log(ssr);
+                let response = JSON.parse(SSRResponse.data).response;
+                states.patchState({
+                    ssr : response
+                    });
             }
         }
         catch (error) {
@@ -84,13 +136,9 @@ export class OneWayBookState {
         }
 
         states.patchState({
-            flight: null,
-            // flight: this.bookData(fairQuote),
-            baggage: ssr.Baggage,
-            meal: ssr.MealDynamic,
-            seat: ssr.SeatDynamic,
-            specialServices: ssr.specialServices
+            flight: this.bookData(states.getState().fareQuote)
         });
+
         this.store.dispatch(new Navigate(['/', 'home', 'book', 'flight', 'one-way']));
         // try {
         //     const agencyBalanceResponse = await this.flightService.agencyBalance();
@@ -100,5 +148,38 @@ export class OneWayBookState {
         //     console.log(error);
         // }
 
+    }
+
+    @Action(CancellationRisk)
+    cancellationRisk(states: StateContext<onewayBook>, action: CancellationRisk) {
+        states.patchState({
+            risk : action.risk
+        });
+    }
+
+    @Action(SendRequest)
+    sendRequest(states: StateContext<onewayBook>, action: SendRequest) {
+
+    }
+
+    @Action(MailCC)
+    mailCC(states: StateContext<onewayBook>, action: MailCC) {
+        states.patchState({
+            mail: action.mail
+        });
+    }
+
+    @Action(Purpose)
+    purpose(states: StateContext<onewayBook>, action: Purpose) {
+        states.patchState({
+            purpose: action.purpose
+        });
+    }
+
+    @Action(Comment)
+    comment(states: StateContext<onewayBook>, action: Comment) {
+        states.patchState({
+            comment: action.comment
+        });
     }
 }

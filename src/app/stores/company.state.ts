@@ -23,21 +23,34 @@ export class CompanyState {
     }
 
     @Selector()
-    static getDomesticCharge(states : company) {
-        return states.service_charges.domesticCharge;
+    static getDomesticServiceCharge(states: company): number {
+        return parseInt(states.service_charges.domesticCharge);
     }
 
     @Selector()
-    static getInternationalCharge(states: company) {
+    static getInternationalServiceCharge(states: company) : number {
         return states.service_charges.internationalCharge;
     }
 
+    @Selector()
+    static getDomesticMarkupCharge(states: company): number {
+        return states.markup_charges.domesticCharge;
+    }
+
+    @Selector()
+    static getInternationalMarkupCharge(states: company): number {
+        return states.markup_charges.internationalCharge;
+    }
+
+    @Selector()
+    static getStateName(states: company): string {
+        return states.service_charges.state_name;
+    }
     @Action(GetCompany)
     async getCompany(states: StateContext<company>, action: GetCompany) {
         try {
             const companyResponse = await this.companyService.getCompany(action.companyId);
-            const company: company = JSON.parse(companyResponse.data);
-            console.log(company);
+            let company: company = JSON.parse(companyResponse.data);
             states.patchState(company[0]);
         }
         catch (error) {

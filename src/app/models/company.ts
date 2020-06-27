@@ -9,8 +9,8 @@ export interface company {
     payment_method: string
     cash_limits: cashLimit
     gst_details: gstDetails
-    service_charges: charges
-    markup_charges: charges
+    service_charges: serviceCharges
+    markup_charges: markupCharges
     city: string
     country_name: string
     country_code: string
@@ -57,8 +57,17 @@ export interface gstDetails{
     phoneNumber: string
 }
 
-export interface charges{
+export interface markupCharges{
     domesticCharge: number
+    internationalCharge: number
+    serviceBusCharge: number
+    serviceCarCharge: number
+    serviceHotelCharge: number
+    state_name: string
+}
+
+export interface serviceCharges {
+    domesticCharge: string
     internationalCharge: number
     serviceBusCharge: number
     serviceCarCharge: number
