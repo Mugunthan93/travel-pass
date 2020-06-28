@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { BookingState } from 'src/app/stores/booking.state';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-history',
@@ -7,12 +10,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HistoryPage implements OnInit {
 
-  list: any = [1, 2, 3, 4, 5, 6, 7, 8];
+  historyBookings: Observable<any[]>;
 
-
-  constructor() { }
+  constructor(
+    private store : Store
+  ) { }
 
   ngOnInit() {
+
+    this.historyBookings = this.store.select(BookingState.getHistoryBooking);
+
   }
 
 }

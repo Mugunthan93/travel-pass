@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { BookingState } from 'src/app/stores/booking.state';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-new',
@@ -7,12 +10,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NewPage implements OnInit {
 
+  newBookings: Observable<any[]>;
 
-  list : any = [1,2,3,4,5,6,7,8];
-
-  constructor() { }
+  constructor(
+    private store : Store
+  ) { }
 
   ngOnInit() {
+
+    this.newBookings = this.store.select(BookingState.getNewBooking);
+
   }
 
 }
