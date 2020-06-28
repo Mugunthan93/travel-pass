@@ -8,6 +8,7 @@ import { HomePageRoutingModule } from './home-routing.module';
 
 import { HomePage } from './home.page';
 import { AboutHotelComponent } from 'src/app/components/hotel/about-hotel/about-hotel.component';
+import { MenuBarComponent } from 'src/app/components/menu-bar/menu-bar.component';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { AboutHotelComponent } from 'src/app/components/hotel/about-hotel/about-
   ],
   declarations: [
     HomePage,
-    AboutHotelComponent
+    AboutHotelComponent,
+    MenuBarComponent
   ],
   entryComponents: [
     AboutHotelComponent

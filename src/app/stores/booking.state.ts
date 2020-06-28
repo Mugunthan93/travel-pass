@@ -34,11 +34,11 @@ export class BookingState {
     }
 
     @Action(MyBooking)
-    myflightBooking(states: StateContext<booking>, action: MyBooking) {
+    async myflightBooking(states: StateContext<booking>, action: MyBooking) {
         states.patchState({
             type : action.type
         });
-        this.menuCtrl.toggle('first');
+        this.menuCtrl.close('first');
         this.store.dispatch(new Navigate(['/', 'home', 'my-booking', states.getState().type, 'new']));
     }
 

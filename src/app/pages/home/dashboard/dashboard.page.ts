@@ -24,8 +24,8 @@ export class DashboardPage implements OnInit {
 
   }
 
-  openMenu() {
-    this.menuCtrl.toggle();
+  async openMenu() {
+    this.menuCtrl.open('first');
   }
 
   

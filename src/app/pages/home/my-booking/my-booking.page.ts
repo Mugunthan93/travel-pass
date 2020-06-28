@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonTabButton } from '@ionic/angular';
+import { IonTabButton, MenuController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
 import { MyBooking } from 'src/app/stores/booking.state';
 
@@ -11,10 +11,15 @@ import { MyBooking } from 'src/app/stores/booking.state';
 export class MyBookingPage implements OnInit {
 
   constructor(
-    private store : Store
+    private store: Store,
+    public menuCtrl : MenuController
   ) { }
 
   ngOnInit() {
+  }
+
+  async openMenu() {
+    this.menuCtrl.open('first');
   }
 
   viewBooking(type : string) {

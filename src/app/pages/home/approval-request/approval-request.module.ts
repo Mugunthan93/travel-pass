@@ -15,6 +15,8 @@ import { ApprovalRequestPage } from './approval-request.page';
     IonicModule,
     ApprovalRequestPageRoutingModule
   ],
-  declarations: [ApprovalRequestPage]
+  declarations: [
+    ApprovalRequestPage
+  ]
 })
 export class ApprovalRequestPageModule {}

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { ApprovalRequest } from 'src/app/stores/approval.state';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-approval-request',
@@ -10,10 +11,15 @@ import { ApprovalRequest } from 'src/app/stores/approval.state';
 export class ApprovalRequestPage implements OnInit {
 
   constructor(
-    private store : Store
+    private store: Store,
+    public menuCtrl: MenuController
   ) { }
 
   ngOnInit() {
+  }
+
+  async openMenu() {
+    this.menuCtrl.open('first');
   }
 
   viewApproval(type: string) {

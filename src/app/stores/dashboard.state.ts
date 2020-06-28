@@ -2,6 +2,11 @@ import { State, Action, StateContext, Store } from "@ngxs/store";
 import { Navigate } from '@ngxs/router-plugin';
 import { SearchType, SearchMode } from './search.state';
 import { JourneyType } from './search/flight.state';
+import { MenuController } from '@ionic/angular';
+
+export class GetDashboard{
+    static readonly type = '[Dashboard] GetDashboard';
+}
 
 export class SearchFlight{
     static readonly type = '[Dashboard] SearchFlight';
@@ -32,10 +37,18 @@ export class SearchHotel {
 export class DashboardState{
 
     constructor(
-        private store: Store
+        private store: Store,
+        public menuCtrl :MenuController
     ) {
         
     }
+
+    @Action(GetDashboard)
+    getDashboard(states: StateContext<any>, action: SearchFlight) {
+        this.menuCtrl.close('first');
+        this.store.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']));
+    }
+    
 
     @Action(SearchFlight)
     searchFlight(states: StateContext<any>, action: SearchFlight) {

@@ -32,11 +32,11 @@ export class ApprovalState {
     }
 
     @Action(ApprovalRequest)
-    approveRequest(states: StateContext<Approval>, action: ApprovalRequest) {
+    async approveRequest(states: StateContext<Approval>, action: ApprovalRequest) {
         states.patchState({
             type: action.type
         });
-        this.menuCtrl.toggle('first');
+        this.menuCtrl.close('first');
         this.store.dispatch(new Navigate(['/', 'home', 'approval-request', states.getState().type, 'request-list']));
     }
 
