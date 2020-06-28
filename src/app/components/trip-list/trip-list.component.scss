@@ -1,6 +1,6 @@
 ion-content{
     max-height: calc(100% - 18px);
-    >ion-virtual-scroll{
+    >ion-list{
         >ion-item{
             --min-height:60px;
             --padding-end: 16px;
@@ -18,7 +18,7 @@ ion-content{
                 }
                 &[slot="end"]{
                     margin-bottom: 0px;
-
+    
                 }
     
             }

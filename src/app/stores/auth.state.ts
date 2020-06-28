@@ -1,7 +1,7 @@
 import { State, Action, StateContext, Store } from '@ngxs/store';
 import { AuthService } from '../services/auth/auth.service';
 import { Navigate } from '@ngxs/router-plugin';
-import { LoadingController, ToastController, AlertController } from '@ionic/angular';
+import { LoadingController, ToastController, AlertController, MenuController } from '@ionic/angular';
 import { GetUser } from './user.state';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { GetCompany } from './company.state';
@@ -34,6 +34,7 @@ export class AuthState {
         private loadingCtrl: LoadingController,
         private alertCtrl: AlertController,
         private authService: AuthService,
+        public menuCtrl:MenuController,
         private store : Store
     ) {
     }
@@ -74,11 +75,11 @@ export class AuthState {
             data = userResponse; 
         }
         catch (error) {
+            console.log(error);
             if (error.error) {
                 const errMsg = JSON.parse(error.error);
                 console.log(errMsg);
             }
-            console.log(error);
             failedAlert.message = error;
             loading.dismiss();
             failedAlert.present();
@@ -95,6 +96,7 @@ export class AuthState {
 
         const logout = await this.authService.logout();
         sessionStorage.clear();
+        this.menuCtrl.toggle('first');
         this.store.dispatch(new Navigate(['/', 'auth']));
         
     }

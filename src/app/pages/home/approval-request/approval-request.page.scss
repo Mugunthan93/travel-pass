@@ -1,0 +1,21 @@
+@import "../../../../style/util/variable.scss";
+@import "../../../../style/util/mixins.scss";
+
+ion-content {
+    ion-row:first-child {
+        background: #{$bar-bg2};
+        padding: 20px 0px;
+        height: 120px;
+
+        >ion-thumbnail {
+            >ion-title {
+                color:#{$white-text};
+                padding: 0px;
+                text-align: center;
+            }
+        }
+    }
+    ion-router-outlet{
+        top:120px;
+    }
+}

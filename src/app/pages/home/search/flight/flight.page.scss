@@ -3,6 +3,7 @@
 
 
 ion-tab-bar {
+    justify-content: space-between;
     // --background:#{$transparent};
     --border:#{$transparent};
     // --color:
@@ -17,6 +18,7 @@ ion-tab-bar {
     @include last-tab-border("multi-city", #{$tab-border});
 
     >ion-tab-button {
+        max-width: -webkit-fill-available;
         background:#{$tab-background};
         color:#{$tab-color};
 

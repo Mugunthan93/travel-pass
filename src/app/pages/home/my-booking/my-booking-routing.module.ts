@@ -5,8 +5,23 @@ import { MyBookingPage } from './my-booking.page';
 
 const routes: Routes = [
   {
-    path: '',
-    component: MyBookingPage
+    path: ':bookingType',
+    component: MyBookingPage,
+    children: [
+      {
+        path: 'new',
+        loadChildren: () => import('./new/new.module').then(m => m.NewPageModule)
+      },
+      {
+        path: 'history',
+        loadChildren: () => import('./history/history.module').then(m => m.HistoryPageModule)
+      },
+      {
+        path: '',
+        redirectTo: '/home/my-booking/flight/new',
+        pathMatch: 'full'
+      }
+    ]
   }
 ];
 

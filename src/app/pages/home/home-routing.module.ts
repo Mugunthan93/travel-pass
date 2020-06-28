@@ -25,6 +25,14 @@ const routes: Routes = [
         loadChildren: () => import('./book/book.module').then(m => m.BookPageModule)
       },
       {
+        path: 'my-booking',
+        loadChildren: () => import('./my-booking/my-booking.module').then(m => m.MyBookingPageModule)
+      },
+      {
+        path: 'approval-request',
+        loadChildren: () => import('./approval-request/approval-request.module').then(m => m.ApprovalRequestPageModule)
+      },
+      {
         path: '',
         redirectTo: '/home/dashboard/home-tab',
         pathMatch: 'full'
@@ -35,10 +43,6 @@ const routes: Routes = [
     path: '',
     redirectTo: '/home/dashboard/home-tab',
     pathMatch: 'full'
-  },
-  {
-    path: 'my-booking',
-    loadChildren: () => import('./my-booking/my-booking.module').then( m => m.MyBookingPageModule)
   }
 ];
 

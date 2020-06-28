@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <ion-text>Approval Request</ion-text>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row class="ion-justify-content-around">
+    <ion-thumbnail>
+      <ion-icon size="large" src="../../../../../assets/icons/dashboard/flight.svg" (click)="viewApproval('flight')"></ion-icon>
+      <ion-title>Flight</ion-title>
+    </ion-thumbnail>
+    <ion-thumbnail>
+      <ion-icon size="large" src="../../../../../assets/icons/dashboard/bus.svg" (click)="viewApproval('bus')"></ion-icon>
+      <ion-title>Bus</ion-title>
+    </ion-thumbnail>
+    <ion-thumbnail>
+      <ion-icon size="large" src="../../../../../assets/icons/dashboard/hotel.svg" (click)="viewApproval('hotel')"></ion-icon>
+      <ion-title>Hotel</ion-title>
+    </ion-thumbnail>
+    <ion-thumbnail>
+      <ion-icon size="large" src="../../../../../assets/icons/dashboard/cab.svg" (click)="viewApproval('cab')">
+      </ion-icon>
+      <ion-title>Cab</ion-title>
+    </ion-thumbnail>
+  </ion-row>
+  <ion-router-outlet></ion-router-outlet>
+</ion-content>
+

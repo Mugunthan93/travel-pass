@@ -4,6 +4,8 @@ import { Store } from '@ngxs/store';
 import { Navigation } from 'swiper/js/swiper.esm';
 import { Navigate } from '@ngxs/router-plugin';
 import { Login, Logout } from 'src/app/stores/auth.state';
+import { MyBooking } from 'src/app/stores/booking.state';
+import { ApprovalRequest } from 'src/app/stores/approval.state';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,22 +21,19 @@ export class DashboardPage implements OnInit {
   ) { }
 
   ngOnInit() {
+
   }
 
   openMenu() {
-    this.menuCtrl.open();
+    this.menuCtrl.toggle();
   }
 
-  onLogout() {
-    this.store.dispatch(new Logout());
-  }
-
+  
   notification() {
-
+    
   }
-
+  
   profile() {
-
+    
   }
-
 }

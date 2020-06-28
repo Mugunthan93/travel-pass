@@ -27,6 +27,8 @@ import { DomesticResultState } from '../stores/result/flight/domestic.state';
 import { InternationalResultState } from '../stores/result/flight/international.state';
 import { MultiCityResultState } from '../stores/result/flight/multi-city.state';
 import { OneWayBookState } from '../stores/book/flight/oneway.state';
+import { BookingState } from '../stores/booking.state';
+import { ApprovalState } from '../stores/approval.state';
 
 @NgModule({
   declarations: [],
@@ -57,6 +59,9 @@ import { OneWayBookState } from '../stores/book/flight/oneway.state';
       MultiCityResultState,
       
       OneWayBookState,
+
+      BookingState,
+      ApprovalState,
       
       FilterState,
       SharedState
@@ -70,6 +75,9 @@ import { OneWayBookState } from '../stores/book/flight/oneway.state';
         SearchState,
         ResultState,
         BookState,
+
+        BookingState,
+        ApprovalState,
         
         FilterState,
         SharedState,

@@ -1,7 +1,6 @@
 <ion-content>
-  <ion-virtual-scroll [items]="items" approxItemHeight="70px">
-    <ion-item class="ion-activatable ripple-parent" lines="none" *virtualItem="let item">
-      <ion-ripple-effect type="unbounded"></ion-ripple-effect>
+  <ion-list lines="none">
+    <ion-item *ngFor="let item of items">
       <ion-icon slot="start" src="../../../assets/icons/dashboard/trip-flight.svg"></ion-icon>
       <ion-icon slot="end" src="../../../assets/ionicons/md-alert-circle.svg"></ion-icon>
       <ion-row>
@@ -15,5 +14,5 @@
         </ion-row>
       </ion-row>
     </ion-item>
-  </ion-virtual-scroll>
+  </ion-list>
 </ion-content>

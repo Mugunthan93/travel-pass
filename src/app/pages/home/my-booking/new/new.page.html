@@ -1,0 +1,35 @@
+
+<ion-content>
+  <ion-card *ngFor="let item of list">
+    <ion-card-content>
+      <ion-row>
+        <ion-row>
+          <ion-text>Chennai</ion-text>
+          <ion-text>From</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-text>One Way</ion-text>
+          <!-- <ion-icon name="add"></ion-icon> -->
+        </ion-row>
+        <ion-row>
+          <ion-text>Chennai</ion-text>
+          <ion-text>From</ion-text>
+        </ion-row>
+      </ion-row>
+      <ion-row>
+        <ion-row>
+          <ion-text>14th</ion-text>
+          <ion-text>Sept</ion-text>
+        </ion-row>
+        <ion-chip>
+          <ion-text>{{'10500' | currency: 'INR'}}</ion-text>
+        </ion-chip>
+      </ion-row>
+      <ion-row>
+        <ion-text>Book Again</ion-text>
+        <ion-text>View</ion-text>
+        <ion-text>Download</ion-text>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

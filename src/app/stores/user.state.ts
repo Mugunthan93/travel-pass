@@ -30,6 +30,16 @@ export class UserState {
     }
 
     @Selector()
+    static isUser(state: user) {
+        return state.role == 'kiosk' ? true : false;
+    }
+
+    @Selector()
+    static isManager(state: user): boolean {
+        return state.role == 'manager' ? true : false;
+    }
+
+    @Selector()
     static user(state: user) {
         return state;
     }

@@ -1,0 +1,65 @@
+@import "../../../../style/util/variable.scss";
+@import "../../../../style/util/mixins.scss";
+
+
+ion-content{
+    ion-row:first-child {
+        background: #{$bar-bg2};
+        padding: 20px 0px;
+        height: 120px;
+
+        >ion-thumbnail {
+            >ion-title {
+                color:#{$white-text};
+                padding: 0px;
+                text-align: center;
+            }
+        }
+    }
+    >ion-tabs{
+        top: 120px !important;
+
+        >ion-tab-bar {
+            justify-content: space-between;
+            // --background:#{$transparent};
+            --border:#{$transparent};
+            // --color:
+            margin-left: 15px;
+            margin-right: 15px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            height: 6vh;
+
+            @include first-tab-border("new", #{$tab-border});
+            @include last-tab-border("history", #{$tab-border});
+
+            >ion-tab-button {
+                max-width: -webkit-fill-available;
+                background:#{$tab-background};
+                color:#{$tab-color};
+
+                >ion-icon {
+                    color:#{$icon-color} !important;
+                }
+
+                >ion-label {
+                    color:#{$tab-color} !important;
+                }
+
+                &[aria-selected="true"] {
+                    background:#{$tab-selected-background};
+                    color:#{$tab-selected-color};
+
+                    >ion-icon {
+                        color:#{$icon-color2} !important;
+                    }
+
+                    >ion-label {
+                        color:#{$tab-selected-color} !important;
+                    }
+
+                }
+            }
+        }
+    }
+}
