@@ -5,6 +5,7 @@ import { Store } from '@ngxs/store';
 import { CompanyState } from '../../company.state';
 import { OneWaySearchState } from '../../search/flight/oneway.state';
 import { UserState } from '../../user.state';
+import { SSR } from '../../result/flight.state';
 
 
 export interface GST {
@@ -140,7 +141,7 @@ export class BaseFlightBook {
         return parseInt(markupCharge.toFixed(2));
     }
 
-    request(data: flightResult): sendRequest {
+    request(fareQuote: flightResult,ssr : SSR, priceChange : boolean, passDetail : any): sendRequest {
         let request: sendRequest = null;
 
         request.managers = this.store.selectSnapshot(UserState.getApprover);
@@ -159,7 +160,7 @@ export class BaseFlightBook {
         
         request.vendor_id = 153;
 
-        request.passenger_details = this.getPassengerDetails(data)
+        request.passenger_details = passDetail
         request.trip_requests = this.store.selectSnapshot(OneWaySearchState.getTripRequest);
 
         return request;

@@ -1,5 +1,5 @@
 import { State, Action, Selector, Store, StateContext } from "@ngxs/store";
-import { bookObj, baggageresponse, mealDynamic, SegmentSeat, flight, FLightBookState, sendRequest } from '../flight.state';
+import { bookObj, baggageresponse, mealDynamic, SegmentSeat, flight, FLightBookState, sendRequest, SetFirstPassengers } from '../flight.state';
 import { flightResult, flightSearchResult } from 'src/app/models/search/flight';
 import { SSR } from '../../result/flight.state';
 import { Navigate } from '@ngxs/router-plugin';
@@ -7,6 +7,7 @@ import { FlightService } from 'src/app/services/flight/flight.service';
 import { OneWayResultState } from '../../result/flight/oneway.state';
 import { BaseFlightBook } from './flight-book';
 import { OneWaySearch } from '../../search/flight/oneway.state';
+import { SearchState } from '../../search.state';
 
 
 export interface onewayBook {
@@ -93,6 +94,11 @@ export class OneWayBookState extends BaseFlightBook{
     }
 
     @Selector()
+    static getPassengerFare(states: onewayBook) {
+        return states.fareQuote.Fare;
+    }
+
+    @Selector()
     static getFlightDetail(states: onewayBook): bookObj {
         return states.flight;
     }
@@ -139,6 +145,7 @@ export class OneWayBookState extends BaseFlightBook{
             flight: this.bookData(states.getState().fareQuote)
         });
 
+        this.store.dispatch(new SetFirstPassengers(this.store.selectSnapshot(SearchState.getSearchType)));
         this.store.dispatch(new Navigate(['/', 'home', 'book', 'flight', 'one-way']));
         // try {
         //     const agencyBalanceResponse = await this.flightService.agencyBalance();

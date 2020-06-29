@@ -1,7 +1,7 @@
 import { city } from '../../shared.state';
 import { traveller } from '../flight.state';
 import { flightSearchPayload, metrixBoard, flightSearchResponse } from 'src/app/models/search/flight';
-import { State, Action, StateContext, Store } from '@ngxs/store';
+import { State, Action, StateContext, Store, Selector } from '@ngxs/store';
 import { LoadingController, AlertController } from '@ionic/angular';
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { ResultMode, ResultType } from '../../result.state';
@@ -62,6 +62,11 @@ export class RoundTripSearchState extends BaseFlightSearch {
     ) {
 
         super();
+    }
+
+    @Selector()
+    static getAdult(states: roundtripSearch): number {
+        return states.formData.traveller.adult;
     }
 
     @Action(RoundTripForm)

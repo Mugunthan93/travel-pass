@@ -90,7 +90,7 @@ export class FlightService {
   }
 
   // approver reqest list
-  async approvalReqList(userId: string): Promise<HTTPResponse> {
+  async approvalReqList(userId: number): Promise<HTTPResponse> {
     return await this.http.get("/allBookings/" + userId, {});
   }
 

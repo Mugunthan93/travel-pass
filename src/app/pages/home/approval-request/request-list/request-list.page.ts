@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { BookingState } from 'src/app/stores/booking.state';
+import { ApprovalRequest, ApprovalState } from 'src/app/stores/approval.state';
 
 @Component({
   selector: 'app-request-list',
@@ -7,12 +11,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RequestListPage implements OnInit {
 
-  list: any = [1, 2, 3, 4, 5, 6, 7, 8];
+  allBookings: Observable<any[]>;
 
-
-  constructor() { }
+  constructor(
+    private store: Store
+  ) { }
 
   ngOnInit() {
-  }
 
+    this.allBookings = this.store.select(ApprovalState.getAllBookings);
+
+  }
 }

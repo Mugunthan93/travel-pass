@@ -1,9 +1,17 @@
-import { State, Store } from '@ngxs/store';
-import { flightResult, flightSearchPayload } from 'src/app/models/search/flight';
+import { State, Store, Action, StateContext, Selector, StateStream } from '@ngxs/store';
+import { flightResult, flightSearchPayload, segmentsPayload, resultFare } from 'src/app/models/search/flight';
 import { OneWayBookState } from './flight/oneway.state';
+import { OneWaySearchState } from '../search/flight/oneway.state';
+import { RoundTripSearchState } from '../search/flight/round-trip.state';
+import { MultiCitySearchState } from '../search/flight/multi-city.state';
+import { UserState } from '../user.state';
+import { CompanyState } from '../company.state';
+import { ModalController } from '@ionic/angular';
 
 
 export interface flight{
+    passengers: passenger[],
+    selectedPassengers:passenger[]
 }
 
 //////////////////////////////////////////////
@@ -41,6 +49,7 @@ export interface kioskRequest {
     trip_mode: number
     fromValue: value
     toValue: value
+    Segments: segmentsPayload[]
     onwardDate: string
     returnDate: number
     adultsType: number
@@ -84,8 +93,10 @@ export interface passenger{
     GSTCompanyName: string,
     GSTNumber: string,
     LastName: string,
-    DateOfBirth:string,
-    Fare: fare
+    DateOfBirth: string,
+    PassportNo: string,
+    PassportExpiry: string,
+    Fare: resultFare
 }
 
 export interface services {
@@ -320,9 +331,37 @@ export interface seat{
     SeatWayType: number
 }
 
+export interface addPassenger {
+    title: string
+    firstname: string
+    lastname: string
+    dob: string
+    ppnumber: string
+    nationality: string
+    ppexpdate: string
+    ftnumber: string
+}
+
+export class SetFirstPassengers {
+    static readonly type = "[flight_book] SetFirstPassengers";
+    constructor(public type : string) {
+
+    }
+}
+
+export class AddPassenger {
+    static readonly type = "[flight_book] AddPassenger";
+    constructor(public pass: addPassenger) {
+
+    }
+}
+
 @State<flight>({
     name: 'flight_book',
-    defaults: null,
+    defaults: {
+        passengers: [],
+        selectedPassengers:[]
+    },
     children: [
         OneWayBookState
     ]
@@ -331,8 +370,123 @@ export interface seat{
 export class FLightBookState {
 
     constructor(
-        public store : Store
+        public store: Store,
+        public modalCtrl : ModalController
     ) {
+
+    }
+
+    @Selector()
+    static getPassengers(states: flight) : passenger[] {
+        return states.passengers
+    }
+
+    @Selector()
+    static getSelected(states: flight): number {
+        return states.selectedPassengers.length;
+    }
+
+    @Action(AddPassenger)
+    addPassenger(states: StateContext<flight>, action: AddPassenger) {
+
+        const pass: passenger = {
+            AddressLine1: null,
+            City: null,
+            CountryName: null,
+            CountryCode: null,
+            Email: null,
+            onwardExtraServices: {
+                Meal: [],
+                MealTotal: 0,
+                BagTotal: 0,
+                Baggage: []
+            },
+            returnExtraServices: {
+                Meal: [],
+                MealTotal: 0,
+                BagTotal: 0,
+                Baggage: []
+            },
+            PaxType: 1,
+            IsLeadPax: false,
+            FirstName: action.pass.firstname,
+            LastName: action.pass.lastname,
+            ContactNo: null,
+            Title: action.pass.title,
+            Gender: null,
+            GSTCompanyEmail: null,
+            DateOfBirth: action.pass.dob,
+            PassportNo: action.pass.ppnumber,
+            PassportExpiry:action.pass.ppexpdate,
+            Fare: this.store.selectSnapshot(OneWayBookState.getPassengerFare),
+            GSTCompanyAddress: null,
+            GSTCompanyContactNumber: null,
+            GSTCompanyName: null,
+            GSTNumber:null
+        }
+
+        let passengers = Object.assign([], states.getState().passengers);
+        passengers.push(pass);
+
+        states.patchState({
+            passengers: passengers
+        });
+
+        this.modalCtrl.dismiss(null, null, 'passenger-details');
+    }
+
+    @Action(SetFirstPassengers)
+    setFirstPassengers(states: StateContext<flight>, action: SetFirstPassengers) {
+
+        let passengerCount: number = 0;
+
+        switch (action.type) {
+            case 'one-way': passengerCount = this.store.selectSnapshot(OneWaySearchState.getAdult); break; 
+            case 'round-trip': passengerCount = this.store.selectSnapshot(RoundTripSearchState.getAdult); break; 
+            case 'multi-city': passengerCount = this.store.selectSnapshot(MultiCitySearchState.getAdult); break; 
+        }
+        
+        let passengers: passenger[] = new Array(passengerCount);
+
+        passengers[0] = {
+            AddressLine1: this.store.selectSnapshot(UserState.getAddress),
+            City: this.store.selectSnapshot(UserState.getCity),
+            CountryName: this.store.selectSnapshot(UserState.getCountryName),
+            CountryCode: null,
+            Email: this.store.selectSnapshot(UserState.getEmail),
+            onwardExtraServices: {
+                Meal: [],
+                MealTotal: 0,
+                BagTotal: 0,
+                Baggage : []
+            },
+            returnExtraServices: {
+                Meal: [],
+                MealTotal: 0,
+                BagTotal: 0,
+                Baggage: []
+            },
+            PaxType: 1,
+            IsLeadPax: true,
+            FirstName: this.store.selectSnapshot(UserState.getFirstName),
+            LastName: this.store.selectSnapshot(UserState.getLastName),
+            ContactNo: this.store.selectSnapshot(UserState.getContact),
+            DateOfBirth: this.store.selectSnapshot(UserState.getDOB),
+            PassportNo: this.store.selectSnapshot(UserState.getPassportNo),
+            PassportExpiry: this.store.selectSnapshot(UserState.getPassportExpiry),
+            Title: this.store.selectSnapshot(UserState.getTitle) == 'Female' ? 'Ms' : 'Mr',
+            Gender: this.store.selectSnapshot(UserState.getTitle) == 'Female' ? 2 : 1,
+            GSTCompanyEmail: this.store.selectSnapshot(CompanyState.gstCompanyEmail),
+            GSTCompanyAddress: this.store.selectSnapshot(CompanyState.gstCompanyAddress),
+            GSTCompanyContactNumber: this.store.selectSnapshot(CompanyState.getContact),
+            GSTCompanyName: this.store.selectSnapshot(CompanyState.getCompanyName),
+            GSTNumber: this.store.selectSnapshot(CompanyState.gstNumber),
+            Fare: this.store.selectSnapshot(OneWayBookState.getPassengerFare)
+        }
+
+        states.patchState({
+            passengers : passengers
+        });
 
     }
 }

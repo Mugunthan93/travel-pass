@@ -1,4 +1,4 @@
-import { State, Action, StateContext, Store } from '@ngxs/store';
+import { State, Action, StateContext, Store, Selector } from '@ngxs/store';
 import { flightSearchPayload, metrixBoard, segmentsPayload, flightSearchResponse } from 'src/app/models/search/flight';
 import { trips } from '../../result/flight.state';
 import { traveller, FlightSearchState } from '../flight.state';
@@ -55,6 +55,11 @@ export class MultiCitySearchState extends BaseFlightSearch {
         private flightService : FlightService
     ) {
         super();
+    }
+
+    @Selector()
+    static getAdult(states: multicitySearch): number {
+        return states.formData.traveller.adult;
     }
 
     @Action(MultiCityForm)

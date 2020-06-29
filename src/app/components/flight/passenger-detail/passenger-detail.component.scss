@@ -1,96 +1,21 @@
 @import "../../../../style/util/variable.scss";
 @import "../../../../style/util/mixins.scss";
 
-ion-grid{
-    >ion-row:first-child{
-        height:20%;
-        margin: 10px;
-        border: 1px solid #{$text-color};
-        border-radius:5px;
-        ion-col{
-            height:100%;
-            background:#{$selected-item};
-            ion-row{
-                height:auto;
-                margin:10px;
-                ion-text{
-                    text-align: justify;
-                    word-break: keep-all;
-                    font-size:10px;
-                }
+ion-content{
+    >ion-card{
+        >ion-card-content{
+            display: flex;
+            flex-direction: column;
+            >ion-text{
+                margin:12px 0px;
             }
         }
     }
-    >ion-row:last-child{
-        margin: 10px;
-        height:80%;
-        >ion-col{
-            height:100%;
-            ion-row{
-                height:10%;
-                padding:4px;
-                ion-item{
-                    @include flex-col-grid;
-                    --padding-start:5px;
-                    width: 100%;
-                }
-                ion-select {
-                    width:100%;
-                    padding: 0px;
-                    color:#{$text-color};
-                    opacity:1;
-                    --placeholder-color:#{$text-color};
-                }
-            }
-            >ion-row:first-child{
-                ion-col{
-                    height:100%;
-                }
-                >ion-item {
-                    &:first-child{
-                        width: 77px;
-                        margin-right:2%;
-                        ion-select {
-                            padding: 0px;
-                            width:100%;
-                            max-width:100%;
-                        }
-                    }
-                    &:last-child{
-                        width: auto;
-                        justify-self: stretch;
-                        ion-input{
-                            width: 100%;
-                        }
-                    }
-                }
-            }
 
-            ion-row:nth-child(5){
-                ion-col{
-                    height:100%;
-                }
-                >ion-col:first-child{
-                    padding-right:2%;
-                }
-            }
-
-            ion-row:nth-child(6){
-                ion-col{
-                    height:100%;
-                }
-                ion-text{
-                    margin-top:3px;
-                    margin-bottom:3px;
-                    font-size:10px;
-                }
-            }
-            ion-row:nth-child(7){
-                margin-top:20px;
-                ion-text{
-                    align-self:center;
-                }
-            }
+    >form{
+        >ion-item{
+            --padding-end:16px;
         }
     }
+
 }

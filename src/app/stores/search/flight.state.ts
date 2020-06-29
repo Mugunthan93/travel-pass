@@ -1,4 +1,4 @@
-import { State, Action, StateContext, Selector } from '@ngxs/store';
+import { State, Action, StateContext, Selector, Select } from '@ngxs/store';
 import { city } from '../shared.state';
 import { OneWaySearchState } from './flight/oneway.state';
 import { RoundTripSearchState } from './flight/round-trip.state';

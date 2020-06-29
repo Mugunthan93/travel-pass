@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { PassengerDetailComponent } from '../passenger-detail/passenger-detail.component';
+import { Store } from '@ngxs/store';
+import { OneWayBookState } from 'src/app/stores/book/flight/oneway.state';
+import { FLightBookState, passenger } from 'src/app/stores/book/flight.state';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-passenger-info',
@@ -9,19 +13,19 @@ import { PassengerDetailComponent } from '../passenger-detail/passenger-detail.c
 })
 export class PassengerInfoComponent implements OnInit {
 
-  passengers: any[];
+  passengers$: Observable<passenger[]>;
+  selected$: Observable<number>;
 
   constructor(
-    public modalCtrl : ModalController
+    public modalCtrl: ModalController,
+    private store : Store
   ) { }
 
   ngOnInit() {
-    this.passengers = [
-      { name: "adults", value: ['1', '2', '4', '6'] },
-      { name: "children", value: ['1', '2', '4', '6'] },
-      { name: "infants", value: ['1', '2', '4', '6'] }
-    ];
-   }
+    this.passengers$ = this.store.select(FLightBookState.getPassengers);
+    this.selected$ = this.store.select(FLightBookState.getSelected);
+    
+  }
   
   async getDetail() {
       const modal = await this.modalCtrl.create({

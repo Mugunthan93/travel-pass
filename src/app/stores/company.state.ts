@@ -23,6 +23,32 @@ export class CompanyState {
     }
 
     @Selector()
+    static gstNumber(states: company): string {
+        return states.gst_details.gstNo;
+    }
+
+
+    @Selector()
+    static getCompanyName(state : company) {
+        return state.company_name;
+    }
+
+    @Selector()
+    static getContact(state: company) {
+        return state.phone_number
+    }
+
+    @Selector()
+    static gstCompanyAddress(states: company): string {
+        return states.company_email;
+    }
+
+    @Selector()
+    static gstCompanyEmail(states: company): string {
+        return states.gst_details.email;
+    }
+
+    @Selector()
     static getDomesticServiceCharge(states: company): number {
         return parseInt(states.service_charges.domesticCharge);
     }

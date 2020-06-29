@@ -1,96 +1,67 @@
 <ion-header>
   <ion-toolbar>
-    <ion-text>Passenger Details</ion-text>
+    <ion-title>
+      <ion-text>Passenger Details</ion-text>
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-grid>
+  <ion-card>
+    <ion-card-content>
+      <ion-text>
+        Enter your name as it is mentioned on your passport.For
+        international Travel,passport should be valid for
+        minimun 6 months from the date of travel. if you are
+        travelling to the USA and/or Canada.please ensure that
+        you enter the correct password details for every
+        passenger, in case you fail to do so,you may not be
+        allowed to enter the USA and/or canada.
+      </ion-text>
+      <ion-text>
+        Meals are subject to availability with the airlines,Please
+        check with the Airlines before travel
+      </ion-text>
+    </ion-card-content>
+  </ion-card>
+
+  <form [formGroup]="Passenger" (ngSubmit)="addPassenger()">
+    <ion-item>
+      <ion-select placeholder="Title" slot="start" formControlName="title">
+        <ion-select-option value="Mr">Mr</ion-select-option>
+        <ion-select-option value="Mrs">Mrs</ion-select-option>
+      </ion-select>
+      <ion-input placeholder="First & Middle Name" formControlName="firstname"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input placeholder="Last Name" formControlName="lastname"></ion-input>
+    </ion-item>
+    <ion-item (click)="getCalendar('Date Of Birth')">
+      <ion-input placeholder="Date of Birth" formControlName="dob"></ion-input>
+      <ion-icon name="calendar" slot="end"></ion-icon>
+    </ion-item>
+    <ion-item>
+      <ion-input placeholder="Passport Number" formControlName="ppnumber"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input slot="start" placeholder="Nationality" formControlName="nationality"></ion-input>
+    </ion-item>
+    <ion-item (click)="getCalendar('Passport Expiry Date')">
+      <ion-input type="text" placeholder="Passport Expiry Date" fromControlName="ppexpdate"></ion-input>
+      <ion-icon name="calendar" slot="end"></ion-icon>
+    </ion-item>
+    <ion-item>
+      <ion-input placeholder="Frequent Traveller Number" formControlName="ftnumber"></ion-input>
+    </ion-item>
     <ion-row>
-      <ion-col>
-        <ion-row>
-          <ion-text>
-            Enter your name as it is mentioned on your passport.For
-            international Travel,passport should be valid for
-            minimun 6 months from the date of travel. if you are
-            travelling to the USA and/or Canada.please ensure that
-            you enter the correct password details for every
-            passenger, in case you fail to do so,you may not be
-            allowed to enter the USA and/or canada.
-          </ion-text>
-        </ion-row>
-        <ion-row>
-          <ion-text>
-          Meals are subject to availability with the airlines,Please
-            check with the Airlines before travel
-          </ion-text>
-        </ion-row>
-      </ion-col>
+      <ion-text>Frequent Flyer Number is subject to airline acceptance</ion-text>
     </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-row>
-          <ion-item>
-            <ion-select placeholder="Title">
-              <ion-select-option value="f">Female</ion-select-option>
-              <ion-select-option value="m">Male</ion-select-option>
-            </ion-select>
-          </ion-item>
-          <ion-col>
-            <ion-item>
-              <ion-input placeholder="First & Middle Name"></ion-input>
-            </ion-item>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-item>
-            <ion-input placeholder="Last Name"></ion-input>
-          </ion-item>
-        </ion-row>
-        <ion-row>
-          <ion-item (click)="getCalendar('Title')">
-            <ion-input placeholder="Date of Birth"></ion-input>
-            <ion-icon name="calendar" slot="end"></ion-icon>
-          </ion-item>
-        </ion-row>
-        <ion-row>
-           <ion-item>
-             <ion-input placeholder="Passport Number"></ion-input>
-           </ion-item>
-        </ion-row>
-        <ion-row>
-          <ion-col size="4">
-            <ion-item>
-              <ion-input placeholder="Nationality"></ion-input>
-            </ion-item>
-          </ion-col>
-          <ion-col size="8">
-            <ion-item (click)="getCalendar('Title')">
-              <ion-input type="text" placeholder="Passport Expiry Date"></ion-input>
-              <ion-icon name="calendar" slot="end"></ion-icon>
-            </ion-item>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-item>
-              <ion-input placeholder="Frequent Traveller Number"></ion-input>
-            </ion-item>
-            <ion-text>Frequent Flyer Number is subject to airline acceptance</ion-text>
-          </ion-col>
-        </ion-row>
-        <ion-row class="ion-justify-content-center">
-          <ion-text (click)="addMeal()">
-            <ion-icon name="add"></ion-icon>
-            Meal & Baggage
-          </ion-text>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            
-          </ion-col>
-        </ion-row>
-      </ion-col>
+    <ion-row *ngIf="false">
+      <ion-icon name="add"></ion-icon>
+      <ion-text (click)="addMeal()">Meal & Baggage</ion-text>
     </ion-row>
-  </ion-grid>
+    <ion-button type="submit" expand="block" fill="solid">
+      <ion-text>Add Passenger</ion-text>
+    </ion-button>
+  </form>
 </ion-content>

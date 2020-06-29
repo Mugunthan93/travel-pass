@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { Platform, AlertController } from '@ionic/angular';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
-import { AuthService } from './services/auth/auth.service';
 import { Network } from '@ionic-native/network/ngx';
 import { AndroidFullScreen } from '@ionic-native/android-full-screen/ngx';
+import { Observable, Subscription } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -12,12 +13,20 @@ import { AndroidFullScreen } from '@ionic-native/android-full-screen/ngx';
 })
 export class AppComponent implements OnInit, OnDestroy{
 
+  onConnect$: Observable<any>;
+  onChange$: Observable<any>;
+  onChangeSub: Subscription;
+
   constructor(
     public platform: Platform,
     private androidPermissions: AndroidPermissions,
     private network: Network,
-    private androidFullScreen: AndroidFullScreen
+    private androidFullScreen: AndroidFullScreen,
+    public alertCtrl : AlertController
   ) {
+
+    this.onChange$ = this.network.onChange();
+    this.onConnect$ = this.network.onConnect();
   }
 
   async ngOnInit() {

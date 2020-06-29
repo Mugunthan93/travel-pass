@@ -30,6 +30,62 @@ export class UserState {
     }
 
     @Selector()
+    static getPassportNo(state: user) : string {
+        return state.passport_no;
+    }
+
+    @Selector()
+    static getPassportExpiry(state: user): string {
+        return state.passport_expiry;
+    }
+
+    @Selector()
+    static getDOB(state: user) : string {
+        return state.dob;
+    }
+
+    @Selector()
+    static getTitle(state: user) : string {
+        return state.gender;
+    }
+
+    @Selector()
+    static getContact(state: user): string {
+        return state.phone_number
+    }
+
+    @Selector()
+    static getLastName(state: user) : string {
+        return state.lastname;
+    }
+
+    @Selector()
+    static getFirstName(state: user) : string {
+        return state.name
+    }
+
+    @Selector()
+    static getEmail(state: user) {
+        return state.email;
+    }
+
+    @Selector()
+    static getCountryName(state: user) {
+        return state.country_name;
+    }
+
+
+    @Selector()
+    static getCity(state : user) {
+        return state.city;
+    }
+
+    @Selector()
+    static getAddress(state : user) {
+        return state.address;
+    }
+
+    @Selector()
     static isUser(state: user) {
         return state.role == 'kiosk' ? true : false;
     }
@@ -40,7 +96,7 @@ export class UserState {
     }
 
     @Selector()
-    static user(state: user) {
+    static user(state: user): user {
         return state;
     }
 
