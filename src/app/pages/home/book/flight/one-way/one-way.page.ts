@@ -3,11 +3,9 @@ import { ModalController } from '@ionic/angular';
 import { PassengerInfoComponent } from 'src/app/components/flight/passenger-info/passenger-info.component';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { resultObj } from 'src/app/stores/result/flight.state';
-import { FLightBookState, bookObj } from 'src/app/stores/book/flight.state';
-import { FlightSearchState } from 'src/app/stores/search/flight.state';
+import { bookObj, CancellationRisk } from 'src/app/stores/book/flight.state';
 import { OneWaySearchState } from 'src/app/stores/search/flight/oneway.state';
-import { OneWayBookState, CancellationRisk } from 'src/app/stores/book/flight/oneway.state';
+import { OneWayBookState } from 'src/app/stores/book/flight/oneway.state';
 import { BookConfirmationComponent } from 'src/app/components/flight/book-confirmation/book-confirmation.component';
 
 @Component({

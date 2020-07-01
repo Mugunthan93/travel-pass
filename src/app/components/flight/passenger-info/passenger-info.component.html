@@ -11,15 +11,17 @@
 <ion-content>
   <ion-item>
     <ion-label slot="start">Adults</ion-label>
-    <ion-text slot="end">{{(selected$ | async)}}/{{(passengers$ | async).length}} Selected</ion-text>
+    <ion-text slot="end">{{(selected$ | async)}}/{{(count$ | async)}} Selected</ion-text>
   </ion-item>
   <ion-list lines="none">
     <ion-item *ngFor="let pax of (passengers$ | async)">
-      <ion-checkbox slot="start"></ion-checkbox>
+      <ion-checkbox slot="start" [value]="pax" (ionChange)="getPass($event)"
+        [disabled]="(selected$ | async) == (count$ | async) && !(selectedPassengers$ | async).includes(pax)">
+      </ion-checkbox>
       <ion-row>
         <ion-row>
           <ion-text>{{pax.FirstName}} {{pax.LastName}}</ion-text>
-          <ion-text>{{pax.Gender == 1 ? 'Male' : 'Female'}}</ion-text>
+          <ion-text> {{ gender(pax) }}</ion-text>
         </ion-row>
         <ion-text>Edit</ion-text>
       </ion-row>

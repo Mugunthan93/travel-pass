@@ -48,5 +48,6 @@ export const environment = {
   timeout: 10,
   ping: 120,
   number: 0,
-  map_js_key: 'AIzaSyDVaJa4N9N1qM8OglHSt5BKsqPn8LikZJk'
+  map_js_key: 'AIzaSyDVaJa4N9N1qM8OglHSt5BKsqPn8LikZJk',
+  vendorID:153
 };

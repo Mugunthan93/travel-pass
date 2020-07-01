@@ -3,7 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { PassengerDetailComponent } from '../passenger-detail/passenger-detail.component';
 import { Store } from '@ngxs/store';
 import { OneWayBookState } from 'src/app/stores/book/flight/oneway.state';
-import { FLightBookState, passenger } from 'src/app/stores/book/flight.state';
+import { FLightBookState, passenger, SelectPassenger, DeselectPassenger } from 'src/app/stores/book/flight.state';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -14,7 +14,9 @@ import { Observable } from 'rxjs';
 export class PassengerInfoComponent implements OnInit {
 
   passengers$: Observable<passenger[]>;
+  selectedPassengers$: Observable<passenger[]>;
   selected$: Observable<number>;
+  count$: Observable<number>;
 
   constructor(
     public modalCtrl: ModalController,
@@ -23,7 +25,9 @@ export class PassengerInfoComponent implements OnInit {
 
   ngOnInit() {
     this.passengers$ = this.store.select(FLightBookState.getPassengers);
+    this.selectedPassengers$ = this.store.select(FLightBookState.getSelectedPassengers);
     this.selected$ = this.store.select(FLightBookState.getSelected);
+    this.count$ = this.store.select(FLightBookState.getCount);
     
   }
   
@@ -40,6 +44,30 @@ export class PassengerInfoComponent implements OnInit {
       );
 
       return await modal.present();
+  }
+
+  getPass(evt: CustomEvent) {
+    if (evt.detail.checked) {
+      this.store.dispatch(new SelectPassenger(evt.detail.value));
+    }
+    else if (!evt.detail.checked) {
+      this.store.dispatch(new DeselectPassenger(evt.detail.value));
+    }
+  }
+
+  gender(pax: passenger): string {
+    if (pax.Gender == null) {
+      switch (pax.Title) {
+        case 'Mr': return 'Male';
+        case 'Mstr': return 'Male';
+        case 'Ms': return 'Female';
+        case 'Mrs': return 'Female';
+      }
+    }
+    switch (pax.Gender) {
+      case 1: return 'Male';
+      case 2: return 'Female';
+    }
   }
 
   dismissInfo() {

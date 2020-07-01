@@ -12,12 +12,12 @@ import { PassengerDetailComponent } from 'src/app/components/flight/passenger-de
 import { MealBaggageComponent } from 'src/app/components/flight/meal-baggage/meal-baggage.component';
 import { CalendarModule } from 'ion2-calendar';
 import { FlightListComponent } from 'src/app/components/flight/flight-list/flight-list.component';
-import { AboutHotelComponent } from 'src/app/components/hotel/about-hotel/about-hotel.component';
 import { SpecialRequestComponent } from 'src/app/components/hotel/special-request/special-request.component';
 import { PoliciesComponent } from 'src/app/components/hotel/policies/policies.component';
 import { AddGuestComponent } from 'src/app/components/hotel/add-guest/add-guest.component';
 import { TermsConditionsComponent } from 'src/app/components/hotel/terms-conditions/terms-conditions.component';
 import { BookConfirmationComponent } from 'src/app/components/flight/book-confirmation/book-confirmation.component';
+import { CustomCalendarComponent } from 'src/app/components/shared/custom-calendar/custom-calendar.component';
 
 @NgModule({
   imports: [
@@ -38,7 +38,8 @@ import { BookConfirmationComponent } from 'src/app/components/flight/book-confir
     PoliciesComponent,
     AddGuestComponent,
     TermsConditionsComponent,
-    BookConfirmationComponent
+    BookConfirmationComponent,
+    CustomCalendarComponent
   ],
   entryComponents: [
     PassengerInfoComponent,
@@ -48,7 +49,8 @@ import { BookConfirmationComponent } from 'src/app/components/flight/book-confir
     PoliciesComponent,
     AddGuestComponent,
     TermsConditionsComponent,
-    BookConfirmationComponent
+    BookConfirmationComponent,
+    CustomCalendarComponent
   ]
 })
 export class BookPageModule {}

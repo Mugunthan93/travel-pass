@@ -64,6 +64,16 @@ export class OneWaySearchState extends BaseFlightSearch{
     }
 
     @Selector()
+    static getFromValue(states: onewaySearch) {
+        return states.formData.from;
+    }
+
+    @Selector()
+    static getToValue(states: onewaySearch) {
+        return states.formData.to;
+    }
+
+    @Selector()
     static getAdult(states: onewaySearch): number {
         return states.formData.traveller.adult;
     }
@@ -75,7 +85,12 @@ export class OneWaySearchState extends BaseFlightSearch{
 
     @Selector()
     static getTravelDate(states: onewaySearch): string {
-        return moment(states.formData.departure).format('YYY:MM:DD');
+        return moment(states.formData.departure).format('YYYY-MM-DDThh:mm:ss');
+    }
+
+    @Selector()
+    static getPayloadTravelDate(states: onewaySearch): string {
+        return moment(states.formData.departure).format('YYYY-MM-DD');
     }
 
     @Selector()

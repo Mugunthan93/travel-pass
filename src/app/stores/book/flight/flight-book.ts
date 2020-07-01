@@ -1,11 +1,9 @@
 import { flightResult, flightData } from 'src/app/models/search/flight';
-import { bookObj, sendRequest, passenger_details } from '../flight.state';
+import { bookObj } from '../flight.state';
 import * as moment from 'moment';
 import { Store } from '@ngxs/store';
 import { CompanyState } from '../../company.state';
 import { OneWaySearchState } from '../../search/flight/oneway.state';
-import { UserState } from '../../user.state';
-import { SSR } from '../../result/flight.state';
 
 
 export interface GST {
@@ -94,7 +92,6 @@ export class BaseFlightBook {
         );
 
         console.log(book);
-
         return book;
     }
 
@@ -139,120 +136,5 @@ export class BaseFlightBook {
             console.log(markupCharge);
         }
         return parseInt(markupCharge.toFixed(2));
-    }
-
-    request(fareQuote: flightResult,ssr : SSR, priceChange : boolean, passDetail : any): sendRequest {
-        let request: sendRequest = null;
-
-        request.managers = this.store.selectSnapshot(UserState.getApprover);
-        request.approval_mail_cc = [];
-        request.purpose = null
-        request.comments = null
-        
-        request.booking_mode = "online"
-        request.status = "pending"
-        request.trip_type = "business";
-        request.transaction_id = null
-        request.customer_id = this.store.selectSnapshot(UserState.getcompanyId);
-        request.travel_date = this.store.selectSnapshot(OneWaySearchState.getTravelDate);
-        request.traveller_id = this.store.selectSnapshot(UserState.getUserId);
-        request.user_id = this.store.selectSnapshot(UserState.getUserId)
-        
-        request.vendor_id = 153;
-
-        request.passenger_details = passDetail
-        request.trip_requests = this.store.selectSnapshot(OneWaySearchState.getTripRequest);
-
-        return request;
-    }
-
-    getPassengerDetails(data: flightResult) : passenger_details {
-        let passenger: passenger_details = null;
-
-        passenger.country_flag = this.store.selectSnapshot(OneWaySearchState.getTripType) == 'domestic' ? "0" : "1";
-        passenger.published_fare = data.Fare.PublishedFare
-        passenger.user_eligibility = { msg: null, company_type: "corporate" }
-        
-        passenger.flight_details = null
-
-
-        passenger.fare_response = {
-            cancellation_risk: null,
-            charges_details: {
-                GST_total: 0,
-                agency_markup: 0,
-                cgst_Charges: this.GST().cgst,
-                sgst_Charges: this.GST().sgst,
-                igst_Charges: this.GST().igst,
-                service_charges: this.serviceCharges(),
-                total_amount: (
-                    data.Fare.PublishedFare - (data.FareBreakdown[0].TaxBreakUp[0].value - data.Fare.OtherCharges) +
-                    (this.markupCharges() * data.Fare.PublishedFare) +
-                    data.Fare.TaxBreakup[0].value +
-                    data.Fare.OtherCharges +
-                    this.serviceCharges() +
-                    this.GST().sgst +
-                    this.GST().cgst +
-                    this.GST().igst),
-                cgst_onward: 0,
-                sgst_onward: 0,
-                igst_onward: 0,
-                sgst_return: 0,
-                cgst_return: 0,
-                igst_return: 0,
-                onward_markup: 0,
-                return_markup: 0,
-                markup_charges: 0,
-                other_taxes: 0,
-                vendor: {
-                    service_charges: 0,
-                    GST: 0
-                }
-            },
-            onwardfare: [
-                [
-                    {
-                        FareBasisCode: data.FareRules[0].FareBasisCode,
-                        IsPriceChanged: false,
-                        PassengerCount: data.FareBreakdown[0].PassengerCount,
-                        PassengerType: data.FareBreakdown[0].PassengerCount,
-                        basefare: data.FareBreakdown[0].BaseFare,
-                        details: {
-                            AdditionalTxnFeeOfrd: 0,
-                            AdditionalTxnFeePub: 0,
-                            BaseFare: data.FareBreakdown[0].BaseFare,
-                            PassengerCount: data.FareBreakdown[0].PassengerCount,
-                            PassengerType: data.FareBreakdown[0].PassengerCount,
-                            Tax: data.Fare.Tax,
-                            TransactionFee: 0,
-                            YQTax: data.Fare.TaxBreakup[1].value
-                        },
-                        tax: data.Fare.Tax,
-                        total_amount: data.Fare.PublishedFare,
-                        yqtax: data.Fare.TaxBreakup[1].value
-                    }
-                ]
-            ],
-            published_fare: data.Fare.PublishedFare
-        }
-        passenger.kioskRequest = null,
-        // {
-        //     adultsType: this.store.selectSnapshot(OneWaySearchState.getAdult),
-        //     childsType: 0,
-        //     infantsType: 0,
-        //     countryFlag: this.store.selectSnapshot(OneWaySearchState.getTripType) == 'domestic' ? "0" : "1",
-        //     fromValue: { airportCode: "MAA", airportName: "Chennai", cityName: "Chennai", cityCode: "MAA", countryCode: "IN", … }
-        //     onwardDate: "2020-11-18T00:00:00"
-        //     returnDate: 0
-        //     toValue: { airportCode: "BLR", airportName: "Bengaluru Intl", cityName: "Bangalore", cityCode: "BLR", … }
-        //     tour: "1"
-        //     travelType: 2
-        //     travelType2: 2
-        //     trip_mode: 1
-        // }
-        passenger.passenger = []
-        passenger.uapi_params = null
-        
-        return passenger;
     }
 }

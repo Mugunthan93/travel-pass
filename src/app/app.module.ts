@@ -18,11 +18,13 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { StateModule } from './modules/state.module';
 import { Network } from '@ionic-native/network/ngx';
 import { AndroidFullScreen } from '@ionic-native/android-full-screen/ngx';
+import { SortPipe } from './pipes/sort/sort.pipe';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SortPipe
   ],
   entryComponents: [],
   imports: [

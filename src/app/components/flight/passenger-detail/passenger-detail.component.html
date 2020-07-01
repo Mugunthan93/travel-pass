@@ -27,27 +27,29 @@
 
   <form [formGroup]="Passenger" (ngSubmit)="addPassenger()">
     <ion-item>
-      <ion-select placeholder="Title" slot="start" formControlName="title">
+      <ion-select placeholder="Title" slot="start" formControlName="Title">
         <ion-select-option value="Mr">Mr</ion-select-option>
+        <ion-select-option value="Ms">Ms</ion-select-option>
         <ion-select-option value="Mrs">Mrs</ion-select-option>
+        <ion-select-option value="Mstr">Mstr</ion-select-option>
       </ion-select>
-      <ion-input placeholder="First & Middle Name" formControlName="firstname"></ion-input>
+      <ion-input placeholder="First & Middle Name" formControlName="FirstName"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-input placeholder="Last Name" formControlName="lastname"></ion-input>
+      <ion-input placeholder="Last Name" formControlName="LastName"></ion-input>
     </ion-item>
     <ion-item (click)="getCalendar('Date Of Birth')">
-      <ion-input placeholder="Date of Birth" formControlName="dob"></ion-input>
+      <ion-input placeholder="Date of Birth" formControlName="DateOfBirth"></ion-input>
       <ion-icon name="calendar" slot="end"></ion-icon>
     </ion-item>
     <ion-item>
-      <ion-input placeholder="Passport Number" formControlName="ppnumber"></ion-input>
+      <ion-input placeholder="Passport Number" formControlName="PassportNo"></ion-input>
     </ion-item>
     <ion-item>
       <ion-input slot="start" placeholder="Nationality" formControlName="nationality"></ion-input>
     </ion-item>
     <ion-item (click)="getCalendar('Passport Expiry Date')">
-      <ion-input type="text" placeholder="Passport Expiry Date" fromControlName="ppexpdate"></ion-input>
+      <ion-input type="text" placeholder="Passport Expiry Date" fromControlName="PassportExpiry"></ion-input>
       <ion-icon name="calendar" slot="end"></ion-icon>
     </ion-item>
     <ion-item>

@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
-import { SendRequest, MailCC, Purpose } from 'src/app/stores/book/flight/oneway.state';
+import { SendRequest } from 'src/app/stores/book/flight/oneway.state';
 import { AlertOptions } from '@ionic/core';
 import { ModalController } from '@ionic/angular';
+import { Observable } from 'rxjs';
+import { user } from 'src/app/models/user';
+import { CompanyState } from 'src/app/stores/company.state';
+import { UserState } from 'src/app/stores/user.state';
+import { MailCC, Purpose, Comments } from 'src/app/stores/book/flight.state';
 
 @Component({
   selector: 'app-book-confirmation',
@@ -14,11 +19,19 @@ export class BookConfirmationComponent implements OnInit {
 
   ccAlertOptions: AlertOptions;
   purposeAlertOptions: AlertOptions;
+  managers$: Observable<user[]>;
+  approverName$: Observable<string>;
+
+
+  purposeArray : string[] = ['Project', 'Offsite meet', 'Sales', 'Support', 'Internal', 'Conference', 'Training', 'Other', 'Business meet'];
 
   constructor(
     private store: Store,
     public modalCtrl : ModalController
-  ) { }
+  ) {
+    this.approverName$ = this.store.select(UserState.getApproverName);
+    this.managers$ = this.store.select(CompanyState.getManagerList);
+   }
 
   ngOnInit() {
 
@@ -41,11 +54,11 @@ export class BookConfirmationComponent implements OnInit {
   }
 
   comment(evt: CustomEvent) {
-    this.store.dispatch(new Comment(evt.detail.value));
+    this.store.dispatch(new Comments(evt.detail.value));
   }
 
   sendRequest() {
-    // this.store.dispatch(new SendRequest(this.request.value));
+    this.store.dispatch(new SendRequest());
   }
 
   dismiss() {

@@ -10,15 +10,14 @@ import { Observable } from 'rxjs';
 })
 export class NewPage implements OnInit {
 
-  newBookings: Observable<any[]>;
+  newBookings$: Observable<any[]>;
 
   constructor(
     private store : Store
   ) { }
 
   ngOnInit() {
-
-    this.newBookings = this.store.select(BookingState.getNewBooking);
+    this.newBookings$ = this.store.select(BookingState.getNewBooking);
 
   }
 

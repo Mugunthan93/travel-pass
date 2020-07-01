@@ -1,6 +1,6 @@
 
 <ion-content>
-  <ion-card *ngFor="let newBooking of (newBookings | async)">
+  <ion-card *ngFor="let newBooking of (newBookings$ | async)">
     <ion-card-content>
       <ion-row>
         <ion-row>

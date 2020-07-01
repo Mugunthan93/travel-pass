@@ -1,6 +1,7 @@
 import { company } from '../models/company';
 import { StateContext, State, Action, Selector } from '@ngxs/store';
 import { CompanyService } from '../services/company/company.service';
+import { user } from '../models/user';
 
 export class GetCompany {
     static readonly type = '[User] GetCompany';
@@ -23,6 +24,11 @@ export class CompanyState {
     }
 
     @Selector()
+    static getPCC(state: company): number {
+        return state.PCC;
+    }
+
+    @Selector()
     static gstNumber(states: company): string {
         return states.gst_details.gstNo;
     }
@@ -31,6 +37,11 @@ export class CompanyState {
     @Selector()
     static getCompanyName(state : company) {
         return state.company_name;
+    }
+
+    @Selector()
+    static getManagerList(state: company) : user[] {
+        return state.Users.filter((el: user) => el.role == 'manager');
     }
 
     @Selector()

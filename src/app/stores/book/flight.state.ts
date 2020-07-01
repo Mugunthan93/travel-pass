@@ -11,7 +11,14 @@ import { ModalController } from '@ionic/angular';
 
 export interface flight{
     passengers: passenger[],
-    selectedPassengers:passenger[]
+    passengerCount: number,
+    selectedPassengers: passenger[],
+
+    risk: string,
+    
+    mail: string[],
+    purpose: string,
+    comment: string
 }
 
 //////////////////////////////////////////////
@@ -19,7 +26,7 @@ export interface flight{
 export interface sendRequest {
     passenger_details: passenger_details
     trip_requests: flightSearchPayload
-    approval_mail_cc: []
+    approval_mail_cc: string
     status: string
     purpose: string
     booking_mode: string
@@ -49,16 +56,14 @@ export interface kioskRequest {
     trip_mode: number
     fromValue: value
     toValue: value
-    Segments: segmentsPayload[]
+    Segments?: segmentsPayload[]
     onwardDate: string
     returnDate: number
     adultsType: number
     childsType: number
     infantsType: number
-    travelType: number
-    travelType2: number
-    countryFlag: string
-    tour: number
+    countryFlag: number
+    tour?: string
 }
 
 export interface value {
@@ -73,7 +78,7 @@ export interface value {
     option_label: string
 }
 
-export interface passenger{
+export interface passenger extends addPassenger{
     AddressLine1:string,
     City: string,
     CountryName: string,
@@ -83,19 +88,12 @@ export interface passenger{
     returnExtraServices: services,
     PaxType: number,
     IsLeadPax: boolean,
-    FirstName: string,
-    ContactNo: string,
-    Title: string,
     Gender: number,
     GSTCompanyEmail: string,
     GSTCompanyAddress: string,
     GSTCompanyContactNumber:string,
     GSTCompanyName: string,
     GSTNumber: string,
-    LastName: string,
-    DateOfBirth: string,
-    PassportNo: string,
-    PassportExpiry: string,
     Fare: resultFare
 }
 
@@ -138,7 +136,7 @@ export interface user_eligibility {
 
 export interface uapi_params {
     selected_plb_Value: selected_Value
-    selected_Return_plb_Value: selected_Value
+    selected_Return_plb_Value: string
 }
 
 export interface selected_Value {
@@ -209,7 +207,7 @@ export interface details {
 export interface managers{
     id: number
     name: string
-    mail : string
+    email : string
 }
 
 /////////////////////////////////////////////////////////
@@ -332,14 +330,25 @@ export interface seat{
 }
 
 export interface addPassenger {
-    title: string
-    firstname: string
-    lastname: string
-    dob: string
-    ppnumber: string
-    nationality: string
-    ppexpdate: string
-    ftnumber: string
+    Title: string,
+    FirstName: string,
+    LastName: string,
+    DateOfBirth: string,
+    ContactNo: string,
+    PassportNo: string,
+    PassportExpiry: string,
+
+    nationality?: string,
+    ftnumber?: string
+}
+
+
+////////////////////////////////////////////////////
+
+export class CancellationRisk {
+    static readonly type = "[OneWay] CancellationRisk";
+    constructor(public risk: string) {
+    }
 }
 
 export class SetFirstPassengers {
@@ -356,11 +365,53 @@ export class AddPassenger {
     }
 }
 
+export class SelectPassenger{
+    static readonly type = "[flight_book] SelectPassenger";
+    constructor(public pass: passenger) {
+
+    }
+}
+
+export class DeselectPassenger {
+    static readonly type = "[flight_book] DeselectPassenger";
+    constructor(public pass: passenger) {
+
+    }
+}
+
+export class MailCC {
+    static readonly type = "[OneWay] MailCC";
+    constructor(public mail: string[]) {
+
+    }
+}
+
+export class Purpose {
+    static readonly type = "[OneWay] Purpose";
+    constructor(public purpose: string) {
+
+    }
+}
+
+export class Comments {
+    static readonly type = "[OneWay] Comment";
+    constructor(public comment: string) {
+
+    }
+}
+
 @State<flight>({
     name: 'flight_book',
     defaults: {
         passengers: [],
-        selectedPassengers:[]
+        passengerCount: null,
+        selectedPassengers: [],
+
+        risk: null,
+        
+        mail: [],
+        purpose: null,
+        comment: null
     },
     children: [
         OneWayBookState
@@ -377,8 +428,33 @@ export class FLightBookState {
     }
 
     @Selector()
+    static getCC(states: flight): string[] {
+        return states.mail;
+    }
+
+    @Selector()
+    static getPurpose(states: flight): string {
+        return states.purpose;
+    }
+
+    @Selector()
+    static getComment(states: flight): string {
+        return states.comment;
+    }
+
+    @Selector()
+    static getRisk(states: flight): string {
+        return states.risk;
+    }
+
+    @Selector()
     static getPassengers(states: flight) : passenger[] {
         return states.passengers
+    }
+
+    @Selector()
+    static getSelectedPassengers(states: flight): passenger[] {
+        return states.selectedPassengers;
     }
 
     @Selector()
@@ -386,15 +462,20 @@ export class FLightBookState {
         return states.selectedPassengers.length;
     }
 
+    @Selector()
+    static getCount(states: flight): number {
+        return states.passengerCount;
+    }
+
     @Action(AddPassenger)
     addPassenger(states: StateContext<flight>, action: AddPassenger) {
 
         const pass: passenger = {
-            AddressLine1: null,
-            City: null,
-            CountryName: null,
-            CountryCode: null,
-            Email: null,
+            AddressLine1: "",
+            City: "",
+            CountryName: "",
+            CountryCode: "",
+            Email: "",
             onwardExtraServices: {
                 Meal: [],
                 MealTotal: 0,
@@ -409,15 +490,15 @@ export class FLightBookState {
             },
             PaxType: 1,
             IsLeadPax: false,
-            FirstName: action.pass.firstname,
-            LastName: action.pass.lastname,
+            FirstName: action.pass.FirstName,
+            LastName: action.pass.LastName,
             ContactNo: null,
-            Title: action.pass.title,
+            Title: action.pass.Title,
             Gender: null,
             GSTCompanyEmail: null,
-            DateOfBirth: action.pass.dob,
-            PassportNo: action.pass.ppnumber,
-            PassportExpiry:action.pass.ppexpdate,
+            DateOfBirth: action.pass.DateOfBirth,
+            PassportNo: action.pass.PassportNo,
+            PassportExpiry: action.pass.PassportExpiry,
             Fare: this.store.selectSnapshot(OneWayBookState.getPassengerFare),
             GSTCompanyAddress: null,
             GSTCompanyContactNumber: null,
@@ -446,7 +527,7 @@ export class FLightBookState {
             case 'multi-city': passengerCount = this.store.selectSnapshot(MultiCitySearchState.getAdult); break; 
         }
         
-        let passengers: passenger[] = new Array(passengerCount);
+        let passengers: passenger[] = [];
 
         passengers[0] = {
             AddressLine1: this.store.selectSnapshot(UserState.getAddress),
@@ -485,8 +566,59 @@ export class FLightBookState {
         }
 
         states.patchState({
-            passengers : passengers
+            passengers: passengers,
+            passengerCount: passengerCount
         });
 
     }
+
+    @Action(SelectPassenger)
+    selectPassenger(states: StateContext<flight>, action: SelectPassenger) {
+        let passArray: passenger[] = Object.assign([], states.getState().selectedPassengers);
+        
+        
+
+        passArray.push(action.pass);
+        states.patchState({
+            selectedPassengers: passArray
+        });
+    }
+
+    @Action(DeselectPassenger)
+    deselectPassenger(states: StateContext <flight>, action: DeselectPassenger) {
+        let passArray = Object.assign([], states.getState().selectedPassengers);
+        const currentArray = passArray.filter(el => el !== action.pass);
+        states.patchState({
+            selectedPassengers: currentArray
+        });
+    }
+
+    @Action(CancellationRisk)
+    cancellationRisk(states: StateContext<flight>, action: CancellationRisk) {
+        states.patchState({
+            risk: action.risk
+        });
+    }
+
+    @Action(MailCC)
+    mailCC(states: StateContext<flight>, action: MailCC) {
+        states.patchState({
+            mail: action.mail
+        });
+    }
+
+    @Action(Purpose)
+    purpose(states: StateContext<flight>, action: Purpose) {
+        states.patchState({
+            purpose: action.purpose
+        });
+    }
+
+    @Action(Comments)
+    comment(states: StateContext<flight>, action: Comments) {
+        states.patchState({
+            comment: action.comment
+        });
+    }
+
 }

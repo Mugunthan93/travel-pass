@@ -30,6 +30,11 @@ export class UserState {
     }
 
     @Selector()
+    static getApproverName(state: user): string {
+        return state.approver.name;
+    }
+
+    @Selector()
     static getPassportNo(state: user) : string {
         return state.passport_no;
     }
@@ -110,7 +115,7 @@ export class UserState {
         return {
             id: state.approver.id,
             name: state.approver.name,
-            mail: state.approver.approver.email
+            email: state.approver.approver.email
         }
     }
 

@@ -57,8 +57,8 @@ export class BookingState {
         let historyBooking = [];
 
         try {
-            const compantId: number = this.store.selectSnapshot(UserState.getUserId);
-            const myBookingResponse = await this.flightService.openBooking(compantId);
+            const userId: number = this.store.selectSnapshot(UserState.getUserId);
+            const myBookingResponse = await this.flightService.openBooking(userId);
             console.log(myBookingResponse);
             let openBooking = JSON.parse(myBookingResponse.data);
             historyBooking.push(...openBooking.data);
@@ -69,8 +69,8 @@ export class BookingState {
         }
 
         try {
-            const compantId: number = this.store.selectSnapshot(UserState.getUserId);
-            const myBookingResponse = await this.flightService.pendingBooking(compantId);
+            const userId: number = this.store.selectSnapshot(UserState.getUserId);
+            const myBookingResponse = await this.flightService.pendingBooking(userId);
             console.log(myBookingResponse);
             let pendingBooking = JSON.parse(myBookingResponse.data);
             console.log(pendingBooking);
