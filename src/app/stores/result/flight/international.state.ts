@@ -83,6 +83,11 @@ export class InternationalResultState extends BaseFlightResult {
         );
     }
 
+    @Selector()
+    static getSelectedFlight(states: internationalResult) {
+        return states.selectedFlight;
+    }
+
     @Action(SelectedFlight)
     selectedFlight(states: StateContext<internationalResult>, action: SelectedFlight) {
         states.patchState({

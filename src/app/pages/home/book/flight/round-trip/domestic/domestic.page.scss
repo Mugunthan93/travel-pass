@@ -1,0 +1,123 @@
+@import "../../../../../../../style/util/variable.scss";
+@import "../../../../../../../style/util/mixins.scss";
+
+
+ion-content {
+
+    >mat-accordion {
+        @include flex-col-grid;
+        width: 100%;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        height: auto;
+
+        mat-expansion-panel {
+            margin-top: 3px;
+            margin-bottom: 3px;
+
+            >mat-expansion-panel-header {
+                background:#{$text-bg};
+                padding-left: 10px;
+                padding-right: 10px;
+
+                >::ng-deep span {
+                    >ion-row {
+                        display: flex;
+                        flex-direction: column;
+
+                        >ion-row {
+                            width: 150px;
+                            justify-content: space-between;
+                        }
+                    }
+                }
+            }
+
+            ::ng-deep .mat-expansion-panel-body {
+                padding: 0px;
+                height: 100%;
+                margin: 5px;
+
+                >div {
+                    ion-item {
+                        --padding-start: 0px;
+
+                        >ion-row {
+                            >* {
+                                margin: auto 5px;
+                            }
+
+                            >ion-row {
+                                flex-direction: column;
+                            }
+                        }
+
+                        >ion-row:last-child {
+                            >ion-row {
+                                >ion-text {
+                                    align-self: flex-end;
+                                }
+                            }
+                        }
+                    }
+
+                    >ion-row {
+                        justify-content: space-between;
+
+                        >ion-col {
+                            flex-direction: column;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-around;
+
+                            &:first-child {
+                                align-items: flex-start;
+                            }
+
+                            &:last-child {
+                                align-items: flex-end;
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            ::ng-deep .mat-expansion-indicator {
+                color:#{$selected-bg};
+            }
+        }
+    }
+
+    >ion-row {
+        background:#{$text-bg};
+        padding: 5px;
+        border-radius: 4px;
+        flex-direction: column;
+    }
+
+    >ion-list {
+        ion-item {
+            --inner-padding-end: 16px;
+            --min-height: 25px;
+
+            >ion-radio {
+                --border-radius: 20px;
+                --inner-border-radius: 20px;
+            }
+        }
+    }
+
+    >ion-item {
+        --inner-padding-end: 16px;
+        --min-height: 25px;
+        border-top: 2px solid grey;
+        border-bottom: 2px solid grey;
+    }
+}
+
+ion-footer {
+    >ion-button {
+        width: -webkit-fill-available;
+    }
+}

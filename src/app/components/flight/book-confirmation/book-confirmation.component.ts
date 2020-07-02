@@ -12,6 +12,7 @@ import { DomesticSendRequest } from 'src/app/stores/book/flight/domestic.state';
 import { ResultState } from 'src/app/stores/result.state';
 import { OneWaySendRequest } from 'src/app/stores/book/flight/oneway.state';
 import { MultiCitySendRequest } from 'src/app/stores/book/flight/multi-city.state';
+import { InternationalSendRequest } from 'src/app/stores/book/flight/international.state';
 
 @Component({
   selector: 'app-book-confirmation',
@@ -66,12 +67,14 @@ export class BookConfirmationComponent implements OnInit {
     if (this.requestType == 'one-way') {
       this.store.dispatch(new OneWaySendRequest());
     }
+    else if (this.requestType == 'round-trip') {
+      this.store.dispatch(new InternationalSendRequest());
+    }
     else if (this.requestType == 'animated-round-trip') {
       this.store.dispatch(new DomesticSendRequest());
     }
     else if (this.requestType == 'multi-city') {
       this.store.dispatch(new MultiCitySendRequest());
-      
     }
   }
 

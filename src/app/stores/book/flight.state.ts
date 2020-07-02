@@ -9,6 +9,7 @@ import { CompanyState } from '../company.state';
 import { ModalController } from '@ionic/angular';
 import { DomesticBookState } from './flight/domestic.state';
 import { MultiCityBookState } from './flight/multi-city.state';
+import { InternationalBookState } from './flight/international.state';
 
 
 export interface flight{
@@ -61,6 +62,24 @@ export interface rt_sendRequest {
     travel_date: string
 }
 
+export interface int_sendRequest {
+    passenger_details: int_passenger_details
+    trip_requests: flightSearchPayload
+    approval_mail_cc: string[]
+    status: string
+    purpose: string
+    booking_mode: string
+    customer_id: number
+    transaction_id: any
+    user_id: number
+    traveller_id: number
+    managers: managers
+    trip_type: string
+    comments: string
+    vendor_id: number
+    travel_date: string
+}
+
 
 
 export interface passenger_details {
@@ -83,6 +102,17 @@ export interface rt_passenger_details {
     published_fare: number
     uapi_params: rt_uapi_params
     fare_response: rt_fare_response
+}
+
+export interface int_passenger_details {
+    kioskRequest: rt_kioskRequest
+    passenger: passenger[]
+    flight_details: flightResult[]
+    country_flag: string
+    user_eligibility: user_eligibility
+    published_fare: number
+    uapi_params: uapi_params
+    fare_response: fare_response
 }
 
 
@@ -478,6 +508,7 @@ export class Comments {
     children: [
         OneWayBookState,
         DomesticBookState,
+        InternationalBookState,
         MultiCityBookState
     ]
 })

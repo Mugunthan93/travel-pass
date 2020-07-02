@@ -6,7 +6,8 @@ import { Store } from '@ngxs/store';
 import { ModalController } from '@ionic/angular';
 import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
 import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
-import { InternationalResultState, DepartureSort, ArrivalSort, DurationSort, PriceSort } from 'src/app/stores/result/flight/international.state';
+import { InternationalResultState, DepartureSort, ArrivalSort, DurationSort, PriceSort, SelectedFlight } from 'src/app/stores/result/flight/international.state';
+import { GetFareQuoteSSR } from 'src/app/stores/book/flight/international.state';
 
 @Component({
   selector: 'app-international',
@@ -93,8 +94,9 @@ export class InternationalPage implements OnInit {
     return modal.present();
   }
 
-  currentFlight(result : resultObj) {
+  currentFlight(result: resultObj) {
     this.selectedFlight = result;
+    this.store.dispatch(new SelectedFlight(result));
   }
 
   changeStatus(status: Observable<boolean>) {
@@ -107,7 +109,7 @@ export class InternationalPage implements OnInit {
   }
 
   book() {
-    // this.store.dispatch(new BookTicket());
+    this.store.dispatch(new GetFareQuoteSSR());
   }
 
   getSort(item: sortButton) {
