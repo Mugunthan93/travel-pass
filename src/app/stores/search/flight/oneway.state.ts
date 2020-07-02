@@ -14,7 +14,7 @@ export interface onewaySearch {
     formData: oneWayForm,
     payload: flightSearchPayload
     metrix: metrixBoard
-    tripTrip:'domestic' | 'international' | null
+    tripType:'domestic' | 'international' | null
 }
 
 export interface oneWayForm {
@@ -47,7 +47,7 @@ export class OneWaySearch {
         },
         payload: null,
         metrix: null,
-        tripTrip:null
+        tripType:null
     }
 })
 
@@ -74,14 +74,10 @@ export class OneWaySearchState extends BaseFlightSearch{
     }
 
     @Selector()
-    static getAdult(states: onewaySearch): number {
-        return states.formData.traveller.adult;
+    static getTripType(states: onewaySearch): string {
+        return states.tripType;
     }
 
-    @Selector()
-    static getTripType(states: onewaySearch): string {
-        return states.tripTrip;
-    }
 
     @Selector()
     static getTravelDate(states: onewaySearch): string {
@@ -98,18 +94,23 @@ export class OneWaySearchState extends BaseFlightSearch{
         return states.payload;
     }
 
+    @Selector()
+    static getAdult(states: onewaySearch): number {
+        return states.formData.traveller.adult;
+    }
+
     @Action(OneWayForm)
     onewayForm(states: StateContext<onewaySearch>, action: OneWayForm) {
 
         if (action.flightform.from.country_code == action.flightform.to.country_code)
         {
             states.patchState({
-                tripTrip : 'domestic'
+                tripType : 'domestic'
             })
         }
         else if (action.flightform.from.country_code != action.flightform.to.country_code) {
             states.patchState({
-                tripTrip: 'international'
+                tripType: 'international'
             })
         }
 

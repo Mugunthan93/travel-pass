@@ -7,6 +7,7 @@ import { MultiCitySearchState } from '../search/flight/multi-city.state';
 import { UserState } from '../user.state';
 import { CompanyState } from '../company.state';
 import { ModalController } from '@ionic/angular';
+import { DomesticBookState } from './flight/domestic.state';
 
 
 export interface flight{
@@ -41,6 +42,26 @@ export interface sendRequest {
     travel_date:string   
 }
 
+export interface rt_sendRequest {
+    passenger_details: rt_passenger_details
+    trip_requests: flightSearchPayload
+    approval_mail_cc: string[]
+    status: string
+    purpose: string
+    booking_mode: string
+    customer_id: number
+    transaction_id: any
+    user_id: number
+    traveller_id: number
+    managers: managers
+    trip_type: string
+    comments: string
+    vendor_id: number
+    travel_date: string
+}
+
+
+
 export interface passenger_details {
     kioskRequest: kioskRequest
     passenger:passenger[]
@@ -52,6 +73,19 @@ export interface passenger_details {
     fare_response: fare_response
 }
 
+export interface rt_passenger_details {
+    kioskRequest: rt_kioskRequest
+    passenger: passenger[]
+    flight_details: flightResult[]
+    country_flag: string
+    user_eligibility: user_eligibility
+    published_fare: number
+    uapi_params: rt_uapi_params
+    fare_response: rt_fare_response
+}
+
+
+
 export interface kioskRequest {
     trip_mode: number
     fromValue: value
@@ -59,6 +93,20 @@ export interface kioskRequest {
     Segments?: segmentsPayload[]
     onwardDate: string
     returnDate: number
+    adultsType: number
+    childsType: number
+    infantsType: number
+    countryFlag: number
+    tour?: string
+}
+
+export interface rt_kioskRequest {
+    trip_mode: number
+    fromValue: value
+    toValue: value
+    Segments?: segmentsPayload[]
+    onwardDate: string
+    returnDate: string
     adultsType: number
     childsType: number
     infantsType: number
@@ -139,6 +187,11 @@ export interface uapi_params {
     selected_Return_plb_Value: string
 }
 
+export interface rt_uapi_params {
+    selected_plb_Value: selected_Value
+    selected_Return_plb_Value:  selected_Value
+}
+
 export interface selected_Value {
     K3: number
     PLB_earned: number
@@ -150,12 +203,20 @@ export interface selected_Value {
 
 export interface fare_response {
     published_fare: number
-    onwardfare: onwardfare[][]
+    onwardfare: response_fare[][]
     charges_details: charges_details
     cancellation_risk: string
 }
 
-export interface onwardfare {
+export interface rt_fare_response {
+    published_fare: number
+    onwardfare: response_fare[][]
+    returnfare: response_fare[][]
+    charges_details: charges_details
+    cancellation_risk: string
+}
+
+export interface response_fare {
     basefare: number
     yqtax: number
     tax: number
@@ -242,8 +303,8 @@ export interface connectingDetail {
 }
 
 export interface summary{
-    fare: faresummary
-    total:totalsummary
+    fare?: faresummary
+    total?:totalsummary
 }
 
 export interface faresummary {
@@ -346,7 +407,7 @@ export interface addPassenger {
 ////////////////////////////////////////////////////
 
 export class CancellationRisk {
-    static readonly type = "[OneWay] CancellationRisk";
+    static readonly type = "[flight_book] CancellationRisk";
     constructor(public risk: string) {
     }
 }
@@ -414,7 +475,8 @@ export class Comments {
         comment: null
     },
     children: [
-        OneWayBookState
+        OneWayBookState,
+        DomesticBookState
     ]
 })
 

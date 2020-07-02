@@ -2,13 +2,9 @@
 @import "../../../../../../style/util/mixins.scss";
 
 
+ion-content {
 
-ion-grid {
-    @include flex-col-grid;
-    margin-left: 0px;
-    margin-right: 0px;
-
-    mat-accordion {
+    >mat-accordion {
         @include flex-col-grid;
         width: 100%;
         margin-top: 5px;
@@ -16,8 +12,9 @@ ion-grid {
         height: auto;
 
         mat-expansion-panel {
-            margin-top:3px;
-            margin-bottom:3px;
+            margin-top: 3px;
+            margin-bottom: 3px;
+
             >mat-expansion-panel-header {
                 background:#{$text-bg};
                 padding-left: 10px;
@@ -25,158 +22,102 @@ ion-grid {
 
                 >::ng-deep span {
                     >ion-row {
-                        width: 9em;
-                        >ion-col{
-                            >ion-row:last-child{
-                                min-width: 150px;
-                            }
+                        display: flex;
+                        flex-direction: column;
+
+                        >ion-row {
+                            width: 150px;
+                            justify-content: space-between;
                         }
                     }
                 }
             }
 
-            ::ng-deep .mat-expansion-panel-body{
+            ::ng-deep .mat-expansion-panel-body {
                 padding: 0px;
                 height: 100%;
                 margin: 5px;
 
-                >ion-row:first-child {
-                    height: auto;
-                    margin: 5px;
+                >div {
+                    ion-item {
+                        --padding-start: 0px;
 
-                    >ion-col:first-child {
-                        width: 100%;
-                        height: auto;
-
-                        ion-row {
-                            width: 100;
-                        }
-
-                        ion-img {
-                            height: 20px;
-                            width: 20px;
-                        }
-
-                        ion-text {
-                            margin: 2px;
-                        }
-                    }
-
-                    >ion-col:last-child {
-                        width: 100%;
-                        height: auto;
-
-                        ion-img {
-                            height: 20px;
-                            width: 20px;
-                            float: right;
-                        }
-
-                        ion-text {
-                            padding-right: 5px;
-                            font-size: small;
-                        }
-                    }
-                }
-
-                >ion-row:nth-of-type(2) {
-                    height: auto;
-                    margin: 5px;
-
-                    ion-col {
-                        height: auto;
-
-                        ion-row {
-                            height: auto;
-                        }
-                    }
-
-                    ion-col:first-child {
-                        ion-row {
-                            margin-top: 2px;
-                            margin-bottom: 2px;
-                        }
-
-                        ion-row:first-child {
-                            ion-text {
-                                font-size: medium;
+                        >ion-row {
+                            >* {
+                                margin: auto 5px;
                             }
-                        }
-                    }
 
-                    ion-col:nth-of-type(2) {
-                        ion-row {
-
-                            ion-icon,
-                            ion-text {
-                                margin: auto;
+                            >ion-row {
+                                flex-direction: column;
                             }
-                        }
-
-                        >ion-row:first-child {
-                            height: 75%;
                         }
 
                         >ion-row:last-child {
-                            height: 25%;
-                        }
-
-                    }
-
-                    ion-col:last-child {
-                        ion-row {
-                            margin-top: 2px;
-                            margin-bottom: 2px;
-
-                            ion-text {
-                                margin-left: auto;
+                            >ion-row {
+                                >ion-text {
+                                    align-self: flex-end;
+                                }
                             }
                         }
+                    }
 
-                        ion-row:first-child {
-                            ion-text {
-                                font-size: medium;
+                    >ion-row {
+                        justify-content: space-between;
+
+                        >ion-col {
+                            flex-direction: column;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-around;
+
+                            &:first-child {
+                                align-items: flex-start;
+                            }
+
+                            &:last-child {
+                                align-items: flex-end;
                             }
                         }
                     }
                 }
+
             }
 
-            ::ng-deep .mat-expansion-indicator{
+            ::ng-deep .mat-expansion-indicator {
                 color:#{$selected-bg};
             }
         }
     }
 
-    ion-row#passenger {
+    >ion-row {
         background:#{$text-bg};
         padding: 5px;
         border-radius: 4px;
+        flex-direction: column;
+    }
 
-        >ion-col {
-            >ion-row:first-child {
-                ion-text {
-                    font-size: medium;
-                }
+    >ion-list {
+        ion-item {
+            --inner-padding-end: 16px;
+            --min-height: 25px;
+
+            >ion-radio {
+                --border-radius: 20px;
+                --inner-border-radius: 20px;
             }
         }
+    }
+
+    >ion-item {
+        --inner-padding-end: 16px;
+        --min-height: 25px;
+        border-top: 2px solid grey;
+        border-bottom: 2px solid grey;
     }
 }
 
 ion-footer {
-    >ion-row#book-button {
-        width: 100%;
-
-        >ion-col {
-            ion-button {
-                width: -webkit-fill-available;
-                --opacity: 1;
-                --background:#{$btn4-bg};
-
-                ion-text {
-                    color: white;
-                }
-            }
-        }
+    >ion-button {
+        width: -webkit-fill-available;
     }
 }

@@ -8,7 +8,7 @@ import { FlightResultState, resultObj, sortButton, ResetEmailDetail } from 'src/
 import { ResultState } from 'src/app/stores/result.state';
 import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 import { DepartureSort, ArrivalSort, DurationSort, PriceSort, OneWayResultState, SelectedFlight } from 'src/app/stores/result/flight/oneway.state';
-import { BookTicket } from 'src/app/stores/book/flight/oneway.state';
+import { OneWaySendRequest, GetFareQuoteSSR } from 'src/app/stores/book/flight/oneway.state';
 
 @Component({
   selector: 'app-one-way',
@@ -79,7 +79,7 @@ export class OneWayPage implements OnInit,OnDestroy {
   }
 
   book() {
-    this.store.dispatch(new BookTicket());
+    this.store.dispatch(new GetFareQuoteSSR());
   }
 
   currentFlight(flight : resultObj) {

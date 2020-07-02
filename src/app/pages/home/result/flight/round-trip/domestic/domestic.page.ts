@@ -9,6 +9,7 @@ import { ResultState } from 'src/app/stores/result.state';
 import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
 import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 import { DomesticResultState, SelectedDepartureFlight, SelectedReturnFlight, DepartureSort, ArrivalSort, DurationSort, PriceSort } from 'src/app/stores/result/flight/domestic.state';
+import { GetFareQuoteSSR } from 'src/app/stores/book/flight/domestic.state';
 
 @Component({
   selector: 'app-domestic',
@@ -281,7 +282,7 @@ export class DomesticPage implements OnInit {
   }
 
   book() {
-    // this.store.dispatch(new BookTicket());
+    this.store.dispatch(new GetFareQuoteSSR());
   }
 
   ngOnDestroy() {

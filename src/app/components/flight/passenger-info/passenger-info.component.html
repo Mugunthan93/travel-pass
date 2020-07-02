@@ -16,6 +16,7 @@
   <ion-list lines="none">
     <ion-item *ngFor="let pax of (passengers$ | async)">
       <ion-checkbox slot="start" [value]="pax" (ionChange)="getPass($event)"
+        [checked]="(selectedPassengers$ | async).includes(pax)"
         [disabled]="(selected$ | async) == (count$ | async) && !(selectedPassengers$ | async).includes(pax)">
       </ion-checkbox>
       <ion-row>

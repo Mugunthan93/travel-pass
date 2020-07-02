@@ -30,10 +30,6 @@ export class OneWayPage implements OnInit {
     this.flightDetail.subscribe(flight => console.log(flight));
   }
 
-  FairValue(value : any) {
-    console.log(value);
-  }
-
   async addPassengerDetails() {
     const modal = await this.modalCtrl.create({
       component: PassengerInfoComponent,

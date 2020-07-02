@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
-import { SendRequest } from 'src/app/stores/book/flight/oneway.state';
 import { AlertOptions } from '@ionic/core';
 import { ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
@@ -9,6 +8,9 @@ import { user } from 'src/app/models/user';
 import { CompanyState } from 'src/app/stores/company.state';
 import { UserState } from 'src/app/stores/user.state';
 import { MailCC, Purpose, Comments } from 'src/app/stores/book/flight.state';
+import { DomesticSendRequest } from 'src/app/stores/book/flight/domestic.state';
+import { ResultState } from 'src/app/stores/result.state';
+import { OneWaySendRequest } from 'src/app/stores/book/flight/oneway.state';
 
 @Component({
   selector: 'app-book-confirmation',
@@ -21,6 +23,7 @@ export class BookConfirmationComponent implements OnInit {
   purposeAlertOptions: AlertOptions;
   managers$: Observable<user[]>;
   approverName$: Observable<string>;
+  requestType: string;
 
 
   purposeArray : string[] = ['Project', 'Offsite meet', 'Sales', 'Support', 'Internal', 'Conference', 'Training', 'Other', 'Business meet'];
@@ -31,6 +34,7 @@ export class BookConfirmationComponent implements OnInit {
   ) {
     this.approverName$ = this.store.select(UserState.getApproverName);
     this.managers$ = this.store.select(CompanyState.getManagerList);
+    this.requestType = this.store.selectSnapshot(ResultState.getResultType);
    }
 
   ngOnInit() {
@@ -58,7 +62,12 @@ export class BookConfirmationComponent implements OnInit {
   }
 
   sendRequest() {
-    this.store.dispatch(new SendRequest());
+    if (this.requestType == 'one-way') {
+      this.store.dispatch(new OneWaySendRequest());
+    }
+    else if (this.requestType == 'animated-round-trip') {
+      this.store.dispatch(new DomesticSendRequest());
+    }
   }
 
   dismiss() {

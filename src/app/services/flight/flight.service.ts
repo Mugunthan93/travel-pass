@@ -5,7 +5,7 @@ import { HTTPResponse, HTTP } from '@ionic-native/http/ngx';
 import { environment } from 'src/environments/environment';
 import { fareRule } from '../../stores/result/flight.state';
 import { itineraryPayload } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
-import { sendRequest } from 'src/app/stores/book/flight.state';
+import { sendRequest, rt_sendRequest } from 'src/app/stores/book/flight.state';
 import * as moment from 'moment';
 
 @Injectable({
@@ -47,8 +47,13 @@ export class FlightService {
     return await this.http.post("/airlines/airlineSSR", trace);
   }
 
-  //send req by user
+  //send req by user - one-way
   async sendRequest(request: sendRequest): Promise<HTTPResponse> {
+    return await this.http.post("/airlineRequest?email_notify=true", request);
+  }
+
+  //send req by user - round-trip
+  async rtSendRequest(request: rt_sendRequest): Promise<HTTPResponse> {
     return await this.http.post("/airlineRequest?email_notify=true", request);
   }
 

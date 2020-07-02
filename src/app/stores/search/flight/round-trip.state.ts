@@ -1,5 +1,5 @@
 import { city } from '../../shared.state';
-import { traveller } from '../flight.state';
+import { traveller, FlightSearchState } from '../flight.state';
 import { flightSearchPayload, metrixBoard, flightSearchResponse } from 'src/app/models/search/flight';
 import { State, Action, StateContext, Store, Selector } from '@ngxs/store';
 import { LoadingController, AlertController } from '@ionic/angular';
@@ -8,12 +8,14 @@ import { ResultMode, ResultType } from '../../result.state';
 import { InternationalResponse } from '../../result/flight/international.state';
 import { DomesticResponse } from '../../result/flight/domestic.state';
 import { BaseFlightSearch } from './filght-search';
+import * as moment from 'moment';
 
 
 export interface roundtripSearch {
     formData: roundTripForm,
     payload: flightSearchPayload
     metrix: metrixBoard
+    tripType: 'domestic' | 'international' | null
 }
 
 export interface roundTripForm {
@@ -47,7 +49,8 @@ export class RoundTripSearch {
             class: null
         },
         payload: null,
-        metrix: null
+        metrix: null,
+        tripType: null
     }
 })
 
@@ -69,8 +72,56 @@ export class RoundTripSearchState extends BaseFlightSearch {
         return states.formData.traveller.adult;
     }
 
+    @Selector()
+    static getFromValue(states: roundtripSearch) {
+        return states.formData.from;
+    }
+
+    @Selector()
+    static getToValue(states: roundtripSearch) {
+        return states.formData.to;
+    }
+
+    @Selector()
+    static getTripType(states: roundtripSearch): string {
+        return states.tripType;
+    }
+
+
+    @Selector()
+    static getTravelDate(states: roundtripSearch): string {
+        return moment(states.formData.departure).format('YYYY-MM-DDThh:mm:ss');
+    }
+
+    @Selector()
+    static getReturnDate(states: roundtripSearch): string {
+        return moment(states.formData.return).format('YYYY-MM-DDThh:mm:ss');
+    }
+
+    @Selector()
+    static getPayloadTravelDate(states: roundtripSearch): string {
+        return moment(states.formData.departure).format('YYYY-MM-DD');
+    }
+
+    @Selector()
+    static getTripRequest(states: roundtripSearch): flightSearchPayload {
+        return states.payload;
+    }
+
     @Action(RoundTripForm)
     roundtripForm(states: StateContext<roundtripSearch>, action: RoundTripForm) {
+
+        if (action.flightform.from.country_code == action.flightform.to.country_code) {
+            states.patchState({
+                tripType: 'domestic'
+            })
+        }
+        else if (action.flightform.from.country_code != action.flightform.to.country_code) {
+            states.patchState({
+                tripType: 'international'
+            })
+        }
+
         states.patchState({
             formData : action.flightform
         })
@@ -102,27 +153,30 @@ export class RoundTripSearchState extends BaseFlightSearch {
         await loading.present();
 
         let currentState = states.getState();
+        let departureTime = typeof currentState.formData.departure == 'string' ? currentState.formData.departure : currentState.formData.departure.toJSON();
+        let returnTime = typeof currentState.formData.return == 'string' ? currentState.formData.return : currentState.formData.return.toJSON();
+
 
         states.patchState({
             payload: {
                 AdultCount: currentState.formData.traveller.adult.toString(),
                 ChildCount: currentState.formData.traveller.child.toString(),
                 InfantCount: currentState.formData.traveller.infant.toString(),
-                JourneyType: this.store.selectSnapshot(state => state.FlightSearchState.getJourneyType),
+                JourneyType: this.store.selectSnapshot(FlightSearchState.getJourneyType),
                 Segments: [
                     {
                         Origin: currentState.formData.from.city_code,
                         Destination: currentState.formData.to.city_code,
                         FlightCabinClass: this.getCabinClass(currentState.formData.class),
-                        PreferredArrivalTime: currentState.formData.departure.toJSON(),
-                        PreferredDepartureTime: currentState.formData.departure.toJSON()
+                        PreferredArrivalTime: departureTime,
+                        PreferredDepartureTime: departureTime
                     },
                     {
                         Origin: currentState.formData.to.city_code,
                         Destination: currentState.formData.from.city_code,
                         FlightCabinClass: this.getCabinClass(currentState.formData.class),
-                        PreferredArrivalTime: currentState.formData.return.toJSON(),
-                        PreferredDepartureTime: currentState.formData.return.toJSON()
+                        PreferredArrivalTime: returnTime,
+                        PreferredDepartureTime: returnTime
                     }
                 ],
                 prefferedAirline: [null],
