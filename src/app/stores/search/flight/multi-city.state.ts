@@ -8,12 +8,14 @@ import { Navigate } from '@ngxs/router-plugin';
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { MultiCityResponse } from '../../result/flight/multi-city.state';
 import { BaseFlightSearch } from './filght-search';
+import * as moment from 'moment';
 
 
 export interface multicitySearch {
     formData: multicityForm,
     payload: flightSearchPayload
-    metrix: metrixBoard
+    metrix: metrixBoard,
+    tripType: 'domestic' | 'international' | null
 }
 
 
@@ -42,7 +44,8 @@ export class MultiCitySearch {
             class: null
         },
         payload: null,
-        metrix: null
+        metrix: null,
+        tripType: null
     }
 })
 
@@ -58,6 +61,37 @@ export class MultiCitySearchState extends BaseFlightSearch {
     }
 
     @Selector()
+    static getFromValue(states: multicitySearch) {
+        return states.formData.trips[0].from;
+    }
+
+    @Selector()
+    static getToValue(states: multicitySearch) {
+        return states.formData.trips[states.formData.trips.length - 1].to;
+    }
+
+    @Selector()
+    static getTripType(states: multicitySearch): string {
+        return states.tripType;
+    }
+
+
+    @Selector()
+    static getTravelDate(states: multicitySearch): string {
+        return moment(states.formData.trips[0].departure).format('YYYY-MM-DDThh:mm:ss');
+    }
+
+    @Selector()
+    static getPayloadTravelDate(states: multicitySearch): string {
+        return moment(states.formData.trips[0].departure).format('YYYY-MM-DD');
+    }
+
+    @Selector()
+    static getTripRequest(states: multicitySearch): flightSearchPayload {
+        return states.payload;
+    }
+
+    @Selector()
     static getAdult(states: multicitySearch): number {
         return states.formData.traveller.adult;
     }
@@ -65,7 +99,8 @@ export class MultiCitySearchState extends BaseFlightSearch {
     @Action(MultiCityForm)
     multicityForm(states: StateContext<multicitySearch>, action: MultiCityForm) {
         states.patchState({
-            formData : action.flightform
+            formData : action.flightform,
+            tripType: 'international'
         });
     }
 
@@ -104,8 +139,8 @@ export class MultiCitySearchState extends BaseFlightSearch {
                     Origin: el.from.city_code,
                     Destination: el.to.city_code,
                     FlightCabinClass: this.getCabinClass(currentState.formData.class),
-                    PreferredDepartureTime: el.departure.toJSON(),
-                    PreferredArrivalTime: el.departure.toJSON()
+                    PreferredDepartureTime: typeof el.departure == 'string' ? el.departure : el.departure.toJSON(),
+                    PreferredArrivalTime: typeof el.departure == 'string' ? el.departure : el.departure.toJSON()
                 });
             }
         );
@@ -115,7 +150,7 @@ export class MultiCitySearchState extends BaseFlightSearch {
                 AdultCount: currentState.formData.traveller.adult.toString(),
                 ChildCount: currentState.formData.traveller.child.toString(),
                 InfantCount: currentState.formData.traveller.infant.toString(),
-                JourneyType: this.store.selectSnapshot(state =>  state.FlightSearchState.getJourneyType),
+                JourneyType: this.store.selectSnapshot(FlightSearchState.getJourneyType),
                 Segments: segs,
                 prefferedAirline: [null],
                 sources: ['']

@@ -11,6 +11,7 @@ import { MailCC, Purpose, Comments } from 'src/app/stores/book/flight.state';
 import { DomesticSendRequest } from 'src/app/stores/book/flight/domestic.state';
 import { ResultState } from 'src/app/stores/result.state';
 import { OneWaySendRequest } from 'src/app/stores/book/flight/oneway.state';
+import { MultiCitySendRequest } from 'src/app/stores/book/flight/multi-city.state';
 
 @Component({
   selector: 'app-book-confirmation',
@@ -67,6 +68,10 @@ export class BookConfirmationComponent implements OnInit {
     }
     else if (this.requestType == 'animated-round-trip') {
       this.store.dispatch(new DomesticSendRequest());
+    }
+    else if (this.requestType == 'multi-city') {
+      this.store.dispatch(new MultiCitySendRequest());
+      
     }
   }
 

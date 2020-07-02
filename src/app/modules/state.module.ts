@@ -30,6 +30,7 @@ import { OneWayBookState } from '../stores/book/flight/oneway.state';
 import { BookingState } from '../stores/booking.state';
 import { ApprovalState } from '../stores/approval.state';
 import { DomesticBookState } from '../stores/book/flight/domestic.state';
+import { MultiCityBookState } from '../stores/book/flight/multi-city.state';
 
 @NgModule({
   declarations: [],
@@ -61,6 +62,7 @@ import { DomesticBookState } from '../stores/book/flight/domestic.state';
       
       OneWayBookState,
       DomesticBookState,
+      MultiCityBookState,
 
       BookingState,
       ApprovalState,

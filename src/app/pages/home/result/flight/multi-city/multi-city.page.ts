@@ -9,6 +9,7 @@ import { FlightResultState, resultObj, ResetEmailDetail, sortButton } from 'src/
 import { ResultState } from 'src/app/stores/result.state';
 import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 import { MultiCityResultState, SelectedFlight, DepartureSort, ArrivalSort, DurationSort, PriceSort } from 'src/app/stores/result/flight/multi-city.state';
+import { GetFareQuoteSSR } from 'src/app/stores/book/flight/multi-city.state';
 
 @Component({
   selector: 'app-multi-city',
@@ -88,7 +89,7 @@ export class MultiCityPage implements OnInit {
   }
 
   book() {
-    // this.store.dispatch(new BookTicket());
+    this.store.dispatch(new GetFareQuoteSSR());
   }
 
   currentFlight(flight : resultObj){

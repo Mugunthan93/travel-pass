@@ -8,6 +8,7 @@ import { UserState } from '../user.state';
 import { CompanyState } from '../company.state';
 import { ModalController } from '@ionic/angular';
 import { DomesticBookState } from './flight/domestic.state';
+import { MultiCityBookState } from './flight/multi-city.state';
 
 
 export interface flight{
@@ -476,7 +477,8 @@ export class Comments {
     },
     children: [
         OneWayBookState,
-        DomesticBookState
+        DomesticBookState,
+        MultiCityBookState
     ]
 })
 

@@ -18,8 +18,6 @@ export class RequestListPage implements OnInit {
   ) { }
 
   ngOnInit() {
-
     this.allBookings = this.store.select(ApprovalState.getAllBookings);
-
   }
 }
