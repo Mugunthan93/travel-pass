@@ -19,6 +19,9 @@ import { StateModule } from './modules/state.module';
 import { Network } from '@ionic-native/network/ngx';
 import { AndroidFullScreen } from '@ionic-native/android-full-screen/ngx';
 import { ApproveRequestComponent } from './components/flight/approve-request/approve-request.component';
+import { FilePath } from '@ionic-native/file-path/ngx';
+import { File } from '@ionic-native/file/ngx';
+
 
 
 @NgModule({
@@ -44,6 +47,8 @@ import { ApproveRequestComponent } from './components/flight/approve-request/app
   ],
   providers: [
     Platform,
+    FilePath,
+    File,
     ScreenOrientation,
     StatusBar,
     SplashScreen,

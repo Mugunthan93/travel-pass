@@ -15,7 +15,9 @@ export class FlightService {
 
   constructor(
     private http: NativeHttpService
-  ) { }
+  ) { 
+    console.log();
+  }
   
   async metrixboard(metrixData: metrixBoard) {
     return await this.http.post("/metrixdashboard", metrixData);
@@ -99,9 +101,35 @@ export class FlightService {
     return await this.http.get("/airlineRequest/getairlinebyuserid/" + userId.toString() + "/pending/" + endDate + "/" + startDate + "/0/999", book);
   }
 
+  async bookedBooking(userId: number): Promise<HTTPResponse> {
+
+    const startDate = moment().format('YYYY-MM-DD%2023:59:59.000+00:00');
+    const endDate = moment().subtract(7, "days").format('YYYY-MM-DD%2000:00:01.000+00:00');
+    const book = {
+      "booking_mode": "online"
+    }
+
+    return await this.http.get("/airlineRequest/getairlinebyuserid/" + userId.toString() + "/booked/" + endDate + "/" + startDate + "/0/999", book);
+  }
+
+  async rejBooking(userId: number): Promise<HTTPResponse> {
+
+    const startDate = moment().format('YYYY-MM-DD%2023:59:59.000+00:00');
+    const endDate = moment().subtract(7, "days").format('YYYY-MM-DD%2000:00:01.000+00:00');
+    const book = {
+      "booking_mode": "online"
+    }
+
+    return await this.http.get("/airlineRequest/getairlinebyuserid/" + userId.toString() + "/rej/" + endDate + "/" + startDate + "/0/999", book);
+  }
+
   // approver reqest list
   async approvalReqList(userId: number): Promise<HTTPResponse> {
     return await this.http.get("/allBookings/" + userId, {});
+  }
+
+  async downloadTicket(pnr : string, filePath : string): Promise<HTTPResponse> {
+    return await this.http.downloadFile("/ticket/" + pnr + ".pdf", {}, filePath);
   }
 
 

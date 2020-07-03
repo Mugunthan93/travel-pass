@@ -77,6 +77,9 @@ export class NativeHttpService implements OnInit{
     return await this.http.delete(environment.baseURL + url, opt, this.header);
   }
 
+  downloadFile(url: string, body: any, filePath: string): Promise<HTTPResponse> {
+    return this.http.downloadFile(url, body, this.header, filePath);
+  }
   async setCookie(url : string,session : any) {
     return await this.http.setCookie(url, session);
   }
@@ -100,4 +103,5 @@ export class NativeHttpService implements OnInit{
   getReqTimeout() {
     return this.http.getRequestTimeout();
   }
+
 }

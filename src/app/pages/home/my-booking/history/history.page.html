@@ -3,15 +3,15 @@
     <ion-card-content>
       <ion-row>
         <ion-row>
-          <ion-text>{{historyBooking.trip_requests.Segments[0].DestinationName}}</ion-text>
+          <ion-text>{{historyBooking.trip_requests.Segments[0].OriginName}}</ion-text>
           <ion-text>From</ion-text>
         </ion-row>
         <ion-row>
-          <ion-text>One Way</ion-text>
+          <ion-text>{{tripType(historyBooking)}}</ion-text>
           <!-- <ion-icon name="add"></ion-icon> -->
         </ion-row>
         <ion-row>
-          <ion-text>{{historyBooking.trip_requests.Segments[0].OriginName}}</ion-text>
+          <ion-text>{{historyBooking.trip_requests.Segments[0].DestinationName}}</ion-text>
           <ion-text>To</ion-text>
         </ion-row>
       </ion-row>
@@ -25,9 +25,9 @@
         </ion-chip>
       </ion-row>
       <ion-row>
-        <ion-text>Book Again</ion-text>
-        <ion-text>View</ion-text>
-        <ion-text>Download</ion-text>
+        <ion-button (click)="downloadTicket(historyBooking)">
+          Download
+        </ion-button>
       </ion-row>
     </ion-card-content>
   </ion-card>

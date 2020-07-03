@@ -1,10 +1,9 @@
 import { State, Action, StateContext, Store } from '@ngxs/store';
 import { AuthService } from '../services/auth/auth.service';
 import { Navigate } from '@ngxs/router-plugin';
-import { LoadingController, ToastController, AlertController, MenuController } from '@ionic/angular';
-import { GetUser } from './user.state';
-import { HTTPResponse } from '@ionic-native/http/ngx';
-import { GetCompany } from './company.state';
+import { LoadingController, AlertController, MenuController } from '@ionic/angular';
+import { GetUser, UserState } from './user.state';
+import { GetCompany, CompanyState } from './company.state';
 import { user } from '../models/user';
 
 export class Login {
@@ -96,6 +95,11 @@ export class AuthState {
 
         const logout = await this.authService.logout();
         sessionStorage.clear();
+
+        this.store.reset(new UserState(null));
+        this.store.reset(new CompanyState(null));
+        // this.store.dispatch(new StateReset(UserState,CompanyState));
+        // this.store.dispatch(new StateResetAll());
         this.menuCtrl.toggle('first');
         this.store.dispatch(new Navigate(['/', 'auth']));
         

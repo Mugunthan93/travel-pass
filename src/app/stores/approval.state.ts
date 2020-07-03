@@ -102,8 +102,9 @@ export class ApprovalState {
         try {
             const getApprovalReqResponse = await this.flightService.getReqTicket(action.id.toString());
             console.log(getApprovalReqResponse);
+            let response = JSON.parse(getApprovalReqResponse.data);
             states.patchState({
-                selectedRequest: getApprovalReqResponse.data[0]
+                selectedRequest: response.data[0]
             });
             return await modal.present();
 

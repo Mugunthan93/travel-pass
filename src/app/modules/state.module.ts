@@ -73,6 +73,7 @@ import { InternationalBookState } from '../stores/book/flight/international.stat
       SharedState
     ], { developmentMode: !environment.production }
     ),
+    NgxsFormPluginModule.forRoot(),
     NgxsStoragePluginModule.forRoot({
       key: [
         UserState,

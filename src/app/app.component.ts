@@ -4,7 +4,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Network } from '@ionic-native/network/ngx';
 import { AndroidFullScreen } from '@ionic-native/android-full-screen/ngx';
 import { Observable, Subscription } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-root',
@@ -22,7 +22,7 @@ export class AppComponent implements OnInit, OnDestroy{
     private androidPermissions: AndroidPermissions,
     private network: Network,
     private androidFullScreen: AndroidFullScreen,
-    public alertCtrl : AlertController
+    public alertCtrl: AlertController
   ) {
 
     this.onChange$ = this.network.onChange();

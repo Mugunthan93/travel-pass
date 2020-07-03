@@ -26,6 +26,8 @@
     "@ionic-native/android-full-screen": "^5.26.0",
     "@ionic-native/android-permissions": "^5.25.0",
     "@ionic-native/core": "^5.22.0-beta-1",
+    "@ionic-native/file": "^5.27.0",
+    "@ionic-native/file-path": "^5.27.0",
     "@ionic-native/google-maps": "^5.0.0-beta.27",
     "@ionic-native/http": "^5.21.5",
     "@ionic-native/keyboard": "^5.22.0-beta-1",
@@ -124,7 +126,8 @@
       },
       "cordova-plugin-android-permissions": {},
       "cordova-plugin-network-information": {},
-      "cordova-plugin-fullscreen": {}
+      "cordova-plugin-fullscreen": {},
+      "cordova-plugin-filepath": {}
     },
     "platforms": [
       "ios",

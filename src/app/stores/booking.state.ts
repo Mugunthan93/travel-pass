@@ -3,6 +3,8 @@ import { Navigate } from '@ngxs/router-plugin';
 import { MenuController } from '@ionic/angular';
 import { FlightService } from '../services/flight/flight.service';
 import { UserState } from './user.state';
+import { FilePath } from '@ionic-native/file-path/ngx';
+import { File } from '@ionic-native/file/ngx';
 
 
 export interface booking {
@@ -14,6 +16,13 @@ export interface booking {
 export class MyBooking {
     static readonly type = "[booking] MyBooking";
     constructor(public type : string) {
+
+    }
+}
+
+export class DownloadTicket {
+    static readonly type = "[booking] DownloadTicket";
+    constructor(public booked : any) {
 
     }
 }
@@ -31,7 +40,9 @@ export class BookingState {
     constructor(
         private store: Store,
         public menuCtrl: MenuController,
-        private flightService : FlightService
+        private flightService: FlightService,
+        private fliePath: FilePath,
+        private file: File
     ) {
 
     }
@@ -56,25 +67,50 @@ export class BookingState {
         let newBooking = [];
         let historyBooking = [];
 
+        ///open try catch
         try {
             const userId: number = this.store.selectSnapshot(UserState.getUserId);
             const myBookingResponse = await this.flightService.openBooking(userId);
-            console.log(myBookingResponse);
             let openBooking = JSON.parse(myBookingResponse.data);
-            historyBooking.push(...openBooking.data);
+            console.log(openBooking);
             newBooking.push(...openBooking.data);
         }
         catch (error) {
             console.log(error);
         }
 
+        /// pending try catch
         try {
             const userId: number = this.store.selectSnapshot(UserState.getUserId);
             const myBookingResponse = await this.flightService.pendingBooking(userId);
-            console.log(myBookingResponse);
             let pendingBooking = JSON.parse(myBookingResponse.data);
             console.log(pendingBooking);
             newBooking.push(...pendingBooking.data);
+        }
+        catch (error) {
+            console.log(error);
+        }
+
+
+        //rej try catch
+        try {
+            const userId: number = this.store.selectSnapshot(UserState.getUserId);
+            const myBookingResponse = await this.flightService.rejBooking(userId);
+            let rejBooking = JSON.parse(myBookingResponse.data);
+            console.log(rejBooking);
+            newBooking.push(...rejBooking.data);
+        }
+        catch (error) {
+            console.log(error);
+        }
+
+        //booked try catch
+        try {
+            const userId: number = this.store.selectSnapshot(UserState.getUserId);
+            const myBookingResponse = await this.flightService.bookedBooking(userId);
+            let bookedBooking = JSON.parse(myBookingResponse.data);
+            console.log(bookedBooking);
+            historyBooking.push(...bookedBooking.data);
         }
         catch (error) {
             console.log(error);
@@ -87,6 +123,24 @@ export class BookingState {
 
         this.menuCtrl.close('first');
         this.store.dispatch(new Navigate(['/', 'home', 'my-booking', states.getState().type, 'new']));
+    }
+
+    @Action(DownloadTicket)
+    async downloadTicket(states: StateContext<booking>, action: DownloadTicket) {
+
+        let pnrString: string = action.booked.passenger_details.PNR;
+        let pnr: string = pnrString.substring(2, pnrString.length - 2);
+        let path: string = this.file.externalDataDirectory;
+        console.log(this.file);
+        console.log(this.fliePath.resolveNativePath(path));
+
+        try {
+            const ticketResponse = await this.flightService.downloadTicket(pnr, path);
+            console.log(ticketResponse.data);
+        }
+        catch (error) {
+            console.log(error); 
+        }
     }
 
 }

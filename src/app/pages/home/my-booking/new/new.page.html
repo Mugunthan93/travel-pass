@@ -5,17 +5,17 @@
       <ion-row>
         <ion-row>
           <ion-text>
-            {{newBooking.trip_requests.Segments[0].OriginName ? newBooking.trip_requests.Segments[0].OriginName : ''}}
+            {{newBooking.trip_requests.Segments[0] ? newBooking.trip_requests.Segments[0].OriginName : ''}}
           </ion-text>
           <ion-text>From</ion-text>
         </ion-row>
         <ion-row>
-          <ion-text>One Way</ion-text>
+          <ion-text>{{tripType(newBooking)}}</ion-text>
           <!-- <ion-icon name="add"></ion-icon> -->
         </ion-row>
         <ion-row>
           <ion-text>
-            {{newBooking.trip_requests.Segments[0].DestinationName ? newBooking.trip_requests.Segments[0].DestinationName : ''}}
+            {{newBooking.trip_requests.Segments[0] ? newBooking.trip_requests.Segments[0].DestinationName : ''}}
           </ion-text>
           <ion-text>To</ion-text>
         </ion-row>
@@ -30,9 +30,9 @@
         </ion-chip>
       </ion-row>
       <ion-row>
-        <ion-text>Book Again</ion-text>
-        <ion-text>View</ion-text>
-        <ion-text>Download</ion-text>
+        <ion-text *ngIf="newBooking.status=='pending'" class="pending">Waiting For Approval</ion-text>
+        <ion-text *ngIf="newBooking.status == 'open'" class="open">Approved</ion-text>
+        <ion-text *ngIf="newBooking.status == 'rej'" class="rej">Rejected</ion-text>
       </ion-row>
     </ion-card-content>
   </ion-card>
