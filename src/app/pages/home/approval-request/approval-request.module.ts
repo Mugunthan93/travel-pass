@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { ApprovalRequestPageRoutingModule } from './approval-request-routing.module';
 
 import { ApprovalRequestPage } from './approval-request.page';
+import { ApproveRequestComponent } from 'src/app/components/flight/approve-request/approve-request.component';
 
 @NgModule({
   imports: [
@@ -17,6 +18,8 @@ import { ApprovalRequestPage } from './approval-request.page';
   ],
   declarations: [
     ApprovalRequestPage
+  ],
+  entryComponents: [
   ]
 })
 export class ApprovalRequestPageModule {}

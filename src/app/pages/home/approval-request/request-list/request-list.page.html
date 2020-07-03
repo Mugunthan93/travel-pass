@@ -7,7 +7,7 @@
           <ion-text>From</ion-text>
         </ion-row>
         <ion-row>
-          <ion-text>One Way</ion-text>
+          <ion-text>{{tripType(allBooking)}}</ion-text>
           <!-- <ion-icon name="add"></ion-icon> -->
         </ion-row>
         <ion-row>
@@ -25,9 +25,7 @@
         </ion-chip>
       </ion-row>
       <ion-row>
-        <ion-text>Book Again</ion-text>
-        <ion-text>View</ion-text>
-        <ion-text>Download</ion-text>
+        <ion-text (click)="getApprove(allBooking.id)">Approve</ion-text>
       </ion-row>
     </ion-card-content>
   </ion-card>

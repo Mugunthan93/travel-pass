@@ -1,13 +1,15 @@
 import { State, Action, StateContext, Store, Selector } from "@ngxs/store";
 import { Navigate } from '@ngxs/router-plugin';
-import { MenuController } from '@ionic/angular';
+import { MenuController, ModalController } from '@ionic/angular';
 import { FlightService } from '../services/flight/flight.service';
 import { UserState } from './user.state';
+import { ApproveRequestComponent } from '../components/flight/approve-request/approve-request.component';
 
 
 export interface Approval {
     type: string
-    list : any
+    list: any,
+    selectedRequest: any
 }
 
 export class ApprovalRequest {
@@ -17,11 +19,29 @@ export class ApprovalRequest {
     }
 }
 
+export class GetApproveRequest {
+    static readonly type = "[approval] GetApproveRequest";
+    constructor(public id: number) {
+
+    }
+}
+
+export class AcceptRequest {
+    static readonly type = "[approval] AcceptRequest";
+}
+
+export class DeclineRequest {
+    static readonly type = "[approval] DeclineRequest";
+}
+
+
+
 @State<Approval>({
     name: 'approval',
     defaults: {
         type: 'flight',
-        list: null
+        list: null,
+        selectedRequest : null
     }
 })
 export class ApprovalState {
@@ -29,7 +49,8 @@ export class ApprovalState {
     constructor(
         private store: Store,
         public menuCtrl: MenuController,
-        public flightService : FlightService
+        public flightService: FlightService,
+        public modalCtrl: ModalController
     ) {
 
     }
@@ -37,6 +58,11 @@ export class ApprovalState {
     @Selector()
     static getAllBookings(state: Approval): any[] {
         return state.list;
+    }
+
+    @Selector()
+    static getSelectedRequest(state: Approval) {
+        return state.selectedRequest;
     }
 
     @Action(ApprovalRequest)
@@ -65,6 +91,44 @@ export class ApprovalState {
 
         this.menuCtrl.close('first');
         this.store.dispatch(new Navigate(['/', 'home', 'approval-request', states.getState().type, 'request-list']));
+    }
+
+    @Action(GetApproveRequest)
+    async getApproveRequest(states: StateContext<Approval>, action: GetApproveRequest) {
+        const modal = await this.modalCtrl.create({
+            component : ApproveRequestComponent
+        });
+
+        try {
+            const getApprovalReqResponse = await this.flightService.getReqTicket(action.id.toString());
+            console.log(getApprovalReqResponse);
+            states.patchState({
+                selectedRequest: getApprovalReqResponse.data[0]
+            });
+            return await modal.present();
+
+        }
+        catch (error) {
+            console.log(error);
+        }
+
+    }
+
+    @Action(AcceptRequest)
+    async acceptRequest(states: StateContext<Approval>) {
+        let req = null;
+        try {
+            const acceptReqResponse = await this.flightService.approvalReq(states.getState().selectedRequest.id,req);
+            console.log(acceptReqResponse);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    @Action(DeclineRequest)
+    declineRequest(states: StateContext<Approval>, action: DeclineRequest) {
+
     }
 
 

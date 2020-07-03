@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { BookingState } from 'src/app/stores/booking.state';
-import { ApprovalRequest, ApprovalState } from 'src/app/stores/approval.state';
+import { ApprovalRequest, ApprovalState, GetApproveRequest } from 'src/app/stores/approval.state';
+import { ModalController } from '@ionic/angular';
+import { ApproveRequestComponent } from 'src/app/components/flight/approve-request/approve-request.component';
 
 @Component({
   selector: 'app-request-list',
@@ -19,5 +21,18 @@ export class RequestListPage implements OnInit {
 
   ngOnInit() {
     this.allBookings = this.store.select(ApprovalState.getAllBookings);
+  }
+
+  async getApprove(id : number) {
+    this.store.dispatch(new GetApproveRequest(id));
+  }
+
+  tripType(book : any) {
+    switch (book.trip_requests.JourneyType) {
+      case 1: return 'One Way'; break;
+      case 2: return 'Round Trip'; break;
+      case 3: return 'Multi City'; break;
+      default: return '';
+    }
   }
 }

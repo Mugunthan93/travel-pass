@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { RequestListPageRoutingModule } from './request-list-routing.module';
 
 import { RequestListPage } from './request-list.page';
+import { ApproveRequestComponent } from 'src/app/components/flight/approve-request/approve-request.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,10 @@ import { RequestListPage } from './request-list.page';
     IonicModule,
     RequestListPageRoutingModule
   ],
-  declarations: [RequestListPage]
+  declarations: [
+    RequestListPage
+  ],
+  entryComponents: [
+  ]
 })
 export class RequestListPageModule {}

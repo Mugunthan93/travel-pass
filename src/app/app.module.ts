@@ -18,15 +18,17 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { StateModule } from './modules/state.module';
 import { Network } from '@ionic-native/network/ngx';
 import { AndroidFullScreen } from '@ionic-native/android-full-screen/ngx';
-import { SortPipe } from './pipes/sort/sort.pipe';
+import { ApproveRequestComponent } from './components/flight/approve-request/approve-request.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    SortPipe
+    ApproveRequestComponent
   ],
-  entryComponents: [],
+  entryComponents: [
+    ApproveRequestComponent
+  ],
   imports: [
     BrowserModule,
     IonicModule.forRoot({

@@ -1,10 +1,12 @@
 
 <ion-content>
-  <ion-card *ngFor="let newBooking of (newBookings$ | async)">
+  <ion-card *ngFor="let newBooking of (newBookings$ | async | sort : 'id')">
     <ion-card-content>
       <ion-row>
         <ion-row>
-          <ion-text>{{newBooking.trip_requests.Segments[0].DestinationName}}</ion-text>
+          <ion-text>
+            {{newBooking.trip_requests.Segments[0].OriginName ? newBooking.trip_requests.Segments[0].OriginName : ''}}
+          </ion-text>
           <ion-text>From</ion-text>
         </ion-row>
         <ion-row>
@@ -12,7 +14,9 @@
           <!-- <ion-icon name="add"></ion-icon> -->
         </ion-row>
         <ion-row>
-          <ion-text>{{newBooking.trip_requests.Segments[0].OriginName}}</ion-text>
+          <ion-text>
+            {{newBooking.trip_requests.Segments[0].DestinationName ? newBooking.trip_requests.Segments[0].DestinationName : ''}}
+          </ion-text>
           <ion-text>To</ion-text>
         </ion-row>
       </ion-row>
