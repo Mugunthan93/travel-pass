@@ -6,6 +6,9 @@ import { OneWayResultState } from './flight/oneway.state';
 import { MultiCityResultState } from './flight/multi-city.state';
 import { DomesticResultState } from './flight/domestic.state';
 import { InternationalResultState } from './flight/international.state';
+import { itineraryPayload } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
+import { FlightService } from 'src/app/services/flight/flight.service';
+import { ModalController, AlertController } from '@ionic/angular';
 
 export interface flight {
     sort: sortButton[],
@@ -159,6 +162,13 @@ export class RemoveEmailDetail {
     }
 }
 
+export class SendEmail {
+    static readonly type = '[Flight] SendEmail';
+    constructor(public itiPayload: itineraryPayload) {
+
+    }
+}
+
 @State<flight>({
     name: 'flight_result',
     defaults: {
@@ -182,6 +192,9 @@ export class RemoveEmailDetail {
 export class FlightResultState{
 
     constructor(
+        private flightService: FlightService,
+        public modalCtrl: ModalController,
+        public alertCtrl:AlertController
     ) {
 
     }
@@ -245,5 +258,33 @@ export class FlightResultState{
         states.patchState({
             emailItinerary: currentArray
         });
+    }
+
+    @Action(SendEmail)
+    async sendEmail(states: StateContext<flight>, action: SendEmail) {
+
+        const alert = await this.alertCtrl.create({
+            header: 'Mail Success',
+            subHeader: 'Mail Sent',
+            buttons: [{
+                text: 'Ok',
+                handler: () => {
+                    return true;
+                }
+            }]
+        });
+
+        try {
+            const emailResponse = await this.flightService.emailItinerary(action.itiPayload);
+            console.log(emailResponse);
+            states.patchState({
+                emailItinerary :[]
+            });
+            this.modalCtrl.dismiss();
+            alert.present();
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
 }

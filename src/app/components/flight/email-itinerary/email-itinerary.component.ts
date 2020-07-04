@@ -1,11 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FlightResultState, itinerarytrip, itineraryFlight, itineraryconnectingflight, emailtrip } from 'src/app/stores/result/flight.state';
+import { FlightResultState, itinerarytrip, itineraryFlight, itineraryconnectingflight, emailtrip, SendEmail } from 'src/app/stores/result/flight.state';
 import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { ModalController } from '@ionic/angular';
 import * as moment from 'moment';
 import { FormControl, Validators } from '@angular/forms';
+import { StateReset } from 'ngxs-reset-plugin';
 
 export interface itineraryPayload{
   toemail: string,
@@ -157,16 +158,9 @@ export class EmailItineraryComponent implements OnInit {
 
   async sendMail() {
     if (this.emailId.valid) {
-      try {
-        this.emailPayload.toemail = this.emailId.value;
-        this.emailPayload.mailcontent = this.openContent() + this.itinerary + this.closeContent();
-        console.log(this.emailPayload.mailcontent);
-        const emailResponse = await this.flightService.emailItinerary(this.emailPayload);
-        console.log(emailResponse);
-      }
-      catch (error) {
-        console.log(error);
-      }
+      this.emailPayload.toemail = this.emailId.value;
+      this.emailPayload.mailcontent = this.openContent() + this.itinerary + this.closeContent();
+      this.store.dispatch(new SendEmail(this.emailPayload));
     }
   }
 

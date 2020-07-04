@@ -4,11 +4,13 @@ import { ModalController } from '@ionic/angular';
 import { FlightBaggageComponent } from '../flight-baggage/flight-baggage.component';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { flightData } from 'src/app/models/search/flight';
-import { resultObj, fareRule, FlightResultState, AddEmailDetail, RemoveEmailDetail } from 'src/app/stores/result/flight.state';
+import { resultObj, fareRule, FlightResultState, AddEmailDetail, RemoveEmailDetail, itinerarytrip } from 'src/app/stores/result/flight.state';
 import { FairRuleComponent } from '../fair-rule/fair-rule.component';
 import { Store } from '@ngxs/store';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ResultState } from 'src/app/stores/result.state';
+import { map } from 'rxjs/operators';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-result-list',
@@ -43,6 +45,7 @@ export class ResultListComponent implements OnInit, AfterViewInit {
   flightName: boolean;
   flightPrice: boolean;
   flightMail: boolean;
+  itiMail: Observable<itinerarytrip[]>;
 
   constructor(
     public modalCtrl: ModalController,
@@ -52,6 +55,7 @@ export class ResultListComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.type = this.store.selectSnapshot(ResultState.getResultType);
+    this.itiMail = this.store.select(FlightResultState.getItinerary);
     this.changeType();
     this.flightList.forEach(
       (el, ind, arr) => {
@@ -125,6 +129,16 @@ export class ResultListComponent implements OnInit, AfterViewInit {
     else if (!evt.detail.checked) {
       this.store.dispatch(new RemoveEmailDetail(evt.detail.value));
     }
+  }
+
+  emailSelect(mail : itinerarytrip) : Observable<boolean> {
+    return this.itiMail.pipe(
+      map(
+        (email: itinerarytrip[]) => {
+          return email.some(el => _.isEqual(mail,el))
+        }
+      )
+    )
   }
 
   async showBaggage(baggage: flightData[][]){
