@@ -98,10 +98,10 @@ export class DomesticResultState extends BaseFlightResult {
     static getDomesticDepartureRoundTrip(states: domesticResult, filterState: filter): resultObj[] {
         return states.departure.value.filter(
             el =>
-                (filterState.stops !== null ? el.stops == filterState.stops : el) &&
+                (filterState.stops !== -1 ? el.stops == filterState.stops : el) &&
                 moment(el.departure).hour() <= filterState.depatureHours &&
                 moment(el.arrival).hour() <= filterState.arrivalHours &&
-                filterState.airlines.includes({ name: el.name, value: true })
+                filterState.airlines.some(air => (air.name === el.name) && (air.value))
         );
     }
 
@@ -109,10 +109,10 @@ export class DomesticResultState extends BaseFlightResult {
     static getDomesticReturnRoundTrip(states: domesticResult, filterState: filter): resultObj[] {
         return states.return.value.filter(
             el =>
-                (filterState.stops !== null ? el.stops == filterState.stops : el) &&
+                (filterState.stops !== -1 ? el.stops == filterState.stops : el) &&
                 moment(el.departure).hour() <= filterState.depatureHours &&
                 moment(el.arrival).hour() <= filterState.arrivalHours &&
-                filterState.airlines.includes({ name: el.name, value: true })
+                filterState.airlines.some(air => (air.name === el.name) && (air.value))
         );
     }
 

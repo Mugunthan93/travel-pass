@@ -4,7 +4,7 @@ import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { FlightResultState, resultObj, sortButton, ResetEmailDetail } from 'src/app/stores/result/flight.state';
+import { FlightResultState, resultObj, sortButton } from 'src/app/stores/result/flight.state';
 import { ResultState } from 'src/app/stores/result.state';
 import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 import { DepartureSort, ArrivalSort, DurationSort, PriceSort, OneWayResultState, SelectedFlight } from 'src/app/stores/result/flight/oneway.state';
@@ -29,8 +29,6 @@ export class OneWayPage implements OnInit {
   }
   
   ngOnInit() {
-
-    this.store.dispatch(new ResetEmailDetail());
     this.flightList$ = this.store.select(OneWayResultState.getOneWay);
     this.selectedFlight$ = this.store.select(OneWayResultState.getSelectedFlight);
 

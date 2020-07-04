@@ -5,7 +5,7 @@ import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-
 import { flightResult } from 'src/app/models/search/flight';
 import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { FlightResultState, resultObj, ResetEmailDetail, sortButton } from 'src/app/stores/result/flight.state';
+import { FlightResultState, resultObj, sortButton } from 'src/app/stores/result/flight.state';
 import { ResultState } from 'src/app/stores/result.state';
 import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 import { MultiCityResultState, SelectedFlight, DepartureSort, ArrivalSort, DurationSort, PriceSort } from 'src/app/stores/result/flight/multi-city.state';
@@ -45,8 +45,6 @@ export class MultiCityPage implements OnInit {
   }
   
   ngOnInit() {
-
-    this.store.dispatch(new ResetEmailDetail());
     this.selectedFlight = this.store.select(MultiCityResultState.getSelectedFlight);
 
     this.resultType$ = this.store.select(ResultState.getResultType);

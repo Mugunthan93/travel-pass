@@ -78,10 +78,10 @@ export class MultiCityResultState extends BaseFlightResult {
     static getMultiWay(states: multicityResult, filterState: filter): resultObj[] {
         return states.value.filter(
             el =>
-                (filterState.stops !== null ? el.stops == filterState.stops : el) &&
+                (filterState.stops !== -1 ? el.stops == filterState.stops : el) &&
                 moment(el.departure).hour() <= filterState.depatureHours &&
                 moment(el.arrival).hour() <= filterState.arrivalHours &&
-                filterState.airlines.includes({ name: el.name, value: true })
+                filterState.airlines.some(air => (air.name === el.name) && (air.value))
         );
     }
 

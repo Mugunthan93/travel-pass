@@ -159,10 +159,6 @@ export class RemoveEmailDetail {
     }
 }
 
-export class ResetEmailDetail {
-    static readonly type = '[Flight] ResetEmailDetail';
-}
-
 @State<flight>({
     name: 'flight_result',
     defaults: {
@@ -248,13 +244,6 @@ export class FlightResultState{
         const currentArray = emailArray.filter(el => el !== action.flightItem);
         states.patchState({
             emailItinerary: currentArray
-        });
-    }
-
-    @Action(ResetEmailDetail)
-    resetEmailDetail(states: StateContext<flight>, action: ResetEmailDetail) {
-        states.patchState({
-            emailItinerary: null
         });
     }
 }
