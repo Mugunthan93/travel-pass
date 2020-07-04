@@ -184,7 +184,7 @@ export class MultiCitySearchState extends BaseFlightSearch {
             const data: flightSearchResponse = JSON.parse(flightResponse.data);
             this.store.dispatch(new MultiCityResponse(data.response));
 
-            this.store.dispatch(new ResultMode('Flight'));
+            this.store.dispatch(new ResultMode('flight'));
             this.store.dispatch(new ResultType('multi-city'));
             loading.dismiss();
             this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'multi-city']));

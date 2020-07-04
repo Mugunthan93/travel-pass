@@ -1,25 +1,3 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button (click)="back()">
-        <ion-icon src="../../../../assets/ionicons/arrow-back-outline.svg"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>
-      <ion-text>One-Way Result</ion-text>
-    </ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="mailTicket()" *ngIf="mailStatus$ | async">
-        <ion-icon slot="icon-only" src="../../../../../assets/ionicons/mail-outline.svg"></ion-icon>
-      </ion-button>
-      <ion-button (click)="filter()">
-        <ion-icon slot="icon-only" src="../../../../../assets/ionicons/md-filter-outline.svg"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-  <app-result-sorting (sort)="getSort($event)"></app-result-sorting>
-</ion-header>
-
 <ion-grid>
   <ion-row>
     <ion-col>
@@ -27,12 +5,10 @@
       </ion-row>
       <ion-row>
         <ion-col>
-          <app-result-list 
-            [type]="resultType"
-            [flightList]="flightList"
-            [selectedFlights]="selectedFlight"
+          <app-result-list
+            [flightList]="flightList$ | async"
+            [selectedFlights]="selectedFlight$ | async"
             (getFlightValue)="currentFlight($event)"
-            (mailStatus$)="changeStatus($event)"
           ></app-result-list>
         </ion-col>
       </ion-row>
@@ -40,12 +16,11 @@
   </ion-row>
 </ion-grid>
 
-<ion-footer *ngIf="(selectedFlight | async) !== null">
+<ion-footer *ngIf="(selectedFlight$ | async) !== null">
   <ion-toolbar>
-    <ion-row class="ion-justify-content-around" *ngFor="let i of (selectedFlight | async).trips">
+    <ion-row class="ion-justify-content-around" *ngFor="let i of (selectedFlight$ | async).trips">
       <ion-col>
         <ion-img src="../../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
-        <!-- <ion-text *ngFor="let name of (i.tripinfo.airline.name | wordwrap)">{{name}}</ion-text> -->
         <ion-text>{{i.tripinfo.airline.name}}</ion-text>
         <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
       </ion-col>

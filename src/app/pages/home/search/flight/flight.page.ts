@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { IonTabs } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
@@ -14,7 +14,6 @@ import { SearchType } from 'src/app/stores/search.state';
 export class FlightPage implements OnInit {
 
   flightType: string;
-
   journeyType$: Observable<string>;
 
   constructor(

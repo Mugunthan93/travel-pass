@@ -101,7 +101,7 @@ export class DomesticResultState extends BaseFlightResult {
                 (filterState.stops !== null ? el.stops == filterState.stops : el) &&
                 moment(el.departure).hour() <= filterState.depatureHours &&
                 moment(el.arrival).hour() <= filterState.arrivalHours &&
-                filterState.airlines.includes(el.name)
+                filterState.airlines.includes({ name: el.name, value: true })
         );
     }
 
@@ -112,7 +112,7 @@ export class DomesticResultState extends BaseFlightResult {
                 (filterState.stops !== null ? el.stops == filterState.stops : el) &&
                 moment(el.departure).hour() <= filterState.depatureHours &&
                 moment(el.arrival).hour() <= filterState.arrivalHours &&
-                filterState.airlines.includes(el.name)
+                filterState.airlines.includes({ name: el.name, value: true })
         );
     }
 

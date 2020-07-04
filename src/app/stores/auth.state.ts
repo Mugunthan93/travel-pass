@@ -5,6 +5,29 @@ import { LoadingController, AlertController, MenuController } from '@ionic/angul
 import { GetUser, UserState } from './user.state';
 import { GetCompany, CompanyState } from './company.state';
 import { user } from '../models/user';
+import { StateReset } from 'ngxs-reset-plugin';
+import { DashboardState } from './dashboard.state';
+import { SearchState } from './search.state';
+import { ResultState } from './result.state';
+import { BookState } from './book.state';
+import { FlightSearchState } from './search/flight.state';
+import { FlightResultState } from './result/flight.state';
+import { FLightBookState } from './book/flight.state';
+import { OneWaySearchState } from './search/flight/oneway.state';
+import { RoundTripSearchState } from './search/flight/round-trip.state';
+import { MultiCitySearchState } from './search/flight/multi-city.state';
+import { OneWayResultState } from './result/flight/oneway.state';
+import { DomesticResultState } from './result/flight/domestic.state';
+import { InternationalResultState } from './result/flight/international.state';
+import { MultiCityResultState } from './result/flight/multi-city.state';
+import { OneWayBookState } from './book/flight/oneway.state';
+import { DomesticBookState } from './book/flight/domestic.state';
+import { InternationalBookState } from './book/flight/international.state';
+import { MultiCityBookState } from './book/flight/multi-city.state';
+import { BookingState } from './booking.state';
+import { ApprovalState } from './approval.state';
+import { FilterState } from './result/filter.state';
+import { SharedState } from './shared.state';
 
 export class Login {
     static readonly type = '[App] LoginUser';
@@ -96,10 +119,40 @@ export class AuthState {
         const logout = await this.authService.logout();
         sessionStorage.clear();
 
-        this.store.reset(new UserState(null));
-        this.store.reset(new CompanyState(null));
-        // this.store.dispatch(new StateReset(UserState,CompanyState));
-        // this.store.dispatch(new StateResetAll());
+        this.store.dispatch(new StateReset(
+            AuthState,
+            UserState,
+            CompanyState,
+            DashboardState,
+            SearchState,
+            ResultState,
+            BookState,
+
+            //lvl 2
+            FlightSearchState,
+            FlightResultState,
+            FLightBookState,
+
+            OneWaySearchState,
+            RoundTripSearchState,
+            MultiCitySearchState,
+
+            OneWayResultState,
+            DomesticResultState,
+            InternationalResultState,
+            MultiCityResultState,
+
+            OneWayBookState,
+            DomesticBookState,
+            InternationalBookState,
+            MultiCityBookState,
+
+            BookingState,
+            ApprovalState,
+
+            FilterState,
+            SharedState
+        ));
         this.menuCtrl.toggle('first');
         this.store.dispatch(new Navigate(['/', 'auth']));
         

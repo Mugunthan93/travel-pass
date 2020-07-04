@@ -1,9 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
-import { Observable, Subscription } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { FilterState, filter } from 'src/app/stores/result/filter.state';
+import { FilterState, filter, GetFilter, airlineName } from 'src/app/stores/result/filter.state';
+import { StateReset } from 'ngxs-reset-plugin';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-trip-filter',
@@ -12,13 +13,10 @@ import { FilterState, filter } from 'src/app/stores/result/filter.state';
 })
 export class TripFilterComponent implements OnInit {
 
-  @Input() type: string;
   filterForm: FormGroup;
   airlines: FormGroup;
 
-  inputs: filter = null;
   inputs$: Observable<filter>;
-  inputsSub: Subscription;
 
   constructor(
     public fb: FormBuilder,
@@ -29,34 +27,32 @@ export class TripFilterComponent implements OnInit {
 
   ngOnInit() {
 
+    this.inputs$ = this.store.select(FilterState.getFilter);
     this.airlines = this.fb.group({});
 
-    this.filterForm = this.fb.group({
-      "stops": this.fb.control(null),
-      "depHours": this.fb.control(0),
-      "arrHours": this.fb.control(0),
-      "price": this.fb.control(0),
-      "corpFare": this.fb.control(false),
-      "airlines": this.airlines
+    this.inputs$.subscribe(
+      (res: filter) => {
+    
+        this.filterForm = this.fb.group({
+          "stops": this.fb.control(res.stops),
+          "depHours": this.fb.control(res.depatureHours),
+          "arrHours": this.fb.control(res.arrivalHours),
+          "price": this.fb.control(res.price),
+          "corpFare": this.fb.control(res.corporateFare),
+          "airlines": this.airlines
+        });
+    
+        console.log(this.filterForm);
+        this.addAirlines(res);
+      
     });
 
-    console.log(this.filterForm);
-
-
-    this.inputs$ = this.store.select(FilterState.getFilter);
-    this.inputsSub = this.inputs$.subscribe(
-      (res: filter) => {
-        this.addAirlines(res);
-        this.inputs = res; 
-        console.log(this.filterForm);
-      }
-    );
 
   }
 
   addAirlines(res: filter) {
     res.airlines.forEach((el) => {
-      this.airlines.addControl(el,this.fb.control(false));
+      this.airlines.addControl(el.name,this.fb.control(el.value));
     });
   }
   
@@ -64,33 +60,59 @@ export class TripFilterComponent implements OnInit {
     this.modalCtrl.dismiss();
   }
 
-  reset() {
-    
-  }
-
   chooseStop(evt: CustomEvent) {
-    console.log(evt);
     this.filterForm.controls['stops'].setValue(parseInt(evt.detail.value));
   }
 
   depRange(evt: CustomEvent) {
+    this.filterForm.controls['depHours'].setValue(parseInt(evt.detail.value));
     console.log(evt);
   }
 
   reRange(evt: CustomEvent) {
+    this.filterForm.controls['arrHours'].setValue(parseInt(evt.detail.value));
     console.log(evt);
   }
 
   priceRange(evt: CustomEvent) {
+    this.filterForm.controls['price'].setValue(parseInt(evt.detail.value));
     console.log(evt);
   }
 
-  corpFare(evt : CustomEvent) {
-    console.log(evt);
+  corpFare(evt: CustomEvent) {
+    this.filterForm.controls['corpFare'].setValue(parseInt(evt.detail.value));
+  }
+
+  reset() {
+    this.store.dispatch(new StateReset(FilterState));
   }
 
   filter() {
-    console.log(this.filterForm);
+
+    if (this.filterForm.valid) {
+      
+      let airline: airlineName[] = [];
+  
+      for (const key in this.filterForm.value.airlines){
+        airline.push({
+          name: key,
+          value: this.filterForm.value.airlines[key]
+        });
+      }
+  
+      let filter: filter = {
+        stops: this.filterForm.value.stops,
+        depatureHours: this.filterForm.value.depHours,
+        arrivalHours: this.filterForm.value.arrHours,
+        corporateFare: this.filterForm.value.corpFare,
+        airlines: airline,
+        price: this.filterForm.value.price
+      }
+      this.store.dispatch(new GetFilter(filter));
+      this.modalCtrl.dismiss();
+
+    }
+
     
   }
 

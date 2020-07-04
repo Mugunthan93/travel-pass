@@ -52,7 +52,7 @@ export class DashboardState{
 
     @Action(SearchFlight)
     searchFlight(states: StateContext<any>, action: SearchFlight) {
-        this.store.dispatch(new SearchMode('Flight'));
+        this.store.dispatch(new SearchMode('flight'));
         this.store.dispatch(new SearchType('one-way'));
         this.store.dispatch(new JourneyType('one-way'));
         this.store.dispatch(new Navigate(['/', 'home', 'search', 'flight', 'one-way']));
@@ -70,9 +70,4 @@ export class DashboardState{
         this.store.dispatch(new SearchType('Hotel'));
         this.store.dispatch(new Navigate(['/', 'home', 'search','hotel']));
     }
-
-    // @Action(SearchFlight)
-    // searchCab() {
-
-    // }
 }

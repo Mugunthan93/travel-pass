@@ -17,6 +17,10 @@ ion-content{
 
         >ion-item {
             margin: 20px auto;
+            >ion-row{
+                display: flex;
+                flex-direction: column;
+            }
         }
 
         >ion-button {

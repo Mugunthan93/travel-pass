@@ -8,6 +8,7 @@ import { resultObj, fareRule, FlightResultState, AddEmailDetail, RemoveEmailDeta
 import { FairRuleComponent } from '../fair-rule/fair-rule.component';
 import { Store } from '@ngxs/store';
 import { Observable, Subscription } from 'rxjs';
+import { ResultState } from 'src/app/stores/result.state';
 
 @Component({
   selector: 'app-result-list',
@@ -23,17 +24,14 @@ import { Observable, Subscription } from 'rxjs';
     ])
   ]
 })
-export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
+export class ResultListComponent implements OnInit, AfterViewInit {
   
   @ViewChildren('colref', { read: ElementRef }) columns: QueryList<ElementRef>;
   @Output() getsColumns: EventEmitter<QueryList<ElementRef>> = new EventEmitter<QueryList<ElementRef>>(true);
-  @Input() flightType: string;
 
-  @Input() type: string;
   @Input() flightList: resultObj[];
   @Input() selectedFlights: any;
-
-  @Output() mailStatus$: EventEmitter<Observable<boolean>> = new EventEmitter<Observable<boolean>>(false);
+  
   @Output() getFlightValue: EventEmitter<any> = new EventEmitter<any>(null);
 
   selectedFlight = null;
@@ -41,6 +39,7 @@ export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
   itemList: number = 60;
   state: string[] = [];
 
+  type: string;
   flightName: boolean;
   flightPrice: boolean;
   flightMail: boolean;
@@ -52,17 +51,13 @@ export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnInit() {
+    this.type = this.store.selectSnapshot(ResultState.getResultType);
+    this.changeType();
     this.flightList.forEach(
       (el, ind, arr) => {
         this.state[ind] = "default";
       }
     );
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.type) { 
-      this.changeType(changes.type.currentValue);
-    }
   }
 
   ngAfterViewInit(): void {
@@ -78,13 +73,13 @@ export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
 
-  changeType(type: string): void {
-    if (type == 'one-way' || type == 'animated-round-trip') {
+  changeType(): void {
+    if (this.type == 'one-way' || this.type == 'animated-round-trip') {
       this.flightName = false;
       this.flightPrice = true;
       this.flightMail = true;
     }
-    else if (type == 'round-trip' || type == 'multi-city') {
+    else if (this.type == 'round-trip' || this.type == 'multi-city') {
       this.flightName = true;
       this.flightPrice = false;
       this.flightMail = false;
@@ -130,7 +125,6 @@ export class ResultListComponent implements OnInit, OnChanges, AfterViewInit {
     else if (!evt.detail.checked) {
       this.store.dispatch(new RemoveEmailDetail(evt.detail.value));
     }
-    this.mailStatus$.emit(this.store.select(FlightResultState.mailStatus));
   }
 
   async showBaggage(baggage: flightData[][]){

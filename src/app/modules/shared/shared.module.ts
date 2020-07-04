@@ -12,7 +12,6 @@ import { CalendarModule } from 'ion2-calendar';
 
 @NgModule({
   declarations: [
-    ResultSortingComponent,
     ResultListComponent
   ],
   imports: [
@@ -24,7 +23,6 @@ import { CalendarModule } from 'ion2-calendar';
     CalendarModule
   ],
   exports: [
-    ResultSortingComponent,
     ResultListComponent,
     MatExpansionModule
   ]

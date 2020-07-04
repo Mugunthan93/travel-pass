@@ -8,7 +8,13 @@ export interface filter {
     depatureHours: number
     arrivalHours: number
     corporateFare: boolean
-    airlines: string[]
+    airlines: airlineName[]
+    price: number
+}
+
+export interface airlineName {
+    name: string,
+    value:boolean
 }
 
 export class GetAirlines {
@@ -18,14 +24,22 @@ export class GetAirlines {
     }
 }
 
+export class GetFilter {
+    static readonly type = '[Filter] GetFilter';
+    constructor(public filter: filter) {
+
+    }
+}
+
 @State<filter>({
     name: 'filter',
     defaults: {
-        stops: null,
+        stops: -1,
         depatureHours: 24,
         arrivalHours: 24,
         corporateFare: false,
-        airlines: []
+        airlines: [],
+        price : 0
     }
 })
 
@@ -38,20 +52,28 @@ export class FilterState {
 
     @Action(GetAirlines)
     getAirlines(states: StateContext<filter>, action: GetAirlines) {
-        let airlines: string[] = [];
+        let airlines: airlineName[] = [];
         action.result.forEach(
             (el) => {
-                airlines.push(el.name);
+                airlines.push({
+                    name: el.name,
+                    value: true
+                });
             }
         );
 
         states.patchState({
-                stops: null,
+                stops: -1,
                 depatureHours: 24,
                 arrivalHours: 24,
                 corporateFare: false,
-                airlines: _.sortedUniq(airlines)
+                airlines: _.uniqBy(airlines,'name')
         })
+    }
+
+    @Action(GetFilter)
+    getFilter(states: StateContext<filter>, action: GetFilter) {
+        states.patchState(action.filter);
     }
 
 }

@@ -210,7 +210,7 @@ export class RoundTripSearchState extends BaseFlightSearch {
             console.log(flightResponse);
             const data: flightSearchResponse = JSON.parse(flightResponse.data);
             console.log(data);
-            this.store.dispatch(new ResultMode('Flight'));
+            this.store.dispatch(new ResultMode('flight'));
             if (data.response.Results.length == 1) {
                 this.store.dispatch(new ResultType('round-trip'));
                 this.store.dispatch(new InternationalResponse(data.response));

@@ -17,6 +17,7 @@ import { environment } from 'src/environments/environment';
 import { BusFilterComponent } from 'src/app/components/bus/bus-filter/bus-filter.component';
 import { FairRuleComponent } from 'src/app/components/flight/fair-rule/fair-rule.component';
 import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
+import { ResultSortingComponent } from 'src/app/components/shared/result-sorting/result-sorting.component';
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import { EmailItineraryComponent } from 'src/app/components/flight/email-itinera
     HotelLocationComponent,
     BusFilterComponent,
     FairRuleComponent,
-    EmailItineraryComponent
+    EmailItineraryComponent,
+    ResultSortingComponent
   ],
   entryComponents: [
     TripFilterComponent,
@@ -51,7 +53,8 @@ import { EmailItineraryComponent } from 'src/app/components/flight/email-itinera
     HotelLocationComponent,
     BusFilterComponent,
     FairRuleComponent,
-    EmailItineraryComponent
+    EmailItineraryComponent,
+    ResultSortingComponent
   ]
 })
 export class ResultPageModule {}

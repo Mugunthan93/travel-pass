@@ -1,14 +1,30 @@
 <ion-header>
     <ion-toolbar>
-        <ion-title>Send Email Itinerary</ion-title>
+        <ion-title>
+            <ion-text>
+                Send Email Itinerary
+            </ion-text>
+        </ion-title>
     </ion-toolbar>
-    <ion-item lines="full">
-        <ion-label position="floating">To:</ion-label>
-        <ion-input type="text"></ion-input>
-    </ion-item>
 </ion-header>
 <ion-content>
-
+    <ion-item lines="full">
+        <ion-label position="floating">To:</ion-label>
+        <ion-row>
+            <ion-input type="text" [formControl]="emailId" required email></ion-input>
+            <ion-label *ngIf="
+                  emailId.touched &&
+                  emailId.hasError('required')" color="danger">
+                Email Address Required
+            </ion-label>
+            <ion-label *ngIf="
+                  emailId.touched &&
+                  emailId.dirty &&
+                  emailId.hasError('pattern')" color="danger">
+                Invalid Email Address
+            </ion-label>
+        </ion-row>
+    </ion-item>
 </ion-content>
 <ion-footer>
     <ion-toolbar>

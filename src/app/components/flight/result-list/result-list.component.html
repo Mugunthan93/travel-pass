@@ -30,7 +30,6 @@
                 *ngFor="let i of item.trips" [ngStyle]="{'height':'80px'}">
                 <ion-col>
                   <ion-img src="../../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
-                  <!-- <ion-text *ngFor="let name of (i.tripinfo.airline.name | wordwrap)">{{name}}</ion-text> -->
                   <ion-text>{{i.tripinfo.airline.name}}</ion-text>
                   <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
                 </ion-col>

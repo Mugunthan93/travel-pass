@@ -5,6 +5,7 @@ import { Store } from '@ngxs/store';
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { ModalController } from '@ionic/angular';
 import * as moment from 'moment';
+import { FormControl, Validators } from '@angular/forms';
 
 export interface itineraryPayload{
   toemail: string,
@@ -20,8 +21,9 @@ export interface itineraryPayload{
   styleUrls: ['./email-itinerary.component.scss'],
 })
 export class EmailItineraryComponent implements OnInit {
+
+  emailId: FormControl;
   
-  @Input() type: string;
   heading: string = "content head";
 
   itinerary: string = "";
@@ -33,11 +35,11 @@ export class EmailItineraryComponent implements OnInit {
   emailtripSub: Subscription;
 
   emailPayload: itineraryPayload = {
-    bccemail : "sarath@tripmidas.com",
-    ccemail : "mari@tripmidas.com",
+    bccemail: "nadesan@tripmidas.com",
+    ccemail: "support@tripmidas.com,operations@tripmidas.com",
     mailcontent : "",
     subject : "Your itineraries for Flight",
-    toemail : "kskarthick93@gmail.com"
+    toemail : ""
   }
 
   constructor(
@@ -49,6 +51,16 @@ export class EmailItineraryComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.emailId = new FormControl(null,
+      [
+        Validators.required,
+        Validators.email,
+        Validators.pattern('[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,63}'
+        )]);
+    
+    console.log(this.emailId);
+
     this.emailtrip$ = this.store.select(FlightResultState.getemailTrip);
     this.emailtripSub = this.emailtrip$.subscribe(
       (email: emailtrip) => {
@@ -144,19 +156,26 @@ export class EmailItineraryComponent implements OnInit {
   }
 
   async sendMail() {
-    try {
-      this.emailPayload.mailcontent = this.openContent() + this.itinerary + this.closeContent();
-      console.log(this.emailPayload.mailcontent);
-      const emailResponse = await this.flightService.emailItinerary(this.emailPayload);
-      console.log(emailResponse);
-    }
-    catch (error) {
-      console.log(error);
+    if (this.emailId.valid) {
+      try {
+        this.emailPayload.toemail = this.emailId.value;
+        this.emailPayload.mailcontent = this.openContent() + this.itinerary + this.closeContent();
+        console.log(this.emailPayload.mailcontent);
+        const emailResponse = await this.flightService.emailItinerary(this.emailPayload);
+        console.log(emailResponse);
+      }
+      catch (error) {
+        console.log(error);
+      }
     }
   }
 
   dismiss() {
     this.modalCtrl.dismiss();
+  }
+
+  getMailID(evt: CustomEvent) {
+    this.emailId.patchValue(evt.detail.value);
   }
 
 }

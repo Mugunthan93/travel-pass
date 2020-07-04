@@ -1,6 +1,5 @@
-form{
-    min-height: -webkit-fill-available;
-    >ion-content{
+ion-content{
+    >form{
         >ion-grid{
             --ion-grid-padding:10px !important;
             >*{
@@ -18,8 +17,9 @@ form{
             }
         }
     }
-    
-    >ion-footer{
+}
+ion-footer{
+    >form{
         ion-toolbar{
             ion-button{
                 margin:0px 0px 0px 0px;

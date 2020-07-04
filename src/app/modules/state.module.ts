@@ -32,6 +32,7 @@ import { ApprovalState } from '../stores/approval.state';
 import { DomesticBookState } from '../stores/book/flight/domestic.state';
 import { MultiCityBookState } from '../stores/book/flight/multi-city.state';
 import { InternationalBookState } from '../stores/book/flight/international.state';
+import { NgxsResetPluginModule } from 'ngxs-reset-plugin';
 
 @NgModule({
   declarations: [],
@@ -73,6 +74,7 @@ import { InternationalBookState } from '../stores/book/flight/international.stat
       SharedState
     ], { developmentMode: !environment.production }
     ),
+    NgxsResetPluginModule.forRoot(),
     NgxsFormPluginModule.forRoot(),
     NgxsStoragePluginModule.forRoot({
       key: [

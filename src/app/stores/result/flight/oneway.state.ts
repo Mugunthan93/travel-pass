@@ -74,12 +74,13 @@ export class OneWayResultState extends BaseFlightResult {
 
     @Selector([FilterState])
     static getOneWay(states: onewayResult, filterState: filter): resultObj[] {
+
         return states.value.filter(
             el =>
-                (filterState.stops !== null ? el.stops == filterState.stops : el) &&
+                (filterState.stops !== -1 ? el.stops == filterState.stops : el) &&
                 moment(el.departure).hour() <= filterState.depatureHours &&
                 moment(el.arrival).hour() <= filterState.arrivalHours &&
-                filterState.airlines.includes(el.name)
+                filterState.airlines.some(air => (air.name === el.name) && (air.value))
         );
     }
 
