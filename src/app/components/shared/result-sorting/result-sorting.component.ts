@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { sortButton, FlightResultState } from 'src/app/stores/result/flight.state';
+import { sortButton, FlightResultState, SortChange } from 'src/app/stores/result/flight.state';
 
 @Component({
   selector: 'app-result-sorting',
@@ -34,7 +34,7 @@ export class ResultSortingComponent implements OnInit {
   
   sortChange(evt: CustomEvent) {
     this.currentButton = evt.detail.value;
-    this.store.dispatch(new this.sortChange(evt.detail.value));
+    this.store.dispatch(new SortChange(evt.detail.value));
   }
 
   sorting(item: sortButton) {

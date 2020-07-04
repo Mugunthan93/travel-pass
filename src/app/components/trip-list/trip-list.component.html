@@ -1,16 +1,17 @@
 <ion-content>
   <ion-list lines="none">
-    <ion-item *ngFor="let item of items">
+    <ion-item *ngFor="let trip of (upcomingTrips$ | async)">
       <ion-icon slot="start" src="../../../assets/icons/dashboard/trip-flight.svg"></ion-icon>
       <ion-icon slot="end" src="../../../assets/ionicons/md-alert-circle.svg"></ion-icon>
       <ion-row>
         <ion-row>
-          <ion-text>{{ item.from }}</ion-text>
+          <ion-text>
+            {{ trip.from }}</ion-text>
           <ion-icon src="../../../assets/icons/straight.svg"></ion-icon>
-          <ion-text>{{ item.to }}</ion-text>
+          <ion-text>{{ trip.to }}</ion-text>
         </ion-row>
         <ion-row>
-          <ion-text>{{ item.date | date }} | {{ item.time | date : 'shortTime' }}</ion-text>
+          <ion-text>{{ trip.travelStartDate | date }} | {{ trip.travelStartDate | date : 'shortTime' }}</ion-text>
         </ion-row>
       </ion-row>
     </ion-item>

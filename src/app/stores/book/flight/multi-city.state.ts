@@ -13,6 +13,7 @@ import * as moment from 'moment';
 import { MultiCityResultState } from '../../result/flight/multi-city.state';
 import { MultiCitySearch, MultiCitySearchState } from '../../search/flight/multi-city.state';
 import { GST } from './oneway.state';
+import { BookMode, BookType } from '../../book.state';
 
 
 export interface multicityBook {
@@ -111,6 +112,8 @@ export class MultiCityBookState {
         });
 
         this.store.dispatch(new SetFirstPassengers(this.store.selectSnapshot(SearchState.getSearchType)));
+        this.store.dispatch(new BookMode('flight'));
+        this.store.dispatch(new BookType('multi-city'));
         this.store.dispatch(new Navigate(['/', 'home', 'book', 'flight', 'multi-city']));
 
     }

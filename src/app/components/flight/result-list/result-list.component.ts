@@ -33,6 +33,7 @@ export class ResultListComponent implements OnInit, AfterViewInit {
 
   @Input() flightList: resultObj[];
   @Input() selectedFlights: any;
+  @Input() flightType: string;
   
   @Output() getFlightValue: EventEmitter<any> = new EventEmitter<any>(null);
 

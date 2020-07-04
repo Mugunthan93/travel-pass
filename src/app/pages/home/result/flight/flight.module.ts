@@ -16,8 +16,8 @@ import { SharedModule } from 'src/app/modules/shared/shared.module';
     FormsModule,
     IonicModule,
     FlightPageRoutingModule,
-    MatExpansionModule,
-    SharedModule
+    SharedModule,
+    MatExpansionModule
   ],
   declarations: [
     FlightPage

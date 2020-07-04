@@ -18,6 +18,7 @@ export class MenuBarComponent implements OnInit {
 
   isUser: Observable<boolean>;
   isManager: Observable<boolean>;
+  name: Observable<string>;
 
   constructor(
     private store: Store,
@@ -25,6 +26,7 @@ export class MenuBarComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.name = this.store.select(UserState.getFirstName);
     this.isManager = this.store.select(UserState.isManager);
   }
 

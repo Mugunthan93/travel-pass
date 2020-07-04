@@ -6,7 +6,12 @@
       </ion-button>
     </ion-buttons>
     <ion-title>
-      <ion-text>One-Way Result</ion-text>
+      <ion-text>{{resultMode$ | async | titlecase}} Result 
+        {{
+          ((resultMode$ | async) == 'flight') && ((resultType$ | async) == 'animated-round-trip') ? '[Round Trip]' :
+          (resultMode$ | async) == 'flight' ? '['+(resultType$ | async)+']' : ''
+        }}
+      </ion-text>
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="mailTicket()" *ngIf="mailStatus$ | async">

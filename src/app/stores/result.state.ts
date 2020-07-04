@@ -1,7 +1,5 @@
 import { State, Selector, Action, StateContext, Store } from '@ngxs/store';
 import { FlightResultState } from './result/flight.state';
-import { FlightSearchState } from './search/flight.state';
-import { FLightBookState } from './book/flight.state';
 
 export interface result{
     mode: string,

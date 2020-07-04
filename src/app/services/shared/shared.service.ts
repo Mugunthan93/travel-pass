@@ -17,4 +17,8 @@ export class SharedService {
     }
     return await this.http.get("/airlines/tboairlinecities", param);
   }
+
+  async upcomingTrips(): Promise<HTTPResponse> {
+    return await this.http.get("/allBookings/upcomming/trips/airline/getallTrips/list/booked/",{});
+  }
 }

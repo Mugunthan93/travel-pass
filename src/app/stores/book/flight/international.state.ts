@@ -15,6 +15,7 @@ import { MultiCitySearch, MultiCitySearchState } from '../../search/flight/multi
 import { GST } from './oneway.state';
 import { InternationalResultState } from '../../result/flight/international.state';
 import { RoundTripSearchState, RoundTripSearch } from '../../search/flight/round-trip.state';
+import { BookMode, BookType } from '../../book.state';
 
 
 export interface internationalBook {
@@ -113,6 +114,8 @@ export class InternationalBookState {
         });
 
         this.store.dispatch(new SetFirstPassengers(this.store.selectSnapshot(SearchState.getSearchType)));
+        this.store.dispatch(new BookMode('flight'));
+        this.store.dispatch(new BookType('round-trip'));
         this.store.dispatch(new Navigate(['/', 'home', 'book', 'flight', 'round-trip','international']));
 
     }

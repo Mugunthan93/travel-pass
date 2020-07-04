@@ -1,34 +1,10 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button (click)="back()">
-        <ion-icon src="../../../../assets/ionicons/arrow-back-outline.svg"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>
-      <ion-text>Multi-City Result</ion-text>
-    </ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="mailTicket()" *ngIf="mailStatus$ | async">
-        <ion-icon slot="icon-only" src="../../../../../assets/ionicons/mail-outline.svg"></ion-icon>
-      </ion-button>
-      <ion-button (click)="filter()">
-        <ion-icon src="../../../../../assets/ionicons/md-filter-outline.svg"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-  <app-result-sorting (sort)="getSort($event)"></app-result-sorting>
-</ion-header>
-
 <ion-grid>
   <ion-row>
     <ion-col>
       <app-result-list
-      [type]="resultType"
-      [flightList]="flightList" 
-      [selectedFlights]="selectedFlight"
+      [flightList]="flightList$ | async"
+      [selectedFlights]="selectedFlight$ | async"
       (getFlightValue)="currentFlight($event)"
-      (mailStatus$)="changeStatus($event)"
       ></app-result-list>
     </ion-col>
   </ion-row>

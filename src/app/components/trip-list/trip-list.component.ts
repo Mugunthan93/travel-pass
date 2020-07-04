@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { DashboardState, upcomingTrips } from 'src/app/stores/dashboard.state';
 
 export interface tripList {
   from : string
@@ -14,27 +17,15 @@ export interface tripList {
 })
 export class TripListComponent implements OnInit {
 
-  items : tripList[] = [
-    {from : 'CHE', to : 'CBE', date: '1994-11-05T08:15:30-05:00', time:'1994-11-05T08:15:30-05:00'},
-    {from : 'CHE', to : 'CBE', date: '1994-11-05T08:15:30-05:00', time:'1994-11-05T08:15:30-05:00'},
-    {from : 'CHE', to : 'CBE', date: '1994-11-05T08:15:30-05:00', time:'1994-11-05T08:15:30-05:00'},
-    {from : 'CHE', to : 'CBE', date: '1994-11-05T08:15:30-05:00', time:'1994-11-05T08:15:30-05:00'},
-    {from : 'CHE', to : 'CBE', date: '1994-11-05T08:15:30-05:00', time:'1994-11-05T08:15:30-05:00'},
-    { from: 'CHE', to: 'CBE', date: '1994-11-05T08:15:30-05:00', time: '1994-11-05T08:15:30-05:00' },
-    {from : 'CHE', to : 'CBE', date: '1994-11-05T08:15:30-05:00', time:'1994-11-05T08:15:30-05:00'},
-    {from : 'CHE', to : 'CBE', date: '1994-11-05T08:15:30-05:00', time:'1994-11-05T08:15:30-05:00'},
-    {from : 'CHE', to : 'CBE', date: '1994-11-05T08:15:30-05:00', time:'1994-11-05T08:15:30-05:00'},
-    {from : 'CHE', to : 'CBE', date: '1994-11-05T08:15:30-05:00', time:'1994-11-05T08:15:30-05:00'},
-    {from : 'CHE', to : 'CBE', date: '1994-11-05T08:15:30-05:00', time:'1994-11-05T08:15:30-05:00'},
-    {from : 'CHE', to : 'CBE', date: '1994-11-05T08:15:30-05:00', time:'1994-11-05T08:15:30-05:00'},
-    {from : 'CHE', to : 'CBE', date: '1994-11-05T08:15:30-05:00', time:'1994-11-05T08:15:30-05:00'},
-    { from: 'CHE', to: 'CBE', date: '1994-11-05T08:15:30-05:00', time: '1994-11-05T08:15:30-05:00' }
-  ];
+  upcomingTrips$: Observable<upcomingTrips[]>;
 
-
-  constructor() {
+  constructor(
+    private store : Store
+  ) {
    }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.upcomingTrips$ = this.store.select(DashboardState.getUpcomingTrips);
+  }
 
 }

@@ -1,59 +1,11 @@
 <ion-content>
   <mat-accordion multi="false">
-    <mat-expansion-panel *ngFor="let flight of depFlightDetail.trip;let i = index">
-      <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">
-        <ion-row>
-          <ion-text>
-            Trip {{i+1}}
-          </ion-text>
-          <ion-row>
-            <ion-text>{{flight.origin}}</ion-text>
-            <ion-icon src="../../../../../../assets/icons/flight.svg"></ion-icon>
-            <ion-text>{{flight.destination}}</ion-text>
-          </ion-row>
-        </ion-row>
-      </mat-expansion-panel-header>
-      <div *ngFor="let flight of flight.connecting_flight;let i = index">
-        <ion-item>
-          <ion-row slot="start">
-            <ion-img src="../../../../../../assets/AirlineLogo/{{flight.airline.code}}.gif"></ion-img>
-            <ion-row>
-              <ion-text>{{flight.airline.name}}</ion-text>
-              <ion-text>{{flight.airline.code}} - {{flight.airline.number}}</ion-text>
-            </ion-row>
-          </ion-row>
-          <ion-row slot="end">
-            <!-- <ion-img src="../../../../../../assets/site-image/D7.gif"></ion-img> -->
-          </ion-row>
-        </ion-item>
-        <ion-row>
-          <ion-col>
-            <ion-text>({{flight.origin.code}}) {{flight.origin.date  | date : 'HH:mm'}}</ion-text>
-            <ion-text>{{flight.origin.date | date : 'EEE,d LLL' | titlecase}}</ion-text>
-            <ion-text>{{flight.origin.name}}</ion-text>
-            <ion-text>Terminal {{flight.origin.terminal}}</ion-text>
-          </ion-col>
-          <ion-col>
-            <ion-icon size="large" src="../../../../../../assets/icons/passage-of-time.svg"></ion-icon>
-            <ion-text>{{flight.duration}}</ion-text>
-          </ion-col>
-          <ion-col>
-            <ion-text>({{flight.destination.code}}) {{flight.destination.date  | date : 'HH:mm'}}</ion-text>
-            <ion-text>{{flight.destination.date | date : 'EEE,d LLL' | titlecase}}</ion-text>
-            <ion-text>{{flight.destination.name}}</ion-text>
-            <ion-text>Terminal {{flight.destination.terminal}}</ion-text>
-          </ion-col>
-        </ion-row>
-      </div>
-    </mat-expansion-panel>
-  </mat-accordion>
-  <mat-accordion multi="false">
     <mat-expansion-panel *ngFor="let flight of reFlightDetail.trip;let i = index">
       <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">
         <ion-row>
-          <ion-text>
-            Trip {{i+1}}
-          </ion-text>
+          <ion-label>
+            {{i == 0 ? 'Onward Trip Details' : i == 1 ? 'Return Trip Details'}}
+          </ion-label>
           <ion-row>
             <ion-text>{{flight.origin}}</ion-text>
             <ion-icon src="../../../../../../assets/icons/flight.svg"></ion-icon>

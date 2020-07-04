@@ -21,6 +21,9 @@ import { InternationalResultState } from 'src/app/stores/result/flight/internati
 export class ResultPage implements OnInit {
 
   mailStatus$: Observable<boolean>;
+  resultMode$: Observable<string>;
+  resultType$: Observable<string>;
+
   resultMode: string;
   resultType: string;
 
@@ -33,21 +36,17 @@ export class ResultPage implements OnInit {
   }
 
   ngOnInit() {
+    this.resultMode$ = this.store.select(ResultState.getResultMode);
+    this.resultType$ = this.store.select(ResultState.getResultType);
+
     this.resultMode = this.store.selectSnapshot(ResultState.getResultMode);
     this.resultType = this.store.selectSnapshot(ResultState.getResultType);
+
     this.mailStatus$ = this.store.select(FlightResultState.mailStatus);
   }
 
   back() {
-    this.store.dispatch(
-      new StateReset(
-        ResultState,
-        FlightResultState,
-        OneWayResultState,
-        DomesticResultState,
-        InternationalResultState,
-        MultiCityResultState
-      ));
+    this.store.dispatch(new StateReset(ResultState));
     this.store.dispatch(new Navigate(['/', 'home', 'search', this.resultMode,this.resultType]));
   }
 

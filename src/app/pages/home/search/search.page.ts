@@ -35,14 +35,7 @@ export class SearchPage implements OnInit,OnDestroy {
   }
 
   back() {
-    this.store.dispatch(
-      new StateReset(
-        SearchState,
-        FlightSearchState,
-        OneWaySearchState,
-        RoundTripSearchState,
-        MultiCitySearchState
-      ));
+    this.store.dispatch(new StateReset(SearchState));
     this.store.dispatch(new Navigate(['/','home','dashboard','home-tab']));
   }
 

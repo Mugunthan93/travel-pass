@@ -12,6 +12,7 @@ import { CompanyState } from '../../company.state';
 import { environment } from 'src/environments/environment';
 import { UserState } from '../../user.state';
 import * as moment from 'moment';
+import { BookMode, BookType } from '../../book.state';
 
 
 export interface onewayBook {
@@ -120,6 +121,8 @@ export class OneWayBookState{
         });
 
         this.store.dispatch(new SetFirstPassengers(this.store.selectSnapshot(SearchState.getSearchType)));
+        this.store.dispatch(new BookMode('flight'));
+        this.store.dispatch(new BookType('one-way'));
         this.store.dispatch(new Navigate(['/', 'home', 'book', 'flight', 'one-way']));
 
     }

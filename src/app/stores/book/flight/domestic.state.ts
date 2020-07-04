@@ -13,6 +13,7 @@ import { UserState } from '../../user.state';
 import { environment } from 'src/environments/environment';
 import { Navigate } from '@ngxs/router-plugin';
 import { SearchState } from '../../search.state';
+import { BookMode, BookType } from '../../book.state';
 
 export interface domesticBook {
     departure: {  
@@ -161,6 +162,8 @@ export class DomesticBookState {
         });
 
         this.store.dispatch(new SetFirstPassengers(this.store.selectSnapshot(SearchState.getSearchType)));
+        this.store.dispatch(new BookMode('flight'));
+        this.store.dispatch(new BookType('animated-round-trip'));
         this.store.dispatch(new Navigate(['/', 'home', 'book', 'flight', 'round-trip','domestic']));
 
     }

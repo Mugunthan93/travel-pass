@@ -18,29 +18,11 @@ import { GetFareQuoteSSR } from 'src/app/stores/book/flight/domestic.state';
 })
 export class DomesticPage implements OnInit {
 
-  sortButtons: any[] = [
-    { value: 'departure', state: 'default' },
-    { value: 'arrival', state: 'default' },
-    { value: 'duration', state: 'default' },
-    { value: 'price', state: 'default' }
-  ];
-
-  departList: resultObj[];
   departList$: Observable<resultObj[]>;
-  departListSub: Subscription;
-  
-  returnList: resultObj[];
   returnList$: Observable<resultObj[]>;
-  returnListSub: Subscription;
 
   selectedDepartureFlight$: Observable<resultObj>;
   selectedReturnFlight$: Observable<resultObj>;
-
-  resultType: string;
-  resultType$: Observable<string>;
-  resultTypeSub: Subscription;
-
-  mailStatus$: Observable<boolean>;
 
   constructor(
     public animationCtrl: AnimationController,
@@ -49,83 +31,19 @@ export class DomesticPage implements OnInit {
     private store : Store
   ) {
 
-    
-
   }
 
   ngOnInit() {
 
-    this.selectedDepartureFlight$ = this.store.select(DomesticResultState.getSelectedDepartureFlight);
-    this.selectedReturnFlight$ = this.store.select(DomesticResultState.getSelectedReturnFlight);
-    this.resultType$ = this.store.select(ResultState.getResultType);
-
     this.departList$ = this.store.select(DomesticResultState.getDomesticDepartureRoundTrip);
     this.returnList$ = this.store.select(DomesticResultState.getDomesticReturnRoundTrip);
+
+    this.selectedDepartureFlight$ = this.store.select(DomesticResultState.getSelectedDepartureFlight);
+    this.selectedReturnFlight$ = this.store.select(DomesticResultState.getSelectedReturnFlight);
 
     let animation: Observable<boolean> = concat(this.departList$, this.returnList$).pipe(map(el => true));
     let animationSub: Subscription = animation.subscribe((res: boolean) => res ? this.animation() : null);
 
-  }
-
-  async filter() {
-    const modal = await this.modalCtrl.create({
-      component: TripFilterComponent,
-      componentProps: {
-        type: this.resultType
-      }
-    });
-
-    modal.onDidDismiss().then(
-      (filteredData) => {
-        console.log(filteredData);
-        // this.flightList = filteredData.data;
-      }
-    );
-
-    return await modal.present();
-  }
-
-  async mailTicket() {
-    const modal = await this.modalCtrl.create({
-      component: EmailItineraryComponent,
-      componentProps: {
-        type: this.resultType
-      }
-    });
-
-    // modal.onDidDismiss().then(
-    //   (filteredFlightList) => {
-    //     this.flightList = filteredFlightList.data;
-    //   }
-    // );
-
-    return modal.present();
-  }
-
-  changeStatus(status: Observable<boolean>) {
-    this.mailStatus$ = status;
-    this.mailStatus$.subscribe(status => console.log(status));
-  }
-
-  back() {
-
-  }
-
-  getSort(item : sortButton) {
-    if (item.value == 'departure') {
-      this.store.dispatch(new DepartureSort(item.state));
-    }
-    else if (item.value == 'arrival') {
-      this.store.dispatch(new ArrivalSort(item.state));
-
-    }
-    else if (item.value == 'duration') {
-      this.store.dispatch(new DurationSort(item.state));
-
-    }
-    else if (item.value == 'price') {
-      this.store.dispatch(new PriceSort(item.state));
-    }
   }
   
   //animation
@@ -283,9 +201,6 @@ export class DomesticPage implements OnInit {
 
   book() {
     this.store.dispatch(new GetFareQuoteSSR());
-  }
-
-  ngOnDestroy() {
   }
 
 }
