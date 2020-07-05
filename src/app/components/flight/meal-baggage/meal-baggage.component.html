@@ -1,6 +1,15 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Add Meal & Baggage</ion-title>
+    <ion-title>
+      <ion-text>
+        Add Meal & Baggage
+      </ion-text>
+    </ion-title>
+    <ion-buttons (click)="dismissMeal()" slot="end">
+      <ion-button>
+        <ion-icon name="close-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content>

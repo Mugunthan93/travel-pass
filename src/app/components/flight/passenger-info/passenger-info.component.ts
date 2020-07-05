@@ -34,16 +34,27 @@ export class PassengerInfoComponent implements OnInit {
   async getDetail() {
       const modal = await this.modalCtrl.create({
         component: PassengerDetailComponent,
+        componentProps: {
+          form: 'add',
+          pax: null
+        },
         id: 'passenger-details'
       });
 
-      modal.onDidDismiss().then(
-        (resData) => {
-          console.log(resData);
-        }
-      );
-
       return await modal.present();
+  }
+
+  async editPassenger(pax: passenger) {
+    const modal = await this.modalCtrl.create({
+      component: PassengerDetailComponent,
+      componentProps: {
+        form: 'edit',
+        pax : pax
+      },
+      id: 'passenger-details'
+    });
+
+    return await modal.present();
   }
 
   getPass(evt: CustomEvent) {

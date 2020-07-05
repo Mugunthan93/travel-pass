@@ -5,6 +5,8 @@ import { FlightService } from '../services/flight/flight.service';
 import { UserState } from './user.state';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { File } from '@ionic-native/file/ngx';
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+import { environment } from 'src/environments/environment';
 
 
 export interface booking {
@@ -42,7 +44,8 @@ export class BookingState {
         public menuCtrl: MenuController,
         private flightService: FlightService,
         private fliePath: FilePath,
-        private file: File
+        private file: File,
+        private transfer: FileTransfer
     ) {
 
     }
@@ -128,19 +131,29 @@ export class BookingState {
     @Action(DownloadTicket)
     async downloadTicket(states: StateContext<booking>, action: DownloadTicket) {
 
+        const fileTransfer: FileTransferObject = this.transfer.create();
+
         let pnrString: string = action.booked.passenger_details.PNR;
         let pnr: string = pnrString.substring(2, pnrString.length - 2);
-        let path: string = this.file.externalDataDirectory;
-        console.log(this.file);
-        console.log(this.fliePath.resolveNativePath(path));
+        
+        const url: string = environment.baseURL + "/ticket/" + pnr + ".pdf";
+        const path: string = this.file.externalDataDirectory + pnr + ".pdf";
 
         try {
-            const ticketResponse = await this.flightService.downloadTicket(pnr, path);
-            console.log(ticketResponse.data);
+            const fileResponse = await fileTransfer.download(url, path);
+            console.log(fileResponse);
         }
         catch (error) {
-            console.log(error); 
+            console.log(error);
         }
+
+        // try {
+        //     const ticketResponse = await this.flightService.downloadTicket(pnr, path);
+        //     console.log(ticketResponse.data);
+        // }
+        // catch (error) {
+        //     console.log(error); 
+        // }
     }
 
 }

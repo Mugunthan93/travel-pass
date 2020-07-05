@@ -36,6 +36,7 @@ export class DomesticPage implements OnInit {
   async addPassengerDetails() {
     const modal = await this.modalCtrl.create({
       component: PassengerInfoComponent,
+      keyboardClose:false,
       id: 'passenger-info'
     });
 

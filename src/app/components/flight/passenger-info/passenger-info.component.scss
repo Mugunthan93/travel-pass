@@ -14,19 +14,27 @@ ion-content{
         }
     }
     >ion-list{
-        >ion-item{
-            --inner-padding-end: 16px;
-            --border-width: 2px;
-            --border-radius: 8px;
-            margin: 0px 16px;
-            >ion-row{
-                width: -webkit-fill-available;
-                justify-content: space-between;
+        >ion-item-sliding{
+            >ion-item{
+                --inner-padding-end: 16px;
+                --border-width: 2px;
+                --border-radius: 8px;
+                margin: 0px 16px;
                 >ion-row{
-                    flex-direction: column;
+                    width: -webkit-fill-available;
+                    justify-content: space-between;
+                    >ion-row{
+                        flex-direction: column;
+                    }
+                    >ion-text{
+                        align-self: center;
+                    }
                 }
-                >ion-text{
-                    align-self: center;
+            }
+            >ion-item-options{
+                margin-right: 16px;
+                >ion-item-option{
+                    border-radius: 8px;
                 }
             }
         }

@@ -458,6 +458,13 @@ export class AddPassenger {
     }
 }
 
+export class EditPassenger {
+    static readonly type = "[flight_book] AddPassenger";
+    constructor(public pass: addPassenger,public pax : passenger) {
+
+    }
+}
+
 export class SelectPassenger{
     static readonly type = "[flight_book] SelectPassenger";
     constructor(public pass: passenger) {
@@ -612,6 +619,55 @@ export class FLightBookState {
         this.modalCtrl.dismiss(null, null, 'passenger-details');
     }
 
+    @Action(EditPassenger)
+    editPassenger(states: StateContext<flight>, action: EditPassenger) {
+        const pass: passenger = {
+            AddressLine1: action.pax.AddressLine1,
+            City: action.pax.City,
+            CountryName: action.pax.CountryName,
+            CountryCode: action.pax.CountryCode,
+            Email: action.pax.Email,
+            onwardExtraServices: {
+                Meal: [],
+                MealTotal: 0,
+                BagTotal: 0,
+                Baggage: []
+            },
+            returnExtraServices: {
+                Meal: [],
+                MealTotal: 0,
+                BagTotal: 0,
+                Baggage: []
+            },
+            PaxType: 1,
+            IsLeadPax: false,
+            FirstName: action.pass.FirstName,
+            LastName: action.pass.LastName,
+            ContactNo: action.pax.ContactNo,
+            Title: action.pass.Title,
+            Gender: this.getGender(action.pass.Title),
+            GSTCompanyEmail: action.pax.GSTCompanyEmail,
+            DateOfBirth: action.pass.DateOfBirth,
+            PassportNo: action.pass.PassportNo,
+            PassportExpiry: action.pass.PassportExpiry,
+            Fare: this.store.selectSnapshot(OneWayBookState.getPassengerFare),
+            GSTCompanyAddress: action.pax.GSTCompanyAddress,
+            GSTCompanyContactNumber: action.pax.GSTCompanyContactNumber,
+            GSTCompanyName: action.pax.GSTCompanyName,
+            GSTNumber: action.pax.GSTNumber
+        }
+
+        let passengers: passenger[] = Object.assign([], states.getState().passengers);
+        let filterPass: passenger[] = passengers.filter(el => el.PassportNo !== action.pax.PassportNo);
+        filterPass.push(pass);
+
+        states.patchState({
+            passengers: filterPass
+        });
+
+        this.modalCtrl.dismiss(null, null, 'passenger-details');
+    }
+
     @Action(SetFirstPassengers)
     setFirstPassengers(states: StateContext<flight>, action: SetFirstPassengers) {
 
@@ -671,9 +727,6 @@ export class FLightBookState {
     @Action(SelectPassenger)
     selectPassenger(states: StateContext<flight>, action: SelectPassenger) {
         let passArray: passenger[] = Object.assign([], states.getState().selectedPassengers);
-        
-        
-
         passArray.push(action.pass);
         states.patchState({
             selectedPassengers: passArray

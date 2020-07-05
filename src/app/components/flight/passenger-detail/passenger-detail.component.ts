@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { MealBaggageComponent } from '../meal-baggage/meal-baggage.component';
-import { CalendarModalOptions, CalendarModal, CalendarResult } from 'ion2-calendar';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
-import { AddPassenger } from 'src/app/stores/book/flight.state';
-import { CustomCalendarComponent } from '../../shared/custom-calendar/custom-calendar.component';
+import { AddPassenger, passenger, addPassenger, EditPassenger } from 'src/app/stores/book/flight.state';
 import * as moment from 'moment';
+import { BookState } from 'src/app/stores/book.state';
 
 @Component({
   selector: 'app-passenger-detail',
@@ -15,8 +14,12 @@ import * as moment from 'moment';
 })
 export class PassengerDetailComponent implements OnInit {
 
+  @Input() form: string;
+  @Input() pax: passenger;
 
+  formSubmit: boolean = false;
   Passenger: FormGroup;
+  type: string;
 
   constructor(
     private store : Store,
@@ -25,108 +28,86 @@ export class PassengerDetailComponent implements OnInit {
 
   ngOnInit() {
 
-    this.Passenger = new FormGroup({
-      "Title": new FormControl(null),
-      "FirstName": new FormControl(null),
-      "LastName": new FormControl(null),
-      "DateOfBirth": new FormControl(null),
-      "ContactNo": new FormControl(null),
-      "PassportNo": new FormControl(null),
-      "PassportExpiry": new FormControl(null),
-      "nationality": new FormControl(null),
-      "ftnumber": new FormControl(null)
-    });
+    if (this.form == 'add') {
+      this.Passenger = new FormGroup({
+        "Title": new FormControl(null,[Validators.required]),
+        "FirstName": new FormControl(null,[Validators.required]),
+        "LastName": new FormControl(null),
+        "DateOfBirth": new FormControl(null),
+        "ContactNo": new FormControl(null),
+        "PassportNo": new FormControl(null,[Validators.required]),
+        "PassportExpiry": new FormControl(null,[Validators.required]),
+        "nationality": new FormControl(null),
+        "ftnumber": new FormControl(null)
+      });
+    }
+    else if (this.form == 'edit'){
+      this.Passenger = new FormGroup({
+        "Title": new FormControl(this.pax.Title),
+        "FirstName": new FormControl(this.pax.FirstName),
+        "LastName": new FormControl(this.pax.LastName),
+        "DateOfBirth": new FormControl(this.pax.DateOfBirth),
+        "ContactNo": new FormControl(this.pax.ContactNo),
+        "PassportNo": new FormControl(this.pax.PassportNo),
+        "PassportExpiry": new FormControl(this.pax.PassportExpiry),
+        "nationality": new FormControl(this.pax.nationality),
+        "ftnumber": new FormControl(this.pax.ftnumber)
+      });
+    }
+
+    this.type = this.store.selectSnapshot(BookState.getBookType);
+
    }
   
   async addMeal() {
     const modal = await this.modalCtrl.create({
       component: MealBaggageComponent,
-      id: 'passenger-meal'
-    });
+      id: 'passenger-meal',
+      componentProps: {
 
-    modal.onDidDismiss().then(
-      (resData) => {
-        console.log(resData);
       }
-    );
+    });
 
     return await modal.present();
   }
 
-  async getCalendar(title) {
-
-    const options: CalendarModalOptions = {
-      title: title,
-      pickMode: 'single',
-      color: 'dark',
-      weekStart: 1,
-      canBackwardsSelected: false,
-      closeLabel: 'Close',
-      doneLabel: 'OK',
-      defaultDate: Date.now()
-    }
-
-    const modal = await this.modalCtrl.create({
-      component: CalendarModal,
-      componentProps: {
-        options
-      }
-    });
-
-    modal.present();
-
-    const event: any = await modal.onDidDismiss();
-    if (title == 'Date Of Birth') {
-      let calendarResult: CalendarResult = event.data.dateObj;
-      console.log(calendarResult);
-      this.Passenger.controls["dob"].setValue(moment(calendarResult.dateObj).format('YYYY-MM-DD hh:mm:ss A Z'));
-    }
-    else if (title == 'Passport Expiry Date') {
-      let calendarResult: CalendarResult = event.data.dateObj;
-      console.log(calendarResult);
-      this.Passenger.controls["ppexpdate"].setValue(moment(calendarResult.dateObj).format('YYYY-MM-DD hh:mm:ss A Z'));
-    }
-  
-
-  }
-
-  async getCustomCalendar() {
-
-    const options = {
-      from: new Date(),
-      to: 0,
-      color: 'dark',
-      pickMode: 'single',
-      showToggleButtons: true,
-      showMonthPicker: true,
-      monthPickerFormat: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
-      defaultTitle: 'None',
-      defaultSubtitle: 'Sub None',
-      disableWeeks: [],
-      monthFormat: 'MMM YYYY',
-      weekdays: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
-      weekStart: 0
-    }
-
-    const modal = await this.modalCtrl.create({
-      component: CustomCalendarComponent,
-      componentProps: {
-        options
-      }
-    });
-
-    modal.present();
-
-    const event: any = await modal.onDidDismiss();
-    this.Passenger.controls["dob"].setValue(event.data.dateObj);
-  }
-
   addPassenger() {
-    this.store.dispatch(new AddPassenger(this.Passenger.value));
+    this.formSubmit = true;
+    if (this.Passenger.valid) {
+      let passenger: addPassenger = {
+        Title: this.Passenger.value.Title,
+        FirstName: this.Passenger.value.FirstName,
+        LastName: this.Passenger.value.LastName,
+        DateOfBirth: moment.utc(this.Passenger.value.DateOfBirth).format('YYYY-MM-DD hh:mm:ss A Z'),
+        ContactNo: this.Passenger.value.ContactNo,
+        PassportNo: this.Passenger.value.PassportNo,
+        PassportExpiry: moment.utc(this.Passenger.value.DateOfBirth).format('YYYY-MM-DD hh:mm:ss A Z'),
+        nationality: this.Passenger.value.nationality,
+        ftnumber: this.Passenger.value.ftnumber
+      }
+      if (this.form == 'add') {
+        this.store.dispatch(new AddPassenger(passenger));
+      }
+      else if (this.form == 'edit') {
+        this.store.dispatch(new EditPassenger(passenger,this.pax));
+      }
+    }
   }
 
   dismissDetail() {
     this.modalCtrl.dismiss(null, null, 'passenger-details');
+  }
+
+  errorClass(name: string) {
+    return {
+      'initial': (this.Passenger.controls[name].value == null) && !this.formSubmit,
+      'valid':
+        this.Passenger.controls[name].value !== null ||
+        (this.Passenger.controls[name].valid && !this.formSubmit) ||
+        (this.Passenger.controls[name].valid && this.formSubmit),
+      'invalid':
+        (this.Passenger.controls[name].invalid && this.formSubmit)
+    }
   }
 
 }

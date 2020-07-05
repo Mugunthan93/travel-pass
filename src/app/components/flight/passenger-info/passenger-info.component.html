@@ -5,6 +5,11 @@
         Passengers Information
       </ion-text>
     </ion-title>
+    <ion-buttons slot="end" (click)="dismissInfo()">
+      <ion-button>
+        <ion-icon name="close-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -14,19 +19,26 @@
     <ion-text slot="end">{{(selected$ | async)}}/{{(count$ | async)}} Selected</ion-text>
   </ion-item>
   <ion-list lines="none">
-    <ion-item *ngFor="let pax of (passengers$ | async)">
-      <ion-checkbox slot="start" [value]="pax" (ionChange)="getPass($event)"
-        [checked]="(selectedPassengers$ | async).includes(pax)"
-        [disabled]="(selected$ | async) == (count$ | async) && !(selectedPassengers$ | async).includes(pax)">
-      </ion-checkbox>
-      <ion-row>
+    <ion-item-sliding *ngFor="let pax of (passengers$ | async)">
+
+      <ion-item>
+        <ion-checkbox slot="start" [value]="pax" (ionChange)="getPass($event)"
+          [checked]="(selectedPassengers$ | async).includes(pax)"
+          [disabled]="(selected$ | async) == (count$ | async) && !(selectedPassengers$ | async).includes(pax)">
+        </ion-checkbox>
         <ion-row>
-          <ion-text>{{pax.FirstName}} {{pax.LastName}}</ion-text>
-          <ion-text> {{ gender(pax) }}</ion-text>
+          <ion-row>
+            <ion-text>{{pax.FirstName}} {{pax.LastName}}</ion-text>
+            <ion-text> {{ gender(pax) }}</ion-text>
+          </ion-row>
         </ion-row>
-        <ion-text>Edit</ion-text>
-      </ion-row>
-    </ion-item>
+      </ion-item>
+
+      <ion-item-options side="end">
+        <ion-item-option (click)="editPassenger(pax)">Edit</ion-item-option>
+      </ion-item-options>
+
+    </ion-item-sliding>
   </ion-list>
   <ion-item>
     <ion-row (click)="getDetail()">

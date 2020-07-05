@@ -52,7 +52,8 @@ export class InternationalPage implements OnInit {
 
   async confirmRequest() {
     const modal = await this.modalCtrl.create({
-      component: BookConfirmationComponent
+      component: BookConfirmationComponent,
+      keyboardClose:false
     });
 
     return await modal.present();

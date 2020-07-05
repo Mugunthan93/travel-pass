@@ -1,8 +1,15 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      <ion-text>Passenger Details</ion-text>
+      <ion-text>
+        {{form == 'add' ? 'Add Passenger Details' : form == 'edit' ? 'Edit Passenger Details' : 'Passenger Details'}}
+      </ion-text>
     </ion-title>
+    <ion-buttons slot="end" (click)="dismissDetail()">
+      <ion-button>
+        <ion-icon name="close-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -27,43 +34,49 @@
 
   <form [formGroup]="Passenger" (ngSubmit)="addPassenger()">
     <ion-item>
-      <ion-select placeholder="Title" slot="start" formControlName="Title">
+      <ion-select placeholder="Title" slot="start" formControlName="Title" required [ngClass]="errorClass('Title')">
         <ion-select-option value="Mr">Mr</ion-select-option>
         <ion-select-option value="Ms">Ms</ion-select-option>
         <ion-select-option value="Mrs">Mrs</ion-select-option>
         <ion-select-option value="Mstr">Mstr</ion-select-option>
       </ion-select>
-      <ion-input placeholder="First & Middle Name" formControlName="FirstName"></ion-input>
+      <ion-input placeholder="First & Middle Name" formControlName="FirstName" required
+        [ngClass]="errorClass('FirstName')">
+      </ion-input>
     </ion-item>
     <ion-item>
       <ion-input placeholder="Last Name" formControlName="LastName"></ion-input>
     </ion-item>
-    <ion-item (click)="getCalendar('Date Of Birth')">
-      <ion-input placeholder="Date of Birth" formControlName="DateOfBirth"></ion-input>
-      <ion-icon name="calendar" slot="end"></ion-icon>
+    <ion-item [ngClass]="errorClass('DateOfBirth')">
+      <ion-label>Date Of Birth</ion-label>
+      <ion-datetime displayFormat="DD-MMM-YYYY"
+      placeholder="Select Date Of Birth" formControlName="DateOfBirth">
+      </ion-datetime>
     </ion-item>
-    <ion-item>
-      <ion-input placeholder="Passport Number" formControlName="PassportNo"></ion-input>
+    <ion-item [ngClass]="errorClass('PassportNo')">
+      <ion-input placeholder="Passport Number" formControlName="PassportNo" required></ion-input>
     </ion-item>
     <ion-item>
       <ion-input slot="start" placeholder="Nationality" formControlName="nationality"></ion-input>
     </ion-item>
-    <ion-item (click)="getCalendar('Passport Expiry Date')">
-      <ion-input type="text" placeholder="Passport Expiry Date" fromControlName="PassportExpiry"></ion-input>
-      <ion-icon name="calendar" slot="end"></ion-icon>
+    <ion-item [ngClass]="errorClass('PassportExpiry')">
+      <ion-label>PassPort Expiry Date</ion-label>
+      <ion-datetime displayFormat="DD-MMM-YYYY"
+        placeholder="Select Passport Expiry Date" max="2050" formControlName="PassportExpiry" required>
+      </ion-datetime>
     </ion-item>
     <ion-item>
       <ion-input placeholder="Frequent Traveller Number" formControlName="ftnumber"></ion-input>
     </ion-item>
-    <ion-row>
+    <ion-item>
       <ion-text>Frequent Flyer Number is subject to airline acceptance</ion-text>
-    </ion-row>
-    <ion-row *ngIf="false">
+    </ion-item>
+    <ion-button expand="block" fill="solid" *ngIf="false">
       <ion-icon name="add"></ion-icon>
       <ion-text (click)="addMeal()">Meal & Baggage</ion-text>
-    </ion-row>
+    </ion-button>
     <ion-button type="submit" expand="block" fill="solid">
-      <ion-text>Add Passenger</ion-text>
+      <ion-text>{{form == 'add' ? 'Add Passenger' : form == 'edit' ? 'Edit Passenger' : 'Add Passsenger'}}</ion-text>
     </ion-button>
   </form>
 </ion-content>
