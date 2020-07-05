@@ -1,5 +1,5 @@
 <ion-content>
-  <ion-card *ngFor="let historyBooking of (historyBookings | async)">
+  <ion-card *ngFor="let historyBooking of (historyBookings | async | sort : 'id')">
     <ion-card-content>
       <ion-row>
         <ion-row>

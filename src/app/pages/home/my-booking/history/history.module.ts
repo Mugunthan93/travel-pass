@@ -15,6 +15,8 @@ import { HistoryPage } from './history.page';
     IonicModule,
     HistoryPageRoutingModule
   ],
-  declarations: [HistoryPage]
+  declarations: [
+    HistoryPage
+  ]
 })
 export class HistoryPageModule {}

@@ -21,6 +21,7 @@ import { AndroidFullScreen } from '@ionic-native/android-full-screen/ngx';
 import { ApproveRequestComponent } from './components/flight/approve-request/approve-request.component';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { File } from '@ionic-native/file/ngx';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 
@@ -43,6 +44,7 @@ import { File } from '@ionic-native/file/ngx';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
+    MatExpansionModule,
     StateModule
   ],
   providers: [

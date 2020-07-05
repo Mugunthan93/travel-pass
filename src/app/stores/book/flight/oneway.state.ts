@@ -183,6 +183,7 @@ export class OneWayBookState{
                 flight_details: [states.getState().fareQuote],
                 country_flag: this.store.selectSnapshot(OneWaySearchState.getTripType) == 'domestic' ? "0" : "1",
                 user_eligibility: {
+                    approverid: "airline",
                     msg: null,
                     company_type: "corporate"
                 },
@@ -322,8 +323,8 @@ export class OneWayBookState{
         data.Segments.forEach(
             (element: flightData[], index: number, arr: flightData[][]) => {
                 book.trip[index] = {
-                    origin: element[index].Origin.Airport.CityName,
-                    destination: element[index].Destination.Airport.CityName,
+                    origin: element[0].Origin.Airport.CityName,
+                    destination: element[element.length - 1].Destination.Airport.CityName,
                     connecting_flight: []
                 }
 

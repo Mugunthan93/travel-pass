@@ -7,14 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { RequestListPageRoutingModule } from './request-list-routing.module';
 
 import { RequestListPage } from './request-list.page';
-import { ApproveRequestComponent } from 'src/app/components/flight/approve-request/approve-request.component';
+import { PipeModule } from 'src/app/modules/pipe.module';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    RequestListPageRoutingModule
+    RequestListPageRoutingModule,
+    PipeModule
   ],
   declarations: [
     RequestListPage

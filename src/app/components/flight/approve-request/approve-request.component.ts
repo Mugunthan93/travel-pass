@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { ApprovalState } from 'src/app/stores/approval.state';
+import { ApprovalState, AcceptRequest, DeclineRequest } from 'src/app/stores/approval.state';
+import { ModalController } from '@ionic/angular';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-approve-request',
@@ -10,22 +12,31 @@ import { ApprovalState } from 'src/app/stores/approval.state';
 })
 export class ApproveRequestComponent implements OnInit {
 
-  flightDetail : Observable<any>;
+  flightDetail$ : Observable<any>;
 
   constructor(
-    private store : Store
+    private store: Store,
+    public modalCtrl : ModalController
   ) { }
 
   ngOnInit() {
-    this.flightDetail = this.store.selectSnapshot(ApprovalState.getSelectedRequest);
+    this.flightDetail$ = this.store.select(ApprovalState.getSelectedRequest);
   }
   
   approveRequest() {
-
+    this.store.dispatch(new AcceptRequest());
   }
 
   declineRequest() {
-    
+    this.store.dispatch(new DeclineRequest());
+  }
+
+  duration(duration : number) {
+    return moment.duration(duration, 'minutes').days() + "d " + moment.duration(duration, 'minutes').hours() + "h " + moment.duration(duration, 'minutes').minutes() + "m"
+  }
+
+  dismiss() {
+    this.modalCtrl.dismiss();
   }
 
 }

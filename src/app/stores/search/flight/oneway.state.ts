@@ -156,7 +156,9 @@ export class OneWaySearchState extends BaseFlightSearch{
                 Segments: [
                     {
                         Origin: currentState.formData.from.city_code,
+                        OriginName:currentState.formData.from.city_name,
                         Destination: currentState.formData.to.city_code,
+                        DestinationName:currentState.formData.to.city_name,
                         FlightCabinClass: this.getCabinClass(currentState.formData.class),
                         PreferredArrivalTime: departureTime,
                         PreferredDepartureTime: departureTime

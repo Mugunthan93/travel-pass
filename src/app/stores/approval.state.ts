@@ -117,19 +117,70 @@ export class ApprovalState {
 
     @Action(AcceptRequest)
     async acceptRequest(states: StateContext<Approval>) {
-        let req = null;
+        let req = Object.assign({}, states.getState().selectedRequest);
+        let reqbody = {
+            passenger_details: req.passenger_details,
+            booking_mode: req.booking_mode,
+            assigned_to: req.assigned_to,
+            assigned_by: req.assigned_by,
+            comments: req.comments,
+            trip_requests: req.trip_requests,
+            cancellation_remarks: req.cancellation_remarks,
+            trip_type: req.trip_type,
+            customer_id: req.customer_id,
+            status: 'open',
+            transaction_id: req.transaction_id,
+            managers: req.managers,
+            user_id: req.user_id,
+            req_id: req.id,
+            traveller_id: req.traveller_id,
+            travel_date: req.travel_date
+        }
+        console.log(reqbody);
+        console.log(JSON.stringify(reqbody));
         try {
-            const acceptReqResponse = await this.flightService.approvalReq(states.getState().selectedRequest.id,req);
+            const acceptReqResponse = await this.flightService.approvalReq(req.id, reqbody);
             console.log(acceptReqResponse);
         }
         catch (error) {
+            let errObj = JSON.parse(error.error);
+            console.log(errObj);
             console.log(error);
         }
     }
 
     @Action(DeclineRequest)
-    declineRequest(states: StateContext<Approval>, action: DeclineRequest) {
-
+    async declineRequest(states: StateContext<Approval>) {
+        let req = Object.assign({}, states.getState().selectedRequest);
+        let reqbody = {
+            passenger_details: req.passenger_details,
+            booking_mode: req.booking_mode,
+            assigned_to: req.assigned_to,
+            assigned_by: req.assigned_by,
+            comments: req.comments,
+            trip_requests: req.trip_requests,
+            cancellation_remarks: req.cancellation_remarks,
+            trip_type: req.trip_type,
+            customer_id: req.customer_id,
+            status: 'rej',
+            transaction_id: req.transaction_id,
+            managers: req.managers,
+            user_id: req.user_id,
+            req_id: req.id,
+            traveller_id: req.traveller_id,
+            travel_date: req.travel_date
+        }
+        console.log(reqbody);
+        console.log(JSON.stringify(reqbody));
+        try {
+            const acceptReqResponse = await this.flightService.approvalReq(req.id, reqbody);
+            console.log(acceptReqResponse);
+        }
+        catch (error) {
+            let errObj = JSON.parse(error.error);
+            console.log(errObj);
+            console.log(error);
+        }
     }
 
 

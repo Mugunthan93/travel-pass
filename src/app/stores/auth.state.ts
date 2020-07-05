@@ -6,7 +6,7 @@ import { GetUser, UserState } from './user.state';
 import { GetCompany, CompanyState } from './company.state';
 import { user } from '../models/user';
 import { StateReset } from 'ngxs-reset-plugin';
-import { DashboardState } from './dashboard.state';
+import { DashboardState, UpcomingTrips } from './dashboard.state';
 import { SearchState } from './search.state';
 import { ResultState } from './result.state';
 import { BookState } from './book.state';
@@ -109,6 +109,7 @@ export class AuthState {
         
         this.store.dispatch(new GetUser(data));
         this.store.dispatch(new GetCompany(data.customer_id));
+        this.store.dispatch(new UpcomingTrips());
         loading.dismiss();
         this.store.dispatch(new Navigate(['/', 'home','dashboard','home-tab']));
     }

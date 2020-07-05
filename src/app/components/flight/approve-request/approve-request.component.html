@@ -3,87 +3,102 @@
     <ion-title>
       <ion-text>Approve Request</ion-text>
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <!-- <mat-accordion multi="false">
-    <mat-expansion-panel *ngFor="let flight of (flightDetail | async).trip;let i = index">
+  <mat-accordion multi="false"
+    *ngFor="let flight of (flightDetail$ | async).passenger_details.flight_details;let i = index">
+    <mat-expansion-panel *ngFor="let seg of flight.Segments;let i = index">
       <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">
         <ion-row>
           <ion-text>
             Trip {{i+1}}
           </ion-text>
           <ion-row>
-            <ion-text>{{flight.origin}}</ion-text>
+            <ion-text>{{seg[0].Origin.Airport.CityName}}</ion-text>
             <ion-icon src="../../../../../../assets/icons/flight.svg"></ion-icon>
-            <ion-text>{{flight.destination}}</ion-text>
+            <ion-text>{{seg[seg.length - 1].Destination.Airport.CityName}}</ion-text>
           </ion-row>
         </ion-row>
       </mat-expansion-panel-header>
-      <div *ngFor="let flight of flight.connecting_flight;let i = index">
+      <div *ngFor="let s of seg;let i = index">
         <ion-item>
           <ion-row slot="start">
-            <ion-img src="../../../../../../assets/AirlineLogo/{{flight.airline.code}}.gif"></ion-img>
+            <ion-img src="../../../../../../assets/AirlineLogo/{{s.Airline.AirlineCode}}.gif"></ion-img>
             <ion-row>
-              <ion-text>{{flight.airline.name}}</ion-text>
-              <ion-text>{{flight.airline.code}} - {{flight.airline.number}}</ion-text>
+              <ion-text>{{s.Airline.AirlineName}}</ion-text>
+              <ion-text>{{s.Airline.AirlineCode}} - {{s.Airline.FlightNumber}}</ion-text>
             </ion-row>
           </ion-row>
         </ion-item>
         <ion-row>
           <ion-col>
-            <ion-text>({{flight.origin.code}}) {{flight.origin.date  | date : 'HH:mm'}}</ion-text>
-            <ion-text>{{flight.origin.date | date : 'EEE,d LLL' | titlecase}}</ion-text>
-            <ion-text>{{flight.origin.name}}</ion-text>
-            <ion-text>Terminal {{flight.origin.terminal}}</ion-text>
+            <ion-text>({{s.Origin.Airport.AirportCode}}) {{s.Origin.DepTime  | date : 'HH:mm'}}</ion-text>
+            <ion-text>{{s.Origin.DepTime | date : 'EEE,d LLL' | titlecase}}</ion-text>
+            <ion-text>{{s.Origin.Airport.AirportName}}</ion-text>
           </ion-col>
           <ion-col>
             <ion-icon size="large" src="../../../../../../assets/icons/passage-of-time.svg"></ion-icon>
-            <ion-text>{{flight.duration}}</ion-text>
+            <ion-text>{{s.Duration}} Mins</ion-text>
           </ion-col>
           <ion-col>
-            <ion-text>({{flight.destination.code}}) {{flight.destination.date  | date : 'HH:mm'}}</ion-text>
-            <ion-text>{{flight.destination.date | date : 'EEE,d LLL' | titlecase}}</ion-text>
-            <ion-text>{{flight.destination.name}}</ion-text>
+            <ion-text>({{s.Destination.Airport.AirportCode}}) {{s.Destination.ArrTime  | date : 'HH:mm'}}</ion-text>
+            <ion-text>{{s.Destination.ArrTime | date : 'EEE,d LLL' | titlecase}}</ion-text>
+            <ion-text>{{s.Destination.Airport.AirportName}}</ion-text>
           </ion-col>
         </ion-row>
       </div>
     </mat-expansion-panel>
-  </mat-accordion> -->
-  <ion-list-header>
-    <ion-text>Travellers Details</ion-text>
-  </ion-list-header>
+  </mat-accordion>
   <ion-card>
     <ion-card-header>
-      <ion-title>
-        <ion-text>Adult</ion-text>
-      </ion-title>
+      <ion-card-subtitle>
+        <ion-label>
+          <ion-text>Travellers Details</ion-text>
+        </ion-label>
+      </ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
-      <ion-item>
-        <ion-label slot="start">Name</ion-label>
-        <ion-label slot="end"></ion-label>
-      </ion-item>
-      <ion-item>
-        <ion-label slot="start">Email</ion-label>
-        <ion-label slot="end"></ion-label>
-      </ion-item>
-      <ion-item>
-        <ion-label slot="start">Mobile</ion-label>
-        <ion-label slot="end"></ion-label>
-      </ion-item>
+      <ion-card *ngFor="let passenger of (flightDetail$ | async).passenger_details.passenger">
+        <ion-card-header *ngIf="passenger.IsLeadPax">
+          <ion-card-subtitle>
+            <ion-label>
+              <ion-text>Lead Passenger</ion-text>
+            </ion-label>
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-item>
+            <ion-label slot="start">Name</ion-label>
+            <ion-text slot="end">{{passenger.FirstName+" "+passenger.LastName}}</ion-text>
+          </ion-item>
+          <ion-item>
+            <ion-label slot="start">Email</ion-label>
+            <ion-text slot="end">{{passenger.Email}}</ion-text>
+          </ion-item>
+          <ion-item>
+            <ion-label slot="start">Mobile</ion-label>
+            <ion-text slot="end">{{passenger.ContactNo}}</ion-text>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
     </ion-card-content>
   </ion-card>
 </ion-content>
 <ion-footer>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)="approveRequest()">
-        <ion-label>Approve</ion-label>
+      <ion-button (click)="declineRequest()">
+        <ion-label>Decline</ion-label>
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="declineRequest()">
+      <ion-button (click)="approveRequest()">
         <ion-label>Approve</ion-label>
       </ion-button>
     </ion-buttons>

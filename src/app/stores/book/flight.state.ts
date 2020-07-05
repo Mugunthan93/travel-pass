@@ -209,6 +209,7 @@ export interface fare {
 }
 
 export interface user_eligibility {
+    approverid?:string,
     msg: any
     company_type: string
 }
@@ -589,7 +590,7 @@ export class FLightBookState {
             LastName: action.pass.LastName,
             ContactNo: null,
             Title: action.pass.Title,
-            Gender: null,
+            Gender: this.getGender(action.pass.Title),
             GSTCompanyEmail: null,
             DateOfBirth: action.pass.DateOfBirth,
             PassportNo: action.pass.PassportNo,
@@ -714,6 +715,16 @@ export class FLightBookState {
         states.patchState({
             comment: action.comment
         });
+    }
+
+    getGender(title : string) : number {
+        if (title == 'Mstr' || title == 'Mr')
+        {
+            return 1;
+        }
+        else {
+            return 2;
+        }
     }
 
 }

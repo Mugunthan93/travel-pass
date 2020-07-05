@@ -7,18 +7,18 @@ import { IonicModule } from '@ionic/angular';
 import { NewPageRoutingModule } from './new-routing.module';
 
 import { NewPage } from './new.page';
-import { SortPipe } from 'src/app/pipes/sort/sort.pipe';
+import { PipeModule } from 'src/app/modules/pipe.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    NewPageRoutingModule
+    NewPageRoutingModule,
+    PipeModule
   ],
   declarations: [
-    NewPage,
-    SortPipe
+    NewPage
   ]
 })
 export class NewPageModule {}

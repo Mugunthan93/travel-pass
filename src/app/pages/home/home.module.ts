@@ -9,19 +9,20 @@ import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
 import { AboutHotelComponent } from 'src/app/components/hotel/about-hotel/about-hotel.component';
 import { MenuBarComponent } from 'src/app/components/menu-bar/menu-bar.component';
-import { ApproveRequestComponent } from 'src/app/components/flight/approve-request/approve-request.component';
+import { PipeModule } from 'src/app/modules/pipe.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule,
-    HomePageRoutingModule
+    IonicModule, 
+    HomePageRoutingModule,
+    PipeModule
   ],
   declarations: [
     HomePage,
     AboutHotelComponent,
-    MenuBarComponent,
+    MenuBarComponent
   ],
   entryComponents: [
     AboutHotelComponent

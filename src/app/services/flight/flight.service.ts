@@ -74,7 +74,7 @@ export class FlightService {
 
   //approve the request
   async approvalReq(ticketId : string, requestBody : any ): Promise<HTTPResponse> {
-    return await this.http.put("/airlineRequest" + ticketId, requestBody);
+    return await this.http.put("/airlineRequest/" + ticketId, requestBody);
   }
 
   //my booking - new
