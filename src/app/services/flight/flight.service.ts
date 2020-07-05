@@ -129,7 +129,7 @@ export class FlightService {
   }
 
   async downloadTicket(pnr : string, filePath : string): Promise<HTTPResponse> {
-    return await this.http.downloadFile("/ticket/" + pnr + ".pdf", {}, filePath);
+    return await this.http.get("/ticket/" + pnr + ".pdf", {});
   }
 
 

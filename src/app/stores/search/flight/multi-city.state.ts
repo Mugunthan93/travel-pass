@@ -139,6 +139,8 @@ export class MultiCitySearchState extends BaseFlightSearch {
                     Origin: el.from.city_code,
                     Destination: el.to.city_code,
                     FlightCabinClass: this.getCabinClass(currentState.formData.class),
+                    OriginName: el.from.city_name,
+                    DestinationName: el.to.city_name,
                     PreferredDepartureTime: typeof el.departure == 'string' ? el.departure : el.departure.toJSON(),
                     PreferredArrivalTime: typeof el.departure == 'string' ? el.departure : el.departure.toJSON()
                 });

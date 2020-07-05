@@ -167,6 +167,8 @@ export class RoundTripSearchState extends BaseFlightSearch {
                     {
                         Origin: currentState.formData.from.city_code,
                         Destination: currentState.formData.to.city_code,
+                        OriginName: currentState.formData.from.city_name,
+                        DestinationName: currentState.formData.to.city_name,
                         FlightCabinClass: this.getCabinClass(currentState.formData.class),
                         PreferredArrivalTime: departureTime,
                         PreferredDepartureTime: departureTime
@@ -174,6 +176,8 @@ export class RoundTripSearchState extends BaseFlightSearch {
                     {
                         Origin: currentState.formData.to.city_code,
                         Destination: currentState.formData.from.city_code,
+                        OriginName: currentState.formData.to.city_name,
+                        DestinationName: currentState.formData.from.city_name,
                         FlightCabinClass: this.getCabinClass(currentState.formData.class),
                         PreferredArrivalTime: returnTime,
                         PreferredDepartureTime: returnTime

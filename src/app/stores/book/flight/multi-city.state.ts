@@ -174,6 +174,7 @@ export class MultiCityBookState {
                 flight_details: [states.getState().fareQuote],
                 country_flag: this.store.selectSnapshot(MultiCitySearchState.getTripType) == 'domestic' ? "0" : "1",
                 user_eligibility: {
+                    approverid: "airline",
                     msg: null,
                     company_type: "corporate"
                 },

@@ -261,6 +261,7 @@ export class DomesticBookState {
                 flight_details: [states.getState().departure.fareQuote, states.getState().return.fareQuote],
                 country_flag: this.store.selectSnapshot(RoundTripSearchState.getTripType) == 'domestic' ? "0" : "1",
                 user_eligibility: {
+                    approverid: "airline",
                     msg: null,
                     company_type: "corporate"
                 },
