@@ -15,7 +15,10 @@ import { MultiCitySearch, MultiCitySearchState } from '../../search/flight/multi
 import { GST } from './oneway.state';
 import { InternationalResultState } from '../../result/flight/international.state';
 import { RoundTripSearchState, RoundTripSearch } from '../../search/flight/round-trip.state';
-import { BookMode, BookType } from '../../book.state';
+import { BookMode, BookType, BookState } from '../../book.state';
+import { LoadingController, AlertController, ModalController } from '@ionic/angular';
+import { StateReset } from 'ngxs-reset-plugin';
+import { ResultState } from '../../result.state';
 
 
 export interface internationalBook {
@@ -55,7 +58,10 @@ export class InternationalBookState {
 
     constructor(
         public store: Store,
-        private flightService: FlightService
+        private flightService: FlightService,
+        public loadingCtrl: LoadingController,
+        public alertCtrl: AlertController,
+        public modalCtrl: ModalController
     ) {
     }
 
@@ -71,6 +77,27 @@ export class InternationalBookState {
 
     @Action(GetFareQuoteSSR)
     async getFareQuoteSSR(states: StateContext<internationalBook>) {
+
+        const loading = await this.loadingCtrl.create({
+            spinner: "crescent"
+        });
+        const failedAlert = await this.alertCtrl.create({
+            header: 'Book Failed',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                cssClass: 'danger',
+                handler: (res) => {
+                    failedAlert.dismiss({
+                        data: false,
+                        role: 'failed'
+                    });
+                }
+            }]
+        });
+
+        loading.message = "Checking Flight Availability";
+        loading.present();
 
         try {
             const fairQuoteResponse = await this.flightService.fairQuote(this.store.selectSnapshot(InternationalResultState.getSelectedFlight).fareRule);
@@ -116,12 +143,53 @@ export class InternationalBookState {
         this.store.dispatch(new SetFirstPassengers(this.store.selectSnapshot(SearchState.getSearchType)));
         this.store.dispatch(new BookMode('flight'));
         this.store.dispatch(new BookType('round-trip'));
-        this.store.dispatch(new Navigate(['/', 'home', 'book', 'flight', 'round-trip','international']));
+        this.store.dispatch(new Navigate(['/', 'home', 'book', 'flight', 'round-trip', 'international']));
+        loading.dismiss();
 
     }
 
     @Action(InternationalSendRequest)
     async internationalSendRequest(states: StateContext<internationalBook>) {
+
+        const loading = await this.loadingCtrl.create({
+            spinner: "crescent"
+        });
+        const failedAlert = await this.alertCtrl.create({
+            header: 'Send Request Failed',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                cssClass: 'danger',
+                handler: (res) => {
+                    failedAlert.dismiss({
+                        data: false,
+                        role: 'failed'
+                    });
+                }
+            }]
+        });
+        const successAlert = await this.alertCtrl.create({
+            header: 'Send Request Success',
+            subHeader: 'Request status will be updated in My Bookings',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                cssClass: 'danger',
+                handler: (res) => {
+                    this.store.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']));
+                    successAlert.dismiss({
+                        data: false,
+                        role: 'failed'
+                    });
+                    this.store.dispatch(new StateReset(SearchState, ResultState, BookState));
+                    this.modalCtrl.dismiss(null, null, 'send-request');
+                }
+            }]
+        });
+
+        loading.message = "Request Sending";
+        loading.present();
+
         let sendReq: int_sendRequest = null;
 
 
@@ -271,12 +339,16 @@ export class InternationalBookState {
         try {
             const sendReqResponse = await this.flightService.intSendRequest(sendReq);
             console.log(sendReqResponse);
+            if (sendReqResponse.status == 200) {
+                successAlert.present();
+            }
         }
         catch (error) {
             console.log(error);
             let err = JSON.parse(error.error);
             console.log(err);
         }
+        loading.dismiss();
     }
 
     internationalbookData(data: flightResult): bookObj {

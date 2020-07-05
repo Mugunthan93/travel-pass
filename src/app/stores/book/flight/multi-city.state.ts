@@ -13,7 +13,10 @@ import * as moment from 'moment';
 import { MultiCityResultState } from '../../result/flight/multi-city.state';
 import { MultiCitySearch, MultiCitySearchState } from '../../search/flight/multi-city.state';
 import { GST } from './oneway.state';
-import { BookMode, BookType } from '../../book.state';
+import { BookMode, BookType, BookState } from '../../book.state';
+import { LoadingController, AlertController, ModalController } from '@ionic/angular';
+import { StateReset } from 'ngxs-reset-plugin';
+import { ResultState } from '../../result.state';
 
 
 export interface multicityBook {
@@ -53,7 +56,10 @@ export class MultiCityBookState {
 
     constructor(
         public store: Store,
-        private flightService: FlightService
+        private flightService: FlightService,
+        public loadingCtrl: LoadingController,
+        public alertCtrl: AlertController,
+        public modalCtrl: ModalController
     ) {
     }
 
@@ -69,6 +75,27 @@ export class MultiCityBookState {
 
     @Action(GetFareQuoteSSR)
     async getFareQuoteSSR(states: StateContext<multicityBook>) {
+
+        const loading = await this.loadingCtrl.create({
+            spinner: "crescent"
+        });
+        const failedAlert = await this.alertCtrl.create({
+            header: 'Book Failed',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                cssClass: 'danger',
+                handler: (res) => {
+                    failedAlert.dismiss({
+                        data: false,
+                        role: 'failed'
+                    });
+                }
+            }]
+        });
+
+        loading.message = "Checking Flight Availability";
+        loading.present();
 
         try {
             const fairQuoteResponse = await this.flightService.fairQuote(this.store.selectSnapshot(MultiCityResultState.getSelectedFlight).fareRule);
@@ -115,11 +142,51 @@ export class MultiCityBookState {
         this.store.dispatch(new BookMode('flight'));
         this.store.dispatch(new BookType('multi-city'));
         this.store.dispatch(new Navigate(['/', 'home', 'book', 'flight', 'multi-city']));
-
+        loading.dismiss();
     }
 
     @Action(MultiCitySendRequest)
     async multicitySendRequest(states: StateContext<multicityBook>) {
+
+        const loading = await this.loadingCtrl.create({
+            spinner: "crescent"
+        });
+        const failedAlert = await this.alertCtrl.create({
+            header: 'Send Request Failed',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                cssClass: 'danger',
+                handler: (res) => {
+                    failedAlert.dismiss({
+                        data: false,
+                        role: 'failed'
+                    });
+                }
+            }]
+        });
+        const successAlert = await this.alertCtrl.create({
+            header: 'Send Request Success',
+            subHeader: 'Request status will be updated in My Bookings',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                cssClass: 'danger',
+                handler: (res) => {
+                    this.store.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']));
+                    successAlert.dismiss({
+                        data: false,
+                        role: 'failed'
+                    });
+                    this.store.dispatch(new StateReset(SearchState, ResultState, BookState));
+                    this.modalCtrl.dismiss(null, null,'send-request');
+                }
+            }]
+        });
+
+        loading.message = "Request Sending";
+        loading.present();
+        
         let sendReq: sendRequest = null;
 
 
@@ -269,12 +336,16 @@ export class MultiCityBookState {
         try {
             const sendReqResponse = await this.flightService.sendRequest(sendReq);
             console.log(sendReqResponse);
+            if (sendReqResponse.status == 200) {
+                successAlert.present();
+            }
         }
         catch (error) {
             console.log(error);
             let err = JSON.parse(error.error);
             console.log(err);
         }
+        loading.dismiss();
     }
 
     multicitybookData(data: flightResult): bookObj {

@@ -67,6 +67,9 @@ export class BookingState {
             type : action.type
         });
 
+        this.menuCtrl.close('first');
+        this.store.dispatch(new Navigate(['/', 'home', 'my-booking', states.getState().type, 'new']));
+
         let newBooking = [];
         let historyBooking = [];
 
@@ -123,9 +126,6 @@ export class BookingState {
             new: newBooking,
             history:historyBooking
         });
-
-        this.menuCtrl.close('first');
-        this.store.dispatch(new Navigate(['/', 'home', 'my-booking', states.getState().type, 'new']));
     }
 
     @Action(DownloadTicket)

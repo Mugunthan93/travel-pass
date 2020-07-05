@@ -193,6 +193,8 @@ export class OneWaySearchState extends BaseFlightSearch{
             const flightResponse = await this.flightService.searchFlight(searchData.payload);
             console.log(flightResponse);
             const data: flightSearchResponse = JSON.parse(flightResponse.data);
+
+            
             this.store.dispatch(new OneWayResponse(data.response));
             console.log(data);
 
