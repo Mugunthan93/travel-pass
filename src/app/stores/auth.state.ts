@@ -94,24 +94,23 @@ export class AuthState {
             console.log(JSON.parse(JSONdata));
             sessionStorage.setItem('session', JSONdata);
             const userResponse : user = JSON.parse(userLoginResponse.data);
-            data = userResponse; 
+            data = userResponse;
+
+            this.store.dispatch(new GetUser(data));
+            this.store.dispatch(new GetCompany(data.customer_id));
+            this.store.dispatch(new UpcomingTrips());
+            loading.dismiss();
+            this.store.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']));
         }
         catch (error) {
             console.log(error);
-            if (error.error) {
-                const errMsg = JSON.parse(error.error);
-                console.log(errMsg);
+            if (error.error == "{message :'UnAuthorized User'}") {
+                failedAlert.message = "UnAuthorized Users";
+                this.store.dispatch(new Logout());
+                loading.dismiss();
+                failedAlert.present(); 
             }
-            failedAlert.message = error;
-            loading.dismiss();
-            failedAlert.present();
         }
-        
-        this.store.dispatch(new GetUser(data));
-        this.store.dispatch(new GetCompany(data.customer_id));
-        this.store.dispatch(new UpcomingTrips());
-        loading.dismiss();
-        this.store.dispatch(new Navigate(['/', 'home','dashboard','home-tab']));
     }
 
     @Action(Logout)

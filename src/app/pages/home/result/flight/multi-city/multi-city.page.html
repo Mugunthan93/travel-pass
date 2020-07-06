@@ -3,7 +3,7 @@
     <ion-col>
       <app-result-list
       [flightList]="flightList$ | async"
-      [selectedFlights]="selectedFlight$ | async"
+      [selectedFlights]="selectedFlight | async"
       (getFlightValue)="currentFlight($event)"
       ></app-result-list>
     </ion-col>

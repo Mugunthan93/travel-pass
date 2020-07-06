@@ -29,7 +29,6 @@ export class HomeTabPage implements OnInit {
       )
     );
     this.store.dispatch(new UpcomingTrips());
-
   }
 
   searchFlight() {

@@ -64,13 +64,15 @@ export class ApprovalState {
     static getSelectedRequest(state: Approval) {
         return state.selectedRequest;
     }
-
+    
     @Action(ApprovalRequest)
     async approveRequest(states: StateContext<Approval>, action: ApprovalRequest) {
         states.patchState({
             type: action.type
         });
-
+        
+        this.menuCtrl.close('first');
+        this.store.dispatch(new Navigate(['/', 'home', 'approval-request', states.getState().type, 'request-list']));
         let allBooking : any[] = [];
 
         try {
@@ -89,8 +91,6 @@ export class ApprovalState {
             list : allBooking
         });
 
-        this.menuCtrl.close('first');
-        this.store.dispatch(new Navigate(['/', 'home', 'approval-request', states.getState().type, 'request-list']));
     }
 
     @Action(GetApproveRequest)

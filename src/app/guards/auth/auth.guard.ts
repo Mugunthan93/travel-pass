@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, CanActivate, CanLoad, Route, UrlSegment, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { AuthState } from 'src/app/stores/auth.state';
+import { AuthState, Logout } from 'src/app/stores/auth.state';
 import { Navigate } from '@ngxs/router-plugin';
 import { UserState } from 'src/app/stores/user.state';
 
@@ -23,8 +23,8 @@ export class AuthGuard implements CanActivate  {
       console.log(isAuth);
       return true;
     }
-    else{
-      this.store.dispatch(new Navigate(['/','auth','login']));
+    else {
+      this.store.dispatch(new Logout());
     }
   }
 

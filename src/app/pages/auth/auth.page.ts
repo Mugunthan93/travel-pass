@@ -33,8 +33,10 @@ export class AuthPage implements OnInit {
   }
 
   onLogin() {
-    this.store.dispatch(new Login(this.loginForm.value.email, this.loginForm.value.password));
-    this.loginForm.reset();
+    this.store.dispatch(new Login(this.loginForm.value.email, this.loginForm.value.password))
+      .subscribe({
+        complete: () => this.loginForm.reset()
+      });
   }
 
   ngOnDestroy(): void {
