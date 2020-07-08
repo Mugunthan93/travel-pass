@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { BookingState, DownloadTicket } from 'src/app/stores/booking.state';
 import { Observable } from 'rxjs';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
+import { File } from '@ionic-native/file/ngx';
 
 @Component({
   selector: 'app-history',
@@ -13,10 +15,13 @@ export class HistoryPage implements OnInit {
   historyBookings: Observable<any[]>;
 
   constructor(
-    private store : Store
+    private store: Store,
+    private file: File,
+    private fileOpener: FileOpener
   ) { }
 
   ngOnInit() {
+    console.log(this.file);
     this.historyBookings = this.store.select(BookingState.getHistoryBooking);
   }
 
@@ -29,8 +34,20 @@ export class HistoryPage implements OnInit {
     }
   }
 
-  downloadTicket(booked) {
-    this.store.dispatch(new DownloadTicket(booked));
+  async isFileExist(pnr: string): Promise<boolean> {
+    return await this.file.checkFile(this.file.externalDataDirectory, pnr + ".pdf");
+  }
+
+  async viewFile(pnr : string) {
+    await this.fileOpener.open(this.file.externalDataDirectory + pnr + ".pdf", 'application/pdf');
+  }
+
+  getPNR(pnr : string) : string[] {
+    return JSON.parse(pnr);
+  }
+
+  downloadTicket(pnr : string) {
+    this.store.dispatch(new DownloadTicket(pnr));
   }
 
 }

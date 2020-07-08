@@ -22,7 +22,9 @@ import { ApproveRequestComponent } from './components/flight/approve-request/app
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { File } from '@ionic-native/file/ngx';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { Keyboard } from '@ionic-native/keyboard/ngx';
 
 
 
@@ -53,6 +55,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     FilePath,
     File,
     FileTransfer,
+    FileOpener,
     ScreenOrientation,
     StatusBar,
     SplashScreen,
@@ -60,6 +63,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     Network,
     AndroidFullScreen,
     HTTP,
+    Keyboard,
     {
       provide: NativeHttpService,
       useFactory: (platform : Platform,http : HTTP) => {

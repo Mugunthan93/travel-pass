@@ -1,8 +1,10 @@
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { SharedService } from '../services/shared/shared.service';
+import * as _ from 'lodash';
 
 export interface Shared {
-    city : city[]
+    flightCity: city[],
+    hotelCity: hotelcity[]
 }
 
 export interface city {
@@ -16,10 +18,26 @@ export interface city {
     nationalty: string
 }
 
-export class GetCity {
-    static readonly type = '[Shared] GetCity';
+export interface hotelcity {
+    cityid: number
+    country: string
+    countrycode: string
+    destination: string
+    stateprovince: string
+    stateprovincecode: string
+}
+
+export class GetFlightCity {
+    static readonly type = '[Shared] GetFlightCity';
     constructor(public city : string) {
         
+    }
+}
+
+export class GetHotelCity {
+    static readonly type = '[Shared] GetHotelCity';
+    constructor(public city: string) {
+
     }
 }
 
@@ -30,7 +48,8 @@ export class ClearCity {
 @State<Shared>({
     name: 'Shared',
     defaults: {
-        city : []
+        flightCity: [],
+        hotelCity:[]
     }
 })
 export class SharedState {
@@ -42,18 +61,26 @@ export class SharedState {
     }
 
     @Selector()
-    static cities(state: Shared) {
-        return state.city;
+    static flightcities(state: Shared) {
+        return state.flightCity;
     }
 
-    @Action(GetCity, {cancelUncompleted: true})
-    async getCity(states: StateContext<Shared>, action: GetCity) {
+    @Selector()
+    static hotelcities(state: Shared) {
+        return state.hotelCity;
+    }
+
+    @Action(GetFlightCity, {cancelUncompleted: true})
+    async getflightCity(states: StateContext<Shared>, action: GetFlightCity) {
         try {
-            const city = await this.sharedService.searchCity(action.city);
-            console.log(city);
-            const parsedCity = JSON.parse(city.data);
+            const currentState = states.getState();
+
+            const city = await this.sharedService.searchFlightCity(action.city);
+            const parsedCity: city[] = JSON.parse(city.data);
+
             states.setState({
-                city: parsedCity
+                flightCity: parsedCity,
+                hotelCity : currentState.hotelCity
             });
         }
         catch (error) {
@@ -61,10 +88,21 @@ export class SharedState {
         }
     }
 
-    @Action(ClearCity)
-    clearCity(states: StateContext<Shared>, action: GetCity) {
-        states.setState({
-            city : []
-        });
+    @Action(GetHotelCity, {cancelUncompleted: true})
+    async gethotelCity(states: StateContext<Shared>, action: GetHotelCity) {
+        try {
+            const currentState = states.getState();
+
+            const city = await this.sharedService.searchHotelCity(action.city);
+            const parsedCity: hotelcity[] = JSON.parse(city.data);
+
+            states.setState({
+                flightCity: currentState.flightCity,
+                hotelCity: parsedCity
+            });
+        }
+        catch (error) {
+            console.log(error);  
+        }
     }
 }

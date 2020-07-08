@@ -71,10 +71,8 @@
           <ion-text>{{historyBooking.passenger_details.fare_response.published_fare | currency: 'INR'}}</ion-text>
         </ion-chip>
       </ion-row>
-      <ion-row>
-        <ion-button (click)="downloadTicket(historyBooking)">
-          Download
-        </ion-button>
+      <ion-row *ngFor="let pnr of getPNR(historyBooking.passenger_details.PNR)">
+        <ion-button (click)="downloadTicket(pnr)">Download</ion-button>
       </ion-row>
     </ion-card-content>
   </ion-card>

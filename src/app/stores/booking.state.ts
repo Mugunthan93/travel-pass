@@ -24,7 +24,7 @@ export class MyBooking {
 
 export class DownloadTicket {
     static readonly type = "[booking] DownloadTicket";
-    constructor(public booked : any) {
+    constructor(public booked : string) {
 
     }
 }
@@ -132,12 +132,9 @@ export class BookingState {
     async downloadTicket(states: StateContext<booking>, action: DownloadTicket) {
 
         const fileTransfer: FileTransferObject = this.transfer.create();
-
-        let pnrString: string = action.booked.passenger_details.PNR;
-        let pnr: string = pnrString.substring(2, pnrString.length - 2);
-        
-        const url: string = environment.baseURL + "/ticket/" + pnr + ".pdf";
-        const path: string = this.file.externalDataDirectory + pnr + ".pdf";
+        let pnr: string = action.booked;
+        const url: string = environment.baseURL + "/airlines/airlineTicketing/" + pnr + ".pdf";
+        const path: string = this.file.externalRootDirectory + '/TravellersPass/Ticket/' + pnr + ".pdf";
 
         try {
             const fileResponse = await fileTransfer.download(url, path);
@@ -146,14 +143,6 @@ export class BookingState {
         catch (error) {
             console.log(error);
         }
-
-        // try {
-        //     const ticketResponse = await this.flightService.downloadTicket(pnr, path);
-        //     console.log(ticketResponse.data);
-        // }
-        // catch (error) {
-        //     console.log(error); 
-        // }
     }
 
 }

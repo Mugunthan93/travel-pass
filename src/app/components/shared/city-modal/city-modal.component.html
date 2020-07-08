@@ -11,12 +11,17 @@
     </ion-toolbar>
     <ion-item lines="full">
         <ion-label position="floating">Select City</ion-label>
-        <ion-input type="text" (input)="searchCity($event.target.value)"></ion-input>
+        <ion-input 
+            type="text"
+            inputmode="text"
+            (ionInput)="searchCity($event.target.value)"
+            #city>
+        </ion-input>
     </ion-item>
 </ion-header>
 <ion-content>
-    <ion-list *ngIf="cities.length > 0">
-        <ion-item lines="none" *ngFor="let city of cities" (click)="selectCity(city)">
+    <ion-list *ngIf="(flightcities$ | async).length > 0">
+        <ion-item lines="none" *ngFor="let city of (flightcities$ | async)" (click)="selectCity(city)">
             <ion-label>{{city.city_name}}</ion-label>
             <ion-text>{{city.city_code}}</ion-text>
         </ion-item>

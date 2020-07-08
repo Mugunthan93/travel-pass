@@ -84,13 +84,13 @@ export class DashboardState{
 
     @Action(SearchBus)
     searchBus() {
-        this.store.dispatch(new SearchType('Bus'));
+        this.store.dispatch(new SearchMode('bus'));
         this.store.dispatch(new Navigate(['/', 'home', 'search','bus']));
     }
 
     @Action(SearchHotel)
     searchHotel() {
-        this.store.dispatch(new SearchType('Hotel'));
+        this.store.dispatch(new SearchMode('hotel'));
         this.store.dispatch(new Navigate(['/', 'home', 'search','hotel']));
     }
 

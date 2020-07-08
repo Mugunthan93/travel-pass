@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { BookingState } from 'src/app/stores/booking.state';
-import { ApprovalRequest, ApprovalState, GetApproveRequest } from 'src/app/stores/approval.state';
-import { ModalController } from '@ionic/angular';
-import { ApproveRequestComponent } from 'src/app/components/flight/approve-request/approve-request.component';
+import { ApprovalState, GetApproveRequest } from 'src/app/stores/approval.state';
 
 @Component({
   selector: 'app-request-list',

@@ -5,7 +5,7 @@ import { LoadingController, AlertController, MenuController } from '@ionic/angul
 import { GetUser, UserState } from './user.state';
 import { GetCompany, CompanyState } from './company.state';
 import { user } from '../models/user';
-import { StateReset } from 'ngxs-reset-plugin';
+import { StateReset, StateResetAll } from 'ngxs-reset-plugin';
 import { DashboardState, UpcomingTrips } from './dashboard.state';
 import { SearchState } from './search.state';
 import { ResultState } from './result.state';
@@ -119,85 +119,10 @@ export class AuthState {
         const logout = await this.authService.logout();
         sessionStorage.clear();
 
-        this.store.dispatch(new StateReset(
-            AuthState,
-            UserState,
-            CompanyState,
-            DashboardState,
-            SearchState,
-            ResultState,
-            BookState,
-
-            //lvl 2
-            FlightSearchState,
-            FlightResultState,
-            FLightBookState,
-
-            OneWaySearchState,
-            RoundTripSearchState,
-            MultiCitySearchState,
-
-            OneWayResultState,
-            DomesticResultState,
-            InternationalResultState,
-            MultiCityResultState,
-
-            OneWayBookState,
-            DomesticBookState,
-            InternationalBookState,
-            MultiCityBookState,
-
-            BookingState,
-            ApprovalState,
-
-            FilterState,
-            SharedState
-        ));
+        this.store.dispatch(new StateResetAll(SharedState));
         this.menuCtrl.toggle('first');
         this.store.dispatch(new Navigate(['/', 'auth']));
         
     }
 
 }
-
-
-// const veerObject = {
-//     PAN_number: null,
-//     address: null,
-//     approver: null,
-//     city: null,
-//     country_name: null,
-//     createdAt: "2018-11-09T08:03:23.357Z",
-//     created_by: null,
-//     credit_limit: 10000,
-//     credit_req: null,
-//     customer_id: 81,
-//     designation: "developer",
-//     dob: null,
-//     email: "veera@tripmidas.com",
-//     gender: null,
-//     grade: null,
-//     gst_details: null,
-//     id: 224,
-//     is_Password_Changed: true,
-//     is_rightsto_book: null,
-//     lastname: null,
-//     manager_email: null,
-//     manager_name: null,
-//     markup_charge: null,
-//     name: "Veera",
-//     passport_expiry: null,
-//     passport_no: null,
-//     password: "$2a$10$RJa5sLQTNnWCJhAyo8L.6OyErvfRTd524K87Df.M8O45cS5rw2yWC",
-//     phone_number: "9655261060",
-//     resetPasswordExpires: "1576672044556",
-//     resetPasswordToken: "6626f0bfd726076357f6efc8bd642d48ebc07f7b",
-//     role: "management",
-//     sales_id: null,
-//     service_charge: null,
-//     staff_code: null,
-//     status: true,
-//     updatedAt: "2019-12-18T12:25:56.214Z",
-//     validity_period: null
-// }
-// sessionStorage.setItem('session', JSON.stringify(veerObject));

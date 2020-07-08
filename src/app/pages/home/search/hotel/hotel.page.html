@@ -1,4 +1,48 @@
 <ion-content>
+  <ion-card>
+    <ion-card-content>
+      <form [formGroup]="hotelSearch" (ngSubmit)="searchHotel()">
+        <ion-row>
+          <ion-text>City/Area</ion-text>
+          <ion-text [ngClass]="errorClass('city')">New Delhi</ion-text>
+          <ion-text [ngClass]="errorClass('city')">India</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-row>
+            <ion-text>Rooms</ion-text>
+            <ion-text [ngClass]="errorClass('rooms')">1 Room</ion-text>
+            <ion-text [ngClass]="errorClass('rooms')">1 Adult</ion-text>
+          </ion-row>
+          <ion-row>
+            <ion-text>Nationality</ion-text>
+            <ion-text [ngClass]="errorClass('nationality')">Indian</ion-text>
+          </ion-row>
+          <ion-row>
+            <ion-text>Star Hotel</ion-text>
+            <ion-text [ngClass]="errorClass('star')">1 Star</ion-text>
+          </ion-row>
+        </ion-row>
+        <ion-row>
+          <ion-row>
+            <ion-text>Check-In</ion-text>
+            <ion-text [ngClass]="errorClass('checkin')">Thu,27 Feb 20</ion-text>
+          </ion-row>
+          <ion-row>
+            <ion-text>Check-Out</ion-text>
+            <ion-text [ngClass]="errorClass('checkout')">Fri,28 Feb 20</ion-text>
+          </ion-row>
+        </ion-row>
+        <ion-row>
+          <ion-button expand="full" type="submit">
+            <ion-text>{{'Search Hotel' | titlecase}}</ion-text>
+          </ion-button>
+        </ion-row>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
+<!-- <ion-content>
   <ion-grid>
     <ion-row>
       <ion-col size="1">
@@ -111,4 +155,4 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-</ion-content>
+</ion-content> -->

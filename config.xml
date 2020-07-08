@@ -22,6 +22,7 @@
     <preference name="orientation" value="portrait" />
     <preference name="resizeOnFullScreen" value="true" />
     <preference name="KeyboardResizeMode" value="ionic" />
+    <preference name="KeyboardDisplayRequiresUserAction" value="false" />
     <preference name="GOOGLE_MAPS_ANDROID_API_KEY" value="AIzaSyDVaJa4N9N1qM8OglHSt5BKsqPn8LikZJk" />
     <platform name="android">
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application" xmlns:android="http://schemas.android.com/apk/res/android">

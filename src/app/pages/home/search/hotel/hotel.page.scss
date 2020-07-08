@@ -1,93 +1,146 @@
 @import "../../../../../style/util/variable.scss";
 
-ion-grid{
-    >ion-row:first-child{
-        margin-top:10px;
-        margin-bottom:10px;
-        >ion-col{
-            margin: auto !important;
-        }
-    }
-    >ion-row:last-child{
-        margin:10px;
-        >ion-col{
-            margin: auto !important;
-        }
-    }
-}
-
-ion-card.tab{
-    margin:0px;
-    ion-card-content{
-        padding:0px;
-        ion-chip{
-            width: -webkit-fill-available;
-        }
-    }
-}
-
-ion-card.content{
-    margin: auto;
-    >ion-card-header {
-        >ion-row{
-            border-bottom:2px solid #e6e6e6;
-            >ion-col{
-                >ion-row{
-                    margin-top:6px;
-                    margin-bottom:6px;
-                    >ion-text{
-                        margin:auto;
+ion-content{
+    >ion-card{
+        >ion-card-content{
+            >form{
+                >ion-row:not(:last-child) {
+                    border-bottom: 2px solid grey;
+                    ion-text:first-child {
+                        color: black;
+                        font-size: 17px;
+                        font-weight: 500;
                     }
                 }
-            }
-        }
-    }
-    >ion-card-content {
-        padding:16px;
-        >ion-row{
-            ion-col{
-                margin-top:10px;
-                margin-bottom:10px;
-            }
-            >ion-col:nth-child(2){
-                ion-text {
-                    margin: auto;
+                >ion-row{
+                    min-height: fit-content;
+                    padding: 30px 0px;
                 }
-                ion-icon{
-                    height: 19px;
-                    margin:auto;
+                >ion-row:nth-child(1) {
+                    flex-direction: column;
+                    >ion-text {
+                        align-self: center;
+                    }
+                }
+    
+                >ion-row:nth-child(2),ion-row:nth-child(3) {
+                    justify-content: space-between;
+                    >ion-row {
+                        flex-direction: column;
+                        align-content: center;
+                    }
+                    >ion-row:last-child {
+                        >ion-text:last-child {
+                            margin-left: auto;
+                            margin-bottom: auto;
+                        }
+                    }
+                }
+    
+                >ion-row:nth-child(2) {
+                    >ion-row:nth-child(2){
+                        >ion-text {
+                            margin: 0px auto;
+                        }
+                    }
+                }
+    
+                >ion-row:last-child{
+                    justify-content: center;
                 }
             }
-            >ion-col:first-child{
-                ion-text{
-                    margin-right: auto !important;
-                }
-            }
-            >ion-col:last-child{
-                ion-text {
-                    margin-left: auto !important;
-                }
-            }
-        }
-        >ion-row:first-child{
-            border-bottom:2px solid #e6e6e6;
         }
     }
 }
 
-mat-divider{
-    border-width: 2px;
-    border-color: #e6e6e6;
-}
+// ion-grid{
+//     >ion-row:first-child{
+//         margin-top:10px;
+//         margin-bottom:10px;
+//         >ion-col{
+//             margin: auto !important;
+//         }
+//     }
+//     >ion-row:last-child{
+//         margin:10px;
+//         >ion-col{
+//             margin: auto !important;
+//         }
+//     }
+// }
 
-ion-button {
-    margin-top:10px;
-    margin-bottom:10px;
-    --opacity: 1;
-    --background:#{$btn4-bg};
-    width:100%;
+// ion-card.tab{
+//     margin:0px;
+//     ion-card-content{
+//         padding:0px;
+//         ion-chip{
+//             width: -webkit-fill-available;
+//         }
+//     }
+// }
 
-    ion-text {
-        color: white;
-    }
-}
+// ion-card.content{
+//     margin: auto;
+//     >ion-card-header {
+//         >ion-row{
+//             border-bottom:2px solid #e6e6e6;
+//             >ion-col{
+//                 >ion-row{
+//                     margin-top:6px;
+//                     margin-bottom:6px;
+//                     >ion-text{
+//                         margin:auto;
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     >ion-card-content {
+//         padding:16px;
+//         >ion-row{
+//             ion-col{
+//                 margin-top:10px;
+//                 margin-bottom:10px;
+//             }
+//             >ion-col:nth-child(2){
+//                 ion-text {
+//                     margin: auto;
+//                 }
+//                 ion-icon{
+//                     height: 19px;
+//                     margin:auto;
+//                 }
+//             }
+//             >ion-col:first-child{
+//                 ion-text{
+//                     margin-right: auto !important;
+//                 }
+//             }
+//             >ion-col:last-child{
+//                 ion-text {
+//                     margin-left: auto !important;
+//                 }
+//             }
+//         }
+//         >ion-row:first-child{
+//             border-bottom:2px solid #e6e6e6;
+//         }
+//     }
+// }
+
+// mat-divider{
+//     border-width: 2px;
+//     border-color: #e6e6e6;
+// }
+
+// ion-button {
+//     margin-top:10px;
+//     margin-bottom:10px;
+//     --opacity: 1;
+//     --background:#{$btn4-bg};
+//     width:100%;
+
+//     ion-text {
+//         color: white;
+//     }
+// }

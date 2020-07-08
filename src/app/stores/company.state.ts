@@ -2,6 +2,8 @@ import { company } from '../models/company';
 import { StateContext, State, Action, Selector } from '@ngxs/store';
 import { CompanyService } from '../services/company/company.service';
 import { user } from '../models/user';
+import { UserState } from './user.state';
+import * as _ from 'lodash';
 
 export class GetCompany {
     static readonly type = '[User] GetCompany';
@@ -39,9 +41,9 @@ export class CompanyState {
         return state.company_name;
     }
 
-    @Selector()
-    static getManagerList(state: company) : user[] {
-        return state.Users.filter((el: user) => el.role == 'manager');
+    @Selector([UserState])
+    static getManagerList(state: company,user : user) : user[] {
+        return state.Users.filter((el: user) => el.role == 'manager' && !_.isEqual(el,user));
     }
 
     @Selector()

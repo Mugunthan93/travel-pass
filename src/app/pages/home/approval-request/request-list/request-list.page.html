@@ -45,7 +45,7 @@
 </ion-content>
 
 <ion-content>
-  <ion-card *ngFor="let allBooking of (allBookings | async | sort : 'id')">
+  <ion-card *ngFor="let allBooking of (allBookings | async)">
     <!-- trip_request -->
     <ion-card-content>
       <ion-row>
@@ -65,7 +65,7 @@
       <ion-row>
         <ion-row>
           <ion-text>{{allBooking.travel_date | date : 'd'}}th</ion-text>
-          <ion-text>{{allBooking.travel_date | date : 'LLL'}}</ion-text>
+          <ion-text>{{allBooking.travel_date | date : 'LLL, yyyy'}}</ion-text>
         </ion-row>
         <ion-chip>
           <ion-text>{{allBooking.passenger_details.fare_response.published_fare | currency: 'INR'}}</ion-text>

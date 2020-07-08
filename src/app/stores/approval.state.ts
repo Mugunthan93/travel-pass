@@ -1,9 +1,11 @@
 import { State, Action, StateContext, Store, Selector } from "@ngxs/store";
 import { Navigate } from '@ngxs/router-plugin';
-import { MenuController, ModalController } from '@ionic/angular';
+import { MenuController, ModalController, AlertController } from '@ionic/angular';
 import { FlightService } from '../services/flight/flight.service';
 import { UserState } from './user.state';
 import { ApproveRequestComponent } from '../components/flight/approve-request/approve-request.component';
+import * as _ from 'lodash';
+import * as moment from 'moment';
 
 
 export interface Approval {
@@ -50,7 +52,8 @@ export class ApprovalState {
         private store: Store,
         public menuCtrl: MenuController,
         public flightService: FlightService,
-        public modalCtrl: ModalController
+        public modalCtrl: ModalController,
+        private alertCtrl : AlertController
     ) {
 
     }
@@ -73,23 +76,34 @@ export class ApprovalState {
         
         this.menuCtrl.close('first');
         this.store.dispatch(new Navigate(['/', 'home', 'approval-request', states.getState().type, 'request-list']));
-        let allBooking : any[] = [];
 
         try {
             const userId: number = this.store.selectSnapshot(UserState.getUserId);
             const approvalReqResponse = await this.flightService.approvalReqList(userId);
             console.log(approvalReqResponse);
             let openBooking = JSON.parse(approvalReqResponse.data);
-            allBooking.push(...openBooking);
+            let partition = _.partition(openBooking, (el) => {
+                return  moment({}).isBefore(el.travel_date)
+            })
+            partition[0] = partition[0].sort((a,b) => {
+                if (moment(b.travel_date).isAfter(a.travel_date)) {
+                    return -1;
+                }
+                else if (moment(b.travel_date).isBefore(a.travel_date)) {
+                    return 1;
+                }
+                else {
+                    return 0;
+                }
+            })
+            states.patchState({
+                list: partition[0].concat(partition[1])
+            });
 
         }
         catch (error) {
             console.log(error);
         }
-
-        states.patchState({
-            list : allBooking
-        });
 
     }
 
@@ -103,6 +117,7 @@ export class ApprovalState {
             const getApprovalReqResponse = await this.flightService.getReqTicket(action.id.toString());
             console.log(getApprovalReqResponse);
             let response = JSON.parse(getApprovalReqResponse.data);
+
             states.patchState({
                 selectedRequest: response.data[0]
             });
@@ -117,6 +132,28 @@ export class ApprovalState {
 
     @Action(AcceptRequest)
     async acceptRequest(states: StateContext<Approval>) {
+        const successAlert = await this.alertCtrl.create({
+            header: 'Approve Success',
+            subHeader: 'Request has been approved successfully',
+            buttons: [{
+                text: 'OK',
+                handler: () => {
+                    this.store.dispatch(new Navigate(['/', 'home', 'approval-request', states.getState().type, 'request-list']));
+                    successAlert.dismiss();
+                }
+            }]
+        });
+        let failedAlert = await this.alertCtrl.create({
+            header: 'Approve Failed',
+            subHeader: 'Failed to Approve the Request',
+            buttons: [{
+                text: 'Cancel',
+                handler: () => {
+                    successAlert.dismiss();
+                }
+            }]
+        });
+        
         let req = Object.assign({}, states.getState().selectedRequest);
         let reqbody = {
             passenger_details: req.passenger_details,
@@ -141,9 +178,16 @@ export class ApprovalState {
         try {
             const acceptReqResponse = await this.flightService.approvalReq(req.id, reqbody);
             console.log(acceptReqResponse);
+            if (acceptReqResponse.status == 200) {
+                successAlert.present();
+            }
         }
         catch (error) {
             let errObj = JSON.parse(error.error);
+            if (errObj.status_code == 500) {
+                failedAlert.message = errObj.message;
+                failedAlert.present();
+            }
             console.log(errObj);
             console.log(error);
         }
@@ -151,6 +195,29 @@ export class ApprovalState {
 
     @Action(DeclineRequest)
     async declineRequest(states: StateContext<Approval>) {
+
+        const successAlert = await this.alertCtrl.create({
+            header: 'Decline Success',
+            subHeader: 'Request has been Decline successfully',
+            buttons: [{
+                text: 'OK',
+                handler: () => {
+                    this.store.dispatch(new Navigate(['/', 'home', 'approval-request', states.getState().type, 'request-list']));
+                    successAlert.dismiss();
+                }
+            }]
+        });
+        let failedAlert = await this.alertCtrl.create({
+            header: 'Decline Failed',
+            subHeader: 'Failed to decline the Request',
+            buttons: [{
+                text: 'Cancel',
+                handler: () => {
+                    successAlert.dismiss();
+                }
+            }]
+        });
+
         let req = Object.assign({}, states.getState().selectedRequest);
         let reqbody = {
             passenger_details: req.passenger_details,
@@ -173,11 +240,18 @@ export class ApprovalState {
         console.log(reqbody);
         console.log(JSON.stringify(reqbody));
         try {
-            const acceptReqResponse = await this.flightService.approvalReq(req.id, reqbody);
-            console.log(acceptReqResponse);
+            const declineReqResponse = await this.flightService.approvalReq(req.id, reqbody);
+            console.log(declineReqResponse);
+            if (declineReqResponse.status == 200) {
+                successAlert.present();
+            }
         }
         catch (error) {
             let errObj = JSON.parse(error.error);
+            if (errObj.status_code == 500) {
+                failedAlert.message = errObj.message;
+                failedAlert.present();
+            }
             console.log(errObj);
             console.log(error);
         }

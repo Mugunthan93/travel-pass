@@ -11,11 +11,18 @@ export class SharedService {
     private http : NativeHttpService
   ) { }
 
-  async searchCity(reqCity: string): Promise<HTTPResponse> {
+  async searchFlightCity(reqCity: string): Promise<HTTPResponse> {
     const param: { [key: string]: string | string[] } = {
       "city": reqCity
     }
     return await this.http.get("/airlines/tboairlinecities", param);
+  }
+
+  async searchHotelCity(reqCity: string): Promise<HTTPResponse> {
+    const param: { [key: string]: string | string[] } = {
+      "city": reqCity
+    }
+    return await this.http.get("/hotels/gethotelcities", param);
   }
 
   async upcomingTrips(): Promise<HTTPResponse> {
