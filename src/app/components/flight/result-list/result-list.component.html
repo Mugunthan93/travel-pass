@@ -4,7 +4,8 @@
       <mat-accordion multi="false">
         <mat-expansion-panel 
           [hideToggle]="true"  
-            *ngFor="let item of flightList;let i = index"
+            *ngFor="let item of (flightList | sort : (sortBy$ | async).property : (sortBy$ | async).state );let i =
+            index"
             #panel>
           <mat-expansion-panel-header 
             [collapsedHeight]="'fit-content'" 

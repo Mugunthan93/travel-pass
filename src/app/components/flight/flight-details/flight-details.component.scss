@@ -1,0 +1,53 @@
+
+
+
+ion-content{
+    >ion-row{
+        display: flex;
+        flex-direction: column;
+        >ion-card{
+            >ion-card-content{
+                ion-item {
+                    --padding-start: 0px;
+        
+                    >ion-row {
+                        >* {
+                            margin: auto 5px;
+                        }
+        
+                        >ion-row {
+                            flex-direction: column;
+                        }
+                    }
+        
+                    >ion-row:last-child {
+                        >ion-row {
+                            >ion-text {
+                                align-self: flex-end;
+                            }
+                        }
+                    }
+                }
+        
+                >ion-row {
+                    justify-content: space-between;
+        
+                    >ion-col {
+                        flex-direction: column;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-around;
+        
+                        &:first-child {
+                            align-items: flex-start;
+                        }
+        
+                        &:last-child {
+                            align-items: flex-end;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

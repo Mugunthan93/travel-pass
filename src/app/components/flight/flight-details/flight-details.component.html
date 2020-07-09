@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <ion-text>Flight Details</ion-text>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeFlightDetail()">
+        <ion-icon name="close-sharp"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row *ngFor="let cflight of connecting">
+    <ion-item>
+      <ion-label>
+        Trip {{1 + connecting.indexOf(cflight)}}
+      </ion-label>
+    </ion-item>
+    <ion-card *ngFor="let c of cflight">
+      <ion-card-content>
+        <ion-item>
+          <ion-row slot="start">
+            <ion-img src="../../../../../../assets/AirlineLogo/{{c.Airline.AirlineCode}}.gif"></ion-img>
+            <ion-row>
+              <ion-text>{{c.Airline.AirlineName}}</ion-text>
+              <ion-text>{{c.Airline.AirlineCode}} - {{c.Airline.FlightNumber}}</ion-text>
+            </ion-row>
+          </ion-row>
+        </ion-item>
+        <ion-row>
+          <ion-col>
+            <ion-text>({{c.Origin.Airport.AirportCode}}) {{c.Origin.DepTime  | date : 'HH:mm'}}</ion-text>
+            <ion-text>{{c.Origin.DepTime | date : 'EEE,d LLL' | titlecase}}</ion-text>
+            <ion-text>{{c.Origin.Airport.CityName}}</ion-text>
+          </ion-col>
+          <ion-col>
+            <ion-icon size="large" src="../../../../../../assets/icons/passage-of-time.svg"></ion-icon>
+            <ion-text>{{c.Duration}}</ion-text>
+          </ion-col>
+          <ion-col>
+            <ion-text>({{c.Destination.Airport.AirportCode}}) {{c.Destination.ArrTime  | date : 'HH:mm'}}
+            </ion-text>
+            <ion-text>{{c.Destination.ArrTime | date : 'EEE,d LLL' | titlecase}}</ion-text>
+            <ion-text>{{c.Destination.Airport.CityName}}</ion-text>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+  </ion-row>
+</ion-content>

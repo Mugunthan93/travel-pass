@@ -13,12 +13,14 @@ import { ModalController, AlertController } from '@ionic/angular';
 export interface flight {
     sort: sortButton[],
     emailtrip: emailtrip,
-    emailItinerary:itinerarytrip[]
+    emailItinerary: itinerarytrip[],
+    currentSort: sortButton
 }
 
 export interface sortButton {
-    value: string
-    state : string
+    label: string
+    state: string
+    property: string
 }
 
 export interface resultObj {
@@ -135,7 +137,7 @@ export interface SSR {
 //classes ----------------------------------------->>>>>>
 
 export class SortChange {
-    static readonly type = '[Flight] DepartureSort';
+    static readonly type = '[Flight] SortChange';
     constructor(public button : sortButton) {
 
     }
@@ -169,17 +171,25 @@ export class SendEmail {
     }
 }
 
+export class SortBy {
+    static readonly type = "[Flight] SortBy";
+    constructor(public sortby: sortButton) {
+
+    }
+}
+
 @State<flight>({
     name: 'flight_result',
     defaults: {
         sort: [
-            { value: 'departure', state: 'deafult' },
-            {value : 'arrival',state : 'default'},
-            {value : 'duration',state : 'default'},
-            { value: 'price', state: 'default' }
+            { label: 'departure', state: 'default', property: 'departure' },
+            { label: 'arrival', state: 'default', property: 'arrival'},
+            { label: 'duration', state: 'default', property: 'Duration'},
+            { label: 'price', state: 'default', property: 'fare' }
         ],
         emailtrip: null,
-        emailItinerary:[]
+        emailItinerary: [],
+        currentSort: { label: 'departure', state: 'default', property: 'departure' }
     },
     children: [
         OneWayResultState,
@@ -219,17 +229,59 @@ export class FlightResultState{
         return states.sort;
     }
 
+    @Selector()
+    static getSortBy(states: flight): sortButton {
+        return states.currentSort;
+    }
+
+
     @Action(SortChange)
     sortChange(states: StateContext<flight>, action: SortChange) {
-        let currentState: sortButton[] = states.getState().sort;
-        currentState.forEach(
-            (el) => {
+        let currentStates: sortButton[] = states.getState().sort.map(
+            (el : sortButton) => {
                 if (el !== action.button) {
-                    el.state = "default";
+                    let currentstate = Object.assign({}, el);
+                    currentstate.state = "default";
+                    return currentstate;
+                }
+                else {  
+                    return el;
+                }
+        });
+        states.patchState({
+            sort: currentStates,
+            currentSort: action.button
+        });
+    }
+
+    @Action(SortBy)
+    sortBy(states: StateContext<flight>, action: SortBy) {
+        let currentsort : sortButton[] = states.getState().sort;
+        let sortedarray : sortButton[] = [];
+        currentsort.forEach((el,ind,arr) => {
+            if (el == action.sortby && action.sortby.state == 'default') {
+                sortedarray[ind] = {
+                    label: action.sortby.label,
+                    property: action.sortby.property,
+                    state: 'rotated'
                 }
             }
-        );
-        states.patchState({ sort: currentState });
+            else if (el == action.sortby && action.sortby.state == 'rotated') {
+                sortedarray[ind] = {
+                    label: action.sortby.label,
+                    property: action.sortby.property,
+                    state: 'default'
+                }
+            }
+            else {
+                sortedarray[ind] = el;
+            }
+        });
+
+        states.patchState({
+            sort: sortedarray,
+            currentSort : action.sortby
+        });
     }
 
     @Action(AddEmailTrips)

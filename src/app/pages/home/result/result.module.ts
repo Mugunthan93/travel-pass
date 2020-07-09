@@ -18,6 +18,8 @@ import { BusFilterComponent } from 'src/app/components/bus/bus-filter/bus-filter
 import { FairRuleComponent } from 'src/app/components/flight/fair-rule/fair-rule.component';
 import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 import { ResultSortingComponent } from 'src/app/components/shared/result-sorting/result-sorting.component';
+import { PipeModule } from 'src/app/modules/pipe.module';
+import { FlightDetailsComponent } from 'src/app/components/flight/flight-details/flight-details.component';
 
 
 @NgModule({
@@ -27,6 +29,7 @@ import { ResultSortingComponent } from 'src/app/components/shared/result-sorting
     ReactiveFormsModule,
     IonicModule,
     ResultPageRoutingModule,
+    PipeModule,
     AgmCoreModule.forRoot({
       // please get your own API key here:
       // https://developers.google.com/maps/documentation/javascript/get-api-key?hl=en
@@ -43,7 +46,8 @@ import { ResultSortingComponent } from 'src/app/components/shared/result-sorting
     BusFilterComponent,
     FairRuleComponent,
     EmailItineraryComponent,
-    ResultSortingComponent
+    ResultSortingComponent,
+    FlightDetailsComponent
   ],
   entryComponents: [
     TripFilterComponent,
@@ -54,7 +58,8 @@ import { ResultSortingComponent } from 'src/app/components/shared/result-sorting
     BusFilterComponent,
     FairRuleComponent,
     EmailItineraryComponent,
-    ResultSortingComponent
+    ResultSortingComponent,
+    FlightDetailsComponent
   ]
 })
 export class ResultPageModule {}

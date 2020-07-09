@@ -4,9 +4,8 @@ import { ResultListComponent } from 'src/app/components/flight/result-list/resul
 import { IonicModule } from '@ionic/angular';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { ResultSortingComponent } from 'src/app/components/shared/result-sorting/result-sorting.component';
-import { CustomCalendarComponent } from 'src/app/components/shared/custom-calendar/custom-calendar.component';
 import { CalendarModule } from 'ion2-calendar';
+import { PipeModule } from '../pipe.module';
 
 
 
@@ -20,7 +19,8 @@ import { CalendarModule } from 'ion2-calendar';
     ReactiveFormsModule,
     IonicModule,
     MatExpansionModule,
-    CalendarModule
+    CalendarModule,
+    PipeModule
   ],
   exports: [
     ResultListComponent,

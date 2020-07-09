@@ -25,35 +25,6 @@ export class SelectedFlight {
     }
 }
 
-export class DurationSort {
-    static readonly type = '[OneWay] DurationSort';
-    constructor(public state: string) {
-
-    }
-}
-
-export class ArrivalSort {
-    static readonly type = '[OneWay] ArrivalSort';
-    constructor(public state: string) {
-
-    }
-}
-
-export class DepartureSort {
-    static readonly type = '[OneWay] DepartureSort';
-    constructor(public state: string) {
-
-    }
-}
-
-export class PriceSort {
-    static readonly type = '[OneWay] PriceSort';
-    constructor(public state: string) {
-
-    }
-}
-
-
 @State<onewayResult>({
     name: 'oneway_result',
     defaults: {
@@ -104,62 +75,6 @@ export class OneWayResultState extends BaseFlightResult {
         });
         this.store.dispatch(new AddEmailTrips(this.emailTrips(action.response.Results[0])));
         this.store.dispatch(new GetAirlines(states.getState().value));
-    }
-
-    @Action(DurationSort)
-    durationSort(states: StateContext<onewayResult>, action: DurationSort) {
-        if (action.state == 'default') { 
-            states.patchState({
-                value: this.ascDuration(states.getState().value)
-            });
-        }
-        else if (action.state == 'rotated') {
-            states.patchState({
-                value: this.desDuration(states.getState().value)
-            });
-        }
-    }
-
-    @Action(ArrivalSort)
-    arrivalSort(states: StateContext<onewayResult>, action: ArrivalSort) {
-        if (action.state == 'default') {
-            states.patchState({
-                value: this.ascArrival(states.getState().value)
-            });
-        }
-        else if (action.state == 'rotated') {
-            states.patchState({
-                value: this.desArrival(states.getState().value)
-            });
-        }
-    }
-
-    @Action(DepartureSort)
-    departureSort(states: StateContext<onewayResult>, action: DepartureSort) {
-        if (action.state == 'default') {
-            states.patchState({
-                value: this.ascDeparture(states.getState().value)
-            });
-        }
-        else if (action.state == 'rotated') {
-            states.patchState({
-                value: this.desDeparture(states.getState().value)
-            });
-        }
-    }
-
-    @Action(PriceSort)
-    priceSort(states: StateContext<onewayResult>, action: PriceSort) {
-        if (action.state == 'default') {
-            states.patchState({
-                value: this.ascPrice(states.getState().value)
-            });
-        }
-        else if (action.state == 'rotated') {
-            states.patchState({
-                value: this.desPrice(states.getState().value)
-            });
-        }
     }
 
 }

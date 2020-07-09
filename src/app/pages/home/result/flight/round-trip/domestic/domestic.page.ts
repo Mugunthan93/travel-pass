@@ -1,14 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef, QueryList } from '@angular/core';
 import { Gesture, GestureDetail } from '@ionic/core';
 import { AnimationController, Animation, GestureController, ModalController } from '@ionic/angular';
-import { resultObj, sortButton } from 'src/app/stores/result/flight.state';
+import { resultObj } from 'src/app/stores/result/flight.state';
 import { Observable, Subscription, concat } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
-import { ResultState } from 'src/app/stores/result.state';
-import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
-import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
-import { DomesticResultState, SelectedDepartureFlight, SelectedReturnFlight, DepartureSort, ArrivalSort, DurationSort, PriceSort } from 'src/app/stores/result/flight/domestic.state';
+import { DomesticResultState, SelectedDepartureFlight, SelectedReturnFlight } from 'src/app/stores/result/flight/domestic.state';
 import { GetFareQuoteSSR } from 'src/app/stores/book/flight/domestic.state';
 
 @Component({

@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { resultObj, sortButton } from 'src/app/stores/result/flight.state';
-import { Observable, Subscription } from 'rxjs';
-import { ResultState } from 'src/app/stores/result.state';
+import { resultObj } from 'src/app/stores/result/flight.state';
+import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { ModalController } from '@ionic/angular';
-import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
-import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
-import { InternationalResultState, DepartureSort, ArrivalSort, DurationSort, PriceSort, SelectedFlight } from 'src/app/stores/result/flight/international.state';
+import { InternationalResultState, SelectedFlight } from 'src/app/stores/result/flight/international.state';
 import { GetFareQuoteSSR } from 'src/app/stores/book/flight/international.state';
 
 @Component({

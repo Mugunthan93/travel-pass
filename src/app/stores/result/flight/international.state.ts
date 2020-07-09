@@ -27,34 +27,6 @@ export class SelectedFlight {
     }
 }
 
-export class DurationSort {
-    static readonly type = '[International] DurationSort';
-    constructor(public state: string) {
-
-    }
-}
-
-export class ArrivalSort {
-    static readonly type = '[International] ArrivalSort';
-    constructor(public state: string) {
-
-    }
-}
-
-export class DepartureSort {
-    static readonly type = '[International] DepartureSort';
-    constructor(public state: string) {
-
-    }
-}
-
-export class PriceSort {
-    static readonly type = '[International] PriceSort';
-    constructor(public state: string) {
-
-    }
-}
-
 @State<internationalResult>({
     name: 'international_result',
     defaults: {
@@ -105,61 +77,5 @@ export class InternationalResultState extends BaseFlightResult {
         this.store.dispatch(new AddEmailTrips(this.emailTrips(action.response.Results[0])));
         this.store.dispatch(new GetAirlines(states.getState().value));
         this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'round-trip', 'international']));
-    }
-
-    @Action(DurationSort)
-    durationSort(states: StateContext<internationalResult>, action: DurationSort) {
-        if (action.state == 'default') {
-            states.patchState({
-                value: this.ascDuration(states.getState().value)
-            });
-        }
-        else if (action.state == 'rotated') {
-            states.patchState({
-                value: this.desDuration(states.getState().value)
-            });
-        }
-    }
-
-    @Action(ArrivalSort)
-    arrivalSort(states: StateContext<internationalResult>, action: ArrivalSort) {
-        if (action.state == 'default') {
-            states.patchState({
-                value: this.ascArrival(states.getState().value)
-            });
-        }
-        else if (action.state == 'rotated') {
-            states.patchState({
-                value: this.desArrival(states.getState().value)
-            });
-        }
-    }
-
-    @Action(DepartureSort)
-    departureSort(states: StateContext<internationalResult>, action: DepartureSort) {
-        if (action.state == 'default') {
-            states.patchState({
-                value: this.ascDeparture(states.getState().value)
-            });
-        }
-        else if (action.state == 'rotated') {
-            states.patchState({
-                value: this.desDeparture(states.getState().value)
-            });
-        }
-    }
-
-    @Action(PriceSort)
-    priceSort(states: StateContext<internationalResult>, action: PriceSort) {
-        if (action.state == 'default') {
-            states.patchState({
-                value: this.ascPrice(states.getState().value)
-            });
-        }
-        else if (action.state == 'rotated') {
-            states.patchState({
-                value: this.desPrice(states.getState().value)
-            });
-        }
     }
 }

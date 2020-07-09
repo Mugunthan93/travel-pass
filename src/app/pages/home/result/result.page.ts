@@ -3,15 +3,11 @@ import { ModalController } from '@ionic/angular';
 import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
 import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 import { Observable } from 'rxjs';
-import { sortButton, FlightResultState } from 'src/app/stores/result/flight.state';
-import { DepartureSort, ArrivalSort, DurationSort, PriceSort, OneWayResultState } from 'src/app/stores/result/flight/oneway.state';
+import { FlightResultState } from 'src/app/stores/result/flight.state';
 import { Store } from '@ngxs/store';
 import { ResultState } from 'src/app/stores/result.state';
 import { StateReset } from 'ngxs-reset-plugin';
-import { MultiCityResultState } from 'src/app/stores/result/flight/multi-city.state';
 import { Navigate } from '@ngxs/router-plugin';
-import { DomesticResultState } from 'src/app/stores/result/flight/domestic.state';
-import { InternationalResultState } from 'src/app/stores/result/flight/international.state';
 
 @Component({
   selector: 'app-result',
@@ -65,23 +61,6 @@ export class ResultPage implements OnInit {
     });
 
     return modal.present();
-  }
-
-  getSort(item: sortButton) {
-    if (item.value == 'departure') {
-      this.store.dispatch(new DepartureSort(item.state));
-    }
-    else if (item.value == 'arrival') {
-      this.store.dispatch(new ArrivalSort(item.state));
-
-    }
-    else if (item.value == 'duration') {
-      this.store.dispatch(new DurationSort(item.state));
-
-    }
-    else if (item.value == 'price') {
-      this.store.dispatch(new PriceSort(item.state));
-    }
   }
 
 }

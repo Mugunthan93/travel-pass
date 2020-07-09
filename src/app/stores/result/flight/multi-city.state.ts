@@ -28,35 +28,6 @@ export class SelectedFlight {
     }
 }
 
-export class DurationSort {
-    static readonly type = '[MultiCity] DurationSort';
-    constructor(public state: string) {
-
-    }
-}
-
-export class ArrivalSort {
-    static readonly type = '[MultiCity] ArrivalSort';
-    constructor(public state: string) {
-
-    }
-}
-
-export class DepartureSort {
-    static readonly type = '[MultiCity] DepartureSort';
-    constructor(public state: string) {
-
-    }
-}
-
-export class PriceSort {
-    static readonly type = '[MultiCity] PriceSort';
-    constructor(public state: string) {
-
-    }
-}
-
-
 @State<multicityResult>({
     name: 'multicity_result',
     defaults: {
@@ -106,63 +77,6 @@ export class MultiCityResultState extends BaseFlightResult {
 
         this.store.dispatch(new AddEmailTrips(this.emailTrips(action.response.Results[0])));
         this.store.dispatch(new GetAirlines(states.getState().value));
-    }
-
-
-    @Action(DurationSort)
-    durationSort(states: StateContext<multicityResult>, action: DurationSort) {
-        if (action.state == 'default') {
-            states.patchState({
-                value: this.ascDuration(states.getState().value)
-            });
-        }
-        else if (action.state == 'rotated') {
-            states.patchState({
-                value: this.desDuration(states.getState().value)
-            });
-        }
-    }
-
-    @Action(ArrivalSort)
-    arrivalSort(states: StateContext<multicityResult>, action: ArrivalSort) {
-        if (action.state == 'default') {
-            states.patchState({
-                value: this.ascArrival(states.getState().value)
-            });
-        }
-        else if (action.state == 'rotated') {
-            states.patchState({
-                value: this.desArrival(states.getState().value)
-            });
-        }
-    }
-
-    @Action(DepartureSort)
-    departureSort(states: StateContext<multicityResult>, action: DepartureSort) {
-        if (action.state == 'default') {
-            states.patchState({
-                value: this.ascDeparture(states.getState().value)
-            });
-        }
-        else if (action.state == 'rotated') {
-            states.patchState({
-                value: this.desDeparture(states.getState().value)
-            });
-        }
-    }
-
-    @Action(PriceSort)
-    priceSort(states: StateContext<multicityResult>, action: PriceSort) {
-        if (action.state == 'default') {
-            states.patchState({
-                value: this.ascPrice(states.getState().value)
-            });
-        }
-        else if (action.state == 'rotated') {
-            states.patchState({
-                value: this.desPrice(states.getState().value)
-            });
-        }
     }
 
 }

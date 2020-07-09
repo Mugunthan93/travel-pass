@@ -53,16 +53,18 @@
       placeholder="Select Date Of Birth" formControlName="DateOfBirth">
       </ion-datetime>
     </ion-item>
-    <ion-item [ngClass]="errorClass('PassportNo')">
-      <ion-input placeholder="Passport Number" formControlName="PassportNo" required></ion-input>
+    <ion-item>
+      <ion-input placeholder="Passport Number" formControlName="PassportNo" required
+        [ngClass]="errorClass('PassportNo')"></ion-input>
     </ion-item>
     <ion-item>
       <ion-input slot="start" placeholder="Nationality" formControlName="nationality"></ion-input>
     </ion-item>
-    <ion-item [ngClass]="errorClass('PassportExpiry')">
+    <ion-item>
       <ion-label>PassPort Expiry Date</ion-label>
       <ion-datetime displayFormat="DD-MMM-YYYY"
-        placeholder="Select Passport Expiry Date" max="2050" formControlName="PassportExpiry" required>
+        placeholder="Select Passport Expiry Date" max="2050" formControlName="PassportExpiry" required
+        [ngClass]="errorClass('PassportExpiry')">
       </ion-datetime>
     </ion-item>
     <ion-item>

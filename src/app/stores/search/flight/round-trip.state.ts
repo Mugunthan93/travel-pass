@@ -153,9 +153,6 @@ export class RoundTripSearchState extends BaseFlightSearch {
         await loading.present();
 
         let currentState = states.getState();
-        let departureTime = typeof currentState.formData.departure == 'string' ? currentState.formData.departure : currentState.formData.departure.toJSON();
-        let returnTime = typeof currentState.formData.return == 'string' ? currentState.formData.return : currentState.formData.return.toJSON();
-
 
         states.patchState({
             payload: {
@@ -170,8 +167,8 @@ export class RoundTripSearchState extends BaseFlightSearch {
                         OriginName: currentState.formData.from.city_name,
                         DestinationName: currentState.formData.to.city_name,
                         FlightCabinClass: this.getCabinClass(currentState.formData.class),
-                        PreferredArrivalTime: departureTime,
-                        PreferredDepartureTime: departureTime
+                        PreferredArrivalTime: moment(currentState.formData.departure).format('YYYY-MM-DDTHH:mm:ss'),
+                        PreferredDepartureTime: moment(currentState.formData.departure).format('YYYY-MM-DDTHH:mm:ss')
                     },
                     {
                         Origin: currentState.formData.to.city_code,
@@ -179,8 +176,8 @@ export class RoundTripSearchState extends BaseFlightSearch {
                         OriginName: currentState.formData.to.city_name,
                         DestinationName: currentState.formData.from.city_name,
                         FlightCabinClass: this.getCabinClass(currentState.formData.class),
-                        PreferredArrivalTime: returnTime,
-                        PreferredDepartureTime: returnTime
+                        PreferredArrivalTime: moment(currentState.formData.return).format('YYYY-MM-DDTHH:mm:ss'),
+                        PreferredDepartureTime: moment(currentState.formData.return).format('YYYY-MM-DDTHH:mm:ss')
                     }
                 ],
                 prefferedAirline: [null],

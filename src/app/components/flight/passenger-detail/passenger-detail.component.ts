@@ -43,13 +43,13 @@ export class PassengerDetailComponent implements OnInit {
     }
     else if (this.form == 'edit'){
       this.Passenger = new FormGroup({
-        "Title": new FormControl(this.pax.Title),
-        "FirstName": new FormControl(this.pax.FirstName),
+        "Title": new FormControl(this.pax.Title, [Validators.required]),
+        "FirstName": new FormControl(this.pax.FirstName, [Validators.required]),
         "LastName": new FormControl(this.pax.LastName),
         "DateOfBirth": new FormControl(this.pax.DateOfBirth),
         "ContactNo": new FormControl(this.pax.ContactNo),
-        "PassportNo": new FormControl(this.pax.PassportNo),
-        "PassportExpiry": new FormControl(this.pax.PassportExpiry),
+        "PassportNo": new FormControl(this.pax.PassportNo, [Validators.required]),
+        "PassportExpiry": new FormControl(this.pax.PassportExpiry, [Validators.required]),
         "nationality": new FormControl(this.pax.nationality),
         "ftnumber": new FormControl(this.pax.ftnumber)
       });

@@ -1,8 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { sortButton, FlightResultState, SortChange } from 'src/app/stores/result/flight.state';
+import { sortButton, FlightResultState, SortChange, SortBy } from 'src/app/stores/result/flight.state';
 
 @Component({
   selector: 'app-result-sorting',
@@ -20,25 +20,24 @@ import { sortButton, FlightResultState, SortChange } from 'src/app/stores/result
 export class ResultSortingComponent implements OnInit {
 
   buttons$: Observable<sortButton[]>;
-  currentButton: sortButton;
-
-  @Output() sort: EventEmitter<sortButton> = new EventEmitter<sortButton>(null);
+  currentButton$: Observable<sortButton>;
 
   constructor(
     private store : Store
   ) { }
 
   ngOnInit() {
+    this.currentButton$ = this.store.select(FlightResultState.getSortBy);
     this.buttons$ = this.store.select(FlightResultState.getButtons);
   }
   
   sortChange(evt: CustomEvent) {
-    this.currentButton = evt.detail.value;
     this.store.dispatch(new SortChange(evt.detail.value));
   }
 
   sorting(item: sortButton) {
-    this.sort.emit(item);
+    console.log(item);
+    this.store.dispatch(new SortBy(item));
   }
 
 }

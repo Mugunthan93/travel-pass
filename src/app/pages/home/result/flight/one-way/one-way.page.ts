@@ -1,15 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
 import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { FlightResultState, resultObj, sortButton } from 'src/app/stores/result/flight.state';
-import { ResultState } from 'src/app/stores/result.state';
-import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
-import { DepartureSort, ArrivalSort, DurationSort, PriceSort, OneWayResultState, SelectedFlight } from 'src/app/stores/result/flight/oneway.state';
-import { OneWaySendRequest, GetFareQuoteSSR } from 'src/app/stores/book/flight/oneway.state';
-import { GetAirlines } from 'src/app/stores/result/filter.state';
+import { resultObj } from 'src/app/stores/result/flight.state';
+import { OneWayResultState, SelectedFlight } from 'src/app/stores/result/flight/oneway.state';
+import { GetFareQuoteSSR } from 'src/app/stores/book/flight/oneway.state';
 
 @Component({
   selector: 'app-one-way',

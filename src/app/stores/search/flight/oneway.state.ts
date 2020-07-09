@@ -145,7 +145,6 @@ export class OneWaySearchState extends BaseFlightSearch{
         await loading.present();
 
         let currentState = states.getState();
-        let departureTime = typeof currentState.formData.departure == 'string' ? currentState.formData.departure : currentState.formData.departure.toJSON();
 
         states.patchState({
             payload: {
@@ -160,8 +159,8 @@ export class OneWaySearchState extends BaseFlightSearch{
                         OriginName:currentState.formData.from.city_name,
                         DestinationName:currentState.formData.to.city_name,
                         FlightCabinClass: this.getCabinClass(currentState.formData.class),
-                        PreferredArrivalTime: departureTime,
-                        PreferredDepartureTime: departureTime
+                        PreferredArrivalTime: moment(currentState.formData.departure).format('YYYY-MM-DDTHH:mm:ss'),
+                        PreferredDepartureTime: moment(currentState.formData.departure).format('YYYY-MM-DDTHH:mm:ss')
                     }
                 ],
                 prefferedAirline: [null],
@@ -189,6 +188,7 @@ export class OneWaySearchState extends BaseFlightSearch{
         }
 
         const searchData = states.getState();
+        console.log(searchData);
         try {
             const flightResponse = await this.flightService.searchFlight(searchData.payload);
             console.log(flightResponse);

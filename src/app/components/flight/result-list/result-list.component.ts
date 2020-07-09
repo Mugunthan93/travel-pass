@@ -4,13 +4,14 @@ import { ModalController } from '@ionic/angular';
 import { FlightBaggageComponent } from '../flight-baggage/flight-baggage.component';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { flightData } from 'src/app/models/search/flight';
-import { resultObj, fareRule, FlightResultState, AddEmailDetail, RemoveEmailDetail, itinerarytrip } from 'src/app/stores/result/flight.state';
+import { resultObj, fareRule, FlightResultState, AddEmailDetail, RemoveEmailDetail, itinerarytrip, sortButton } from 'src/app/stores/result/flight.state';
 import { FairRuleComponent } from '../fair-rule/fair-rule.component';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { ResultState } from 'src/app/stores/result.state';
 import { map } from 'rxjs/operators';
 import * as _ from 'lodash';
+import { FlightDetailsComponent } from '../flight-details/flight-details.component';
 
 @Component({
   selector: 'app-result-list',
@@ -48,6 +49,8 @@ export class ResultListComponent implements OnInit, AfterViewInit {
   flightMail: boolean;
   itiMail: Observable<itinerarytrip[]>;
 
+  sortBy$: Observable<sortButton>;
+
   constructor(
     public modalCtrl: ModalController,
     private store : Store
@@ -55,14 +58,19 @@ export class ResultListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    
     this.type = this.store.selectSnapshot(ResultState.getResultType);
     this.itiMail = this.store.select(FlightResultState.getItinerary);
+
+    this.sortBy$ = this.store.select(FlightResultState.getSortBy);
+
     this.changeType();
     this.flightList.forEach(
       (el, ind, arr) => {
         this.state[ind] = "default";
       }
     );
+    
   }
 
   ngAfterViewInit(): void {
@@ -167,7 +175,15 @@ export class ResultListComponent implements OnInit, AfterViewInit {
   }
 
   async showFlightDetail(connectingFlights: flightData[][]) {
-    
+    const modal = await this.modalCtrl.create({
+      component: FlightDetailsComponent,
+      componentProps: {
+        'connecting': connectingFlights
+      },
+      cssClass: 'baggage'
+    });
+
+    return await modal.present();
   }
 
 }
