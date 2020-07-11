@@ -18,19 +18,20 @@ export class AuthService {
       password : password
     }
     // this.http.setAuth(email, password);
-    return this.http.post("/users/login", login);
+    return await this.http.post("/users/login", login);
   }
 
-  logout() : Promise<HTTPResponse> {
-    return this.http.post("/users/logout", {});
+  async logout() : Promise<HTTPResponse> {
+    return await this.http.post("/users/logout", {});
   }
 
-  async forgotPassword(email : string): Promise<HTTPResponse> {
-    return this.http.post("/users",{email : email});
+  async forgotPassword(email: string): Promise<HTTPResponse> {
+    console.log(email);
+    return await this.http.post("/users",{email : email});
   }
 
   async newPassword(token: string,password : string): Promise<HTTPResponse> {
-    return this.http.post("/users/userpassword/resetpassword/"+token,{password : password});
+    return await this.http.post("/users/userpassword/resetpassword/"+token,{password : password});
   }
 
 }

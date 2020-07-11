@@ -135,6 +135,7 @@ export class AuthState {
     @Action(SendConfirmationEmail)
     async sendConfirmation(states: StateContext<auth>, action: SendConfirmationEmail) {
         try {
+            console.log(action.email);
             const sendmail = await this.authService.forgotPassword(action.email);
             console.log(sendmail);
         }
