@@ -27,9 +27,9 @@ export class SortPipe implements PipeTransform {
           return 0;
         }
         else if (order == 'des' || order == 'rotated' ) {
-          if (a[property] > b[property]) {
+          if (b[property] > a[property]) {
             return -1;
-          } else if (a[property] < b[property]) {
+          } else if (b[property] < a[property]) {
             return 1;
           } else {
             return 0;

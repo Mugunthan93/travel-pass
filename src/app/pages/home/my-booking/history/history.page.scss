@@ -44,7 +44,8 @@ ion-content {
             }
 
             >ion-row:last-child {
-                justify-content: flex-end;
+                justify-content: space-between;
+                align-items: flex-end;
                 >ion-text {
                     color: #{$icon-color2};
                     font-size: 17px;

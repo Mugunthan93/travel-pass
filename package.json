@@ -26,6 +26,7 @@
     "@ionic-native/android-full-screen": "^5.26.0",
     "@ionic-native/android-permissions": "^5.25.0",
     "@ionic-native/core": "^5.22.0-beta-1",
+    "@ionic-native/deeplinks": "^5.27.0",
     "@ionic-native/file": "^5.27.0",
     "@ionic-native/file-opener": "^5.27.0",
     "@ionic-native/file-path": "^5.27.0",
@@ -66,6 +67,7 @@
     "google-libphonenumber": "^3.2.6",
     "hammerjs": "^2.0.8",
     "ion2-calendar": "^3.0.0-rc.0",
+    "ionic-plugin-deeplinks": "^1.0.20",
     "jquery": "^3.5.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
@@ -135,6 +137,24 @@
       "cordova-plugin-filepath": {},
       "cordova-plugin-file-opener2": {
         "ANDROID_SUPPORT_V4_VERSION": "27.+"
+      },
+      "ionic-plugin-deeplinks": {
+        "URL_SCHEME": "travellerspass",
+        "DEEPLINK_SCHEME": "https",
+        "DEEPLINK_HOST": "travellerspass.com",
+        "ANDROID_PATH_PREFIX": "/",
+        "ANDROID_2_PATH_PREFIX": "/",
+        "ANDROID_3_PATH_PREFIX": "/",
+        "ANDROID_4_PATH_PREFIX": "/",
+        "ANDROID_5_PATH_PREFIX": "/",
+        "DEEPLINK_2_SCHEME": " ",
+        "DEEPLINK_2_HOST": " ",
+        "DEEPLINK_3_SCHEME": " ",
+        "DEEPLINK_3_HOST": " ",
+        "DEEPLINK_4_SCHEME": " ",
+        "DEEPLINK_4_HOST": " ",
+        "DEEPLINK_5_SCHEME": " ",
+        "DEEPLINK_5_HOST": " "
       }
     },
     "platforms": [

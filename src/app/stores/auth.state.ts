@@ -2,53 +2,60 @@ import { State, Action, StateContext, Store } from '@ngxs/store';
 import { AuthService } from '../services/auth/auth.service';
 import { Navigate } from '@ngxs/router-plugin';
 import { LoadingController, AlertController, MenuController } from '@ionic/angular';
-import { GetUser, UserState } from './user.state';
-import { GetCompany, CompanyState } from './company.state';
+import { GetUser } from './user.state';
+import { GetCompany } from './company.state';
 import { user } from '../models/user';
-import { StateReset, StateResetAll } from 'ngxs-reset-plugin';
-import { DashboardState, UpcomingTrips } from './dashboard.state';
-import { SearchState } from './search.state';
-import { ResultState } from './result.state';
-import { BookState } from './book.state';
-import { FlightSearchState } from './search/flight.state';
-import { FlightResultState } from './result/flight.state';
-import { FLightBookState } from './book/flight.state';
-import { OneWaySearchState } from './search/flight/oneway.state';
-import { RoundTripSearchState } from './search/flight/round-trip.state';
-import { MultiCitySearchState } from './search/flight/multi-city.state';
-import { OneWayResultState } from './result/flight/oneway.state';
-import { DomesticResultState } from './result/flight/domestic.state';
-import { InternationalResultState } from './result/flight/international.state';
-import { MultiCityResultState } from './result/flight/multi-city.state';
-import { OneWayBookState } from './book/flight/oneway.state';
-import { DomesticBookState } from './book/flight/domestic.state';
-import { InternationalBookState } from './book/flight/international.state';
-import { MultiCityBookState } from './book/flight/multi-city.state';
-import { BookingState } from './booking.state';
-import { ApprovalState } from './approval.state';
-import { FilterState } from './result/filter.state';
+import { StateResetAll } from 'ngxs-reset-plugin';
+import { UpcomingTrips } from './dashboard.state';
 import { SharedState } from './shared.state';
 
+export interface auth {
+    forgotToken : string
+}
+
 export class Login {
-    static readonly type = '[App] LoginUser';
+    static readonly type = '[Auth] LoginUser';
     constructor(public username: string,public password: string) {
     }
 }
 
 export class Logout {
-    static readonly type = '[App] LogOutUser';
+    static readonly type = '[Auth] LogOutUser';
 }
 
-export class Signup{
-    static readonly type = '[App] SignUpUser';
-    constructor(public signupData) {
+// export class Signup {
+//     static readonly type = '[Auth] SignUpUser';
+//     constructor(public signupData) {
         
+//     }
+// }
+
+export class SendConfirmationEmail {
+    static readonly type = '[Auth] ConirmationEmail';
+    constructor(public email : string) {
+
     }
 }
 
-@State<void>({
+export class SetToken {
+    static readonly type = '[Auth] SetToken';
+    constructor(public token : string) {
+
+    }
+}
+
+export class SetNewPassword {
+    static readonly type = '[Auth] SetNewPassword';
+    constructor(public password : string) {
+
+    }
+}
+
+@State<auth>({
     name : 'Auth',
-    defaults:null
+    defaults: {
+        forgotToken : null
+    }
 })
 export class AuthState {
 
@@ -57,12 +64,12 @@ export class AuthState {
         private alertCtrl: AlertController,
         private authService: AuthService,
         public menuCtrl:MenuController,
-        private store : Store
+        private store: Store
     ) {
     }
 
     @Action(Login)
-    async Login(states: StateContext<void>, action: Login) {
+    async Login(states: StateContext<auth>, action: Login) {
 
         const loading = await this.loadingCtrl.create({
             spinner: "crescent"
@@ -114,7 +121,7 @@ export class AuthState {
     }
 
     @Action(Logout)
-    async Logout(states: StateContext<void>, action: Logout) {
+    async Logout(states: StateContext<auth>, action: Logout) {
 
         const logout = await this.authService.logout();
         sessionStorage.clear();
@@ -123,6 +130,38 @@ export class AuthState {
         this.menuCtrl.toggle('first');
         this.store.dispatch(new Navigate(['/', 'auth']));
         
+    }
+
+    @Action(SendConfirmationEmail)
+    async sendConfirmation(states: StateContext<auth>, action: SendConfirmationEmail) {
+        try {
+            const sendmail = await this.authService.forgotPassword(action.email);
+            console.log(sendmail);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    @Action(SetToken)
+    async setToken(states: StateContext<auth>, action: SetToken) {
+        states.patchState({
+            forgotToken: action.token
+        });
+    }
+
+    @Action(SetNewPassword)
+    async setNewPassword(states: StateContext<auth>, action: SetNewPassword) {
+
+        let token: string = states.getState().forgotToken;
+
+        try {
+            const setpassword = await this.authService.newPassword(token, action.password);
+            console.log(setpassword);
+        }
+        catch (error) {
+            console.log(error); 
+        }
     }
 
 }

@@ -55,7 +55,6 @@
         </ion-row>
         <ion-row>
           <ion-text>{{tripType(historyBooking)}}</ion-text>
-          <!-- <ion-icon name="add"></ion-icon> -->
         </ion-row>
         <ion-row>
           <ion-text>{{historyBooking.trip_requests.Segments[0].DestinationName}}</ion-text>
@@ -72,6 +71,7 @@
         </ion-chip>
       </ion-row>
       <ion-row *ngFor="let pnr of getPNR(historyBooking.passenger_details.PNR)">
+        <ion-text (click)="viewFile(pnr)">View</ion-text>
         <ion-button (click)="downloadTicket(pnr)">Download</ion-button>
       </ion-row>
     </ion-card-content>

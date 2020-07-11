@@ -24,6 +24,7 @@
     <preference name="KeyboardResizeMode" value="ionic" />
     <preference name="KeyboardDisplayRequiresUserAction" value="false" />
     <preference name="GOOGLE_MAPS_ANDROID_API_KEY" value="AIzaSyDVaJa4N9N1qM8OglHSt5BKsqPn8LikZJk" />
+    <preference name="AndroidLaunchMode" value="singleTask" />
     <platform name="android">
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application" xmlns:android="http://schemas.android.com/apk/res/android">
             <application android:networkSecurityConfig="@xml/network_security_config" />

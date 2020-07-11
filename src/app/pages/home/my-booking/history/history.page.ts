@@ -4,6 +4,7 @@ import { BookingState, DownloadTicket } from 'src/app/stores/booking.state';
 import { Observable } from 'rxjs';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { File } from '@ionic-native/file/ngx';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-history',
@@ -17,7 +18,8 @@ export class HistoryPage implements OnInit {
   constructor(
     private store: Store,
     private file: File,
-    private fileOpener: FileOpener
+    private fileOpener: FileOpener,
+    public alertCtrl : AlertController
   ) { }
 
   ngOnInit() {
@@ -34,12 +36,28 @@ export class HistoryPage implements OnInit {
     }
   }
 
-  async isFileExist(pnr: string): Promise<boolean> {
-    return await this.file.checkFile(this.file.externalDataDirectory, pnr + ".pdf");
-  }
-
-  async viewFile(pnr : string) {
-    await this.fileOpener.open(this.file.externalDataDirectory + pnr + ".pdf", 'application/pdf');
+  async viewFile(pnr: string) {
+    try {
+      console.log(this.file.externalRootDirectory + '/TravellersPass/Ticket/' + pnr + ".pdf");
+      await this.fileOpener.open(this.file.externalRootDirectory + '/TravellersPass/Ticket/' + pnr + ".pdf", 'application/pdf');
+    }
+    catch (error) {
+      if (error.status == 9) {
+        const failedAlert = await this.alertCtrl.create({
+          header: 'File Error',
+          subHeader: 'File Not Found',
+          buttons: [
+            {
+              text: 'Retry',
+              handler: () => {
+                this.store.dispatch(new DownloadTicket(pnr));
+              }
+            }
+          ]
+        });
+        failedAlert.present();
+      }
+    }
   }
 
   getPNR(pnr : string) : string[] {

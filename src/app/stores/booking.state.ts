@@ -1,12 +1,13 @@
 import { State, Action, StateContext, Store, Selector } from "@ngxs/store";
 import { Navigate } from '@ngxs/router-plugin';
-import { MenuController } from '@ionic/angular';
+import { MenuController, ModalController, LoadingController, AlertController } from '@ionic/angular';
 import { FlightService } from '../services/flight/flight.service';
 import { UserState } from './user.state';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { environment } from 'src/environments/environment';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
 
 
 export interface booking {
@@ -45,7 +46,10 @@ export class BookingState {
         private flightService: FlightService,
         private fliePath: FilePath,
         private file: File,
-        private transfer: FileTransfer
+        private transfer: FileTransfer,
+        public loadingCtrl: LoadingController,
+        public alertCtrl: AlertController,
+        private fileOpener: FileOpener
     ) {
 
     }
@@ -133,15 +137,59 @@ export class BookingState {
 
         const fileTransfer: FileTransferObject = this.transfer.create();
         let pnr: string = action.booked;
-        const url: string = environment.baseURL + "/airlines/airlineTicketing/" + pnr + ".pdf";
+        const url: string = environment.baseURL + "/ticket/" + pnr + ".pdf";
         const path: string = this.file.externalRootDirectory + '/TravellersPass/Ticket/' + pnr + ".pdf";
+
+        let loadingAlert = await this.loadingCtrl.create({
+            message: "Downloading Please wait",
+            spinner: "crescent"
+        });
+
+        let failedAlert = await this.alertCtrl.create({
+            header: 'Download Failed',
+            subHeader: 'Error while Downloading file',
+            buttons: [
+                {
+                    text: 'Dismiss',
+                    handler: async () => {
+                        await failedAlert.dismiss();
+                    }
+                }
+            ]
+        });
+
+        await loadingAlert.present();
+
 
         try {
             const fileResponse = await fileTransfer.download(url, path);
             console.log(fileResponse);
+            let fileUrl = fileResponse.nativeURL;
+            await loadingAlert.dismiss();
+            let successAlert = await this.alertCtrl.create({
+                header: 'Download Success',
+                subHeader: 'File Has Been Downloaded',
+                buttons: [
+                    {
+                        text: 'View File',
+                        handler: async () => {
+                            await this.fileOpener.open(fileUrl, 'application/pdf');
+                        }
+                    },
+                    {
+                        text: 'Dismiss',
+                        handler: async () => {
+                            await successAlert.dismiss();
+                        }
+                    }
+                ]
+            });
+            await successAlert.present();
         }
         catch (error) {
             console.log(error);
+            await loadingAlert.dismiss();
+            await failedAlert.present();
         }
     }
 

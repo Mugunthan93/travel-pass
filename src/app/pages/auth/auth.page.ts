@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, ModalController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
 import { Login } from 'src/app/stores/auth.state';
+import { Navigate } from '@ngxs/router-plugin';
 
 @Component({
   selector: 'app-auth',
@@ -19,9 +19,9 @@ export class AuthPage implements OnInit {
 
   constructor(
     public authService: AuthService,
-    public router: Router,
     public loadingCtrl: LoadingController,
-    public store: Store
+    public store: Store,
+    public modalCtrl : ModalController
   ) {
   }
 
@@ -39,7 +39,8 @@ export class AuthPage implements OnInit {
       });
   }
 
-  ngOnDestroy(): void {
+  async forgotPassword() {
+    this.store.dispatch(new Navigate(['/', 'auth','forgot-password']));
   }
 
 }

@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { Platform, AlertController } from '@ionic/angular';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
-import { Network } from '@ionic-native/network/ngx';
 import { AndroidFullScreen } from '@ionic-native/android-full-screen/ngx';
 import { Observable, Subscription } from 'rxjs';
 import { File } from '@ionic-native/file/ngx';
+import { Deeplinks, DeeplinkMatch } from '@ionic-native/deeplinks/ngx';
+import { environment } from 'src/environments/environment';
+import { NewPasswordPage } from './pages/auth/new-password/new-password.page';
 
 
 @Component({
@@ -14,22 +16,34 @@ import { File } from '@ionic-native/file/ngx';
 })
 export class AppComponent implements OnInit, OnDestroy{
 
-  onConnect$: Observable<any>;
-  onChange$: Observable<any>;
-  onChangeSub: Subscription;
+  resetPassword$: Observable<DeeplinkMatch> = this.deepLinks.route({
+    'https://demo.travellerspass.com/forgotpassword/:token': NewPasswordPage,
+    'https://business.travellerspass.com/forgotpassword/:token': NewPasswordPage
+  });
+  resetSub: Subscription;
 
   constructor(
     public platform: Platform,
     private androidPermissions: AndroidPermissions,
     private androidFullScreen: AndroidFullScreen,
     public alertCtrl: AlertController,
-    private file : File
+    private file: File,
+    private deepLinks: Deeplinks
   ) {
   }
 
   async ngOnInit() {
     await this.platform.ready();
     await this.androidFullScreen.immersiveMode();
+
+    this.resetSub = this.resetPassword$.subscribe(
+      match => {
+        console.log(match);
+      },
+      unmatch => {
+        console.log(unmatch);
+      }
+    );
 
     try {
       await this.file.checkDir(this.file.externalRootDirectory, 'TravellersPass');
@@ -71,7 +85,9 @@ export class AppComponent implements OnInit, OnDestroy{
   }
 
   ngOnDestroy() {
-    
+    if (!this.resetSub.closed) {
+      this.resetSub.unsubscribe();
+    }
   }
 
 }

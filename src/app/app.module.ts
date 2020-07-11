@@ -25,7 +25,7 @@ import { File } from '@ionic-native/file/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
-
+import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 
 
 @NgModule({
@@ -64,6 +64,7 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
     AndroidFullScreen,
     HTTP,
     Keyboard,
+    Deeplinks,
     {
       provide: NativeHttpService,
       useFactory: (platform : Platform,http : HTTP) => {

@@ -16,6 +16,8 @@ import { AuthPage } from './auth.page';
     ReactiveFormsModule,
     AuthPageRoutingModule
   ],
-  declarations: [AuthPage]
+  declarations: [
+    AuthPage
+  ]
 })
 export class AuthPageModule {}

@@ -25,4 +25,12 @@ export class AuthService {
     return this.http.post("/users/logout", {});
   }
 
+  async forgotPassword(email : string): Promise<HTTPResponse> {
+    return this.http.post("/users",{email : email});
+  }
+
+  async newPassword(token: string,password : string): Promise<HTTPResponse> {
+    return this.http.post("/users/userpassword/resetpassword/"+token,{password : password});
+  }
+
 }
