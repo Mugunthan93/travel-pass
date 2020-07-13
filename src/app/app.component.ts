@@ -17,8 +17,7 @@ import { NewPasswordPage } from './pages/auth/new-password/new-password.page';
 export class AppComponent implements OnInit, OnDestroy{
 
   resetPassword$: Observable<DeeplinkMatch> = this.deepLinks.route({
-    'https://demo.travellerspass.com/forgotpassword/:token': NewPasswordPage,
-    'https://business.travellerspass.com/forgotpassword/:token': NewPasswordPage
+    '/forgotpassword/:token': NewPasswordPage
   });
   resetSub: Subscription;
 
@@ -35,6 +34,7 @@ export class AppComponent implements OnInit, OnDestroy{
   async ngOnInit() {
     await this.platform.ready();
     await this.androidFullScreen.immersiveMode();
+    console.log(this.deepLinks);
 
     this.resetSub = this.resetPassword$.subscribe(
       match => {

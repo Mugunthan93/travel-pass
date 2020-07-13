@@ -6,16 +6,16 @@ import { SendConfirmationEmail } from 'src/app/stores/auth.state';
 
 @Component({
   selector: 'app-forgot-password',
-  templateUrl: './forgot-password.page.html',
-  styleUrls: ['./forgot-password.page.scss'],
+  templateUrl: './forgot-password.component.html',
+  styleUrls: ['./forgot-password.component.scss'],
 })
-export class ForgotPasswordPage implements OnInit {
+export class ForgotPasswordComponent implements OnInit {
 
   emailForm: FormGroup;
 
   constructor(
     public modalCtrl: ModalController,
-    private store : Store
+    private store: Store
   ) { }
 
   ngOnInit() {
@@ -29,6 +29,10 @@ export class ForgotPasswordPage implements OnInit {
     if (this.emailForm.valid) {
       this.store.dispatch(new SendConfirmationEmail(this.emailForm.value));
     }
+  }
+
+  dismiss() {
+    this.modalCtrl.dismiss();
   }
 
 }

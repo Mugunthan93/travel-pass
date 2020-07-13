@@ -1,0 +1,8 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+        "namespace": "android_app",
+        "package_name": "com.travellerspass.tripmidas",
+        "sha256_cert_fingerprints": ["EF:4A:58:9C:B2:B7:4E:DC:2B:E9:C0:96:D4:45:3B:B0:5F:E3:30:5E:DC:E9:02:00:13:3D:08:C6:A4:30:A7:26"]
+    }
+}]

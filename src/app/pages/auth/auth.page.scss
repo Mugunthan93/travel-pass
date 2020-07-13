@@ -7,24 +7,8 @@ ion-content{
         height: 70px;
         margin: 6vh auto;
     }
-    >ion-title{
-        text-align: center;
-        font-size: large;
-    }
-    >form {
-        padding: 0px 10px;
-        min-height: -webkit-fill-available;
 
-        >ion-item {
-            margin: 20px auto;
-            >ion-row{
-                display: flex;
-                flex-direction: column;
-            }
-        }
-
-        >ion-button {
-            --background: #A6D2AE !important;
-        }
+    >ion-router-outlet{
+        top:200px;
     }
 }

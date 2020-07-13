@@ -128,19 +128,60 @@ export class AuthState {
 
         this.store.dispatch(new StateResetAll(SharedState));
         this.menuCtrl.toggle('first');
-        this.store.dispatch(new Navigate(['/', 'auth']));
+        this.store.dispatch(new Navigate(['/', 'auth','login']));
         
     }
 
     @Action(SendConfirmationEmail)
     async sendConfirmation(states: StateContext<auth>, action: SendConfirmationEmail) {
+
+        const loading = await this.loadingCtrl.create({
+            spinner: "crescent"
+        });
+        const failedAlert = await this.alertCtrl.create({
+            header: 'Email Sending Failed',
+            subHeader: 'Problem sending mail',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                cssClass: 'danger',
+                handler: (res) => {
+                    failedAlert.dismiss({
+                        data: false,
+                        role: 'failed'
+                    });
+                }
+            }]
+        });
+        const successAlert = await this.alertCtrl.create({
+            header: 'Email Sending Success',
+            subHeader:'Email Sent,Check for your mail',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                cssClass: 'danger',
+                handler: (res) => {
+                    successAlert.dismiss({
+                        data: true,
+                        role: 'success'
+                    });
+                }
+            }]
+        });
+
+        loading.message = "Sending Mail...";
+        await loading.present();
         try {
             console.log(action.email);
             const sendmail = await this.authService.forgotPassword(action.email);
+            loading.dismiss();
+            successAlert.present(); 
             console.log(sendmail);
         }
         catch (error) {
             console.log(error);
+            loading.dismiss();
+            failedAlert.present(); 
         }
     }
 
