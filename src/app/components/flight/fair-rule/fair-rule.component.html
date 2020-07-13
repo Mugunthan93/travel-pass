@@ -1,21 +1,18 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      FLight Fair Rule
+      <ion-text>
+        FLight Fair Rule
+      </ion-text>
     </ion-title>
+    <ion-buttons slot="end" (click)="dismissFareRule()">
+      <ion-button>
+        <ion-text>Dismiss</ion-text>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <div [innerHTML]="htmlTemplate"></div>
 </ion-content>
-
-<ion-footer>
-  <ion-toolbar>
-    <ion-buttons>
-      <ion-button (click)="dismissFareRule()">
-        <ion-label>Dismiss</ion-label>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-footer>

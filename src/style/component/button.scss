@@ -111,7 +111,8 @@ $button-opacity:$btn-opacity;
 // $fab-box-shadow:;
 
 ion-button {
-    --background: #{$button-color};
+    // --background: #{$button-color};
+    --background:-webkit-linear-gradient(354deg, #53b2fe, #065af3);
     >ion-text{
         color:#{$white-text};
     }

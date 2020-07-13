@@ -112,6 +112,7 @@ export class InternationalBookState {
                 }
                 else if (response.Error.ErrorCode == 6) {
                     console.log(response.Error.ErrorMessage);
+                    loading.dismiss();
                     this.store.dispatch(new RoundTripSearch());
                     return;
                 }

@@ -148,6 +148,7 @@ export class DomesticBookState {
                 }
                 else if (depResponse.Error.ErrorCode == 6 || reResponse.Error.ErrorCode == 6) {
                     console.log(depResponse.Error.ErrorMessage);
+                    loading.dismiss();
                     this.store.dispatch(new RoundTripSearch());
                     return;
                 }

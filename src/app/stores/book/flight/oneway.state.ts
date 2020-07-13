@@ -121,6 +121,7 @@ export class OneWayBookState{
                 }
                 else if (response.Error.ErrorCode == 6) {
                     console.log(response.Error.ErrorMessage);
+                    loading.dismiss();
                     this.store.dispatch(new OneWaySearch());
                     return;
                 }
