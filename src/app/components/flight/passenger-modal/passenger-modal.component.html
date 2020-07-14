@@ -10,9 +10,9 @@
     <form [formGroup]="traveller" (ngSubmit)="confirm()">
       <ion-row>
         <ion-text>Adult</ion-text>
-        <ion-icon size="large" name="add-circle-outline" (click)="increase('adult')"></ion-icon>
-        <ion-text>{{traveller.value.adult}}</ion-text>
         <ion-icon size="large" name="remove-circle-outline" (click)="decrease('adult')"></ion-icon>
+        <ion-text>{{traveller.value.adult}}</ion-text>
+        <ion-icon size="large" name="add-circle-outline" (click)="increase('adult')"></ion-icon>
       </ion-row>
       <!-- <ion-row>
         <ion-text>Child</ion-text>

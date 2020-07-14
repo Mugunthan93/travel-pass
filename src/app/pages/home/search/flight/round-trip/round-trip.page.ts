@@ -38,7 +38,7 @@ export class RoundTripPage implements OnInit {
       departure: this.fb.control(null, [Validators.required]),
       return: this.fb.control(null, [Validators.required]),
       traveller: this.fb.control(null, [Validators.required]),
-      class: this.fb.control(null, [Validators.required])
+      class: this.fb.control('all', [Validators.required])
     });
 
     this.roundTripSearch.valueChanges.subscribe(

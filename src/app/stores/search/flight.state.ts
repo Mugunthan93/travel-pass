@@ -35,7 +35,7 @@ export class JourneyType {
 @State<flight>({
     name: 'flight_search',
     defaults: {
-        JourneyType : null
+        JourneyType : 1
     },
     children: [
         OneWaySearchState,

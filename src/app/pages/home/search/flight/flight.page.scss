@@ -45,3 +45,15 @@ ion-tab-bar {
         }
     }
 }
+
+ion-row{
+    height: 35px;
+    margin: 20px 40px;
+    ion-segment{
+
+    }
+}
+
+ion-router-outlet{
+    top:80px;
+}

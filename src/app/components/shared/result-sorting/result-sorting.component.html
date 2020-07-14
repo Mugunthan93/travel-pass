@@ -1,12 +1,14 @@
-<ion-segment 
-  (ionChange)="sortChange($event)">
-  <ion-segment-button 
-    [value]="button" 
-    layout="icon-end" 
-    *ngFor="let button of (buttons$ | async)" 
-    (click)="sorting(button)"
-    [ngClass]="{'selectedItem':(currentButton$ | async) == button,'':(currentButton$ | async) !==button}">
-    <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg" [@rotatedState]="button.state"></ion-icon>
-    <ion-label>{{button.label | uppercase}}</ion-label>
-  </ion-segment-button>
-</ion-segment>
+<ion-content>
+  <ion-segment 
+    (ionChange)="sortChange($event)">
+    <ion-segment-button 
+      [value]="button" 
+      layout="icon-end" 
+      *ngFor="let button of (buttons$ | async)" 
+      (click)="sorting(button)"
+      [ngClass]="{'selectedItem':currentButton == button,'':currentButton !==button}">
+      <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg" [@rotatedState]="button.state"></ion-icon>
+      <ion-label>{{button.label | uppercase}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-content>

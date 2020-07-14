@@ -2,6 +2,10 @@
 @import "../../../../style/util/mixins.scss";
 
 ion-content{
+    --background: white !important;
+    ion-text{
+        color:#000105;
+    }
     >ion-row {
         width: 100%;
     
@@ -136,14 +140,17 @@ ion-content{
                         border-top: 1px solid grey;
                         padding: 0px;
 
-                        ion-row:first-child {
-                            background: #{$bar-bg2};
+                        >ion-row {
+                            // background: #{$bar-bg2};
                             height: fit-content;
-                            padding: 10px 0px 28px 0px;
+                            padding: 10px 0px;
 
-                            >ion-thumbnail {
+                            >ion-row{
+                                display: flex;
+                                flex-direction: column;
+                                place-items: center;
                                 >ion-title {
-                                    color:#{$white-text};
+                                    color:#000105;
                                     padding: 0px;
                                     text-align: center;
                                 }
@@ -158,10 +165,11 @@ ion-content{
 
 
 .selectedItem{
-    background: rgb(229, 173, 173) !important;
-    ion-text,ion-label{
-        color:white;
-    }
+    background-color: #daebff !important;
+    // background: rgb(229, 173, 173) !important;
+    // ion-text,ion-label{
+    //     color:white;
+    // }
 }
 
 .mat-expansion-panel-spacing{

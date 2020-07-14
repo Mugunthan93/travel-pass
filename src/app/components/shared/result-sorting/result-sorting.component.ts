@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
@@ -21,6 +21,7 @@ export class ResultSortingComponent implements OnInit {
 
   buttons$: Observable<sortButton[]>;
   currentButton$: Observable<sortButton>;
+  currentButton: sortButton;
 
   constructor(
     private store : Store
@@ -29,6 +30,7 @@ export class ResultSortingComponent implements OnInit {
   ngOnInit() {
     this.currentButton$ = this.store.select(FlightResultState.getSortBy);
     this.buttons$ = this.store.select(FlightResultState.getButtons);
+    this.currentButton$.subscribe(el => this.currentButton = el);
   }
   
   sortChange(evt: CustomEvent) {

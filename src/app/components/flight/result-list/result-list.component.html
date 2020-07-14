@@ -71,22 +71,22 @@
               </ion-button>
           </mat-expansion-panel-header>
           <ion-row class="ion-justify-content-around">
-            <ion-thumbnail>
+            <ion-row>
               <ion-icon size="large" name="briefcase" (click)="showBaggage(item.baggage)">
               </ion-icon>
               <ion-title>Baggage</ion-title>
-            </ion-thumbnail>
-            <ion-thumbnail>
+            </ion-row>
+            <ion-row>
               <ion-icon size="large" name="briefcase" (click)="showFareRule(item.fareRule)">
               </ion-icon>
               <ion-title>Fare Rule</ion-title>
-            </ion-thumbnail>
-            <ion-thumbnail>
+            </ion-row>
+            <ion-row>
               <ion-icon size="large" src="../../../../../../assets/icons/flying-fly.svg"
                 (click)="showFlightDetail(item.connectingFlights)">
               </ion-icon>
               <ion-title>Flight details</ion-title>
-            </ion-thumbnail>
+            </ion-row>
           </ion-row>
         </mat-expansion-panel>
       </mat-accordion>

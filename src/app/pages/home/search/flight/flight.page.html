@@ -1,5 +1,21 @@
 
-  <ion-tabs (ionTabsDidChange)="typeChange($event)">
+<ion-row>
+  <ion-segment mode="ios" (ionChange)="typeChange($event)" value="one-way">
+    <ion-segment-button value="one-way">
+      <ion-text>One Way</ion-text>
+    </ion-segment-button>
+    <ion-segment-button value="round-trip">
+      <ion-text>Round Trip</ion-text>
+    </ion-segment-button>
+    <ion-segment-button value="multi-city">
+      <ion-text>Multi City</ion-text>
+    </ion-segment-button>
+  </ion-segment>
+</ion-row>
+
+  <ion-router-outlet mode="md"></ion-router-outlet>
+
+  <!-- <ion-tabs (ionTabsDidChange)="typeChange($event)">
     <ion-tab-bar slot="top">
       <ion-tab-button tab="one-way" aria-selected="true">
         <ion-label>One Way</ion-label>
@@ -13,4 +29,5 @@
         <ion-label>Multi City</ion-label>
       </ion-tab-button>
     </ion-tab-bar>
-  </ion-tabs>
+  </ion-tabs> -->
+

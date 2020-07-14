@@ -35,7 +35,7 @@ export class MultiCityPage implements OnInit {
     this.multiCitySearch = this.fb.group({
       trips: this.fb.array([this.createTrip()]),
       traveller: this.fb.control(null, [Validators.required]),
-      class: this.fb.control(null, [Validators.required])
+      class: this.fb.control('all', [Validators.required])
     });
     
     this.trips = this.multiCitySearch.get('trips') as FormArray;
