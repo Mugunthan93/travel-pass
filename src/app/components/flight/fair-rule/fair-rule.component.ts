@@ -25,9 +25,13 @@ export class FairRuleComponent implements OnInit {
   async ngOnInit() {
     try {
       const fareRuleResponse = await (await this.flightService.fairRule(this.fareRule)).data;
+      console.log(fareRuleResponse);
       const fairRuleTemplate = JSON.parse(fareRuleResponse).response.FareRules[0].FareRuleDetail;
+      console.log(fairRuleTemplate);
       const sanitizedTemplate = this.domSantizier.sanitize(SecurityContext.HTML, fairRuleTemplate);
+      console.log(sanitizedTemplate);
       this.htmlTemplate = sanitizedTemplate;
+      console.log(this.htmlTemplate);
     }
     catch (error) {
       console.log(error);

@@ -57,6 +57,7 @@ export interface flightDetail {
     arrTime: string,
     class: string,
     duration: string,
+    day:boolean,
     stops: string,
     seats: number,
     fare: number,
@@ -69,6 +70,7 @@ export interface fareRule {
 }
 
 export interface baggage {
+    logo : string,
     originName: string,
     destinationName: string,
     baggage:string,

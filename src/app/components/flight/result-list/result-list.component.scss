@@ -17,7 +17,7 @@ ion-content{
                 height:100%;
                 flex-grow:1;
                 >mat-expansion-panel {
-                    border-bottom: 2px solid grey !important;
+                    // border-bottom: 2px solid grey !important;
     
                     >mat-expansion-panel-header {
                         @include flex-col-grid;
@@ -130,6 +130,7 @@ ion-content{
                             }
 
                             >ion-button{
+                                --background:#95d8ff !important;
                                 margin:0px;
                                 height: 30px;
                             }
@@ -137,11 +138,11 @@ ion-content{
                     }
     
                     ::ng-deep .mat-expansion-panel-body {
-                        border-top: 1px solid grey;
+                        border-bottom: 1px solid #c6c6c6;
                         padding: 0px;
 
                         >ion-row {
-                            // background: #{$bar-bg2};
+                            background: #FFFFFF;
                             height: fit-content;
                             padding: 10px 0px;
 
@@ -165,7 +166,8 @@ ion-content{
 
 
 .selectedItem{
-    background-color: #daebff !important;
+    background-color: #b9e4ff !important;
+    // background-color: #daebff !important;
     // background: rgb(229, 173, 173) !important;
     // ion-text,ion-label{
     //     color:white;

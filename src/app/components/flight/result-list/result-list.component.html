@@ -43,7 +43,7 @@
                 </ion-col>
                 <ion-col #colref [ngClass]="{'col-grow': flightType == 'return', 'col-shrink': flightType == 'departure'}">
                   <ion-text>
-                    {{i.tripinfo.duration}}
+                    {{i.tripinfo.duration}}{{i.tripinfo.day ? '(+1Day)' : ''}}
                   </ion-text>
                   <ion-text>
                     {{i.tripinfo.stops}}

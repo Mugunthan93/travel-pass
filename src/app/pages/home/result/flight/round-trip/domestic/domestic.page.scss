@@ -3,7 +3,8 @@
 
 ion-header{
     ion-icon {
-        filter: invert(100%) sepia(100%) saturate(100%) hue-rotate(100deg) brightness(100%) contrast(100%);
+        // filter: invert(100%) sepia(100%) saturate(100%) hue-rotate(100deg) brightness(100%) contrast(100%);
+        color:#{$icon-color2};
     }
 }
 

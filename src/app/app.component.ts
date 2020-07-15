@@ -6,7 +6,6 @@ import { Observable, Subscription } from 'rxjs';
 import { File } from '@ionic-native/file/ngx';
 import { Deeplinks, DeeplinkMatch } from '@ionic-native/deeplinks/ngx';
 import { environment } from 'src/environments/environment';
-import { NewPasswordPage } from './pages/auth/new-password/new-password.page';
 
 
 @Component({
@@ -15,11 +14,6 @@ import { NewPasswordPage } from './pages/auth/new-password/new-password.page';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy{
-
-  resetPassword$: Observable<DeeplinkMatch> = this.deepLinks.route({
-    '/forgotpassword/:token': NewPasswordPage
-  });
-  resetSub: Subscription;
 
   constructor(
     public platform: Platform,
@@ -35,15 +29,6 @@ export class AppComponent implements OnInit, OnDestroy{
     await this.platform.ready();
     await this.androidFullScreen.immersiveMode();
     console.log(this.deepLinks);
-
-    this.resetSub = this.resetPassword$.subscribe(
-      match => {
-        console.log(match);
-      },
-      unmatch => {
-        console.log(unmatch);
-      }
-    );
 
     try {
       await this.file.checkDir(this.file.externalRootDirectory, 'TravellersPass');
@@ -85,9 +70,6 @@ export class AppComponent implements OnInit, OnDestroy{
   }
 
   ngOnDestroy() {
-    if (!this.resetSub.closed) {
-      this.resetSub.unsubscribe();
-    }
   }
 
 }

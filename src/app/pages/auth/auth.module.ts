@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { AuthPageRoutingModule } from './auth-routing.module';
 
 import { AuthPage } from './auth.page';
+import { ForgotPasswordComponent } from 'src/app/components/flight/forgot-password/forgot-password.component';
 
 @NgModule({
   imports: [
@@ -17,7 +18,11 @@ import { AuthPage } from './auth.page';
     AuthPageRoutingModule
   ],
   declarations: [
-    AuthPage
+    AuthPage,
+    ForgotPasswordComponent
+  ],
+  entryComponents: [
+    ForgotPasswordComponent
   ]
 })
 export class AuthPageModule {}

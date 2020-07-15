@@ -78,6 +78,7 @@ export class BaseFlightResult {
                         }
 
                         baggage[ind][i] = {
+                            logo:e.Airline.AirlineCode,
                             originName: e.Origin.Airport.CityName,
                             destinationName: e.Destination.Airport.CityName,
                             baggage: e.Baggage,
@@ -105,7 +106,8 @@ export class BaseFlightResult {
                         depTime: el[0].Origin.DepTime,
                         arrTime: el[el.length - 1].Destination.ArrTime,
                         class: this.getCabinClass(el[0].CabinClass),
-                        duration: moment.duration(this.getDuration(el), 'minutes').days() + "d " + moment.duration(this.getDuration(el), 'minutes').hours() + "h " + moment.duration(this.getDuration(el), 'minutes').minutes() + "m",
+                        duration: moment.duration(this.getDuration(el), 'minutes').hours() + "h " + moment.duration(this.getDuration(el), 'minutes').minutes() + "m",
+                        day: moment.duration(this.getDuration(el), 'minutes').days() >= 1 ? true : false,
                         stops: el.length == 1 ? 'Non Stop' : el.length - 1 + " Stop",
                         seats: el[0].NoOfSeatAvailable,
                         fare: result.Fare.PublishedFare,

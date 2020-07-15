@@ -42,6 +42,9 @@ export class SearchHotel {
 
 export class UpcomingTrips {
     static readonly type = '[Dashboard] UpcomingTrips';
+    constructor() {
+
+    }
 }
 
 

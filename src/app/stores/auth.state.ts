@@ -108,6 +108,7 @@ export class AuthState {
             this.store.dispatch(new UpcomingTrips());
             loading.dismiss();
             this.store.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']));
+            console.log("login end");
         }
         catch (error) {
             console.log(error);
