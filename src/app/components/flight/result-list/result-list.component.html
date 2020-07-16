@@ -29,35 +29,39 @@
               <ion-row 
                 class="ion-justify-content-around" 
                 [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}"
-                *ngFor="let i of item.trips" [ngStyle]="{'height':'80px'}">
-                <ion-col>
-                  <ion-img src="../../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
-                  <ion-text>{{i.tripinfo.airline.name}}</ion-text>
-                  <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
-                </ion-col>
-                <ion-col #colref [ngClass]="{'col-grow': flightType == 'return', 'col-shrink': flightType == 'departure'}">
+                *ngFor="let i of item.trips" [ngStyle]="{'height':'fit-content'}">
+                <ion-title>
+                  <ion-text>{{i.tripinfo.airline.name}} | {{i.tripinfo.airline.code}} - {{i.tripinfo.airline.number}}
+                  </ion-text>
+                </ion-title>
+                <ion-row>
+                  <ion-col>
+                    <ion-img src="../../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
+                  </ion-col>
+                  <ion-col #colref [ngClass]="{'col-grow': flightType == 'return', 'col-shrink': flightType == 'departure'}">
+                      <ion-text>
+                        {{i.tripinfo.depTime | date : 'HH:mm'}} - {{i.tripinfo.arrTime | date : 'HH:mm'}}
+                      </ion-text>
+                      <ion-text>{{i.tripinfo.class}}</ion-text>
+                  </ion-col>
+                  <ion-col #colref [ngClass]="{'col-grow': flightType == 'return', 'col-shrink': flightType == 'departure'}">
                     <ion-text>
-                      {{i.tripinfo.depTime | date : 'HH:mm'}} - {{i.tripinfo.arrTime | date : 'HH:mm'}}
+                      {{i.tripinfo.duration}}{{i.tripinfo.day ? '(+1Day)' : ''}}
                     </ion-text>
-                    <ion-text>{{i.tripinfo.class}}</ion-text>
-                </ion-col>
-                <ion-col #colref [ngClass]="{'col-grow': flightType == 'return', 'col-shrink': flightType == 'departure'}">
-                  <ion-text>
-                    {{i.tripinfo.duration}}{{i.tripinfo.day ? '(+1Day)' : ''}}
-                  </ion-text>
-                  <ion-text>
-                    {{i.tripinfo.stops}}
-                  </ion-text>
-                </ion-col>
-                <ion-col
-                  *ngIf="flightPrice">
-                  <ion-text>
-                    {{i.tripinfo.fare | currency : i.tripinfo.currency }}
-                  </ion-text>
-                  <ion-text>
-                    {{i.tripinfo.seats}} seat left
-                  </ion-text>
-                </ion-col>
+                    <ion-text>
+                      {{i.tripinfo.stops}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col
+                    *ngIf="flightPrice">
+                    <ion-text>
+                      {{i.tripinfo.fare | currency : i.tripinfo.currency }}
+                    </ion-text>
+                    <ion-text>
+                      {{i.tripinfo.seats}} seat left
+                    </ion-text>
+                  </ion-col>
+                </ion-row>
               </ion-row>
               <ion-row *ngIf="flightMail"
                 [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}">
@@ -72,17 +76,17 @@
           </mat-expansion-panel-header>
           <ion-row class="ion-justify-content-around">
             <ion-row>
-              <ion-icon size="large" name="briefcase" (click)="showBaggage(item.baggage)">
+              <ion-icon name="briefcase" (click)="showBaggage(item.baggage)">
               </ion-icon>
               <ion-title>Baggage</ion-title>
             </ion-row>
             <ion-row>
-              <ion-icon size="large" name="briefcase" (click)="showFareRule(item.fareRule)">
+              <ion-icon name="briefcase" (click)="showFareRule(item.fareRule)">
               </ion-icon>
               <ion-title>Fare Rule</ion-title>
             </ion-row>
             <ion-row>
-              <ion-icon size="large" src="../../../../../../assets/icons/flying-fly.svg"
+              <ion-icon src="../../../../assets/icons/flying-fly.svg"
                 (click)="showFlightDetail(item.connectingFlights)">
               </ion-icon>
               <ion-title>Flight details</ion-title>

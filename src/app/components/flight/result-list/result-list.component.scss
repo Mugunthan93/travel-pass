@@ -71,49 +71,72 @@ ion-content{
                                     white-space: nowrap;
                                     margin: auto;
                                 }
-    
-                                >ion-col {
-                                    display: flex;
-                                    flex-direction: column;
-                                    max-width: fit-content;
-                                    margin: 5px 0px;
-                                    height:auto;
 
-                                    ion-img {
-                                        width: 25px;
-                                        height: 25px;
-                                    }
-
-                                    &:nth-child(2){
-                                        width: 100%;
-                                        opacity:1;
-                                        transition:all 20ms linear 0s;
-                                        &.col-grow {
-                                            width: 100%;
-                                            opacity: 1;
-                                        }
-
-                                        &.col-shrink {
-                                            max-width: 0px;
-                                            opacity: 0;
-                                        }
-                                    }
-
-                                    &:nth-child(3) {
-                                        width: 100%;
-                                        opacity:1;
-                                        transition:all 20ms linear 0s;
-                                        &.col-grow {
-                                            width: 100%;
-                                            opacity: 1;
-                                        }
-
-                                        &.col-shrink {
-                                            max-width: 0px;
-                                            opacity: 0;
-                                        }
-                                    }
+                                ion-title{
+                                    margin: 8px;
                                 }
+
+                                >ion-row{
+                                    width: -webkit-fill-available;
+                                    justify-content: space-around;
+                                    height: 55px !important;
+
+                                    >ion-col:nth-child(1) {
+                                        display: flex;
+                                        flex-direction: row;
+                                        ion-row{
+                                          display: flex;
+                                          flex-direction: column;
+                                            height: fit-content;
+                                            margin-left: 10px;
+                                        }
+    
+                                        ion-img {
+                                            width: 25px;
+                                            height: 25px;
+                                        }
+                                    }
+        
+                                    >ion-col {
+                                        display: flex;
+                                        flex-direction: column;
+                                        max-width: fit-content;
+                                        margin: 5px 0px;
+                                        height: min-content;
+    
+                                        &:nth-child(2){
+                                            width: 100%;
+                                            opacity:1;
+                                            transition:all 20ms linear 0s;
+                                            &.col-grow {
+                                                width: 100%;
+                                                opacity: 1;
+                                            }
+    
+                                            &.col-shrink {
+                                                max-width: 0px;
+                                                opacity: 0;
+                                            }
+                                        }
+    
+                                        &:nth-child(3) {
+                                            width: 100%;
+                                            opacity:1;
+                                            transition:all 20ms linear 0s;
+                                            &.col-grow {
+                                                width: 100%;
+                                                opacity: 1;
+                                            }
+    
+                                            &.col-shrink {
+                                                max-width: 0px;
+                                                opacity: 0;
+                                            }
+                                        }
+                                    }
+
+                                }
+
                             }
 
                             >ion-row:last-of-type{
@@ -133,6 +156,9 @@ ion-content{
                                 --background:#95d8ff !important;
                                 margin:0px;
                                 height: 30px;
+                                >ion-icon{
+                                    filter: invert(100%) sepia(100%) saturate(100%) hue-rotate(100deg) brightness(100%) contrast(100%);
+                                }
                             }
                         }
                     }

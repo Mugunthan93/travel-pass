@@ -129,7 +129,7 @@ export class AuthState {
 
         this.store.dispatch(new StateResetAll(SharedState));
         this.menuCtrl.toggle('first');
-        this.store.dispatch(new Navigate(['/', 'auth','login']));
+        this.store.dispatch(new Navigate(['/', 'auth']));
         
     }
 
