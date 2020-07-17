@@ -11,24 +11,16 @@
             [collapsedHeight]="'fit-content'" 
             [expandedHeight]="'fit-content'" 
             (click)="selectFlight(panel,item,$event)">
-              <ion-row *ngIf="flightName"
-              [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}">
+              <ion-row *ngIf="flightName" [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}">
                 <ion-label>{{item.name}}</ion-label>
-                <ion-row>
-                  <ion-row>
-                    <ion-text>{{item.fare | currency : item.currency}}</ion-text>
-                    <ion-text>{{item.seats}} Seats Left</ion-text>
-                  </ion-row>
-                  <ion-row>
-                    <ion-checkbox class="email" [value]="item.email" (ionChange)="getFlight($event)" 
-                    [checked]="emailSelect(item.email) | async"></ion-checkbox>
-                    <ion-label>Email</ion-label>
-                  </ion-row>
-                </ion-row>
+                <ion-text>{{item.seats}} Seats Left</ion-text>
+                <ion-text>{{item.fare | currency : item.currency}}</ion-text>
+                <ion-item>
+                  <ion-checkbox slot="start" class="email" [value]="item.email" (ionChange)="getFlight($event)" [checked]="emailSelect(item.email) | async"></ion-checkbox>
+                  <ion-label slot="end">Email</ion-label>
+                </ion-item>
               </ion-row>
-              <ion-row 
-                class="ion-justify-content-around" 
-                [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}"
+              <ion-row class="ion-justify-content-around two" [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}"
                 *ngFor="let i of item.trips" [ngStyle]="{'height':'fit-content'}">
                 <ion-title>
                   <ion-text>{{i.tripinfo.airline.name}} | {{i.tripinfo.airline.code}} - {{i.tripinfo.airline.number}}

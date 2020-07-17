@@ -9,6 +9,7 @@ import { InternationalBookState } from 'src/app/stores/book/flight/international
 import { MultiCityBookState } from 'src/app/stores/book/flight/multi-city.state';
 import { Navigate } from '@ngxs/router-plugin';
 import { FLightBookState } from 'src/app/stores/book/flight.state';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-book',
@@ -24,7 +25,8 @@ export class BookPage implements OnInit {
   bookType: string;
 
   constructor(
-    private store : Store
+    private store: Store,
+    public loadingCtrl : LoadingController
   ) {
    }
 
@@ -37,8 +39,11 @@ export class BookPage implements OnInit {
     this.bookType = this.store.selectSnapshot(BookState.getBookType)
   }
 
-  back() {
+  async back() {
     this.store.dispatch(new StateReset(BookState));
+    if (this.bookType == 'animated-round-trip') {
+      this.bookType = 'round-trip';
+    }
     this.store.dispatch(new Navigate(['/', 'home', 'result', this.bookMode, this.bookType]));
   }
 

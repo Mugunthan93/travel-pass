@@ -15,7 +15,7 @@
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="mailTicket()" *ngIf="mailStatus$ | async">
-        <ion-icon slot="icon-only" src="../../../../../assets/ionicons/mail-outline.svg"></ion-icon>
+        <ion-icon slot="icon-only" class="Blink" src="../../../../../assets/ionicons/mail-outline.svg"></ion-icon>
       </ion-button>
       <ion-button (click)="filter()">
         <ion-icon slot="icon-only" src="../../../../../assets/ionicons/md-filter-outline.svg"></ion-icon>

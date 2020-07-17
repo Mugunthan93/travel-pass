@@ -7,6 +7,7 @@ import { SearchType } from 'src/app/stores/search.state';
 import { RouterNavigation, Navigate } from '@ngxs/router-plugin';
 import { RouterStateSnapshot, RoutesRecognized, ActivatedRoute } from '@angular/router';
 import { RouterTrigger } from '@ngxs/router-plugin/src/router.state';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-flight',
@@ -17,16 +18,27 @@ import { RouterTrigger } from '@ngxs/router-plugin/src/router.state';
 export class FlightPage implements OnInit {
 
   flightType: string;
-  journeyType$: Observable<number>;
+  journeyType$: Observable<string>;
 
   constructor(
     public store: Store,
     public activatedRoute : ActivatedRoute
   ) {
-    this.journeyType$ = this.store.select(FlightSearchState.getJourneyType);
+    
   }
   
   async ngOnInit() {
+    this.journeyType$ = this.store.select(FlightSearchState.getJourneyType).pipe(map((type : number) => {
+      if (type == 1) {
+        return 'one-way';
+      }
+      else if (type == 2) {
+        return 'round-trip';
+      }
+      else if (type == 3) {
+        return 'multi-city';
+      }
+    }));
   }
 
   typeChange(evt : CustomEvent) {

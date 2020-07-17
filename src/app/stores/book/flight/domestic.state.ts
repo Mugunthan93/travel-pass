@@ -146,6 +146,12 @@ export class DomesticBookState {
                     reFQ = reResponse.Results;
                     rePriceChange = reResponse.IsPriceChanged;
                 }
+                else if (depResponse.Error.ErrorCode == 2 || reResponse.Error.ErrorCode == 2) {
+                    console.log(depResponse.Error.ErrorMessage);
+                    loading.dismiss();
+                    this.store.dispatch(new RoundTripSearch());
+                    return;
+                }
                 else if (depResponse.Error.ErrorCode == 6 || reResponse.Error.ErrorCode == 6) {
                     console.log(depResponse.Error.ErrorMessage);
                     loading.dismiss();

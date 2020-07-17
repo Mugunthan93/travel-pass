@@ -1,6 +1,6 @@
 
 <ion-row>
-  <ion-segment mode="ios" (ionChange)="typeChange($event)" value="one-way">
+  <ion-segment mode="ios" (ionChange)="typeChange($event)" [value]="journeyType$ | async">
     <ion-segment-button value="one-way">
       <ion-text>One Way</ion-text>
     </ion-segment-button>

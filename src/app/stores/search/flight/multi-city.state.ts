@@ -193,25 +193,24 @@ export class MultiCitySearchState extends BaseFlightSearch {
         }
         catch (error) {
             console.log(error);
+            if (error.status == -4) {
+                failedAlert.message = "Search Timeout, Try Again";
+            }
             //no reesult error
             if (error.status == 400) {
                 const errorString = JSON.parse(error.error);
                 failedAlert.message = errorString.message.response.Error.ErrorMessage;
-                loading.dismiss();
-                failedAlert.present();
             }
             //502 => proxy error
             if (error.status == 502) {
                 failedAlert.message = "Server failed to get correct information";
-                loading.dismiss();
-                failedAlert.present();
             }
             //503 => service unavailable, Maintanence downtime
             if (error.status == 503) {
                 failedAlert.message = "Server Maintanence Try again Later";
-                loading.dismiss();
-                failedAlert.present();
             }
+            loading.dismiss();
+            failedAlert.present();
         }
 
     }

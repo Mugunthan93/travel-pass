@@ -44,36 +44,87 @@ app-result-list {
 }
 
 ion-footer{
-    ion-toolbar{
-        --background:#{$text-color};
-        --opacity: 0.5;
-        ion-row{
-            height: 75px;
-            padding: 10px;
+    ion-text{
+        color: white;
+    }
+    >ion-toolbar{
+        height: 70px;
+        --background: #000105;
+        opacity: 1;
+
+        >ion-row{
+            height: -webkit-fill-available;
+            justify-content: space-between;
             ion-col{
-                @include flex-col-grid;
-                ion-img:first-child {
-                    margin-bottom: auto;
-                    height: 50% !important;
-                    margin-right:auto;
+                max-width: fit-content;
+                height:51px;
+                margin: auto;
+                ion-img{
+                    width: 51px;
+                    height: 45px;
                 }
-
-                ion-text {
-                    margin-bottom: auto;
-                    margin-right:auto;
-                    font-size: small;
-                    opacity: 0.7;
-                    color:black;
-                }
-
-                ion-button{
-                    --background:#{$btn4-bg};
-                    ion-text{
-                        margin:auto;
-                        color:white;
+        
+                &:first-child{
+                    display: flex;
+                    flex-direction: row;
+                    >ion-row{
+                        display: flex;
+                        flex-direction: column;
+                        margin-left: 5px;
+                        justify-content: space-around;
                     }
+                }
+        
+                &:not(:first-child) {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-around;
                 }
             }
         }
+        ion-button {
+            --background: -webkit-linear-gradient(354deg, #53b2fe, #065af3);
+
+            >ion-text {
+                color:#{$white-text};
+            }
+        }
     }
+
+
 }
+
+// ion-footer{
+//     ion-toolbar{
+//         --background:#{$text-color};
+//         --opacity: 0.5;
+//         ion-row{
+//             height: 75px;
+//             padding: 10px;
+//             ion-col{
+//                 @include flex-col-grid;
+//                 ion-img:first-child {
+//                     margin-bottom: auto;
+//                     height: 50% !important;
+//                     margin-right:auto;
+//                 }
+
+//                 ion-text {
+//                     margin-bottom: auto;
+//                     margin-right:auto;
+//                     font-size: small;
+//                     opacity: 0.7;
+//                     color:black;
+//                 }
+
+//                 ion-button{
+//                     --background:#{$btn4-bg};
+//                     ion-text{
+//                         margin:auto;
+//                         color:white;
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }

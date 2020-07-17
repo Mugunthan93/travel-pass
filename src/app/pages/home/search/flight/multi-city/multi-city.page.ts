@@ -67,7 +67,7 @@ export class MultiCityPage implements OnInit {
     console.log(tripArray,tripElement);
   }
 
-  async selectCity(field: string, control: any, i: number) {
+  async selectCity(field: string, control: FormGroup[], i: number) {
     console.log(control,i);
     const modal = await this.modalCtrl.create({
       component: CityModalComponent
@@ -80,9 +80,15 @@ export class MultiCityPage implements OnInit {
         }
         console.log(control);
         if (field == 'to') {
-          if (i !== control.length - 1) {
+          if (control[i + 1]) {
             control[i+1].controls['from'].patchValue(selectedCity.data);
           }
+          else{
+            this.addTrip();
+            control[i + 1].controls['from'].patchValue(selectedCity.data);
+          }
+          // if (i !== control.length - 1) {
+          // }
         }
         control[i].controls[field].patchValue(selectedCity.data);
       }

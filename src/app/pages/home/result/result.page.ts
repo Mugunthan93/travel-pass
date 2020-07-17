@@ -43,6 +43,9 @@ export class ResultPage implements OnInit {
 
   back() {
     this.store.dispatch(new StateReset(ResultState));
+    if (this.resultType == 'animated-round-trip') {
+      this.resultType = 'round-trip';
+    }
     this.store.dispatch(new Navigate(['/', 'home', 'search', this.resultMode,this.resultType]));
   }
 

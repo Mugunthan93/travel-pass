@@ -18,11 +18,13 @@
 
 <ion-footer *ngIf="(selectedFlight$ | async) !== null">
   <ion-toolbar>
-    <ion-row class="ion-justify-content-around" *ngFor="let i of (selectedFlight$ | async).trips">
+    <ion-row *ngFor="let i of (selectedFlight$ | async).trips">
       <ion-col>
         <ion-img src="../../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
-        <ion-text>{{i.tripinfo.airline.name}}</ion-text>
-        <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
+        <ion-row>
+          <ion-text>{{i.tripinfo.airline.name}}</ion-text>
+          <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
+        </ion-row>
       </ion-col>
       <ion-col>
         <ion-text>

@@ -28,29 +28,29 @@
     <ion-row>
       <ion-row>
         <ion-label>DEPARTURE</ion-label>
-        <ion-row class="ion-justify-content-around" *ngFor="let i of (selectedDepartureFlight$ | async).trips">
+        <ion-row *ngFor="let i of (selectedDepartureFlight$ | async).trips">
           <ion-img src="../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
           <ion-row>
             <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
-            <ion-text>{{i.tripinfo.fare}}</ion-text>
+            <ion-text>{{i.tripinfo.fare | currency : 'INR'}}</ion-text>
           </ion-row>
         </ion-row>
       </ion-row>
       <ion-row>
         <ion-label>RETURN</ion-label>
-        <ion-row class="ion-justify-content-around" *ngFor="let i of (selectedReturnFlight$ | async).trips">
+        <ion-row *ngFor="let i of (selectedReturnFlight$ | async).trips">
           <ion-img src="../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
           <ion-row>
             <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
-            <ion-text>{{i.tripinfo.fare}}</ion-text>
+            <ion-text>{{i.tripinfo.fare | currency : 'INR'}}</ion-text>
           </ion-row>
         </ion-row>
       </ion-row>
+      <ion-row>
+        <ion-button (click)="book()">
+          <ion-text>Book</ion-text>
+        </ion-button>
+      </ion-row>
     </ion-row>
-    <ion-buttons slot="end">
-      <ion-button (click)="book()">
-        <ion-text>Book</ion-text>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-footer>

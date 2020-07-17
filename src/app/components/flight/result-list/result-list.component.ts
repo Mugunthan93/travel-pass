@@ -31,10 +31,10 @@ export class ResultListComponent implements OnInit, AfterViewInit {
   
   @ViewChildren('colref', { read: ElementRef }) columns: QueryList<ElementRef>;
   @Output() getsColumns: EventEmitter<QueryList<ElementRef>> = new EventEmitter<QueryList<ElementRef>>(true);
+  @Input() flightType: string;
 
   @Input() flightList: resultObj[];
   @Input() selectedFlights: any;
-  @Input() flightType: string;
   
   @Output() getFlightValue: EventEmitter<any> = new EventEmitter<any>(null);
 

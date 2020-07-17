@@ -28,35 +28,36 @@ ion-content{
                             width: 100%;
                             @include flex-col-grid;
 
+                            >ion-row.two{
+                                >ion-title{
+                                    margin-left:5px;
+                                }
+                            }
+
                             >ion-row:first-child {
                                 padding: 5px 0px;
                                 justify-content: space-between;
 
-                                >ion-label {
-                                    margin: auto 10px;
-                                    font-size: 20px !important;
-                                    list-style: upper-alpha;
+                                >*{
+                                    margin:0px auto;
                                 }
 
-                                >ion-row{
-                                    >ion-row:first-of-type{
-                                        width: auto;
-                                        flex-direction: column;
-                                        margin: auto 10px;
-                                    }
-                                    >ion-row:last-of-type{
-                                        justify-content: flex-end;
-                                        padding: 6px 0px;
-                                        width: fit-content;
-    
-                                        ion-label {
-                                            margin: 0px 10px;
-                                            align-self: center;
-                                        }
-    
-                                        ion-checkbox {
-                                            margin: 0px 5px;
-                                        }
+                                >ion-text{
+                                    align-self: flex-end;
+                                }
+                                
+                                >ion-label{
+                                    margin-left:4px;
+                                    font-size: 16px !important;
+                                }
+
+                                >ion-item{
+                                    align-self: flex-end;
+                                    --min-height: 17px;
+                                    --padding-start: 0px;
+                                    width: 80px;
+                                    >ion-checkbox{
+                                        margin: 0px;
                                     }
                                 }
 
@@ -73,7 +74,7 @@ ion-content{
                                 }
 
                                 ion-title{
-                                    margin: 8px;
+                                    margin: 0px 8px;
                                 }
 
                                 >ion-row{

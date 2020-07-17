@@ -16,7 +16,6 @@ ion-content{
         max-width: calc(100vw + 4px);
 
         >ion-row:first-child {
-
             display: flex;
             flex-direction: column;
             transition: width 20ms linear 0s;
@@ -38,8 +37,9 @@ ion-content{
             }
 
             >app-result-list {
-                border: 2px solid grey;
                 min-height: 95%;
+                border-top: 2px solid #dad9de;
+                border-right: 8px solid #dad9de;
             }
 
         }
@@ -67,8 +67,8 @@ ion-content{
             }
 
             >app-result-list {
-                border: 2px solid grey;
-                min-height: 95%
+                min-height: 95%;
+                border-top: 2px solid #dad9de;
             }
 
         }
@@ -78,38 +78,45 @@ ion-content{
 }
 
 ion-footer {
-    --background:none;
-    ion-toolbar {
-        --background:#{$text-color};
-        --opacity: 0.5;
-        >ion-row{
-            flex-direction: row;
+    ion-text {
+        color: white;
+    }
+
+    >ion-toolbar {
+        height: 70px;
+        --background: #000105;
+        opacity: 1;
+
+        >ion-row {
+            height: -webkit-fill-available;
             justify-content: space-around;
+
             >ion-row{
-                margin: 5px 0px;
+                display: flex;
                 flex-direction: column;
-                width: fit-content;
-    
-                >ion-label{
-                    margin: 4px 0px;
-                }
-    
-                >ion-row{
-                    margin: 4px 0px;
-                    >ion-img{
-                        margin: 0px 8px 0px 0px;
-                    }
-    
-                    >ion-row{
-                        flex-direction: column;
-                        >ion-text {
-                            font-size: 17px;
-                        }
-                    }
-    
-                }
+                height: fit-content;
+                margin: auto;
                 
-            } 
+                >ion-row{
+
+                    >ion-row{
+                        margin-left:5px;
+                        display: flex;
+                        flex-direction: column;
+
+                    }
+                }
+            }
+        }
+
+        ion-button {
+            --background: -webkit-linear-gradient(354deg, #53b2fe, #065af3);
+
+            >ion-text {
+                color:#{$white-text};
+            }
         }
     }
+
+
 }
