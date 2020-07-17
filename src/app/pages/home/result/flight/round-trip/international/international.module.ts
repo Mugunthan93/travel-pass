@@ -8,6 +8,7 @@ import { InternationalPageRoutingModule } from './international-routing.module';
 
 import { InternationalPage } from './international.page';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { SharedModule } from 'src/app/modules/shared/shared.module';
     FormsModule,
     IonicModule,
     InternationalPageRoutingModule,
-    SharedModule
+    SharedModule,
+    MatExpansionModule
   ],
   declarations: [InternationalPage]
 })

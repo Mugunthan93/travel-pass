@@ -6,6 +6,7 @@ import { Store } from '@ngxs/store';
 import { resultObj } from 'src/app/stores/result/flight.state';
 import { MultiCityResultState, SelectedFlight } from 'src/app/stores/result/flight/multi-city.state';
 import { GetFareQuoteSSR } from 'src/app/stores/book/flight/multi-city.state';
+import { SelectedFlightComponent } from 'src/app/components/flight/selected-flight/selected-flight.component';
 
 @Component({
   selector: 'app-multi-city',
@@ -15,7 +16,7 @@ import { GetFareQuoteSSR } from 'src/app/stores/book/flight/multi-city.state';
 export class MultiCityPage implements OnInit {
 
   flightList$: Observable<resultObj[]>;
-  selectedFlight: Observable<resultObj>;
+  selectedFlight$: Observable<resultObj>;
 
   constructor(
     public modalCtrl : ModalController,
@@ -26,11 +27,22 @@ export class MultiCityPage implements OnInit {
   
   ngOnInit() {
     this.flightList$ = this.store.select(MultiCityResultState.getMultiWay);
-    this.selectedFlight = this.store.select(MultiCityResultState.getSelectedFlight);
+    this.selectedFlight$ = this.store.select(MultiCityResultState.getSelectedFlight);
   }
 
-  book() {
-    this.store.dispatch(new GetFareQuoteSSR());
+  async selectedFlight() {
+    const modal = await this.modalCtrl.create({
+      component: SelectedFlightComponent
+    });
+
+    modal.onDidDismiss().then(
+      (flight) => {
+        if (flight.data) {
+          this.store.dispatch(new GetFareQuoteSSR());
+        }
+      });
+
+    return await modal.present();
   }
 
   currentFlight(flight : resultObj){

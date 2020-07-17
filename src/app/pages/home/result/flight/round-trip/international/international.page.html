@@ -9,6 +9,17 @@
 <ion-footer *ngIf="(selectedFlight$ | async) !== null">
   <ion-toolbar>
     <ion-row>
+      <ion-text>{{(selectedFlight$ | async).fare | currency : (selectedFlight$ | async).currency}}</ion-text>
+      <ion-button (click)="selectedFlight()">
+        <ion-text>Continue</ion-text>
+      </ion-button>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>
+
+<!-- <ion-footer *ngIf="(selectedFlight$ | async) !== null">
+  <ion-toolbar>
+    <ion-row>
       <ion-label>{{(selectedFlight$ | async).name}}</ion-label>
       <ion-row>
         <ion-row>
@@ -25,7 +36,6 @@
     <ion-row class="ion-justify-content-around" *ngFor="let i of (selectedFlight$ | async).trips">
       <ion-col>
         <ion-img src="../../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
-        <!-- <ion-text *ngFor="let name of (i.tripinfo.airline.name | wordwrap)">{{name}}</ion-text> -->
         <ion-text>{{i.tripinfo.airline.name}}</ion-text>
         <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
       </ion-col>
@@ -45,4 +55,4 @@
       </ion-col>
     </ion-row>
   </ion-toolbar>
-</ion-footer>
+</ion-footer> -->

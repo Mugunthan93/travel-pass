@@ -8,7 +8,7 @@ import { RoundTripPageRoutingModule } from './round-trip-routing.module';
 
 import { RoundTripPage } from './round-trip.page';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
-import { ResultSortingComponent } from 'src/app/components/shared/result-sorting/result-sorting.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   imports: [
@@ -16,7 +16,8 @@ import { ResultSortingComponent } from 'src/app/components/shared/result-sorting
     FormsModule,
     IonicModule,
     RoundTripPageRoutingModule,
-    SharedModule
+    SharedModule,
+    MatExpansionModule
   ],
   declarations: [
     RoundTripPage

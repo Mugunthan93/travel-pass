@@ -20,6 +20,8 @@ import { EmailItineraryComponent } from 'src/app/components/flight/email-itinera
 import { ResultSortingComponent } from 'src/app/components/shared/result-sorting/result-sorting.component';
 import { PipeModule } from 'src/app/modules/pipe.module';
 import { FlightDetailsComponent } from 'src/app/components/flight/flight-details/flight-details.component';
+import { SelectedFlightComponent } from 'src/app/components/flight/selected-flight/selected-flight.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 @NgModule({
@@ -29,6 +31,7 @@ import { FlightDetailsComponent } from 'src/app/components/flight/flight-details
     ReactiveFormsModule,
     IonicModule,
     ResultPageRoutingModule,
+    MatExpansionModule,
     PipeModule,
     AgmCoreModule.forRoot({
       // please get your own API key here:
@@ -47,7 +50,8 @@ import { FlightDetailsComponent } from 'src/app/components/flight/flight-details
     FairRuleComponent,
     EmailItineraryComponent,
     ResultSortingComponent,
-    FlightDetailsComponent
+    FlightDetailsComponent,
+    SelectedFlightComponent
   ],
   entryComponents: [
     TripFilterComponent,
@@ -59,7 +63,8 @@ import { FlightDetailsComponent } from 'src/app/components/flight/flight-details
     FairRuleComponent,
     EmailItineraryComponent,
     ResultSortingComponent,
-    FlightDetailsComponent
+    FlightDetailsComponent,
+    SelectedFlightComponent
   ]
 })
 export class ResultPageModule {}

@@ -5,6 +5,7 @@ import { Store } from '@ngxs/store';
 import { ModalController } from '@ionic/angular';
 import { InternationalResultState, SelectedFlight } from 'src/app/stores/result/flight/international.state';
 import { GetFareQuoteSSR } from 'src/app/stores/book/flight/international.state';
+import { SelectedFlightComponent } from 'src/app/components/flight/selected-flight/selected-flight.component';
 
 @Component({
   selector: 'app-international',
@@ -30,8 +31,19 @@ export class InternationalPage implements OnInit {
     this.store.dispatch(new SelectedFlight(result));
   }
 
-  book() {
-    this.store.dispatch(new GetFareQuoteSSR());
+  async selectedFlight() {
+    const modal = await this.modalCtrl.create({
+      component : SelectedFlightComponent
+    });
+
+    modal.onDidDismiss().then(
+      (flight) => {
+        if (flight.data) {
+          this.store.dispatch(new GetFareQuoteSSR());
+        }
+    });
+
+    return await modal.present();
   }
 
 }
