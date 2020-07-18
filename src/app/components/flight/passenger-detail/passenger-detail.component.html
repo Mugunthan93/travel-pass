@@ -37,45 +37,47 @@
       <ion-label>Passenger Details</ion-label>
     </ion-item>
     <ion-item lines="full">
-      <ion-select placeholder="Title" slot="start" formControlName="Title" required [ngClass]="errorClass('Title')">
+      <ion-select placeholder="Title" slot="start" [interfaceOptions]="customAlertOptions" formControlName="Title"
+        required
+        [ngClass]="errorClass('Title')">
         <ion-select-option value="Mr">Mr</ion-select-option>
         <ion-select-option value="Ms">Ms</ion-select-option>
         <ion-select-option value="Mrs">Mrs</ion-select-option>
         <ion-select-option value="Mstr">Mstr</ion-select-option>
       </ion-select>
-      <ion-input placeholder="First & Middle Name" formControlName="FirstName" required
+      <ion-input type="text" placeholder="First & Middle Name" formControlName="FirstName" required
         [ngClass]="errorClass('FirstName')">
       </ion-input>
     </ion-item>
     <ion-item lines="full">
-      <ion-input placeholder="Last Name" formControlName="LastName" [ngClass]="errorClass('LastName')"></ion-input>
+      <ion-input type="text" placeholder="Last Name" formControlName="LastName" [ngClass]="errorClass('LastName')" required></ion-input>
     </ion-item>
     <ion-item lines="full">
-      <ion-input placeholder="Email" formControlName="Email" [ngClass]="errorClass('Email')"></ion-input>
+      <ion-input type="email" placeholder="Email" formControlName="Email" [ngClass]="errorClass('Email')" required pattern></ion-input>
     </ion-item>
     <ion-item lines="full">
-      <ion-datetime displayFormat="DD-MMM-YYYY"
-      placeholder="Select Date Of Birth" formControlName="DateOfBirth" [ngClass]="errorClass('DateOfBirth')">
+      <ion-datetime type="date" displayFormat="DD-MMM-YYYY" (ionFocus)="focusDate($event)"
+      placeholder="Select Date Of Birth" formControlName="DateOfBirth" [ngClass]="errorClass('DateOfBirth')" required>
       </ion-datetime>
     </ion-item>
     <ion-item lines="full">
-      <ion-input placeholder="Address" formControlName="Address" [ngClass]="errorClass('Address')"></ion-input>
+      <ion-input type="text" placeholder="Address" formControlName="Address" [ngClass]="errorClass('Address')"></ion-input>
     </ion-item>
-    <ion-item lines="full" (click)="selectCity('City')">
+    <ion-item lines="full" (click)="selectCity('City')" (ionFocus)="selectCity('City')">
       <ion-input placeholder="Select City" formControlName="City" [ngClass]="errorClass('City')"></ion-input>
     </ion-item>
     <ion-item lines="full">
-      <ion-input placeholder="Phone Number" formControlName="ContactNo" [ngClass]="errorClass('ContactNo')"></ion-input>
+      <ion-input type="number" placeholder="Phone Number" formControlName="ContactNo" [ngClass]="errorClass('ContactNo')" required pattern></ion-input>
     </ion-item>
     <ion-item lines="full">
-      <ion-input placeholder="Passport Number" formControlName="PassportNo" required
+      <ion-input placeholder="Passport Number" formControlName="PassportNo" required pattern
         [ngClass]="errorClass('PassportNo')"></ion-input>
     </ion-item>
     <ion-item lines="full">
-      <ion-input slot="start" placeholder="Nationality" formControlName="nationality"></ion-input>
+      <ion-input type="text" slot="start" placeholder="Nationality" formControlName="nationality"></ion-input>
     </ion-item>
     <ion-item lines="full">
-      <ion-datetime displayFormat="DD-MMM-YYYY"
+      <ion-datetime displayFormat="DD-MMM-YYYY" type="date"
         placeholder="Select Passport Expiry Date" max="2050" formControlName="PassportExpiry" required
         [ngClass]="errorClass('PassportExpiry')">
       </ion-datetime>
@@ -90,19 +92,19 @@
       <ion-label>GST Details</ion-label>
     </ion-item>
     <ion-item lines="full">
-      <ion-input placeholder="Company Name" formControlName="CompanyName" [ngClass]="errorClass('CompanyName')"></ion-input>
+      <ion-input type="text" placeholder="Company Name" formControlName="CompanyName" [ngClass]="errorClass('CompanyName')" required></ion-input>
     </ion-item>
     <ion-item lines="full">
-      <ion-input placeholder="Company Email" formControlName="CompanyEmail" [ngClass]="errorClass('CompanyEmail')"></ion-input>
+      <ion-input type="email" placeholder="Company Email" formControlName="CompanyEmail" [ngClass]="errorClass('CompanyEmail')" required pattern></ion-input>
     </ion-item>
     <ion-item lines="full">
-      <ion-input placeholder="GST Number" formControlName="GSTNumber" [ngClass]="errorClass('GSTNumber')"></ion-input>
+      <ion-input type="text" placeholder="GST Number" formControlName="GSTNumber" [ngClass]="errorClass('GSTNumber')" required pattern></ion-input>
     </ion-item>
     <ion-item lines="full">
-      <ion-input placeholder="Company Address" formControlName="CompanyAddress" [ngClass]="errorClass('CompanyAddress')"></ion-input>
+      <ion-input type="text" placeholder="Company Address" formControlName="CompanyAddress" [ngClass]="errorClass('CompanyAddress')"></ion-input>
     </ion-item>
     <ion-item lines="full">
-      <ion-input placeholder="Company Number" formControlName="CompanyNumber" [ngClass]="errorClass('CompanyNumber')"></ion-input>
+      <ion-input type="number" placeholder="Company Number" formControlName="CompanyNumber" [ngClass]="errorClass('CompanyNumber')" required pattern></ion-input>
     </ion-item>
     <ion-button expand="block" fill="solid" *ngIf="false">
       <ion-icon name="add"></ion-icon>

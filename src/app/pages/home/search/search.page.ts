@@ -14,11 +14,9 @@ import { MultiCitySearchState } from 'src/app/stores/search/flight/multi-city.st
   templateUrl: './search.page.html',
   styleUrls: ['./search.page.scss'],
 })
-export class SearchPage implements OnInit,OnDestroy {
+export class SearchPage implements OnInit {
 
   searchMode$: Observable<any>;
-  search: string;
-  searchSub: Subscription;
 
   constructor(
     private store : Store
@@ -27,22 +25,11 @@ export class SearchPage implements OnInit,OnDestroy {
 
   ngOnInit() {
     this.searchMode$ = this.store.select(SearchState.getSearchMode);
-    this.searchSub = this.searchMode$.subscribe(
-      (mode : string) => {
-        this.search = mode;
-      }
-    );
   }
 
   back() {
     this.store.dispatch(new StateReset(SearchState));
     this.store.dispatch(new Navigate(['/','home','dashboard','home-tab']));
-  }
-
-  ngOnDestroy() {
-    if (!this.searchSub.closed) {
-      this.searchSub.unsubscribe();
-    }
   }
 
 }

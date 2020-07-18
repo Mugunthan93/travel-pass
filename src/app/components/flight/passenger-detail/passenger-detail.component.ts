@@ -11,6 +11,7 @@ import { company } from 'src/app/models/company';
 import { CompanyState } from 'src/app/stores/company.state';
 import { CityModalComponent } from '../../shared/city-modal/city-modal.component';
 import { city } from 'src/app/stores/shared.state';
+import { AlertOptions } from '@ionic/core';
 
 @Component({
   selector: 'app-passenger-detail',
@@ -29,6 +30,15 @@ export class PassengerDetailComponent implements OnInit {
   type: string;
 
   selectedCity: city;
+  customAlertOptions: AlertOptions;
+
+  regex: any = {
+    email: "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$",
+    phone_number: "^[0-9]{10}$",
+    passport: "^[A-PR-WYa-pr-wy][1-9]\\d\\s?\\d{4}[1-9]$",
+    gst:"^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$"
+  }
+
 
   constructor(
     private store : Store,
@@ -38,6 +48,11 @@ export class PassengerDetailComponent implements OnInit {
 
   ngOnInit() {
 
+    this.customAlertOptions = {
+      header: 'Title',
+      cssClass: 'cabinClass'
+    }
+
     this.company = this.store.selectSnapshot(CompanyState.getCompany);
 
     if (this.form == 'add') {
@@ -45,20 +60,20 @@ export class PassengerDetailComponent implements OnInit {
         "Title": new FormControl(null,[Validators.required]),
         "FirstName": new FormControl(null, [Validators.required]),
         "LastName": new FormControl(null,[Validators.required]),
-        "Email": new FormControl(null, [Validators.required]),
+        "Email": new FormControl(null, [Validators.required, Validators.pattern(this.regex.email)]),
         "DateOfBirth": new FormControl(null, [Validators.required]),
         "Address": new FormControl(null, [Validators.required]),
         "City": new FormControl(null, [Validators.required]),
-        "ContactNo": new FormControl(null, [Validators.required]),
-        "PassportNo": new FormControl(null,[Validators.required]),
+        "ContactNo": new FormControl(null, [Validators.required, Validators.pattern(this.regex.phone_number)]),
+        "PassportNo": new FormControl(null, [Validators.required, Validators.pattern(this.regex.passport)]),
         "nationality": new FormControl(null),
         "PassportExpiry": new FormControl(null,[Validators.required]),
         "ftnumber": new FormControl(null),
         "CompanyName": new FormControl(this.company.company_name, [Validators.required]),
-        "CompanyEmail": new FormControl(this.company.company_email, [Validators.required]),
-        "GSTNumber": new FormControl(this.company.gst_details.gstNo, [Validators.required]),
+        "CompanyEmail": new FormControl(this.company.company_email, [Validators.required, Validators.pattern(this.regex.email)]),
+        "GSTNumber": new FormControl(this.company.gst_details.gstNo, [Validators.required, Validators.pattern(this.regex.gst)]),
         "CompanyAddress": new FormControl(this.company.company_address_line1, [Validators.required]),
-        "CompanyNumber": new FormControl(this.company.phone_number, [Validators.required])
+        "CompanyNumber": new FormControl(this.company.phone_number, [Validators.required, Validators.pattern(this.regex.phone_number)])
       });
     }
     else if (this.form == 'edit'){
@@ -66,28 +81,28 @@ export class PassengerDetailComponent implements OnInit {
         "Title": new FormControl(this.pax.Title, [Validators.required]),
         "FirstName": new FormControl(this.pax.FirstName, [Validators.required]),
         "LastName": new FormControl(this.pax.LastName, [Validators.required]),
-        "Email": new FormControl(this.pax.Email, [Validators.required]),
+        "Email": new FormControl(this.pax.Email, [Validators.required, Validators.pattern(this.regex.email)]),
         "DateOfBirth": new FormControl(this.pax.DateOfBirth, [Validators.required]),
         "Address": new FormControl(this.pax.AddressLine1, [Validators.required]),
         "City": new FormControl(this.pax.City, [Validators.required]),
-        "ContactNo": new FormControl(this.pax.ContactNo, [Validators.required]),
-        "PassportNo": new FormControl(this.pax.PassportNo, [Validators.required]),
+        "ContactNo": new FormControl(this.pax.ContactNo, [Validators.required, Validators.pattern(this.regex.phone_number)]),
+        "PassportNo": new FormControl(this.pax.PassportNo, [Validators.required, Validators.pattern(this.regex.passport)]),
         "nationality": new FormControl(this.pax.nationality),
         "PassportExpiry": new FormControl(this.pax.PassportExpiry, [Validators.required]),
         "ftnumber": new FormControl(this.pax.ftnumber),
         "CompanyName": new FormControl(this.pax.GSTCompanyName, [Validators.required]),
-        "CompanyEmail": new FormControl(this.pax.GSTCompanyEmail, [Validators.required]),
-        "GSTNumber": new FormControl(this.pax.GSTNumber, [Validators.required]),
+        "CompanyEmail": new FormControl(this.pax.GSTCompanyEmail, [Validators.required, Validators.pattern(this.regex.email)]),
+        "GSTNumber": new FormControl(this.pax.GSTNumber, [Validators.required, Validators.pattern(this.regex.gst)]),
         "CompanyAddress": new FormControl(this.pax.GSTCompanyAddress, [Validators.required]),
-        "CompanyNumber": new FormControl(this.pax.GSTCompanyContactNumber, [Validators.required])
+        "CompanyNumber": new FormControl(this.pax.GSTCompanyContactNumber, [Validators.required, Validators.pattern(this.regex.phone_number)])
       });
     }
 
     this.type = this.store.selectSnapshot(BookState.getBookType);
 
-    this.Passenger.valueChanges.subscribe(el => console.log(el));
+    this.Passenger.valueChanges.subscribe(el => console.log(this.Passenger));
 
-   }
+  }
   
   async addMeal() {
     const modal = await this.modalCtrl.create({
@@ -117,6 +132,10 @@ export class PassengerDetailComponent implements OnInit {
     );
 
     return await modal.present();
+  }
+
+  async focusDate(evt : CustomEvent) {
+    console.log(evt);
   }
 
   addPassenger() {
@@ -189,12 +208,8 @@ export class PassengerDetailComponent implements OnInit {
   errorClass(name: string) {
     return {
       'initial': (this.Passenger.controls[name].value == null) && !this.formSubmit,
-      'valid':
-        this.Passenger.controls[name].value !== null ||
-        (this.Passenger.controls[name].valid && !this.formSubmit) ||
-        (this.Passenger.controls[name].valid && this.formSubmit),
-      'invalid':
-        (this.Passenger.controls[name].invalid && this.formSubmit)
+      'valid':this.Passenger.controls[name].valid && this.formSubmit,
+      'invalid':this.Passenger.controls[name].invalid && this.formSubmit
     }
   }
 
