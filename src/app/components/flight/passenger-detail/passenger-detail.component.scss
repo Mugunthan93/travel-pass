@@ -15,6 +15,9 @@ ion-content{
     >form{
         >ion-item{
             --padding-end:16px;
+            >ion-datetime{
+                padding: 0px;
+            }
         }
         >ion-button{
             padding-left:15px;

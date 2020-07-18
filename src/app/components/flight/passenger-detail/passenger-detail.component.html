@@ -33,7 +33,10 @@
   </ion-card>
 
   <form [formGroup]="Passenger" (ngSubmit)="addPassenger()">
-    <ion-item>
+    <ion-item lines="full">
+      <ion-label>Passenger Details</ion-label>
+    </ion-item>
+    <ion-item lines="full">
       <ion-select placeholder="Title" slot="start" formControlName="Title" required [ngClass]="errorClass('Title')">
         <ion-select-option value="Mr">Mr</ion-select-option>
         <ion-select-option value="Ms">Ms</ion-select-option>
@@ -44,34 +47,62 @@
         [ngClass]="errorClass('FirstName')">
       </ion-input>
     </ion-item>
-    <ion-item>
-      <ion-input placeholder="Last Name" formControlName="LastName"></ion-input>
+    <ion-item lines="full">
+      <ion-input placeholder="Last Name" formControlName="LastName" [ngClass]="errorClass('LastName')"></ion-input>
     </ion-item>
-    <ion-item [ngClass]="errorClass('DateOfBirth')">
-      <ion-label>Date Of Birth</ion-label>
+    <ion-item lines="full">
+      <ion-input placeholder="Email" formControlName="Email" [ngClass]="errorClass('Email')"></ion-input>
+    </ion-item>
+    <ion-item lines="full">
       <ion-datetime displayFormat="DD-MMM-YYYY"
-      placeholder="Select Date Of Birth" formControlName="DateOfBirth">
+      placeholder="Select Date Of Birth" formControlName="DateOfBirth" [ngClass]="errorClass('DateOfBirth')">
       </ion-datetime>
     </ion-item>
-    <ion-item>
+    <ion-item lines="full">
+      <ion-input placeholder="Address" formControlName="Address" [ngClass]="errorClass('Address')"></ion-input>
+    </ion-item>
+    <ion-item lines="full" (click)="selectCity('City')">
+      <ion-input placeholder="Select City" formControlName="City" [ngClass]="errorClass('City')"></ion-input>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-input placeholder="Phone Number" formControlName="ContactNo" [ngClass]="errorClass('ContactNo')"></ion-input>
+    </ion-item>
+    <ion-item lines="full">
       <ion-input placeholder="Passport Number" formControlName="PassportNo" required
         [ngClass]="errorClass('PassportNo')"></ion-input>
     </ion-item>
-    <ion-item>
+    <ion-item lines="full">
       <ion-input slot="start" placeholder="Nationality" formControlName="nationality"></ion-input>
     </ion-item>
-    <ion-item>
-      <ion-label>PassPort Expiry Date</ion-label>
+    <ion-item lines="full">
       <ion-datetime displayFormat="DD-MMM-YYYY"
         placeholder="Select Passport Expiry Date" max="2050" formControlName="PassportExpiry" required
         [ngClass]="errorClass('PassportExpiry')">
       </ion-datetime>
     </ion-item>
-    <ion-item>
+    <ion-item lines="full">
       <ion-input placeholder="Frequent Traveller Number" formControlName="ftnumber"></ion-input>
     </ion-item>
-    <ion-item>
+    <ion-item lines="full">
       <ion-text>Frequent Flyer Number is subject to airline acceptance</ion-text>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-label>GST Details</ion-label>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-input placeholder="Company Name" formControlName="CompanyName" [ngClass]="errorClass('CompanyName')"></ion-input>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-input placeholder="Company Email" formControlName="CompanyEmail" [ngClass]="errorClass('CompanyEmail')"></ion-input>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-input placeholder="GST Number" formControlName="GSTNumber" [ngClass]="errorClass('GSTNumber')"></ion-input>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-input placeholder="Company Address" formControlName="CompanyAddress" [ngClass]="errorClass('CompanyAddress')"></ion-input>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-input placeholder="Company Number" formControlName="CompanyNumber" [ngClass]="errorClass('CompanyNumber')"></ion-input>
     </ion-item>
     <ion-button expand="block" fill="solid" *ngIf="false">
       <ion-icon name="add"></ion-icon>

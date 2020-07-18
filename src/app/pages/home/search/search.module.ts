@@ -7,7 +7,6 @@ import { IonicModule } from '@ionic/angular';
 import { SearchPageRoutingModule } from './search-routing.module';
 
 import { SearchPage } from './search.page';
-import { CityModalComponent } from 'src/app/components/shared/city-modal/city-modal.component';
 import { PassengerModalComponent } from 'src/app/components/flight/passenger-modal/passenger-modal.component';
 import { CalendarModule } from 'ion2-calendar';
 
@@ -22,11 +21,9 @@ import { CalendarModule } from 'ion2-calendar';
   ],
   declarations: [
     SearchPage,
-    CityModalComponent,
     PassengerModalComponent
   ],
   entryComponents: [
-    CityModalComponent,
     PassengerModalComponent
   ]
 })

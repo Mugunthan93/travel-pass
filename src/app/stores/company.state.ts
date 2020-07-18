@@ -85,6 +85,12 @@ export class CompanyState {
     static getStateName(states: company): string {
         return states.service_charges.state_name;
     }
+
+    @Selector()
+    static getCompany(states: company): company {
+        return states;
+    }
+
     @Action(GetCompany)
     async getCompany(states: StateContext<company>, action: GetCompany) {
         try {

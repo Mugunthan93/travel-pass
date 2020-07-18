@@ -1,5 +1,5 @@
 import { State, Action, Selector, Store, StateContext } from "@ngxs/store";
-import { bookObj, FLightBookState, sendRequest, SetFirstPassengers, kioskRequest, value } from '../flight.state';
+import { bookObj, FLightBookState, sendRequest, SetFirstPassengers, kioskRequest, value, SetFare } from '../flight.state';
 import { flightResult, flightData } from 'src/app/models/search/flight';
 import { SSR } from '../../result/flight.state';
 import { Navigate } from '@ngxs/router-plugin';
@@ -148,6 +148,7 @@ export class OneWayBookState{
             flight: this.onewaybookData(states.getState().fareQuote)
         });
 
+        this.store.dispatch(new SetFare(states.getState().fareQuote.Fare));
         this.store.dispatch(new SetFirstPassengers(this.store.selectSnapshot(SearchState.getSearchType)));
         this.store.dispatch(new BookMode('flight'));
         this.store.dispatch(new BookType('one-way'));

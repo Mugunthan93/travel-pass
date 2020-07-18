@@ -10,6 +10,7 @@ import { HomePage } from './home.page';
 import { AboutHotelComponent } from 'src/app/components/hotel/about-hotel/about-hotel.component';
 import { MenuBarComponent } from 'src/app/components/menu-bar/menu-bar.component';
 import { PipeModule } from 'src/app/modules/pipe.module';
+import { CityModalComponent } from 'src/app/components/shared/city-modal/city-modal.component';
 
 @NgModule({
   imports: [
@@ -22,10 +23,12 @@ import { PipeModule } from 'src/app/modules/pipe.module';
   declarations: [
     HomePage,
     AboutHotelComponent,
-    MenuBarComponent
+    MenuBarComponent,
+    CityModalComponent
   ],
   entryComponents: [
-    AboutHotelComponent
+    AboutHotelComponent,
+    CityModalComponent
   ]
 })
 export class HomePageModule {}

@@ -3,7 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { PassengerDetailComponent } from '../passenger-detail/passenger-detail.component';
 import { Store } from '@ngxs/store';
 import { OneWayBookState } from 'src/app/stores/book/flight/oneway.state';
-import { FLightBookState, passenger, SelectPassenger, DeselectPassenger } from 'src/app/stores/book/flight.state';
+import { FLightBookState, passenger, SelectPassenger, DeselectPassenger, DeletePassenger } from 'src/app/stores/book/flight.state';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -64,6 +64,10 @@ export class PassengerInfoComponent implements OnInit {
     else if (!evt.detail.checked) {
       this.store.dispatch(new DeselectPassenger(evt.detail.value));
     }
+  }
+
+  deletePassneger(pax : passenger) {
+    this.store.dispatch(new DeletePassenger(pax));
   }
 
   gender(pax: passenger): string {

@@ -1,7 +1,7 @@
 import { Selector, Action, State, Store, StateContext } from '@ngxs/store';
 import { flightResult, flightData } from 'src/app/models/search/flight';
 import { SSR } from '../../result/flight.state';
-import { bookObj, value, FLightBookState, rt_uapi_params, rt_sendRequest, SetFirstPassengers, rt_kioskRequest } from '../flight.state';
+import { bookObj, value, FLightBookState, rt_uapi_params, rt_sendRequest, SetFirstPassengers, rt_kioskRequest, SetFare } from '../flight.state';
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { DomesticResultState } from '../../result/flight/domestic.state';
 import { RoundTripSearch, RoundTripSearchState } from '../../search/flight/round-trip.state';
@@ -193,6 +193,7 @@ export class DomesticBookState {
             }
         });
 
+        this.store.dispatch(new SetFare(states.getState().departure.fareQuote.Fare, states.getState().return.fareQuote.Fare));
         this.store.dispatch(new SetFirstPassengers(this.store.selectSnapshot(SearchState.getSearchType)));
         this.store.dispatch(new BookMode('flight'));
         this.store.dispatch(new BookType('animated-round-trip'));

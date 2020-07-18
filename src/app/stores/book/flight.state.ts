@@ -10,6 +10,8 @@ import { ModalController } from '@ionic/angular';
 import { DomesticBookState } from './flight/domestic.state';
 import { MultiCityBookState } from './flight/multi-city.state';
 import { InternationalBookState } from './flight/international.state';
+import * as _ from 'lodash';
+import { SearchState } from '../search.state';
 
 
 export interface flight{
@@ -21,10 +23,23 @@ export interface flight{
     
     mail: string[],
     purpose: string,
-    comment: string
+    comment: string,
+
+    fare: fareObj
 }
 
 //////////////////////////////////////////////
+
+export interface fareObj{
+    AdditionalTxnFeeOfrd: number
+    AdditionalTxnFeePub: number
+    BaseFare: number
+    PassengerCount: number
+    PassengerType: number
+    Tax: number
+    TransactionFee: number
+    YQTax: number
+}
 
 export interface sendRequest {
     passenger_details: passenger_details
@@ -80,8 +95,6 @@ export interface int_sendRequest {
     travel_date: string
 }
 
-
-
 export interface passenger_details {
     kioskRequest: kioskRequest
     passenger:passenger[]
@@ -114,8 +127,6 @@ export interface int_passenger_details {
     uapi_params: uapi_params
     fare_response: fare_response
 }
-
-
 
 export interface kioskRequest {
     trip_mode: number
@@ -173,7 +184,7 @@ export interface passenger extends addPassenger{
     GSTCompanyContactNumber:string,
     GSTCompanyName: string,
     GSTNumber: string,
-    Fare: resultFare
+    Fare: fareObj
 }
 
 export interface services {
@@ -438,6 +449,12 @@ export interface addPassenger {
 
 ////////////////////////////////////////////////////
 
+export class SetFare {
+    static readonly type = "[flight_book] SetFare";
+    constructor(public fare1: resultFare, public fare2?: resultFare) {
+    }
+}
+
 export class CancellationRisk {
     static readonly type = "[flight_book] CancellationRisk";
     constructor(public risk: string) {
@@ -453,14 +470,21 @@ export class SetFirstPassengers {
 
 export class AddPassenger {
     static readonly type = "[flight_book] AddPassenger";
-    constructor(public pass: addPassenger) {
+    constructor(public pass: passenger) {
 
     }
 }
 
 export class EditPassenger {
     static readonly type = "[flight_book] AddPassenger";
-    constructor(public pass: addPassenger,public pax : passenger) {
+    constructor(public pass: passenger,public pax : passenger) {
+
+    }
+}
+
+export class DeletePassenger {
+    static readonly type = "[flight_book] DeletePassenger";
+    constructor(public pax: passenger) {
 
     }
 }
@@ -511,7 +535,8 @@ export class Comments {
         
         mail: [],
         purpose: null,
-        comment: null
+        comment: null,
+        fare : null
     },
     children: [
         OneWayBookState,
@@ -556,6 +581,11 @@ export class FLightBookState {
     }
 
     @Selector()
+    static getLeadPassenger(states: flight): passenger {
+        return states.passengers[0]
+    }
+
+    @Selector()
     static getSelectedPassengers(states: flight): passenger[] {
         return states.selectedPassengers;
     }
@@ -570,47 +600,53 @@ export class FLightBookState {
         return states.passengerCount;
     }
 
+    @Selector()
+    static getFare(states: flight): fareObj {
+        return states.fare;
+    }
+
+    @Action(SetFare)
+    setFare(states: StateContext<flight>, action: SetFare) {
+
+        if (action.fare2) {
+            let result: fareObj = {
+                AdditionalTxnFeeOfrd: action.fare1.AdditionalTxnFeeOfrd + action.fare2.AdditionalTxnFeeOfrd,
+                AdditionalTxnFeePub: action.fare1.AdditionalTxnFeePub + action.fare2.AdditionalTxnFeePub,
+                BaseFare: action.fare1.BaseFare + action.fare2.BaseFare,
+                PassengerCount: this.passCount(this.store.selectSnapshot(SearchState.getSearchType)),
+                PassengerType: 1,
+                Tax: action.fare1.Tax + action.fare2.Tax,
+                TransactionFee: 0,
+                YQTax: action.fare1.YQTax + action.fare2.YQTax
+            }
+            states.patchState({
+                fare: result
+            });
+        }
+        else {
+            let result: fareObj = {
+                AdditionalTxnFeeOfrd: action.fare1.AdditionalTxnFeeOfrd,
+                AdditionalTxnFeePub: action.fare1.AdditionalTxnFeePub,
+                BaseFare: action.fare1.BaseFare,
+                PassengerCount: this.passCount(this.store.selectSnapshot(SearchState.getSearchType)),
+                PassengerType: 1,
+                Tax: action.fare1.Tax,
+                TransactionFee: 0,
+                YQTax: action.fare1.YQTax
+            }
+            states.patchState({
+                fare: result
+            });
+        }
+
+    }
+
     @Action(AddPassenger)
     addPassenger(states: StateContext<flight>, action: AddPassenger) {
 
-        const pass: passenger = {
-            AddressLine1: "",
-            City: "",
-            CountryName: "",
-            CountryCode: "",
-            Email: "",
-            onwardExtraServices: {
-                Meal: [],
-                MealTotal: 0,
-                BagTotal: 0,
-                Baggage: []
-            },
-            returnExtraServices: {
-                Meal: [],
-                MealTotal: 0,
-                BagTotal: 0,
-                Baggage: []
-            },
-            PaxType: 1,
-            IsLeadPax: false,
-            FirstName: action.pass.FirstName,
-            LastName: action.pass.LastName,
-            ContactNo: null,
-            Title: action.pass.Title,
-            Gender: this.getGender(action.pass.Title),
-            GSTCompanyEmail: null,
-            DateOfBirth: action.pass.DateOfBirth,
-            PassportNo: action.pass.PassportNo,
-            PassportExpiry: action.pass.PassportExpiry,
-            Fare: this.store.selectSnapshot(OneWayBookState.getPassengerFare),
-            GSTCompanyAddress: null,
-            GSTCompanyContactNumber: null,
-            GSTCompanyName: null,
-            GSTNumber:null
-        }
-
         let passengers = Object.assign([], states.getState().passengers);
-        passengers.push(pass);
+        passengers.push(action.pass);
+        passengers = _.uniqBy(passengers,passengers);
 
         states.patchState({
             passengers: passengers
@@ -621,51 +657,27 @@ export class FLightBookState {
 
     @Action(EditPassenger)
     editPassenger(states: StateContext<flight>, action: EditPassenger) {
-        const pass: passenger = {
-            AddressLine1: action.pax.AddressLine1,
-            City: action.pax.City,
-            CountryName: action.pax.CountryName,
-            CountryCode: action.pax.CountryCode,
-            Email: action.pax.Email,
-            onwardExtraServices: {
-                Meal: [],
-                MealTotal: 0,
-                BagTotal: 0,
-                Baggage: []
-            },
-            returnExtraServices: {
-                Meal: [],
-                MealTotal: 0,
-                BagTotal: 0,
-                Baggage: []
-            },
-            PaxType: 1,
-            IsLeadPax: false,
-            FirstName: action.pass.FirstName,
-            LastName: action.pass.LastName,
-            ContactNo: action.pax.ContactNo,
-            Title: action.pass.Title,
-            Gender: this.getGender(action.pass.Title),
-            GSTCompanyEmail: action.pax.GSTCompanyEmail,
-            DateOfBirth: action.pass.DateOfBirth,
-            PassportNo: action.pass.PassportNo,
-            PassportExpiry: action.pass.PassportExpiry,
-            Fare: this.store.selectSnapshot(OneWayBookState.getPassengerFare),
-            GSTCompanyAddress: action.pax.GSTCompanyAddress,
-            GSTCompanyContactNumber: action.pax.GSTCompanyContactNumber,
-            GSTCompanyName: action.pax.GSTCompanyName,
-            GSTNumber: action.pax.GSTNumber
-        }
 
         let passengers: passenger[] = Object.assign([], states.getState().passengers);
-        let filterPass: passenger[] = passengers.filter(el => el.PassportNo !== action.pax.PassportNo);
-        filterPass.push(pass);
+        let filterPass: passenger[] = passengers.filter(el => !_.isEqual(el, action.pax));
+        filterPass.push(action.pass);
 
         states.patchState({
             passengers: filterPass
         });
 
         this.modalCtrl.dismiss(null, null, 'passenger-details');
+    }
+
+    @Action(DeletePassenger)
+    deletePassenger(states: StateContext<flight>, action: DeletePassenger) {
+
+        let passengers: passenger[] = Object.assign([], states.getState().passengers);
+        let filterPass: passenger[] = passengers.filter(el => !_.isEqual(el, action.pax));
+
+        states.patchState({
+            passengers: filterPass
+        });
     }
 
     @Action(SetFirstPassengers)
@@ -714,7 +726,7 @@ export class FLightBookState {
             GSTCompanyContactNumber: this.store.selectSnapshot(CompanyState.getContact),
             GSTCompanyName: this.store.selectSnapshot(CompanyState.getCompanyName),
             GSTNumber: this.store.selectSnapshot(CompanyState.gstNumber),
-            Fare: this.store.selectSnapshot(OneWayBookState.getPassengerFare)
+            Fare: states.getState().fare
         }
 
         states.patchState({
@@ -778,6 +790,17 @@ export class FLightBookState {
         else {
             return 2;
         }
+    }
+
+
+    passCount(type: string) : number {
+        let passengerCount = 0;
+        switch (type) {
+            case 'one-way': passengerCount = this.store.selectSnapshot(OneWaySearchState.getAdult); break;
+            case 'round-trip': passengerCount = this.store.selectSnapshot(RoundTripSearchState.getAdult); break;
+            case 'multi-city': passengerCount = this.store.selectSnapshot(MultiCitySearchState.getAdult); break;
+        }
+        return passengerCount;
     }
 
 }

@@ -2,7 +2,7 @@
 @import "../../../../style/util/mixins.scss";
 
 ion-content{
-    >ion-item{
+    >ion-item:first-child{
         --padding-end: 16px;
         >ion-row {
             align-self: center;
@@ -13,30 +13,31 @@ ion-content{
             }
         }
     }
-    >ion-list{
-        >ion-item-sliding{
-            >ion-item{
-                --inner-padding-end: 16px;
-                --border-width: 2px;
-                --border-radius: 8px;
-                margin: 0px 16px;
+    >ion-row{
+        justify-content: space-between;
+        align-items: center;
+        >ion-item{
+            width:65%;
+            --inner-padding-end: 16px;
+            --border-width: 2px;
+            --border-radius: 8px;
+            margin: 0px 16px;
+            >ion-row{
+                width: -webkit-fill-available;
+                justify-content: space-between;
                 >ion-row{
-                    width: -webkit-fill-available;
-                    justify-content: space-between;
-                    >ion-row{
-                        flex-direction: column;
-                    }
-                    >ion-text{
-                        align-self: center;
-                    }
+                    flex-direction: column;
+                }
+                >ion-text{
+                    align-self: center;
                 }
             }
-            >ion-item-options{
-                margin-right: 16px;
-                >ion-item-option{
-                    border-radius: 8px;
-                }
-            }
+        }
+        >ion-icon{
+            width:10%;
+        }
+        >ion-text{
+            width:10%;
         }
     }
 }
