@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { Store } from '@ngxs/store';
+import { Observable, concat } from 'rxjs';
+import { FLightBookState, SelectService, meal, baggage, SetVeg, SetNonVeg } from 'src/app/stores/book/flight.state';
+import { map } from 'lodash';
+import * as _ from 'lodash';
+import { BookState } from 'src/app/stores/book.state';
 
 @Component({
   selector: 'app-meal-baggage',
@@ -13,20 +19,63 @@ export class MealBaggageComponent implements OnInit {
   meals: any[] = ["1", "2", "3", "4", "5"];
   baggages: any[] = ["1", "2", "3", "4", "5"];
 
+  onwardMeal$: Observable<meal[]>;
+  returnMeal$: Observable<meal[]>;
+  onwardBaggage$: Observable<baggage[]>;
+  returnBaggage$: Observable<baggage[]>;
+
+  totalMeal$: Observable<meal[]>;
+  totalBaggage$: Observable<baggage[]>;
+
+  total$: Observable<any>;
+
+  selectedService$: Observable<string>; 
+  veg$: Observable<boolean>;
+  nonveg$: Observable<boolean>;
+
   constructor(
+    private store : Store,
     public modalCtrl : ModalController
   ) { }
 
   ngOnInit() {
-    this.type = "meal";
-   }
+    this.selectedService$ = this.store.select(FLightBookState.getSelectedService);
+    this.veg$ = this.store.select(FLightBookState.getVeg);
+    this.nonveg$ = this.store.select(FLightBookState.getNonVeg);
+
+
+    this.onwardMeal$ = this.store.select(FLightBookState.getOnwardMeals);
+    this.returnMeal$ = this.store.select(FLightBookState.getReturnMeals);
+    this.onwardBaggage$ = this.store.select(FLightBookState.getOnwardBaggages);
+    this.returnBaggage$ = this.store.select(FLightBookState.getReturnBaggages);
+
+
+    if (this.store.selectSnapshot(BookState.getBookType) == 'animated-round-trip') {
+      this.totalMeal$ = concat(this.onwardMeal$, this.returnMeal$);
+      this.totalBaggage$ = concat(this.onwardBaggage$, this.returnBaggage$);
+    }
+    else {
+      this.totalMeal$ = this.onwardMeal$;
+      this.totalBaggage$ = this.onwardBaggage$;
+    }
+  }
   
   dismissMeal() {
     this.modalCtrl.dismiss(null,null,'passenger-meal');
   }
 
-  change(type) {
-    this.type = type.detail.value;
+  change(type : CustomEvent) {
+    this.store.dispatch(new SelectService(type.detail.value));
+  }
+
+  checkVeg(check: CustomEvent) {
+    console.log(check);
+    this.store.dispatch(new SetVeg(check.detail.checked));
+  }
+
+  checkNonVeg(check: CustomEvent) {
+    console.log(check);
+    this.store.dispatch(new SetNonVeg(check.detail.checked));
   }
 
 }

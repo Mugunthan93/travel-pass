@@ -1,6 +1,8 @@
 <ion-content>
   <ion-row>
     <ion-col>
+      <ion-text *ngIf="(flightList | sort : (sortBy$ | async).property : (sortBy$ | async).state ).length == 0">No
+        result found</ion-text>
       <mat-accordion multi="false">
         <mat-expansion-panel 
           [hideToggle]="true"  
@@ -22,10 +24,13 @@
               </ion-row>
               <ion-row class="ion-justify-content-around two" [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}"
                 *ngFor="let i of item.trips" [ngStyle]="{'height':'fit-content'}">
-                <ion-title>
-                  <ion-text>{{i.tripinfo.airline.name}} | {{i.tripinfo.airline.code}} - {{i.tripinfo.airline.number}}
-                  </ion-text>
-                </ion-title>
+                <ion-row class="heading">
+                  <ion-title>
+                    <ion-text>{{i.tripinfo.airline.name}} | {{i.tripinfo.airline.code}} - {{i.tripinfo.airline.number}}</ion-text>
+                  </ion-title>
+                  <ion-icon *ngIf="item.refund" src="../../../../assets/menu/refundable.svg"></ion-icon>
+                  <ion-icon *ngIf="!item.refund" src="../../../../assets/menu/nonrefundable.svg"></ion-icon>
+                </ion-row>
                 <ion-row>
                   <ion-col>
                     <ion-img src="../../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>

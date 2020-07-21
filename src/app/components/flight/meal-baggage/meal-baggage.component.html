@@ -12,113 +12,109 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
+
 <ion-content>
-  <ion-grid>
-    <ion-row>
-      <ion-segment (ionChange)="change($event)" value="meal">
-        <ion-col size="6">
-          <ion-segment-button value="meal">
-            <ion-label>MEALS</ion-label>
-          </ion-segment-button>
-        </ion-col>
-        <ion-col size="6">
-          <ion-segment-button value="baggage">
-            <ion-label>BAGGAGE</ion-label>
-          </ion-segment-button>
-        </ion-col>
-      </ion-segment>
-    </ion-row>
-    <ion-row>
+  <ion-segment (ionChange)="change($event)" [value]="selectedService$ | async">
+    <ion-col size="6">
+      <ion-segment-button value="meal">
+        <ion-label>MEALS</ion-label>
+      </ion-segment-button>
+    </ion-col>
+    <ion-col size="6">
+      <ion-segment-button value="baggage">
+        <ion-label>BAGGAGE</ion-label>
+      </ion-segment-button>
+    </ion-col>
+  </ion-segment>
+  <app-flight-list></app-flight-list>
+  <ion-row *ngIf="(selectedService$ | async) == 'meal'">
+    <ion-col>
+      <ion-item>
+        <ion-checkbox (ionChange)="checkVeg($event)" [checked]="veg$ | async"></ion-checkbox>
+        <ion-label>Veg</ion-label>
+      </ion-item>
+    </ion-col>
+    <ion-col>
+      <ion-item>
+        <ion-checkbox (ionChange)="checkNonVeg($event)" [checked]="nonveg$ | async"></ion-checkbox>
+        <ion-label>Non Veg</ion-label>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <!--meal list-->
+  <div *ngIf="(selectedService$ | async) == 'meal'">
+    <ion-row *ngFor="let meal of (totalMeal$ | async | food : (veg$ | async) : (nonveg$ | async))">
       <ion-col>
-        <app-flight-list></app-flight-list>
+        <ion-list>
+          <ion-row>
+            <ion-col size="8">
+              <ion-row>
+                <ion-text>{{ meal.AirlineDescription }} - {{ meal.Quantity }}</ion-text>
+              </ion-row>
+              <ion-row>
+                <ion-text>{{ meal.Price | currency: meal.Currency }}</ion-text>
+              </ion-row>
+            </ion-col>
+            <ion-col size="4">
+              <ion-row>
+                <ion-col size="4">
+                  <ion-icon name="remove-circle-outline"></ion-icon>
+                </ion-col>
+                <ion-col size="4">
+                  <ion-input type="number" hidden></ion-input>
+                  <ion-text>
+                    3
+                  </ion-text>
+                </ion-col>
+                <ion-col size="4">
+                  <ion-icon name="add-circle-outline"></ion-icon>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-list>
       </ion-col>
     </ion-row>
-    <ion-row *ngIf="type == 'meal'">
+  </div>
+  <!--baggage list-->
+  <div *ngIf="(selectedService$ | async) == 'baggage'">
+    <ion-row *ngFor="let baggage of (totalBaggage$ | async)">
       <ion-col>
-        <ion-item>
-          <ion-checkbox></ion-checkbox>
-          <ion-label>Veg</ion-label>
-        </ion-item>
-      </ion-col>
-      <ion-col>
-        <ion-item>
-          <ion-checkbox></ion-checkbox>
-          <ion-label>Non Veg</ion-label>
-        </ion-item>
+        <ion-list>
+          <ion-row>
+            <ion-col size="8">
+              <ion-row>
+                <ion-text>CheckIn Baggage - upto {{ baggage.Weight }} kg</ion-text>
+              </ion-row>
+              <ion-row>
+                <ion-text>{{ baggage.Price | currency: baggage.Currency }}</ion-text>
+              </ion-row>
+            </ion-col>
+            <ion-col size="4">
+              <ion-row>
+                <ion-col size="4">
+                  <ion-icon name="add"></ion-icon>
+                </ion-col>
+                <ion-col size="4">
+                  <ion-input type="number" hidden></ion-input>
+                  <ion-text>
+                    3
+                  </ion-text>
+                </ion-col>
+                <ion-col size="4">
+                  <ion-icon name="remove"></ion-icon>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-list>
       </ion-col>
     </ion-row>
-    <!--meal list-->
-    <div *ngIf="type == 'meal'">
-      <ion-row *ngFor="let meal of meals">
-        <ion-col>
-          <ion-list>
-            <ion-row>
-              <ion-col size="8">
-                <ion-row>
-                  <ion-text>Chickem Tandoori</ion-text>
-                </ion-row>
-                <ion-row>
-                  <ion-text>{{'1282' | currency:'INR'}}</ion-text>
-                </ion-row>
-              </ion-col>
-              <ion-col size="4">
-                <ion-row>
-                  <ion-col size="4">
-                    <ion-icon name="add"></ion-icon>
-                  </ion-col>
-                  <ion-col size="4">
-                    <ion-input type="number" hidden></ion-input>
-                    <ion-text>
-                      3
-                    </ion-text>
-                  </ion-col>
-                  <ion-col size="4">
-                    <ion-icon name="remove"></ion-icon>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-          </ion-list>
-        </ion-col>
-      </ion-row>
-    </div>
-    <!--baggage list-->
-    <div *ngIf="type == 'baggage'">
-      <ion-row *ngFor="let baggage of baggages">
-        <ion-col>
-          <ion-list>
-            <ion-row>
-              <ion-col size="8">
-                <ion-row>
-                  <ion-text>CheckIn Baggage - upto 20 kg</ion-text>
-                </ion-row>
-                <ion-row>
-                  <ion-text>{{'1282' | currency:'INR'}}</ion-text>
-                </ion-row>
-              </ion-col>
-              <ion-col size="4">
-                <ion-row>
-                  <ion-col size="4">
-                    <ion-icon name="add"></ion-icon>
-                  </ion-col>
-                  <ion-col size="4">
-                    <ion-input type="number" hidden></ion-input>
-                    <ion-text>
-                      3
-                    </ion-text>
-                  </ion-col>
-                  <ion-col size="4">
-                    <ion-icon name="remove"></ion-icon>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-          </ion-list>
-        </ion-col>
-      </ion-row>
-    </div>
-  </ion-grid>
+  </div>
 </ion-content>
+
+
 <ion-footer>
   <ion-toolbar>
     <ion-row class="ion-justify-content-between">

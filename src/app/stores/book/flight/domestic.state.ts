@@ -1,7 +1,7 @@
 import { Selector, Action, State, Store, StateContext } from '@ngxs/store';
 import { flightResult, flightData } from 'src/app/models/search/flight';
 import { SSR } from '../../result/flight.state';
-import { bookObj, value, FLightBookState, rt_uapi_params, rt_sendRequest, SetFirstPassengers, rt_kioskRequest, SetFare } from '../flight.state';
+import { bookObj, value, FLightBookState, rt_uapi_params, rt_sendRequest, SetFirstPassengers, rt_kioskRequest, SetFare, SetMeal, SetBaggage } from '../flight.state';
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { DomesticResultState } from '../../result/flight/domestic.state';
 import { RoundTripSearch, RoundTripSearchState } from '../../search/flight/round-trip.state';
@@ -106,10 +106,10 @@ export class DomesticBookState {
 
         let depFQ = null;
         let depPriceChange = false;
-        let depSSR = null;
+        let depSSR : SSR = null;
         let reFQ = null;
         let rePriceChange = false;
-        let reSSR = null;
+        let reSSR : SSR = null;
 
         const loading = await this.loadingCtrl.create({
             spinner: "crescent"
@@ -141,10 +141,28 @@ export class DomesticBookState {
                 let reResponse = JSON.parse(returnFQResponse.data).response;
                 console.log(depResponse, reResponse);
                 if (depResponse.Results && reResponse.Results) {
+
                     depFQ = depResponse.Results;
                     depPriceChange = depResponse.IsPriceChanged;
                     reFQ = reResponse.Results;
                     rePriceChange = reResponse.IsPriceChanged;
+
+                    states.patchState({
+                        departure: {
+                            fareQuote: depFQ,
+                            isPriceChanged: depPriceChange,
+                            ssr: depSSR,
+                            flight: this.domesticbookData(depFQ)
+                        },
+                        return: {
+                            fareQuote: reFQ,
+                            isPriceChanged: rePriceChange,
+                            ssr: reSSR,
+                            flight: this.domesticbookData(reFQ)
+                        }
+                    });
+
+
                 }
                 else if (depResponse.Error.ErrorCode == 2 || reResponse.Error.ErrorCode == 2) {
                     console.log(depResponse.Error.ErrorMessage);
@@ -162,6 +180,11 @@ export class DomesticBookState {
         }
         catch (error) {
             console.log(error);
+            if (error.status == -4) {
+                loading.dismiss();
+                failedAlert.message = "Timeout, Try Again";
+                return;
+            }
         }
 
         try {
@@ -172,26 +195,45 @@ export class DomesticBookState {
                 depSSR = JSON.parse(departureSSRResponse.data).response;
                 reSSR = JSON.parse(returnSSRResponse.data).response;
                 console.log(depSSR, reSSR);
+
+                states.patchState({
+                    departure: {
+                        fareQuote: states.getState().departure.fareQuote,
+                        isPriceChanged: states.getState().departure.isPriceChanged,
+                        ssr: depSSR,
+                        flight: states.getState().departure.flight
+                    },
+                    return: {
+                        fareQuote: states.getState().return.fareQuote,
+                        isPriceChanged: states.getState().return.isPriceChanged,
+                        ssr: reSSR,
+                        flight: states.getState().return.flight
+                    }
+                });
+
+                this.store.dispatch(new SetMeal(depSSR.MealDynamic, reSSR.MealDynamic));
+                this.store.dispatch(new SetBaggage(depSSR.Baggage, reSSR.Baggage));
+
+                if (depSSR.MealDynamic) {
+                    this.store.dispatch(new SetMeal(depSSR.MealDynamic, reSSR.MealDynamic));
+                }
+                else if (depSSR.Meal) {
+                    this.store.dispatch(new SetMeal(depSSR.Meal, reSSR.Meal));
+                }
+
+                if (depSSR.Baggage) {
+                    this.store.dispatch(new SetBaggage(depSSR.Baggage, reSSR.Baggage));
+                }
             }
         }
         catch (error) {
             console.log(error);
-        }
-
-        states.patchState({
-            departure: {
-                fareQuote: depFQ,
-                isPriceChanged: depPriceChange,
-                ssr: depSSR,
-                flight: this.domesticbookData(depFQ)
-            },
-            return : {
-                fareQuote: reFQ,
-                isPriceChanged: rePriceChange,
-                ssr: reSSR,
-                flight: this.domesticbookData(reFQ)
+            if (error.status == -4) {
+                loading.dismiss();
+                failedAlert.message = "Timeout, Try Again";
+                return;
             }
-        });
+        }
 
         this.store.dispatch(new SetFare(states.getState().departure.fareQuote.Fare, states.getState().return.fareQuote.Fare));
         this.store.dispatch(new SetFirstPassengers(this.store.selectSnapshot(SearchState.getSearchType)));

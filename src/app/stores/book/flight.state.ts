@@ -26,9 +26,26 @@ export interface flight{
     comment: string,
 
     fare: fareObj
+
+    meal: bookmeal
+    baggage: bookbaggage
+    
+    selectedService: string
+    veg: boolean
+    nonveg: boolean
 }
 
 //////////////////////////////////////////////
+
+export interface bookmeal {
+    onward: meal[]
+    return: meal[]
+}
+
+export interface bookbaggage {
+    onward: baggage[]
+    return: baggage[]
+}
 
 export interface fareObj{
     AdditionalTxnFeeOfrd: number
@@ -196,16 +213,32 @@ export interface services {
 
 export interface baggage {
     AirlineCode: string
+    Origin: string
+    Destination: string
     FlightNumber: string
-    WayType: number
-    Code: string
+    
     Description: number
+    Code: string
     Weight: number
     Currency: string
     Price: number
+    WayType: number
+    option_label: string
+}
+
+export interface meal{
+    AirlineCode: string
     Origin: string
     Destination: string
-    option_label:string
+    FlightNumber: string
+
+    AirlineDescription: string
+    Code: string
+    Description: number
+    Currency: string
+    Price: number
+    WayType: number
+    Quantity: number
 }
 
 export interface fare {
@@ -455,6 +488,18 @@ export class SetFare {
     }
 }
 
+export class SetMeal {
+    static readonly type = "[flight_book] SetMeal";
+    constructor(public onward: meal[][] & meal[], public ret?: meal[][] & meal[]) {
+    }
+}
+
+export class SetBaggage {
+    static readonly type = "[flight_book] SetBaggage";
+    constructor(public onward: baggage[][] & baggage[], public ret?: baggage[][] & baggage[]) {
+    }
+}
+
 export class CancellationRisk {
     static readonly type = "[flight_book] CancellationRisk";
     constructor(public risk: string) {
@@ -504,22 +549,43 @@ export class DeselectPassenger {
 }
 
 export class MailCC {
-    static readonly type = "[OneWay] MailCC";
+    static readonly type = "[flight_book] MailCC";
     constructor(public mail: string[]) {
 
     }
 }
 
 export class Purpose {
-    static readonly type = "[OneWay] Purpose";
+    static readonly type = "[flight_book] Purpose";
     constructor(public purpose: string) {
 
     }
 }
 
 export class Comments {
-    static readonly type = "[OneWay] Comment";
+    static readonly type = "[flight_book] Comment";
     constructor(public comment: string) {
+
+    }
+}
+
+export class SelectService {
+    static readonly type = "[flight_book] SelectService";
+    constructor(public service : string) {
+
+    }
+}
+
+export class SetVeg {
+    static readonly type = "[flight_book] SetVeg";
+    constructor(public veg: boolean) {
+
+    }
+}
+
+export class SetNonVeg {
+    static readonly type = "[flight_book] SetNonVeg";
+    constructor(public nonveg: boolean) {
 
     }
 }
@@ -536,7 +602,18 @@ export class Comments {
         mail: [],
         purpose: null,
         comment: null,
-        fare : null
+        fare: null,
+        meal: {
+            onward: null,
+            return : null
+        },
+        baggage: {
+            onward: null,
+            return: null
+        },
+        selectedService: 'meal',
+        veg: true,
+        nonveg: true
     },
     children: [
         OneWayBookState,
@@ -603,6 +680,131 @@ export class FLightBookState {
     @Selector()
     static getFare(states: flight): fareObj {
         return states.fare;
+    }
+
+    @Selector()
+    static getOnwardMeals(states: flight): meal[] {
+        return states.meal.onward;
+    }
+
+    @Selector()
+    static getReturnMeals(states: flight): meal[] {
+        return states.meal.return;
+    }
+
+    @Selector()
+    static getOnwardBaggages(states: flight): baggage[] {
+        return states.baggage.onward;
+    }
+
+    @Selector()
+    static getReturnBaggages(states: flight): baggage[] {
+        return states.baggage.return;
+    }
+
+    @Selector()
+    static getSelectedService(states: flight): string {
+        return states.selectedService;
+    }
+
+    @Selector()
+    static getVeg(states: flight): boolean {
+        return states.veg;
+    }
+
+    @Selector()
+    static getNonVeg(states: flight): boolean {
+        return states.nonveg;
+    }
+
+    @Action(SetVeg)
+    setVeg(states: StateContext<flight>, action: SetVeg) {
+        states.patchState({
+            veg: action.veg
+        });
+    }
+
+    @Action(SetNonVeg)
+    setNonVeg(states: StateContext<flight>, action: SetNonVeg) {
+        states.patchState({
+            nonveg: action.nonveg
+        });
+    }
+
+    @Action(SelectService)
+    selectService(states: StateContext<flight>, action: SelectService) {
+        states.patchState({
+            selectedService: action.service
+        });
+    }
+
+    @Action(SetMeal)
+    setMeal(states: StateContext<flight>, action: SetMeal) {
+
+        let onward: meal[] = null;
+        let ret: meal[] = null;
+
+        if (action.onward != null || action.onward != undefined) {
+            if (action.onward.some((el : meal[]) => Array.isArray(el))) {
+                onward = _.flattenDeep(action.onward);
+            }
+            else {
+                onward = action.onward;
+            }
+            onward = onward.filter(el => el.hasOwnProperty('Price') && el.hasOwnProperty('Quantity') && el.Price !== 0 && el.Quantity !== 0);
+        }
+
+        if (action.ret != null || action.ret != undefined) {
+            if (action.ret.some((el: meal[]) => Array.isArray(el))) {
+                ret = _.flattenDeep(action.ret);
+            }
+            else {
+                ret = action.ret;
+            }
+            ret = ret.filter(el => el.hasOwnProperty('Price') && el.hasOwnProperty('Quantity') && el.Price !== 0 && el.Quantity !== 0);
+        }
+
+
+        states.patchState({
+            meal: {
+                onward: onward,
+                return: ret
+            }
+        });
+    }
+
+    @Action(SetBaggage)
+    setBaggage(states: StateContext<flight>, action: SetBaggage) {
+
+        let onward: baggage[] = null;
+        let ret: baggage[] = null;
+
+        if (action.onward != null || action.onward != undefined) {
+            if (action.onward.some((el: baggage[]) => Array.isArray(el))) {
+                onward = _.flattenDeep(action.onward);
+            }
+            else {
+                onward = action.onward;
+            }
+            onward = onward.filter(el => el.hasOwnProperty('Price') && el.hasOwnProperty('Weight') && el.Price !== 0 && el.Weight !== 0);
+        }
+
+        if (action.ret != null || action.ret != undefined) {
+            if (action.ret.some((el: baggage[]) => Array.isArray(el))) {
+                ret = _.flattenDeep(action.ret);
+            }
+            else {
+                ret = action.ret;
+            }
+            ret = ret.filter(el => el.hasOwnProperty('Price') && el.hasOwnProperty('Weight') &&  el.Price !== 0 && el.Weight !== 0);
+        }
+
+        states.patchState({
+            baggage: {
+                onward: onward,
+                return: ret
+            }
+        });
     }
 
     @Action(SetFare)

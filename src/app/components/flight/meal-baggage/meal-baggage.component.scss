@@ -1,7 +1,13 @@
 @import "../../../../style/util/variable.scss";
 
-ion-grid{
-    >ion-row:nth-child(3){
+ion-content{
+    >ion-segment{
+    }
+    >app-flight-list{
+        width:100%;
+        height:100%;
+    }
+    >ion-row{
         ion-item{
             >ion-checkbox{
                 background: transparent;
@@ -11,14 +17,7 @@ ion-grid{
             }
         }
     }
-    >ion-row:nth-child(2){
-        height:60px;
-        background:#dcdada;
-        >app-flight-list{
-            width:100%;
-            height:100%;
-        }
-    }
+
 }
 
 ion-list{

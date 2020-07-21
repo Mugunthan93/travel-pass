@@ -18,6 +18,8 @@ import { AddGuestComponent } from 'src/app/components/hotel/add-guest/add-guest.
 import { TermsConditionsComponent } from 'src/app/components/hotel/terms-conditions/terms-conditions.component';
 import { BookConfirmationComponent } from 'src/app/components/flight/book-confirmation/book-confirmation.component';
 import { CustomCalendarComponent } from 'src/app/components/shared/custom-calendar/custom-calendar.component';
+import { SharedModule } from 'src/app/modules/shared/shared.module';
+import { FoodPipe } from 'src/app/pipes/food/food.pipe';
 
 @NgModule({
   imports: [
@@ -26,7 +28,8 @@ import { CustomCalendarComponent } from 'src/app/components/shared/custom-calend
     ReactiveFormsModule,
     IonicModule,
     BookPageRoutingModule,
-    CalendarModule
+    CalendarModule,
+    SharedModule
   ],
   declarations: [
     BookPage,
@@ -39,7 +42,8 @@ import { CustomCalendarComponent } from 'src/app/components/shared/custom-calend
     AddGuestComponent,
     TermsConditionsComponent,
     BookConfirmationComponent,
-    CustomCalendarComponent
+    CustomCalendarComponent,
+    FoodPipe
   ],
   entryComponents: [
     PassengerInfoComponent,

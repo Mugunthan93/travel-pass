@@ -1,5 +1,5 @@
 import { State, Action, Selector, Store, StateContext } from "@ngxs/store";
-import { bookObj, FLightBookState, sendRequest, SetFirstPassengers, kioskRequest, value, SetFare } from '../flight.state';
+import { bookObj, FLightBookState, sendRequest, SetFirstPassengers, kioskRequest, value, SetFare, SetMeal, SetBaggage } from '../flight.state';
 import { flightResult, flightData } from 'src/app/models/search/flight';
 import { SSR } from '../../result/flight.state';
 import { Navigate } from '@ngxs/router-plugin';
@@ -110,14 +110,15 @@ export class OneWayBookState{
 
         try {
             const fairQuoteResponse = await this.flightService.fairQuote(this.store.selectSnapshot(OneWayResultState.getSelectedFlight).fareRule);
+            console.log(fairQuoteResponse);
             if (fairQuoteResponse.status == 200) {
                 let response = JSON.parse(fairQuoteResponse.data).response;
                 if (response.Results) {
                     states.patchState({
                         fareQuote: response.Results,
-                        isPriceChanged: response.IsPriceChanged
+                        isPriceChanged: response.IsPriceChanged,
+                        flight: this.onewaybookData(response.Results)
                     });
-
                 }
                 else if (response.Error.ErrorCode == 6) {
                     console.log(response.Error.ErrorMessage);
@@ -129,24 +130,40 @@ export class OneWayBookState{
         }
         catch (error) {
             console.log(error);
+            if (error.status == -4) {
+                loading.dismiss();
+                failedAlert.message = "Timeout, Try Again";
+                return;
+            }
         }
 
         try {
             const SSRResponse = await this.flightService.SSR(this.store.selectSnapshot(OneWayResultState.getSelectedFlight).fareRule);
             if (SSRResponse.status == 200) {
-                let response = JSON.parse(SSRResponse.data).response;
+                let response : SSR = JSON.parse(SSRResponse.data).response;
                 states.patchState({
                     ssr : response
-                    });
+                });
+                if (response.MealDynamic) {
+                    this.store.dispatch(new SetMeal(response.MealDynamic, null));
+                }
+                else if (response.Meal) {
+                    this.store.dispatch(new SetMeal(response.Meal, null));
+                }
+
+                if (response.Baggage) {
+                    this.store.dispatch(new SetBaggage(response.Baggage, null));
+                }
             }
         }
         catch (error) {
             console.log(error);
+            if (error.status == -4) {
+                loading.dismiss();
+                failedAlert.message = "Timeout, Try Again";
+                return;
+            }
         }
-
-        states.patchState({
-            flight: this.onewaybookData(states.getState().fareQuote)
-        });
 
         this.store.dispatch(new SetFare(states.getState().fareQuote.Fare));
         this.store.dispatch(new SetFirstPassengers(this.store.selectSnapshot(SearchState.getSearchType)));

@@ -1,5 +1,5 @@
 import { State, Action, Selector, Store, StateContext } from "@ngxs/store";
-import { bookObj, FLightBookState, sendRequest, SetFirstPassengers, kioskRequest, value, SetFare } from '../flight.state';
+import { bookObj, FLightBookState, sendRequest, SetFirstPassengers, kioskRequest, value, SetFare, SetMeal, SetBaggage } from '../flight.state';
 import { flightResult, flightData } from 'src/app/models/search/flight';
 import { SSR } from '../../result/flight.state';
 import { Navigate } from '@ngxs/router-plugin';
@@ -104,7 +104,8 @@ export class MultiCityBookState {
                 if (response.Results) {
                     states.patchState({
                         fareQuote: response.Results,
-                        isPriceChanged: response.IsPriceChanged
+                        isPriceChanged: response.IsPriceChanged,
+                        flight: this.multicitybookData(response.Results)
                     });
 
                 }
@@ -118,26 +119,43 @@ export class MultiCityBookState {
         }
         catch (error) {
             console.log(error);
+            if (error.status == -4) {
+                loading.dismiss();
+                failedAlert.message = "Timeout, Try Again";
+                return;
+            }
         }
 
         try {
             const SSRResponse = await this.flightService.SSR(this.store.selectSnapshot(MultiCityResultState.getSelectedFlight).fareRule);
             if (SSRResponse.status == 200) {
-                let response = JSON.parse(SSRResponse.data).response;
+                let response : SSR = JSON.parse(SSRResponse.data).response;
                 states.patchState({
                     ssr: response
                 });
+
+                if (response.MealDynamic) {
+                    this.store.dispatch(new SetMeal(response.MealDynamic, null));
+                }
+                else if (response.Meal) {
+                    this.store.dispatch(new SetMeal(response.Meal, null));
+                }
+
+                if (response.Baggage) {
+                    this.store.dispatch(new SetBaggage(response.Baggage, null));
+                }
             }
         }
         catch (error) {
             console.log(error);
+            if (error.status == -4) {
+                loading.dismiss();
+                failedAlert.message = "Timeout, Try Again";
+                return;
+            }
         }
 
         console.log(states.getState().fareQuote);
-
-        states.patchState({
-            flight: this.multicitybookData(states.getState().fareQuote)
-        });
 
         this.store.dispatch(new SetFare(states.getState().fareQuote.Fare));
         this.store.dispatch(new SetFirstPassengers(this.store.selectSnapshot(SearchState.getSearchType)));

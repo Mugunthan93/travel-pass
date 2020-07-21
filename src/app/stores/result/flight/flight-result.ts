@@ -124,6 +124,7 @@ export class BaseFlightResult {
         resultObj = {
             name: result.Segments[0][0].Airline.AirlineName,
             fare: result.Fare.PublishedFare,
+            refund: result.IsRefundable,
             Duration: totalDuration,
             departure: result.Segments[0][0].Origin.DepTime,
             arrival: lastArrival,

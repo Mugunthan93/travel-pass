@@ -25,6 +25,7 @@ export interface sortButton {
 
 export interface resultObj {
     fare: number
+    refund: boolean
     name: string
     currency: string
     trips: trips[]
@@ -127,9 +128,10 @@ export interface itineraryconnectingflight {
 }
 
 export interface SSR {
-    Baggage: any[][]
+    Baggage: any[][] & any[]
     Error: { ErrorCode: number, ErrorMessage: string }
-    MealDynamic: any[][]
+    MealDynamic: any[][] & any[]
+    Meal: any[][] & any[]
     ResponseStatus: number
     SeatDynamic: any[]
     specialServices:any[]

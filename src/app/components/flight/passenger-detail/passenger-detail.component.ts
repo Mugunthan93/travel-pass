@@ -99,18 +99,39 @@ export class PassengerDetailComponent implements OnInit {
     }
 
     this.type = this.store.selectSnapshot(BookState.getBookType);
-
     this.Passenger.valueChanges.subscribe(el => console.log(this.Passenger));
 
   }
   
   async addMeal() {
+    let prop: any = null;
+    if (this.form == 'add') {
+      prop = {
+        'onward': {
+          Meal: [],
+          MealTotal: 0,
+          BagTotal: 0,
+          Baggage: []
+        },
+        'return': {
+          Meal: [],
+          MealTotal: 0,
+          BagTotal: 0,
+          Baggage: []
+        }
+      }
+    }
+    else if (this.form == 'edit') {
+      prop = {
+        'onward': this.pax.onwardExtraServices,
+        'return': this.pax.returnExtraServices
+      }
+    }
+
     const modal = await this.modalCtrl.create({
       component: MealBaggageComponent,
       id: 'passenger-meal',
-      componentProps: {
-
-      }
+      componentProps: prop
     });
 
     return await modal.present();

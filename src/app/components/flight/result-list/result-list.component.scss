@@ -8,10 +8,15 @@ ion-content{
     }
     >ion-row {
         width: 100%;
-    
         >ion-col {
             @include flex-col-grid;
-    
+            min-height: -webkit-fill-available;
+            >ion-text{
+                text-align: center;
+                margin-top: 20px;
+                font-size: 17px !important;
+                font-weight: bold;
+            }
             >mat-accordion {
                 @include flex-col-grid;
                 height:100%;
@@ -29,8 +34,17 @@ ion-content{
                             @include flex-col-grid;
 
                             >ion-row.two{
-                                >ion-title{
-                                    margin-left:5px;
+                                >ion-row.heading{
+                                    height : 17px !important; 
+                                    justify-content: left;
+                                    >ion-title{
+                                        max-width: fit-content;
+                                        margin-left:5px;
+                                    }
+                                    >ion-icon{
+                                        font-size: 20px !important;
+                                        margin: 0px 8px;
+                                    }
                                 }
                             }
 

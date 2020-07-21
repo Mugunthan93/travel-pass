@@ -9,6 +9,7 @@ import { OneWayPageRoutingModule } from './one-way-routing.module';
 import { OneWayPage } from './one-way.page';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
+import { PipeModule } from 'src/app/modules/pipe.module';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { SharedModule } from 'src/app/modules/shared/shared.module';
     IonicModule,
     OneWayPageRoutingModule,
     MatExpansionModule,
-    SharedModule
+    SharedModule,
+    PipeModule
   ],
   declarations: [
     OneWayPage

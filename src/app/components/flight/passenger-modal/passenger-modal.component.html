@@ -26,18 +26,27 @@
         <ion-text>{{traveller.value.infant}}</ion-text>
         <ion-icon size="large" name="remove-circle-outline" (click)="decrease('infant')"></ion-icon>
       </ion-row> -->
-      <ion-row>
-        <ion-button (click)="close()">
-          <ion-text>Cancel</ion-text>
-        </ion-button>
-        <ion-button type="submit">
-          <ion-text>Confirm</ion-text>
-        </ion-button>
-      </ion-row>
       <ion-input type="number" formControlName="adult" hidden></ion-input>
       <ion-input type="number" formControlName="child" hidden></ion-input>
       <ion-input type="number" formControlName="infant" hidden></ion-input>
     </form>
   </ion-grid>
 </ion-content>
+
+<ion-footer>
+  <form [formGroup]="traveller" (ngSubmit)="confirm()">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="close()">
+          <ion-text>Cancel</ion-text>
+        </ion-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-button type="submit">
+          <ion-text>Confirm</ion-text>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </form>
+</ion-footer>
 

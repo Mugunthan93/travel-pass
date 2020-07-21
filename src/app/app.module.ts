@@ -31,7 +31,7 @@ import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 @NgModule({
   declarations: [
     AppComponent,
-    ApproveRequestComponent
+    ApproveRequestComponent,
   ],
   entryComponents: [
     ApproveRequestComponent
