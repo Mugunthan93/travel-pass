@@ -46,6 +46,7 @@ export class NativeHttpService implements OnInit{
     this.http.setHeader(environment.baseURL, "Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setHeader(environment.baseURL, "withCredentials", "true");
+    this.http.setRequestTimeout(300);
   }
 
   setAuth(username: string, password: string): void  {

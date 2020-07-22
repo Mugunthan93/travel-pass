@@ -36,10 +36,8 @@
     <ion-icon name="close" (click)="deletePassneger(pax)"></ion-icon>
     <ion-text (click)="editPassenger(pax)">Edit</ion-text>
   </ion-row>
-  <ion-item>
-    <ion-row (click)="getDetail()">
-      <ion-icon name="add"></ion-icon>
-      <ion-text>Add Adults</ion-text>
-    </ion-row>
-  </ion-item>
+  <ion-button (click)="getDetail()">
+    <ion-icon name="add"></ion-icon>
+    <ion-text>Add Adults</ion-text>
+  </ion-button>
 </ion-content>

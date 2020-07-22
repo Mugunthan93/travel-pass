@@ -12,6 +12,11 @@ import { CompanyState } from 'src/app/stores/company.state';
 import { CityModalComponent } from '../../shared/city-modal/city-modal.component';
 import { city } from 'src/app/stores/shared.state';
 import { AlertOptions } from '@ionic/core';
+import { OneWayBookState } from 'src/app/stores/book/flight/oneway.state';
+import { OneWaySearchState } from 'src/app/stores/search/flight/oneway.state';
+import { RoundTripSearchState } from 'src/app/stores/search/flight/round-trip.state';
+import { MultiCitySearchState } from 'src/app/stores/search/flight/multi-city.state';
+import { SearchState } from 'src/app/stores/search.state';
 
 @Component({
   selector: 'app-passenger-detail',
@@ -35,7 +40,7 @@ export class PassengerDetailComponent implements OnInit {
   regex: any = {
     email: "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$",
     phone_number: "^[0-9]{10}$",
-    passport: "^[A-PR-WYa-pr-wy][1-9]\\d\\s?\\d{4}[1-9]$",
+    passport: "^(?!^0+$)[a-zA-Z0-9]{6,9}$",
     gst:"^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$"
   }
 
@@ -64,10 +69,10 @@ export class PassengerDetailComponent implements OnInit {
         "DateOfBirth": new FormControl(null, [Validators.required]),
         "Address": new FormControl(null, [Validators.required]),
         "City": new FormControl(null, [Validators.required]),
-        "ContactNo": new FormControl(null, [Validators.required, Validators.pattern(this.regex.phone_number)]),
-        "PassportNo": new FormControl(null, [Validators.required, Validators.pattern(this.regex.passport)]),
+        "ContactNo": new FormControl(null,[Validators.required, Validators.pattern(this.regex.phone_number)]),
+        "PassportNo": this.passportValidation() == 'international' ? new FormControl(null, [Validators.required, Validators.pattern(this.regex.passport)]) : new FormControl(null),
         "nationality": new FormControl(null),
-        "PassportExpiry": new FormControl(null,[Validators.required]),
+        "PassportExpiry": this.passportValidation() == 'international' ? new FormControl(null, [Validators.required]) : new FormControl(null),
         "ftnumber": new FormControl(null),
         "CompanyName": new FormControl(this.company.company_name, [Validators.required]),
         "CompanyEmail": new FormControl(this.company.company_email, [Validators.required, Validators.pattern(this.regex.email)]),
@@ -86,9 +91,9 @@ export class PassengerDetailComponent implements OnInit {
         "Address": new FormControl(this.pax.AddressLine1, [Validators.required]),
         "City": new FormControl(this.pax.City, [Validators.required]),
         "ContactNo": new FormControl(this.pax.ContactNo, [Validators.required, Validators.pattern(this.regex.phone_number)]),
-        "PassportNo": new FormControl(this.pax.PassportNo, [Validators.required, Validators.pattern(this.regex.passport)]),
+        "PassportNo": this.passportValidation() == 'international' ? new FormControl(null, [Validators.required, Validators.pattern(this.regex.passport)]) : new FormControl(null),
         "nationality": new FormControl(this.pax.nationality),
-        "PassportExpiry": new FormControl(this.pax.PassportExpiry, [Validators.required]),
+        "PassportExpiry": this.passportValidation() == 'international' ? new FormControl(null, [Validators.required]) : new FormControl(null),
         "ftnumber": new FormControl(this.pax.ftnumber),
         "CompanyName": new FormControl(this.pax.GSTCompanyName, [Validators.required]),
         "CompanyEmail": new FormControl(this.pax.GSTCompanyEmail, [Validators.required, Validators.pattern(this.regex.email)]),
@@ -231,6 +236,14 @@ export class PassengerDetailComponent implements OnInit {
       'initial': (this.Passenger.controls[name].value == null) && !this.formSubmit,
       'valid':this.Passenger.controls[name].valid && this.formSubmit,
       'invalid':this.Passenger.controls[name].invalid && this.formSubmit
+    }
+  }
+
+  passportValidation() : string {
+    switch (this.store.selectSnapshot(SearchState.getSearchType)) {
+      case 'one-way': return this.store.selectSnapshot(OneWaySearchState.getTripType); break;
+      case 'round-trip': return this.store.selectSnapshot(RoundTripSearchState.getTripType); break;
+      case 'multi-city': return this.store.selectSnapshot(MultiCitySearchState.getTripType); break;
     }
   }
 

@@ -30,7 +30,6 @@ export class ResultSortingComponent implements OnInit {
   ngOnInit() {
     this.currentButton$ = this.store.select(FlightResultState.getSortBy);
     this.buttons$ = this.store.select(FlightResultState.getButtons);
-    this.currentButton$.subscribe(el => this.currentButton = el);
   }
   
   sortChange(evt: CustomEvent) {

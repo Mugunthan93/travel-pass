@@ -98,9 +98,22 @@ export class MultiCitySearchState extends BaseFlightSearch {
 
     @Action(MultiCityForm)
     multicityForm(states: StateContext<multicitySearch>, action: MultiCityForm) {
+
+        action.flightform.trips.forEach(
+            el => {
+                if (el.from.country_code == el.to.country_code) {
+                    states.patchState({
+                        tripType: 'domestic'
+                    })
+                }
+                else if (el.from.country_code != el.to.country_code) {
+                    states.patchState({
+                        tripType: 'international'
+                    })
+                }
+        });
         states.patchState({
-            formData : action.flightform,
-            tripType: 'international'
+            formData : action.flightform
         });
     }
 

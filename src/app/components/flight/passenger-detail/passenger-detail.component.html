@@ -69,17 +69,26 @@
     <ion-item lines="full">
       <ion-input type="number" placeholder="Phone Number" formControlName="ContactNo" [ngClass]="errorClass('ContactNo')" required pattern></ion-input>
     </ion-item>
-    <ion-item lines="full">
+    <ion-item lines="full" *ngIf="passportValidation() == 'domestic'">
+      <ion-input placeholder="Passport Number" formControlName="PassportNo"
+        [ngClass]="errorClass('PassportNo')"></ion-input>
+    </ion-item>
+    <ion-item lines="full" *ngIf="passportValidation() == 'international'">
       <ion-input placeholder="Passport Number" formControlName="PassportNo" required pattern
         [ngClass]="errorClass('PassportNo')"></ion-input>
     </ion-item>
     <ion-item lines="full">
       <ion-input type="text" slot="start" placeholder="Nationality" formControlName="nationality"></ion-input>
     </ion-item>
-    <ion-item lines="full">
+    <ion-item lines="full" *ngIf="passportValidation() == 'domestic'">
       <ion-datetime displayFormat="DD-MMM-YYYY" type="date"
-        placeholder="Select Passport Expiry Date" max="2050" formControlName="PassportExpiry" required
+        placeholder="Select Passport Expiry Date" max="2050" formControlName="PassportExpiry"
         [ngClass]="errorClass('PassportExpiry')">
+      </ion-datetime>
+    </ion-item>
+    <ion-item lines="full" *ngIf="passportValidation() == 'international'">
+      <ion-datetime displayFormat="DD-MMM-YYYY" type="date" placeholder="Select Passport Expiry Date" max="2050"
+        formControlName="PassportExpiry" required [ngClass]="errorClass('PassportExpiry')">
       </ion-datetime>
     </ion-item>
     <ion-item lines="full">
@@ -106,7 +115,7 @@
     <ion-item lines="full">
       <ion-input type="number" placeholder="Company Number" formControlName="CompanyNumber" [ngClass]="errorClass('CompanyNumber')" required pattern></ion-input>
     </ion-item>
-    <ion-button expand="block" fill="solid" *ngIf="true">
+    <ion-button expand="block" fill="solid" *ngIf="false">
       <ion-icon name="add"></ion-icon>
       <ion-text (click)="addMeal()">Meal & Baggage</ion-text>
     </ion-button>

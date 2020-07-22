@@ -4,6 +4,8 @@ import { SearchType, SearchMode } from './search.state';
 import { JourneyType } from './search/flight.state';
 import { MenuController } from '@ionic/angular';
 import { SharedService } from '../services/shared/shared.service';
+import * as _ from 'lodash';
+import * as moment from 'moment';
 
 export interface dashboard {
     upcomingTrips: upcomingTrips[]
@@ -102,8 +104,26 @@ export class DashboardState{
         try {
             const upcomingTripsResponse = await this.sharedService.upcomingTrips();
             let response = JSON.parse(upcomingTripsResponse.data);
+
+            let partition = _.partition(response.data, (el) => {
+                return moment({}).isBefore(el.travel_date)
+            })
+            partition[0] = partition[0].sort((a, b) => {
+                if (moment(b.travel_date).isAfter(a.travel_date)) {
+                    return -1;
+                }
+                else if (moment(b.travel_date).isBefore(a.travel_date)) {
+                    return 1;
+                }
+                else {
+                    return 0;
+                }
+            })
+
+            let totalResponse: any[] = partition[0].concat(partition[1]);
+
             states.patchState({
-                upcomingTrips: this.tripResponse(response.data)
+                upcomingTrips: this.tripResponse(totalResponse)
             });
             console.log(response.data);
         }

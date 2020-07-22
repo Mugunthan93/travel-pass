@@ -193,7 +193,7 @@ export class SortBy {
         ],
         emailtrip: null,
         emailItinerary: [],
-        currentSort: { label: 'departure', state: 'default', property: 'departure' }
+        currentSort: { label: 'price', state: 'rotated', property: 'fare' }
     },
     children: [
         OneWayResultState,

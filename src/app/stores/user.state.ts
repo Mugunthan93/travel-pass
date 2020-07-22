@@ -97,7 +97,7 @@ export class UserState {
 
     @Selector()
     static isManager(state: user): boolean {
-        return state.role == 'manager' ? true : false;
+        return (state.role == 'manager') || (state.role == 'admin') ? true : false;
     }
 
     @Selector()

@@ -40,4 +40,11 @@ ion-content{
             width:10%;
         }
     }
+    >ion-button{
+        margin-left: 16px;
+        margin-top: 10px;
+        >ion-icon{
+            color: white;
+        }
+    }
 }

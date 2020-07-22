@@ -3,6 +3,7 @@ import { Store, State, Action, StateContext, Selector } from '@ngxs/store';
 import { flightSearchResult, flightResult, flightData } from 'src/app/models/search/flight';
 import { FilterState, filter, GetAirlines } from '../filter.state';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 import { BaseFlightResult } from './flight-result';
 
 export interface onewayResult {
