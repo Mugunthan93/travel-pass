@@ -11,7 +11,7 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-    <ion-item>
+    <ion-item *ngIf="!(isAdmin$ | async)">
       <ion-label slot="start">Approver</ion-label>
       <ion-label slot="end">{{approverName$ | async}}</ion-label>
     </ion-item>

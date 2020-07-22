@@ -21,12 +21,13 @@ import { InternationalSendRequest } from 'src/app/stores/book/flight/internation
 })
 export class BookConfirmationComponent implements OnInit {
 
-  ccAlertOptions: AlertOptions;
-  purposeAlertOptions: AlertOptions;
   managers$: Observable<user[]>;
   approverName$: Observable<string>;
+  isAdmin$: Observable<boolean>;
   requestType: string;
-
+  
+  ccAlertOptions: AlertOptions;
+  purposeAlertOptions: AlertOptions;
 
   purposeArray : string[] = ['Project', 'Offsite meet', 'Sales', 'Support', 'Internal', 'Conference', 'Training', 'Other', 'Business meet'];
 
@@ -37,6 +38,7 @@ export class BookConfirmationComponent implements OnInit {
     this.approverName$ = this.store.select(UserState.getApproverName);
     this.managers$ = this.store.select(CompanyState.getManagerList);
     this.requestType = this.store.selectSnapshot(ResultState.getResultType);
+    this.isAdmin$ = this.store.select(UserState.isAdmin);
    }
 
   ngOnInit() {

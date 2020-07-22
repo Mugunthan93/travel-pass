@@ -26,4 +26,9 @@
             <ion-text>{{city.city_code}}</ion-text>
         </ion-item>
     </ion-list>
+    <ion-list *ngIf="(hotelcities$ | async).length > 0">
+        <ion-item lines="none" *ngFor="let city of (hotelcities$ | async)" (click)="selectCity(city)">
+            <ion-label>{{city.destination}}</ion-label>
+        </ion-item>
+    </ion-list>
 </ion-content>

@@ -129,6 +129,11 @@ export class UserState {
         return !!state;
     }
 
+    @Selector()
+    static isAdmin(state: user): boolean {
+        return state.approver == null;
+    }
+
     @Action(GetUser)
     getUser(states: StateContext<user>, action: GetUser) {
         states.setState(action.user);

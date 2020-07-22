@@ -63,8 +63,8 @@ export class PassengerDetailComponent implements OnInit {
     if (this.form == 'add') {
       this.Passenger = new FormGroup({
         "Title": new FormControl(null,[Validators.required]),
-        "FirstName": new FormControl(null, [Validators.required]),
-        "LastName": new FormControl(null,[Validators.required]),
+        "FirstName": new FormControl(null, [Validators.required,Validators.minLength(3)]),
+        "LastName": new FormControl(null, [Validators.required,Validators.minLength(3)]),
         "Email": new FormControl(null, [Validators.required, Validators.pattern(this.regex.email)]),
         "DateOfBirth": new FormControl(null, [Validators.required]),
         "Address": new FormControl(null, [Validators.required]),
@@ -84,8 +84,8 @@ export class PassengerDetailComponent implements OnInit {
     else if (this.form == 'edit'){
       this.Passenger = new FormGroup({
         "Title": new FormControl(this.pax.Title, [Validators.required]),
-        "FirstName": new FormControl(this.pax.FirstName, [Validators.required]),
-        "LastName": new FormControl(this.pax.LastName, [Validators.required]),
+        "FirstName": new FormControl(this.pax.FirstName, [Validators.required, Validators.minLength(3)]),
+        "LastName": new FormControl(this.pax.LastName, [Validators.required, Validators.minLength(3)]),
         "Email": new FormControl(this.pax.Email, [Validators.required, Validators.pattern(this.regex.email)]),
         "DateOfBirth": new FormControl(this.pax.DateOfBirth, [Validators.required]),
         "Address": new FormControl(this.pax.AddressLine1, [Validators.required]),

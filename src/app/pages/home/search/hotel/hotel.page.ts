@@ -3,6 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { GuestRoomComponent } from 'src/app/components/hotel/guest-room/guest-room.component';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { CityModalComponent } from 'src/app/components/shared/city-modal/city-modal.component';
 
 @Component({
   selector: 'app-hotel',
@@ -30,6 +31,24 @@ export class HotelPage implements OnInit {
       'checkout': new FormControl(null, [Validators.required])
     });
 
+    this.hotelSearch.valueChanges.subscribe(el => console.log(el));
+  }
+
+  async selectCity() {
+    const modal = await this.modalCtrl.create({
+      component: CityModalComponent
+    });
+
+    modal.onDidDismiss().then(
+      (selectedCity) => {
+        if (selectedCity.role == "backdrop") {
+          return;
+        }
+        this.hotelSearch.controls['city'].patchValue(selectedCity.data);
+      }
+    );
+
+    return await modal.present();
   }
 
   async selectRoom() {

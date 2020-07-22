@@ -45,12 +45,15 @@
         <ion-select-option value="Mrs">Mrs</ion-select-option>
         <ion-select-option value="Mstr">Mstr</ion-select-option>
       </ion-select>
-      <ion-input type="text" placeholder="First & Middle Name" formControlName="FirstName" required
-        [ngClass]="errorClass('FirstName')">
+      <ion-input type="text" placeholder="First & Middle Name" formControlName="FirstName" required [ngClass]="errorClass('FirstName')">
       </ion-input>
+      <ion-text slot="end" *ngIf="Passenger.controls['FirstName'].hasError('minlength')"
+        [ngClass]="errorClass('FirstName')">Min 3 Charatcer</ion-text>
     </ion-item>
     <ion-item lines="full">
       <ion-input type="text" placeholder="Last Name" formControlName="LastName" [ngClass]="errorClass('LastName')" required></ion-input>
+      <ion-text slot="end" *ngIf="Passenger.controls['LastName'].hasError('minlength')"
+        [ngClass]="errorClass('LastName')">Min 3 Charatcer</ion-text>
     </ion-item>
     <ion-item lines="full">
       <ion-input type="email" placeholder="Email" formControlName="Email" [ngClass]="errorClass('Email')" required pattern></ion-input>

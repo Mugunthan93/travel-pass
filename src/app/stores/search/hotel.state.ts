@@ -1,4 +1,5 @@
-import { State } from '@ngxs/store';
+import { State, Action, StateContext } from '@ngxs/store';
+import { SharedService } from 'src/app/services/shared/shared.service';
 
 
 export interface hotelsearch{
@@ -31,6 +32,7 @@ export interface roomguest {
     NoOfChild: number
 }
 
+////////////////////////////////////////////////////////////////////////////
 
 @State<hotelsearch>({
     name: 'hotel_search',
@@ -38,10 +40,11 @@ export interface roomguest {
 })
 export class HotelSearchState {
 
-    constructor() {
+    constructor(
+        private sharedService : SharedService
+    ) {
 
     }
-
 
     
 }

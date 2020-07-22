@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ModalController, IonInput } from '@ionic/angular';
-import { city, SharedState, ClearCity, GetFlightCity, hotelcity } from 'src/app/stores/shared.state';
+import { city, SharedState, GetFlightCity, hotelcity, GetHotelCity } from 'src/app/stores/shared.state';
 import { Store } from '@ngxs/store';
 import { SearchState } from 'src/app/stores/search.state';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
@@ -18,7 +18,7 @@ export class CityModalComponent implements OnInit {
 
   flightcities$: Observable<city[]>;
   hotelcities$: Observable<hotelcity[]>;
-  type$: Observable<string>;
+  type: string;
 
   constructor(
     private store: Store,
@@ -35,7 +35,7 @@ export class CityModalComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.type$ = this.store.select(SearchState.getSearchMode);
+    this.type = this.store.selectSnapshot(SearchState.getSearchMode);
     this.flightcities$ = this.store.select(SharedState.flightcities);
     this.hotelcities$ = this.store.select(SharedState.hotelcities);
   }
@@ -47,8 +47,13 @@ export class CityModalComponent implements OnInit {
 
   searchCity(cityString: string) {
     console.log(cityString);
-    if (cityString.length >= 3) {  
-      this.store.dispatch(new GetFlightCity(cityString));
+    if (cityString.length >= 3) {
+      if (this.type == 'flight') {
+        this.store.dispatch(new GetFlightCity(cityString));
+      }
+      else if (this.type == 'hotel') {
+        this.store.dispatch(new GetHotelCity(cityString));
+      }
     }
   }
 

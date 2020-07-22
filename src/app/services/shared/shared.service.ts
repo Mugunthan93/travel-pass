@@ -25,6 +25,13 @@ export class SharedService {
     return await this.http.get("/hotels/gethotelcities", param);
   }
 
+  async getNationality(reqNationality: string): Promise<HTTPResponse> {
+    const param: { [key: string]: string | string[] } = {
+      "nationality": reqNationality
+    }
+    return await this.http.get("/hotels/getnationality", param);
+  }
+
   async upcomingTrips(): Promise<HTTPResponse> {
     return await this.http.get("/allBookings/upcomming/trips/airline/getallTrips/list/booked/",{});
   }

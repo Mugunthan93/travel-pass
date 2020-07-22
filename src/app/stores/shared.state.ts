@@ -4,7 +4,8 @@ import * as _ from 'lodash';
 
 export interface Shared {
     flightCity: city[],
-    hotelCity: hotelcity[]
+    hotelCity: hotelcity[],
+    nationality: string[]
 }
 
 export interface city {
@@ -41,15 +42,19 @@ export class GetHotelCity {
     }
 }
 
-export class ClearCity {
-    static readonly type = '[Shared] ClearCity';
+export class GetNationality {
+    static readonly type = '[hotel_search] GetNationality';
+    constructor(public keyword: string) {
+
+    }
 }
 
 @State<Shared>({
     name: 'Shared',
     defaults: {
         flightCity: [],
-        hotelCity:[]
+        hotelCity: [],
+        nationality:[]
     }
 })
 export class SharedState {
@@ -73,14 +78,12 @@ export class SharedState {
     @Action(GetFlightCity, {cancelUncompleted: true})
     async getflightCity(states: StateContext<Shared>, action: GetFlightCity) {
         try {
-            const currentState = states.getState();
 
             const city = await this.sharedService.searchFlightCity(action.city);
             const parsedCity: city[] = JSON.parse(city.data);
 
-            states.setState({
-                flightCity: parsedCity,
-                hotelCity : currentState.hotelCity
+            states.patchState({
+                flightCity: parsedCity
             });
         }
         catch (error) {
@@ -91,18 +94,27 @@ export class SharedState {
     @Action(GetHotelCity, {cancelUncompleted: true})
     async gethotelCity(states: StateContext<Shared>, action: GetHotelCity) {
         try {
-            const currentState = states.getState();
 
             const city = await this.sharedService.searchHotelCity(action.city);
             const parsedCity: hotelcity[] = JSON.parse(city.data);
 
-            states.setState({
-                flightCity: currentState.flightCity,
+            states.patchState({
                 hotelCity: parsedCity
             });
         }
         catch (error) {
             console.log(error);  
+        }
+    }
+
+    @Action(GetNationality)
+    async getNationality(states: StateContext<Shared>, action: GetNationality) {
+        try {
+            const cityResponse = await this.sharedService.getNationality(action.keyword);
+            console.log(cityResponse);
+        }
+        catch (error) {
+            console.log(error);
         }
     }
 }

@@ -12,13 +12,6 @@ export class HotelService {
     private http: NativeHttpService
   ) { }
 
-  async getNationality(reqNationality: string): Promise<HTTPResponse> {
-    const param: { [key: string]: string | string[] } = {
-      "nationality": reqNationality
-    }
-    return await this.http.get("/hotels/getnationality", param);
-  }
-
   async searchHotel(payload: hotelsearchpayload): Promise<HTTPResponse> {
     return await this.http.post("/hotels/search",payload)
   }
