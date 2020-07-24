@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <ion-text>Search {{ title | titlecase }}</ion-text>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-item lines="full">
+    <ion-label position="floating">Select {{ title | titlecase }}</ion-label>
+    <ion-input type="text" inputmode="text" (ionInput)="search($event.target.value)" #city>
+    </ion-input>
+  </ion-item>
+</ion-header>
+<ion-content>
+  <ion-list *ngIf="(flightcities$ | async).length > 0">
+    <ion-item lines="none" *ngFor="let city of (flightcities$ | async)" (click)="select(city)">
+      <ion-label>{{city.city_name}}</ion-label>
+      <ion-text>{{city.city_code}}</ion-text>
+    </ion-item>
+  </ion-list>
+  <ion-list *ngIf="(hotelcities$ | async).length > 0">
+    <ion-item lines="none" *ngFor="let city of (hotelcities$ | async)" (click)="select(city)">
+      <ion-label>{{city.destination}}</ion-label>
+    </ion-item>
+  </ion-list>
+  <ion-list *ngIf="(nationalities$ | async).length > 0">
+    <ion-item lines="none" *ngFor="let nation of (nationalities$ | async)" (click)="select(nation)">
+      <ion-label>{{nation.nationality}}</ion-label>
+      <ion-text>{{nation.country_code}}</ion-text>
+    </ion-item>
+  </ion-list>
+</ion-content>

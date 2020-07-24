@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ModalController, IonSelect } from '@ionic/angular';
 import { CityModalComponent } from 'src/app/components/shared/city-modal/city-modal.component';
@@ -67,7 +67,7 @@ export class MultiCityPage implements OnInit {
     console.log(tripArray,tripElement);
   }
 
-  async selectCity(field: string, control: FormGroup[], i: number) {
+  async selectCity(field: string, control: any[], i: number) {
     console.log(control,i);
     const modal = await this.modalCtrl.create({
       component: CityModalComponent

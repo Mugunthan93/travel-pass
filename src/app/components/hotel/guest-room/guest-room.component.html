@@ -1,127 +1,66 @@
 <ion-header>
-  <ion-toolbar>Guest Room</ion-toolbar>
+  <ion-toolbar>
+    <ion-title>
+      <ion-text>Guest Room</ion-text>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-text>OK</ion-text>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <mat-accordion>
-          <mat-expansion-panel *ngFor="let room of rooms">
-            <mat-expansion-panel-header>
-              <ion-row>
-                <ion-col>
-                  <ion-row>
-                    <ion-text>Room 1</ion-text>
-                  </ion-row>
-                </ion-col>
-              </ion-row>
-            </mat-expansion-panel-header>
-            <ion-row>
-              <ion-col size="8">
-                <ion-row>
-                  <ion-text>Adults</ion-text>
-                </ion-row>
-                <ion-row>
-                  <ion-text>Age 15 years and above</ion-text>
-                </ion-row>
-              </ion-col>
-              <ion-col size="4">
-                <ion-row class="ion-justify-content-between">
-                  <ion-col size="2">
-                    <ion-icon name="add"></ion-icon>
-                  </ion-col>
-                  <ion-col size="2">
-                    <ion-input type="number" hidden></ion-input>
-                    <ion-text>
-                      3
-                    </ion-text>
-                  </ion-col>
-                  <ion-col size="2">
-                    <ion-icon name="remove"></ion-icon>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col size="8">
-                <ion-row>
-                  <ion-text>Age of Adults</ion-text>
-                </ion-row>
-              </ion-col>
-              <ion-col size="4">
-                <ion-row>
-                  <ion-col>
-                    <ion-select placeholder="Adult Age">
-                      <ion-select-option value="f">Female</ion-select-option>
-                      <ion-select-option value="m">Male</ion-select-option>
-                    </ion-select>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col size="8">
-                <ion-row>
-                  <ion-text>Children</ion-text>
-                </ion-row>
-                <ion-row>
-                  <ion-text>Age 12 years and above</ion-text>
-                </ion-row>
-              </ion-col>
-              <ion-col size="4">
-                <ion-row class="ion-justify-content-between">
-                  <ion-col size="2">
-                    <ion-icon name="add"></ion-icon>
-                  </ion-col>
-                  <ion-col size="2">
-                    <ion-input type="number" hidden></ion-input>
-                    <ion-text>
-                      3
-                    </ion-text>
-                  </ion-col>
-                  <ion-col size="2">
-                    <ion-icon name="remove"></ion-icon>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col size="8">
-                <ion-row>
-                  <ion-text>Age of Children</ion-text>
-                </ion-row>
-              </ion-col>
-              <ion-col size="4">
-                <ion-row>
-                  <ion-col>
-                    <ion-select placeholder="Child Age">
-                      <ion-select-option value="f">Female</ion-select-option>
-                      <ion-select-option value="m">Male</ion-select-option>
-                    </ion-select>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-            <ion-row class="ion-justify-content-center">
-              <ion-col size="12">
-                <ion-chip color="warning">
-                  <ion-text>Up to 18 guests allowed in one room</ion-text>
-                </ion-chip>
-              </ion-col>
-            </ion-row>
-          </mat-expansion-panel>
-        </mat-accordion>
-      </ion-col>
-    </ion-row>
-    <ion-row class="ion-justify-content-center">
-      <ion-col size="3" (click)="addRoom()">
+  <mat-accordion *ngFor="let room of (rooms$ | async); let i = index">
+    <mat-expansion-panel expanded="true">
+      <mat-expansion-panel-header>
+        <ion-text>Room {{i + 1}}</ion-text>
+      </mat-expansion-panel-header>
+      <!-- no of adult -->
+      <ion-row>
         <ion-row>
-          <ion-icon name="add"></ion-icon>
-          <ion-text>
-            Add Room
-          </ion-text>
+          <ion-text>Adults</ion-text>
         </ion-row>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+        <ion-row>
+          <ion-icon size="large" name="remove-circle-outline" (click)="decrease('adult',i)"></ion-icon>
+          <ion-text>{{room.NoOfAdults}}</ion-text>
+          <ion-icon size="large" name="add-circle-outline" (click)="increase('adult',i)"></ion-icon>
+        </ion-row>
+      </ion-row>
+      <!-- no of children -->
+      <ion-row>
+        <ion-row>
+          <ion-text>Children</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-icon size="large" name="remove-circle-outline" (click)="decrease('children',i)"></ion-icon>
+          <ion-text>{{room.NoOfChild}}</ion-text>
+          <ion-icon size="large" name="add-circle-outline" (click)="increase('children',i)"></ion-icon>
+        </ion-row>
+      </ion-row>
+      <!-- children Age -->
+      <ion-row>
+        <ion-text>Age of Children</ion-text>
+        <ion-text>Age 12 years and below</ion-text>
+      </ion-row>
+      <ion-row *ngFor="let child of room.ChildAge;let j = index">
+        <ion-row>
+          <ion-text>Child {{1 + j}}</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-select placeholder="Child Age" [interfaceOptions]="customAlertOptions" [value]="child" (ionChange)="selectedAge($event,j,i)">
+            <ion-select-option *ngFor="let age of ages" [value]="age">{{age}}</ion-select-option>
+          </ion-select>
+        </ion-row>
+      </ion-row>
+      <ion-row>
+        <ion-text>Up to 18 guests allowed in one room</ion-text>
+      </ion-row>
+    </mat-expansion-panel>
+    <ion-icon name="close" (click)="deleteRoom(i)"></ion-icon>
+  </mat-accordion>
+  <ion-button (click)="addRoom()">
+    <ion-icon name="add"></ion-icon>
+    <ion-text>Add Room</ion-text>
+  </ion-button>
 </ion-content>

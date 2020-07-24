@@ -33,6 +33,7 @@ import { DomesticBookState } from '../stores/book/flight/domestic.state';
 import { MultiCityBookState } from '../stores/book/flight/multi-city.state';
 import { InternationalBookState } from '../stores/book/flight/international.state';
 import { NgxsResetPluginModule } from 'ngxs-reset-plugin';
+import { HotelSearchState } from '../stores/search/hotel.state';
 
 @NgModule({
   declarations: [],
@@ -66,6 +67,8 @@ import { NgxsResetPluginModule } from 'ngxs-reset-plugin';
       DomesticBookState,
       InternationalBookState,
       MultiCityBookState,
+
+      HotelSearchState,
 
       BookingState,
       ApprovalState,

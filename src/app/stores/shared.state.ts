@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 export interface Shared {
     flightCity: city[],
     hotelCity: hotelcity[],
-    nationality: string[]
+    nationality: nationality[]
 }
 
 export interface city {
@@ -17,6 +17,8 @@ export interface city {
     country_name: string
     currency: string
     nationalty: string
+    cityid?: number
+    countrycode? : string
 }
 
 export interface hotelcity {
@@ -26,6 +28,11 @@ export interface hotelcity {
     destination: string
     stateprovince: string
     stateprovincecode: string
+}
+
+export interface nationality{
+    nationality: string
+    country_code: string
 }
 
 export class GetFlightCity {
@@ -75,6 +82,11 @@ export class SharedState {
         return state.hotelCity;
     }
 
+    @Selector()
+    static nationalities(state: Shared) {
+        return state.nationality;
+    }
+
     @Action(GetFlightCity, {cancelUncompleted: true})
     async getflightCity(states: StateContext<Shared>, action: GetFlightCity) {
         try {
@@ -110,8 +122,12 @@ export class SharedState {
     @Action(GetNationality)
     async getNationality(states: StateContext<Shared>, action: GetNationality) {
         try {
-            const cityResponse = await this.sharedService.getNationality(action.keyword);
-            console.log(cityResponse);
+            const nationalityResponse = await this.sharedService.getNationality(action.keyword);
+            const nationality: nationality[] = JSON.parse(nationalityResponse.data);
+
+            states.patchState({
+                nationality: nationality
+            });
         }
         catch (error) {
             console.log(error);

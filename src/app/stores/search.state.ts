@@ -1,5 +1,6 @@
 import { State, Action, StateContext, Selector } from "@ngxs/store";
 import { FlightSearchState } from './search/flight.state';
+import { HotelSearchState } from './search/hotel.state';
 
 export interface search{
     mode: string,
@@ -28,7 +29,8 @@ export class SearchType {
         type: null
     },
     children: [
-        FlightSearchState
+        FlightSearchState,
+        HotelSearchState
     ]
 })
 export class SearchState {

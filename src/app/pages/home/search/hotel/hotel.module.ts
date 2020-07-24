@@ -10,6 +10,7 @@ import { HotelPage } from './hotel.page';
 import { MatDividerModule } from '@angular/material/divider';
 import { GuestRoomComponent } from 'src/app/components/hotel/guest-room/guest-room.component';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
+import { SelectModalComponent } from 'src/app/components/shared/select-modal/select-modal.component';
 
 @NgModule({
   imports: [
@@ -23,10 +24,12 @@ import { SharedModule } from 'src/app/modules/shared/shared.module';
   ],
   declarations: [
     HotelPage,
-    GuestRoomComponent
+    GuestRoomComponent,
+    SelectModalComponent
   ],
   entryComponents: [
-    GuestRoomComponent
+    GuestRoomComponent,
+    SelectModalComponent
   ]
 })
 export class HotelPageModule {}
