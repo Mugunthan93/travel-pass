@@ -32,7 +32,7 @@
           <ion-row (click)="openStar()">
             <ion-text>Star Hotel</ion-text>
             <ion-text [ngClass]="errorClass('star')">
-              {{this.hotelSearch.value.star !== null ? this.hotelSearch.value.star + ' Star' : 'Add Star'}}
+              {{this.hotelSearch.value.star !== null ? this.hotelSearch.value.star == 0 ? 'All' :  this.hotelSearch.value.star + ' Star' : 'Add Star'}}
             </ion-text>
           </ion-row>
         </ion-row>
@@ -64,7 +64,7 @@
         <ion-input formControlName="nationality" hidden></ion-input>
         <ion-select #select formControlName="star" hidden cancelText="Cancel" okText="Confirm"
           [interfaceOptions]="customAlertOptions" (ionChange)="selectStar($event)">
-          <ion-select-option *ngFor="let star of stars" [value]="star">{{star}} Star</ion-select-option>
+          <ion-select-option *ngFor="let star of stars" [value]="star"> {{ (star == 0) ? 'All' : star + ' Star' }}</ion-select-option>
         </ion-select>
         <ion-input formControlName="checkin" hidden></ion-input>
         <ion-input formControlName="checkout" hidden></ion-input>

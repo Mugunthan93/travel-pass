@@ -1,60 +1,4 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button icon="arrow-back-outline" defaultHref="home">
-      </ion-back-button>
-    </ion-buttons>
-    <ion-title>Chennai</ion-title>
-    <ion-title>25 sep - 27 sep | 1 Guest | 618 Hotels</ion-title>
-    <ion-buttons slot="end">
-      <ion-button>
-        <ion-icon name="search"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-  <ion-row>
-    <ion-segment (ionChange)="sorting($event)">
-      <ion-col size="3">
-        <ion-segment-button value="departure" layout="icon-end">
-          <ion-label>
-            {{'suggested' | uppercase}}
-            <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-            <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
-          </ion-label>
-        </ion-segment-button>
-      </ion-col>
-      <ion-col size="3">
-        <ion-segment-button value="arrival" layout="icon-end">
-          <ion-label>
-            {{'stars' | uppercase}}
-            <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-            <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
-          </ion-label>
-        </ion-segment-button>
-      </ion-col>
-      <ion-col size="3">
-        <ion-segment-button value="duration" layout="icon-end">
-          <ion-label>
-            {{'rating' | uppercase}}
-            <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-            <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
-          </ion-label>
-        </ion-segment-button>
-      </ion-col>
-      <ion-col size="3">
-        <ion-segment-button value="price" layout="icon-end">
-          <ion-label>
-            {{'price' | uppercase}}
-            <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-            <!-- <ion-icon src="../../../../../../assets/ionicons/arrow-down-outline.svg"></ion-icon> -->
-          </ion-label>
-        </ion-segment-button>
-      </ion-col>
-    </ion-segment>
-  </ion-row>
-</ion-header>
-
-<ion-content [scrollY]="'true'">
+<!-- <ion-content [scrollY]="'true'">
   <ion-grid>
     <ion-row *ngFor="let hotel of hotelList" (click)="viewHotel()">
       <ion-col>
@@ -140,30 +84,67 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+</ion-content> -->
+
+<ion-content>
+  <ion-card *ngFor="let hotel of (hotelList$ | async)">
+    <ion-card-header>
+      <ion-row>
+        <ion-icon size="large" [name]="star == 'full' ? 'star' : star == 'half' ? 'star-half' : 'star'"
+          *ngFor="let star of starRating(hotel.StarRating)"></ion-icon>
+      </ion-row>
+      <ion-row>
+        <ion-row>
+          <ion-label>{{hotel.HotelName}}</ion-label>
+          <ion-text>{{hotel.Address}}</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-label>{{hotel.Price.PublishedPrice | currency : 'INR'}}</ion-label>
+          <!-- <ion-text>{{'For ' + hotel.nights + ' Nights'}}</ion-text> -->
+        </ion-row>
+      </ion-row>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-img slot="start" [src]="hotel.HotelPicture"></ion-img>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
 
-<ion-footer>
-  <ion-toolbar>
-    <ion-buttons slot="start" (click)="hotelFilter()">
-      <ion-button>
-        <ion-icon src="../../../../../assets/ionicons/md-filter-outline.svg"></ion-icon>
-      </ion-button>
-      <ion-text>Filter</ion-text>
-    </ion-buttons>
-
-    <ion-buttons slot="end">
-      <ion-button>
-        <ion-icon name="map"></ion-icon>
-      </ion-button>
-      <ion-text>Map</ion-text>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-footer>
-
-
-<!-- <mat-accordion [hideToggle]="'true'">
-  <mat-expansion-panel *ngFor="let hoteItem of hotelList">
-    <mat-expansion-panel-header [collapsedHeight]="hotelHeight" [expandedHeight]="hotelHeight">
-    </mat-expansion-panel-header>
-  </mat-expansion-panel>
-</mat-accordion> -->
+<!-- <ion-row>
+  <ion-segment (ionChange)="sorting($event)">
+    <ion-col size="3">
+      <ion-segment-button value="departure" layout="icon-end">
+        <ion-label>
+          {{'suggested' | uppercase}}
+          <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
+        </ion-label>
+      </ion-segment-button>
+    </ion-col>
+    <ion-col size="3">
+      <ion-segment-button value="arrival" layout="icon-end">
+        <ion-label>
+          {{'stars' | uppercase}}
+          <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
+        </ion-label>
+      </ion-segment-button>
+    </ion-col>
+    <ion-col size="3">
+      <ion-segment-button value="duration" layout="icon-end">
+        <ion-label>
+          {{'rating' | uppercase}}
+          <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
+        </ion-label>
+      </ion-segment-button>
+    </ion-col>
+    <ion-col size="3">
+      <ion-segment-button value="price" layout="icon-end">
+        <ion-label>
+          {{'price' | uppercase}}
+          <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
+        </ion-label>
+      </ion-segment-button>
+    </ion-col>
+  </ion-segment>
+</ion-row> -->

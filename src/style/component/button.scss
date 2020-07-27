@@ -113,6 +113,7 @@ $button-opacity:$btn-opacity;
 ion-button {
     // --background: #{$button-color};
     --background:-webkit-linear-gradient(354deg, #53b2fe, #065af3);
+    // --background:-webkit-linear-gradient(354deg, #ffc2c2, #e87474);
     >ion-text{
         color:#{$white-text};
     }

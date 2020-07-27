@@ -3,6 +3,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { sortButton, FlightResultState, SortChange, SortBy } from 'src/app/stores/result/flight.state';
+import { ResultState } from 'src/app/stores/result.state';
 
 @Component({
   selector: 'app-result-sorting',
@@ -19,17 +20,32 @@ import { sortButton, FlightResultState, SortChange, SortBy } from 'src/app/store
 })
 export class ResultSortingComponent implements OnInit {
 
-  buttons$: Observable<sortButton[]>;
-  currentButton$: Observable<sortButton>;
-  currentButton: sortButton;
+  resultMode$: Observable<string>;
+
+  flightbuttons$: Observable<sortButton[]>;
+  hotelbuttons$: Observable<sortButton[]>;
+  
+  currentflightButton$: Observable<sortButton>;
+  currenthotelButton$: Observable<sortButton>;
+
+  currentflightButton: sortButton;
+  currenthotelButton: sortButton;
 
   constructor(
     private store : Store
   ) { }
 
   ngOnInit() {
-    this.currentButton$ = this.store.select(FlightResultState.getSortBy);
-    this.buttons$ = this.store.select(FlightResultState.getButtons);
+    this.resultMode$ = this.store.select(ResultState.getResultMode);
+
+    this.flightbuttons$ = this.store.select(FlightResultState.getButtons);
+    this.hotelbuttons$ = this.store.select(FlightResultState.getButtons);
+
+    this.currentflightButton$ = this.store.select(FlightResultState.getSortBy);
+    this.currenthotelButton$ = this.store.select(FlightResultState.getSortBy);
+
+    this.currentflightButton$.subscribe(el => this.currentflightButton = el);
+    this.currenthotelButton$.subscribe(el => this.currenthotelButton = el);
   }
   
   sortChange(evt: CustomEvent) {

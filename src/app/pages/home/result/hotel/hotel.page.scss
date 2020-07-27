@@ -1,14 +1,6 @@
 @import "../../../../../style/util/variable.scss";
 @import "../../../../../style/util/mixins.scss";
 
-ion-header{
-    >ion-toolbar{
-        ion-title:last-of-type{
-            font-size:xx-small !important;
-        }
-    }
-}
-
 ion-grid{
     >ion-row {
         margin:8px;
@@ -116,31 +108,49 @@ ion-grid{
     }
 }
 
-ion-segment {
-    border-bottom:1px solid #{$text-color};
-}
 
-ion-segment-button {
-    @include flex-col-grid;
-
-    ion-label {
-        font-size: xx-small;
-    }
-}
-
-ion-footer{
-    >ion-toolbar{
-    
-        >ion-buttons{
-            height: 56px;
+ion-content{
+    >ion-card{
+        ion-label{
+            color: #000105;
+            font-size: 16px !important;
+            font-weight: bold;
+        }
+        ion-text {
+            color: #000105;
+            font-size: 13px !important;
+        }
+        >ion-card-header{
             display: flex;
             flex-direction: column;
+            >ion-row:nth-child(1){
+                >ion-icon {
+                    color: gold !important;
+                }
+            }
+            >ion-row:nth-child(2) {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                >ion-row:nth-child(1){
+                    width:80%;
+                }
+                >ion-row:nth-child(2) {
+                    width:20%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                }
+            }
         }
-        >ion-buttons:nth-of-type(2){
-            width: fit-content;
-            margin-left: auto;
-            margin-right: auto;
+        >ion-card-content{
+            >ion-item{
+                --padding-start: 0px;
+                >ion-img{
+                    height: 100px !important;
+                    width: 128px;
+                }
+            }
         }
     }
 }
-

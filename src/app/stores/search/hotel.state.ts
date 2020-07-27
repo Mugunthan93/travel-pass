@@ -1,10 +1,12 @@
-import { State, Action, StateContext, Selector, Store  } from '@ngxs/store';
+import { State, Action, StateContext, Selector, Store, ofActionSuccessful, ofActionDispatched, ofAction, ofActionCanceled, ofActionErrored, ofActionCompleted  } from '@ngxs/store';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { ModalController, AlertController } from '@ionic/angular';
+import { ModalController, AlertController, LoadingController } from '@ionic/angular';
 import { city, nationality } from '../shared.state';
 import { Navigate } from '@ngxs/router-plugin';
 import { HotelService } from 'src/app/services/hotel/hotel.service';
+import { hotelResponse, HotelResponse } from '../result/hotel.state';
+import { ResultMode } from '../result.state';
 
 export interface hotelsearch{
     formData : hotelForm
@@ -124,7 +126,8 @@ export class SearchHotel {
 export class HotelSearchState {
 
     constructor(
-        private store : Store,
+        private store: Store,
+        public loadingCtrl: LoadingController,
         public modalCtrl: ModalController,
         public alertCtrl: AlertController,
         private hotelService : HotelService
@@ -150,6 +153,11 @@ export class HotelSearchState {
     @Selector()
     static checkChildrenAge(state: hotelsearch): boolean {
         return state.rooms.some((el) => (el.NoOfChild == el.ChildAge.length) && (el.ChildAge.some(el => el !== null)));
+    }
+
+    @Selector()
+    static getNights(state : hotelsearch): number {
+        return moment(state.formData.checkout).diff(moment(state.formData.checkin), 'days');
     }
 
     @Action(AddRoom)
@@ -322,6 +330,27 @@ export class HotelSearchState {
     @Action(SearchHotel)
     async searchHotel(states: StateContext<hotelsearch>) {
 
+        const loading = await this.loadingCtrl.create({
+            spinner: "crescent"
+        });
+        const failedAlert = await this.alertCtrl.create({
+            header: 'Search Failed',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                cssClass: 'danger',
+                handler: (res) => {
+                    failedAlert.dismiss({
+                        data: false,
+                        role: 'failed'
+                    });
+                }
+            }]
+        });
+
+        loading.message = "Searching Hotel...";
+        await loading.present();
+
         let currentForm: hotelForm = states.getState().formData;
 
         let payload: hotelsearchpayload = {
@@ -329,7 +358,7 @@ export class HotelSearchState {
             CityId: currentForm.city.cityid.toString(),
             CountryCode: currentForm.city.countrycode,
             EndUserIp: "192.168.1.10",
-            GuestNationality: currentForm.nationality.nationality,
+            GuestNationality: currentForm.nationality.country_code,
             IsNearBySearchAllowed: false,
             IsTBOMapped: true,
             MaxRating: 5,
@@ -343,15 +372,41 @@ export class HotelSearchState {
             RoomGuests: currentForm.room
         }
 
+        states.patchState({
+            payload: payload
+        });
+
         try {
-            const hotelResponse = await this.hotelService.searchHotel(payload);
-            console.log(hotelResponse);
+            let hotelResponse = await this.hotelService.searchHotel(payload);
+            let hoteldata: hotelResponse = JSON.parse(hotelResponse.data);
+            this.store.dispatch(new HotelResponse(hoteldata.response));
+            this.store.dispatch(new ResultMode('hotel'));
+
+            loading.dismiss();
+            this.store.dispatch(new Navigate(['/', 'home', 'result', 'hotel']));
         }
         catch (error) {
             console.log(error);
+            if (error.status == -4) {
+                failedAlert.message = "Search Timeout, Try Again";
+            }
+            //no result error
+            if (error.status == 400) {
+                const errorString = JSON.parse(error.error);
+                failedAlert.message = errorString.message.response.Error.ErrorMessage;
+            }
+            //502 => proxy error
+            if (error.status == 502) {
+                failedAlert.message = "Server failed to get correct information";
+            }
+            //503 => service unavailable, Maintanence downtime
+            if (error.status == 503) {
+                failedAlert.message = "Server Maintanence Try again Later";
+            }
+            loading.dismiss();
+            failedAlert.present();
         }
 
-        // this.store.dispatch(new Navigate(['/', 'home', 'result', 'hotel']));
     }
 
     

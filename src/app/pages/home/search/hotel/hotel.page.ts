@@ -26,7 +26,7 @@ export class HotelPage implements OnInit {
   customAlertOptions: AlertOptions;
   newDate: Date;
 
-  stars: number[] = [1,2,3,4,5];
+  stars: number[] = [0,1,2,3,4,5];
 
 
   constructor(
@@ -40,12 +40,26 @@ export class HotelPage implements OnInit {
     this.rooms$ = this.store.select(HotelSearchState.getRooms);
 
     this.hotelSearch = new FormGroup({
-      'city': new FormControl(null, [Validators.required]),
-      'room': new FormControl(null, [Validators.required]),
-      'nationality': new FormControl(null, [Validators.required]),
-      'star': new FormControl(null, [Validators.required]),
-      'checkin': new FormControl(null, [Validators.required]),
-      'checkout': new FormControl(null, [Validators.required])
+      'city': new FormControl({
+        cityid: 144306,
+        country: "India",
+        countrycode: "IN",
+        destination: "Mumbai",
+        stateprovince: "Maharashtra",
+        stateprovincecode: "MH"
+      }, [Validators.required]),
+      'room': new FormControl([{
+        ChildAge: [],
+        NoOfAdults: 1,
+        NoOfChild: 0
+      }], [Validators.required]),
+      'nationality': new FormControl({
+        country_code: "IN",
+        nationality: "Indian"
+      }, [Validators.required]),
+      'star': new FormControl(0, [Validators.required]),
+      'checkin': new FormControl("2020-12-09T18:30:00.000Z", [Validators.required]),
+      'checkout': new FormControl("2020-12-11T18:30:00.000Z", [Validators.required])
     });
 
     this.hotelSearch.valueChanges.subscribe(el => console.log(el));

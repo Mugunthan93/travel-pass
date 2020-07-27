@@ -24,6 +24,7 @@ $toolbar-background:$bar-bg2;
 ion-toolbar {
     --color: #{$toolbar-color};
     --background: #{$toolbar-background};
+    // --background: #e87474 0% 0% no-repeat padding-box;
     opacity:1;
 
     ion-button{
