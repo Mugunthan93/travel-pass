@@ -26,6 +26,7 @@ import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
 
 
 @NgModule({
@@ -65,6 +66,7 @@ import { Deeplinks } from '@ionic-native/deeplinks/ngx';
     HTTP,
     Keyboard,
     Deeplinks,
+    WebView,
     {
       provide: NativeHttpService,
       useFactory: (platform : Platform,http : HTTP) => {

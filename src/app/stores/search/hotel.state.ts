@@ -5,7 +5,7 @@ import { ModalController, AlertController, LoadingController } from '@ionic/angu
 import { city, nationality } from '../shared.state';
 import { Navigate } from '@ngxs/router-plugin';
 import { HotelService } from 'src/app/services/hotel/hotel.service';
-import { hotelResponse, HotelResponse } from '../result/hotel.state';
+import { hotelResponse, HotelResponse, hotelImageResponse } from '../result/hotel.state';
 import { ResultMode } from '../result.state';
 
 export interface hotelsearch{
@@ -379,11 +379,14 @@ export class HotelSearchState {
         try {
             let hotelResponse = await this.hotelService.searchHotel(payload);
             let hoteldata: hotelResponse = JSON.parse(hotelResponse.data);
-            this.store.dispatch(new HotelResponse(hoteldata.response));
-            this.store.dispatch(new ResultMode('hotel'));
-
-            loading.dismiss();
-            this.store.dispatch(new Navigate(['/', 'home', 'result', 'hotel']));
+            this.store.dispatch(new HotelResponse(hoteldata.response))
+                .subscribe({
+                    complete: () => {
+                        this.store.dispatch(new ResultMode('hotel'));
+                        loading.dismiss();
+                        this.store.dispatch(new Navigate(['/', 'home', 'result', 'hotel']));
+                    }
+                });
         }
         catch (error) {
             console.log(error);

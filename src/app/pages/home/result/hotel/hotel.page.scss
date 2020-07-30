@@ -146,9 +146,27 @@ ion-content{
         >ion-card-content{
             >ion-item{
                 --padding-start: 0px;
-                >ion-img{
-                    height: 100px !important;
-                    width: 128px;
+                background-color: #ececec;
+                >ion-row.img{
+                    >ion-img{
+                        height: 100px;
+                        width: 128px;
+                        object-fit: cover;
+                    }
+                    >ion-icon{
+                        position: absolute;
+                        bottom: 5px;
+                        left: 90px;
+                        color: white;
+                    }
+                }
+                >ion-row.facility{
+                    >ion-item{
+                        --padding-start: 0px;
+                        >ion-icon{
+                            margin: 0px;
+                        }
+                    }
                 }
             }
         }

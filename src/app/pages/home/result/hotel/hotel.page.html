@@ -87,7 +87,8 @@
 </ion-content> -->
 
 <ion-content>
-  <ion-card *ngFor="let hotel of (hotelList$ | async)">
+  <ion-card *ngFor="let hotel of (hotelList$ | async);let i = index">
+
     <ion-card-header>
       <ion-row>
         <ion-icon size="large" [name]="star == 'full' ? 'star' : star == 'half' ? 'star-half' : 'star'"
@@ -104,12 +105,34 @@
         </ion-row>
       </ion-row>
     </ion-card-header>
+
     <ion-card-content>
       <ion-item>
-        <ion-img slot="start" [src]="hotel.HotelPicture"></ion-img>
+        <ion-row class="img">
+          <ion-img [src]="imgURL(hotel.Images,hotel.HotelCode) | async" (ionError)="imgError($event)"></ion-img>
+          <ion-icon size="large" name="heart-outline"></ion-icon>
+          <ion-icon slot="start" name="heart-sharp" *ngIf="false"></ion-icon>
+        </ion-row>
+        <ion-row class="facility">
+          <ion-item>
+            <ion-icon slot="start" name="add-sharp"></ion-icon>
+            <ion-label>{{hotel.HotelFacilities[0]}}</ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-icon slot="start" name="add-sharp"></ion-icon>
+            <ion-label>{{hotel.HotelFacilities[1]}}</ion-label>
+          </ion-item>
+        </ion-row>
       </ion-item>
     </ion-card-content>
+
   </ion-card>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)" #infinite>
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
 </ion-content>
 
 <!-- <ion-row>

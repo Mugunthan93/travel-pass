@@ -17,7 +17,7 @@ export class SortPipe implements PipeTransform {
 
       //number sorting
       if (property == 'id' || property == 'fare' || property == 'Duration') {
-        if (order == 'asc' || order == 'default') {
+        if (order == 'des' || order == 'rotated') {
           if (b[property] < a[property]) {
             return -1;
           }
@@ -26,7 +26,7 @@ export class SortPipe implements PipeTransform {
           }
           return 0;
         }
-        else if (order == 'des' || order == 'rotated' ) {
+        else if (order == 'asc' || order == 'default' ) {
           if (b[property] > a[property]) {
             return -1;
           } else if (b[property] < a[property]) {

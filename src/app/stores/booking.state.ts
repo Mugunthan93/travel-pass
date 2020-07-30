@@ -44,7 +44,6 @@ export class BookingState {
         private store: Store,
         public menuCtrl: MenuController,
         private flightService: FlightService,
-        private fliePath: FilePath,
         private file: File,
         private transfer: FileTransfer,
         public loadingCtrl: LoadingController,

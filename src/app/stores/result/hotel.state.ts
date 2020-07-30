@@ -1,13 +1,20 @@
 import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
 import { sortButton } from './flight.state';
 import { HotelService } from 'src/app/services/hotel/hotel.service';
+import { File } from '@ionic-native/file/ngx';
+import { FileTransferObject, FileTransfer } from '@ionic-native/file-transfer/ngx';
+import { LoadingController } from '@ionic/angular';
+import { Observable, of, from, iif } from 'rxjs';
+import { mergeMap, take, toArray, switchMap, tap, catchError, map, mapTo, retry, retryWhen, takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash';
 
 export interface hotelresult {
     sort : sortButton[]
+    hotelresponseList: hotelresponselist[]
     hotelList: hotellist[]
     traceId: string
-    currentSort : sortButton
+    currentSort: sortButton,
+    listLimit : number
 }
 
 export interface getHotelInfo {
@@ -41,6 +48,7 @@ export interface hotelinfoList {
     Services: any
     SpecialInstructions: any
     StarRating: number
+    ResultIndex?: number
 }
 
 export interface attractions {
@@ -137,7 +145,7 @@ export interface hotellist {
     IsTBOMapped: boolean
     Price: hotelprice
     ResultIndex: number
-    StarRating: string[]
+    StarRating: number
     SupplierHotelCodes: supplierhotelcodes[]
     Address: string
     Attractions: attractions[]
@@ -146,8 +154,6 @@ export interface hotellist {
     HotelFacilities: string[]
     Images: string[]
     PinCode: string
-
-
     // HotelAddress: string
 
     // HotelDescription: string
@@ -181,11 +187,22 @@ export class HotelResponse {
     }
 }
 
-export class hotelInfoResponse {
-    static readonly type = "[hotel_result] hotelInfoResponse";
-    constructor(public hotelinfo: hotelinfoList, public hotelresponse: hotelresponselist) {
+export class DownloadResult {
+    static readonly type = "[hotel_result] DownloadResult";
+    constructor(public list: hotelresponselist[]) {
 
     }
+}
+
+export class DownloadImage {
+    static readonly type = "[hotel_result] DownloadImage";
+    constructor(public img : string, public code : string) {
+
+    }
+}
+
+export class hotelImageResponse {
+    static readonly type = "[hotel_result] hotelImageResponse";
 }
 
 @State<hotelresult>({
@@ -194,10 +211,13 @@ export class hotelInfoResponse {
         sort: [
             { label: 'price', state: 'default', property: 'price' },
             { label: 'star', state: 'default', property: 'stars' },
+            { label: 'hotel', state: 'default', property: 'stars' },
         ],
-        hotelList : [],
+        hotelresponseList: [],
+        hotelList :[],
         traceId: null,
-        currentSort: { label: 'price', state: 'rotated', property: 'price' }
+        currentSort: { label: 'price', state: 'rotated', property: 'price' },
+        listLimit : 10
     }
 })
 
@@ -205,7 +225,10 @@ export class HotelResultState{
 
     constructor(
         private store: Store,
-        private hotelService: HotelService
+        private hotelService: HotelService,
+        private file: File,
+        private transfer: FileTransfer,
+        public loadingCtrl : LoadingController
     ) {
 
     }
@@ -225,71 +248,146 @@ export class HotelResultState{
         return states.currentSort;
     }
 
-    @Action(HotelResponse)
-    getHotelResponse(states: StateContext<hotelresult>, action: HotelResponse) {
-
-        action.response.HotelResults.forEach(
-            async (el: hotelresponselist, ind: number, arr: hotelresponselist[]) => {
-
-                if (el.SupplierHotelCodes) {
-
-                    let hotelInfo = {
-                        CategoryId: el.SupplierHotelCodes[0].CategoryId,
-                        EndUserIp: "192.168.0.115",
-                        HotelCode: el.HotelCode,
-                        ResultIndex: el.ResultIndex,
-                        TraceId: action.response.TraceId
-                    }
-
-                    try {
-                        let hotelinfoResponse = await this.hotelService.getHotelInfo(hotelInfo);
-                        let hotelData: hotelinfoList = JSON.parse(hotelinfoResponse.data).response.HotelDetails;
-                        this.store.dispatch(new hotelInfoResponse(hotelData,el));
-                    }
-                    catch (error) {
-                        console.log(error);
-                    }
-                }
-            }
-        );
-
-        states.patchState({
-            traceId : action.response.TraceId
-        });
+    @Selector()
+    static getLimit(states: hotelresult): number {
+        return states.listLimit;
     }
 
-    @Action(hotelInfoResponse)
-    hotelInfoResponse(states: StateContext<hotelresult>, action: hotelInfoResponse) {
-
-        let info: any = action.hotelinfo;
-        let response: any = action.hotelresponse;
-        let hotel: any;
-        hotel = _.merge(info, response);
-        
-        let pickedHotel : hotellist = _.pick(hotel,[
-            'HotelCode',
-            'HotelName',
-            'HotelPicture',
-            'IsTBOMapped',
-            'Price',
-            'ResultIndex',
-            'StarRating',
-            'SupplierHotelCodes',
-            'Address',
-            'Attractions',
-            'CountryName',
-            'Description',
-            'HotelFacilities',
-            'Images',
-            'PinCode'
-        ]);
-
-        let currentinfoList = Object.assign([], states.getState().hotelList);
-        currentinfoList.push(pickedHotel);
+    @Action(HotelResponse)
+    async getHotelResponse(states: StateContext<hotelresult>, action: HotelResponse) {
 
         states.patchState({
-            hotelList: currentinfoList
+            hotelresponseList: action.response.HotelResults,
+            traceId: action.response.TraceId
         });
+
+        states.dispatch(new DownloadResult(action.response.HotelResults));
+
+    }
+
+    // @Action(hotelImageResponse)
+    // async getImageResponse(states: StateContext<hotelresult>) {
+
+    //     let currentList = states.getState().hotelList;
+    //     try {
+    //         let getImageList = await this.getImages(currentList);
+    //         console.log(getImageList);
+    //         states.patchState({
+    //             hotelList: getImageList
+    //         });
+    //     }
+    //     catch (error) {
+    //         console.log(error);
+    //         states.patchState({
+    //             hotelList: currentList
+    //         });
+    //     }
+
+    // }
+
+    @Action(DownloadResult)
+    downloadresult(states: StateContext<hotelresult>, action: DownloadResult) {
+        return from(action.list)
+            .pipe(
+                take(states.getState().listLimit),
+                mergeMap(
+                    async (el: hotelresponselist) => {
+                        console.log(el);
+
+                        if (el.SupplierHotelCodes) {
+
+                            let traceId: string = states.getState().traceId;
+                            let currentList: hotellist[] = states.getState().hotelList;
+
+                            let hotelInfo = {
+                                CategoryId: el.SupplierHotelCodes[0].CategoryId,
+                                EndUserIp: "192.168.0.115",
+                                HotelCode: el.HotelCode,
+                                ResultIndex: el.ResultIndex,
+                                TraceId: traceId
+                            }
+
+                            let hotelinfoResponse = await this.hotelService.getHotelInfo(hotelInfo);
+                            let hotelData: hotelinfoList = JSON.parse(hotelinfoResponse.data).response.HotelDetails;
+                            console.log(JSON.parse(hotelinfoResponse.data).response);
+
+                            if (JSON.parse(hotelinfoResponse.data).response.Error.ErrorCode == 2) {
+                                return;
+                            }
+
+                            let hotel: any = _.merge(hotelData, el);
+                            let pickedHotel: hotellist = _.pick(hotel, [
+                                'HotelCode',
+                                'HotelName',
+                                'HotelPicture',
+                                'IsTBOMapped',
+                                'Price',
+                                'ResultIndex',
+                                'StarRating',
+                                'SupplierHotelCodes',
+                                'Address',
+                                'Attractions',
+                                'CountryName',
+                                'Description',
+                                'HotelFacilities',
+                                'Images',
+                                'PinCode',
+                                'pictures'
+                            ]);
+
+                            currentList.push(pickedHotel);
+
+                            states.patchState({
+                                hotelList: currentList
+                            });
+                        }
+
+                    }
+                )
+            )
+    }
+    
+    @Action(DownloadImage)
+    downloadPicture(states: StateContext<hotelresult>, action: DownloadImage): Observable<string> {
+
+        return from(action.img)
+            .pipe(
+                tap(
+                    async (img: string) => {
+                        const fileTransfer: FileTransferObject = this.transfer.create();
+                
+                        let splitedEl: string[] = img.split('/');
+                        let fileName: string = splitedEl[splitedEl.length - 1];
+                        let folderName: string = action.code;
+                
+                        let url: string = img;
+                        let path: string = this.file.externalRootDirectory + 'TravellersPass/Hotel/Images/' + folderName + '/' + fileName + '.jpg';
+                
+                        try {
+                            if (await this.file.checkDir(this.file.externalRootDirectory + 'TravellersPass/Hotel/Images/', folderName)) {
+                                return path;
+                            }
+                        }
+                        catch (error) {
+                            if (error.code == 1) {
+                                try {
+                                    const fileResponse = await fileTransfer.download(url, path);
+                                    console.log(fileResponse);
+                                    if (fileResponse.isFile) {
+                                        let str: string = fileResponse.fullPath;
+                                        console.log(str);
+                                        return str;
+                                    }
+                                }
+                                catch (error) {
+                                    console.log(error);
+                                    return null;
+                                }
+                            }
+                        }
+                    }
+                )
+            )
 
     }
     
