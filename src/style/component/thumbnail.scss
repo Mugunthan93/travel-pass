@@ -1,16 +1,53 @@
-
+@import "../base/color.scss";
+@import "../base/fonts.scss";
 
 //variable
 
 // $thumbnail-size:;
-// $thumbnail-border-radius:;
+$thumbnail-border-radius:18px;
 
 ion-thumbnail{
-    background: #FFFFFF 0% 0% no-repeat padding-box;
-    box-shadow: 0px 6px 10px #2174A5B3;
-    --border-radius: 18px;
+
+    width: min-content;
+    height: min-content;
+    background: #{$white} 0% 0% no-repeat padding-box;
+    box-shadow: 0px 6px 10px #{$geraldine};
     opacity: 1;
-    ion-icon{
-        margin:8px !important;
+
+    --border-radius: #{$thumbnail-border-radius};
+
+
+    &.dashboard{
+       width: 56px;
+       height: 56px;
+
+        >ion-icon{
+
+            &.flight {
+                width: 31px !important;
+                height: 31px !important;
+                margin: 13px 12px 12px 13px;
+            }
+
+            &.bus {
+                width: 27px !important;
+                height: 26px !important;
+                margin: 15px 14px 15px 14px;
+            }
+
+            &.hotel {
+                width: 28px !important;
+                height: 22px !important;
+                margin: 17px 14px 17px 14px;
+            }
+
+            &.cab{
+                width: 26px !important;
+                height: 24px !important;
+                margin: 16px 14px 16px 15px;
+            }
+
+        }
+
     }
 }

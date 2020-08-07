@@ -1,24 +1,52 @@
+@import "../base/color.scss";
 
 //variable
 
-// $modal-backdrop-opacity:;
-// $modal-border-color:;
-// $modal-background:;
+$modal-backdrop-opacity:0.5;
+$modal-border-color:transparent;
+$modal-background:transparent;
 
-// $modal-box-model:(
-//     "height":,
-//     "width":,
-//     "min-height":,
-//     "min-width":,
-//     "max-height":,
-//     "max-width":
-// );
+$modal-width : fit-content;
+$modal-height: fit-content;
 
-// $modal-border:(
-//     "radius":,
-//     "style":,
-//     "width":
-// );
+$modal-width-type:(
+    "min": min-content,
+    "max": max-content
+);
+
+$modal-height-type:(
+    "min": min-content,
+    "max": max-content
+);
+
+$modal-border:(
+    "radius":0px,
+    "style":none,
+    "width":0px
+);
+
+
+ion-modal{
+
+    --backdrop-opacity:#{$modal-backdrop-opacity};
+    --background:#{$modal-background};
+    --border-color:#{$modal-border-color};
+
+    --border-radius:map.get($modal-border,"radius");
+    --border-style:map.get($modal-border, "style");
+    --border-width:map.get($modal-border, "width");
+
+    --width:#{$modal-width};
+    --height:#{$modal-height};
+
+    --min-width:map.get($modal-width-type,"min");
+    --max-width:map.get($modal-width-type, "max");
+
+    --min-height:map.get($modal-height-type, "min");
+    --max-height:map.get($modal-height-type, "max");
+
+
+}
 
 
 .modal-wrapper,

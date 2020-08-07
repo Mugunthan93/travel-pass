@@ -1,8 +1,22 @@
+@import "../base/color.scss";
+
+$card-color:$black;
+$card-background:none;
+
+$card-title-color:$black;
+$card-subtitle-color:$black;
+
+ion-card{
+    --color: #{$card-color};
+    --background: #{$card-background};
+}
+
+ion-card-title{
+    --color:#{$card-title-color};
+}
+
+ion-card-subtitle{
+    --color:#{$card-subtitle-color};
+}
 
 
-//variable
-// $card-color:;
-// $card-background:;
-
-// $card-title-color:;
-// $card-subtitle-color:;

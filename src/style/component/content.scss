@@ -1,24 +1,31 @@
-
+@import "../base/color.scss";
 
 //variable
-// $content-color:;
-$content-background:"./assets/ng-img/bg.jpeg";
-// $content-keyboard-offset:;
-// $content-offset-bottom:;
-// $content-offset-top:;
+$content-color:initial;
+$content-background:$white  url("./assets/ng-img/bg.jpeg") no-repeat;
+$content-keyboard-offset:0px;
+$content-offset-bottom:0px;
+$content-offset-top:0px;
 
-// $content-padding:(
-//     "bottom":,
-//     "end":,
-//     "start":,
-//     "top":
-// );
+$content-padding:(
+    "bottom":0px,
+    "end":0px,
+    "start":0px,
+    "top":0px
+);
 
 ion-content {
-    --background: url(#{$content-background});
-    --background-repeat: no-repeat;
-    --background-size: cover;
-    // --offset-bottom:200px !important;
+    --background:#{$content-background};
+
+    --color:#{$content-color};
+    --keyboard-offset:#{$content-keyboard-offset};
+    --offset-bottom:#{$content-offset-bottom};
+    --offset-top:#{$content-offset-top};
+    --padding-bottom:map.get($content-padding,"bottom");
+    --padding-end:map.get($content-padding, "end");
+    --padding-start:map.get($content-padding, "start");
+    --padding-top:map.get($content-padding, "top");
+
     max-width:100vw;
     max-height: 100vh;
 }

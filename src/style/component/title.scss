@@ -1,27 +1,38 @@
-@import "../util/variable.scss";
+@import "../base/color.scss";
+@import "../base/fonts.scss";
 
 //variable 
 
-// $title-color:;
+$title-color:$black;
+$title-family:'roboto-title';
 
-.md{
+ion-title {
+    --color: #{$title-color};
+    font-family: #{$title-family};
 
-    ion-title {
-        padding-left : 0px;
-        padding-right : 0px;
-        color: $text-color;
-        font-size: $text-font-size;
+    padding:0px;
+
+    &.small {
+        font-size: #{$small-font};
     }
 
-}
-
-.ios{
-
-    ion-title {
-        padding-left : 0px;
-        padding-right : 0px;
-        color: $text-color;
-        font-size: $text-font-size;
+    &.medium {
+        font-size:#{$medium-font};
     }
 
+    &.large {
+        font-size: #{$large-font};
+    }
+
+    &.bold {
+        font-weight: 700;
+    }
+
+    &.bolder {
+        font-weight: 800;
+    }
+
+    &.boldest {
+        font-weight: 900;
+    }
 }

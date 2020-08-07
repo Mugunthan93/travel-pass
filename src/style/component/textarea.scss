@@ -1,20 +1,38 @@
-
+@import "../base/color.scss";
 
 //variable
 
-// $textarea-placeholder-color:;
-// $textarea-background:;
-// $textarea-border-radius:;
-// $textarea-padding:(
-//     "bottom":,
-//     "end":,
-//     "start":,
-//     "top":
-// );
-// $textarea-placeholder:(
-//     "color":,
-//     "font-style":,
-//     "opacity":
-// );
+$textarea-color:$suva-grey;
+$textarea-background:transparent;
+$textarea-border-radius:0px;
+$textarea-padding:(
+    "bottom":0px,
+    "end":0px,
+    "start":0px,
+    "top":0px
+);
+$textarea-placeholder:(
+    "color":0px,
+    "font-style":0px,
+    "opacity":0px,
+    "font-weight":none
+);
+
+
+ion-textarea {
+    --background:#{$textarea-background};
+    --border-radius:#{$textarea-border-radius};
+    --color:#{$textarea-color};
+
+    --padding-bottom:map.get($textarea-padding,"bottom");
+    --padding-end:map.get($textarea-padding,"end");
+    --padding-start:map.get($textarea-padding,"start");
+    --padding-top:map.get($textarea-padding,"top");
+
+    --placeholder-color:map.get($textarea-placeholder,"color");
+    --placeholder-font-style:map.get($textarea-placeholder,"font-style");
+    --placeholder-font-weight:map.get($textarea-placeholder,"font-weight");
+    --placeholder-opacity:map.get($textarea-placeholder,"opacity");
+}
 
 

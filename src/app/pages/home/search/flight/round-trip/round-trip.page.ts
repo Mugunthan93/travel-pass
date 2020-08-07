@@ -2,12 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonSelect, ModalController, PickerController } from '@ionic/angular';
-import { CityModalComponent } from 'src/app/components/shared/city-modal/city-modal.component';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
 import { PassengerModalComponent } from 'src/app/components/flight/passenger-modal/passenger-modal.component';
 import { Store } from '@ngxs/store';
 import { AlertOptions } from '@ionic/core';
 import { RoundTripSearch, RoundTripForm } from 'src/app/stores/search/flight/round-trip.state';
+import { SelectModalComponent } from 'src/app/components/shared/select-modal/select-modal.component';
 
 @Component({
   selector: 'app-round-trip',
@@ -66,7 +66,10 @@ export class RoundTripPage implements OnInit {
 
   async selectCity(field) {
     const modal = await this.modalCtrl.create({
-      component: CityModalComponent
+      component: SelectModalComponent,
+      componentProps: {
+        title: 'city'
+      }
     });
 
     modal.onDidDismiss().then(
@@ -100,7 +103,8 @@ export class RoundTripPage implements OnInit {
     const options: CalendarModalOptions = {
       title: field.toLocaleUpperCase(),
       pickMode: 'single',
-      color: 'dark',
+      color: '#e87474',
+      cssClass: 'ion2-calendar',
       weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       weekStart: 1,
       canBackwardsSelected: false,

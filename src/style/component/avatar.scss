@@ -1,3 +1,7 @@
-
 //variable
-// $avatar-border-radius:;
+$avatar-border-radius:4px;
+
+
+ion-avatar{
+    --border-radius: #{$avatar-border-radius};
+}

@@ -1,9 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      <ion-text>
-        {{form == 'add' ? 'Add Passenger Details' : form == 'edit' ? 'Edit Passenger Details' : 'Passenger Details'}}
-      </ion-text>
+      {{form == 'add' ? 'Add Passenger Details' : form == 'edit' ? 'Edit Passenger Details' : 'Passenger Details'}}
     </ion-title>
     <ion-buttons slot="end" (click)="dismissDetail()">
       <ion-button>
@@ -16,7 +14,7 @@
 <ion-content>
   <ion-card>
     <ion-card-content>
-      <ion-text>
+      <ion-label>
         Enter your name as it is mentioned on your passport.For
         international Travel,passport should be valid for
         minimun 6 months from the date of travel. if you are
@@ -24,17 +22,17 @@
         you enter the correct password details for every
         passenger, in case you fail to do so,you may not be
         allowed to enter the USA and/or canada.
-      </ion-text>
-      <ion-text>
+      </ion-label>
+      <ion-label>
         Meals are subject to availability with the airlines,Please
         check with the Airlines before travel
-      </ion-text>
+      </ion-label>
     </ion-card-content>
   </ion-card>
 
   <form [formGroup]="Passenger" (ngSubmit)="addPassenger()">
     <ion-item lines="full">
-      <ion-label>Passenger Details</ion-label>
+      <ion-label class="large bold">Passenger Details</ion-label>
     </ion-item>
     <ion-item lines="full">
       <ion-select placeholder="Title" slot="start" [interfaceOptions]="customAlertOptions" formControlName="Title"
@@ -123,7 +121,7 @@
       <ion-text (click)="addMeal()">Meal & Baggage</ion-text>
     </ion-button>
     <ion-button type="submit" expand="block" fill="solid">
-      <ion-text>{{form == 'add' ? 'Add Passenger' : form == 'edit' ? 'Edit Passenger' : 'Add Passsenger'}}</ion-text>
+      <ion-label clas="medium bold">{{form == 'add' ? 'Add Passenger' : form == 'edit' ? 'Edit Passenger' : 'Add Passsenger'}}</ion-label>
     </ion-button>
   </form>
 </ion-content>

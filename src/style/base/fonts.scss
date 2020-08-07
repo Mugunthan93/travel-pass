@@ -1,5 +1,32 @@
-@import "../util/variable.scss";
+
+$roboto-black-url : "/assets/font-family/roboto/Roboto-Black.ttf";
+$roboto-regular-url : "/assets/font-family/roboto/Roboto-Regular.ttf";
+$roboto-thin-url : "/assets/font-family/roboto/Roboto-Thin.ttf";
+
+$small-font: 13px;
+$medium-font: 15px;
+$large-font:17px;
+
+@font-face {
+    font-family: 'roboto-title';
+    src: url($roboto-black-url) format('truetype');
+    font-size: #{$large-font};
+}
+
+@font-face {
+    font-family: 'roboto-label';
+    src: url($roboto-regular-url) format('truetype');
+    font-size: #{$medium-font};
+}
+
+@font-face {
+    font-family: 'roboto-text';
+    src: url($roboto-thin-url) format('truetype');
+    font-size: #{$small-font};
+}
 
 * {
-    --ion-font-family : $mobile-font-family;
+
+    --ion-font-family : 'roboto-title roboto-label roboto-text';
+
 }

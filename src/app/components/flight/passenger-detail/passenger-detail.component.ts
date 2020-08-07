@@ -17,6 +17,7 @@ import { OneWaySearchState } from 'src/app/stores/search/flight/oneway.state';
 import { RoundTripSearchState } from 'src/app/stores/search/flight/round-trip.state';
 import { MultiCitySearchState } from 'src/app/stores/search/flight/multi-city.state';
 import { SearchState } from 'src/app/stores/search.state';
+import { SelectModalComponent } from '../../shared/select-modal/select-modal.component';
 
 @Component({
   selector: 'app-passenger-detail',
@@ -144,7 +145,10 @@ export class PassengerDetailComponent implements OnInit {
 
   async selectCity(field) {
     const modal = await this.modalCtrl.create({
-      component: CityModalComponent
+      component: SelectModalComponent,
+      componentProps: {
+        title : 'city'
+      }
     });
 
     modal.onDidDismiss().then(

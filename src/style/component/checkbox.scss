@@ -1,22 +1,53 @@
+@import "../base/color.scss";
+@import "../base/fonts.scss";
 
+// variable
+$checkbox-border-color:$suva-grey;
+$checkbox-border-color-checked:$suva-grey;
 
-//variable
-// $checkbox-border-color:;
-// $checkbox-border-color-checked:;
+$checkbox-background:$white;
+$checkbox-background-checked:$geraldine;
 
-// $checkbox-background:;
-// $checkbox-background-checked:;
+$checkbox-chekmark:(
+    "color":$white,
+    "width":15px,
+);
 
-// $checkbox-chekmark:(
-//     "color":,
-//     "width":,
-// );
+$checkbox-size:10px;
+$chekbox-border:(
+    "radius":4px,
+    "style":solid,
+    "width":5px
+);
 
-// $checkbox-size:;
-// $chekbox-border:(
-//     "radius":,
-//     "style":,
-//     "width":
-// );
+$checkbox-transition:auto;
 
-// $checkbox-transition:;
+@mixin ion-checkbox{
+    --background:#{$checkbox-background};
+    --background-checked:#{$checkbox-background-checked};
+    --border-color:#{$checkbox-border-color};
+    --border-color-checked:#{$checkbox-border-color-checked};
+
+    --border-radius:map.get($chekbox-border, "radius");
+    --border-style:map.get($chekbox-border, "style");
+    --border-width:map.get($chekbox-border, "width");
+
+    --checkmark-color:map.get($checkbox-chekmark, "color");
+    --checkmark-width :map.get($checkbox-chekmark, "width");
+
+    --size:#{$checkbox-size};
+    --transition:#{$checkbox-transition};
+}
+
+ion-checkbox{
+
+    &.email {
+        --background-checked: #{$geraldine} !important;
+        --border-color-checked: #{$geraldine} !important;
+    }
+
+    &.default {
+        --background-checked: #{$geraldine} !important;
+        --border-color-checked: #{$geraldine} !important;
+    }
+}

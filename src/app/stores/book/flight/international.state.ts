@@ -1,5 +1,5 @@
 import { State, Action, Selector, Store, StateContext } from "@ngxs/store";
-import { bookObj, FLightBookState, sendRequest, SetFirstPassengers, kioskRequest, value, rt_sendRequest, rt_kioskRequest, int_sendRequest, SetFare, SetMeal, SetBaggage } from '../flight.state';
+import { bookObj, FLightBookState, SetFirstPassengers, value, rt_kioskRequest, int_sendRequest, SetFare, SetMeal, SetBaggage } from '../flight.state';
 import { flightResult, flightData } from 'src/app/models/search/flight';
 import { SSR } from '../../result/flight.state';
 import { Navigate } from '@ngxs/router-plugin';
@@ -10,8 +10,6 @@ import { CompanyState } from '../../company.state';
 import { environment } from 'src/environments/environment';
 import { UserState } from '../../user.state';
 import * as moment from 'moment';
-import { MultiCityResultState } from '../../result/flight/multi-city.state';
-import { MultiCitySearch, MultiCitySearchState } from '../../search/flight/multi-city.state';
 import { GST } from './oneway.state';
 import { InternationalResultState } from '../../result/flight/international.state';
 import { RoundTripSearchState, RoundTripSearch } from '../../search/flight/round-trip.state';
@@ -107,7 +105,7 @@ export class InternationalBookState {
                     states.patchState({
                         fareQuote: response.Results,
                         isPriceChanged: response.IsPriceChanged,
-                        flight: this.internationalbookData(states.getState().fareQuote)
+                        flight: this.internationalbookData(response.Results)
                     });
                 }
                 else if (response.Error.ErrorCode == 6) {

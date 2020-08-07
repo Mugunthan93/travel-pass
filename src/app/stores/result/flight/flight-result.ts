@@ -1,6 +1,8 @@
 import { flightResult, flightData } from 'src/app/models/search/flight';
 import { itinerarytrip, emailtrip, resultObj, trips, baggage, fareRule } from '../flight.state';
 import * as moment from 'moment';
+import * as _ from 'lodash';
+import { isNullOrUndefined } from 'util';
 
 
 

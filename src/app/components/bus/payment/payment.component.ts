@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-payment',
-  templateUrl: './payment.page.html',
-  styleUrls: ['./payment.page.scss'],
+  templateUrl: './payment.component.html',
+  styleUrls: ['./payment.component.scss'],
 })
-export class PaymentPage implements OnInit {
+export class PaymentComponent implements OnInit {
 
   fares: any[] = [
     { name: 'Base Fare', value: '1150' },
@@ -17,13 +18,15 @@ export class PaymentPage implements OnInit {
     { name: 'Net Payable', value: '1150' }
   ];
 
-  constructor() { }
+  constructor(
+    public modalCtrl : ModalController
+  ) { }
 
   ngOnInit() {
   }
 
   bookBus() {
-    
+    this.modalCtrl.dismiss(null, null, 'bus-payment');
   }
 
 }

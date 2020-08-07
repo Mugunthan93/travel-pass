@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { IonInput, ModalController } from '@ionic/angular';
+import { IonInput, ModalController, IonSearchbar } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { city, hotelcity, SharedState, GetFlightCity, GetHotelCity, GetNationality, nationality } from 'src/app/stores/shared.state';
 import { Store } from '@ngxs/store';
@@ -15,7 +15,7 @@ import { StateReset } from 'ngxs-reset-plugin';
 export class SelectModalComponent implements OnInit {
 
   @Input() title: string;
-  @ViewChild('city', { static: true, read: IonInput }) cityInput: IonInput;
+  @ViewChild('city', { static: true, read: IonSearchbar }) cityInput: IonSearchbar;
 
   flightcities$: Observable<city[]>;
   hotelcities$: Observable<hotelcity[]>;

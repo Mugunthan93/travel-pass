@@ -1,5 +1,12 @@
+@import "../base/color.scss";
 
 //variable
 
-// $router-color:;
-// $router-background:;
+$router-color:$geraldine;
+$router-background:transparent;
+
+
+ion-router-link{
+    --color:#{$router-color};
+    --background:#{$router-background};
+}

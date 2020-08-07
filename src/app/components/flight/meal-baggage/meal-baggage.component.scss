@@ -1,4 +1,4 @@
-@import "../../../../style/util/variable.scss";
+@import "../../../../style/base/color.scss";
 
 ion-content{
     >ion-segment{
@@ -59,7 +59,7 @@ ion-footer{
                 ion-button{
                     float:right;
                     margin-right:8px;
-                    background:#{$btn4-bg};
+                    background:#{$geraldine};
                     ion-text{
                         color:white;
                     }

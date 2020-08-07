@@ -1,40 +1,48 @@
-@import "../util/variable.scss";
+@import "../base/color.scss";
+@import "../base/fonts.scss";
 
 //variable
 
-// $select-placeholder:(
-//     "color":,
-//     "opacity":
-// );
+$select-placeholder:(
+    "color":$suva-grey,
+    "opacity": 1
+);
 
-// $select-padding:(
-//     "bottom":,
-//     "end":,
-//     "start":,
-//     "top":
-// );
+$select-padding:(
+    "bottom":0px,
+    "end":0px,
+    "start":0px,
+    "top":0px
+);
+
 $content-background:"./assets/ng-img/bg.jpeg";
 
 ion-select{
-    --padding-top: 0px;
-    --padding-bottom: 0px;
-    --padding-start: 0px;
+
+    --padding-bottom: map.get($select-padding, "bottom");
+    --padding-end: map.get($select-padding, "end");
+    --padding-start: map.get($select-padding, "start");
+    --padding-top: map.get($select-padding, "top");
+
+    --placeholder-color: map.get($select-placeholder, "color");
+    --placeholder-opacity: map.get($select-placeholder, "opacity");
+
     align-items: center;
 }
 
 .cabinClass, .cc, .purpose{
     div.alert-head{
-        background:#5BACDC;
-        --ion-text-color:white;
+        background:#{$geraldine};
+        --ion-text-color:#{$white};
     }
     div.alert-radio-group{
         background: url(#{$content-background});
         button{
             div.alert-button-inner{
                 div.alert-radio-icon{
-                    border-color:#5BACDC;
+                    border-color:#{$geraldine};
                     div.alert-radio-inner{
-                        background-color: #5BACDC;
+                        background-color: #{$geraldine};
                     }
                 }
             }
@@ -42,11 +50,11 @@ ion-select{
     }
     div.alert-button-group{
         justify-content: space-around;
-        background:#5BACDC;
+        background:#{$geraldine};
         button {
-            background: #5BACDC;
+            background: #{$geraldine};
             span {
-                color:#{$white-text};
+                color:#{$white};
             }
         }
     }

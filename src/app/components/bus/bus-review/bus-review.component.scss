@@ -1,4 +1,3 @@
-@import "../../../../style/util/variable.scss";
 
 ion-content{
     ion-card{
@@ -31,9 +30,6 @@ ion-content{
                 }
                 >ion-button{
                     --background:transparent;
-                }
-                >ion-text{
-                    color:#{$btn2-bg};
                 }
             }
         }

@@ -1,84 +1,68 @@
-@import "../util/variable.scss";
-@import "../util/mixins.scss";
+@import "../base/color.scss";
 
 //variable
 
-// $tab-bar-color:$bar-color;
-// $tab-bar-background:$bar-bg;
-// $tab-bar-border:;
+$tab-bar-color:$suva-grey;
+$tab-bar-background:$white;
+$tab-bar-border:0px;
 
-// $tab-button-color:;
-// $tab-button-ripple-color:;
-// $rab-button-color-type:(
-//     "focused":,
-//     "selected":
-// );
+$tab-button-color:$suva-grey;
+$tab-button-ripple-color:$suva-grey;
+$tab-button-color-type:(
+    "focused":$suva-grey,
+    "selected":$geraldine
+);
 
-// $tab-button-background:;
-// $tab-button-background-type:(
-//     "focused":,
-//     "focused-opacity":
-// );
+$tab-button-background:transparent;
+$tab-button-background-type:(
+    "focused":transparent,
+    "focused-opacity":1
+);
 
-// $tab-button-padding:(
-//     "bottom":,
-//     "end":,
-//     "start":,
-//     "top":
-// );
+$tab-button-padding:(
+    "bottom":0px,
+    "end":0px,
+    "start":0px,
+    "top":0px
+);
 
 ion-tab-bar{
-    // --color: #{$transparent};
-    --background: white;
 
-    // margin-left:15px;
-    // margin-right:15px;
-    // margin-top:20px;
-    // margin-bottom:20px;
-    // height:6vh;
+    --background:#{$tab-bar-background};
+    --border:#{$tab-bar-border};
+    --color:#{$tab-bar-color};
+
 }
 
-// ion-tab-button{
-//     --color :#{$text-color};
-//     // --color-focused :
-//     // --color-selected :
-//     // --ripple-color :
-//     // --background :
-//     // --background-focused : ;
-//     // --background-focused-opacity :
-//     // --padding-bottom : ;
-//     // --padding-end : ;
-//     // --padding-start : ;
-//     // --padding-top : ;
+ion-tab-button {
 
-//     &[aria-selected="true"] {
-//         background: #{$selected-bg};
-//     }
+    --background:#{$tab-button-background};
+    --background-focused:map.get($tab-button-background-type,"focused");
+    --background-focused-opacity:map.get($tab-button-background-type,"focused-opacity");
 
-// }
+    --color:#{$tab-button-color};
+    --color-focused:map.get($tab-button-color-type, "focused");
+    --color-selected:map.get($tab-button-color-type, "selected");
 
+    --padding-bottom:map.get($tab-button-padding, "bottom");
+    --padding-end:map.get($tab-button-padding, "end");
+    --padding-start:map.get($tab-button-padding, "start");
+    --padding-top:map.get($tab-button-padding, "top");
 
+    --ripple-color:#{$tab-button-ripple-color};
 
-ion-tabs{
-    >ion-tab-bar{
-        >ion-tab-button{
-            >ion-icon{
-                color:#{$icon-color} !important;
-            }
-            >ion-label{
-                color:#{$icon-color} !important;
-            }
+    >ion-icon{
+        color:#{$suva-grey};
+    }
 
-            &[aria-selected="true"] {
-                >ion-icon {
-                    color:#{$icon-color2} !important;
-                }
+    &[aria-selected="true"]{
+        >ion-icon{
+            color:#{$geraldine};
+        }
 
-                >ion-label {
-                    color:#{$icon-color2} !important;
-                }
-                
-            }
+        >ion-label{
+            color:#{$geraldine};
         }
     }
+
 }

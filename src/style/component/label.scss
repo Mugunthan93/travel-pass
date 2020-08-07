@@ -1,19 +1,56 @@
-@import "../util/variable.scss";
+@import "../base/color.scss";
+@import "../base/fonts.scss";
 
 //variable 
 
-// $label-color:;
+$label-color:$black;
+$label-family:'roboto-label';
+
 
 ion-label{
-    --color: #{$text-color} !important;
-    font-size: #{$text-font-size};
-    margin:0px;
-    font-weight: bold !important;
-    font-size: 12px !important;
-}
+    --color: #{$label-color};
+    font-family:#{$label-family};
 
-[aria-selected="true"]{
-    ion-label{
-        color:#{$selected-color};
+    margin:0px;
+
+    &.small{
+
+        font-size:#{$small-font};
+
     }
+
+    &.medium{
+
+        font-size:#{$medium-font};
+
+    }
+
+    &.large{
+
+        font-size:#{$large-font};
+
+    }
+
+    &[aria-selected="true"]{
+
+        --color:#{$geraldine};
+
+    }
+
+    &.white {
+        color:#{$white};
+    }
+
+    &.bold {
+        font-weight: 700;
+    }
+
+    &.bolder {
+        font-weight: 800;
+    }
+
+    &.boldest {
+        font-weight: 900;
+    }
+
 }

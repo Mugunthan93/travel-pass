@@ -1,4 +1,3 @@
-@import "../../../../style/util/variable.scss";
 
 
 ion-item{
@@ -33,12 +32,6 @@ ion-footer {
         >ion-col {
             ion-button {
                 width: -webkit-fill-available;
-                --opacity: 1;
-                --background:#{$btn4-bg};
-
-                ion-text {
-                    color: white;
-                }
             }
         }
     }

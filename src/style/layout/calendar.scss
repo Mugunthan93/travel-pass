@@ -1,0 +1,21 @@
+
+@import "../base/color.scss";
+@import "../base/fonts.scss";
+
+.ion2-calendar {
+    button {
+        &.days-btn{
+            >p {
+                font-family: 'roboto-label' !important;
+                font-size:#{$small-font} !important;
+            }
+        }
+        &.days-btn.on-selected {
+            >p {
+                font-family: 'roboto-title' !important;
+                font-size:#{$large-font} !important;
+            }
+
+        }
+    }
+}

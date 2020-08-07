@@ -2,12 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ModalController, IonSelect } from '@ionic/angular';
-import { CityModalComponent } from 'src/app/components/shared/city-modal/city-modal.component';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
 import { PassengerModalComponent } from 'src/app/components/flight/passenger-modal/passenger-modal.component';
 import { Store } from '@ngxs/store';
 import { AlertOptions } from '@ionic/core';
 import { MultiCityForm, MultiCitySearch } from 'src/app/stores/search/flight/multi-city.state';
+import { SelectModalComponent } from 'src/app/components/shared/select-modal/select-modal.component';
 
 @Component({
   selector: 'app-multi-city',
@@ -70,7 +70,10 @@ export class MultiCityPage implements OnInit {
   async selectCity(field: string, control: any[], i: number) {
     console.log(control,i);
     const modal = await this.modalCtrl.create({
-      component: CityModalComponent
+      component: SelectModalComponent,
+      componentProps: {
+        title: 'city'
+      }
     });
 
     modal.onDidDismiss().then(
@@ -121,7 +124,8 @@ export class MultiCityPage implements OnInit {
     const options: CalendarModalOptions = {
       title: 'DEPARTURE',
       pickMode: 'single',
-      color: 'dark',
+      color: '#e87474',
+      cssClass: 'ion2-calendar',
       weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       weekStart: 1,
       canBackwardsSelected: false,

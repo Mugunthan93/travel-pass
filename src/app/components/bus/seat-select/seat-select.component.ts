@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { BusReviewComponent } from 'src/app/components/bus/bus-review/bus-review.component';
-import { BusPhotoComponent } from 'src/app/components/bus/bus-photo/bus-photo.component';
-import { BusAmentiesComponent } from 'src/app/components/bus/bus-amenties/bus-amenties.component';
-import { BusPolicyComponent } from 'src/app/components/bus/bus-policy/bus-policy.component';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+import { BusReviewComponent } from '../bus-review/bus-review.component';
+import { BusPhotoComponent } from '../bus-photo/bus-photo.component';
+import { BusAmentiesComponent } from '../bus-amenties/bus-amenties.component';
+import { BusPolicyComponent } from '../bus-policy/bus-policy.component';
+import { PickDropPointComponent } from '../pick-drop-point/pick-drop-point.component';
 
 @Component({
-  selector: 'app-select-seat',
-  templateUrl: './select-seat.page.html',
-  styleUrls: ['./select-seat.page.scss'],
+  selector: 'app-seat-select',
+  templateUrl: './seat-select.component.html',
+  styleUrls: ['./seat-select.component.scss'],
 })
-export class SelectSeatPage implements OnInit {
+export class SeatSelectComponent implements OnInit {
 
   continue: boolean = false;
 
@@ -25,7 +26,7 @@ export class SelectSeatPage implements OnInit {
 
   async busReview() {
     const modal = await this.modalCtrl.create({
-      component : BusReviewComponent
+      component: BusReviewComponent
     });
 
     return await modal.present();
@@ -61,8 +62,13 @@ export class SelectSeatPage implements OnInit {
     }
   }
 
-  pickupdrop() {
-    this.router.navigate(['/', 'home', 'result', 'bus','select-drop-and-pickup']);
+  async pickupdrop() {
+    const modal = await this.modalCtrl.create({
+      component: PickDropPointComponent,
+      id : 'pick-drop'
+    });
+
+    return await modal.present();
   }
 
 }

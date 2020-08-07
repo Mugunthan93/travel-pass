@@ -1,7 +1,5 @@
-@import "../../../../../../style/util/variable.scss";
-
-ion-content{
-    >ion-grid{
+ion-content {
+    >ion-grid {
         >ion-row:nth-child(1) {
             ion-card.tab {
 
@@ -17,15 +15,18 @@ ion-content{
 
         >ion-row:nth-child(2) {
             >ion-list {
-                >ion-row{
-                    >ion-col{
+                >ion-row {
+                    >ion-col {
                         flex-direction: column;
+
                         >ion-item {
                             --inner-padding-top: 10px;
                             --inner-padding-bottom: 10px;
+
                             >ion-row {
                                 height: 100%;
                                 flex-direction: column;
+
                                 >ion-title {
                                     padding-left: 0px;
                                 }
@@ -38,21 +39,20 @@ ion-content{
     }
 }
 
-ion-footer{
-    >ion-toolbar{
-        --background: #{$toolbar-bg};
-        >ion-item{
-            >ion-row{
+ion-footer {
+    >ion-toolbar {
+        >ion-item {
+            >ion-row {
                 flex-direction: column;
-                >ion-title{
-                    padding:0px;
+
+                >ion-title {
+                    padding: 0px;
                 }
             }
         }
+
         ion-button {
             width: -webkit-fill-available;
-            --opacity: 1;
-            --background:#{$btn4-bg};
 
             ion-text {
                 color: white;

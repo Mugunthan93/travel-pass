@@ -4,6 +4,7 @@ import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { sortButton, FlightResultState, SortChange, SortBy } from 'src/app/stores/result/flight.state';
 import { ResultState } from 'src/app/stores/result.state';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-result-sorting',
@@ -55,6 +56,15 @@ export class ResultSortingComponent implements OnInit {
   sorting(item: sortButton) {
     console.log(item);
     this.store.dispatch(new SortBy(item));
+  }
+
+  selectedButton(button : sortButton) {
+    if (this.currentflightButton.property == button.property) {
+      return 'selectedItem';
+    }
+    else if (!(this.currentflightButton.property == button.property)){
+      return '';
+    }
   }
 
 }

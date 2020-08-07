@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { SelectDropAndPickupPage } from './select-drop-and-pickup.page';
+import { SeatSelectComponent } from './seat-select.component';
 
-describe('SelectDropAndPickupPage', () => {
-  let component: SelectDropAndPickupPage;
-  let fixture: ComponentFixture<SelectDropAndPickupPage>;
+describe('SeatSelectComponent', () => {
+  let component: SeatSelectComponent;
+  let fixture: ComponentFixture<SeatSelectComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SelectDropAndPickupPage ],
+      declarations: [ SeatSelectComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SelectDropAndPickupPage);
+    fixture = TestBed.createComponent(SeatSelectComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

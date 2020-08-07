@@ -1,14 +1,14 @@
+
 <ion-header id="sidebar">
   <ion-toolbar>
     <ion-buttons  slot="start">
       <ion-button (click)="openMenu()">
         <ion-icon name="menu"></ion-icon>
       </ion-button>
+      <!-- <ion-menu-button></ion-menu-button> -->
     </ion-buttons>
-    <ion-title>
-        <ion-text>
-          Travellers Pass
-        </ion-text>
+    <ion-title class="large">
+      Travellers Pass
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="notification()">
@@ -27,17 +27,17 @@
     <ion-tab-bar slot="bottom" class="ion-justify-content-around">
       <ion-tab-button tab="home-tab">
         <ion-icon name="briefcase"></ion-icon>
-        <ion-label>Home</ion-label>
+        <ion-label class="large">Home</ion-label>
       </ion-tab-button>
   
       <ion-tab-button tab="trip-tab">
         <ion-icon name="home"></ion-icon>
-        <ion-label>Trips</ion-label>
+        <ion-label class="large">Trips</ion-label>
       </ion-tab-button>
   
       <ion-tab-button tab="expense-tab">
         <ion-icon name="card"></ion-icon>
-        <ion-label>Expense</ion-label>
+        <ion-label class="large">Expense</ion-label>
       </ion-tab-button>
     </ion-tab-bar>
   </ion-tabs>

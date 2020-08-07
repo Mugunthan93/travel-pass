@@ -4,10 +4,6 @@ import { Store } from '@ngxs/store';
 import { SearchState } from 'src/app/stores/search.state';
 import { Navigate } from '@ngxs/router-plugin';
 import { StateReset } from 'ngxs-reset-plugin';
-import { FlightSearchState } from 'src/app/stores/search/flight.state';
-import { OneWaySearchState } from 'src/app/stores/search/flight/oneway.state';
-import { RoundTripSearchState } from 'src/app/stores/search/flight/round-trip.state';
-import { MultiCitySearchState } from 'src/app/stores/search/flight/multi-city.state';
 
 @Component({
   selector: 'app-search',

@@ -1,5 +1,9 @@
-
+@import "../base/color.scss";
 
 //variable
 
-// $note-color:;
+$note-color:$geraldine;
+
+ion-note{
+    --color:#{$note-color};
+}

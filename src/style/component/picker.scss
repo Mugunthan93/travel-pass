@@ -1,23 +1,46 @@
-
+@import "../base/color.scss";
 
 //variable
 
-// $picker-backdrop-opacity:;
-// $picker-border-color:;
+$picker-backdrop-opacity:0.5;
+$picker-border-color:transparent;
 
-// $picker-background:;
-// $picker-background-rgb:;
+$picker-background:none;
+$picker-background-rgb:none;
 
-// $picker-box-model:(
-//     "height":,
-//     "width":,
-//     "min-height":,
-//     "min-width":,
-//     "max-height":,
-//     "max-width":
-// );
-// $picker-border:(
-//     "radius":,
-//     "style":,
-//     "width":
-// );
+$picker-height:initial;
+$picker-width:initial;
+$picker-height-type:(
+    "min":30%,
+    "max":50%
+);
+$picker-width-type:(
+    "min":max-content,
+    "max":max-content
+);
+$picker-border:(
+    "radius":0px,
+    "style":none,
+    "width":0px
+);
+
+
+ion-picker {
+    --backdrop-opacity:#{$picker-backdrop-opacity};
+    --border-color:#{$picker-border-color};
+    --background:#{$picker-background};
+    --background-rgb:#{$picker-background-rgb};
+
+    --width:#{$picker-width};
+    --height:#{$picker-height};
+
+    --min-width:map.get($picker-width-type,"min");
+    --max-width:map.get($picker-width-type,"max");
+
+    --min-height:map.get($picker-height-type,"min");
+    --max-height:map.get($picker-height-type,"max");
+
+    --border-radius:map.get($picker-border,"radius");
+    --border-style:map.get($picker-border,"style");
+    --border-width:map.get($picker-border,"width");
+}

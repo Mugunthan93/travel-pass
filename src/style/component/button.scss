@@ -1,81 +1,96 @@
-@import '../util/variable.scss';
+@import '../base/color.scss';
 
 //BACKBUTTON
 
-// //variable
-$back-button-color:$btn2-bg;
-$back-button-opacity:$btn-opacity;
-// $back-button-ripple-color:;
-// $back-button-color-type:(
-//     "focused":,
-//     "hover":
-// );
+$back-button-color:$white;
+$back-button-color-type:(
+    "focused":$white,
+    "hover":$white
+    );
 
-$back-button-background:$btn2-bg;
-// $back-button-background-type:(
-//     "focused":,
-//     "hover":,
-//     "focused-opacity":,
-//     "hover-opacity":
-// );
+$back-button-background:$white;
+$back-button-background-type:(
+    "focused":transparent,
+    "hover":transparent,
+    "focused-opacity":1,
+    "hover-opacity":1
+    );
 
-// //box-model
+$back-button-border-radius:0px;
+$back-button-icon-margin:(
+    "margin-bottom":0px,
+    "margin-end":0px,
+    "margin-start":0px,
+    "margin-top":0px,
+);
 
-// $back-button-border-radius:;
-// $back-button-model-box:(
-//     "min-height":,
-//     "min-width":,
-//     "margin-bottom":,
-//     "margin-end":,
-//     "margin-start":,
-//     "margin-top":,
-//     "padding-bottom":,
-//     "padding-end":,
-//     "padding-start":,
-//     "padding-top":
-// );
-// $back-button-icon-model-box:(
-//     "margin-bottom":,
-//     "margin-end":,
-//     "margin-start":,
-//     "margin-top":,
-//     "padding-bottom":,
-//     "padding-end":,
-//     "padding-start":,
-//     "padding-top":
-// );
+$back-button-icon-padding:(
+    "padding-bottom":0px,
+    "padding-end":0px,
+    "padding-start":0px,
+    "padding-top":0px
+);
 
-// $back-button-icon-font-weight:;
-// $back-button-transition:;
+$back-button-min-height:initial;
+$back-button-min-width:16px;
+
+$back-button-margin:(
+    "margin-bottom":0px,
+    "margin-end":0px,
+    "margin-start":0px,
+    "margin-top":0px,
+);
+
+$back-button-opacity:1;
+$back-button-padding:(
+    "padding-bottom":0px,
+    "padding-end":0px,
+    "padding-start":0px,
+    "padding-top":0px
+);
+
+$back-button-border-radius:0px;
+$back-button-icon-font-size: 16px;
+$back-button-icon-font-weight:none;
+
+$back-button-ripple-color:$white;
+$back-button-transition:none;
 
 //BUTTON
 
 //variable
 
-$button-color:$btn3-bg;
-$button-opacity:$btn-opacity;
-// $button-border:(
-//     "color":,
-//     "style":,
-//     "width":
-// );
-// $button-padding:(
-//     "bottom":,
-//     "end":,
-//     "start":,
-//     "top":
-// );
-// $button-background:;
-// $button-background-type:(
-//     "activated":,
-//     "focused":,
-//     "hover":,
-//     "activated-opacity":,
-//     "focused-opacity":,
-//     "hover-opacity":
-// );
-// $button-transition:;
-// $button-box-shadow:;
+$button-color:$white;
+$button-color-type:(
+    "activated":$white,
+    "focused":$white,
+    "hover":$white,
+);
+$button-opacity:1;
+$button-border:(
+    "color": $malibu,
+    "style": none,
+    "width": 0px,
+    "radius": 4px
+);
+$button-padding:(
+    "bottom":0px,
+    "end":0px,
+    "start":0px,
+    "top":0px
+);
+$button-background:$geraldine;
+$button-background-type:(
+    "activated":$beauty-bush,
+    "focused":$beauty-bush,
+    "hover":$beauty-bush,
+    "activated-opacity":0,
+    "focused-opacity":0,
+    "hover-opacity":0
+);
+$button-ripple-color: $white;
+$button-transition:none;
+$button-box-shadow:none;
 
 //FABBUTTON
 
@@ -111,30 +126,110 @@ $button-opacity:$btn-opacity;
 // $fab-box-shadow:;
 
 ion-button {
-    // --background: #{$button-color};
-    --background:-webkit-linear-gradient(354deg, #53b2fe, #065af3);
-    // --background:-webkit-linear-gradient(354deg, #ffc2c2, #e87474);
-    >ion-text{
-        color:#{$white-text};
+
+    --background: #{$button-background};
+    --background-activated: map.get($button-background-type, "activated");
+    --background-activated-opacity: map.get($button-background-type, "activated-opacity");
+    --background-focused: map.get($button-background-type, "focused");
+    --background-focused-opacity: map.get($button-background-type, "focused-opacity");
+    --background-hover: map.get($button-background-type, "hover");
+    --background-hover-opacity: map.get($button-background-type, "hover-opacity");
+
+    --border-color: map.get($button-border,"color");
+    --border-style: map.get($button-border,"style");
+    --border-width: map.get($button-border, "width"); 
+    --border-radius: map.get($button-border, "radius");
+
+    --box-shadow:#{$button-box-shadow};
+    --color:#{$button-color};
+
+    --color-activated: map.get($button-color-type, "activated");
+    --color-focused: map.get($button-color-type, "focused");
+    --color-hover: map.get($button-color-type, "hover");
+
+    --opacity:#{$button-opacity};
+
+    --padding-bottom: map.get($button-padding, "bottom");
+    --padding-end: map.get($button-padding, "end");
+    --padding-start: map.get($button-padding, "start");
+    --padding-top: map.get($button-padding, "top");
+    
+    --ripple-color: #{$button-ripple-color};
+    --transition:#{$button-transition};
+
+    /////////////////////////////////
+
+    >ion-label, >ion-text{
+        color:#{$white};
     }
-    >ion-icon {
-        // color:#{$white-text};
-        // filter: invert(100%) sepia(100%) saturate(100%) hue-rotate(100deg) brightness(100%) contrast(100%);
-        color:#{$icon-color2};
+
+    &.swap {
+
+        --opacity: 1;
+        --background: transparent;
+
+       >ion-icon {
+           color:#{$geraldine};
+       }
+
     }
+
+    &.add {
+
+        >ion-icon {
+            color:#{$white};
+        }
+
+    }
+
+
 }
 
 ion-back-button {
-    --color:#{$back-button-color};
-    --background: #{$back-button-background};
-    --padding-start:auto !important;
-    --padding-end:auto !important;
-    --icon-padding-start: 0px;
-    --icon-padding-end: 0px;
-}
 
-button{
-    background: transparent;
+    --background: #{$back-button-background};
+    --background-focused: map.get($back-button-background-type, "focused");
+    --background-focused-opacity: map.get($back-button-background-type, "focused-opacity");
+    --background-hover: map.get($back-button-background-type, "hover");
+    --background-hover-opacity: map.get($back-button-background-type, "hover-opacity");
+
+    --border-radius: #{$back-button-border-radius};
+    --color: #{$back-button-color};
+    --color-focused: map.get($back-button-color-type, "focused");
+    --color-hover: map.get($back-button-color-type, "hover");
+    --icon-font-size: #{$back-button-icon-font-size};
+    --icon-font-weight: #{$back-button-icon-font-weight};
+
+    --opacity:#{$back-button-opacity};
+
+    --padding-bottom: map.get($back-button-padding, "bottom");
+    --padding-end: map.get($back-button-padding, "end");
+    --padding-start: map.get($back-button-padding, "start");
+    --padding-top: map.get($back-button-padding, "top");
+
+    --ripple-color: #{$back-button-ripple-color};
+    --transition:#{$back-button-transition};
+
+    --min-height:#{$back-button-min-height};
+    --min-width:#{$back-button-min-width};
+
+    --margin-bottom: map.get($back-button-margin, "bottom");
+    --margin-end: map.get($back-button-margin, "end");
+    --margin-start: map.get($back-button-margin, "start");
+    --margin-top: map.get($back-button-margin, "top");
+
+    --icon-padding-bottom: map.get($back-button-icon-padding, "bottom");
+    --icon-padding-end: map.get($back-button-icon-padding, "end");
+    --icon-padding-start: map.get($back-button-icon-padding, "start");
+    --icon-padding-top: map.get($back-button-icon-padding, "top");
+
+    --icon-margin-bottom: map.get($back-button-icon-margin, "bottom");
+    --icon-margin-end: map.get($back-button-icon-margin, "end");
+    --icon-margin-start: map.get($back-button-icon-margin, "start");
+    --icon-margin-top: map.get($back-button-icon-margin, "top");
+
+
+
 }
 
 

@@ -5,34 +5,18 @@ ion-content{
     >ion-row{
         flex-direction: column;
         >ion-item{
-            >ion-label{
-                font-size:18px !important;
-            }
+            --padding-start: 16px !important;
+            --padding-top: 8px !important;
+            --padding-bottom: 8px  !important;
         }
         >ion-card{
-            >ion-card-header{
-                padding:0px;
-                >ion-item{
-                    >ion-card-title{
-                        >ion-label{
-                            font-size: 15px !important;
-                        }
-                    }
-                }
-            }
+            --background: transparent;
             >ion-card-content{
                 padding:10px;
                 >ion-row{
                     margin: 5px 10px;
                     >ion-col{
                         align-self: center;
-                        >ion-text{
-                            font-size: 15px;
-                        }
-                        >ion-label{
-                            font-size: 17px !important;
-                            font-weight: bold;
-                        }
                     }
                 }
             }

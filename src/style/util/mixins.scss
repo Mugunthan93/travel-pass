@@ -29,23 +29,9 @@
 @mixin search-grid-input($side1,$side2){
     ion-row{
         flex-direction: column;
-        ion-text {
+        ion-label, ion-text {
             margin-#{$side2}:auto !important;
             margin-#{$side1}:0 !important;
-            
-        }
-        ion-text:nth-child(1) {
-            color: black;
-            font-size: 17px;
-            font-weight: 500;
-        }
-        ion-text:nth-child(2) {
-            font-weight: 500;
-            font-size: small;
-        }
-        ion-text:nth-child(3) {
-            font-weight: 500;
-            font-size: small;
         }
     }
 }
@@ -53,7 +39,7 @@
 @mixin search-grid-switch(){
     &>ion-button{
         --opacity: 1;
-        --background: #{$transparent};
+        --background: transparent;
         ion-icon {
             height: 25px;
             width: 100%;

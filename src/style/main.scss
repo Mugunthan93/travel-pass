@@ -1,7 +1,6 @@
 
 @import "base/color.scss";
 @import "base/fonts.scss";
-@import "base/typography.scss";
 
 @import "component/action-sheet.scss";
 @import "component/alert.scss";
@@ -45,9 +44,13 @@
 @import "component/toolbar.scss";
 
 @import "layout/grid.scss";
+@import "layout/calendar.scss";
 
-@import "util/function.scss";
-@import "util/variable.scss";
 @import "util/mixins.scss";
 
 @import "vendors/ng-material/expansion-panel.scss";
+
+
+ion-header{
+    background: #{$geraldine};
+}

@@ -5,6 +5,11 @@ ion-content{
     >ion-row{
         display: flex;
         flex-direction: column;
+        >ion-item {
+            --padding-start: 16px !important;
+            --padding-top: 8px !important;
+            --padding-bottom: 8px !important;
+        }
         >ion-card{
             >ion-card-content{
                 ion-item {

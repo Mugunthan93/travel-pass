@@ -1,53 +1,240 @@
-@import "../util/variable.scss";
+@import "../base/color.scss";
+@import "../base/fonts.scss";
 
 //variable
 
-$toolbar-color:$bar-color;
-// $toolbar-opacity:;
-
-$toolbar-background:$bar-bg2;
-
-// $toolbar-min-height:;
-// $toolbar-border:(
-//     "color":,
-//     "style":,
-//     "width":
-// );
-
-// $toolbar-padding:(
-//     "bottom":,
-//     "end":,
-//     "start":,
-//     "top":
-// );
+$toolbar-color:$white;
+$toolbar-opacity:1;
+$toolbar-background:$geraldine;
+$toolbar-min-height:48px;
+$toolbar-border:(
+    "color":$geraldine,
+    "style":none,
+    "width":0px
+);
+$toolbar-padding:(
+    "bottom":0px,
+    "end":0px,
+    "start":0px,
+    "top":0px
+);
 
 ion-toolbar {
-    --color: #{$toolbar-color};
+
     --background: #{$toolbar-background};
-    // --background: #e87474 0% 0% no-repeat padding-box;
-    opacity:1;
+    --border-color: map.get($toolbar-border, "color");
+    --border-style: map.get($toolbar-border, "style");
+    --border-width: map.get($toolbar-border, "width");
+    --color: #{$toolbar-color};
+    --min-height: #{$toolbar-min-height};
+    --opacity:#{$toolbar-opacity};
+    --padding-bottom: map.get($toolbar-padding, "bottom");
+    --padding-end: map.get($toolbar-padding, "end");
+    --padding-start: map.get($toolbar-padding, "start");
+    --padding-top: map.get($toolbar-padding, "top");
+
 
     ion-button{
         --opacity: 1;
-        --background: #{$transparent};
+        --background: transparent;
         >ion-icon{
-            color:#{$white-icon} !important;
+            color:#{$white} !important;
         }
 
-        >ion-title {
-            >ion-text {
-                color: white !important;
-                font-weight: bold !important;
-                font-size: 17px !important;
+        >span {
+            color : #{$white};
+        }
+    }
+    
+    >ion-title{
+        color:#{$white} !important;
+    }
+}
+
+ion-toolbar {
+
+    &.result-footer{
+
+        height: 70px;
+        --background:#{$suva-grey};
+
+        label {
+            color: #{$white};
+        }
+
+        ion-button {
+            --background: #{$geraldine} !important;
+        }
+
+        >ion-row.one-way {
+            height: -webkit-fill-available;
+            justify-content: space-between;
+
+            ion-col {
+                max-width: fit-content;
+                height: 51px;
+                margin: auto;
+
+                ion-img {
+                    width: 51px;
+                    height: 45px;
+                }
+
+                &:first-child {
+                    display: flex;
+                    flex-direction: row;
+
+                    >ion-row {
+                        display: flex;
+                        flex-direction: column;
+                        margin-left: 5px;
+                        justify-content: space-around;
+                    }
+                }
+
+                &:not(:first-child) {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-around;
+                }
             }
         }
+
+        >ion-row.animated-round-trip {
+            height: -webkit-fill-available;
+            justify-content: space-around;
+
+            label {
+                margin: 25px;
+            }
+
+            >ion-row {
+                display: flex;
+                flex-direction: column;
+                height: fit-content;
+                margin: auto;
+
+                >ion-row {
+
+                    >ion-row {
+                        margin-left: 5px;
+                        display: flex;
+                        flex-direction: column;
+                    }
+                }
+            }
+        }
+
+        >ion-row.multi-city {
+
+            justify-content: space-between;
+            margin: 0px 10px;
+            align-items: center;
+            height: -webkit-fill-available;
+
+            >ion-label {
+                align-self: center;
+            }
+
+            ion-button {
+                >ion-label {
+                    margin: 14px !important;
+                }
+            }
+        }
+
     }
 
-    >ion-title{
-        >ion-text{
-            color: white !important;
-            font-weight: bold !important;
-            font-size: 17px !important;
+    &.book-footer{
+
+        height: 50px;
+        --background:#{$suva-grey};
+
+        label {
+            color: #{$white};
         }
+
+        ion-button {
+            --background: #{$geraldine} !important;
+        }
+
+        >ion-row.one-way {
+            height: -webkit-fill-available;
+            justify-content: space-between;
+
+            ion-col {
+                max-width: fit-content;
+                height: 51px;
+                margin: auto;
+
+                ion-img {
+                    width: 51px;
+                    height: 45px;
+                }
+
+                &:first-child {
+                    display: flex;
+                    flex-direction: row;
+
+                    >ion-row {
+                        display: flex;
+                        flex-direction: column;
+                        margin-left: 5px;
+                        justify-content: space-around;
+                    }
+                }
+
+                &:not(:first-child) {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-around;
+                }
+            }
+        }
+
+        >ion-row.animated-round-trip {
+            height: -webkit-fill-available;
+            justify-content: space-around;
+
+            label {
+                margin: 25px;
+            }
+
+            >ion-row {
+                display: flex;
+                flex-direction: column;
+                height: fit-content;
+                margin: auto;
+
+                >ion-row {
+
+                    >ion-row {
+                        margin-left: 5px;
+                        display: flex;
+                        flex-direction: column;
+                    }
+                }
+            }
+        }
+
+        >ion-row.multi-city {
+
+            justify-content: space-between;
+            margin: 0px 10px;
+            align-items: center;
+            height: -webkit-fill-available;
+
+            >ion-label {
+                align-self: center;
+            }
+
+            ion-button {
+                >ion-label {
+                    margin: 14px !important;
+                }
+            }
+        }
+
     }
+
 }

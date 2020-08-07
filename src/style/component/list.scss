@@ -1,18 +1,28 @@
-@import "../util/variable.scss";
+@import "../base/color.scss";
 
 //variable
 
-// $list-color:;
-// $list-border-color:;
+$list-header-background:transparent;
 
-// $list-background:;
-// $list-inner-border-width:;
+$list-header-border-type:(
+    "color":transparent,
+    "style":none,
+    "width":0px
+);
 
-// $list-border:(
-//     "style":,
-//     "width":
-// );
+$list-header-color:$black;
+$list-header-inner-border-width:0px;
 
-ion-list{
-    background:#{$transparent} !important;
+
+ion-list {
+    background: transparent !important;
+}
+
+ion-list-header{
+    --background:#{$list-header-background};
+    --border-color:map.get($list-header-border-type, "color");
+    --border-style:map.get($list-header-border-type, "style");
+    --border-width:map.get($list-header-border-type, "width");
+    --color:#{$list-header-color};
+    --inner-border-width:#{$list-header-inner-border-width};
 }

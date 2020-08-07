@@ -1,7 +1,14 @@
-
+@import "../base/color.scss";
 
 //variable
 
-// $skeleton-background:;
-// $skeleton-background-rgb:;
-// $skeleton-border-radius:;
+$skeleton-background:#{$geraldine};
+$skeleton-background-rgb:#{$geraldine-rgb};
+$skeleton-border-radius:5px;
+
+
+ion-skeleton-text{
+    --background : #{$skeleton-background};
+    --background-rgb : #{$skeleton-background-rgb};
+    --border-radius : #{$skeleton-border-radius};
+}

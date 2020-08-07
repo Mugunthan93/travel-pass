@@ -1,4 +1,4 @@
-@import "../../../../style/util/variable.scss";
+@import "../../../../style/base/color.scss";
 
 ion-segment{
     >ion-segment-button{
@@ -30,7 +30,7 @@ ion-segment{
         }
 
         >ion-row.selected {
-            background:#{$btn2-bg};
+            background:#{$geraldine};
 
             ion-text {
                 color: white;
@@ -38,8 +38,3 @@ ion-segment{
         }
     }
 }
-
-// ion-content{
-//     height:64px;
-
-// }

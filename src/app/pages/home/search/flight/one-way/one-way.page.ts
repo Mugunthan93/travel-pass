@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ModalController, PickerController, IonSelect, Platform } from '@ionic/angular';
+import { ModalController, PickerController, IonSelect, Platform, PopoverController } from '@ionic/angular';
 import { CityModalComponent } from 'src/app/components/shared/city-modal/city-modal.component';
 import { PassengerModalComponent } from 'src/app/components/flight/passenger-modal/passenger-modal.component';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
 import { Store } from '@ngxs/store';
 import { OverlayEventDetail, AlertOptions } from '@ionic/core';
 import { OneWaySearch, OneWayForm } from 'src/app/stores/search/flight/oneway.state';
+import { SelectModalComponent } from 'src/app/components/shared/select-modal/select-modal.component';
 
 export interface passengerInput{
   adult: number
@@ -29,6 +30,7 @@ export class OneWayPage implements OnInit {
 
   constructor(
     public modalCtrl: ModalController,
+    public popoverCtrl: PopoverController,
     public pickrCtrl: PickerController,
     public fb: FormBuilder,
     public platform: Platform,
@@ -55,7 +57,10 @@ export class OneWayPage implements OnInit {
 
   async selectCity(field) {
     const modal = await this.modalCtrl.create({
-      component: CityModalComponent
+      component: SelectModalComponent,
+      componentProps: {
+        title: 'city'
+      },
     });
 
     modal.onDidDismiss().then(
@@ -82,7 +87,8 @@ export class OneWayPage implements OnInit {
     const options: CalendarModalOptions = {
       title: 'DEPARTURE',
       pickMode: 'single',
-      color: 'dark',
+      color: '#e87474',
+      cssClass: 'ion2-calendar',
       weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       weekStart: 1,
       canBackwardsSelected: false,

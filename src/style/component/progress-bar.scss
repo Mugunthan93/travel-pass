@@ -1,7 +1,14 @@
-
+@import "../base/color.scss";
 
 //variable
 
-// $progress-bar-background:;
-// $progress-bar-buffer-background:;
-// $progress-bar-progress-background:;
+$progress-bar-background:transparent;
+$progress-bar-buffer-background:transparent;
+$progress-bar-progress-background:$geraldine;
+
+
+ion-progress-bar{
+    --background:#{$progress-bar-background};
+    --buffer-background:#{$progress-bar-buffer-background};
+    --progress-background:#{$progress-bar-progress-background};
+}
