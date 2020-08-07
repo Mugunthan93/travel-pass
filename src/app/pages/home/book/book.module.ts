@@ -20,6 +20,8 @@ import { BookConfirmationComponent } from 'src/app/components/flight/book-confir
 import { CustomCalendarComponent } from 'src/app/components/shared/custom-calendar/custom-calendar.component';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { FoodPipe } from 'src/app/pipes/food/food.pipe';
+import { PaymentComponent } from 'src/app/components/bus/payment/payment.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   imports: [
@@ -29,7 +31,8 @@ import { FoodPipe } from 'src/app/pipes/food/food.pipe';
     IonicModule,
     BookPageRoutingModule,
     CalendarModule,
-    SharedModule
+    SharedModule,
+    MatDividerModule
   ],
   declarations: [
     BookPage,
@@ -43,6 +46,7 @@ import { FoodPipe } from 'src/app/pipes/food/food.pipe';
     TermsConditionsComponent,
     BookConfirmationComponent,
     CustomCalendarComponent,
+    PaymentComponent,
     FoodPipe
   ],
   entryComponents: [
@@ -54,7 +58,8 @@ import { FoodPipe } from 'src/app/pipes/food/food.pipe';
     AddGuestComponent,
     TermsConditionsComponent,
     BookConfirmationComponent,
-    CustomCalendarComponent
+    CustomCalendarComponent,
+    PaymentComponent
   ]
 })
 export class BookPageModule {}

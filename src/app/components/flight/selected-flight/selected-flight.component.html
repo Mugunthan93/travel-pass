@@ -1,59 +1,22 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      <ion-text>Selected Flight</ion-text>
+      Selected Flight
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">
-        <ion-icon name="close"></ion-icon>
+        <ion-icon name="close-sharp"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <!-- <ion-row *ngFor="let cflight of (selectedFlight$ | async).connectingFlights;let i = index">
-    <ion-item>
-      <ion-label>
-        Trip {{1 + (selectedFlight$ | async).connectingFlights.indexOf(cflight)}}
-      </ion-label>
-    </ion-item>
-    <ion-card *ngFor="let c of cflight">
-      <ion-card-content>
-        <ion-item>
-          <ion-row slot="start">
-            <ion-img src="../../../../../../assets/AirlineLogo/{{c.Airline.AirlineCode}}.gif"></ion-img>
-            <ion-row>
-              <ion-text>{{c.Airline.AirlineName}}</ion-text>
-              <ion-text>{{c.Airline.AirlineCode}} - {{c.Airline.FlightNumber}}</ion-text>
-            </ion-row>
-          </ion-row>
-        </ion-item>
-        <ion-row>
-          <ion-col>
-            <ion-text>({{c.Origin.Airport.AirportCode}}) {{c.Origin.DepTime  | date : 'HH:mm'}}</ion-text>
-            <ion-text>{{c.Origin.DepTime | date : 'EEE,d LLL' | titlecase}}</ion-text>
-            <ion-text>{{c.Origin.Airport.CityName}}</ion-text>
-          </ion-col>
-          <ion-col>
-            <ion-icon size="large" src="../../../../../../assets/icons/passage-of-time.svg"></ion-icon>
-            <ion-text>{{c.Duration}}</ion-text>
-          </ion-col>
-          <ion-col>
-            <ion-text>({{c.Destination.Airport.AirportCode}}) {{c.Destination.ArrTime  | date : 'HH:mm'}}
-            </ion-text>
-            <ion-text>{{c.Destination.ArrTime | date : 'EEE,d LLL' | titlecase}}</ion-text>
-            <ion-text>{{c.Destination.Airport.CityName}}</ion-text>
-          </ion-col>
-        </ion-row>
-      </ion-card-content>
-    </ion-card>
-  </ion-row> -->
   <mat-accordion multi="true">
     <mat-expansion-panel *ngFor="let cflight of (selectedFlight$ | async).connectingFlights;let i = index" [expanded]="'true'">
       <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">
         <ion-item>
-          <ion-label>
+          <ion-label class="large bold">
             Trip {{1 + (selectedFlight$ | async).connectingFlights.indexOf(cflight)}}
           </ion-label>
         </ion-item>
@@ -63,26 +26,26 @@
           <ion-row slot="start">
             <ion-img src="../../../../../../assets/AirlineLogo/{{c.Airline.AirlineCode}}.gif"></ion-img>
             <ion-row>
-              <ion-text>{{c.Airline.AirlineName}}</ion-text>
-              <ion-text>{{c.Airline.AirlineCode}} - {{c.Airline.FlightNumber}}</ion-text>
+              <ion-label class="bold">{{c.Airline.AirlineName}}</ion-label>
+              <ion-text class="large bold">{{c.Airline.AirlineCode}} - {{c.Airline.FlightNumber}}</ion-text>
             </ion-row>
           </ion-row>
         </ion-item>
         <ion-row>
           <ion-col>
-            <ion-text>({{c.Origin.Airport.AirportCode}}) {{c.Origin.DepTime  | date : 'HH:mm'}}</ion-text>
-            <ion-text>{{c.Origin.DepTime | date : 'EEE,d LLL' | titlecase}}</ion-text>
-            <ion-text>{{c.Origin.Airport.CityName}}</ion-text>
+            <ion-text class="bold">({{c.Origin.Airport.AirportCode}}) {{c.Origin.DepTime  | date : 'HH:mm'}}</ion-text>
+            <ion-text class="bold">{{c.Origin.DepTime | date : 'EEE,d LLL' | titlecase}}</ion-text>
+            <ion-text class="bold">{{c.Origin.Airport.CityName}}</ion-text>
           </ion-col>
           <ion-col>
             <ion-icon size="large" src="../../../../../../assets/icons/passage-of-time.svg"></ion-icon>
-            <ion-text>{{c.Duration}}</ion-text>
+            <ion-text class="bold">{{c.Duration}}</ion-text>
           </ion-col>
           <ion-col>
-            <ion-text>({{c.Destination.Airport.AirportCode}}) {{c.Destination.ArrTime  | date : 'HH:mm'}}
+            <ion-text class="bold">({{c.Destination.Airport.AirportCode}}) {{c.Destination.ArrTime  | date : 'HH:mm'}}
             </ion-text>
-            <ion-text>{{c.Destination.ArrTime | date : 'EEE,d LLL' | titlecase}}</ion-text>
-            <ion-text>{{c.Destination.Airport.CityName}}</ion-text>
+            <ion-text class="bold">{{c.Destination.ArrTime | date : 'EEE,d LLL' | titlecase}}</ion-text>
+            <ion-text class="bold">{{c.Destination.Airport.CityName}}</ion-text>
           </ion-col>
         </ion-row>
       </div>
@@ -91,11 +54,12 @@
 </ion-content>
 
 <ion-footer *ngIf="(selectedFlight$ | async) !== null">
-  <ion-toolbar>
-    <ion-row>
-      <ion-text>{{(selectedFlight$ | async).fare | currency : (selectedFlight$ | async).currency}}</ion-text>
+  <ion-toolbar class="result-footer">
+    <ion-row class="multi-city">
+      <ion-label class="large bold">{{(selectedFlight$ | async).fare | currency : (selectedFlight$ | async).currency}}
+      </ion-label>
       <ion-button (click)="book()">
-        <ion-text>Continue</ion-text>
+        <ion-label class="large bold">Book</ion-label>
       </ion-button>
     </ion-row>
   </ion-toolbar>

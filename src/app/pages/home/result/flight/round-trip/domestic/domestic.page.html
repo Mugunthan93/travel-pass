@@ -24,15 +24,15 @@
 </ion-content>
 
 <ion-footer *ngIf="(selectedDepartureFlight$ | async) !== null && (selectedReturnFlight$ | async) !== null">
-  <ion-toolbar>
-    <ion-row>
+  <ion-toolbar class="result-footer">
+    <ion-row class="animated-round-trip">
       <ion-row>
         <ion-label>DEPARTURE</ion-label>
         <ion-row *ngFor="let i of (selectedDepartureFlight$ | async).trips">
           <ion-img src="../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
           <ion-row>
-            <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
-            <ion-text>{{i.tripinfo.fare | currency : 'INR'}}</ion-text>
+            <ion-label>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-label>
+            <ion-label>{{i.tripinfo.fare | currency : 'INR'}}</ion-label>
           </ion-row>
         </ion-row>
       </ion-row>
@@ -41,14 +41,14 @@
         <ion-row *ngFor="let i of (selectedReturnFlight$ | async).trips">
           <ion-img src="../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
           <ion-row>
-            <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
-            <ion-text>{{i.tripinfo.fare | currency : 'INR'}}</ion-text>
+            <ion-label>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-label>
+            <ion-label>{{i.tripinfo.fare | currency : 'INR'}}</ion-label>
           </ion-row>
         </ion-row>
       </ion-row>
       <ion-row>
-        <ion-button (click)="book()">
-          <ion-text>Book</ion-text>
+        <ion-button expand="block" size="small" (click)="book()">
+          <ion-label class="bold">Book</ion-label>
         </ion-button>
       </ion-row>
     </ion-row>

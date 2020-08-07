@@ -160,19 +160,17 @@ export class BaseFlightResult {
         }
     }
 
-    getCabinClass(cls: string) {
-        if (cls == "1" || "2") {
-            return "economy"
+    getCabinClass(cls: number) : string {
+        let cabinclass : string = null;
+        switch (cls) {
+            case 1: cabinclass = "All"; break;
+            case 2: cabinclass = "economy"; break;
+            case 3: cabinclass = "premium economy"; break;
+            case 4: cabinclass = "bussiness"; break;
+            case 6: cabinclass = "first class"; break;
+            default: cabinclass = "All";  break;
         }
-        else if (cls == "3") {
-            return "premium economy";
-        }
-        else if (cls == "4") {
-            return "bussiness";
-        }
-        else if (cls == "5") {
-            return "first class";
-        }
+        return cabinclass;
     }
 
     getDuration(data: flightData[]): number {
@@ -183,125 +181,5 @@ export class BaseFlightResult {
             }
         );
         return time;
-    }
-
-    ascDuration(currentState: resultObj[]): resultObj[] {
-        return currentState.slice().sort(
-            (a: resultObj, b: resultObj) => {
-                if (b.Duration < a.Duration) {
-                    return -1;
-                }
-                else if (b.Duration > a.Duration) {
-                    return 1;
-                }
-                return 0;
-            }
-        );
-    }
-
-    desDuration(currentState: resultObj[]): resultObj[] {
-        return currentState.slice().sort(
-            (a: resultObj, b: resultObj) => {
-                if (b.Duration > a.Duration) {
-                    return -1;
-                }
-                else if (b.Duration < a.Duration) {
-                    return 1;
-                }
-                return 0;
-            }
-        );
-    }
-
-    ascDeparture(currentState: resultObj[]): resultObj[] {
-        return currentState.slice().sort(
-            (a: resultObj, b: resultObj) => {
-                if (moment(b.departure).isBefore(a.departure)) {
-                    return -1;
-                }
-                else if (moment(b.departure).isAfter(a.departure)) {
-                    return 1;
-                }
-                else if (moment(b.departure).isSame(a.departure)) {
-                    return 0;
-                }
-            }
-        );
-    }
-
-    desDeparture(currentState: resultObj[]): resultObj[] {
-        return currentState.slice().sort(
-            (a: resultObj, b: resultObj) => {
-                if (moment(b.departure).isAfter(a.departure)) {
-                    return -1;
-                }
-                else if (moment(b.departure).isBefore(a.departure)) {
-                    return 1;
-                }
-                else if (moment(b.departure).isSame(a.departure)) {
-                    return 0;
-                }
-            }
-        );
-    }
-
-    ascArrival(currentState: resultObj[]): resultObj[] {
-        return currentState.slice().sort(
-            (a: resultObj, b: resultObj) => {
-                if (moment(b.arrival).isBefore(a.arrival)) {
-                    return -1;
-                }
-                else if (moment(b.arrival).isAfter(a.arrival)) {
-                    return 1;
-                }
-                else if (moment(b.arrival).isSame(a.arrival)) {
-                    return 0;
-                }
-            }
-        );
-    }
-
-    desArrival(currentState: resultObj[]): resultObj[] {
-        return currentState.slice().sort(
-            (a: resultObj, b: resultObj) => {
-                if (moment(b.arrival).isAfter(a.arrival)) {
-                    return -1;
-                }
-                else if (moment(b.arrival).isBefore(a.arrival)) {
-                    return 1;
-                }
-                else if (moment(b.arrival).isSame(a.arrival)) {
-                    return 0;
-                }
-            }
-        );
-    }
-
-    ascPrice(currentState: resultObj[]): resultObj[] {
-        return currentState.slice().sort(
-            (a: resultObj, b: resultObj) => {
-                if (b.fare < a.fare) {
-                    return -1;
-                }
-                else if (b.fare > a.fare) {
-                    return 1;
-                }
-                return 0;
-            }
-        );
-    }
-
-    desPrice(currentState: resultObj[]): resultObj[] {
-        return currentState.slice().sort(
-            (a: resultObj, b: resultObj) => {
-                if (b.fare > a.fare) {
-                    return -1;
-                }
-                else if (b.fare < a.fare) {
-                    return 1;
-                }
-                return 0;
-            }
-        );
     }
 }

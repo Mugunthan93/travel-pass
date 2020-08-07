@@ -1,14 +1,5 @@
-@import "../../../../../style/util/variable.scss";
 @import "../../../../../style/util/mixins.scss";
-
-ion-toolbar{
-    >ion-title{
-        padding-left:0px;
-    }
-    >ion-title:nth-of-type(2){
-        font-size: x-small;
-    }
-}
+@import "../../../../../style/base/color.scss";
 
 ion-content{
     >mat-accordion{
@@ -120,44 +111,6 @@ ion-content{
             ion-icon{
                 margin: 8px;
             }
-        }
-    }
-}
-
-
-
-ion-content{
-    >ion-segment{
-        position: relative;
-        bottom: 0px;
-        top: calc(100% - 64px);
-        max-width: 90vw;
-        margin: auto;
-        >ion-segment-button{
-            min-width: 16vw;
-            width:16vw;
-            white-space: normal;
-            --padding-start:0px;
-            --padding-end:0px;
-            --background:grey;
-            --background-checked:#{$selected2-bg};
-            --color-checked:#{$selected2-bg};
-            >ion-text{
-                font-size: 7px;
-                color:white;
-            }
-            >ion-icon{
-                font-size: 12px;
-                margin-top: 0;
-                margin-bottom: 3px;
-            }
-            @include middle-segment-button(grey);
-        }
-        >ion-segment-button:first-child{
-            @include first-segment-button(grey);
-        }
-        >ion-segment-button:last-child{
-            @include last-segment-button(grey);
         }
     }
 }

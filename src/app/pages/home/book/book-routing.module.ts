@@ -11,16 +11,16 @@ const routes: Routes = [
       {
         path: 'flight',
         loadChildren: () => import('./flight/flight.module').then(m => m.FlightPageModule)
+      },
+      {
+        path: 'hotel',
+        loadChildren: () => import('./hotel/hotel.module').then(m => m.HotelPageModule)
+      },
+      {
+        path: 'bus',
+        loadChildren: () => import('./bus/bus.module').then(m => m.BusPageModule)
       }
     ]
-  },
-  {
-    path: 'hotel',
-    loadChildren: () => import('./hotel/hotel.module').then( m => m.HotelPageModule)
-  },
-  {
-    path: 'bus',
-    loadChildren: () => import('./bus/bus.module').then( m => m.BusPageModule)
   }
 ];
 

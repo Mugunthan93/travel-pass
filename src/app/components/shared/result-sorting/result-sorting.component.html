@@ -2,22 +2,23 @@
 
   <ion-segment (ionChange)="sortChange($event)" *ngIf="(resultMode$ | async) == 'flight'">
     <ion-segment-button 
+      class="sort"
       [value]="button" 
       layout="icon-end" 
       *ngFor="let button of (flightbuttons$ | async)"
       (click)="sorting(button)"
-      [ngClass]="{'selectedItem':currentflightButton == button,'':currentflightButton !==button}">
+      [ngClass]="selectedButton(button)">
       <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg" [@rotatedState]="button.state"></ion-icon>
-      <ion-label>{{button.label | uppercase}}</ion-label>
+      <ion-label class="small">{{button.label | uppercase}}</ion-label>
     </ion-segment-button>
   </ion-segment>
 
-  <ion-segment (ionChange)="sortChange($event)" *ngIf="(resultMode$ | async) == 'hotel'">
+  <!-- <ion-segment (ionChange)="sortChange($event)" *ngIf="(resultMode$ | async) == 'hotel'">
     <ion-segment-button [value]="button" layout="icon-end" *ngFor="let button of (hotelbuttons$ | async)"
       (click)="sorting(button)" [ngClass]="{'selectedItem':currenthotelButton == button,'':currenthotelButton !==button}">
       <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg" [@rotatedState]="button.state"></ion-icon>
-      <ion-label>{{button.label | uppercase}}</ion-label>
+      <ion-title>{{button.label | uppercase}}</ion-title>
     </ion-segment-button>
-  </ion-segment>
+  </ion-segment> -->
 
 </ion-content>

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
+import { PaymentComponent } from 'src/app/components/bus/payment/payment.component';
 
 @Component({
   selector: 'app-bus',
@@ -9,14 +11,20 @@ import { Router } from '@angular/router';
 export class BusPage implements OnInit {
 
   constructor(
-    public router : Router
+    public router: Router,
+    public modalCtrl : ModalController
   ) { }
 
   ngOnInit() {
   }
 
-  busPayment() {
-    this.router.navigate(['/','home','book','bus','payment']);
+  async busPayment() {
+    const modal = await this.modalCtrl.create({
+      component: PaymentComponent,
+      id : 'bus-payment'
+    });
+
+    return await modal.present();
   }
 
 }

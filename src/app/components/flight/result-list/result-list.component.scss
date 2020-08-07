@@ -1,11 +1,7 @@
-@import "../../../../style/util/variable.scss";
 @import "../../../../style/util/mixins.scss";
+@import "../../../../style/base/color.scss";
 
 ion-content{
-    --background: white !important;
-    ion-text{
-        color:#000105;
-    }
     >ion-row {
         width: 100%;
         >ion-col {
@@ -14,15 +10,12 @@ ion-content{
             >ion-text{
                 text-align: center;
                 margin-top: 20px;
-                font-size: 17px !important;
-                font-weight: bold;
             }
             >mat-accordion {
                 @include flex-col-grid;
                 height:100%;
                 flex-grow:1;
                 >mat-expansion-panel {
-                    // border-bottom: 2px solid grey !important;
     
                     >mat-expansion-panel-header {
                         @include flex-col-grid;
@@ -36,10 +29,12 @@ ion-content{
                             >ion-row.two{
                                 >ion-row.heading{
                                     height : 17px !important; 
-                                    justify-content: left;
-                                    >ion-title{
+                                    justify-content: space-between;
+                                    flex-wrap: nowrap;
+                                    >ion-label{
                                         max-width: fit-content;
                                         margin-left:5px;
+                                        overflow: hidden;
                                     }
                                     >ion-icon{
                                         font-size: 20px !important;
@@ -62,16 +57,19 @@ ion-content{
                                 
                                 >ion-label{
                                     margin-left:4px;
-                                    font-size: 16px !important;
                                 }
 
                                 >ion-item{
                                     align-self: flex-end;
                                     --min-height: 17px;
                                     --padding-start: 0px;
+                                    --inner-padding-start: 7px;
                                     width: 80px;
                                     >ion-checkbox{
                                         margin: 0px;
+                                    }
+                                    >ion-label{
+                                        overflow: inherit;
                                     }
                                 }
 
@@ -82,7 +80,6 @@ ion-content{
                                 height: fit-content;
 
                                 >ion-text{
-                                    font-size: calc(1vw + 6px);
                                     white-space: nowrap;
                                     margin: auto;
                                 }
@@ -168,12 +165,11 @@ ion-content{
                             }
 
                             >ion-button{
-                                --background:#95d8ff !important;
-                                // --background:#e87474 !important;
                                 margin:0px;
                                 height: 30px;
+
                                 >ion-icon{
-                                    filter: invert(100%) sepia(100%) saturate(100%) hue-rotate(100deg) brightness(100%) contrast(100%);
+                                    color : #{$white} !important;
                                 }
                             }
                         }
@@ -193,7 +189,6 @@ ion-content{
                                 flex-direction: column;
                                 place-items: center;
                                 >ion-title {
-                                    color:#000105;
                                     padding: 0px;
                                     text-align: center;
                                 }
@@ -208,13 +203,7 @@ ion-content{
 
 
 .selectedItem{
-    background-color: #b9e4ff !important;
-    
-    // background-color: #daebff !important;
-    // background: rgb(229, 173, 173) !important;
-    // ion-text,ion-label{
-    //     color:white;
-    // }
+    background-color: #{$onahau} !important;
 }
 
 .mat-expansion-panel-spacing{

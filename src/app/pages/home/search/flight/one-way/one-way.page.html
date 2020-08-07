@@ -4,29 +4,29 @@
       <!--from-->
       <ion-col (click)="selectCity('from')">
         <ion-row>
-          <ion-text>From</ion-text>
-          <ion-text [ngClass]="errorClass('from')">
+          <ion-label class="bold large">From</ion-label>
+          <ion-text class="medium bold" [ngClass]="errorClass('from')">
             {{this.oneWaySearch.value.from !== null ? this.oneWaySearch.value.from.city_code : 'Select'}}
           </ion-text>
-          <ion-text [ngClass]="errorClass('from')">
+          <ion-text class="medium bold" [ngClass]="errorClass('from')">
             {{this.oneWaySearch.value.from !== null ? this.oneWaySearch.value.from.city_name : 'Origin'}}
           </ion-text>
         </ion-row>
       </ion-col>
       <!--exhange-->
       <ion-col>
-        <ion-button expand=full fill="clear" (click)="swapTrip()">
+        <ion-button class="swap" expand=full fill="clear" (click)="swapTrip()">
           <ion-icon src="../../../../../../assets/icons/straight.svg"></ion-icon>
         </ion-button>
       </ion-col>
       <!--to-->
       <ion-col (click)="selectCity('to')">
         <ion-row>
-          <ion-text>To</ion-text>
-          <ion-text [ngClass]="errorClass('to')">
+          <ion-label class="bold large">To</ion-label>
+          <ion-text class="medium bold" [ngClass]="errorClass('to')">
             {{this.oneWaySearch.value.to !== null ? this.oneWaySearch.value.to.city_code : 'Select'}}
           </ion-text>
-          <ion-text [ngClass]="errorClass('to')">
+          <ion-text class="medium bold" [ngClass]="errorClass('to')">
             {{this.oneWaySearch.value.to !== null ? this.oneWaySearch.value.to.city_name : 'Destination'}}
           </ion-text>
         </ion-row>
@@ -36,8 +36,8 @@
       <!--depart-->
       <ion-col (click)="selectDate()">
         <ion-row>
-          <ion-text>Depart</ion-text>
-          <ion-text [ngClass]="errorClass('departure')">
+          <ion-label class="bold large">Depart</ion-label>
+          <ion-text class="medium bold" [ngClass]="errorClass('departure')">
             {{this.oneWaySearch.value.departure !== null ? 
               (this.oneWaySearch.value.departure | date : 'EEE,d LLL' | titlecase) : 
               'Select Date'}}
@@ -48,8 +48,8 @@
       <!--traveller number-->
       <ion-col (click)="selectPassengers()">
         <ion-row>
-          <ion-text>Travellers</ion-text>
-          <ion-text 
+          <ion-label class="bold large">Travellers</ion-label>
+          <ion-text class="medium bold"
            [ngClass]="errorClass('traveller')"
             *ngIf="(this.oneWaySearch.value.traveller == null) ||
                   (this.oneWaySearch.value.traveller?.adult <= 0 &&
@@ -58,17 +58,17 @@
           >
             Select Passengers
           </ion-text>
-          <ion-text
+          <ion-text class="medium bold"
             [ngClass]="errorClass('traveller')"
             *ngIf="this.oneWaySearch.value.traveller !== null && this.oneWaySearch.value.traveller.adult > 0">
             {{this.oneWaySearch.value.traveller.adult+'   Adult'}}
           </ion-text>
-          <ion-text 
+          <ion-text class="medium bold"
             [ngClass]="errorClass('traveller')"
             *ngIf="this.oneWaySearch.value.traveller !== null && this.oneWaySearch.value.traveller.child > 0">
             {{this.oneWaySearch.value.traveller.child+'   Child'}}
           </ion-text>
-          <ion-text
+          <ion-text class="medium bold"
             [ngClass]="errorClass('traveller')"
             *ngIf="this.oneWaySearch.value.traveller !== null && this.oneWaySearch.value.traveller.infant > 0">
             {{this.oneWaySearch.value.traveller.infant+'   Infant'}}
@@ -80,8 +80,8 @@
       <!--class-->
       <ion-col>
         <ion-row>
-          <ion-text>Class</ion-text>
-          <ion-text 
+          <ion-label class="bold large">Class</ion-label>
+          <ion-text class="medium bold"
             [ngClass]="errorClass('class')"
             (click)="selectClass()">{{(this.oneWaySearch.value.class !== null ? this.oneWaySearch.value.class : 'Select Class') | titlecase}}</ion-text>
           <ion-item hidden="true">
@@ -109,8 +109,8 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-button expand="full" type="submit">
-        <ion-text>{{'Search Flight' | titlecase}}</ion-text>
+      <ion-button type="submit">
+        <ion-text class="large boldest">{{'Search Flight' | titlecase}}</ion-text>
       </ion-button>
     </ion-row>
   </ion-grid>

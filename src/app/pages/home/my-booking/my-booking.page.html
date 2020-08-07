@@ -6,41 +6,52 @@
       </ion-button>
     </ion-buttons>
     <ion-title>
-      <ion-text>My Bookings</ion-text>
+      My Bookings
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-row class="ion-justify-content-around">
-    <ion-thumbnail>
-      <ion-icon size="large" src="../../../../../assets/icons/dashboard/flight.svg" (click)="viewBooking('flight')"></ion-icon>
-      <ion-title>Flight</ion-title>
-    </ion-thumbnail>
-    <ion-thumbnail>
-      <ion-icon size="large" src="../../../../../assets/icons/dashboard/bus.svg" (click)="viewBooking('bus')">
-      </ion-icon>
-      <ion-title>Bus</ion-title>
-    </ion-thumbnail>
-    <ion-thumbnail>
-      <ion-icon size="large" src="../../../../../assets/icons/dashboard/hotel.svg" (click)="viewBooking('hotel')">
-      </ion-icon>
-      <ion-title>Hotel</ion-title>
-    </ion-thumbnail>
-    <ion-thumbnail>
-      <ion-icon size="large" src="../../../../../assets/icons/dashboard/cab.svg" (click)="viewBooking('cab')">
-      </ion-icon>
-      <ion-title>Cab</ion-title>
-    </ion-thumbnail>
+    <ion-row>
+      <ion-thumbnail class="thumbnail">
+        <ion-icon class="flight" src="../../../../../assets/icons/dashboard/flight.svg"
+          (click)="viewBooking('flight')">
+        </ion-icon>
+      </ion-thumbnail>
+      <ion-label class="large white">Flight</ion-label>
+    </ion-row>
+    <ion-row>
+      <ion-thumbnail class="thumbnail">
+        <ion-icon class="bus" src="../../../../../assets/icons/dashboard/bus.svg" (click)="viewBooking('bus')">
+        </ion-icon>
+      </ion-thumbnail>
+      <ion-label class="large white">Bus</ion-label>
+    </ion-row>
+    <ion-row>
+      <ion-thumbnail class="thumbnail">
+        <ion-icon class="hotel" src="../../../../../assets/icons/dashboard/hotel.svg"
+          (click)="viewBooking('hotel')">
+        </ion-icon>
+      </ion-thumbnail>
+      <ion-label class="large white">Hotel</ion-label>
+    </ion-row>
+    <ion-row>
+      <ion-thumbnail class="thumbnail">
+        <ion-icon class="cab" src="../../../../../assets/icons/dashboard/cab.svg" (click)="viewBooking('cab')">
+        </ion-icon>
+      </ion-thumbnail>
+      <ion-label class="large white">Cab</ion-label>
+    </ion-row>
   </ion-row>
   <ion-tabs>
     <ion-tab-bar slot="top">
       <ion-tab-button tab="new">
-        <ion-label>New</ion-label>
+        <ion-label class="large bold">New</ion-label>
       </ion-tab-button>
 
       <ion-tab-button tab="history">
-        <ion-label>History</ion-label>
+        <ion-label class="large bold">History</ion-label>
       </ion-tab-button>
     </ion-tab-bar>
   </ion-tabs>

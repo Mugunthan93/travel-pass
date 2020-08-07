@@ -4,50 +4,50 @@
       <form [formGroup]="hotelSearch" (ngSubmit)="searchHotel()">
         <ion-row>
           <ion-row (click)="selectCity()">
-            <ion-text>City/State</ion-text>
-            <ion-text [ngClass]="errorClass('city')">
+            <ion-label class="bold">City/State</ion-label>
+            <ion-text class="bold" [ngClass]="errorClass('city')">
               {{this.hotelSearch.value.city !== null ? this.hotelSearch.value.city.destination : 'Select'}}
             </ion-text>
-            <ion-text [ngClass]="errorClass('city')">
+            <ion-text class="bold" [ngClass]="errorClass('city')">
               {{this.hotelSearch.value.city !== null ? this.hotelSearch.value.city.stateprovince : 'City'}}
             </ion-text>
           </ion-row>
         </ion-row>
         <ion-row>
           <ion-row (click)="selectRoom()">
-            <ion-text>Rooms</ion-text>
-            <ion-text [ngClass]="errorClass('room')">
+            <ion-label class="bold">Rooms</ion-label>
+            <ion-text class="bold" [ngClass]="errorClass('room')">
               {{this.hotelSearch.value.room !== null ? this.hotelSearch.value.room.length + ' Room' : 'Add Room'}}
             </ion-text>
-            <ion-text [ngClass]="errorClass('room')">
+            <ion-text class="bold" [ngClass]="errorClass('room')">
                {{this.hotelSearch.value.room !== null ? totalAdult() : 'Add Adult'}}
             </ion-text>
           </ion-row>
           <ion-row (click)="selectNationality()">
-            <ion-text>Nationality</ion-text>
-            <ion-text [ngClass]="errorClass('nationality')">
+            <ion-label class="bold">Nationality</ion-label>
+            <ion-text class="bold" [ngClass]="errorClass('nationality')">
               {{this.hotelSearch.value.nationality !== null ? this.hotelSearch.value.nationality.nationality : 'Add Nationality'}}
             </ion-text>
           </ion-row>
           <ion-row (click)="openStar()">
-            <ion-text>Star Hotel</ion-text>
-            <ion-text [ngClass]="errorClass('star')">
+            <ion-label class="bold">Star Hotel</ion-label>
+            <ion-text class="bold" [ngClass]="errorClass('star')">
               {{this.hotelSearch.value.star !== null ? this.hotelSearch.value.star == 0 ? 'All' :  this.hotelSearch.value.star + ' Star' : 'Add Star'}}
             </ion-text>
           </ion-row>
         </ion-row>
         <ion-row>
           <ion-row (click)="selectDate('checkin')">
-            <ion-text>Check-In</ion-text>
-            <ion-text [ngClass]="errorClass('checkin')">
+            <ion-label class="bold">Check-In</ion-label>
+            <ion-text class="bold" [ngClass]="errorClass('checkin')">
               {{this.hotelSearch.value.checkin !== null ? 
               (this.hotelSearch.value.checkin | date : 'EEE,d LLL' | titlecase) :
               'Select Date'}}
             </ion-text>
           </ion-row>
           <ion-row (click)="selectDate('checkout')">
-            <ion-text>Check-Out</ion-text>
-            <ion-text [ngClass]="errorClass('checkout')">
+            <ion-label class="bold">Check-Out</ion-label>
+            <ion-text class="bold" [ngClass]="errorClass('checkout')">
               {{this.hotelSearch.value.checkout !== null ? 
               (this.hotelSearch.value.checkout | date : 'EEE,d LLL' | titlecase) :
               'Select Date'}}
@@ -56,7 +56,7 @@
         </ion-row>
         <ion-row>
           <ion-button expand="full" type="submit">
-            <ion-text>{{'Search Hotel' | titlecase}}</ion-text>
+            <ion-label class="medium bold">{{'Search Hotel' | titlecase}}</ion-label>
           </ion-button>
         </ion-row>
         <ion-input formControlName="city" hidden></ion-input>

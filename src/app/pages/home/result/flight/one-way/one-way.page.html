@@ -17,35 +17,35 @@
 </ion-grid>
 
 <ion-footer *ngIf="(selectedFlight$ | async) !== null">
-  <ion-toolbar>
-    <ion-row *ngFor="let i of (selectedFlight$ | async).trips">
+  <ion-toolbar class="result-footer">
+    <ion-row *ngFor="let i of (selectedFlight$ | async).trips" class="one-way">
       <ion-col>
         <ion-img src="../../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
         <ion-row>
-          <ion-text>{{i.tripinfo.airline.name}}</ion-text>
-          <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
+          <ion-label>{{i.tripinfo.airline.name}}</ion-label>
+          <ion-label>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-label>
         </ion-row>
       </ion-col>
       <ion-col>
-        <ion-text>
+        <ion-label>
           {{i.tripinfo.depTime | date : 'HH:mm'}} - {{i.tripinfo.arrTime | date : 'HH:mm'}}
-        </ion-text>
-        <ion-text>{{i.tripinfo.class}}</ion-text>
+        </ion-label>
+        <ion-label>{{i.tripinfo.class}}</ion-label>
       </ion-col>
       <ion-col>
-        <ion-text>
+        <ion-label>
           {{i.tripinfo.duration}}
-        </ion-text>
-        <ion-text>
+        </ion-label>
+        <ion-label>
           {{i.tripinfo.stops}}
-        </ion-text>
+        </ion-label>
       </ion-col>
       <ion-col>
-        <ion-text>
+        <ion-label>
           {{i.tripinfo.fare | currency : i.tripinfo.currency }}
-        </ion-text>
-        <ion-button size="small" (click)="book()">
-          <ion-text>Book</ion-text>
+        </ion-label>
+        <ion-button expand="block" size="small" (click)="book()">
+          <ion-label class="bold">Book</ion-label>
         </ion-button>
       </ion-col>
     </ion-row>

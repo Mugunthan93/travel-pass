@@ -1,12 +1,9 @@
-@import "../../../../style/util/variable.scss";
-
 
 ion-content{
     >ion-item{
         &:first-child{
             ion-text{
                 font-size: xx-small;
-                color:#{$btn2-bg};
             }
         }
         ion-icon{
@@ -34,7 +31,6 @@ ion-content{
             >ion-button {
                 max-width: -webkit-fill-available;
                 --opacity: 1;
-                --background:#{$btn4-bg};
 
                 ion-text,
                 ion-icon {

@@ -1,6 +1,5 @@
-@import "../../../../../../style/util/variable.scss";
 @import "../../../../../../style/util/mixins.scss";
-
+@import "../../../../../../style/base/color.scss";
 
 ion-content{
 
@@ -15,9 +14,10 @@ ion-content{
             margin-bottom: 3px;
     
             >mat-expansion-panel-header {
-                background:#{$text-bg};
-                padding-left: 10px;
-                padding-right: 10px;
+                 background:transparent;
+                 padding-left: 10px;
+                 padding-right: 10px;
+                 border: 2px solid #{$geraldine};
     
                 >::ng-deep span {
                     >ion-row {
@@ -78,27 +78,42 @@ ion-content{
             }
     
             ::ng-deep .mat-expansion-indicator {
-                color:#{$selected-bg};
+                color:#{$geraldine};
             }
         }
     }
     >ion-row{
-        background:#{$text-bg};
+        background:transparent;
+        border: 2px solid #{$geraldine};
+
         padding:5px;
         border-radius: 4px;
         flex-direction: column;
     }
-    >ion-list{
+    >ion-list.fare{
         ion-item{
+            --padding-start: 16px;
             --inner-padding-end: 16px;
             --min-height: 25px;
             >ion-radio{
                 --border-radius: 20px;
                 --inner-border-radius: 20px;
             }
+            >ion-label:last-of-type{
+                text-align: end;
+            }
+        }
+    }
+
+    ion-list.cancel-radio {
+        ion-item{
+            --padding-start: 16px;
+            --inner-padding-end: 16px;
+            --min-height: 25px;
         }
     }
     >ion-item {
+        --padding-start: 16px;
         --inner-padding-end: 16px;
         --min-height: 25px;
         border-top: 2px solid grey;

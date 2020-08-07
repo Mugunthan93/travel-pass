@@ -1,22 +1,20 @@
-@import "../../../../../style/util/variable.scss";
+@import "../../../../../style/base/color.scss";
 @import "../../../../../style/util/mixins.scss";
 
 
 ion-content{
     >ion-card{
         min-height: fit-content;
+
         >ion-card-content{
             >ion-row{
                 justify-content: space-between;
                 margin: 10px 0px;
+
                 >ion-row{
                     flex-direction: column;
-                    >ion-text:first-child{
-                        color: black;
-                        font-size: 17px;
-                        font-weight: 500;
-                    }
                 }
+                
                 >ion-row:last-child{
                     >ion-text:last-child{
                         text-align: end;
@@ -25,35 +23,25 @@ ion-content{
             }
             >ion-row:nth-child(2) {
                 >ion-chip{
-                        background: #{$icon-color2};
                         align-self: center;
                         padding-right: 24px;
                         margin: 0px -32px 0px 0px;
-                        >ion-text {
-                            color: white;
-                            font-size: 17px;
-                            font-weight: 500;
-                        }
                 }
             }
     
             >ion-row:last-child{
                 justify-content: flex-end;
-                >ion-text{
-                    font-size: 17px;
-                    font-weight: 500;
-                }
 
                 >ion-text.pending {
-                    color: #{$icon-color2} !important;
+                    color: #{$malibu} !important;
                 }
 
                 >ion-text.open {
-                    color: #{$bar-bg} !important;
+                    color: #89f789 !important;
                 }
 
                 >ion-text.rej {
-                    color: #{$tab-color} !important;
+                    color: #{$geraldine} !important;
                 }
             }
         }

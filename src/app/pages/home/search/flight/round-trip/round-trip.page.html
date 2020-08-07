@@ -4,8 +4,8 @@
       <!--from-->
       <ion-col (click)="selectCity('from')">
         <ion-row>
-          <ion-text>From</ion-text>
-          <ion-text [ngClass]="errorClass('from')">
+          <ion-label class="bold large">From</ion-label>
+          <ion-text class="medium bold" [ngClass]="errorClass('from')">
             {{this.roundTripSearch.value.from !== null ? this.roundTripSearch.value.from.city_code : 'Select'}}
           </ion-text>
           <ion-text [ngClass]="errorClass('from')">
@@ -15,18 +15,18 @@
       </ion-col>
       <!--exhange-->
       <ion-col>
-        <ion-button expand=full fill="clear" (click)="swapTrip()">
+        <ion-button class="swap" expand=full fill="clear" (click)="swapTrip()">
           <ion-icon src="../../../../../../assets/icons/straight.svg"></ion-icon>
         </ion-button>
       </ion-col>
       <!--to-->
       <ion-col (click)="selectCity('to')">
         <ion-row>
-          <ion-text>To</ion-text>
-          <ion-text [ngClass]="errorClass('to')">
+          <ion-label class="bold large">To</ion-label>
+          <ion-text class="medium bold" [ngClass]="errorClass('to')">
             {{this.roundTripSearch.value.to !== null ? this.roundTripSearch.value.to.city_code : 'Select'}}
           </ion-text>
-          <ion-text [ngClass]="errorClass('to')">
+          <ion-text class="medium bold" [ngClass]="errorClass('to')">
             {{this.roundTripSearch.value.to !== null ? this.roundTripSearch.value.to.city_name : 'Destination'}}
           </ion-text>
         </ion-row>
@@ -35,8 +35,8 @@
     <ion-row>
       <ion-col (click)="selectDate('departure')">
         <ion-row>
-          <ion-text>Depart</ion-text>
-          <ion-text [ngClass]="errorClass('departure')">
+          <ion-label class="bold large">Depart</ion-label>
+          <ion-text class="medium bold" [ngClass]="errorClass('departure')">
             {{this.roundTripSearch.value.departure !== null ? 
               (this.roundTripSearch.value.departure | date : 'EEE,d LLL' | titlecase) : 
               'Select Date'}}
@@ -46,8 +46,8 @@
       <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
       <ion-col (click)="selectDate('return')">
         <ion-row>
-          <ion-text>Return</ion-text>
-          <ion-text [ngClass]="errorClass('return')">
+          <ion-label class="bold large">Return</ion-label>
+          <ion-text class="medium bold" [ngClass]="errorClass('return')">
             {{this.roundTripSearch.value.return !== null ? 
               (this.roundTripSearch.value.return | date : 'EEE,d LLL' | titlecase) : 
               'Select Date'}}
@@ -58,22 +58,23 @@
     <ion-row>
       <ion-col (click)="selectPassengers()">
         <ion-row>
-          <ion-text>Travellers</ion-text>
-          <ion-text [ngClass]="errorClass('traveller')" *ngIf="(this.roundTripSearch.value.traveller == null) ||
+          <ion-label class="bold large">Travellers</ion-label>
+          <ion-text class="medium bold" [ngClass]="errorClass('traveller')"
+            *ngIf="(this.roundTripSearch.value.traveller == null) ||
                   (this.roundTripSearch.value.traveller?.adult <= 0 &&
                     this.roundTripSearch.value.traveller?.child <=0 &&
                     this.roundTripSearch.value.traveller.infant <=0)">
             Select Passengers
           </ion-text>
-          <ion-text [ngClass]="errorClass('traveller')"
+          <ion-text class="medium bold" [ngClass]="errorClass('traveller')"
             *ngIf="this.roundTripSearch.value.traveller !== null && this.roundTripSearch.value.traveller.adult > 0">
             {{this.roundTripSearch.value.traveller.adult+'   Adult'}}
           </ion-text>
-          <ion-text [ngClass]="errorClass('traveller')"
+          <ion-text class="medium bold" [ngClass]="errorClass('traveller')"
             *ngIf="this.roundTripSearch.value.traveller !== null && this.roundTripSearch.value.traveller.child > 0">
             {{this.roundTripSearch.value.traveller.child+'   Child'}}
           </ion-text>
-          <ion-text [ngClass]="errorClass('traveller')"
+          <ion-text class="medium bold" [ngClass]="errorClass('traveller')"
             *ngIf="this.roundTripSearch.value.traveller !== null && this.roundTripSearch.value.traveller.infant > 0">
             {{this.roundTripSearch.value.traveller.infant+'   Infant'}}
           </ion-text>
@@ -82,8 +83,8 @@
       <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
       <ion-col>
         <ion-row>
-          <ion-text>Class</ion-text>
-          <ion-text (click)="selectClass()" [ngClass]="errorClass('class')">
+          <ion-label class="bold large">Class</ion-label>
+          <ion-text class="medium bold" (click)="selectClass()" [ngClass]="errorClass('class')">
             {{(this.roundTripSearch.value.class !== null ? this.roundTripSearch.value.class : 'Select Class') | titlecase}}
           </ion-text>
           <ion-item hidden="true">
@@ -107,8 +108,8 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-button expand="full" type="submit">
-        <ion-text>{{'Search Flight' | titlecase}}</ion-text>
+      <ion-button type="submit">
+        <ion-text class="large boldest">{{'Search Flight' | titlecase}}</ion-text>
       </ion-button>
     </ion-row>
   </ion-grid>

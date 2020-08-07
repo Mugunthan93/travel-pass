@@ -1,4 +1,4 @@
-@import "../../../../style/util/variable.scss";
+
 
 ion-content{
     >mat-accordion {
@@ -77,9 +77,6 @@ ion-content{
     >ion-button{
         margin-left: 16px;
         margin-top: 10px;
-
-        >ion-icon {
-            color: white;
-        }
+        width: 100px !important;
     }
 }

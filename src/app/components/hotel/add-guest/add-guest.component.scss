@@ -1,4 +1,4 @@
-@import "../../../../style/util/variable.scss";
+@import "../../../../style/base/color.scss";
 
 ion-grid {
     >ion-row {
@@ -21,7 +21,7 @@ ion-grid {
                     >ion-input {
                         height: 100%;
                         --padding-start: 8px;
-                        border:1px solid #{$text-color};
+                        border:1px solid #{$grey-bermuda};
                         font-size: 12px;
                         border-radius: 4px;
                     }
@@ -29,7 +29,7 @@ ion-grid {
                     >ion-select {
                         height: 100%;
                         --padding-start: 8px;
-                        border:1px solid #{$text-color};
+                        border:1px solid #{$grey-bermuda};
                         font-size: 12px;
                         border-radius: 4px;
                         align-items: center;
@@ -47,7 +47,7 @@ ion-grid {
             ion-button{
                 max-width: -webkit-fill-available;
                 --opacity: 1;
-                --background:#{$btn4-bg};
+                --background:#{$malibu};
 
                 ion-text,
                 ion-icon {

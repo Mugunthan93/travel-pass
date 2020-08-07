@@ -1,4 +1,4 @@
-@import "../../../../style/util/variable.scss";
+@import "../../../../style/base/color.scss";
 
 ion-card.rules {
     >ion-card-content {
@@ -27,7 +27,7 @@ ion-card.rules {
         >ion-row:last-child {
             >ion-col {
                 >ion-text {
-                    color: #{$btn2-bg};
+                    color: #{$malibu};
                 }
             }
         }

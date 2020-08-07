@@ -1,5 +1,4 @@
 @import "../../../../../../style/util/mixins.scss";
-@import "../../../../../../style/util/variable.scss";
 
 form{
     @include flex-col-grid;
@@ -40,10 +39,12 @@ form{
     }
 }
 
-ion-text{
-    line-height: 20px;
+ion-button{
+    >ion-text{
+        margin: 12px;
+    }
 }
 
-ion-button{
-    --opacity:1;
+ion-text{
+    line-height: 20px;
 }

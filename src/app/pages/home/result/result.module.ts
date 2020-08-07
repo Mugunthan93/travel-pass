@@ -22,6 +22,13 @@ import { PipeModule } from 'src/app/modules/pipe.module';
 import { FlightDetailsComponent } from 'src/app/components/flight/flight-details/flight-details.component';
 import { SelectedFlightComponent } from 'src/app/components/flight/selected-flight/selected-flight.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { SeatSelectComponent } from 'src/app/components/bus/seat-select/seat-select.component';
+import { PickDropPointComponent } from 'src/app/components/bus/pick-drop-point/pick-drop-point.component';
+import { BusReviewComponent } from 'src/app/components/bus/bus-review/bus-review.component';
+import { BusPhotoComponent } from 'src/app/components/bus/bus-photo/bus-photo.component';
+import { BusAmentiesComponent } from 'src/app/components/bus/bus-amenties/bus-amenties.component';
+import { BusPolicyComponent } from 'src/app/components/bus/bus-policy/bus-policy.component';
+import { BusSeatlayoutComponent } from 'src/app/components/bus/bus-seatlayout/bus-seatlayout.component';
 
 
 @NgModule({
@@ -51,7 +58,16 @@ import { MatExpansionModule } from '@angular/material/expansion';
     EmailItineraryComponent,
     ResultSortingComponent,
     FlightDetailsComponent,
-    SelectedFlightComponent
+    SelectedFlightComponent,
+
+    SeatSelectComponent,
+    PickDropPointComponent,
+
+    BusReviewComponent,
+    BusPhotoComponent,
+    BusAmentiesComponent,
+    BusPolicyComponent,
+    BusSeatlayoutComponent
   ],
   entryComponents: [
     TripFilterComponent,
@@ -64,7 +80,16 @@ import { MatExpansionModule } from '@angular/material/expansion';
     EmailItineraryComponent,
     ResultSortingComponent,
     FlightDetailsComponent,
-    SelectedFlightComponent
+    SelectedFlightComponent,
+
+    SeatSelectComponent,
+    PickDropPointComponent,
+
+    BusReviewComponent,
+    BusPhotoComponent,
+    BusAmentiesComponent,
+    BusPolicyComponent,
+    BusSeatlayoutComponent
   ]
 })
 export class ResultPageModule {}

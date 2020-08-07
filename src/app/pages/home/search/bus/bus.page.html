@@ -1,118 +1,74 @@
 <ion-content>
   <ion-grid>
-    <ion-row class="ion-justify-content-between">
-      <ion-col size="4">
-        <ion-row>
-          <ion-text>Leaving From</ion-text>
-        </ion-row>
-        <ion-row>
-          <ion-label>Chennai</ion-label>
-        </ion-row>
-      </ion-col>
-      <ion-col size="3">
-        <ion-button expand=full fill="clear">
-          <ion-icon src="../../../../../../assets/icons/straight.svg"></ion-icon>
-        </ion-button>
-      </ion-col>
-      <ion-col size="4">
-        <ion-row>
-          <ion-text>Going To</ion-text>
-        </ion-row>
-        <ion-row>
-          <ion-label>Rajapalayam</ion-label>
-        </ion-row>
-      </ion-col>
+    <ion-row>
+      <ion-row>
+        <ion-label class="bold">Leaving From</ion-label>
+        <ion-label>Chennai</ion-label>
+      </ion-row>
+      <ion-button class="swap" expand=full fill="clear">
+        <ion-icon src="../../../../../../assets/icons/straight.svg"></ion-icon>
+      </ion-button>
+      <ion-row>
+        <ion-label class="bold">Going To</ion-label>
+        <ion-label>Rajapalayam</ion-label>
+      </ion-row>
     </ion-row>
     <mat-divider></mat-divider>
     <ion-row class="ion-justify-content-between">
-      <ion-col>
+      <ion-row>
+        <ion-label class="bold">Departure</ion-label>
         <ion-row>
-          <ion-text>Departure</ion-text>
+          <ion-text class="bolder">8</ion-text>
+          <ion-row>
+            <ion-text>Apr 2020</ion-text>
+            <ion-text>Wed</ion-text>
+          </ion-row>
         </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-text>8</ion-text>
-          </ion-col>
-          <ion-col>
-            <ion-row>
-              <ion-text>Apr 2020</ion-text>
-            </ion-row>
-            <ion-row>
-              <ion-text>Wed</ion-text>
-            </ion-row>
-          </ion-col>
-        </ion-row>
-      </ion-col>
-      <ion-col>
-        <ion-row>
-          <ion-text>Return</ion-text>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-text>9</ion-text>
-          </ion-col>
-          <ion-col>
-            <ion-row>
-              <ion-text>Apr 2020</ion-text>
-            </ion-row>
-            <ion-row>
-              <ion-text>Thu</ion-text>
-            </ion-row>
-          </ion-col>
-        </ion-row>
-      </ion-col>
+      </ion-row>
+       <ion-row>
+         <ion-label class="bold">Return</ion-label>
+         <ion-row>
+           <ion-text class="bolder">8</ion-text>
+           <ion-row>
+             <ion-text>Apr 2020</ion-text>
+             <ion-text>Wed</ion-text>
+           </ion-row>
+         </ion-row>
+       </ion-row>
     </ion-row>
     <mat-divider></mat-divider>
     <ion-row>
-      <ion-col>
-        <ion-text>Seat(s) Required</ion-text>
-      </ion-col>
+      <ion-label class="bold">Seat(s) Required</ion-label>
     </ion-row>
     <ion-row class="ion-justify-content-around">
-      <ion-col *ngFor="let seat of seats" (click)="selectedSeat(seat)">
-        <ion-text [ngClass]="{'selected':seat.selection}">{{seat.value}}</ion-text>
-      </ion-col>
+      <ion-text class="medium bold" style="align-self: center" *ngFor="let seat of seats" (click)="selectedSeat(seat)"
+        [ngClass]="{'selected-people':seat.selection}">
+        {{seat.value}}</ion-text>
     </ion-row>
     <mat-divider></mat-divider>
-    <ion-row class="ion-justify-content-center">
-      <ion-col size="6">
-        <ion-button (click)="search()">
-          <ion-text>Find Buses</ion-text>
-        </ion-button>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
+    <ion-button expand="block" (click)="search()">
+      <ion-label class="medium bold">Find Buses</ion-label>
+    </ion-button>
+    
+    <ion-list>
+      <ion-list-header>
+        <ion-title>RECENT SEARCHES</ion-title>
+      </ion-list-header>
+      <ion-item *ngFor="let search of recent_searches">
+        <ion-icon slot="start" src="../../../../../assets/icons/dashboard/trip-flight.svg"></ion-icon>
+        <ion-icon slot="end" src="../../../../../assets/ionicons/md-alert-circle.svg"></ion-icon>
         <ion-row>
-          <ion-label>RECENT SEARCHES</ion-label>
+          <ion-row>
+            <ion-label class="medium bold">from</ion-label>
+            <ion-icon src="../../../../../assets/icons/straight.svg"></ion-icon>
+            <ion-label class="medium bold">to</ion-label>
+          </ion-row>
+          <ion-row>
+            <ion-text class="bold">date</ion-text>
+          </ion-row>
         </ion-row>
-        <ion-card *ngFor="let search of recent_searches" class="ion-activatable ripple-parent">
-          <ion-ripple-effect></ion-ripple-effect>
-          <ion-card-content>
-            <ion-row class="ion-justify-content-between">
-              <ion-col>
-                <ion-row>
-                  <ion-text>DELHI</ion-text>
-                </ion-row>
-              </ion-col>
-              <ion-col>
-                <ion-row>
-                  <ion-icon src="../../../../../assets/ionicons/arrow-forward-outline.svg"></ion-icon>
-                </ion-row>
-              </ion-col>
-              <ion-col>
-                <ion-row>
-                  <ion-text>MUMBAI</ion-text>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-icon name="calendar"></ion-icon>
-              <ion-text>8 Apr 2020</ion-text>
-            </ion-row>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
+      </ion-item>
+    </ion-list>
+
   </ion-grid>
 </ion-content>

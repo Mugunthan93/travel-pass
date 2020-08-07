@@ -1,61 +1,54 @@
-@import "../../../../style/util/variable.scss";
+@import "../../../../style/base/color.scss";
 @import "../../../../style/util/mixins.scss";
 
 
 ion-content{
-    ion-row:first-child {
-        background: #{$bar-bg2};
+    >ion-row:first-child {
+        background: #{$geraldine};
         padding: 20px 0px;
-        height: 120px;
+        height: 150px;
 
-        >ion-thumbnail {
-            >ion-title {
-                color:#{$white-text};
-                padding: 0px;
-                text-align: center;
+        >ion-row {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            height: min-content;
+
+            >ion-label {
+                margin-top: 10px;
             }
         }
     }
     >ion-tabs{
-        top: 120px !important;
+        top: 150px !important;
 
         >ion-tab-bar {
             justify-content: space-between;
-            // --background:#{$transparent};
-            --border:#{$transparent};
-            // --color:
+            --border:transparent;
             margin-left: 15px;
             margin-right: 15px;
             margin-top: 20px;
             margin-bottom: 20px;
             height: 6vh;
 
-            @include first-tab-border("new", #{$tab-border});
-            @include last-tab-border("history", #{$tab-border});
+            @include first-tab-border("new", #{$geraldine});
+            @include last-tab-border("history", #{$geraldine});
 
             >ion-tab-button {
                 max-width: -webkit-fill-available;
-                background:#{$tab-background};
-                color:#{$tab-color};
-
-                >ion-icon {
-                    color:#{$icon-color} !important;
-                }
+                background:#{$white};
+                color:#{$geraldine};
 
                 >ion-label {
-                    color:#{$tab-color} !important;
+                    color:#{$geraldine} !important;
                 }
 
                 &[aria-selected="true"] {
-                    background:#{$tab-selected-background};
-                    color:#{$tab-selected-color};
-
-                    >ion-icon {
-                        color:#{$icon-color2} !important;
-                    }
+                    background:#{$geraldine};
+                    color:#{$white};
 
                     >ion-label {
-                        color:#{$tab-selected-color} !important;
+                        color:#{$white} !important;
                     }
 
                 }

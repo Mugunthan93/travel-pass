@@ -32,7 +32,7 @@ import { WebView } from '@ionic-native/ionic-webview/ngx';
 @NgModule({
   declarations: [
     AppComponent,
-    ApproveRequestComponent,
+    ApproveRequestComponent
   ],
   entryComponents: [
     ApproveRequestComponent

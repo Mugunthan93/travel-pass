@@ -11,11 +11,11 @@
 </ion-grid>
 
 <ion-footer *ngIf="(selectedFlight$ | async) !== null">
-  <ion-toolbar>
-    <ion-row>
-      <ion-text>{{(selectedFlight$ | async).fare | currency : (selectedFlight$ | async).currency}}</ion-text>
+  <ion-toolbar class="result-footer">
+    <ion-row class="multi-city">
+      <ion-label class="large bold">{{(selectedFlight$ | async).fare | currency : (selectedFlight$ | async).currency}}</ion-label>
       <ion-button (click)="selectedFlight()">
-        <ion-text>Continue</ion-text>
+        <ion-label class="large bold">Continue</ion-label>
       </ion-button>
     </ion-row>
   </ion-toolbar>

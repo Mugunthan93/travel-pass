@@ -2,12 +2,12 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-button (click)="back()">
-        <ion-icon src="../../../../assets/ionicons/arrow-back-outline.svg"></ion-icon>
+        <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-title>
-      <ion-text>{{bookMode$ | async | titlecase}} Book
-        {{ (bookMode$ | async) == 'flight' ? '['+(bookType$ | async)+']' : ''}}</ion-text>
+      {{bookMode$ | async | titlecase}} Book
+      {{ (bookMode$ | async) == 'flight' ? '['+(bookType$ | async)+']' : ''}}
     </ion-title>
   </ion-toolbar>
 </ion-header>

@@ -2,24 +2,24 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-button (click)="back()">
-        <ion-icon src="../../../../assets/ionicons/arrow-back-outline.svg"></ion-icon>
+        <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>
-      <ion-text>{{resultMode$ | async | titlecase}} Result 
-        {{
-          ((resultMode$ | async) == 'flight') && ((resultType$ | async) == 'animated-round-trip') ? '[Round Trip]' :
-          (resultMode$ | async) == 'flight' ? '['+(resultType$ | async)+']' : ''
-        }}
-      </ion-text>
-      <ion-title>Chennai | 25 sep - 27 sep | 1 Guest | 618 Hotels</ion-title>
+    <ion-title *ngIf="false">{{resultMode$ | async | titlecase}} Result 
+      {{
+        ((resultMode$ | async) == 'flight') && ((resultType$ | async) == 'animated-round-trip') ? '[Round Trip]' :
+        (resultMode$ | async) == 'flight' ? '['+(resultType$ | async)+']' : ''
+      }}
     </ion-title>
+    <ion-title *ngIf="false">Chennai | 25 sep - 27 sep | 1 Guest | 618 Hotels</ion-title>
+    <ion-title class="medium">Chennai To Rajapalayam</ion-title>
+    <ion-title class="small">20 May, Wednesday</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="mailTicket()" *ngIf="mailStatus$ | async">
-        <ion-icon slot="icon-only" class="Blink" src="../../../../../assets/ionicons/mail-outline.svg"></ion-icon>
+        <ion-icon class="Blink" name="mail"></ion-icon>
       </ion-button>
       <ion-button (click)="filter()">
-        <ion-icon slot="icon-only" src="../../../../../assets/ionicons/md-filter-outline.svg"></ion-icon>
+        <ion-icon name="filter"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>

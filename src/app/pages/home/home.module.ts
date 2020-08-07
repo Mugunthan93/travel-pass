@@ -11,6 +11,7 @@ import { AboutHotelComponent } from 'src/app/components/hotel/about-hotel/about-
 import { MenuBarComponent } from 'src/app/components/menu-bar/menu-bar.component';
 import { PipeModule } from 'src/app/modules/pipe.module';
 import { CityModalComponent } from 'src/app/components/shared/city-modal/city-modal.component';
+import { SelectModalComponent } from 'src/app/components/shared/select-modal/select-modal.component';
 
 @NgModule({
   imports: [
@@ -24,11 +25,16 @@ import { CityModalComponent } from 'src/app/components/shared/city-modal/city-mo
     HomePage,
     AboutHotelComponent,
     MenuBarComponent,
-    CityModalComponent
+    CityModalComponent,
+    SelectModalComponent
   ],
   entryComponents: [
     AboutHotelComponent,
-    CityModalComponent
+    CityModalComponent,
+    SelectModalComponent
   ]
 })
-export class HomePageModule {}
+  
+export class HomePageModule {
+
+}

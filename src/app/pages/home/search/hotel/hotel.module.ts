@@ -24,12 +24,10 @@ import { SelectModalComponent } from 'src/app/components/shared/select-modal/sel
   ],
   declarations: [
     HotelPage,
-    GuestRoomComponent,
-    SelectModalComponent
+    GuestRoomComponent
   ],
   entryComponents: [
-    GuestRoomComponent,
-    SelectModalComponent
+    GuestRoomComponent
   ]
 })
 export class HotelPageModule {}

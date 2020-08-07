@@ -1,12 +1,15 @@
-import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
+import { State, Action, StateContext, Selector, Store, ofActionSuccessful } from '@ngxs/store';
 import { sortButton } from './flight.state';
 import { HotelService } from 'src/app/services/hotel/hotel.service';
 import { File } from '@ionic-native/file/ngx';
 import { FileTransferObject, FileTransfer } from '@ionic-native/file-transfer/ngx';
-import { LoadingController } from '@ionic/angular';
-import { Observable, of, from, iif } from 'rxjs';
-import { mergeMap, take, toArray, switchMap, tap, catchError, map, mapTo, retry, retryWhen, takeUntil } from 'rxjs/operators';
+import { LoadingController, IonInfiniteScroll } from '@ionic/angular';
+import { Observable, of, from, iif, throwError } from 'rxjs';
+import { mergeMap, take, toArray, switchMap, tap, catchError, map, mapTo, retry, retryWhen, takeUntil, filter, skipWhile, concatMap, takeWhile, skip } from 'rxjs/operators';
 import * as _ from 'lodash';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { HotelSearchState, SearchHotel } from '../search/hotel.state';
+import { promise } from 'protractor';
 
 export interface hotelresult {
     sort : sortButton[]
@@ -189,20 +192,27 @@ export class HotelResponse {
 
 export class DownloadResult {
     static readonly type = "[hotel_result] DownloadResult";
-    constructor(public list: hotelresponselist[]) {
+    constructor(public limit: number) {
 
     }
 }
 
 export class DownloadImage {
     static readonly type = "[hotel_result] DownloadImage";
-    constructor(public img : string, public code : string) {
+    constructor(public img : string[], public code : string) {
 
     }
 }
 
 export class hotelImageResponse {
     static readonly type = "[hotel_result] hotelImageResponse";
+}
+
+export class AddHotelList {
+    static readonly type = "[hotel_result] AddHotelList";
+    constructor(public event : any) {
+
+    }
 }
 
 @State<hotelresult>({
@@ -225,10 +235,11 @@ export class HotelResultState{
 
     constructor(
         private store: Store,
+        private webview: WebView,
         private hotelService: HotelService,
         private file: File,
         private transfer: FileTransfer,
-        public loadingCtrl : LoadingController
+        public loadingCtrl: LoadingController
     ) {
 
     }
@@ -261,43 +272,31 @@ export class HotelResultState{
             traceId: action.response.TraceId
         });
 
-        states.dispatch(new DownloadResult(action.response.HotelResults));
+        let limit: number = states.getState().listLimit;
+
+        states.dispatch(new DownloadResult(limit));
 
     }
 
-    // @Action(hotelImageResponse)
-    // async getImageResponse(states: StateContext<hotelresult>) {
-
-    //     let currentList = states.getState().hotelList;
-    //     try {
-    //         let getImageList = await this.getImages(currentList);
-    //         console.log(getImageList);
-    //         states.patchState({
-    //             hotelList: getImageList
-    //         });
-    //     }
-    //     catch (error) {
-    //         console.log(error);
-    //         states.patchState({
-    //             hotelList: currentList
-    //         });
-    //     }
-
-    // }
-
     @Action(DownloadResult)
     downloadresult(states: StateContext<hotelresult>, action: DownloadResult) {
-        return from(action.list)
+
+        let list: hotelresponselist[] = states.getState().hotelresponseList;
+
+        return from(list)
             .pipe(
-                take(states.getState().listLimit),
+                take(action.limit),
+                skipWhile((el) => {
+                    let currentState: hotellist[] = states.getState().hotelList;
+                    return currentState.some(hotel => hotel.ResultIndex == el.ResultIndex);
+                }),
                 mergeMap(
                     async (el: hotelresponselist) => {
                         console.log(el);
-
-                        if (el.SupplierHotelCodes) {
+                        if (!_.isUndefined(el.SupplierHotelCodes)) {
 
                             let traceId: string = states.getState().traceId;
-                            let currentList: hotellist[] = states.getState().hotelList;
+                            let pickedHotel: hotellist = null;
 
                             let hotelInfo = {
                                 CategoryId: el.SupplierHotelCodes[0].CategoryId,
@@ -309,39 +308,59 @@ export class HotelResultState{
 
                             let hotelinfoResponse = await this.hotelService.getHotelInfo(hotelInfo);
                             let hotelData: hotelinfoList = JSON.parse(hotelinfoResponse.data).response.HotelDetails;
-                            console.log(JSON.parse(hotelinfoResponse.data).response);
 
-                            if (JSON.parse(hotelinfoResponse.data).response.Error.ErrorCode == 2) {
+                            //trace expired
+                            if (JSON.parse(hotelinfoResponse.data).response.Error.ErrorCode == 6) {
+                                states.dispatch(new SearchHotel());
                                 return;
                             }
 
-                            let hotel: any = _.merge(hotelData, el);
-                            let pickedHotel: hotellist = _.pick(hotel, [
-                                'HotelCode',
-                                'HotelName',
-                                'HotelPicture',
-                                'IsTBOMapped',
-                                'Price',
-                                'ResultIndex',
-                                'StarRating',
-                                'SupplierHotelCodes',
-                                'Address',
-                                'Attractions',
-                                'CountryName',
-                                'Description',
-                                'HotelFacilities',
-                                'Images',
-                                'PinCode',
-                                'pictures'
-                            ]);
+                            //No rooms Available from UAPI
+                            else if (JSON.parse(hotelinfoResponse.data).response.Error.ErrorCode == 2) {
+                                pickedHotel = null;
+                            }
 
-                            currentList.push(pickedHotel);
+                            else {
+                                let hotel: any = _.mergeWith(hotelData, el, this.customizedObj);
+                                pickedHotel = _.pick(hotel, [
+                                    'HotelCode',
+                                    'HotelName',
+                                    'HotelPicture',
+                                    'IsTBOMapped',
+                                    'Price',
+                                    'ResultIndex',
+                                    'StarRating',
+                                    'SupplierHotelCodes',
+                                    'Address',
+                                    'Attractions',
+                                    'CountryName',
+                                    'Description',
+                                    'HotelFacilities',
+                                    'Images',
+                                    'PinCode',
+                                    'pictures'
+                                ]);
+                            }
 
-                            states.patchState({
-                                hotelList: currentList
-                            });
+                            return pickedHotel;
                         }
-
+                    }
+                ),
+                catchError(
+                    (err) => {
+                        console.log(err);
+                        return undefined;
+                    }
+                ),
+                skipWhile((el) => {
+                    return _.isUndefined(el) || _.isNull(el);
+                }),
+                toArray(),
+                tap(
+                    (val: hotellist[]) => {
+                        states.patchState({
+                            hotelList : val
+                        });
                     }
                 )
             )
@@ -352,8 +371,8 @@ export class HotelResultState{
 
         return from(action.img)
             .pipe(
-                tap(
-                    async (img: string) => {
+                mergeMap(
+                    (img: string) => {
                         const fileTransfer: FileTransferObject = this.transfer.create();
                 
                         let splitedEl: string[] = img.split('/');
@@ -363,32 +382,55 @@ export class HotelResultState{
                         let url: string = img;
                         let path: string = this.file.externalRootDirectory + 'TravellersPass/Hotel/Images/' + folderName + '/' + fileName + '.jpg';
                 
-                        try {
-                            if (await this.file.checkDir(this.file.externalRootDirectory + 'TravellersPass/Hotel/Images/', folderName)) {
-                                return path;
-                            }
+                        if (from(this.file.checkDir(this.file.externalRootDirectory + 'TravellersPass/Hotel/Images/', folderName))) {
+                            return path;
                         }
-                        catch (error) {
-                            if (error.code == 1) {
-                                try {
-                                    const fileResponse = await fileTransfer.download(url, path);
-                                    console.log(fileResponse);
-                                    if (fileResponse.isFile) {
-                                        let str: string = fileResponse.fullPath;
-                                        console.log(str);
-                                        return str;
-                                    }
-                                }
-                                catch (error) {
-                                    console.log(error);
-                                    return null;
-                                }
-                            }
+                        else {
+                            return from(fileTransfer.download(url, path))
+                                .pipe(
+                                    tap(
+                                        (file) => {
+                                            if (file.isFile) {
+                                                let str: string = file.fullPath;
+                                                console.log(str);
+                                                return str;
+                                            }
+                                        }
+                                    )
+                                );
                         }
                     }
-                )
+                ),
+                catchError(
+                    (err) => {
+                        console.log(err);
+                        return err;
+                    }
+                ),
+                tap(el => of(this.webview.convertFileSrc(el)))
             )
 
+    }
+
+    @Action(AddHotelList)
+    async addHotelList(states: StateContext<hotelresult>, action: AddHotelList) {
+        let currentState: number = states.getState().listLimit;
+        currentState += 10;
+        states.patchState({
+            listLimit: currentState
+        });
+        states.dispatch(new DownloadResult(currentState));
+        await action.event.target.complete();
+
+    }
+
+    customizedObj(desObj: hotelinfoList, srcObj : hotelresponselist) {
+        if (_.isUndefined(desObj)) {
+            return srcObj;
+        }
+        else if (_.isUndefined(srcObj)) {
+            return desObj;
+        }
     }
     
 }

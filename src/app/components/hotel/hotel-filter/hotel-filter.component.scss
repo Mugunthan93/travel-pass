@@ -1,11 +1,11 @@
-@import "../../../../style/util/variable.scss";
+@import "../../../../style/base/color.scss";
 
 ion-grid{
     margin-left:10px;
     margin-right:10px;
     >ion-row{
         padding:10px;
-        border-bottom:1px solid #{$text-color};
+        border-bottom:1px solid #{$suva-grey};
         >ion-col{
             >ion-row:last-child{
                 >ion-col{
@@ -36,7 +36,7 @@ ion-footer{
             ion-button {
                 width: -webkit-fill-available;
                 --opacity: 1;
-                --background:#{$btn4-bg};
+                --background:#{$malibu};
 
                 ion-text {
                     color: white;

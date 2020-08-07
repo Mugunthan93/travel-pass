@@ -1,4 +1,4 @@
-@import "../../../../../style/util/variable.scss";
+@import "../../../../../style/base/color.scss";
 @import "../../../../../style/util/mixins.scss";
 
 
@@ -13,12 +13,6 @@ ion-content {
 
                 >ion-row {
                     flex-direction: column;
-
-                    >ion-text:first-child {
-                        color: black;
-                        font-size: 17px;
-                        font-weight: 500;
-                    }
                 }
 
                 >ion-row:last-child {
@@ -30,27 +24,15 @@ ion-content {
 
             >ion-row:nth-child(2) {
                 >ion-chip {
-                    background: #{$icon-color2};
                     align-self: center;
                     padding-right: 24px;
                     margin: 0px -32px 0px 0px;
-
-                    >ion-text {
-                        color: white;
-                        font-size: 17px;
-                        font-weight: 500;
-                    }
                 }
             }
 
             >ion-row:last-child {
                 justify-content: space-between;
                 align-items: flex-end;
-                >ion-text {
-                    color: #{$icon-color2};
-                    font-size: 17px;
-                    font-weight: 500;
-                }
             }
         }
     }

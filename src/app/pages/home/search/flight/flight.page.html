@@ -1,14 +1,14 @@
 
 <ion-row>
-  <ion-segment mode="ios" (ionChange)="typeChange($event)" [value]="journeyType$ | async">
-    <ion-segment-button value="one-way">
-      <ion-text>One Way</ion-text>
+  <ion-segment mode="ios" (ionChange)="typeChange($event)" [value]="journeyType$ | async" class="search">
+    <ion-segment-button value="one-way" class="search">
+      <ion-text class="medium bold">One Way</ion-text>
     </ion-segment-button>
-    <ion-segment-button value="round-trip">
-      <ion-text>Round Trip</ion-text>
+    <ion-segment-button value="round-trip" class="search">
+      <ion-text class="medium bold">Round Trip</ion-text>
     </ion-segment-button>
-    <ion-segment-button value="multi-city">
-      <ion-text>Multi City</ion-text>
+    <ion-segment-button value="multi-city" class="search">
+      <ion-text class="medium bold">Multi City</ion-text>
     </ion-segment-button>
   </ion-segment>
 </ion-row>

@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
      <ion-title>
-       <ion-text>Select Travellers</ion-text>
+       Select Travellers
      </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,9 +9,9 @@
   <ion-grid>
     <form [formGroup]="traveller" (ngSubmit)="confirm()">
       <ion-row>
-        <ion-text>Adult</ion-text>
+        <ion-label class="medium bold">Adult</ion-label>
         <ion-icon size="large" name="remove-circle-outline" (click)="decrease('adult')"></ion-icon>
-        <ion-text>{{traveller.value.adult}}</ion-text>
+        <ion-label class="medium bold">{{traveller.value.adult}}</ion-label>
         <ion-icon size="large" name="add-circle-outline" (click)="increase('adult')"></ion-icon>
       </ion-row>
       <!-- <ion-row>
@@ -38,12 +38,12 @@
     <ion-toolbar>
       <ion-buttons slot="start">
         <ion-button (click)="close()">
-          <ion-text>Cancel</ion-text>
+          <ion-label>Cancel</ion-label>
         </ion-button>
       </ion-buttons>
       <ion-buttons slot="end">
         <ion-button type="submit">
-          <ion-text>Confirm</ion-text>
+          <ion-label>Confirm</ion-label>
         </ion-button>
       </ion-buttons>
     </ion-toolbar>

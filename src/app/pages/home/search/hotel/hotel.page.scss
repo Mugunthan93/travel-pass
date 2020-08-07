@@ -1,4 +1,3 @@
-@import "../../../../../style/util/variable.scss";
 
 ion-content{
     >ion-card{
@@ -6,11 +5,6 @@ ion-content{
             >form{
                 >ion-row:not(:last-of-type) {
                     border-bottom: 2px solid grey;
-                    ion-text:first-child {
-                        color: black;
-                        font-size: 17px;
-                        font-weight: 500;
-                    }
                 }
                 >ion-row{
                     min-height: fit-content;
@@ -51,100 +45,13 @@ ion-content{
     
                 >ion-row:last-of-type{
                     justify-content: center;
+                    >ion-button{
+                        ion-label {
+                            margin:10px;
+                        }
+                    }
                 }
             }
         }
     }
 }
-
-// ion-grid{
-//     >ion-row:first-child{
-//         margin-top:10px;
-//         margin-bottom:10px;
-//         >ion-col{
-//             margin: auto !important;
-//         }
-//     }
-//     >ion-row:last-child{
-//         margin:10px;
-//         >ion-col{
-//             margin: auto !important;
-//         }
-//     }
-// }
-
-// ion-card.tab{
-//     margin:0px;
-//     ion-card-content{
-//         padding:0px;
-//         ion-chip{
-//             width: -webkit-fill-available;
-//         }
-//     }
-// }
-
-// ion-card.content{
-//     margin: auto;
-//     >ion-card-header {
-//         >ion-row{
-//             border-bottom:2px solid #e6e6e6;
-//             >ion-col{
-//                 >ion-row{
-//                     margin-top:6px;
-//                     margin-bottom:6px;
-//                     >ion-text{
-//                         margin:auto;
-//                     }
-//                 }
-//             }
-//         }
-//     }
-//     >ion-card-content {
-//         padding:16px;
-//         >ion-row{
-//             ion-col{
-//                 margin-top:10px;
-//                 margin-bottom:10px;
-//             }
-//             >ion-col:nth-child(2){
-//                 ion-text {
-//                     margin: auto;
-//                 }
-//                 ion-icon{
-//                     height: 19px;
-//                     margin:auto;
-//                 }
-//             }
-//             >ion-col:first-child{
-//                 ion-text{
-//                     margin-right: auto !important;
-//                 }
-//             }
-//             >ion-col:last-child{
-//                 ion-text {
-//                     margin-left: auto !important;
-//                 }
-//             }
-//         }
-//         >ion-row:first-child{
-//             border-bottom:2px solid #e6e6e6;
-//         }
-//     }
-// }
-
-// mat-divider{
-//     border-width: 2px;
-//     border-color: #e6e6e6;
-// }
-
-// ion-button {
-//     margin-top:10px;
-//     margin-bottom:10px;
-//     --opacity: 1;
-//     --background:#{$btn4-bg};
-//     width:100%;
-
-//     ion-text {
-//         color: white;
-//     }
-// }

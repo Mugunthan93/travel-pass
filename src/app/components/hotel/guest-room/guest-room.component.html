@@ -1,11 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      <ion-text>Guest Room</ion-text>
+      Guest Room
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">
-        <ion-text>OK</ion-text>
+        <ion-label>OK</ion-label>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -14,38 +14,38 @@
   <mat-accordion *ngFor="let room of (rooms$ | async); let i = index">
     <mat-expansion-panel expanded="true">
       <mat-expansion-panel-header>
-        <ion-text>Room {{i + 1}}</ion-text>
+        <ion-label class="bold">Room {{i + 1}}</ion-label>
       </mat-expansion-panel-header>
       <!-- no of adult -->
       <ion-row>
         <ion-row>
-          <ion-text>Adults</ion-text>
+          <ion-label>Adults</ion-label>
         </ion-row>
         <ion-row>
           <ion-icon size="large" name="remove-circle-outline" (click)="decrease('adult',i)"></ion-icon>
-          <ion-text>{{room.NoOfAdults}}</ion-text>
+          <ion-label>{{room.NoOfAdults}}</ion-label>
           <ion-icon size="large" name="add-circle-outline" (click)="increase('adult',i)"></ion-icon>
         </ion-row>
       </ion-row>
       <!-- no of children -->
       <ion-row>
         <ion-row>
-          <ion-text>Children</ion-text>
+          <ion-label>Children</ion-label>
         </ion-row>
         <ion-row>
           <ion-icon size="large" name="remove-circle-outline" (click)="decrease('children',i)"></ion-icon>
-          <ion-text>{{room.NoOfChild}}</ion-text>
+          <ion-label>{{room.NoOfChild}}</ion-label>
           <ion-icon size="large" name="add-circle-outline" (click)="increase('children',i)"></ion-icon>
         </ion-row>
       </ion-row>
       <!-- children Age -->
       <ion-row>
-        <ion-text>Age of Children</ion-text>
-        <ion-text>Age 12 years and below</ion-text>
+        <ion-label>Age of Children</ion-label>
+        <ion-label>Age 12 years and below</ion-label>
       </ion-row>
       <ion-row *ngFor="let child of room.ChildAge;let j = index">
         <ion-row>
-          <ion-text>Child {{1 + j}}</ion-text>
+          <ion-label>Child {{1 + j}}</ion-label>
         </ion-row>
         <ion-row>
           <ion-select placeholder="Child Age" [interfaceOptions]="customAlertOptions" [value]="child" (ionChange)="selectedAge($event,j,i)">
@@ -54,13 +54,13 @@
         </ion-row>
       </ion-row>
       <ion-row>
-        <ion-text>Up to 18 guests allowed in one room</ion-text>
+        <ion-text class="bold">Up to 6 people allowed in one room</ion-text>
       </ion-row>
     </mat-expansion-panel>
-    <ion-icon name="close" (click)="deleteRoom(i)"></ion-icon>
+    <ion-icon name="close-outline" (click)="deleteRoom(i)"></ion-icon>
   </mat-accordion>
-  <ion-button (click)="addRoom()">
+  <ion-button class="add" (click)="addRoom()">
     <ion-icon name="add"></ion-icon>
-    <ion-text>Add Room</ion-text>
+    <ion-label class="medium bold">Add Room</ion-label>
   </ion-button>
 </ion-content>

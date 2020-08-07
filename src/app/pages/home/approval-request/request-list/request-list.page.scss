@@ -1,6 +1,5 @@
-@import "../../../../../style/util/variable.scss";
 @import "../../../../../style/util/mixins.scss";
-
+@import "../../../../../style/base/color.scss";
 
 ion-content {
     >ion-card {
@@ -13,12 +12,6 @@ ion-content {
 
                 >ion-row {
                     flex-direction: column;
-
-                    >ion-text:first-child {
-                        color: black;
-                        font-size: 17px;
-                        font-weight: 500;
-                    }
                 }
 
                 >ion-row:last-child {
@@ -26,41 +19,40 @@ ion-content {
                         text-align: end;
                     }
                 }
+
+                ion-button{
+                    >ion-label{
+                        margin:8px;
+                    }
+                }
             }
 
             >ion-row:nth-child(2) {
                 >ion-chip {
-                    background: #{$icon-color2};
+                    background: #{$geraldine};
                     align-self: center;
                     padding-right: 24px;
                     margin: 0px -32px 0px 0px;
-
-                    >ion-text {
-                        color: white;
-                        font-size: 17px;
-                        font-weight: 500;
-                    }
                 }
             }
 
             >ion-row:last-child {
                 justify-content: flex-end;
 
-                >ion-text {
-                    font-size: 17px;
-                    font-weight: 500;
+                >ion-text.booked {
+                    color: #{$malibu} !important;
                 }
 
-                >ion-text.booked {
-                    color: #{$icon-color2} !important;
+                >ion-text.pending {
+                    color: #{$malibu} !important;
                 }
 
                 >ion-text.open {
-                    color: #{$bar-bg} !important;
+                    color: #89f789 !important;
                 }
 
                 >ion-text.rej {
-                    color: #{$tab-color} !important;
+                    color: #{$geraldine} !important;
                 }
             }
         }

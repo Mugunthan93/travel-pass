@@ -1,5 +1,4 @@
 @import "../../../../../../style/util/mixins.scss";
-@import "../../../../../../style/util/variable.scss";
 
 form {
     @include flex-col-grid;
@@ -89,5 +88,7 @@ ion-text {
 }
 
 ion-button {
-    --opacity: 1;
+    >ion-text {
+        margin: 12px;
+    }
 }

@@ -87,6 +87,8 @@
 </ion-content> -->
 
 <ion-content>
+
+
   <ion-card *ngFor="let hotel of (hotelList$ | async);let i = index">
 
     <ion-card-header>
@@ -109,7 +111,7 @@
     <ion-card-content>
       <ion-item>
         <ion-row class="img">
-          <ion-img [src]="imgURL(hotel.Images,hotel.HotelCode) | async" (ionError)="imgError($event)"></ion-img>
+          <ion-img [src]="imgURL(hotel.Images,hotel.HotelCode) | async"></ion-img>
           <ion-icon size="large" name="heart-outline"></ion-icon>
           <ion-icon slot="start" name="heart-sharp" *ngIf="false"></ion-icon>
         </ion-row>
@@ -128,7 +130,7 @@
 
   </ion-card>
 
-  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)" #infinite>
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>

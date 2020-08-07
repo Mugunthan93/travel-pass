@@ -24,19 +24,18 @@
 </ion-content>
 
 <ion-content>
-  <ion-list lines="none">
+  <ion-list>
     <ion-item *ngFor="let trip of (upcomingTrips$ | async)">
       <ion-icon slot="start" src="../../../assets/icons/dashboard/trip-flight.svg"></ion-icon>
       <ion-icon slot="end" src="../../../assets/ionicons/md-alert-circle.svg"></ion-icon>
       <ion-row>
         <ion-row>
-          <ion-text>
-            {{ trip.from }}</ion-text>
+          <ion-label class="medium bold">{{ trip.from }}</ion-label>
           <ion-icon src="../../../assets/icons/straight.svg"></ion-icon>
-          <ion-text>{{ trip.to }}</ion-text>
+          <ion-label class="medium bold">{{ trip.to }}</ion-label>
         </ion-row>
         <ion-row>
-          <ion-text>{{ trip.travelStartDate | date }} | {{ trip.travelStartDate | date : 'shortTime' }}</ion-text>
+          <ion-text class="bold">{{ trip.travelStartDate | date }} | {{ trip.travelStartDate | date : 'shortTime' }}</ion-text>
         </ion-row>
       </ion-row>
     </ion-item>

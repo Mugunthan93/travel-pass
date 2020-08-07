@@ -3,13 +3,11 @@ import { matExpansionAnimations } from '@angular/material/expansion';
 import { ModalController, IonInfiniteScroll } from '@ionic/angular';
 import { HotelFilterComponent } from 'src/app/components/hotel/hotel-filter/hotel-filter.component';
 import { Router, ActivatedRoute } from '@angular/router';
-import { hotellist, HotelResultState, hotelresponselist, DownloadResult, DownloadImage } from 'src/app/stores/result/hotel.state';
+import { hotellist, HotelResultState, AddHotelList } from 'src/app/stores/result/hotel.state';
 import { Observable, from, of, iif } from 'rxjs';
-import { Store } from '@ngxs/store';
-import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { Store, ofActionCompleted } from '@ngxs/store';
 import { File } from '@ionic-native/file/ngx';
 import * as _ from 'lodash';
-import { map, take, switchMap, mergeMap, tap, first, takeUntil, withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'app-hotel',
@@ -20,22 +18,19 @@ import { map, take, switchMap, mergeMap, tap, first, takeUntil, withLatestFrom }
 export class HotelPage implements OnInit {
 
   hotelList$: Observable<hotellist[]>;
-  @ViewChild('infinite', { read: IonInfiniteScroll, static: true }) infinite: IonInfiniteScroll;
+  limit$: Observable<number>;
+  isLoading: boolean = false;
 
   constructor(
     public modalCtrl: ModalController,
     public router: Router,
     public activatedRoute: ActivatedRoute,
     private store: Store,
-    private webview: WebView,
     private file: File
   ) { }
 
   ngOnInit() {
-    this.hotelList$ = this.store.select(HotelResultState.getHotelList)
-      .pipe(
-        takeUntil(this.store.select(HotelResultState.getLimit))
-      )
+    this.hotelList$ = this.store.select(HotelResultState.getHotelList);
   }
 
   async hotelFilter() {
@@ -79,16 +74,12 @@ export class HotelPage implements OnInit {
   }
 
   imgError(evt : CustomEvent) {
-    return evt;
+    console.log(evt);
   }
 
-  imgURL(img: string[],code : string): Observable<string> {
-    return from(img)
-      .pipe(
-        take(1),
-        tap(el => this.store.dispatch(new DownloadImage(el, code))),
-        tap(el => of(this.webview.convertFileSrc(el)))
-      )
+  imgURL(img: string[], code: string): Observable<string> {
+    return of('');
+    // return this.store.dispatch(new DownloadImage(img, code));
   }
 
   fileName(img : string[]) : string{
@@ -98,9 +89,8 @@ export class HotelPage implements OnInit {
     return name;
   }
 
-  loadData(evt : CustomEvent) {
-    console.log(evt, this.infinite);
-    
+  loadData(evt: any) {
+    this.store.dispatch(new AddHotelList(evt));
   }
   
 }

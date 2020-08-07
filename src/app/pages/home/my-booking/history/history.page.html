@@ -7,7 +7,7 @@
           <ion-text>
             <ion-skeleton-text animated></ion-skeleton-text>
           </ion-text>
-          <ion-text>From</ion-text>
+          <ion-label>From</ion-label>
         </ion-row>
         <ion-row style="width:25%">
           <ion-text>
@@ -18,20 +18,20 @@
           <ion-text>
             <ion-skeleton-text animated></ion-skeleton-text>
           </ion-text>
-          <ion-text>To</ion-text>
+          <ion-label>To</ion-label>
         </ion-row>
       </ion-row>
       <ion-row>
         <ion-row style="width:30%">
-          <ion-text>
+          <ion-text class="medium bold">
             <ion-skeleton-text animated></ion-skeleton-text>
           </ion-text>
-          <ion-text>
+          <ion-text class="medium bold">
             <ion-skeleton-text animated></ion-skeleton-text>
           </ion-text>
         </ion-row>
         <ion-chip style="width:25%">
-          <ion-text>
+          <ion-text class="medium bold">
             <ion-skeleton-text animated></ion-skeleton-text>
           </ion-text>
         </ion-chip>
@@ -51,28 +51,31 @@
       <ion-row>
         <ion-row>
           <ion-text>{{historyBooking.trip_requests.Segments[0].OriginName}}</ion-text>
-          <ion-text>From</ion-text>
+          <ion-label>From</ion-label>
         </ion-row>
         <ion-row>
           <ion-text>{{tripType(historyBooking)}}</ion-text>
         </ion-row>
         <ion-row>
           <ion-text>{{historyBooking.trip_requests.Segments[0].DestinationName}}</ion-text>
-          <ion-text>To</ion-text>
+          <ion-label>To</ion-label>
         </ion-row>
       </ion-row>
       <ion-row>
         <ion-row>
-          <ion-text>{{historyBooking.travel_date | date : 'd'}}th</ion-text>
-          <ion-text>{{historyBooking.travel_date | date : 'LLL'}}</ion-text>
+          <ion-text class="medium bold">{{historyBooking.travel_date | date : 'd'}}th</ion-text>
+          <ion-text class="medium bold">{{historyBooking.travel_date | date : 'LLL'}}</ion-text>
         </ion-row>
         <ion-chip>
-          <ion-text>{{historyBooking.passenger_details.fare_response.published_fare | currency: 'INR'}}</ion-text>
+          <ion-text class="medium bold">
+            {{historyBooking.passenger_details.fare_response.published_fare | currency: 'INR'}}</ion-text>
         </ion-chip>
       </ion-row>
       <ion-row *ngFor="let pnr of getPNR(historyBooking.passenger_details.PNR)">
         <ion-text (click)="viewFile(pnr)">View</ion-text>
-        <ion-button (click)="downloadTicket(pnr)">Download</ion-button>
+        <ion-button (click)="downloadTicket(pnr)">
+          <ion-label class="medium bold">Download</ion-label>
+        </ion-button>
       </ion-row>
     </ion-card-content>
   </ion-card>

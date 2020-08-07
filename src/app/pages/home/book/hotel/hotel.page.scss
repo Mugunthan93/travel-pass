@@ -1,4 +1,4 @@
-@import "../../../../../style/util/variable.scss";
+@import "../../../../../style/base/color.scss";
 @import "../../../../../style/util/mixins.scss";
 
 ion-grid{
@@ -10,7 +10,7 @@ ion-grid{
     }
     >ion-row:nth-child(1){
         border-radius: 5px;
-        background:#{$text-bg};
+        background:#{$white};
     }
     >ion-row:nth-child(2){
         >ion-col:nth-child(1){
@@ -33,13 +33,13 @@ ion-grid{
     }
     >ion-row:nth-child(3){
         border-radius: 5px;
-        background:#{$text-bg};
+        background:#{$white};
     }
     >ion-row:nth-child(4){
         >ion-col{
             >ion-row{
                 >ion-label{
-                    color:#{$btn2-bg};
+                    color:#{$malibu};
                 }
             }
             >ion-row:nth-child(2){
@@ -52,7 +52,7 @@ ion-grid{
     }
     >ion-row:nth-child(5){
         border-radius: 5px;
-        background:#{$text-bg};
+        background:#{$white};
     }
     >ion-row:nth-child(6){
         >ion-col{
@@ -94,14 +94,14 @@ ion-grid{
                     >ion-input{
                         height:100%;
                         --padding-start: 8px;
-                        border:1px solid #{$text-color};
+                        border:1px solid #{$suva-grey};
                         font-size: 12px;
                         border-radius: 4px;
                     }
                     >ion-select{
                         height:100%;
                         --padding-start: 8px;
-                        border:1px solid #{$text-color};
+                        border:1px solid #{$suva-grey};
                         font-size: 12px;
                         border-radius: 4px;
                         align-items: center;
@@ -146,7 +146,7 @@ ion-grid{
                      ion-button {
                          max-width: -webkit-fill-available;
                          --opacity: 1;
-                         --background:#{$btn4-bg};
+                         --background:#{$malibu};
 
                          ion-text,
                          ion-icon {
@@ -190,7 +190,7 @@ ion-grid{
                     >ion-input {
                         height: 100%;
                         --padding-start: 8px;
-                        border:1px solid #{$text-color};
+                        border:1px solid #{$suva-grey};
                         font-size: 12px;
                         border-radius: 4px;
                     }
@@ -200,7 +200,7 @@ ion-grid{
                 >ion-col{
                     text-align: end;
                     >ion-label{
-                        color:#{$btn2-bg};
+                        color:#{$onahau};
                     }
                 }
             }
@@ -264,7 +264,7 @@ ion-grid{
 
 ion-footer{
     >ion-toolbar{
-        --background:#{$text-bg};
+        --background:#{$white};
         >ion-row{
             padding-left:4px;
         }
@@ -275,12 +275,7 @@ ion-footer{
         ion-button {
             max-width: -webkit-fill-available;
             --opacity: 1;
-            --background:#{$btn4-bg};
-
-            ion-text,
-            ion-icon {
-                color: white !important;
-            }
+            --background:#{$malibu};
         }
     }
 }

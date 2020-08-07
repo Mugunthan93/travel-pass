@@ -1,4 +1,4 @@
-@import "../../../../../../style/util/variable.scss";
+@import "../../../../../../style/base/color.scss";
 
 ion-content {
     >ion-card:nth-child(1) {
@@ -71,7 +71,6 @@ ion-content {
                             height: auto;
                             margin-top: auto;
                             margin-bottom: auto;
-                            color:#{$btn2-bg};
                         }
 
                         >ion-icon {
@@ -112,7 +111,6 @@ ion-content {
                         ion-text {
                             margin: auto;
                             margin-bottom: 0px;
-                            color: #{$btn2-bg};
                         }
                     }
 
@@ -120,7 +118,6 @@ ion-content {
                         ion-text {
                             margin: auto;
                             margin-top: 0px;
-                            color: #{$btn2-bg};
                         }
                     }
                 }
@@ -163,9 +160,6 @@ ion-content {
         >ion-card-content {
             >ion-row:last-child {
                 >ion-col {
-                    >ion-text {
-                        color: #{$btn2-bg};
-                    }
                 }
             }
         }
@@ -197,9 +191,6 @@ ion-content {
 
             >ion-row:last-child {
                 >ion-col {
-                    >ion-text {
-                        color: #{$btn2-bg};
-                    }
                 }
             }
         }

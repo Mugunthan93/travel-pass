@@ -134,7 +134,7 @@ export interface flightData{
     Airline: airLine
     Baggage: string
     CabinBaggage: string
-    CabinClass: string
+    CabinClass: number
     Craft: string
     Destination: destination
     Duration: number

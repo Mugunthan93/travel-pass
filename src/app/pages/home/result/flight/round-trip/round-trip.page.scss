@@ -1,5 +1,5 @@
-@import "../../../../../../style/util/variable.scss";
 @import "../../../../../../style/util/mixins.scss";
+@import "../../../../../../style/base/color.scss";
 
 @mixin left-margin-img {
     margin-left: 5px;
@@ -43,7 +43,7 @@
         }
 
         ion-button {
-            --background:#{$btn4-bg};
+            --background:#{$malibu};
 
             ion-text {
                 color: white;
@@ -55,8 +55,6 @@
 
 ion-footer {
     ion-toolbar {
-        --background:#{$text-color};
-        --opacity: 0.5;
 
         >ion-row {
             height: 75px;

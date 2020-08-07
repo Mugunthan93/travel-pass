@@ -1,4 +1,3 @@
-@import "../../../../../style/util/variable.scss";
 @import "../../../../../style/util/mixins.scss";
 
 ion-content{
@@ -80,7 +79,7 @@ ion-content{
 
                             >ion-segment-button {
                                 min-height: 20px;
-                                height: 50px;
+                                height: 38px;
 
                                 white-space: normal;
                                 --padding-start: 0px;
@@ -120,6 +119,8 @@ ion-content{
             >ion-item{
                 --padding-start:0px;
                 >ion-row{
+                    display: flex;
+                    flex-direction: column;
                     max-width: fit-content;
                     >ion-card-title:last-child{
                         font-size: 12px;
@@ -147,13 +148,14 @@ ion-content{
                 --padding-start: 0px;
 
                 >ion-row {
+                    display: flex;
+                    flex-direction: column;
                     max-width: fit-content;
 
                     >ion-card-title:last-child {
                         font-size: 12px;
                     }
                     >ion-text{
-                        align-self: flex-end;
                         margin-left: 3px;
                     }
                 }
@@ -175,11 +177,18 @@ ion-content{
             }
         }
     }
+
+    >ion-list{
+
+        ion-item{
+            --padding-start:16px;
+            --padding-end:16px;
+        }
+    }
 }
 
 ion-footer {
     >ion-toolbar {
-        --background: #{$toolbar-bg};
 
         >ion-item {
             >ion-row {
@@ -193,12 +202,6 @@ ion-footer {
 
         ion-button {
             width: -webkit-fill-available;
-            --opacity: 1;
-            --background:#{$btn4-bg};
-
-            ion-text {
-                color: white;
-            }
         }
     }
 }

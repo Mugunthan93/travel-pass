@@ -1,15 +1,13 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      <ion-text>
-        Passengers Information
-      </ion-text>
+      Passengers Information
     </ion-title>
     <ion-buttons slot="end" (click)="dismissInfo()">
       <ion-button>
-        <ion-title>
-          <ion-text>OK</ion-text>
-        </ion-title>
+        <ion-label>
+          OK
+        </ion-label>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -17,8 +15,8 @@
 
 <ion-content>
   <ion-item>
-    <ion-label slot="start">Adults</ion-label>
-    <ion-text slot="end">{{(selected$ | async)}}/{{(count$ | async)}} Selected</ion-text>
+    <ion-label class="large" slot="start">Adults</ion-label>
+    <ion-label class="large bold" slot="end" style="text-align: end;">{{(selected$ | async)}}/{{(count$ | async)}} Selected</ion-label>
   </ion-item>
   <ion-row *ngFor="let pax of (passengers$ | async)">
     <ion-item>
@@ -28,16 +26,16 @@
       </ion-checkbox>
       <ion-row>
         <ion-row>
-          <ion-text>{{pax.FirstName}} {{pax.LastName}}</ion-text>
-          <ion-text> {{ gender(pax) }}</ion-text>
+          <ion-label>{{pax.FirstName}} {{pax.LastName}}</ion-label>
+          <ion-label> {{ gender(pax) }}</ion-label>
         </ion-row>
       </ion-row>
     </ion-item>
-    <ion-icon name="close" (click)="deletePassneger(pax)"></ion-icon>
-    <ion-text (click)="editPassenger(pax)">Edit</ion-text>
+    <ion-icon name="close-sharp" (click)="deletePassneger(pax)"></ion-icon>
+    <ion-label class="bold" (click)="editPassenger(pax)">Edit</ion-label>
   </ion-row>
-  <ion-button (click)="getDetail()">
+  <ion-button class="add" (click)="getDetail()">
     <ion-icon name="add"></ion-icon>
-    <ion-text>Add Adults</ion-text>
+    <ion-label class="bold">Add Adults</ion-label>
   </ion-button>
 </ion-content>
