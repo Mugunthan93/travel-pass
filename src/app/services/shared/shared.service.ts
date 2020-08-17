@@ -35,4 +35,9 @@ export class SharedService {
   async upcomingTrips(): Promise<HTTPResponse> {
     return await this.http.get("/allBookings/upcomming/trips/airline/getallTrips/list/booked/",{});
   }
+
+  async getToken(): Promise<HTTPResponse> {
+    return await this.http.get('/airlines/getToken', {});
+  }
+
 }

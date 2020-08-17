@@ -25,4 +25,9 @@ ion-list-header{
     --border-width:map.get($list-header-border-type, "width");
     --color:#{$list-header-color};
     --inner-border-width:#{$list-header-inner-border-width};
+
+    &.searchHeading {
+        padding-right: 16px !important;
+        justify-content: space-between;
+    }
 }

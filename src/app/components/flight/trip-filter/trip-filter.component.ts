@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { FilterState, filter, GetFilter, airlineName } from 'src/app/stores/result/filter.state';
-import { StateReset } from 'ngxs-reset-plugin';
+import { FilterState, GetFilter, airlineName, flightFilter } from 'src/app/stores/result/filter.state';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -16,7 +15,9 @@ export class TripFilterComponent implements OnInit {
   filterForm: FormGroup;
   airlines: FormGroup;
 
-  inputs$: Observable<filter>;
+  defaultFilter: flightFilter = null;
+
+  inputs$: Observable<flightFilter>;
 
   constructor(
     public fb: FormBuilder,
@@ -27,12 +28,14 @@ export class TripFilterComponent implements OnInit {
 
   ngOnInit() {
 
-    this.inputs$ = this.store.select(FilterState.getFilter);
+    this.inputs$ = this.store.select(FilterState.getFlightFilter);
     this.airlines = this.fb.group({});
 
     this.inputs$.subscribe(
-      (res: filter) => {
-    
+      (res: flightFilter) => {
+
+        this.defaultFilter = res;
+
         this.filterForm = this.fb.group({
           "stops": this.fb.control(res.stops),
           "depHours": this.fb.control(res.depatureHours),
@@ -50,7 +53,7 @@ export class TripFilterComponent implements OnInit {
 
   }
 
-  addAirlines(res: filter) {
+  addAirlines(res: flightFilter) {
     res.airlines.forEach((el) => {
       this.airlines.addControl(el.name,this.fb.control(el.value));
     });
@@ -80,11 +83,12 @@ export class TripFilterComponent implements OnInit {
   }
 
   corpFare(evt: CustomEvent) {
-    this.filterForm.controls['corpFare'].setValue(parseInt(evt.detail.value));
+    console.log(evt);
+    this.filterForm.controls['corpFare'].setValue(evt.detail.checked);
   }
 
   reset() {
-    this.store.dispatch(new StateReset(FilterState));
+    this.filterForm.reset();
   }
 
   filter() {
@@ -100,7 +104,7 @@ export class TripFilterComponent implements OnInit {
         });
       }
   
-      let filter: filter = {
+      let filter: flightFilter = {
         stops: this.filterForm.value.stops,
         depatureHours: this.filterForm.value.depHours,
         arrivalHours: this.filterForm.value.arrHours,

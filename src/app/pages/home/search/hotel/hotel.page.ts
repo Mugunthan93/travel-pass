@@ -41,12 +41,12 @@ export class HotelPage implements OnInit {
 
     this.hotelSearch = new FormGroup({
       'city': new FormControl({
-        cityid: 144306,
-        country: "India",
-        countrycode: "IN",
-        destination: "Mumbai",
-        stateprovince: "Maharashtra",
-        stateprovincecode: "MH"
+        cityid: 115936,
+        country: "United Arab Emirates",
+        countrycode: "AE",
+        destination: "Dubai",
+        stateprovince: null,
+        stateprovincecode: null
       }, [Validators.required]),
       'room': new FormControl([{
         ChildAge: [],
@@ -145,7 +145,8 @@ export class HotelPage implements OnInit {
     const options: CalendarModalOptions = {
       title: field.toLocaleUpperCase(),
       pickMode: 'single',
-      color: 'dark',
+      color: '#e87474',
+      cssClass: 'ion2-calendar',
       weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       weekStart: 1,
       canBackwardsSelected: false,

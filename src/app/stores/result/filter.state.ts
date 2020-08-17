@@ -4,12 +4,21 @@ import * as _ from 'lodash';
 
 
 export interface filter {
+    flight: flightFilter
+    hotel : hotelFilter
+}
+
+export interface flightFilter {
     stops: number
     depatureHours: number
     arrivalHours: number
     corporateFare: boolean
     airlines: airlineName[]
     price: number
+}
+
+export interface hotelFilter {
+
 }
 
 export interface airlineName {
@@ -26,7 +35,7 @@ export class GetAirlines {
 
 export class GetFilter {
     static readonly type = '[Filter] GetFilter';
-    constructor(public filter: filter) {
+    constructor(public filter: flightFilter) {
 
     }
 }
@@ -34,20 +43,23 @@ export class GetFilter {
 @State<filter>({
     name: 'filter',
     defaults: {
-        stops: -1,
-        depatureHours: 24,
-        arrivalHours: 24,
-        corporateFare: false,
-        airlines: [],
-        price : 0
+        flight: {
+            stops: -1,
+            depatureHours: 24,
+            arrivalHours: 24,
+            corporateFare: false,
+            airlines: [],
+            price: 0
+        },
+        hotel : null
     }
 })
 
 export class FilterState {
 
     @Selector()
-    static getFilter(states: filter) {
-        return states;
+    static getFlightFilter(states: filter) {
+        return states.flight;
     }
 
     @Action(GetAirlines)
@@ -57,23 +69,28 @@ export class FilterState {
             (el) => {
                 airlines.push({
                     name: el.name,
-                    value: true
+                    value: false
                 });
             }
         );
 
         states.patchState({
+            flight: {
                 stops: -1,
                 depatureHours: 24,
                 arrivalHours: 24,
                 corporateFare: false,
-                airlines: _.uniqBy(airlines,'name')
+                airlines: _.uniqBy(airlines, 'name'),
+                price: 0
+            }
         })
     }
 
     @Action(GetFilter)
     getFilter(states: StateContext<filter>, action: GetFilter) {
-        states.patchState(action.filter);
+        states.patchState({
+            flight: action.filter
+        });
     }
 
 }

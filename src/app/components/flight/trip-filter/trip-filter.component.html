@@ -2,11 +2,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      <ion-text>Flight Filter</ion-text>
+      Flight Filter
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="reset()">
-        <ion-text>RESET</ion-text>
+        <ion-label class="bold">RESET</ion-label>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -20,22 +20,22 @@
       <ion-segment mode="ios" (ionChange)="chooseStop($event)" formControlName="stops"
         [value]="(inputs$ | async).stops">
         <ion-segment-button value="-1">
-          <ion-text>All</ion-text>
+          <ion-label>All</ion-label>
         </ion-segment-button>
         <ion-segment-button value="1">
-          <ion-text>Non-Stop</ion-text>
+          <ion-label>Non-Stop</ion-label>
         </ion-segment-button>
         <ion-segment-button value="2">
-          <ion-text>1 Stop</ion-text>
+          <ion-label>1 Stop</ion-label>
         </ion-segment-button>
         <ion-segment-button value="3">
-          <ion-text>2 Stops</ion-text>
+          <ion-label>2 Stops</ion-label>
         </ion-segment-button>
       </ion-segment>
   
-      <ion-label>Departure Time</ion-label>
-      <ion-range (ionChange)="depRange($event)" min="0" max="24" color="secondary" pin="true" ticks="true" snaps="true"
-        [value]="(inputs$ | async).depatureHours">
+      <ion-label>Departure Time : {{ filterForm.controls['depHours'].value }}</ion-label>
+      <ion-range (ionChange)="depRange($event)" class="filter"
+      pin="true" ticks="true" snaps="true" min="0" max="24" [value]="(inputs$ | async).depatureHours">
       </ion-range>
 
       <ion-row>
@@ -43,9 +43,9 @@
         <ion-label>24 Hours</ion-label>
       </ion-row>
   
-      <ion-label>Arrival Time</ion-label>
-      <ion-range (ionChange)="reRange($event)" min="0" max="24" color="secondary" pin="true" ticks="true" snaps="true"
-      [value]="(inputs$ | async).arrivalHours">
+      <ion-label>Arrival Time : {{ filterForm.controls['arrHours'].value }}</ion-label>
+      <ion-range (ionChange)="reRange($event)" class="filter"
+      pin="true" ticks="true" snaps="true" min="0" max="24" [value]="(inputs$ | async).arrivalHours">
       </ion-range>
 
       <ion-row>
@@ -53,9 +53,9 @@
         <ion-label>24 Hours</ion-label>
       </ion-row>
 
-      <ion-label>Price</ion-label>
-      <ion-range (ionChange)="priceRange($event)" min="1000" max="100000" color="secondary" step="1000"
-        pin="true" ticks="true" snaps="true" [value]="(inputs$ | async).price">
+      <ion-label>Price : {{ filterForm.controls['price'].value }}</ion-label>
+      <ion-range (ionChange)="priceRange($event)" class="filter"
+      pin="true" ticks="true" snaps="true" min="1000" max="100000" step="1000" [value]="(inputs$ | async).price">
       </ion-range>
 
       <ion-row>
@@ -65,7 +65,9 @@
 
       <ion-item>
         <ion-label>Corporate Fare</ion-label>
-        <ion-checkbox (ionChange)="corpFare($event)" slot="end" [value]="(inputs$ | async).corporateFare"></ion-checkbox>
+        <ion-checkbox class="default" (ionChange)="corpFare($event)" slot="end"
+          [checked]="(inputs$ | async).corporateFare">
+        </ion-checkbox>
       </ion-item>
 
       <ion-label>Preferred Airlines</ion-label>
@@ -74,7 +76,8 @@
         <div *ngFor="let airline of (inputs$ | async).airlines">
           <ion-item>
             <ion-label>{{airline.name}}</ion-label>
-            <ion-checkbox slot="end" formControlName="{{airline.name}}" [checked]="airline.value"></ion-checkbox>
+            <ion-checkbox class="default" slot="end" formControlName="{{airline.name}}" [checked]="airline.value">
+            </ion-checkbox>
           </ion-item>
         </div>
       </ion-list>
@@ -90,10 +93,10 @@
   <form [formGroup]="filterForm" (ngSubmit)="filter()">
     <ion-toolbar>
       <ion-button size="large" (click)="close()">
-        <ion-text>Cancel</ion-text>
+        <ion-label class="bold">Cancel</ion-label>
       </ion-button>
       <ion-button size="large" type="submit">
-        <ion-text>Apply</ion-text>
+        <ion-label class="bold">Apply</ion-label>
       </ion-button>
     </ion-toolbar>
   </form>

@@ -49,10 +49,14 @@ export class OneWayResultState extends BaseFlightResult {
 
         return states.value.filter(
             el =>
-                (filterState.stops !== -1 ? el.stops == filterState.stops : el) &&
-                moment(el.departure).hour() <= filterState.depatureHours &&
-                moment(el.arrival).hour() <= filterState.arrivalHours &&
-                filterState.airlines.some(air => (air.name === el.name) && (air.value))
+                (filterState.flight.stops !== -1 ? el.stops == filterState.flight.stops : el) &&
+                el.corporate == filterState.flight.corporateFare &&
+                moment(el.departure).hour() <= filterState.flight.depatureHours &&
+                moment(el.arrival).hour() <= filterState.flight.arrivalHours &&
+                (
+                    filterState.flight.airlines.some(air => air.value == true) ?
+                        filterState.flight.airlines.some(air => (air.name === el.name) && (air.value)) : el
+                )
         );
     }
 

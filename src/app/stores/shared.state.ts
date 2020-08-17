@@ -1,6 +1,10 @@
-import { State, Action, StateContext, Selector } from '@ngxs/store';
+import { State, Action, StateContext, Selector, actionMatcher } from '@ngxs/store';
 import { SharedService } from '../services/shared/shared.service';
 import * as _ from 'lodash';
+import { from, of, iif } from 'rxjs';
+import { takeWhile } from 'lodash';
+import { takeUntil, skipWhile, startWith, debounceTime, distinctUntilChanged, switchMap, map, take } from 'rxjs/operators';
+import { HTTPResponse } from '@ionic-native/http/ngx';
 
 export interface Shared {
     flightCity: city[],
@@ -61,7 +65,7 @@ export class GetNationality {
     defaults: {
         flightCity: [],
         hotelCity: [],
-        nationality:[]
+        nationality: []
     }
 })
 export class SharedState {
@@ -88,49 +92,72 @@ export class SharedState {
     }
 
     @Action(GetFlightCity, {cancelUncompleted: true})
-    async getflightCity(states: StateContext<Shared>, action: GetFlightCity) {
-        try {
+    getflightCity(states: StateContext<Shared>, action: GetFlightCity) {
 
-            const city = await this.sharedService.searchFlightCity(action.city);
-            const parsedCity: city[] = JSON.parse(city.data);
-
-            states.patchState({
-                flightCity: parsedCity
-            });
-        }
-        catch (error) {
-            console.log(error);  
-        }
+        return of(action.city)
+            .pipe(
+                debounceTime(400),
+                distinctUntilChanged(),
+                switchMap(
+                    (str : string) => {
+                        return from(this.sharedService.searchFlightCity(str))
+                    }
+                ),
+                map(
+                    (cities: HTTPResponse) => {
+                        const parsedCity: city[] = JSON.parse(cities.data);
+                        states.patchState({
+                            flightCity: parsedCity
+                        });
+                    }
+                )
+            )
     }
 
     @Action(GetHotelCity, {cancelUncompleted: true})
-    async gethotelCity(states: StateContext<Shared>, action: GetHotelCity) {
-        try {
+    gethotelCity(states: StateContext<Shared>, action: GetHotelCity) {
 
-            const city = await this.sharedService.searchHotelCity(action.city);
-            const parsedCity: hotelcity[] = JSON.parse(city.data);
-
-            states.patchState({
-                hotelCity: parsedCity
-            });
-        }
-        catch (error) {
-            console.log(error);  
-        }
+        return of(action.city)
+            .pipe(
+                debounceTime(400),
+                distinctUntilChanged(),
+                switchMap(
+                    (str: string) => {
+                        return from(this.sharedService.searchHotelCity(str))
+                    }
+                ),
+                map(
+                    (cities: HTTPResponse) => {
+                        const parsedCity: hotelcity[] = JSON.parse(cities.data);
+                        states.patchState({
+                            hotelCity: parsedCity
+                        });
+                    }
+                )
+            )
     }
 
     @Action(GetNationality)
     async getNationality(states: StateContext<Shared>, action: GetNationality) {
-        try {
-            const nationalityResponse = await this.sharedService.getNationality(action.keyword);
-            const nationality: nationality[] = JSON.parse(nationalityResponse.data);
 
-            states.patchState({
-                nationality: nationality
-            });
-        }
-        catch (error) {
-            console.log(error);
-        }
+        return of(action.keyword)
+            .pipe(
+                debounceTime(400),
+                distinctUntilChanged(),
+                switchMap(
+                    (str: string) => {
+                        return from(this.sharedService.getNationality(str))
+                    }
+                ),
+                map(
+                    (cities: HTTPResponse) => {
+                        const nationality: nationality[] = JSON.parse(cities.data);
+                        states.patchState({
+                            nationality: nationality
+                        });
+                    }
+                )
+            )
     }
+
 }

@@ -179,6 +179,7 @@ export class OneWayBookState{
         const loading = await this.loadingCtrl.create({
             spinner: "crescent"
         });
+        
         const failedAlert = await this.alertCtrl.create({
             header: 'Send Request Failed',
             buttons: [{
@@ -193,6 +194,7 @@ export class OneWayBookState{
                 }
             }]
         });
+
         const successAlert = await this.alertCtrl.create({
             header: 'Send Request Success',
             subHeader: 'Request status will be updated in My Bookings',

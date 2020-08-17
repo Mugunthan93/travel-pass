@@ -1,6 +1,5 @@
-import { State, Store, Selector, Action, StateContext } from '@ngxs/store';
-import { flightResult, flightData } from 'src/app/models/search/flight';
-import * as moment from "moment";
+import { State, Selector, Action, StateContext } from '@ngxs/store';
+import { flightData } from 'src/app/models/search/flight';
 import * as _ from "lodash";
 import { OneWayResultState } from './flight/oneway.state';
 import { MultiCityResultState } from './flight/multi-city.state';
@@ -9,22 +8,16 @@ import { InternationalResultState } from './flight/international.state';
 import { itineraryPayload } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { ModalController, AlertController } from '@ionic/angular';
+import { sortButton } from './sort.state';
 
 export interface flight {
-    sort: sortButton[],
     emailtrip: emailtrip,
-    emailItinerary: itinerarytrip[],
-    currentSort: sortButton
-}
-
-export interface sortButton {
-    label: string
-    state: string
-    property: string
+    emailItinerary: itinerarytrip[]
 }
 
 export interface resultObj {
     fare: number
+    corporate: boolean
     refund: boolean
     name: string
     currency: string
@@ -140,8 +133,8 @@ export interface SSR {
 
 //classes ----------------------------------------->>>>>>
 
-export class SortChange {
-    static readonly type = '[Flight] SortChange';
+export class FlightSortChange {
+    static readonly type = '[Flight] FlightSortChange';
     constructor(public button : sortButton) {
 
     }
@@ -175,8 +168,8 @@ export class SendEmail {
     }
 }
 
-export class SortBy {
-    static readonly type = "[Flight] SortBy";
+export class FlightSortBy {
+    static readonly type = "[Flight] FlightSortBy";
     constructor(public sortby: sortButton) {
 
     }
@@ -185,15 +178,8 @@ export class SortBy {
 @State<flight>({
     name: 'flight_result',
     defaults: {
-        sort: [
-            { label: 'departure', state: 'default', property: 'departure' },
-            { label: 'arrival', state: 'default', property: 'arrival'},
-            { label: 'duration', state: 'default', property: 'Duration'},
-            { label: 'price', state: 'default', property: 'fare' }
-        ],
         emailtrip: null,
-        emailItinerary: [],
-        currentSort: { label: 'price', state: 'rotated', property: 'fare' }
+        emailItinerary: []
     },
     children: [
         OneWayResultState,
@@ -226,66 +212,6 @@ export class FlightResultState{
     @Selector()
     static getemailTrip(states: flight): emailtrip {
         return states.emailtrip;
-    }
-
-    @Selector()
-    static getButtons(states : flight): sortButton[] {
-        return states.sort;
-    }
-
-    @Selector()
-    static getSortBy(states: flight): sortButton {
-        return states.currentSort;
-    }
-
-
-    @Action(SortChange)
-    sortChange(states: StateContext<flight>, action: SortChange) {
-        let currentStates: sortButton[] = states.getState().sort.map(
-            (el : sortButton) => {
-                if (el !== action.button) {
-                    let currentstate = Object.assign({}, el);
-                    currentstate.state = "default";
-                    return currentstate;
-                }
-                else {  
-                    return el;
-                }
-        });
-        states.patchState({
-            sort: currentStates,
-            currentSort: action.button
-        });
-    }
-
-    @Action(SortBy)
-    sortBy(states: StateContext<flight>, action: SortBy) {
-        let currentsort : sortButton[] = states.getState().sort;
-        let sortedarray : sortButton[] = [];
-        currentsort.forEach((el,ind,arr) => {
-            if (el == action.sortby && action.sortby.state == 'default') {
-                sortedarray[ind] = {
-                    label: action.sortby.label,
-                    property: action.sortby.property,
-                    state: 'rotated'
-                }
-            }
-            else if (el == action.sortby && action.sortby.state == 'rotated') {
-                sortedarray[ind] = {
-                    label: action.sortby.label,
-                    property: action.sortby.property,
-                    state: 'default'
-                }
-            }
-            else {
-                sortedarray[ind] = el;
-            }
-        });
-
-        states.patchState({
-            sort: sortedarray,
-            currentSort : action.sortby
-        });
     }
 
     @Action(AddEmailTrips)

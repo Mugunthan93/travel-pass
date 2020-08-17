@@ -53,7 +53,7 @@ export class CompanyState {
 
     @Selector()
     static gstCompanyAddress(states: company): string {
-        return states.company_email;
+        return states.company_address_line1 +','+ states.company_address_line2;
     }
 
     @Selector()

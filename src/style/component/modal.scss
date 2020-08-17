@@ -52,6 +52,11 @@ ion-modal{
 .modal-wrapper,
 .picker-wrapper {
     ion-title{
+
+        &.back-modal{
+            padding-left:0px !important;
+        }
+        
         padding-left:43px !important;
     }
 }

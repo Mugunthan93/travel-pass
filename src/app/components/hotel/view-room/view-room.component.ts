@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-view-room',
@@ -7,8 +8,27 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ViewRoomComponent implements OnInit {
 
-  constructor() { }
+  rooms: any[] = ["1", "2", "3", "4", "5"];
 
-  ngOnInit() {}
+  constructor(
+    public router: Router,
+    public activatedRoute: ActivatedRoute
+  ) { }
+
+  ngOnInit() {
+
+    this.rooms = [
+      { name: 1, image: "../../../../assets/img/hotel/hotel-1.jpeg" },
+      { name: 1, image: "../../../../assets/img/hotel/hotel-1.jpeg" },
+      { name: 1, image: "../../../../assets/img/hotel/hotel-1.jpeg" },
+      { name: 1, image: "../../../../assets/img/hotel/hotel-1.jpeg" },
+      { name: 1, image: "../../../../assets/img/hotel/hotel-1.jpeg" },
+      { name: 1, image: "../../../../assets/img/hotel/hotel-1.jpeg" }
+    ];
+  }
+
+  bookHotel() {
+    this.router.navigate(['/', 'home', 'book', 'hotel']);
+  }
 
 }

@@ -1,0 +1,46 @@
+@import "../../../../style/base/color.scss";
+
+ion-content {
+    >ion-card:nth-child(1) {
+
+        >ion-card-header {
+            padding: 10px;
+        }
+
+        >ion-card-content {
+            height: fit-content;
+
+            >mat-grid-list {
+
+                mat-grid-tile {
+                    border-radius: 6px;
+
+                    figure {
+                        flex-direction: column;
+                    }
+
+                    ion-img{
+                        height: 100% !important;
+                        object-fit: cover;
+                    }
+                }
+            }
+
+            >ion-row:first-of-type {
+                align-items: center;
+                padding: 15px 0px;
+
+                >ion-row {
+                    text-align: center;
+                    display: flex;
+                    flex-direction: column;
+                    height: min-content;
+                }
+
+                
+            }
+
+
+        }
+    }
+}

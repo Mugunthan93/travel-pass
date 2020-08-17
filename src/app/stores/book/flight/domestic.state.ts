@@ -519,8 +519,8 @@ export class DomesticBookState {
         data.Segments.forEach(
             (element: flightData[], index: number, arr: flightData[][]) => {
                 book.trip[index] = {
-                    origin: element[index].Origin.Airport.CityName,
-                    destination: element[index].Destination.Airport.CityName,
+                    origin: element[0].Origin.Airport.CityName,
+                    destination: element[element.length - 1].Destination.Airport.CityName,
                     connecting_flight: []
                 }
 

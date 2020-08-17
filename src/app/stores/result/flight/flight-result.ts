@@ -2,9 +2,6 @@ import { flightResult, flightData } from 'src/app/models/search/flight';
 import { itinerarytrip, emailtrip, resultObj, trips, baggage, fareRule } from '../flight.state';
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import { isNullOrUndefined } from 'util';
-
-
 
 export class BaseFlightResult {
 
@@ -123,8 +120,11 @@ export class BaseFlightResult {
             TraceId: traceId
         }
 
+
+
         resultObj = {
             name: result.Segments[0][0].Airline.AirlineName,
+            corporate : _.isNull(result.AirlineRemark) ? false : true,
             fare: result.Fare.PublishedFare,
             refund: result.IsRefundable,
             Duration: totalDuration,

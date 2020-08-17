@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-about-hotel',
@@ -9,12 +10,20 @@ export class AboutHotelComponent implements OnInit {
 
   @Input() selectedSegement: string;
 
-  constructor() { }
+  constructor(
+    public modalCtrl : ModalController
+  ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    
+  }
   
   tabChange(evt : CustomEvent) {
     this.selectedSegement = evt.detail.value;
+  }
+
+  back() {
+    this.modalCtrl.dismiss(null,null,'about-hotel');
   }
 
 }

@@ -916,7 +916,7 @@ export class FLightBookState {
             PaxType: 1,
             IsLeadPax: true,
             FirstName: this.store.selectSnapshot(UserState.getFirstName),
-            LastName: this.store.selectSnapshot(UserState.getLastName),
+            LastName: this.store.selectSnapshot(UserState.getLastName) == null ? '' : this.store.selectSnapshot(UserState.getLastName),
             ContactNo: this.store.selectSnapshot(UserState.getContact),
             DateOfBirth: this.store.selectSnapshot(UserState.getDOB),
             PassportNo: this.store.selectSnapshot(UserState.getPassportNo),

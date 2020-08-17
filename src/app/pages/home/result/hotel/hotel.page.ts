@@ -1,13 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { matExpansionAnimations } from '@angular/material/expansion';
 import { ModalController, IonInfiniteScroll } from '@ionic/angular';
 import { HotelFilterComponent } from 'src/app/components/hotel/hotel-filter/hotel-filter.component';
 import { Router, ActivatedRoute } from '@angular/router';
-import { hotellist, HotelResultState, AddHotelList } from 'src/app/stores/result/hotel.state';
-import { Observable, from, of, iif } from 'rxjs';
-import { Store, ofActionCompleted } from '@ngxs/store';
-import { File } from '@ionic-native/file/ngx';
+import { hotellist, HotelResultState, ViewHotel, AddHotels } from 'src/app/stores/result/hotel.state';
+import { Observable } from 'rxjs';
+import { Store } from '@ngxs/store';
 import * as _ from 'lodash';
+import { ViewHotelComponent } from 'src/app/components/hotel/view-hotel/view-hotel.component';
+import { sortButton, SortState } from 'src/app/stores/result/sort.state';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
 
 @Component({
   selector: 'app-hotel',
@@ -17,20 +19,27 @@ import * as _ from 'lodash';
 })
 export class HotelPage implements OnInit {
 
+  @ViewChild('infinite', { static: true }) infinite: IonInfiniteScroll;
+
   hotelList$: Observable<hotellist[]>;
   limit$: Observable<number>;
   isLoading: boolean = false;
+  loading: string = "Loading Hotels";
+
+  sortBy$: Observable<sortButton>;
 
   constructor(
     public modalCtrl: ModalController,
     public router: Router,
     public activatedRoute: ActivatedRoute,
     private store: Store,
-    private file: File
+    private webview : WebView
   ) { }
-
+  
   ngOnInit() {
     this.hotelList$ = this.store.select(HotelResultState.getHotelList);
+    this.limit$ = this.store.select(HotelResultState.getLimit);
+    this.sortBy$ = this.store.select(SortState.getHotelSortBy);
   }
 
   async hotelFilter() {
@@ -48,12 +57,19 @@ export class HotelPage implements OnInit {
     return await modal.present();
   }
 
-  async viewHotel() {
-    this.router.navigate(['view'], {relativeTo:this.activatedRoute});
-  }
+  async viewHotel(hotel: hotellist) {
 
-  sorting(evt : CustomEvent) {
-    
+    const modal = await this.modalCtrl.create({
+      component: ViewHotelComponent,
+      id: 'view-hotel'
+    })
+
+    this.store.dispatch(new ViewHotel(hotel))
+      .subscribe({
+        complete: async () => {
+          await modal.present();
+        }
+      });
   }
 
   starRating(rating: number): string[] {
@@ -73,24 +89,34 @@ export class HotelPage implements OnInit {
     }
   }
 
-  imgError(evt : CustomEvent) {
+  changeImg(evt : CustomEvent) {
     console.log(evt);
   }
 
-  imgURL(img: string[], code: string): Observable<string> {
-    return of('');
-    // return this.store.dispatch(new DownloadImage(img, code));
-  }
-
-  fileName(img : string[]) : string{
-    let link = img[0].split('/');
-    let fileName = link[link.length - 1];
-    let name = fileName.substring(0, fileName.length - 5);
-    return name;
-  }
-
   loadData(evt: any) {
-    this.store.dispatch(new AddHotelList(evt));
+    this.store.dispatch(new AddHotels())
+      .subscribe(
+        async (res) => {
+          if (res.scroll == 'finished') {
+            await this.infinite.complete();
+          }
+          else if(res.scroll == "stopped") {
+            this.loading = "No more Hotels";
+            await this.infinite.complete();
+          }
+        }
+      );
   }
+
+  loadImg(hotel: hotellist) {
+    if (hotel.Images) {
+      return hotel.Images[0];
+      // return this.webview.convertFileSrc(hotel.Images[0]);
+    }
+    else {
+      return hotel.HotelPicture;
+    }
+  }
+
   
 }

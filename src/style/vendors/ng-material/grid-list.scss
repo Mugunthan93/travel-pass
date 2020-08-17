@@ -1,0 +1,15 @@
+@import "../../base/color.scss";
+
+
+mat-grid-list{
+    &.hotel-grid{
+        height: 250px;
+    }
+
+    mat-grid-tile{
+
+        ion-label {
+            --color: #{$white};
+        }
+    }
+}

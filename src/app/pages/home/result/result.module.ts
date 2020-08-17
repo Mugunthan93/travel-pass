@@ -29,6 +29,11 @@ import { BusPhotoComponent } from 'src/app/components/bus/bus-photo/bus-photo.co
 import { BusAmentiesComponent } from 'src/app/components/bus/bus-amenties/bus-amenties.component';
 import { BusPolicyComponent } from 'src/app/components/bus/bus-policy/bus-policy.component';
 import { BusSeatlayoutComponent } from 'src/app/components/bus/bus-seatlayout/bus-seatlayout.component';
+import { ViewHotelComponent } from 'src/app/components/hotel/view-hotel/view-hotel.component';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatDividerModule } from '@angular/material/divider';
+import { SimilarHotelsComponent } from 'src/app/components/hotel/similar-hotels/similar-hotels.component';
+import { ViewRoomComponent } from 'src/app/components/hotel/view-room/view-room.component';
 
 
 @NgModule({
@@ -39,6 +44,7 @@ import { BusSeatlayoutComponent } from 'src/app/components/bus/bus-seatlayout/bu
     IonicModule,
     ResultPageRoutingModule,
     MatExpansionModule,
+
     PipeModule,
     AgmCoreModule.forRoot({
       // please get your own API key here:

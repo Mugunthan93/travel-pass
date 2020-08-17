@@ -2,17 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { AlertOptions } from '@ionic/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { user } from 'src/app/models/user';
 import { CompanyState } from 'src/app/stores/company.state';
 import { UserState } from 'src/app/stores/user.state';
-import { MailCC, Purpose, Comments } from 'src/app/stores/book/flight.state';
+import { MailCC, Purpose, Comments, FLightBookState } from 'src/app/stores/book/flight.state';
 import { DomesticSendRequest } from 'src/app/stores/book/flight/domestic.state';
 import { ResultState } from 'src/app/stores/result.state';
 import { OneWaySendRequest } from 'src/app/stores/book/flight/oneway.state';
 import { MultiCitySendRequest } from 'src/app/stores/book/flight/multi-city.state';
 import { InternationalSendRequest } from 'src/app/stores/book/flight/international.state';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-book-confirmation',
@@ -30,15 +31,19 @@ export class BookConfirmationComponent implements OnInit {
   purposeAlertOptions: AlertOptions;
 
   purposeArray : string[] = ['Project', 'Offsite meet', 'Sales', 'Support', 'Internal', 'Conference', 'Training', 'Other', 'Business meet'];
+  currentPurpose: string = null;
 
   constructor(
     private store: Store,
-    public modalCtrl : ModalController
+    public modalCtrl: ModalController,
+    public alertCtrl : AlertController
   ) {
+
     this.approverName$ = this.store.select(UserState.getApproverName);
     this.managers$ = this.store.select(CompanyState.getManagerList);
     this.requestType = this.store.selectSnapshot(ResultState.getResultType);
     this.isAdmin$ = this.store.select(UserState.isAdmin);
+
    }
 
   ngOnInit() {
@@ -58,6 +63,7 @@ export class BookConfirmationComponent implements OnInit {
   }
   
   purpose(evt: CustomEvent) {
+    this.currentPurpose = evt.detail.value;
     this.store.dispatch(new Purpose(evt.detail.value));
   }
 
@@ -65,18 +71,35 @@ export class BookConfirmationComponent implements OnInit {
     this.store.dispatch(new Comments(evt.detail.value));
   }
 
-  sendRequest() {
-    if (this.requestType == 'one-way') {
-      this.store.dispatch(new OneWaySendRequest());
+  async sendRequest() {
+    let missing = await this.alertCtrl.create({
+      header: 'Purpose Missing',
+      subHeader: 'Select the purpose',
+      id: 'passenger-check',
+      buttons: [{
+        text: "Ok",
+        handler: async () => {
+          await missing.dismiss();
+        }
+      }]
+    });
+
+    if (this.currentPurpose !== null) {
+      if (this.requestType == 'one-way') {
+        this.store.dispatch(new OneWaySendRequest());
+      }
+      else if (this.requestType == 'round-trip') {
+        this.store.dispatch(new InternationalSendRequest());
+      }
+      else if (this.requestType == 'animated-round-trip') {
+        this.store.dispatch(new DomesticSendRequest());
+      }
+      else if (this.requestType == 'multi-city') {
+        this.store.dispatch(new MultiCitySendRequest());
+      }
     }
-    else if (this.requestType == 'round-trip') {
-      this.store.dispatch(new InternationalSendRequest());
-    }
-    else if (this.requestType == 'animated-round-trip') {
-      this.store.dispatch(new DomesticSendRequest());
-    }
-    else if (this.requestType == 'multi-city') {
-      this.store.dispatch(new MultiCitySendRequest());
+    else {
+      return await missing.present();
     }
   }
 

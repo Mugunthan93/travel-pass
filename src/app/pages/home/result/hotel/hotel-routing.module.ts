@@ -7,10 +7,6 @@ const routes: Routes = [
   {
     path: '',
     component: HotelPage,
-  },
-  {
-    path: 'view',
-    loadChildren: () => import('./view/view.module').then( m => m.ViewPageModule)
   }
 ];
 

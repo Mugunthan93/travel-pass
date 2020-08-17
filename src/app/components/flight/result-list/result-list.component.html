@@ -16,7 +16,7 @@
               <ion-row *ngIf="flightName" [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}">
                 <ion-label class="large bold">{{item.name}}</ion-label>
                 <ion-text class="bold">{{item.seats}} Seats Left</ion-text>
-                <ion-text class="bold">{{item.fare | currency : item.currency}}</ion-text>
+                <ion-label class="bold">{{item.fare | currency : item.currency}}</ion-label>
                 <ion-item>
                   <ion-checkbox  class="email" slot="start" class="email" [value]="item.email" (ionChange)="getFlight($event)" [checked]="emailSelect(item.email) | async"></ion-checkbox>
                   <ion-label slot="end">Email</ion-label>
@@ -46,8 +46,8 @@
                     </ion-text>
                   </ion-col>
                   <ion-col *ngIf="flightPrice">
-                    <ion-text class="bold" [ngClass]="{'small': type == 'animated-round-trip'}">
-                      {{i.tripinfo.fare | currency : i.tripinfo.currency }}</ion-text>
+                    <ion-label class="bold" [ngClass]="{'small': type == 'animated-round-trip'}">
+                      {{i.tripinfo.fare | currency : i.tripinfo.currency }}</ion-label>
                     <ion-text class="bold" [ngClass]="{'small': type == 'animated-round-trip'}">
                       {{i.tripinfo.seats + ' Seat Left' }}</ion-text>
                   </ion-col>

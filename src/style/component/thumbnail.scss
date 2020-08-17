@@ -10,16 +10,15 @@ ion-thumbnail{
 
     width: min-content;
     height: min-content;
-    background: #{$white} 0% 0% no-repeat padding-box;
-    box-shadow: 0px 6px 10px #{$geraldine};
-    opacity: 1;
-
-    --border-radius: #{$thumbnail-border-radius};
-
 
     &.dashboard{
        width: 56px;
        height: 56px;
+       background: #{$white} 0% 0% no-repeat padding-box;
+       box-shadow: 0px 6px 10px #{$geraldine};
+       opacity: 1;
+
+       --border-radius: #{$thumbnail-border-radius};
 
         >ion-icon{
 

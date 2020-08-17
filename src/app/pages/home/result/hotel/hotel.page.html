@@ -88,8 +88,9 @@
 
 <ion-content>
 
-
-  <ion-card *ngFor="let hotel of (hotelList$ | async);let i = index">
+  <ion-card
+    *ngFor="let hotel of (hotelList$ | async | sort : (sortBy$ | async).property : (sortBy$ | async).state);let i = index"
+    (click)="viewHotel(hotel)">
 
     <ion-card-header>
       <ion-row>
@@ -99,7 +100,7 @@
       <ion-row>
         <ion-row>
           <ion-label>{{hotel.HotelName}}</ion-label>
-          <ion-text>{{hotel.Address}}</ion-text>
+          <ion-text>{{hotel.Address ? hotel.Address : hotel.HotelAddress}}</ion-text>
         </ion-row>
         <ion-row>
           <ion-label>{{hotel.Price.PublishedPrice | currency : 'INR'}}</ion-label>
@@ -111,18 +112,19 @@
     <ion-card-content>
       <ion-item>
         <ion-row class="img">
-          <ion-img [src]="imgURL(hotel.Images,hotel.HotelCode) | async"></ion-img>
+          <ion-img [src]="loadImg(hotel)"
+            (ionError)="changeImg($event)"></ion-img>
           <ion-icon size="large" name="heart-outline"></ion-icon>
           <ion-icon slot="start" name="heart-sharp" *ngIf="false"></ion-icon>
         </ion-row>
-        <ion-row class="facility">
+        <ion-row class="facility" *ngIf="hotel.HotelFacilities">
           <ion-item>
             <ion-icon slot="start" name="add-sharp"></ion-icon>
-            <ion-label>{{hotel.HotelFacilities[0]}}</ion-label>
+            <ion-label>{{hotel.HotelFacilities ? hotel.HotelFacilities[0] : ''}}</ion-label>
           </ion-item>
           <ion-item>
             <ion-icon slot="start" name="add-sharp"></ion-icon>
-            <ion-label>{{hotel.HotelFacilities[1]}}</ion-label>
+            <ion-label>{{hotel.HotelFacilities ? hotel.HotelFacilities[1] : ''}}</ion-label>
           </ion-item>
         </ion-row>
       </ion-item>
@@ -130,46 +132,9 @@
 
   </ion-card>
 
-  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
-    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)" #infinite>
+    <ion-infinite-scroll-content loadingSpinner="bubbles" [loadingText]="loading">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
 
 </ion-content>
-
-<!-- <ion-row>
-  <ion-segment (ionChange)="sorting($event)">
-    <ion-col size="3">
-      <ion-segment-button value="departure" layout="icon-end">
-        <ion-label>
-          {{'suggested' | uppercase}}
-          <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-        </ion-label>
-      </ion-segment-button>
-    </ion-col>
-    <ion-col size="3">
-      <ion-segment-button value="arrival" layout="icon-end">
-        <ion-label>
-          {{'stars' | uppercase}}
-          <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-        </ion-label>
-      </ion-segment-button>
-    </ion-col>
-    <ion-col size="3">
-      <ion-segment-button value="duration" layout="icon-end">
-        <ion-label>
-          {{'rating' | uppercase}}
-          <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-        </ion-label>
-      </ion-segment-button>
-    </ion-col>
-    <ion-col size="3">
-      <ion-segment-button value="price" layout="icon-end">
-        <ion-label>
-          {{'price' | uppercase}}
-          <ion-icon src="../../../../../../assets/ionicons/arrow-up-outline.svg"></ion-icon>
-        </ion-label>
-      </ion-segment-button>
-    </ion-col>
-  </ion-segment>
-</ion-row> -->

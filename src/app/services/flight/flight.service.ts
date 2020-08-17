@@ -23,6 +23,8 @@ export class FlightService {
   }
 
   async searchFlight(searchData: flightSearchPayload): Promise<HTTPResponse> {
+    this.http.setReqTimeout(300);
+    console.log(this.http.getReqTimeout());
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setData('json');
     return await this.http.post("/airlines/search", searchData);

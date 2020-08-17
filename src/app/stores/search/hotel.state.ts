@@ -5,8 +5,11 @@ import { ModalController, AlertController, LoadingController } from '@ionic/angu
 import { city, nationality } from '../shared.state';
 import { Navigate } from '@ngxs/router-plugin';
 import { HotelService } from 'src/app/services/hotel/hotel.service';
-import { hotelResponse, HotelResponse, hotelImageResponse } from '../result/hotel.state';
+import { hotelResponse, HotelResponse } from '../result/hotel.state';
 import { ResultMode } from '../result.state';
+import { from, throwError, Observable } from 'rxjs';
+import { tap, finalize, catchError, map, concatMap, flatMap } from 'rxjs/operators';
+import { HTTPResponse } from '@ionic-native/http/ngx';
 
 export interface hotelsearch{
     formData : hotelForm
@@ -331,7 +334,8 @@ export class HotelSearchState {
     async searchHotel(states: StateContext<hotelsearch>) {
 
         const loading = await this.loadingCtrl.create({
-            spinner: "crescent"
+            spinner: "crescent",
+            id: 'search-hotel'
         });
         const failedAlert = await this.alertCtrl.create({
             header: 'Search Failed',
@@ -363,7 +367,7 @@ export class HotelSearchState {
             IsTBOMapped: true,
             MaxRating: 5,
             MinRating: currentForm.star,
-            NoOfNights: moment(currentForm.checkout).diff(moment(currentForm.checkin),'days').toString(),
+            NoOfNights: moment(currentForm.checkout).diff(moment(currentForm.checkin), 'days').toString(),
             NoOfRooms: currentForm.room.length.toString(),
             PreferredCurrency: "INR",
             PreferredHotel: "",
@@ -379,14 +383,10 @@ export class HotelSearchState {
         try {
             let hotelResponse = await this.hotelService.searchHotel(payload);
             let hoteldata: hotelResponse = JSON.parse(hotelResponse.data);
-            this.store.dispatch(new HotelResponse(hoteldata.response))
-                .subscribe({
-                    complete: () => {
-                        this.store.dispatch(new ResultMode('hotel'));
-                        loading.dismiss();
-                        this.store.dispatch(new Navigate(['/', 'home', 'result', 'hotel']));
-                    }
-                });
+            states.dispatch(new HotelResponse(hoteldata.response));
+            states.dispatch(new ResultMode('hotel'));
+            this.loadingCtrl.dismiss(null, null, 'search-hotel');
+            states.dispatch(new Navigate(['/', 'home', 'result', 'hotel']));
         }
         catch (error) {
             console.log(error);
@@ -411,6 +411,4 @@ export class HotelSearchState {
         }
 
     }
-
-    
 }

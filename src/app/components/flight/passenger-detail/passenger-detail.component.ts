@@ -39,6 +39,7 @@ export class PassengerDetailComponent implements OnInit {
   customAlertOptions: AlertOptions;
 
   regex: any = {
+    alphaonly: "^[A-Za-z]+$",
     email: "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$",
     phone_number: "^[0-9]{10}$",
     passport: "^(?!^0+$)[a-zA-Z0-9]{6,9}$",
@@ -64,8 +65,8 @@ export class PassengerDetailComponent implements OnInit {
     if (this.form == 'add') {
       this.Passenger = new FormGroup({
         "Title": new FormControl(null,[Validators.required]),
-        "FirstName": new FormControl(null, [Validators.required,Validators.minLength(3)]),
-        "LastName": new FormControl(null, [Validators.required,Validators.minLength(3)]),
+        "FirstName": new FormControl(null, [Validators.required,Validators.minLength(3), Validators.pattern(this.regex.alphaonly)]),
+        "LastName": new FormControl(null, [Validators.required, Validators.minLength(3), Validators.pattern(this.regex.alphaonly)]),
         "Email": new FormControl(null, [Validators.required, Validators.pattern(this.regex.email)]),
         "DateOfBirth": new FormControl(null, [Validators.required]),
         "Address": new FormControl(null, [Validators.required]),

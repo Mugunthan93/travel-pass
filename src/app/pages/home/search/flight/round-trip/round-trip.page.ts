@@ -37,7 +37,9 @@ export class RoundTripPage implements OnInit {
       to: this.fb.control(null, [Validators.required]),
       departure: this.fb.control(null, [Validators.required]),
       return: this.fb.control(null, [Validators.required]),
-      traveller: this.fb.control(null, [Validators.required]),
+      traveller: this.fb.control({
+        adult: 1, child: 0, infant: 0
+      }, [Validators.required]),
       class: this.fb.control('all', [Validators.required])
     });
 

@@ -1,11 +1,13 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { IonInput, ModalController, IonSearchbar } from '@ionic/angular';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { city, hotelcity, SharedState, GetFlightCity, GetHotelCity, GetNationality, nationality } from 'src/app/stores/shared.state';
 import { Store } from '@ngxs/store';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { SearchState } from 'src/app/stores/search.state';
 import { StateReset } from 'ngxs-reset-plugin';
+import { startWith, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { map } from 'lodash';
 
 @Component({
   selector: 'app-select-modal',
@@ -47,21 +49,19 @@ export class SelectModalComponent implements OnInit {
     await this.modalCtrl.dismiss(selectedVal);
   }
 
-  async search(searchString: string) {
-    console.log(searchString);
-    if (searchString.length >= 3) {
+  search(searchString: string) {
+    if (searchString.length > 2) {
       if (this.title == 'city') {
         if (this.type == 'flight') {
-          this.store.dispatch(new GetFlightCity(searchString));
+          return this.store.dispatch(new GetFlightCity(searchString));
         }
         else if (this.type == 'hotel') {
-          this.store.dispatch(new GetHotelCity(searchString));
+          return this.store.dispatch(new GetHotelCity(searchString));
         }
       }
       else if (this.title == 'nationality') {
-        this.store.dispatch(new GetNationality(searchString));
-      }
-      
+        return this.store.dispatch(new GetNationality(searchString));
+      } 
     }
   }
 

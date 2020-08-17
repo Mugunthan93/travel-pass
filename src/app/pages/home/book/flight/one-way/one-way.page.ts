@@ -64,7 +64,9 @@ export class OneWayPage implements OnInit {
   }
 
   async confirmRequest() {
+
     if (this.selected == this.count) {
+
       const modal = await this.modalCtrl.create({
         component: BookConfirmationComponent,
         id: 'send-request',
@@ -72,19 +74,22 @@ export class OneWayPage implements OnInit {
       });
   
       return await modal.present();
-    } else {
-      const alert = await this.alertCtrl.create({
-        header: 'Passenger Details',
-        subHeader:'Select Your Passenger',
-        id: 'passenger-check',
-        buttons: [{
-          text: "Ok",
-          handler: () => {
-            alert.dismiss();
-          }
-        }]
-      });
-      return await alert.present();
+
+    }
+    else {
+
+    const alert = await this.alertCtrl.create({
+      header: 'Passenger Details',
+      subHeader:'Select Your Passenger',
+      id: 'passenger-check',
+      buttons: [{
+        text: "Ok",
+        handler: () => {
+          alert.dismiss();
+        }
+      }]
+    });
+    return await alert.present();
     }
   }
 

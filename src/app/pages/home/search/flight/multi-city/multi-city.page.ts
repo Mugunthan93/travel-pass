@@ -34,7 +34,9 @@ export class MultiCityPage implements OnInit {
   ngOnInit() {
     this.multiCitySearch = this.fb.group({
       trips: this.fb.array([this.createTrip()]),
-      traveller: this.fb.control(null, [Validators.required]),
+      traveller: this.fb.control({
+        adult: 1, child: 0, infant: 0
+      }, [Validators.required]),
       class: this.fb.control('all', [Validators.required])
     });
     

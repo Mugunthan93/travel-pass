@@ -8,7 +8,7 @@
           <ion-text class="medium bold" [ngClass]="errorClass('from')">
             {{this.roundTripSearch.value.from !== null ? this.roundTripSearch.value.from.city_code : 'Select'}}
           </ion-text>
-          <ion-text [ngClass]="errorClass('from')">
+          <ion-text class="medium bold" [ngClass]="errorClass('from')">
             {{this.roundTripSearch.value.from !== null ? this.roundTripSearch.value.from.city_name : 'Origin'}}
           </ion-text>
         </ion-row>

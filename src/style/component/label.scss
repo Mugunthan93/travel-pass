@@ -52,5 +52,9 @@ ion-label{
     &.boldest {
         font-weight: 900;
     }
+    
+    &.highlight-text {
+        color : #{$geraldine} !important;
+    }
 
 }

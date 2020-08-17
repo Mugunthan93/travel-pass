@@ -35,6 +35,7 @@ import { InternationalBookState } from '../stores/book/flight/international.stat
 import { NgxsResetPluginModule } from 'ngxs-reset-plugin';
 import { HotelSearchState } from '../stores/search/hotel.state';
 import { HotelResultState } from '../stores/result/hotel.state';
+import { SortState } from '../stores/result/sort.state';
 
 @NgModule({
   declarations: [],
@@ -76,6 +77,7 @@ import { HotelResultState } from '../stores/result/hotel.state';
       ApprovalState,
       
       FilterState,
+      SortState,
       SharedState
     ], { developmentMode: !environment.production }
     ),
@@ -94,6 +96,7 @@ import { HotelResultState } from '../stores/result/hotel.state';
         ApprovalState,
         
         FilterState,
+        SortState,
         SharedState,
       ]
     }),

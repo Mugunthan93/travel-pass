@@ -1,7 +1,7 @@
 @import "../base/color.scss";
 
 
-$range-pin-color:$suva-grey;
+$range-pin-color:$white;
 $range-background:(
     "bar":$geraldine,
     "knob":$geraldine,
@@ -9,18 +9,17 @@ $range-background:(
 );
 $range-bar-background-active:none;
 
-$range-bar-height:20px;
-$range-height:15px;
-$range-knob-size:10px;
+$range-bar-height:3px;
+$range-height:42px;
+$range-knob-size:18px;
 
 $range-border-radius:(
-    "bar":5px,
-    "knob":5px
+    "bar":50%,
+    "knob":10px
 );
 $range-knob-box-shadow:none;
 
-ion-range{
-
+@mixin ion-range {
     --pin-color:#{$range-pin-color};
 
     --bar-background:map.get($range-background, "bar");
@@ -29,7 +28,7 @@ ion-range{
 
     --bar-background-active:#{$range-bar-background-active};
 
-    --bar-border-radius:map.get($range-border-radius,"bar");
+    --bar-border-radius:map.get($range-border-radius, "bar");
     --knob-border-radius:map.get($range-border-radius, "knob");
 
     --bar-height:#{$range-bar-height};
@@ -37,5 +36,15 @@ ion-range{
 
     --knob-box-shadow:#{$range-knob-box-shadow};
     --knob-size:#{$range-knob-size};
+}
 
+ion-range{
+
+    @include ion-range;
+
+    &.filter{
+        --bar-background: #{$geraldine};
+        --knob-background: #{$geraldine};
+        --knob-border-radius: 50%;
+    }
 }

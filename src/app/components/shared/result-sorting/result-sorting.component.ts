@@ -1,10 +1,11 @@
-import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
-import { sortButton, FlightResultState, SortChange, SortBy } from 'src/app/stores/result/flight.state';
-import { ResultState } from 'src/app/stores/result.state';
+import { Observable, of } from 'rxjs';
+import { sortButton, SortState, SortChange, SortBy } from 'src/app/stores/result/sort.state';
 import * as _ from 'lodash';
+import { switchMap } from 'rxjs/operators';
+import { ResultState } from 'src/app/stores/result.state';
 
 @Component({
   selector: 'app-result-sorting',
@@ -21,50 +22,46 @@ import * as _ from 'lodash';
 })
 export class ResultSortingComponent implements OnInit {
 
-  resultMode$: Observable<string>;
+  resultMode: string;
 
-  flightbuttons$: Observable<sortButton[]>;
-  hotelbuttons$: Observable<sortButton[]>;
-  
-  currentflightButton$: Observable<sortButton>;
-  currenthotelButton$: Observable<sortButton>;
-
-  currentflightButton: sortButton;
-  currenthotelButton: sortButton;
+  buttons$: Observable<sortButton[]>;
+  currentButton$: Observable<sortButton>;
+  currentButton: sortButton = { label: null, state: null, property: null };
 
   constructor(
     private store : Store
   ) { }
 
   ngOnInit() {
-    this.resultMode$ = this.store.select(ResultState.getResultMode);
 
-    this.flightbuttons$ = this.store.select(FlightResultState.getButtons);
-    this.hotelbuttons$ = this.store.select(FlightResultState.getButtons);
+    this.buttons$ = this.store.select(SortState.getButtons);
+    this.resultMode = this.store.selectSnapshot(ResultState.getResultMode);
+    if (this.resultMode == 'flight') {
+      this.currentButton$ = this.store.select(SortState.getFlightSortBy); 
+    }
+    else if (this.resultMode == 'hotel') {
+      this.currentButton$ = this.store.select(SortState.getHotelSortBy);
+    }
+    this.currentButton$.subscribe(el => this.currentButton = el);
 
-    this.currentflightButton$ = this.store.select(FlightResultState.getSortBy);
-    this.currenthotelButton$ = this.store.select(FlightResultState.getSortBy);
-
-    this.currentflightButton$.subscribe(el => this.currentflightButton = el);
-    this.currenthotelButton$.subscribe(el => this.currenthotelButton = el);
   }
   
-  sortChange(evt: CustomEvent) {
-    this.store.dispatch(new SortChange(evt.detail.value));
+  SortChange(evt: CustomEvent) {
+    if (evt.detail.value.property !== this.currentButton.property) {
+      this.store.dispatch(new SortChange(evt.detail.value, this.resultMode));
+    }
   }
 
-  sorting(item: sortButton) {
-    console.log(item);
-    this.store.dispatch(new SortBy(item));
+  SortBy(item: sortButton) {
+    this.store.dispatch(new SortBy(item, this.resultMode));
   }
 
-  selectedButton(button : sortButton) {
-    if (this.currentflightButton.property == button.property) {
+  selectedButton(button: sortButton): string {
+    if (this.currentButton.property == button.property) {
       return 'selectedItem';
     }
-    else if (!(this.currentflightButton.property == button.property)){
+    else if (this.currentButton.property == button.property){
       return '';
     }
   }
-
 }
