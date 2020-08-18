@@ -1,15 +1,12 @@
-import { State, Action, StateContext, Selector, Store, ofActionSuccessful, ofActionDispatched, ofAction, ofActionCanceled, ofActionErrored, ofActionCompleted  } from '@ngxs/store';
+import { State, Action, StateContext, Selector, Store  } from '@ngxs/store';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { ModalController, AlertController, LoadingController } from '@ionic/angular';
-import { city, nationality } from '../shared.state';
+import { city, nationality, hotelcity } from '../shared.state';
 import { Navigate } from '@ngxs/router-plugin';
 import { HotelService } from 'src/app/services/hotel/hotel.service';
 import { hotelResponse, HotelResponse } from '../result/hotel.state';
 import { ResultMode } from '../result.state';
-import { from, throwError, Observable } from 'rxjs';
-import { tap, finalize, catchError, map, concatMap, flatMap } from 'rxjs/operators';
-import { HTTPResponse } from '@ionic-native/http/ngx';
 
 export interface hotelsearch{
     formData : hotelForm
@@ -20,7 +17,7 @@ export interface hotelsearch{
 export interface hotelForm {
     checkin: Date
     checkout: Date
-    city: city
+    city: hotelcity
     nationality: nationality
     room: roomguest[]
     star: number
@@ -161,6 +158,22 @@ export class HotelSearchState {
     @Selector()
     static getNights(state : hotelsearch): number {
         return moment(state.formData.checkout).diff(moment(state.formData.checkin), 'days');
+    }
+
+    @Selector()
+    static getSearchData(state: hotelsearch): hotelForm {
+        return state.formData;
+    }
+
+    @Selector()
+    static getGuest(state: hotelsearch): number {
+        let guest: number = 0;
+        state.formData.room.forEach(
+            (el) => {
+                guest += el.NoOfAdults + el.NoOfChild;
+            }
+        );
+        return guest;
     }
 
     @Action(AddRoom)

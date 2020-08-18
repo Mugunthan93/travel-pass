@@ -8,6 +8,8 @@ import { Store } from '@ngxs/store';
 import { ResultState } from 'src/app/stores/result.state';
 import { StateReset } from 'ngxs-reset-plugin';
 import { Navigate } from '@ngxs/router-plugin';
+import { hotelForm, HotelSearchState } from 'src/app/stores/search/hotel.state';
+import { HotelResultState } from 'src/app/stores/result/hotel.state';
 
 @Component({
   selector: 'app-result',
@@ -23,6 +25,10 @@ export class ResultPage implements OnInit {
   resultMode: string;
   resultType: string;
 
+  hotelSearch$: Observable<hotelForm>;
+  totalGuest$: Observable<number>;
+  totalHotels$: Observable<number>;
+
   constructor(
     private store:Store,
     public modalCtrl : ModalController
@@ -32,6 +38,7 @@ export class ResultPage implements OnInit {
   }
 
   ngOnInit() {
+
     this.resultMode$ = this.store.select(ResultState.getResultMode);
     this.resultType$ = this.store.select(ResultState.getResultType);
 
@@ -39,6 +46,10 @@ export class ResultPage implements OnInit {
     this.resultType = this.store.selectSnapshot(ResultState.getResultType);
 
     this.mailStatus$ = this.store.select(FlightResultState.mailStatus);
+
+    this.hotelSearch$ = this.store.select(HotelSearchState.getSearchData);
+    this.totalGuest$ = this.store.select(HotelSearchState.getGuest);
+    this.totalHotels$ = this.store.select(HotelResultState.totalResult);
   }
 
   back() {
@@ -46,7 +57,12 @@ export class ResultPage implements OnInit {
     if (this.resultType == 'animated-round-trip') {
       this.resultType = 'round-trip';
     }
-    this.store.dispatch(new Navigate(['/', 'home', 'search', this.resultMode,this.resultType]));
+    if (this.resultMode == 'flight') {     
+      this.store.dispatch(new Navigate(['/', 'home', 'search', this.resultMode,this.resultType]));
+    }
+    else {
+      this.store.dispatch(new Navigate(['/', 'home', 'search', this.resultMode]));
+    }
   }
 
   async filter() {

@@ -1,25 +1,55 @@
-ion-content {
-    >ion-row:first-child {
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
+@import "../../../../style/base/color.scss";
 
-    >ion-row {
-        >ion-col {
-            >ion-row {
-                >ion-img {
-                    width: -webkit-fill-available;
+ion-segment-button{
+        --indicator-height: 0px;
+}
+
+ion-content {
+
+    >ion-card{
+        >ion-card-header{
+            padding: 0px;
+            >ion-img{
+                    height: 100px;
+                    object-fit: cover;
+            }
+        }
+
+        >ion-card-content{
+            background: #dadada;
+            >ion-title{
+                padding-left: 0px !important;
+            }
+            >ion-row{
+                justify-content: space-between;
+                padding-top: 8px;
+            }
+
+            >ion-row.selectroom {
+                justify-content: flex-end;
+                >*{
+                    width: 35px;
+                    margin: 4px 0px;
+                }
+                >ion-label{
+                    align-self: center;
+                    text-align: center;
                 }
 
-                >ion-card {
-                    background: white;
-                    position: relative;
-                    top: -36px;
-                    width: -webkit-fill-available;
-
-                    >ion-card-content {}
+                ion-icon{
+                    color: #{$white};
                 }
             }
+        }
+    }
+}
+
+ion-footer{
+    ion-item{
+        --padding-start:16px;
+        ion-row.room-cost{
+            display: flex;
+            flex-direction: column;
         }
     }
 }

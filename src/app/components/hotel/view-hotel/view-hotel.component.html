@@ -1,12 +1,17 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button (click)="back()">
+    <ion-buttons slot="start" (click)="back()">
+      <ion-button>
         <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title class="bold back-modal">Chennai</ion-title>
-    <ion-title class="medium bold  back-modal">25 sep - 27 sep | 1 Guest | 618 Hotels</ion-title>
+    <ion-title class="bold back-modal">
+      {{ (hotelSearch$ | async).city.destination }}
+    </ion-title>
+    <ion-title class="medium bold  back-modal">
+      {{ (hotelSearch$ | async).checkin | date : 'd LLL' }} - {{ (hotelSearch$ | async).checkout | date : 'd LLL' }} |
+      {{ (totalGuest$ | async) }} Guest | {{ totalHotels$ | async }} Hotels
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -14,17 +19,17 @@
   <ion-card>
     <ion-card-header>
       <ion-card-title>
-        {{ (this.hotel$ | async).HotelDetail.HotelName }}
+        {{ (hotel$ | async).HotelDetail.HotelName }}
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <mat-grid-list class="hotel-grid" cols="3" rowHeight="fit" gutterSize="10px">
         <mat-grid-tile *ngFor="let tile of imgTile((hotel$ | async).HotelDetail.Images);let i = index"
           [colspan]="tile.cols" [rowspan]="tile.rows"
-          [style.background]="tile.color">
-          <ion-img *ngIf="i !== 6" [src]="tile.img"></ion-img>
-          <ion-label *ngIf="i == 6" class="large white">{{ (hotel$ | async).HotelDetail.Images.length + '+' }}</ion-label>
-          <ion-label *ngIf="i == 6" class="large white">PHOTOS</ion-label>
+          [style.background]="'#e87474'">
+          <ion-img *ngIf="i !== 6 && tile.state" [src]=" tile.img"></ion-img>
+          <ion-label *ngIf="i > 6" class="large white">{{ (hotel$ | async).HotelDetail.Images.length + '+' }}</ion-label>
+          <ion-label *ngIf="i > 6" class="large white">PHOTOS</ion-label>
         </mat-grid-tile>
       </mat-grid-list>
 
@@ -47,52 +52,8 @@
       <ion-card-title class="medium bold">About the Hotel</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-row [innerHTML]="decodeDescritption((hotel$ | async).HotelDetail.Description)">
-        <ion-label class="highlight-text" (click)="readMore()">Read More</ion-label>
+      <ion-row [innerHTML]="decodeDescritption((hotel$ | async).HotelDetail.Description)" style="flex-direction: column;">
       </ion-row>
-    </ion-card-content>
-  </ion-card>
-
-  <ion-card class="hotel-rule">
-    <ion-card-header>
-      <ion-card-title>Hotel Rules</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-row *ngFor="let rule of rules | slice: 0 : 2">
-        <ion-col>
-          <ion-row>
-            <ion-col>
-              <ion-text>Guest Rules</ion-text>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <ion-text>Pokémon Yellow</ion-text>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <ion-text>Mega Man X</ion-text>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <ion-text>The Legend of Zelda</ion-text>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <ion-text>Pac-Man</ion-text>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <ion-text>Super Mario World</ion-text>
-            </ion-col>
-          </ion-row>
-        </ion-col>
-      </ion-row>
-      <ion-label class="highlight-text" (click)="showAll()">Show All</ion-label>
     </ion-card-content>
   </ion-card>
 
@@ -107,6 +68,49 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>
+
+<ion-card class="hotel-rule" *ngIf="false">
+  <ion-card-header>
+    <ion-card-title>Hotel Rules</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-row>
+      <ion-col>
+        <ion-row>
+          <ion-col>
+            <ion-text>Guest Rules</ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-text>Pokémon Yellow</ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-text>Mega Man X</ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-text>The Legend of Zelda</ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-text>Pac-Man</ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-text>Super Mario World</ion-text>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-label class="highlight-text" (click)="showAll()">Show All</ion-label>
+  </ion-card-content>
+</ion-card>
 
 <ion-row *ngIf="false">
   <ion-col>

@@ -5,15 +5,29 @@
         <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title *ngIf="false">{{resultMode$ | async | titlecase}} Result 
+
+    <!-- flight title -->
+    <ion-title *ngIf="(resultMode$ | async) == 'flight'">
+      {{resultMode$ | async | titlecase}} Result 
       {{
         ((resultMode$ | async) == 'flight') && ((resultType$ | async) == 'animated-round-trip') ? '[Round Trip]' :
         (resultMode$ | async) == 'flight' ? '['+(resultType$ | async)+']' : ''
       }}
     </ion-title>
-    <ion-title *ngIf="false">Chennai | 25 sep - 27 sep | 1 Guest | 618 Hotels</ion-title>
-    <ion-title class="medium">Chennai To Rajapalayam</ion-title>
-    <ion-title class="small">20 May, Wednesday</ion-title>
+
+    <!-- hotel title -->
+    <ion-title class="bold back-modal" *ngIf="(resultMode$ | async) == 'hotel'">
+      {{ (hotelSearch$ | async).city.destination }}
+    </ion-title>
+    <ion-title class="medium bold  back-modal" *ngIf="(resultMode$ | async) == 'hotel'">
+      {{ (hotelSearch$ | async).checkin | date : 'd LLL' }} - {{ (hotelSearch$ | async).checkout | date : 'd LLL' }} |
+      {{ (totalGuest$ | async) }} Guest | {{ totalHotels$ | async }} Hotels
+    </ion-title>
+
+    <!-- bus title -->
+    <ion-title class="medium" *ngIf="(resultMode$ | async) == 'bus'">Chennai To Rajapalayam</ion-title>
+    <ion-title class="small" *ngIf="(resultMode$ | async) == 'bus'">20 May, Wednesday</ion-title>
+
     <ion-buttons slot="end">
       <ion-button (click)="mailTicket()" *ngIf="mailStatus$ | async">
         <ion-icon class="Blink" name="mail"></ion-icon>

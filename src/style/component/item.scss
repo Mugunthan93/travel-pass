@@ -143,6 +143,12 @@ ion-item.menu-item{
     }
 }
 
+ion-item.facility {
+   >ion-label {
+        --color: #{$black} !important;
+   }
+}
+
 ion-item.searchItem {
     @include ion-item;
     --inner-padding-start: 12px;

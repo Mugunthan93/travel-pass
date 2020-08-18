@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { SortPipe } from '../pipes/sort/sort.pipe';
-import { LimitPipe } from '../pipes/limit/limit.pipe';
+import { RoomPipe } from '../pipes/room/room.pipe';
 
 @NgModule({
     declarations: [
         SortPipe,
-        LimitPipe
+        RoomPipe
     ],
     exports: [
         SortPipe,
-        LimitPipe
+        RoomPipe
     ]
 })
 

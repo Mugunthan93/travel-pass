@@ -10,12 +10,14 @@ import { Observable } from 'rxjs';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import * as decode from 'decode-html';
 import { DomSanitizer } from '@angular/platform-browser';
+import { HotelSearchState, hotelForm } from 'src/app/stores/search/hotel.state';
+import * as _ from 'lodash';
 
 export interface imageTiles {
   cols: number,
   rows: number,
   img?: string,
-  color? : string
+  state: boolean
 }
 
 @Component({
@@ -27,10 +29,10 @@ export class ViewHotelComponent implements OnInit {
 
   hotel$: Observable<selectedHotel>;
   imgList$: Observable<imageTiles[]>;
-
-  rules: any[] = ["1", "2", "3", "4"];
-
-  facilities$: Observable<number>;
+  
+  hotelSearch$: Observable<hotelForm>;
+  totalGuest$: Observable<number>;
+  totalHotels$: Observable<number>;
 
   constructor(
     private store : Store,
@@ -43,81 +45,60 @@ export class ViewHotelComponent implements OnInit {
 
   ngOnInit() {
     this.hotel$ = this.store.select(HotelResultState.getSelectedHotel);
-    this.facilities$ = this.store.select(HotelResultState.getFacilities);
+    
+    this.hotelSearch$ = this.store.select(HotelSearchState.getSearchData);
+    this.totalGuest$ = this.store.select(HotelSearchState.getGuest);
+    this.totalHotels$ = this.store.select(HotelResultState.totalResult);
   }
 
   imgTile(img: string[]): imageTiles[] {
 
-    let tile : imageTiles[] = img.map(
-      (el : string, ind : number) => {
-        let tiles: imageTiles = null;
+    let defaultTile: imageTiles[] = [
+      { rows: 3, cols: 1, img: null , state : false},
+      { rows: 1, cols: 1, img: null, state: false},
+      { rows: 1, cols: 1, img: null, state: false},
+      { rows: 1, cols: 1, img: null, state: false},
+      { rows: 1, cols: 1, img: null, state: false},
+      { rows: 1, cols: 1, img: null, state: false},
+      { rows: 1, cols: 1, img: null, state: false}
+    ]
 
+    //default tiles
+    let currentTile = img.map(
+      (el,ind) => {
         if (ind == 0) {
-          tiles = {
+          return {
             rows: 3,
             cols: 1,
-            img: el,
-            color: 'transparent'
+            img: el, state: true
           }
         }
         else if (ind >= 1) {
           if (ind !== 6) {
-            tiles = {
+            return {
               rows: 1,
               cols: 1,
-              img: el,
-              color: 'transparent'
+              img: el, state: true
             }
           }
           else if (ind == 6) {
-            tiles = {
+            return {
               rows: 1,
               cols: 1,
-              img: el,
-              color: '#e87474'
+              img: el, state: true
             }
           }
         }
-
-        // if (ind == 0) {
-        //   tiles = {
-        //     rows: 3,
-        //     cols: 1,
-        //     img: this.webView.convertFileSrc(el),
-        //     color: 'transparent'
-        //   }
-        // }
-        // else if (ind >= 1) {
-        //   if (ind !== 6) {
-        //     tiles = {
-        //       rows: 1,
-        //       cols: 1,
-        //       img: this.webView.convertFileSrc(el),
-        //       color: 'transparent'
-        //     }
-        //   }
-        //     else if (ind == 6) {
-        //     tiles = {
-        //       rows: 1,
-        //       cols: 1,
-        //       img: this.webView.convertFileSrc(el),
-        //       color: '#e87474'
-        //     }
-        //   }
-        // }
-
-        return tiles;
       }
     );
 
-    console.log(tile.slice(0, 7));
-    return tile.slice(0,7);
+    let mergedTile = _.merge(defaultTile,currentTile);
+    return mergedTile.slice(0,7);
   }
 
   decodeDescritption(desc: string) {
     const descTemplate = decode(desc);
     const sanitizedTemplate = this.domSantizier.sanitize(SecurityContext.HTML, descTemplate);
-    console.log(sanitizedTemplate);
     return sanitizedTemplate;
   }
 
@@ -158,8 +139,8 @@ export class ViewHotelComponent implements OnInit {
     return await modal.present();
   }
 
-  back() {
-    this.modalCtrl.dismiss();
+  async back() {
+    await this.modalCtrl.dismiss(null, null,'view-hotel');
   }
 
 }

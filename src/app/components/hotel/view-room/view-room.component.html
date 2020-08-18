@@ -1,107 +1,94 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Select Room</ion-title>
-    <ion-title>The residency Hotel</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="back()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="bold back-modal">
+      {{ (hotelSearch$ | async).city.destination }}
+    </ion-title>
+    <ion-title class="medium bold  back-modal">
+      {{ (hotelSearch$ | async).checkin | date : 'd LLL' }} - {{ (hotelSearch$ | async).checkout | date : 'd LLL' }} |
+      {{ (totalGuest$ | async) }} Guest | {{ totalHotels$ | async }} Hotels
+    </ion-title>
   </ion-toolbar>
+  <ion-segment scrollable=true (ionChange)="categoryChange($event)" value="all" class="room-category">
+    <ion-segment-button *ngFor="let category of (category$ | async)" [value]="category" 
+    [ngClass]="{'room-category': category !== (selectedCategory$ | async)}">
+      <ion-chip>
+        <ion-label>{{ category }}</ion-label>
+      </ion-chip>
+    </ion-segment-button>
+  </ion-segment>
 </ion-header>
 
 <ion-content>
-  <ion-row>
-    <ion-chip>
-      <ion-text>ALL ROOMS</ion-text>
-      <!-- <ion-icon name="close" *ngIf="tourist.selection"></ion-icon> -->
-    </ion-chip>
-    <ion-chip>
-      <ion-text>BREAKFAST INCLUDED</ion-text>
-      <!-- <ion-icon name="close" *ngIf="tourist.selection"></ion-icon> -->
-    </ion-chip>
-  </ion-row>
-  <ion-row *ngFor="let room of rooms">
-    <ion-col>
-      <ion-row>
-        <ion-img [src]="room.image"></ion-img>
-        <ion-card>
-          <ion-card-header>
-            <ion-card-subtitle>Executive Club</ion-card-subtitle>
-            <ion-row>
-              <ion-col>
-                <ion-row>
-                  <ion-text>Bed Type</ion-text>
-                </ion-row>
-                <ion-row>
-                  <ion-text>King</ion-text>
-                </ion-row>
-              </ion-col>
-              <ion-col>
-                <ion-row>
-                  <ion-text>Bed Size</ion-text>
-                </ion-row>
-                <ion-row>
-                  <ion-text>250.sqft</ion-text>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-          </ion-card-header>
-          <ion-card-content>
-            <ion-row>
-              <ion-text>
-                Room Tariffs(1)
-              </ion-text>
-            </ion-row>
-            <ion-row>
-              <ion-col size="8">
-                <ion-row>
-                  <ion-text>Breakfast</ion-text>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <ion-row>
-                      <ion-text>- Swimming Pool</ion-text>
-                    </ion-row>
-                    <ion-row>
-                      <ion-text>- Swimming Pool</ion-text>
-                    </ion-row>
-                    <ion-row>
-                      <ion-text>- Swimming Pool</ion-text>
-                    </ion-row>
-                    <ion-row>
-                      <ion-text>- Swimming Pool</ion-text>
-                    </ion-row>
-                    <ion-row>
-                      <ion-text>- Swimming Pool</ion-text>
-                    </ion-row>
-                    <ion-row>
-                      <ion-text>More Info</ion-text>
-                    </ion-row>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-              <ion-col size="4">
-                <ion-row>
-                  <ion-text>for 2 Adult</ion-text>
-                </ion-row>
-                <ion-row>
-                  <ion-text>{{'5807' | currency : 'INR'}}</ion-text>
-                </ion-row>
-                <ion-row>
-                  <ion-text>per night</ion-text>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-          </ion-card-content>
-        </ion-card>
+
+
+  <ion-card *ngFor="let room of (roomDetail$ | async) | room : (selectedCategory$ | async); let i = index">
+    <ion-card-header>
+      <ion-img [src]="getImage(room)"></ion-img>
+    </ion-card-header>
+    <ion-card-content>
+
+      <ion-title>{{ room.RoomTypeName ? room.RoomTypeName : room.RoomDescription }}</ion-title>
+
+      <ion-row *ngIf="room.BedTypes">
+        <ion-label class="small">Bed Type</ion-label>
+        <ion-label class="small">{{ room.BedTypes[0].BedTypeDescription }}</ion-label>
       </ion-row>
-    </ion-col>
-  </ion-row>
+
+      <ion-label class="bold">Room Tariffs</ion-label>
+
+      <ion-row>
+        <ion-label class="small">{{ room.RoomDescription ? room.RoomDescription : room.RoomTypeName }}</ion-label>
+        <ion-row style="flex-direction: column;display:flex;">
+          <ion-label class="bold">{{ room.DayRates[0].Amount | currency : 'INR' }}</ion-label>
+          <ion-label class="small">Per Day</ion-label>
+        </ion-row>
+      </ion-row>
+
+      <ion-row class="selectroom">
+        <ion-button (click)="removeRoom(room)">
+          <ion-icon name="remove-outline"></ion-icon>
+        </ion-button>
+        <ion-label class="bold">{{ selectedRoom(room) | async }}</ion-label>
+        <ion-button (click)="addRoom(room)">
+          <ion-icon name="add-outline"></ion-icon>
+        </ion-button>
+      </ion-row>
+
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>
 
 <ion-footer>
   <ion-toolbar>
+    <ion-item>
+      <ion-row class="room-cost">
+        <ion-label class="large bold white">Total:</ion-label>
+        <ion-label class="bold white">{{ totalCost() | async | currency : 'INR' }}</ion-label>
+      </ion-row>
+    </ion-item>
     <ion-buttons slot="end">
       <ion-button (click)="bookHotel()">
-        <ion-text>CONTINUE</ion-text>
+        <ion-label>CONTINUE</ion-label>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>
+
+
+<ion-row *ngIf="false">
+  <ion-chip>
+    <ion-text>ALL ROOMS</ion-text>
+    <!-- <ion-icon name="close" *ngIf="tourist.selection"></ion-icon> -->
+  </ion-chip>
+  <ion-chip>
+    <ion-text>BREAKFAST INCLUDED</ion-text>
+    <!-- <ion-icon name="close" *ngIf="tourist.selection"></ion-icon> -->
+  </ion-chip>
+</ion-row>
 

@@ -8,19 +8,16 @@ import { mergeMap, take, toArray, tap, catchError, skipWhile, takeWhile, flatMap
 import { SearchHotel } from '../search/hotel.state';
 import { SharedService } from 'src/app/services/shared/shared.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
-import { sortButton } from './sort.state';
 import * as _ from 'lodash';
 import { FileService } from 'src/app/services/file/file.service';
-import { isNull } from 'lodash';
-import { ResultMode } from '../result.state';
-import { Navigate } from '@ngxs/router-plugin';
 
 export interface hotelresult {
     hotelresponseList: hotelresponselist[]
     hotelList: hotellist[]
     traceId: string
     selectedHotel: selectedHotel
-    selectedHotelImages: string[]
+    selectedRoom: hotelDetail[]
+    roomCategory : string[]
     listlimit : number
     token: string
 }
@@ -45,6 +42,7 @@ export interface hotelDetail {
     ChildCount?: number
     DayRates?: dayRates[]
     HotelSupplements?: any[]
+    Images?: string[]
     Inclusion?: string[]
     InfoSource?: string
     IsPANMandatory?: boolean
@@ -233,6 +231,7 @@ export interface hotellist {
     ResultIndex?: number
     StarRating?: number
     SupplierHotelCodes?: supplierhotelcodes[]
+    currentSupplier?: supplierhotelcodes
     Attractions?: attractions[]
     CountryName?: string
     PinCode?: string
@@ -290,6 +289,20 @@ export class ViewHotel {
     }
 }
 
+export class AddRoom {
+    static readonly type = "[hotel_result] AddRoom";
+    constructor(public room: hotelDetail) {
+
+    }
+}
+
+export class RemoveRoom {
+    static readonly type = "[hotel_result] RemoveRoom";
+    constructor(public room: hotelDetail) {
+
+    }
+}
+
 export class GetToken {
     static readonly type = '[hotel_result] GetToken';
 }
@@ -301,9 +314,10 @@ export class GetToken {
         hotelList :[],
         traceId: null,
         selectedHotel: null,
-        selectedHotelImages: [],
+        selectedRoom: [],
         listlimit : 10,
-        token : null
+        token: null,
+        roomCategory:['all']
     }
 })
 
@@ -340,8 +354,23 @@ export class HotelResultState{
     }
 
     @Selector()
-    static getFacilities(states: hotelresult) : number {
-        return states.selectedHotel.HotelDetail.HotelFacilities.length;
+    static totalResult(states: hotelresult): number {
+        return states.hotelresponseList.length;
+    }
+
+    @Selector()
+    static getCategory(states : hotelresult) : string[] {
+        return states.roomCategory;
+    }
+
+    @Selector()
+    static getRoomDetail(states: hotelresult): hotelDetail[] {
+        return states.selectedHotel.HotelRoomsDetails;
+    }
+
+    @Selector()
+    static getSelectedRoom(states: hotelresult): hotelDetail[] {
+        return states.selectedRoom
     }
 
     @Action(GetToken)
@@ -351,6 +380,7 @@ export class HotelResultState{
             .pipe(
                 map(
                     (response: HTTPResponse) => {
+                        console.log(response.data);
                         states.patchState({
                             token: response.data.TokenId
                         });
@@ -473,6 +503,7 @@ export class HotelResultState{
                                                             //forbidden - 403
     
                                                             let mergeObj: hotellist = _.merge(omitedVal, el);
+                                                            mergeObj.currentSupplier = supply;
                                                             return mergeObj;
                                                         }
                                                     ),
@@ -516,8 +547,9 @@ export class HotelResultState{
                                     toArray(),
                                     map(
                                         (hotels: hotellist[]) => {
-                                            let current: hotellist = _.assign.apply(_, hotels);
-                                            return current;
+                                            let responseeHotel: hotellist = Object.assign(el,...hotels);
+                                            responseeHotel.RoomDetails = hotels;
+                                            return responseeHotel;
                                         }
                                     )
                                 );
@@ -583,7 +615,15 @@ export class HotelResultState{
 
         return of(action.hotel)
             .pipe(
-                skipWhile(hotel => hotel.ResultIndex == states.getState().selectedHotel.HotelDetail.ResultIndex),
+                skipWhile(hotel => {
+                    let skip: boolean = false;
+                    if (!_.isNull(states.getState().selectedHotel)) {
+                        if (hotel.ResultIndex == states.getState().selectedHotel.HotelDetail.ResultIndex) {
+                            skip = true;
+                        }
+                    }
+                    return skip;
+                }),
                 map(
                     (hotel: hotellist) => {
                         states.dispatch(new GetToken());
@@ -627,6 +667,10 @@ export class HotelResultState{
                             }
                         );
 
+                        roomDetail = _.filter(roomDetail, (n) => {
+                            return !_.isUndefined(n.DayRates);
+                        });
+
                         let selected: selectedHotel = Object.assign({}, {
                             HotelDetail: action.hotel,
                             HotelRoomsDetails: roomDetail,
@@ -636,15 +680,41 @@ export class HotelResultState{
                             resultIndex: action.hotel.ResultIndex
                         });
 
+                        states.patchState({
+                            selectedHotel: selected
+                        });
+
                         return selected;
                     }
                 ),
                 map(
-                    (response: selectedHotel) => {
+                    (hotel: selectedHotel) => {
+                        let category: string[] = Object.assign([], states.getState().roomCategory);
+                        hotel.HotelRoomsDetails.forEach(
+                            (el) => {
+                                if (el.Amenities) {
+                                    let amen: string = _.lowerCase(el.Amenities[0]);
+                                    category.push(amen);
+                                }
+                            }
+                            );
+                        category = _.uniq(category);
 
                         states.patchState({
-                            selectedHotel: response
+                            roomCategory: category
                         });
+
+                        hotel.HotelRoomsDetails.forEach(
+                            (el) => {
+                                let currentRoom: any = hotel.HotelDetail.RoomDetails
+                                    .find(rm => rm.currentSupplier.CategoryId == el.CategoryId);
+                                el.Images = currentRoom.Images;
+                            }
+                        );
+
+                        console.log(hotel);
+
+                        return hotel;
                     }
                 ),
                 catchError(
@@ -654,6 +724,26 @@ export class HotelResultState{
                     }
                 )
             )
+    }
+
+    @Action(AddRoom)
+    addRoom(states: StateContext<hotelresult>, action: AddRoom) {
+        let rooms = Object.assign([], states.getState().selectedRoom);
+        rooms.push(action.room);
+        states.patchState({
+            selectedRoom : rooms
+        });
+    }
+
+    @Action(RemoveRoom)
+    removeRoom(states: StateContext<hotelresult>, action: RemoveRoom) {
+        if (states.getState().selectedRoom.length >= 1) {
+            let rooms = Object.assign([], states.getState().selectedRoom);
+            let filtered = rooms.filter(el => el.RoomIndex !== action.room.RoomIndex);
+            states.patchState({
+                selectedRoom: filtered
+            });
+        }
     }
 
     customizedObj(desObj: hotelinfoList, srcObj : hotelresponselist) {

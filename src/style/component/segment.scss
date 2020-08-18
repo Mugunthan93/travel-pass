@@ -96,9 +96,6 @@ $segment-button-transition:none;
     --transition: #{$segment-button-transition};
 }
 
-ion-segment.search {
-}
-
 ion-segment-button.sort {
     @include ion-segment-button;
 
@@ -121,4 +118,15 @@ ion-segment-button.sort {
         }
     }
 
+}
+
+ion-segment.room-category {
+    --background: #{$white};
+    ion-segment-button.room-category {
+        >ion-chip {
+            --color:#{$geraldine} !important;
+            --background:#{$white} !important;
+            border: 1px solid #{$geraldine};
+        }
+    }
 }
