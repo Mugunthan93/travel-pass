@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable, of, BehaviorSubject, from } from 'rxjs';
+import { Observable, of, BehaviorSubject, from, combineLatest } from 'rxjs';
 import { hotelForm, HotelSearchState } from 'src/app/stores/search/hotel.state';
 import { Store } from '@ngxs/store';
-import { HotelResultState, hotelDetail, selectedHotel, AddRoom, RemoveRoom } from 'src/app/stores/result/hotel.state';
+import { HotelResultState, hotelDetail, selectedHotel, AddRoom, RemoveRoom, BlockRoom } from 'src/app/stores/result/hotel.state';
 import { ModalController } from '@ionic/angular';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'app-view-room',
@@ -48,8 +48,10 @@ export class ViewRoomComponent implements OnInit {
 
   }
 
-  bookHotel() {
-    this.router.navigate(['/', 'home', 'book', 'hotel']);
+  bookHotel(room: hotelDetail) {
+    console.log(room);
+    this.store.dispatch(new AddRoom(room));
+    this.store.dispatch(new BlockRoom());
   }
 
   categoryChange(evt: CustomEvent) {
@@ -62,9 +64,9 @@ export class ViewRoomComponent implements OnInit {
     return room.Images[0];
   }
 
-  addRoom(room: hotelDetail) {
-    this.store.dispatch(new AddRoom(room));
-  }
+  // addRoom(room: hotelDetail) {
+  //   this.store.dispatch(new AddRoom(room));
+  // }
 
   removeRoom(room: hotelDetail) {
     this.store.dispatch(new RemoveRoom(room));

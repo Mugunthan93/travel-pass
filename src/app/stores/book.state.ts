@@ -1,5 +1,6 @@
 import { State, Selector, Action, Store, StateContext } from '@ngxs/store';
 import { FLightBookState } from './book/flight.state';
+import { HotelBookState } from './book/hotel.state';
 
 export interface book {
     mode: string,
@@ -27,7 +28,8 @@ export class BookMode {
         type: null
     },
     children: [
-        FLightBookState
+        FLightBookState,
+        HotelBookState
     ]
 })
 

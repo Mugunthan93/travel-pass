@@ -36,6 +36,7 @@ import { NgxsResetPluginModule } from 'ngxs-reset-plugin';
 import { HotelSearchState } from '../stores/search/hotel.state';
 import { HotelResultState } from '../stores/result/hotel.state';
 import { SortState } from '../stores/result/sort.state';
+import { HotelBookState } from '../stores/book/hotel.state';
 
 @NgModule({
   declarations: [],
@@ -72,6 +73,7 @@ import { SortState } from '../stores/result/sort.state';
 
       HotelSearchState,
       HotelResultState,
+      HotelBookState,
 
       BookingState,
       ApprovalState,
@@ -97,7 +99,7 @@ import { SortState } from '../stores/result/sort.state';
         
         FilterState,
         SortState,
-        SharedState,
+        SharedState
       ]
     }),
     NgxsFormPluginModule.forRoot(),

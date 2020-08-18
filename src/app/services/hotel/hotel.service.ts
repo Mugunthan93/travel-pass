@@ -3,7 +3,7 @@ import { NativeHttpService } from '../http/native-http/native-http.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { hotelsearchpayload } from 'src/app/stores/search/hotel.state';
 import { environment } from 'src/environments/environment';
-import { getHotelInfo, viewPayload } from 'src/app/stores/result/hotel.state';
+import { getHotelInfo, viewPayload, blockRoomPayload } from 'src/app/stores/result/hotel.state';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +33,12 @@ export class HotelService {
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setData('json');
     return await this.http.post('/hotels/getHotelRoom',viewpayload);
+  }
+
+  async blockHotel(blockpayload: blockRoomPayload): Promise<HTTPResponse> {
+    this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
+    this.http.setData('json');
+    return await this.http.post('/hotels/blockRoom', blockpayload);
   }
 
 }

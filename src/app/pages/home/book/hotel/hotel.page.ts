@@ -6,6 +6,12 @@ import { SpecialRequestComponent } from 'src/app/components/hotel/special-reques
 import { PoliciesComponent } from 'src/app/components/hotel/policies/policies.component';
 import { AddGuestComponent } from 'src/app/components/hotel/add-guest/add-guest.component';
 import { TermsConditionsComponent } from 'src/app/components/hotel/terms-conditions/terms-conditions.component';
+import { Store } from '@ngxs/store';
+import { HotelBookState, blockedRoom } from 'src/app/stores/book/hotel.state';
+import { Observable } from 'rxjs';
+import { HotelSearchState, hotelForm } from 'src/app/stores/search/hotel.state';
+import { hotelDetail } from 'src/app/stores/result/hotel.state';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-hotel',
@@ -14,13 +20,45 @@ import { TermsConditionsComponent } from 'src/app/components/hotel/terms-conditi
 })
 export class HotelPage implements OnInit {
 
+  blockedRoom$: Observable<blockedRoom>;
+  searchData$: Observable<hotelForm>;
+
+  selectedRoom$: Observable<hotelDetail[]>;
+
   constructor(
+    private store : Store,
     public router: Router,
     public activatedRoute: ActivatedRoute,
     public modalCtrl : ModalController
   ) { }
 
   ngOnInit() {
+
+    this.blockedRoom$ = this.store.select(HotelBookState.getBlockedRoom);
+    this.searchData$ = this.store.select(HotelSearchState.getSearchData);
+
+    this.selectedRoom$ = this.store.select(HotelBookState.getRoomDetail);
+
+  }
+
+  totalCost(): Observable<string> {
+    return this.selectedRoom$
+      .pipe(
+        map(
+          (rooms: hotelDetail[]) => {
+
+            let cost: number = 0;
+
+            rooms.forEach(
+              (rm) => {
+                cost += rm.Price.PublishedPrice;
+              }
+            );
+
+            return cost.toString();
+          }
+        )
+      )
   }
 
   async hotelRules() {
@@ -61,6 +99,7 @@ export class HotelPage implements OnInit {
   async addGuest() {
     const modal = await this.modalCtrl.create({
       component: AddGuestComponent,
+      id: 'add-guest'
     });
 
     return await modal.present();

@@ -1,15 +1,18 @@
-import { State, Action, StateContext, Selector } from '@ngxs/store';
+import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
 import { HotelService } from 'src/app/services/hotel/hotel.service';
 import { File, FileError, FileEntry, DirectoryEntry } from '@ionic-native/file/ngx';
 import { FileTransferObject, FileTransfer, FileTransferError } from '@ionic-native/file-transfer/ngx';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, ModalController } from '@ionic/angular';
 import { Observable, from, throwError, of } from 'rxjs';
 import { mergeMap, take, toArray, tap, catchError, skipWhile, takeWhile, flatMap, map, switchMap, exhaustMap, retryWhen, delayWhen, finalize, concatMap } from 'rxjs/operators';
-import { SearchHotel } from '../search/hotel.state';
+import { SearchHotel, HotelSearchState } from '../search/hotel.state';
 import { SharedService } from 'src/app/services/shared/shared.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import * as _ from 'lodash';
 import { FileService } from 'src/app/services/file/file.service';
+import { AddBlockRoom } from '../book/hotel.state';
+import { Navigate } from '@ngxs/router-plugin';
+import { BookMode } from '../book.state';
 
 export interface hotelresult {
     hotelresponseList: hotelresponselist[]
@@ -36,6 +39,7 @@ export interface hotelDetail {
     Amenity?: string[]
     AvailabilityType?: string
     BedTypes?: any[]
+    BedTypeCode? : any
     CancellationPolicies?: cancellationPolicy[]
     CancellationPolicy?: string
     CategoryId?: string
@@ -62,7 +66,8 @@ export interface hotelDetail {
     RoomTypeCode?:  string
     RoomTypeName?: string
     SequenceNo?: string
-    SmokingPreference?: string
+    Supplements? : any
+    SmokingPreference?: any
     SupplierPrice?: any
 }
 
@@ -259,6 +264,21 @@ export interface viewPayload {
     TraceId: string
 }
 
+export interface blockRoomPayload {
+    HotelRoomsDetails: any[]
+    ResultIndex: number
+    HotelCode: string
+    HotelName: string
+    GuestNationality: string
+    NoOfRooms: string
+    ClientReferenceNo: number
+    IsVoucherBooking: string
+    CategoryId: string
+    EndUserIp: string
+    TokenId: any
+    TraceId: string
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 export class HotelResponse {
@@ -307,6 +327,10 @@ export class GetToken {
     static readonly type = '[hotel_result] GetToken';
 }
 
+export class BlockRoom {
+    static readonly type = "[hotel_result] BlockRoom";
+}
+
 @State<hotelresult>({
     name: 'hotel_result',
     defaults: {
@@ -324,11 +348,13 @@ export class GetToken {
 export class HotelResultState{
 
     constructor(
+        private store : Store,
         private file : File,
         private hotelService: HotelService,
         private fileService : FileService,
         public loadingCtrl: LoadingController,
-        private sharedService : SharedService
+        private sharedService: SharedService,
+        public modalCtrl : ModalController
     ) {
 
     }
@@ -729,7 +755,12 @@ export class HotelResultState{
     @Action(AddRoom)
     addRoom(states: StateContext<hotelresult>, action: AddRoom) {
         let rooms = Object.assign([], states.getState().selectedRoom);
-        rooms.push(action.room);
+        let num = this.store.selectSnapshot(HotelSearchState.getRooms).length;
+
+        for (let i = 0; i < num;i ++) {
+            rooms.push(action.room);    
+        }
+
         states.patchState({
             selectedRoom : rooms
         });
@@ -744,6 +775,85 @@ export class HotelResultState{
                 selectedRoom: filtered
             });
         }
+    }
+
+    @Action(BlockRoom)
+    blockRoom(states: StateContext<hotelresult>) {
+
+        let room: hotelDetail[] = states.getState().selectedRoom;
+
+        let pickedRooms : any = room.map(
+            (el: hotelDetail) => {
+
+                if (_.isUndefined(el.BedTypeCode)) {
+                    el.BedTypeCode = null;
+                }
+
+                if (_.isUndefined(el.Supplements)) {
+                    el.Supplements = null;
+                }
+
+                if (el.SmokingPreference == "NoPreference") {
+                    el.SmokingPreference = 0;
+                }
+
+                el = _.pick(el, [
+                    'RoomIndex',
+                    'RoomTypeCode',
+                    'RoomTypeName',
+                    'RatePlanCode',
+                    'BedTypeCode',
+                    'SmokingPreference',
+                    'Supplements',
+                    'Price'
+                ]);
+
+                return el;
+            }
+        );
+
+        console.log(pickedRooms);
+
+        let blockpayload: blockRoomPayload = {
+            HotelRoomsDetails: pickedRooms,
+            ResultIndex: states.getState().selectedHotel.HotelDetail.ResultIndex,
+            HotelCode: states.getState().selectedHotel.HotelDetail.HotelCode,
+            HotelName: states.getState().selectedHotel.HotelDetail.HotelName,
+            GuestNationality: this.store.selectSnapshot(HotelSearchState.getNationality),
+            NoOfRooms: states.getState().selectedRoom.length.toString(),
+            ClientReferenceNo: 0,
+            IsVoucherBooking: 'true',
+            CategoryId: states.getState().selectedRoom[0].CategoryId,
+            EndUserIp: '192.168.0.115',
+            TokenId: null,
+            TraceId: states.getState().traceId
+        }
+
+        console.log(blockpayload);
+
+        return from(this.hotelService.blockHotel(blockpayload))
+            .pipe(
+                tap(
+                    (response: HTTPResponse) => {
+                        console.log(response);
+                        let blockedRoom: any = JSON.parse(response.data).response;
+                        states.dispatch(new AddBlockRoom(blockedRoom));
+                        this.modalCtrl.dismiss(null, null, 'view-room');
+                        this.modalCtrl.dismiss(null, null, 'view-hotel');
+
+                        states.dispatch(new BookMode('hotel'));
+
+                        states.dispatch(new Navigate(['/','home','book','hotel']));
+                        return of(response);
+                    }
+                ),
+                catchError(
+                    (err) => {
+                        console.log(err);
+                        return of(err);
+                    }
+                )
+            )
     }
 
     customizedObj(desObj: hotelinfoList, srcObj : hotelresponselist) {

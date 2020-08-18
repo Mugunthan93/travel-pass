@@ -166,6 +166,11 @@ export class HotelSearchState {
     }
 
     @Selector()
+    static getNationality(state: hotelsearch): string {
+        return state.formData.nationality.country_code;
+    }
+
+    @Selector()
     static getGuest(state: hotelsearch): number {
         let guest: number = 0;
         state.formData.room.forEach(

@@ -50,13 +50,18 @@
       </ion-row>
 
       <ion-row class="selectroom">
-        <ion-button (click)="removeRoom(room)">
+
+        <ion-button (click)="bookHotel(room)">
+          <ion-label class="bold">PROCEED</ion-label>
+        </ion-button>
+
+        <!-- <ion-button (click)="removeRoom(room)">
           <ion-icon name="remove-outline"></ion-icon>
         </ion-button>
         <ion-label class="bold">{{ selectedRoom(room) | async }}</ion-label>
         <ion-button (click)="addRoom(room)">
           <ion-icon name="add-outline"></ion-icon>
-        </ion-button>
+        </ion-button> -->
       </ion-row>
 
     </ion-card-content>
@@ -64,7 +69,7 @@
 
 </ion-content>
 
-<ion-footer>
+<ion-footer *ngIf="false">
   <ion-toolbar>
     <ion-item>
       <ion-row class="room-cost">
@@ -73,7 +78,7 @@
       </ion-row>
     </ion-item>
     <ion-buttons slot="end">
-      <ion-button (click)="bookHotel()">
+      <ion-button>
         <ion-label>CONTINUE</ion-label>
       </ion-button>
     </ion-buttons>

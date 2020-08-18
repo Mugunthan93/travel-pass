@@ -27,18 +27,22 @@ ion-content {
 
             >ion-row.selectroom {
                 justify-content: flex-end;
-                >*{
-                    width: 35px;
-                    margin: 4px 0px;
-                }
-                >ion-label{
-                    align-self: center;
-                    text-align: center;
-                }
 
-                ion-icon{
-                    color: #{$white};
+                ion-label{
+                    margin: 12px;
                 }
+                // >*{
+                //     width: 35px;
+                //     margin: 4px 0px;
+                // }
+                // >ion-label{
+                //     align-self: center;
+                //     text-align: center;
+                // }
+
+                // ion-icon{
+                //     color: #{$white};
+                // }
             }
         }
     }
