@@ -1,138 +1,90 @@
-<!-- <ion-content [scrollY]="'true'">
-  <ion-grid>
-    <ion-row *ngFor="let hotel of hotelList" (click)="viewHotel()">
-      <ion-col>
-        <ion-row>
-          <ion-col>
-            <ion-row>
-              <ion-icon size="large" name="star"></ion-icon>
-              <ion-icon size="large" name="star"></ion-icon>
-              <ion-icon size="large" name="star"></ion-icon>
-              <ion-icon size="large" name="star"></ion-icon>
-              <ion-icon size="large" name="star-half"></ion-icon>
-            </ion-row>
-            <ion-row>
-              <ion-col size="8">
-                <ion-row>
-                  <ion-text>The Residency Hotel</ion-text>
-                </ion-row>
-                <ion-row>
-                  <ion-col size="5">
-                    <ion-text>T.Nagar</ion-text>
-                  </ion-col>
-                  <ion-col size="5">
-                    <ion-text>2 room left</ion-text>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-              <ion-col size="4">
-                <ion-row>
-                  <ion-col>
-                    <ion-text>{{'10000' | currency:'INR'}}</ion-text>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <ion-text>For 2 nights</ion-text>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-img src="../../../../../assets/img/hotel.png"></ion-img>
-          </ion-col>
-          <ion-col>
-            <ion-row>
-              <ion-col>
-                <ion-text>4.5/5 Excellent</ion-text>
-              </ion-col>
-              <ion-col>
-                <ion-text>2173 reviews</ion-text>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col size="6">
-                <ion-row>
-                  <ion-icon name="wifi"></ion-icon>
-                  <ion-text>Free Wifi</ion-text>
-                </ion-row>
-              </ion-col>
-              <ion-col size="6">
-                <ion-row>
-                  <ion-icon name="wifi"></ion-icon>
-                  <ion-text>Free Wifi</ion-text>
-                </ion-row>
-              </ion-col>
-              <ion-col size="6">
-                <ion-row>
-                  <ion-icon name="wifi"></ion-icon>
-                  <ion-text>Free Wifi</ion-text>
-                </ion-row>
-              </ion-col>
-              <ion-col size="6">
-                <ion-row>
-                  <ion-icon name="wifi"></ion-icon>
-                  <ion-text>Free Wifi</ion-text>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-          </ion-col>
-        </ion-row>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</ion-content> -->
-
 <ion-content>
 
-  <ion-card
-    *ngFor="let hotel of (hotelList$ | async | sort : (sortBy$ | async).property : (sortBy$ | async).state);let i = index"
-    (click)="viewHotel(hotel)">
-
-    <ion-card-header>
-      <ion-row>
-        <ion-icon size="large" [name]="star == 'full' ? 'star' : star == 'half' ? 'star-half' : 'star'"
-          *ngFor="let star of starRating(hotel.StarRating)"></ion-icon>
-      </ion-row>
-      <ion-row>
-        <ion-row>
-          <ion-title class="medium">{{hotel.HotelName | titlecase}}</ion-title>
-          <ion-text>{{hotel.Address ? hotel.Address : hotel.HotelAddress}}</ion-text>
-        </ion-row>
-        <ion-row>
-          <ion-label>{{hotel.Price.PublishedPrice | currency : 'INR'}}</ion-label>
-          <!-- <ion-text>{{'For ' + hotel.nights + ' Nights'}}</ion-text> -->
-        </ion-row>
-      </ion-row>
-    </ion-card-header>
-
-    <ion-card-content>
-      <ion-item>
-        <ion-row class="img">
-          <ion-img [src]="loadImg(hotel)"
-            (ionError)="changeImg($event)"></ion-img>
-          <ion-icon size="large" name="heart-outline"></ion-icon>
-          <ion-icon slot="start" name="heart-sharp" *ngIf="false"></ion-icon>
-        </ion-row>
-        <ion-row *ngIf="hotel.HotelFacilities">
-          <ion-item class="facility">
-            <ion-label>{{hotel.HotelFacilities ? hotel.HotelFacilities[0] : ''}}</ion-label>
+    <ion-row *ngIf="(hotelList$ | async).length == 0">
+      <ion-card *ngFor="let hotel of skeletonHotel" style="height: 200px;">
+        <ion-card-header style="height: 100px;">
+          <ion-row style="width: 40%;height: 40px;">
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </ion-row>
+          <ion-row>
+            <ion-row style="width: 40%;">
+              <ion-skeleton-text animated></ion-skeleton-text>
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-row>
+            <ion-row>
+              <ion-skeleton-text animated style="min-height: -webkit-fill-available;"></ion-skeleton-text>
+            </ion-row>
+          </ion-row>
+        </ion-card-header>
+    
+        <ion-card-content style="height: 100px;">
+          <ion-item>
+            <ion-row class="img">
+              <ion-skeleton-text animated></ion-skeleton-text>
+              <!-- <ion-icon size="large" name="heart-outline"></ion-icon>
+              <ion-icon slot="start" name="heart-sharp" *ngIf="false"></ion-icon> -->
+            </ion-row>
+            <ion-row *ngIf="hotel.HotelFacilities">
+              <ion-item class="facility">
+                <ion-skeleton-text animated></ion-skeleton-text>
+              </ion-item>
+              <ion-item class="facility">
+                <ion-skeleton-text animated></ion-skeleton-text>
+              </ion-item>
+            </ion-row>
           </ion-item>
-          <ion-item class="facility">
-            <ion-label>{{hotel.HotelFacilities ? hotel.HotelFacilities[1] : ''}}</ion-label>
+        </ion-card-content>
+      </ion-card>
+    </ion-row>
+
+    <ion-row *ngIf="(hotelList$ | async).length > 0">
+      <ion-card
+        *ngFor="let hotel of (hotelList$ | async | sort : (sortBy$ | async).property : (sortBy$ | async).state);let i = index"
+        (click)="viewHotel(hotel)">
+    
+        <ion-card-header>
+          <ion-row>
+            <ion-icon size="large" [name]="star == 'full' ? 'star' : star == 'half' ? 'star-half' : 'star'"
+              *ngFor="let star of starRating(hotel.StarRating)"></ion-icon>
+          </ion-row>
+          <ion-row>
+            <ion-row>
+              <ion-title class="medium">{{hotel.HotelName | titlecase}}</ion-title>
+              <ion-text>{{hotel.Address ? hotel.Address : hotel.HotelAddress}}</ion-text>
+            </ion-row>
+            <ion-row>
+              <ion-label>{{hotel.Price.PublishedPrice | currency : 'INR'}}</ion-label>
+              <!-- <ion-text>{{'For ' + hotel.nights + ' Nights'}}</ion-text> -->
+            </ion-row>
+          </ion-row>
+        </ion-card-header>
+    
+    
+    
+        <ion-card-content>
+          <ion-item>
+            <ion-row class="img">
+              <ion-img [src]="loadImg(hotel)" (ionError)="changeImg($event)"></ion-img>
+              <ion-icon size="large" name="heart-outline"></ion-icon>
+              <ion-icon slot="start" name="heart-sharp" *ngIf="false"></ion-icon>
+            </ion-row>
+            <ion-row *ngIf="hotel.HotelFacilities">
+              <ion-item class="facility">
+                <ion-label>{{hotel.HotelFacilities ? hotel.HotelFacilities[0] : ''}}</ion-label>
+              </ion-item>
+              <ion-item class="facility">
+                <ion-label>{{hotel.HotelFacilities ? hotel.HotelFacilities[1] : ''}}</ion-label>
+              </ion-item>
+            </ion-row>
           </ion-item>
-        </ion-row>
-      </ion-item>
-    </ion-card-content>
+        </ion-card-content>
+    
+      </ion-card>
+      <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)" #infinite>
+        <ion-infinite-scroll-content loadingSpinner="bubbles" [loadingText]="loading">
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+    </ion-row>
 
-  </ion-card>
-
-  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)" #infinite>
-    <ion-infinite-scroll-content loadingSpinner="bubbles" [loadingText]="loading">
-    </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
 
 </ion-content>

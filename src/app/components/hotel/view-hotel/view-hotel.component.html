@@ -27,9 +27,17 @@
         <mat-grid-tile *ngFor="let tile of imgTile((hotel$ | async).HotelDetail.Images);let i = index"
           [colspan]="tile.cols" [rowspan]="tile.rows"
           [style.background]="'#e87474'">
-          <ion-img *ngIf="i !== 6 && tile.state" [src]=" tile.img"></ion-img>
-          <ion-label *ngIf="i > 6" class="large white">{{ (hotel$ | async).HotelDetail.Images.length + '+' }}</ion-label>
-          <ion-label *ngIf="i > 6" class="large white">PHOTOS</ion-label>
+          <ion-img *ngIf="i !== 6" [src]="tile.img"></ion-img>
+          <ion-label 
+            *ngIf="i == 6" 
+            class="large white">
+            {{ (hotel$ | async).HotelDetail.Images.length + '+' }}
+          </ion-label>
+          <ion-label 
+            *ngIf="i == 6"
+            class="large white">
+              PHOTOS
+          </ion-label>
         </mat-grid-tile>
       </mat-grid-list>
 

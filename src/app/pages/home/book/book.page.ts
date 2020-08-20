@@ -3,12 +3,7 @@ import { Store } from '@ngxs/store';
 import { BookState } from 'src/app/stores/book.state';
 import { Observable } from 'rxjs';
 import { StateReset } from 'ngxs-reset-plugin';
-import { OneWayBookState } from 'src/app/stores/book/flight/oneway.state';
-import { DomesticBookState } from 'src/app/stores/book/flight/domestic.state';
-import { InternationalBookState } from 'src/app/stores/book/flight/international.state';
-import { MultiCityBookState } from 'src/app/stores/book/flight/multi-city.state';
 import { Navigate } from '@ngxs/router-plugin';
-import { FLightBookState } from 'src/app/stores/book/flight.state';
 import { LoadingController } from '@ionic/angular';
 
 @Component({
@@ -44,7 +39,12 @@ export class BookPage implements OnInit {
     if (this.bookType == 'animated-round-trip') {
       this.bookType = 'round-trip';
     }
-    this.store.dispatch(new Navigate(['/', 'home', 'result', this.bookMode, this.bookType]));
+    if (this.bookMode == 'flight') {
+      this.store.dispatch(new Navigate(['/', 'home', 'result', this.bookMode, this.bookType]));
+    }
+    else {
+      this.store.dispatch(new Navigate(['/', 'home', 'result', this.bookMode]));
+    }
   }
 
 }

@@ -3,8 +3,8 @@ import { HotelService } from 'src/app/services/hotel/hotel.service';
 import { File, FileError, FileEntry, DirectoryEntry } from '@ionic-native/file/ngx';
 import { FileTransferObject, FileTransfer, FileTransferError } from '@ionic-native/file-transfer/ngx';
 import { LoadingController, ModalController } from '@ionic/angular';
-import { Observable, from, throwError, of } from 'rxjs';
-import { mergeMap, take, toArray, tap, catchError, skipWhile, takeWhile, flatMap, map, switchMap, exhaustMap, retryWhen, delayWhen, finalize, concatMap } from 'rxjs/operators';
+import { Observable, from, throwError, of, EMPTY } from 'rxjs';
+import { mergeMap, take, toArray, tap, catchError, skipWhile, takeWhile, flatMap, map, switchMap, exhaustMap, retryWhen, delayWhen, finalize, concatMap, ignoreElements, skip, find } from 'rxjs/operators';
 import { SearchHotel, HotelSearchState } from '../search/hotel.state';
 import { SharedService } from 'src/app/services/shared/shared.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
@@ -399,6 +399,11 @@ export class HotelResultState{
         return states.selectedRoom
     }
 
+    @Selector()
+    static getHotelCode(states: hotelresult) : string {
+        return states.selectedHotel.HotelDetail.HotelCode
+    }
+
     @Action(GetToken)
     getToken(states: StateContext<hotelresult>) {
 
@@ -465,7 +470,7 @@ export class HotelResultState{
         
 
     @Action(DownloadResult)
-    downloadresult(states: StateContext<hotelresult>, action: DownloadResult) : Observable<any> {
+    downloadresult(states: StateContext<hotelresult>, action: DownloadResult) : Observable<void> {
 
         return from(action.list)
             .pipe(
@@ -478,114 +483,96 @@ export class HotelResultState{
                         if (currentState.some(hotel => hotel.ResultIndex == el.ResultIndex)) {
                             return of(currentState.find(hotel => hotel.ResultIndex == el.ResultIndex));
                         }
-                        else {
-                            return from(el.SupplierHotelCodes)
-                                .pipe(
-                                    mergeMap(
-                                        (supply: supplierhotelcodes) => {
-    
-                                            console.log(supply);
-    
-                                            let hotelInfo = {
-                                                CategoryId: supply.CategoryId,
-                                                EndUserIp: "192.168.0.115",
-                                                HotelCode: el.HotelCode,
-                                                ResultIndex: el.ResultIndex,
-                                                TraceId: traceId
-                                            }
-    
-                                            return from(this.hotelService.getHotelInfo(hotelInfo))
-                                                .pipe(
-                                                    map(
-                                                        (supplyResponse: HTTPResponse) => {
-    
-                                                            console.log(supplyResponse);
-    
-                                                            let hotelData: hotelinfoList = JSON.parse(supplyResponse.data).response.HotelDetails;
-                                                            let omitedVal = _.omitBy(hotelData, (val) => {
-                                                                return _.isNull(val) || (_.isString(val) && val.length < 1) ||
-                                                                    (_.isString(val) && val == "https://images.cdnpath.com/Images/HotelNA.jpg") ||
-                                                                    (_.isArray(val) && val.length < 1);
-                                                            });
-    
-                                                            //Trace Expired
-                                                            if (JSON.parse(supplyResponse.data).response.Error.ErrorCode == 6) {
-                                                                states.dispatch(new SearchHotel());
-                                                            }
-    
-                                                            //Search Timeout, Try Again
-                                                            if (JSON.parse(supplyResponse.data).response.Error.ErrorCode == -4) {
-                                                                console.log(JSON.parse(supplyResponse.data).response);
-                                                                return el;
-                                                            }
-                    
-                                                            //No rooms Available from UAPI
-                                                            else if (JSON.parse(supplyResponse.data).response.Error.ErrorCode == 2) {
-                                                                console.log(JSON.parse(supplyResponse.data).response);
-                                                                return el;
-                                                            }
-    
-                                                            //maintainance - 503
-                                                            //forbidden - 403
-    
-                                                            let mergeObj: hotellist = _.merge(omitedVal, el);
-                                                            mergeObj.currentSupplier = supply;
-                                                            return mergeObj;
-                                                        }
-                                                    ),
-                                                    map(
-                                                        (hotel: hotellist) => {
-                                                            let folderPath: string = 'TravellersPass/Image/Hotel';
-    
-                                                            return this.fileService.checkDir(folderPath, hotel.HotelCode)
-                                                                .pipe(
-                                                                    map(
-                                                                        (dirExist: boolean | FileError) => {
-                                                                            return hotel;
-                                                                        }
-                                                                    ),
-                                                                    catchError(
-                                                                        (error: FileError) => {
-                                                                            console.log("checkdir error", error);
-                                                                            return this.fileService.createDir(folderPath, hotel.HotelCode)
-                                                                                .pipe(
-                                                                                    map(
-                                                                                        (dir: DirectoryEntry) => {
-                                                                                            console.log(dir);
-                                                                                            return hotel;
-                                                                                        }
-                                                                                    )
-                                                                                )
-    
-                                                                        }
-                                                                    )
-                                                                )
-                                                        }
-                                                    ),
-                                                    flatMap(
-                                                        (hotel) => {
-                                                            return hotel;
-                                                        }
-                                                    )
-                                                )
-                                        }
-                                    ),
-                                    toArray(),
-                                    map(
-                                        (hotels: hotellist[]) => {
-                                            let responseeHotel: hotellist = Object.assign(el,...hotels);
-                                            responseeHotel.RoomDetails = hotels;
-                                            return responseeHotel;
-                                        }
-                                    )
-                                );
-                        }
+                        return from(el.SupplierHotelCodes)
+                            .pipe(
+                                takeWhile(el => el.CategoryIndex == 1),
+                                mergeMap(
+                                    (supply: supplierhotelcodes) => {
 
+                                        console.log(supply);
+
+                                        let hotelInfo = {
+                                            CategoryId: supply.CategoryId,
+                                            EndUserIp: "192.168.0.115",
+                                            HotelCode: el.HotelCode,
+                                            ResultIndex: el.ResultIndex,
+                                            TraceId: traceId
+                                        }
+
+                                        return from(this.hotelService.getHotelInfo(hotelInfo))
+                                            .pipe(
+                                                skipWhile((HTTPResponse: HTTPResponse) => {
+
+                                                    //Trace Expired
+                                                    if (JSON.parse(HTTPResponse.data).response.Error.ErrorCode == 6) {
+                                                        states.dispatch(new SearchHotel());
+                                                        return true;
+                                                    }
+
+                                                    //No rooms Available from UAPI
+                                                    if (JSON.parse(HTTPResponse.data).response.Error.ErrorCode == 2) {
+                                                        console.log(JSON.parse(HTTPResponse.data).response);
+                                                        return true;
+                                                    }
+                                                    
+                                                    //Search Timeout, Try Again
+                                                    if (JSON.parse(HTTPResponse.data).response.Error.ErrorCode == -4) {
+                                                        console.log(JSON.parse(HTTPResponse.data).response);
+                                                        return true;
+                                                    }
+
+                                                    //proxy error
+                                                    if (HTTPResponse.status == 502) {
+                                                        return true;
+                                                    }
+
+                                                    return false;
+
+                                                    //maintainance - 503
+                                                    //forbidden - 403
+
+                                                }),
+                                                map(
+                                                    (supplyResponse: HTTPResponse) => {
+
+                                                        let hotelData: hotelinfoList = JSON.parse(supplyResponse.data).response.HotelDetails;
+                                                        let omitedVal = _.omitBy(hotelData, (val) => {
+                                                            return _.isNull(val) || (_.isString(val) && val.length < 1) ||
+                                                                (_.isString(val) && val == "https://images.cdnpath.com/Images/HotelNA.jpg") ||
+                                                                (_.isArray(val) && val.length < 1);
+                                                        });
+
+                                                        let mergeObj: hotellist = _.merge(omitedVal, el);
+                                                        mergeObj.currentSupplier = supply;
+                                                        return mergeObj;
+                                                    }
+                                                ),
+                                                flatMap((hotel) => this.checkDir(hotel)),
+                                                flatMap(
+                                                    (hotel) => {
+                                                        if (!_.isUndefined(hotel.Images)) {
+                                                            return this.getImages(hotel);
+                                                        }
+                                                        return of(hotel);
+                                                    }
+                                                )
+                                            )
+                                    }
+                                ),
+                                toArray(),
+                                flatMap(
+                                    (hotels: hotellist[]) => {
+                                        console.log(hotels);
+                                        return hotels;
+                                    }
+                                )
+                            );
                     }
                 ),
                 toArray(),
                 map(
-                    (hotel : hotellist[]) => {
+                    (hotel) => {
+                        console.log(hotel);
                         states.patchState({
                             hotelList: hotel
                         });
@@ -654,16 +641,16 @@ export class HotelResultState{
                     (hotel: hotellist) => {
                         states.dispatch(new GetToken());
                         const token: string = states.getState().token;
-                        let indexes: number[] = [];
+                        // let indexes: number[] = [];
 
-                        hotel.SupplierHotelCodes.forEach(
-                            (code) => {
-                                indexes.push(code.CategoryIndex);
-                            }
-                        );
+                        // hotel.SupplierHotelCodes.forEach(
+                        //     (code) => {
+                        //         indexes.push(code.CategoryIndex);
+                        //     }
+                        // );
 
                         const viewPayload: viewPayload = {
-                            CategoryIndexes: indexes,
+                            CategoryIndexes: [1],
                             EndUserIp: "192.168.0.115",
                             HotelCode: action.hotel.HotelCode,
                             ResultIndex: action.hotel.ResultIndex,
@@ -732,9 +719,7 @@ export class HotelResultState{
 
                         hotel.HotelRoomsDetails.forEach(
                             (el) => {
-                                let currentRoom: any = hotel.HotelDetail.RoomDetails
-                                    .find(rm => rm.currentSupplier.CategoryId == el.CategoryId);
-                                el.Images = currentRoom.Images;
+                                el.Images = hotel.HotelDetail.Images;
                             }
                         );
 
@@ -872,7 +857,33 @@ export class HotelResultState{
         }
     }
 
-    getImages(hotel : hotellist) : Observable<hotellist> {
+    checkDir(hotel : hotellist): Observable<hotellist> {
+        let folderPath: string = 'TravellersPass/Image/Hotel';
+
+        return this.fileService.checkDir(folderPath, hotel.HotelCode)
+            .pipe(
+                map(
+                    (dirExist: boolean) => {
+                        return hotel;
+                    }
+                ),
+                catchError(
+                    (error: FileError) => {
+                        return this.fileService.createDir(folderPath, hotel.HotelCode)
+                            .pipe(
+                                map(
+                                    (dir: DirectoryEntry) => {
+                                        return hotel;
+                                    }
+                                )
+                            )
+
+                    }
+                )
+            )
+    }
+
+    getImages(hotel: hotellist): Observable<hotellist> {
         return from(hotel.Images)
             .pipe(
                 skipWhile(el => _.isNull(el) || el.length == 0),
@@ -886,44 +897,40 @@ export class HotelResultState{
                         let folderPath: string = 'TravellersPass/Image/Hotel';
 
                         let fileName: string = splitedEl[splitedEl.length - 1];
-                        let filePath: string = folderPath + folderName + '/' + fileName + '.jpg';
+                        let filePath: string = folderPath + '/' + folderName + '/' + fileName + '.jpg';
 
                         return this.fileService.checkFile(filePath, fileName)
                             .pipe(
                                 map(
                                     (fileExist) => {
-                                        console.log("file exist",fileExist);
                                         return this.file.externalRootDirectory + filePath;
                                     }
                                 ),
                                 catchError(
                                     (error: FileError) => {
-                                        console.log("checkfile error", error);
                                         return this.fileService.downloadFile(url, filePath)
                                             .pipe(
                                                 map(
                                                     (files: FileEntry) => {
                                                         let str: string = files.fullPath;
-                                                        console.log("downloaded str",str);
                                                         return this.file.externalRootDirectory + str;
                                                     }
                                                 ),
                                                 catchError(
                                                     (err: FileTransferError) => {
-                                                        console.log("file transfer error",err);
-                                                        return err.source;
+                                                        return of('');
                                                     }
                                                 )
                                             )
                                     }
-                                ),
+                                )
                             )
                     }
                 ),
+                skipWhile(el => el == ''),
                 toArray(),
                 map(
-                    (el: string[]) => {
-                        console.log("final array",el);
+                    (el) => {
                         hotel.Images = el;
                         return hotel;
                     }

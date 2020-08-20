@@ -305,11 +305,12 @@ export interface response_fare {
 }
 
 export interface charges_details {
-    vendor: vendor
     service_charges: number
     sgst_Charges: number
     cgst_Charges: number
     igst_Charges: number
+
+    vendor: vendor
     total_amount: number
     markup_charges: number
     other_taxes: number

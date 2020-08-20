@@ -16,8 +16,7 @@ import * as _ from 'lodash';
 export interface imageTiles {
   cols: number,
   rows: number,
-  img?: string,
-  state: boolean
+  img?: string
 }
 
 @Component({
@@ -54,13 +53,13 @@ export class ViewHotelComponent implements OnInit {
   imgTile(img: string[]): imageTiles[] {
 
     let defaultTile: imageTiles[] = [
-      { rows: 3, cols: 1, img: null , state : false},
-      { rows: 1, cols: 1, img: null, state: false},
-      { rows: 1, cols: 1, img: null, state: false},
-      { rows: 1, cols: 1, img: null, state: false},
-      { rows: 1, cols: 1, img: null, state: false},
-      { rows: 1, cols: 1, img: null, state: false},
-      { rows: 1, cols: 1, img: null, state: false}
+      { rows: 3, cols: 1, img: null },
+      { rows: 1, cols: 1, img: null },
+      { rows: 1, cols: 1, img: null },
+      { rows: 1, cols: 1, img: null },
+      { rows: 1, cols: 1, img: null },
+      { rows: 1, cols: 1, img: null },
+      { rows: 1, cols: 1, img: null }
     ]
 
     //default tiles
@@ -70,7 +69,7 @@ export class ViewHotelComponent implements OnInit {
           return {
             rows: 3,
             cols: 1,
-            img: el, state: true
+            img: this.webView.convertFileSrc(el)
           }
         }
         else if (ind >= 1) {
@@ -78,14 +77,14 @@ export class ViewHotelComponent implements OnInit {
             return {
               rows: 1,
               cols: 1,
-              img: el, state: true
+              img: this.webView.convertFileSrc(el)
             }
           }
           else if (ind == 6) {
             return {
               rows: 1,
               cols: 1,
-              img: el, state: true
+              img: this.webView.convertFileSrc(el)
             }
           }
         }

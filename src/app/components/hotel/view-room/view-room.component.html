@@ -28,7 +28,7 @@
 
   <ion-card *ngFor="let room of (roomDetail$ | async) | room : (selectedCategory$ | async); let i = index">
     <ion-card-header>
-      <ion-img [src]="getImage(room)"></ion-img>
+      <ion-img [src]="getImage(room.Images)"></ion-img>
     </ion-card-header>
     <ion-card-content>
 

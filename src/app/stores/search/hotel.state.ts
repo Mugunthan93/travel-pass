@@ -181,6 +181,33 @@ export class HotelSearchState {
         return guest;
     }
 
+    @Selector()
+    static getTotalAdult(state: hotelsearch): number {
+        let guest: number = 0;
+        state.formData.room.forEach(
+            (el) => {
+                guest += el.NoOfAdults;
+            }
+        );
+        return guest;
+    }
+
+    @Selector()
+    static getTotalChildren(state: hotelsearch): number {
+        let guest: number = 0;
+        state.formData.room.forEach(
+            (el) => {
+                guest += el.NoOfChild;
+            }
+        );
+        return guest;
+    }
+
+    @Selector()
+    static getPayload(state: hotelsearch): hotelsearchpayload {
+        return state.payload;
+    }
+
     @Action(AddRoom)
     addRoom(states: StateContext<hotelsearch>, action: AddRoom) {
 

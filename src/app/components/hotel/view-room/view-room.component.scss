@@ -1,6 +1,7 @@
 @import "../../../../style/base/color.scss";
 
 ion-segment-button{
+        max-width: fit-content;
         --indicator-height: 0px;
 }
 

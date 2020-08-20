@@ -22,6 +22,7 @@ import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { FoodPipe } from 'src/app/pipes/food/food.pipe';
 import { PaymentComponent } from 'src/app/components/bus/payment/payment.component';
 import { MatDividerModule } from '@angular/material/divider';
+import { FareSummaryComponent } from 'src/app/components/hotel/fare-summary/fare-summary.component';
 
 @NgModule({
   imports: [
@@ -47,6 +48,7 @@ import { MatDividerModule } from '@angular/material/divider';
     BookConfirmationComponent,
     CustomCalendarComponent,
     PaymentComponent,
+    FareSummaryComponent,
     FoodPipe
   ],
   entryComponents: [
@@ -59,7 +61,8 @@ import { MatDividerModule } from '@angular/material/divider';
     TermsConditionsComponent,
     BookConfirmationComponent,
     CustomCalendarComponent,
-    PaymentComponent
+    PaymentComponent,
+    FareSummaryComponent
   ]
 })
 export class BookPageModule {}

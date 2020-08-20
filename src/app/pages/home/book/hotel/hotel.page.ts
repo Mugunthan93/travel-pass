@@ -7,11 +7,14 @@ import { PoliciesComponent } from 'src/app/components/hotel/policies/policies.co
 import { AddGuestComponent } from 'src/app/components/hotel/add-guest/add-guest.component';
 import { TermsConditionsComponent } from 'src/app/components/hotel/terms-conditions/terms-conditions.component';
 import { Store } from '@ngxs/store';
-import { HotelBookState, blockedRoom } from 'src/app/stores/book/hotel.state';
+import { HotelBookState, blockedRoom, RoomDetails, AddLeadPan } from 'src/app/stores/book/hotel.state';
 import { Observable } from 'rxjs';
 import { HotelSearchState, hotelForm } from 'src/app/stores/search/hotel.state';
 import { hotelDetail } from 'src/app/stores/result/hotel.state';
 import { map } from 'rxjs/operators';
+import { FareSummaryComponent } from 'src/app/components/hotel/fare-summary/fare-summary.component';
+import { user } from 'src/app/models/user';
+import { UserState } from 'src/app/stores/user.state';
 
 @Component({
   selector: 'app-hotel',
@@ -23,7 +26,10 @@ export class HotelPage implements OnInit {
   blockedRoom$: Observable<blockedRoom>;
   searchData$: Observable<hotelForm>;
 
-  selectedRoom$: Observable<hotelDetail[]>;
+  selectedRoom$: Observable<RoomDetails[]>;
+  passenger$: Observable<user>; 
+
+  pan: string = null;
 
   constructor(
     private store : Store,
@@ -38,6 +44,7 @@ export class HotelPage implements OnInit {
     this.searchData$ = this.store.select(HotelSearchState.getSearchData);
 
     this.selectedRoom$ = this.store.select(HotelBookState.getRoomDetail);
+    this.passenger$ = this.store.select(UserState.user);
 
   }
 
@@ -105,8 +112,21 @@ export class HotelPage implements OnInit {
     return await modal.present();
   }
 
-  fare() {
-    this.router.navigate(['fare'],{relativeTo:this.activatedRoute});
+  panChange(evt : CustomEvent) {
+    this.pan = evt.detail.value;
+  }
+
+  async fare() {
+    if (this.pan.length > 1) { 
+      this.store.dispatch(new AddLeadPan(this.pan));
+      const modal = await this.modalCtrl.create({
+        component: FareSummaryComponent,
+        id: 'fare-summary'
+      });
+  
+      return await modal.present();
+    }
+
   }
 
 }

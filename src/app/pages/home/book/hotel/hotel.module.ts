@@ -8,6 +8,7 @@ import { HotelPageRoutingModule } from './hotel-routing.module';
 
 import { HotelPage } from './hotel.page';
 import { MatDividerModule } from '@angular/material/divider';
+import { BookConfirmationComponent } from 'src/app/components/shared/book-confirmation/book-confirmation.component';
 
 @NgModule({
   imports: [
@@ -17,6 +18,12 @@ import { MatDividerModule } from '@angular/material/divider';
     HotelPageRoutingModule,
     MatDividerModule
   ],
-  declarations: [HotelPage]
+  declarations: [
+    HotelPage,
+    BookConfirmationComponent
+  ],
+  entryComponents: [
+    BookConfirmationComponent
+  ]
 })
 export class HotelPageModule {}

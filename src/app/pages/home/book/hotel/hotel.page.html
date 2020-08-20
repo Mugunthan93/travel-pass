@@ -41,13 +41,13 @@
         <ion-select-option value="Ms">Ms</ion-select-option>
         <ion-select-option value="Mrs">Mrs</ion-select-option>
       </ion-select>
-      <ion-input placeholder="First Name"></ion-input>
-      <ion-input placeholder="Last Name"></ion-input>
+      <ion-input placeholder="First Name" [value]="(passenger$ | async).name" readonly></ion-input>
+      <ion-input placeholder="Last Name" [value]="(passenger$ | async).lastname" readonly></ion-input>
     </ion-row>
   
     <ion-row class="pass-detail-2">
-      <ion-input placeholder="Pan Number"></ion-input>
-      <ion-input placeholder="Email"></ion-input>
+      <ion-input placeholder="Pan Number" (ionChange)="panChange($event)"></ion-input>
+      <ion-input placeholder="Email" [value]="(passenger$ | async).email" readonly></ion-input>
     </ion-row>
   
     <ion-row class="add-pass">
@@ -65,12 +65,12 @@
 
 </ion-content>
 
-<ion-footer *ngIf="selectedRoom$ | async">
+<ion-footer>
   <ion-toolbar>
     <ion-item>
       <ion-row class="room-cost">
-        <ion-label class="large bold white">Total:</ion-label>
-        <ion-label class="bold white">{{ totalCost() | async | currency : 'INR' }}</ion-label>
+        <!-- <ion-label class="large bold white">Total:</ion-label> -->
+        <!-- <ion-label class="bold white">{{ totalCost() | async | currency : 'INR' }}</ion-label> -->
       </ion-row>
     </ion-item>
     <ion-buttons slot="end">

@@ -7,10 +7,6 @@ const routes: Routes = [
   {
     path: '',
     component: HotelPage
-  },
-  {
-    path: 'fare',
-    loadChildren: () => import('./fare/fare.module').then( m => m.FarePageModule)
   }
 ];
 

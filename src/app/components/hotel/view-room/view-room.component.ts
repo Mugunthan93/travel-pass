@@ -6,6 +6,7 @@ import { Store } from '@ngxs/store';
 import { HotelResultState, hotelDetail, selectedHotel, AddRoom, RemoveRoom, BlockRoom } from 'src/app/stores/result/hotel.state';
 import { ModalController } from '@ionic/angular';
 import { map, tap, withLatestFrom } from 'rxjs/operators';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
 
 @Component({
   selector: 'app-view-room',
@@ -30,7 +31,8 @@ export class ViewRoomComponent implements OnInit {
     private store: Store,
     public modalCtrl : ModalController,
     public router: Router,
-    public activatedRoute: ActivatedRoute
+    public activatedRoute: ActivatedRoute,
+    public webView :WebView
   ) { }
 
   ngOnInit() {
@@ -60,8 +62,9 @@ export class ViewRoomComponent implements OnInit {
     this.selectedCategory$.subscribe(console.log);
   }
 
-  getImage(room: hotelDetail): string {
-    return room.Images[0];
+  getImage(img : string[]) : string {
+    let randomNum: number = Math.floor(Math.random() * Math.floor(img.length));
+    return this.webView.convertFileSrc(img[randomNum]);
   }
 
   // addRoom(room: hotelDetail) {

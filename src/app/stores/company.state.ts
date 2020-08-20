@@ -1,5 +1,5 @@
 import { company } from '../models/company';
-import { StateContext, State, Action, Selector } from '@ngxs/store';
+import { StateContext, State, Action, Selector, StateStream } from '@ngxs/store';
 import { CompanyService } from '../services/company/company.service';
 import { user } from '../models/user';
 import { UserState } from './user.state';
@@ -69,6 +69,11 @@ export class CompanyState {
     @Selector()
     static getInternationalServiceCharge(states: company) : number {
         return states.service_charges.internationalCharge;
+    }
+
+    @Selector()
+    static getHotelServiceCharge(states: company): number{
+        return states.service_charges.serviceHotelCharge;
     }
 
     @Selector()

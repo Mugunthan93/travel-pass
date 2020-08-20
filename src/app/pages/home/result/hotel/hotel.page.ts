@@ -20,6 +20,7 @@ import { WebView } from '@ionic-native/ionic-webview/ngx';
 export class HotelPage implements OnInit {
 
   @ViewChild('infinite', { static: true }) infinite: IonInfiniteScroll;
+  skeletonHotel: number[] = [1,2,3,4,5,6,7,8];
 
   hotelList$: Observable<hotellist[]>;
   limit$: Observable<number>;
@@ -110,8 +111,7 @@ export class HotelPage implements OnInit {
 
   loadImg(hotel: hotellist) {
     if (hotel.Images) {
-      return hotel.Images[0];
-      // return this.webview.convertFileSrc(hotel.Images[0]);
+      return this.webview.convertFileSrc(hotel.Images[0]);
     }
     else {
       return hotel.HotelPicture;

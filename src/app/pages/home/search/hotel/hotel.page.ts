@@ -40,26 +40,12 @@ export class HotelPage implements OnInit {
     this.rooms$ = this.store.select(HotelSearchState.getRooms);
 
     this.hotelSearch = new FormGroup({
-      'city': new FormControl({
-        cityid: 115936,
-        country: "United Arab Emirates",
-        countrycode: "AE",
-        destination: "Dubai",
-        stateprovince: null,
-        stateprovincecode: null
-      }, [Validators.required]),
-      'room': new FormControl([{
-        ChildAge: [],
-        NoOfAdults: 1,
-        NoOfChild: 0
-      }], [Validators.required]),
-      'nationality': new FormControl({
-        country_code: "IN",
-        nationality: "Indian"
-      }, [Validators.required]),
+      'city': new FormControl(null, [Validators.required]),
+      'room': new FormControl(null, [Validators.required]),
+      'nationality': new FormControl(null, [Validators.required]),
       'star': new FormControl(0, [Validators.required]),
-      'checkin': new FormControl("2020-12-09T18:30:00.000Z", [Validators.required]),
-      'checkout': new FormControl("2020-12-11T18:30:00.000Z", [Validators.required])
+      'checkin': new FormControl(null, [Validators.required]),
+      'checkout': new FormControl(null, [Validators.required])
     });
 
     this.hotelSearch.valueChanges.subscribe(el => console.log(el));

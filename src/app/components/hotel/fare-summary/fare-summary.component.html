@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Fare</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-item>
+      <ion-label class="bold">
+        {{ (blockedRoom$ | async).HotelName }}
+      </ion-label>
+      <!-- <ion-text slot="end">
+        2 Adults
+      </ion-text> -->
+    </ion-item>
+  
+    <ion-item class="checkinout">
+      <ion-row slot="start">
+        <ion-label class="bold">{{ (searchData$ | async ).checkin | date : 'EEE,d LLL' }}</ion-label>
+        <ion-label>CHECKIN</ion-label>
+      </ion-row>
+      <ion-row slot="end">
+        <ion-label class="bold">{{ (searchData$ | async ).checkout | date : 'EEE,d LLL' }}</ion-label>
+        <ion-label>CHECKOUT</ion-label>
+      </ion-row>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label slot="start">Basic Room Price</ion-label>
+      <!-- <ion-label slot="end">{{ baseFare() | async | currency : 'INR'}}</ion-label> -->
+    </ion-item>
+  
+    <ion-item>
+      <ion-label slot="start">Service Charge</ion-label>
+      <ion-label slot="end">{{'1510' | currency : 'INR'}}</ion-label>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label slot="start">Other Charge</ion-label>
+      <ion-label slot="end">{{'1510' | currency : 'INR'}}</ion-label>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label slot="start">SGST</ion-label>
+      <ion-label slot="end">{{'1510' | currency : 'INR'}}</ion-label>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label slot="start">CGST</ion-label>
+      <ion-label slot="end">{{'1510' | currency : 'INR'}}</ion-label>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label slot="start">IGST</ion-label>
+      <ion-label slot="end">{{'1510' | currency : 'INR'}}</ion-label>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label slot="start">TOTAL</ion-label>
+      <ion-text slot="end">{{'1510' | currency : 'INR'}}</ion-text>
+    </ion-item>
+  </ion-row>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="end" (click)="sendRequest()">
+      <ion-button>
+        <ion-label>Send Request</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
