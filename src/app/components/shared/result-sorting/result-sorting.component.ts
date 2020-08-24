@@ -42,6 +42,9 @@ export class ResultSortingComponent implements OnInit {
     else if (this.resultMode == 'hotel') {
       this.currentButton$ = this.store.select(SortState.getHotelSortBy);
     }
+    else if (this.resultMode == 'bus') {
+      this.currentButton$ = this.store.select(SortState.getBusSortBy);
+    }
     this.currentButton$.subscribe(el => this.currentButton = el);
 
   }

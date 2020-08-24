@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { BusFilterComponent } from 'src/app/components/bus/bus-filter/bus-filter.component';
-import { Router, ActivatedRoute } from '@angular/router';
 import { SeatSelectComponent } from 'src/app/components/bus/seat-select/seat-select.component';
-import { modalController } from '@ionic/core';
+import { Observable } from 'rxjs';
+import { busResponse, BusResultState, SeatLayout } from 'src/app/stores/result/bus.state';
+import { Store } from '@ngxs/store';
+import * as moment from 'moment';
+import { sortButton, SortState } from 'src/app/stores/result/sort.state';
 
 @Component({
   selector: 'app-bus',
@@ -12,25 +14,44 @@ import { modalController } from '@ionic/core';
 })
 export class BusPage implements OnInit {
 
-  result: any[];
+  busresut$: Observable<busResponse[]>;
+  sortBy$: Observable<sortButton>;
 
   constructor(
-    public router: Router,
-    public modalCtrl : ModalController,
-    public activatedRoute : ActivatedRoute
+    public modalCtrl: ModalController,
+    private store : Store
   ) { }
 
   ngOnInit() {
-    this.result = [1,2,3,4,5,6,7];
+    this.busresut$ = this.store.select(BusResultState.getBusResult);
+    this.sortBy$ = this.store.select(SortState.getBusSortBy);
   }
 
-  async selectBus() {
+  departTime(time : string) {
+    return moment(time, ["h:mm A"]).format("HH:mm");
+  }
+
+  duration(mins : number) {
+    return moment.duration(mins, 'minutes').hours() + 'h ' + moment.duration(mins, 'minutes').minutes() + 'm';
+  }
+
+  arrivalTime(time : string) {
+    return moment(time, ["h:mm A"]).format("HH:mm");
+  }
+
+  async selectBus(busDetail: busResponse) {
+
     const modal = await this.modalCtrl.create({
       component: SeatSelectComponent,
       id : 'seat-select'
     });
-    
-    return await modal.present();
+
+    this.store.dispatch(new SeatLayout(busDetail))
+      .subscribe({
+        complete: async () => {
+          await modal.present();
+        }
+      });
     
   }
 }

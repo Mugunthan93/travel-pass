@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { Observable } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { BusResultState } from 'src/app/stores/result/bus.state';
 
 @Component({
   selector: 'app-bus-policy',
@@ -7,15 +11,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BusPolicyComponent implements OnInit {
 
-  constructor() { }
+  policies$: Observable<any[]>;
 
-  policies: any[] = [
-    { title: "More than 12hrs", percentage: "15", value: "171" },
-    { title: "4 to 12 hrs", percentage: "30", value: "342" },
-    { title: "3 to 4 hrs", percentage: "60", value: "684" },
-    { title: "0 to 3 hrs", percentage: "90", value: "1026" }
-  ];
-
-  ngOnInit() {}
+  constructor(
+    public modalCtrl: ModalController,
+    private store: Store
+  ) {
+  }
+  
+  ngOnInit() {
+    this.policies$ = this.store.select(BusResultState.getPolicies);
+    this.policies$.subscribe(el => console.log(el));
+  }
+  
+  dismiss() {
+    this.modalCtrl.dismiss(null,null,'bus-policy');
+  }
 
 }

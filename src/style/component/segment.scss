@@ -130,3 +130,16 @@ ion-segment.room-category {
         }
     }
 }
+
+ion-segment.points {
+    --background: #{$white};
+
+    ion-segment-button.point {
+        --indicator-height: 0px;
+        >ion-chip {
+            --color:#{$geraldine} !important;
+            --background:#{$white} !important;
+            border: 1px solid #{$geraldine};
+        }
+    }
+}

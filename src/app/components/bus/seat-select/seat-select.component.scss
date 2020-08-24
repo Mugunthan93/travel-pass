@@ -1,3 +1,11 @@
+@import "../../../../style/base/color.scss";
+
+ion-header{
+    ion-title{
+        padding:0px !important;
+    }
+}
+
 ion-footer {
     ion-toolbar:first-child {
         --background: white;
@@ -8,6 +16,10 @@ ion-footer {
             ion-button {
                 min-width: 25%;
                 margin: 0px;
+
+                ion-label{
+                    color:#{$geraldine};
+                }
             }
         }
     }

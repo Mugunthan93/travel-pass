@@ -77,6 +77,11 @@ export class CompanyState {
     }
 
     @Selector()
+    static getBusServiceCharge(states: company): number {
+        return parseInt(states.service_charges.serviceBusCharge);
+    }
+
+    @Selector()
     static getDomesticMarkupCharge(states: company): number {
         return states.markup_charges.domesticCharge;
     }
@@ -84,6 +89,11 @@ export class CompanyState {
     @Selector()
     static getInternationalMarkupCharge(states: company): number {
         return states.markup_charges.internationalCharge;
+    }
+
+    @Selector()
+    static getBusMarkupCharge(states: company): number {
+        return states.markup_charges.serviceBusCharge
     }
 
     @Selector()

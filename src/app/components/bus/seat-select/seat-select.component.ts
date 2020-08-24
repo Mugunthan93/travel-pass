@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Router } from '@angular/router';
 import { BusReviewComponent } from '../bus-review/bus-review.component';
 import { BusPhotoComponent } from '../bus-photo/bus-photo.component';
 import { BusAmentiesComponent } from '../bus-amenties/bus-amenties.component';
 import { BusPolicyComponent } from '../bus-policy/bus-policy.component';
 import { PickDropPointComponent } from '../pick-drop-point/pick-drop-point.component';
+import { Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { seat, BusResultState } from 'src/app/stores/result/bus.state';
 
 @Component({
   selector: 'app-seat-select',
@@ -14,14 +16,17 @@ import { PickDropPointComponent } from '../pick-drop-point/pick-drop-point.compo
 })
 export class SeatSelectComponent implements OnInit {
 
-  continue: boolean = false;
+  selectedSeats$: Observable<seat[]>;
 
   constructor(
     public modalCtrl: ModalController,
-    public router: Router
-  ) { }
+    private store : Store
+  ) {
+    this.selectedSeats$ = this.store.select(BusResultState.getselectedSeat);
+  }
 
   ngOnInit() {
+    
   }
 
   async busReview() {
@@ -50,16 +55,11 @@ export class SeatSelectComponent implements OnInit {
 
   async busPolicy() {
     const modal = await this.modalCtrl.create({
-      component: BusPolicyComponent
+      component: BusPolicyComponent,
+      id:'bus-policy'
     });
 
     return await modal.present();
-  }
-
-  selectedSeat(evt) {
-    if (evt) {
-      this.continue = evt;
-    }
   }
 
   async pickupdrop() {
@@ -69,6 +69,10 @@ export class SeatSelectComponent implements OnInit {
     });
 
     return await modal.present();
+  }
+
+  dismiss() {
+    this.modalCtrl.dismiss(null, null,'seat-select');
   }
 
 }

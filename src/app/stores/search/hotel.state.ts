@@ -301,8 +301,8 @@ export class HotelSearchState {
             (el: roomguest, ind: number, arr: roomguest[]) => {
                 let newEl = Object.assign({}, el);
                 if (ind == action.roomId) {
-                    if (newEl.NoOfAdults >= 1) {
-                        newEl.NoOfAdults -= 1;
+                    if (newEl.NoOfChild >= 1) {
+                        newEl.NoOfChild -= 1;
                         newEl.ChildAge = Object.assign([], el.ChildAge);
                         newEl.ChildAge.pop();
                     }
@@ -373,7 +373,6 @@ export class HotelSearchState {
             formData : action.hotelForm
         });
     }
-    
 
     @Action(SearchHotel)
     async searchHotel(states: StateContext<hotelsearch>) {

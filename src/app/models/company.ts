@@ -69,7 +69,7 @@ export interface markupCharges{
 export interface serviceCharges {
     domesticCharge: string
     internationalCharge: number
-    serviceBusCharge: number
+    serviceBusCharge: string
     serviceCarCharge: number
     serviceHotelCharge: number
     state_name: string

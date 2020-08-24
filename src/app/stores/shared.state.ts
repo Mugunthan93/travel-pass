@@ -9,7 +9,8 @@ import { HTTPResponse } from '@ionic-native/http/ngx';
 export interface Shared {
     flightCity: city[],
     hotelCity: hotelcity[],
-    nationality: nationality[]
+    nationality: nationality[],
+    busCity: buscity[]
 }
 
 export interface city {
@@ -39,6 +40,12 @@ export interface nationality{
     country_code: string
 }
 
+export interface buscity {
+    id: number
+    station_id: number
+    station_name: string
+}
+
 export class GetFlightCity {
     static readonly type = '[Shared] GetFlightCity';
     constructor(public city : string) {
@@ -48,6 +55,13 @@ export class GetFlightCity {
 
 export class GetHotelCity {
     static readonly type = '[Shared] GetHotelCity';
+    constructor(public city: string) {
+
+    }
+}
+
+export class GetBusCity {
+    static readonly type = '[Shared] GetBusCity';
     constructor(public city: string) {
 
     }
@@ -65,7 +79,8 @@ export class GetNationality {
     defaults: {
         flightCity: [],
         hotelCity: [],
-        nationality: []
+        nationality: [],
+        busCity: []
     }
 })
 export class SharedState {
@@ -89,6 +104,11 @@ export class SharedState {
     @Selector()
     static nationalities(state: Shared) {
         return state.nationality;
+    }
+
+    @Selector()
+    static buscities(state: Shared) {
+        return state.busCity;
     }
 
     @Action(GetFlightCity, {cancelUncompleted: true})
@@ -138,7 +158,7 @@ export class SharedState {
     }
 
     @Action(GetNationality)
-    async getNationality(states: StateContext<Shared>, action: GetNationality) {
+    getNationality(states: StateContext<Shared>, action: GetNationality) {
 
         return of(action.keyword)
             .pipe(
@@ -152,8 +172,32 @@ export class SharedState {
                 map(
                     (cities: HTTPResponse) => {
                         const nationality: nationality[] = JSON.parse(cities.data);
+                        console.log(nationality);
                         states.patchState({
                             nationality: nationality
+                        });
+                    }
+                )
+            )
+    }
+
+    @Action(GetBusCity)
+    getBusCity(states: StateContext<Shared>, action: GetBusCity) {
+        return of(action.city)
+            .pipe(
+                debounceTime(400),
+                distinctUntilChanged(),
+                switchMap(
+                    (str: string) => {
+                        return from(this.sharedService.busCity(str))
+                    }
+                ),
+                map(
+                    (cities: HTTPResponse) => {
+                        const buscity: buscity[] = JSON.parse(cities.data);
+                        console.log(buscity);
+                        states.patchState({
+                            busCity: buscity
                         });
                     }
                 )

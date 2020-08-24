@@ -5,8 +5,10 @@ import * as _ from 'lodash';
 export interface sort {
     flight: sortButton[]
     hotel: sortButton[]
+    bus: sortButton[]
     currentFlight: sortButton
     currentHotel: sortButton
+    currentBus: sortButton
 }
 
 export interface sortButton {
@@ -40,12 +42,19 @@ export class SortBy {
             { label: 'price', state: 'default', property: 'fare' }
         ],
         hotel: [
-            { label: 'price', state: 'default', property: 'PublishedPrice' },
-            { label: 'star', state: 'default', property: 'StarRating' },
             { label: 'hotel', state: 'default', property: 'HotelName' },
+            { label: 'star', state: 'default', property: 'StarRating' },
+            { label: 'price', state: 'default', property: 'PublishedPrice' }
+        ],
+        bus: [
+            { label: 'departure', state: 'default', property: 'departureTime' },
+            { label: 'arrival', state: 'default', property: 'arrivalTime' },
+            { label: 'seat', state: 'default', property: 'availableSeats' },
+            { label: 'fare', state: 'default', property: 'fare' }
         ],
         currentFlight: { label: 'price', state: 'rotated', property: 'fare' },
-        currentHotel: { label: 'price', state: 'rotated', property: 'PublishedPrice' }
+        currentHotel: { label: 'price', state: 'rotated', property: 'PublishedPrice' },
+        currentBus: { label: 'fare', state: 'default', property: 'fare' }
     }
 })
 
@@ -63,6 +72,9 @@ export class SortState {
         else if (resultstate.mode == 'hotel') {
             return states.hotel;
         }
+        else if (resultstate.mode == 'bus') {
+            return states.bus;
+        }
     }
 
     @Selector()
@@ -73,6 +85,11 @@ export class SortState {
     @Selector()
     static getHotelSortBy(states: sort): sortButton {
         return states.currentHotel;
+    }
+
+    @Selector()
+    static getBusSortBy(states: sort): sortButton {
+        return states.currentBus;
     }
 
 
@@ -112,6 +129,23 @@ export class SortState {
             states.patchState({
                 flight: currentStates,
                 currentFlight: action.button
+            });
+        }
+        else if (action.mode == 'bus') {
+            let currentStates: sortButton[] = states.getState().bus.map(
+                (el: sortButton) => {
+                    if (!_.isEqual(action.button, el)) {
+                        let currentstate = Object.assign({}, el);
+                        currentstate.state = "default";
+                        return currentstate;
+                    }
+                    else {
+                        return el;
+                    }
+                });
+            states.patchState({
+                bus: currentStates,
+                currentBus: action.button
             });
         }
 
@@ -179,6 +213,34 @@ export class SortState {
                 currentHotel: action.button
             });
             
+        }
+        else if (action.mode == 'bus') {
+            let currentsort: sortButton[] = states.getState().bus;
+            let sortedarray: sortButton[] = [];
+            currentsort.forEach((el, ind, arr) => {
+                if (_.isEqual(action.button, el) && action.button.state == 'default') {
+                    sortedarray[ind] = {
+                        label: action.button.label,
+                        property: action.button.property,
+                        state: 'rotated'
+                    }
+                }
+                else if (_.isEqual(action.button, el) && action.button.state == 'rotated') {
+                    sortedarray[ind] = {
+                        label: action.button.label,
+                        property: action.button.property,
+                        state: 'default'
+                    }
+                }
+                else {
+                    sortedarray[ind] = el;
+                }
+            });
+
+            states.patchState({
+                bus: sortedarray,
+                currentBus: action.button
+            });
         }
     }
 

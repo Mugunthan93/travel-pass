@@ -2,114 +2,122 @@
 @import "../../../../../style/base/fonts.scss";
 
 ion-grid{
-
-    >ion-row{
-        margin-top: 15px;
-        margin-bottom: 15px;
-        margin-left: 10px;
-        margin-right: 10px;
-    }
-
-    >ion-row:nth-of-type(1){
-        justify-content: space-between;
+    >form{
         >ion-row{
-            display: flex;
-            flex-direction: column;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            margin-left: 10px;
+            margin-right: 10px;
         }
-        >ion-row:last-of-type{
-            text-align: end;
-        }
-    }
-
-    >ion-row:nth-of-type(2){
-        justify-content: space-between;
-        >ion-row {
-            display: flex;
-            flex-direction: column;
-
+    
+        >ion-row:nth-of-type(1){
+            justify-content: space-between;
             >ion-row{
                 display: flex;
-                flex-direction: row;
-
-                >*{
-                    margin: 0px 4px;
-                }
-
-                >ion-text{
-                    font-size:calc(2 * #{$large-font});
-                }
-
+                flex-direction: column;
+            }
+            >ion-row:last-of-type{
+                text-align: end;
+            }
+        }
+    
+        >ion-row:nth-of-type(2){
+            justify-content: space-between;
+            >ion-row {
+                display: flex;
+                flex-direction: column;
+    
                 >ion-row{
                     display: flex;
-                    flex-direction: column;
+                    flex-direction: row;
+    
+                    >*{
+                        margin: 0px 4px;
+                    }
+    
+                    >ion-text{
+                        font-size:calc(2 * #{$large-font});
+                    }
+    
+                    >ion-row{
+                        display: flex;
+                        flex-direction: column;
+                    }
                 }
             }
-        }
 
-        >ion-row:last-child {
-            align-items: flex-end;
-            text-align: right;
-        }
-    }
-
-    >ion-button{
-        width: fit-content;
-        align-self: center;
-        --padding-start: 8px;
-        --padding-end: 8px;
-        --padding-top: 8px;
-        --padding-bottom: 8px;
-        margin: 20px 0px;
-    }
-
-    >ion-list {
-
-        min-height: -webkit-fill-available;
-        padding: 0px;
-        background: transparent;
-
-        >ion-item {
-
-            --min-height: 60px;
-            --padding-end: 16px;
-            margin: 5px 22px;
-            background: #FFFFFF 0% 0% no-repeat padding-box;
-            box-shadow: 0px 2px 6px #00000029;
-            border-radius: 8px;
-            opacity: 1;
-            --padding-start: 16px;
-
-            >ion-icon {
-                font-size: 17px !important;
-
-                &[slot="start"] {
-                    margin-top: 0px;
-                    margin-right: 16px;
-                    color: #E87474 !important;
+            >ion-row.returnbutton {
+                ion-label {
+                    margin: 8px;
                 }
-
-                &[slot="end"] {
-                    margin-bottom: 0px;
-
-                }
-
             }
-
-            >ion-row {
+    
+            >ion-row:last-child {
+                align-items: flex-end;
+                text-align: right;
+            }
+        }
+    
+        >ion-button{
+            width: fit-content;
+            align-self: center;
+            --padding-start: 8px;
+            --padding-end: 8px;
+            --padding-top: 8px;
+            --padding-bottom: 8px;
+            margin: 20px auto;
+        }
+    
+        >ion-list {
+    
+            min-height: -webkit-fill-available;
+            padding: 0px;
+            background: transparent;
+    
+            >ion-item {
+    
+                --min-height: 60px;
+                --padding-end: 16px;
+                margin: 5px 22px;
+                background: #FFFFFF 0% 0% no-repeat padding-box;
+                box-shadow: 0px 2px 6px #00000029;
+                border-radius: 8px;
+                opacity: 1;
+                --padding-start: 16px;
+    
+                >ion-icon {
+                    font-size: 17px !important;
+    
+                    &[slot="start"] {
+                        margin-top: 0px;
+                        margin-right: 16px;
+                        color: #E87474 !important;
+                    }
+    
+                    &[slot="end"] {
+                        margin-bottom: 0px;
+    
+                    }
+    
+                }
+    
                 >ion-row {
-                    width: -webkit-fill-available;
-                }
-
-                >ion-row:first-child {
-                    *:first-child {
-                        margin-left: 0px;
+                    >ion-row {
+                        width: -webkit-fill-available;
                     }
-
-                    * {
-                        margin: 0px 5px;
+    
+                    >ion-row:first-child {
+                        *:first-child {
+                            margin-left: 0px;
+                        }
+    
+                        * {
+                            margin: 0px 5px;
+                        }
                     }
                 }
             }
         }
     }
+
 }

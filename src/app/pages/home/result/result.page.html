@@ -25,8 +25,12 @@
     </ion-title>
 
     <!-- bus title -->
-    <ion-title class="medium" *ngIf="(resultMode$ | async) == 'bus'">Chennai To Rajapalayam</ion-title>
-    <ion-title class="small" *ngIf="(resultMode$ | async) == 'bus'">20 May, Wednesday</ion-title>
+    <ion-title class="medium" *ngIf="(resultMode$ | async) == 'bus'">{{ (busSearch$ | async).source.station_name }} To
+      {{ (busSearch$ | async).destination.station_name }}
+    </ion-title>
+    <ion-title class="small" *ngIf="(resultMode$ | async) == 'bus'">
+      {{ (busSearch$ | async).departure | date : 'dd LLL, EEEE' }}
+    </ion-title>
 
     <ion-buttons slot="end">
       <ion-button (click)="mailTicket()" *ngIf="mailStatus$ | async">

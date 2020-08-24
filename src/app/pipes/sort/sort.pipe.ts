@@ -54,22 +54,26 @@ export class SortPipe implements PipeTransform {
   }
 
 
-  numberSorting(a : any, b: any, property : string, order: string) {
+  numberSorting(a: any, b: any, property: string, order: string) {
     if (order == 'asc' || order == 'default') {
-      if (b[property] < a[property]) {
+      if (parseInt(b[property]) < parseInt(a[property])) {
         return -1;
       }
-      else if (b[property] > a[property]) {
+      else if (parseInt(b[property]) > parseInt(a[property])) {
         return 1;
       }
-      return 0;
+      else {
+        return 0;
+      }
     }
     else if (order == 'des' || order == 'rotated') {
-      if (b[property] > a[property]) {
+      if (parseInt(b[property]) > parseInt(a[property])) {
         return -1;
-      } else if (b[property] < a[property]) {
+      }
+      else if (parseInt(b[property]) < parseInt(a[property])) {
         return 1;
-      } else {
+      }
+      else {
         return 0;
       }
     }

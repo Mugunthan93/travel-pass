@@ -1,74 +1,118 @@
 <ion-content>
   <ion-grid>
-    <ion-row>
+    <form [formGroup]="busSearch" (ngSubmit)="searchBus()">
       <ion-row>
-        <ion-label class="bold">Leaving From</ion-label>
-        <ion-label>Chennai</ion-label>
-      </ion-row>
-      <ion-button class="swap" expand=full fill="clear">
-        <ion-icon src="../../../../../../assets/icons/straight.svg"></ion-icon>
-      </ion-button>
-      <ion-row>
-        <ion-label class="bold">Going To</ion-label>
-        <ion-label>Rajapalayam</ion-label>
-      </ion-row>
-    </ion-row>
-    <mat-divider></mat-divider>
-    <ion-row class="ion-justify-content-between">
-      <ion-row>
-        <ion-label class="bold">Departure</ion-label>
-        <ion-row>
-          <ion-text class="bolder">8</ion-text>
-          <ion-row>
-            <ion-text>Apr 2020</ion-text>
-            <ion-text>Wed</ion-text>
-          </ion-row>
-        </ion-row>
-      </ion-row>
-       <ion-row>
-         <ion-label class="bold">Return</ion-label>
-         <ion-row>
-           <ion-text class="bolder">8</ion-text>
-           <ion-row>
-             <ion-text>Apr 2020</ion-text>
-             <ion-text>Wed</ion-text>
-           </ion-row>
-         </ion-row>
-       </ion-row>
-    </ion-row>
-    <mat-divider></mat-divider>
-    <ion-row>
-      <ion-label class="bold">Seat(s) Required</ion-label>
-    </ion-row>
-    <ion-row class="ion-justify-content-around">
-      <ion-text class="medium bold" style="align-self: center" *ngFor="let seat of seats" (click)="selectedSeat(seat)"
-        [ngClass]="{'selected-people':seat.selection}">
-        {{seat.value}}</ion-text>
-    </ion-row>
-    <mat-divider></mat-divider>
-    <ion-button expand="block" (click)="search()">
-      <ion-label class="medium bold">Find Buses</ion-label>
-    </ion-button>
-    
-    <ion-list>
-      <ion-list-header>
-        <ion-title>RECENT SEARCHES</ion-title>
-      </ion-list-header>
-      <ion-item *ngFor="let search of recent_searches">
-        <ion-icon slot="start" src="../../../../../assets/icons/dashboard/trip-flight.svg"></ion-icon>
-        <ion-icon slot="end" src="../../../../../assets/ionicons/md-alert-circle.svg"></ion-icon>
-        <ion-row>
-          <ion-row>
-            <ion-label class="medium bold">from</ion-label>
-            <ion-icon src="../../../../../assets/icons/straight.svg"></ion-icon>
-            <ion-label class="medium bold">to</ion-label>
-          </ion-row>
-          <ion-row>
-            <ion-text class="bold">date</ion-text>
-          </ion-row>
-        </ion-row>
-      </ion-item>
-    </ion-list>
 
+        <ion-row (click)="selectCity('source')">
+          <ion-label class="bold">Leaving From</ion-label>
+          <ion-label>
+            {{ busSearch.controls['source'].value !== null ? (busSearch.controls['source'].value.station_name) : 'Select Origin' }}
+          </ion-label>
+        </ion-row>
+        <ion-button class="swap" expand=full fill="clear" (click)="swapBus()">
+          <ion-icon src="../../../../../../assets/icons/straight.svg"></ion-icon>
+        </ion-button>
+        <ion-row (click)="selectCity('destination')">
+          <ion-label class="bold">Going To</ion-label>
+          <ion-label>
+            {{ busSearch.controls['destination'].value !== null ? (busSearch.controls['destination'].value.station_name) : 'Select Origin' }}
+          </ion-label>
+        </ion-row>
+
+      </ion-row>
+      <mat-divider></mat-divider>
+      <ion-row class="ion-justify-content-between">
+
+        <ion-row (click)="selectDate('departure')">
+
+          <ion-label class="bold">Departure</ion-label>
+
+          <ion-row>
+            <ion-text class="bolder">
+              {{ busSearch.controls['departure'].value !== null ? (busSearch.controls['departure'].value | date : 'd') : '' }}
+            </ion-text>
+            <ion-row>
+              <ion-text>
+                {{ busSearch.controls['departure'].value !== null ?  (busSearch.controls['departure'].value | date : 'LLL yyyy') : 'Select' }}
+              </ion-text>
+              <ion-text>
+                {{ busSearch.controls['departure'].value !== null ?  (busSearch.controls['departure'].value | date : 'EEE') : 'Date' }}
+              </ion-text>
+            </ion-row>
+          </ion-row>
+        </ion-row>
+
+        <ion-row *ngIf="!Return" class="returnbutton">
+          <ion-button (click)="selectDate('return')">
+            <ion-label>Add Return Date</ion-label>
+          </ion-button>
+        </ion-row>
+
+        <ion-row *ngIf="Return" (click)="selectDate('return')" class="returndate">
+          <ion-label class="bold">
+            Return
+            <ion-icon name="close-outline" (click)="removeReturn()"></ion-icon>
+          </ion-label>
+          <ion-row>
+            <ion-text class="bolder">
+              {{ busSearch.controls['return'].value !== null ? (busSearch.controls['return'].value | date : 'd') : '' }}</ion-text>
+            <ion-row>
+              <ion-text>
+                {{ busSearch.controls['return'].value !== null ?  (busSearch.controls['return'].value | date : 'LLL yyyy') : 'Select' }}
+              </ion-text>
+              <ion-text>
+                {{ busSearch.controls['return'].value !== null ?  (busSearch.controls['return'].value | date : 'EEE') : 'Date' }}
+              </ion-text>
+            </ion-row>
+          </ion-row>
+        </ion-row>
+
+      </ion-row>
+      <mat-divider></mat-divider>
+
+      <ion-row>
+        <ion-label class="bold">Seat(s) Required</ion-label>
+      </ion-row>
+
+      <ion-row class="ion-justify-content-around">
+
+        <ion-text class="medium bold" style="align-self: center" *ngFor="let seat of seats" (click)="selectedSeat(seat)"
+          [ngClass]="{'selected-people':seat.selection}">
+          {{seat.value}}</ion-text>
+
+      </ion-row>
+
+      <mat-divider></mat-divider>
+
+      <ion-button expand="block" type="submit">
+        <ion-label class="medium bold">Search Bus</ion-label>
+      </ion-button>
+      
+      <ion-list *ngIf="false">
+        <ion-list-header>
+          <ion-title>RECENT SEARCHES</ion-title>
+        </ion-list-header>
+        <ion-item *ngFor="let search of recent_searches">
+          <ion-icon slot="start" src="../../../../../assets/icons/dashboard/trip-flight.svg"></ion-icon>
+          <ion-icon slot="end" src="../../../../../assets/ionicons/md-alert-circle.svg"></ion-icon>
+          <ion-row>
+            <ion-row>
+              <ion-label class="medium bold">from</ion-label>
+              <ion-icon src="../../../../../assets/icons/straight.svg"></ion-icon>
+              <ion-label class="medium bold">to</ion-label>
+            </ion-row>
+            <ion-row>
+              <ion-text class="bold">date</ion-text>
+            </ion-row>
+          </ion-row>
+        </ion-item>
+      </ion-list>
+
+      <ion-input formControlName="source" hidden></ion-input>
+      <ion-input formControlName="destination" hidden></ion-input>
+      <ion-input formControlName="departure" hidden></ion-input>
+      <ion-input formControlName="return" hidden></ion-input>
+      <ion-input formControlName="seat" hidden></ion-input>
+    </form>
   </ion-grid>
 </ion-content>

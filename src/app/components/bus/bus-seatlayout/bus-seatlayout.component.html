@@ -3,23 +3,42 @@
     <ion-col>
       <ion-card>
       <ion-card-header>
+
         <ion-card-title>
-          <ion-label>Parveen Travels</ion-label>
+          {{ ($busDetail | async).operatorName }}
         </ion-card-title>
         <ion-card-subtitle>
-          <ion-text>Non A/C Semi Sleeper</ion-text>
+          {{ ($busDetail | async).busType }}
         </ion-card-subtitle>
+
+        <ion-segment (ionChange)="changeIndex($event)" [value]="$seatIndex | async" *ngIf="($upperSeat | async).length > 0">
+          <ion-segment-button value="lower">Lower</ion-segment-button>
+          <ion-segment-button value="upper">Upper</ion-segment-button>
+        </ion-segment>
+
       </ion-card-header>
-      <ion-card-content>
-        <ion-row *ngFor="let lowerseat of lowerSeats;let i = index" class="ion-justify-content-between"
-          [ngStyle]="{'height' : 'calc(100% / '+lowerSeats.length+')' }">
-          <ion-col *ngFor="let seat of lowerseat" (click)="selectedSeat()">
-            <ion-icon *ngIf="seat" src="../../../../assets/icons/bus/bus seats/s1.svg"></ion-icon>
-            <!-- <ion-text>
-              {{seat ? seat.id : ''}}
-            </ion-text> -->
+      <ion-card-content *ngIf="($seatIndex | async) == 'lower'">
+
+        <ion-row *ngFor="let seats of ($lowerSeat | async);let i = index" class="ion-justify-content-between">
+          <ion-col *ngFor="let seat of seats" (click)="selectLowerSeat(seat)">
+
+            <ion-icon [src]="seatURL(seat) | async"></ion-icon>
+
           </ion-col>
         </ion-row>
+
+      </ion-card-content>
+
+      <ion-card-content *ngIf="($seatIndex | async) == 'upper'">
+
+        <ion-row *ngFor="let seats of ($upperSeat | async);let i = index" class="ion-justify-content-between">
+          <ion-col *ngFor="let seat of seats" (click)="selectUpperSeat(seat)">
+
+            <ion-icon [src]="seatURL(seat) | async"></ion-icon>
+
+          </ion-col>
+        </ion-row>
+
       </ion-card-content>
       </ion-card>
     </ion-col>

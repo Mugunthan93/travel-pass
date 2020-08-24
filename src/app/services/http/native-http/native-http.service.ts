@@ -62,6 +62,10 @@ export class NativeHttpService implements OnInit{
     return await this.http.get(environment.baseURL + url, opt, this.header);
   }
 
+  async getfromtbo(url: string, opt: any): Promise<HTTPResponse> {
+    return await this.http.get(environment.tbobaseURL + url, opt, this.header);
+  }
+
   async post(url: string, body?: any): Promise<HTTPResponse> {
     return await this.http.post(environment.baseURL + url, body, this.header);
   }

@@ -37,6 +37,9 @@ import { HotelSearchState } from '../stores/search/hotel.state';
 import { HotelResultState } from '../stores/result/hotel.state';
 import { SortState } from '../stores/result/sort.state';
 import { HotelBookState } from '../stores/book/hotel.state';
+import { BusSearchState } from '../stores/search/bus.state';
+import { BusResultState } from '../stores/result/bus.state';
+import { BusBookState } from '../stores/book/bus.state';
 
 @NgModule({
   declarations: [],
@@ -74,6 +77,10 @@ import { HotelBookState } from '../stores/book/hotel.state';
       HotelSearchState,
       HotelResultState,
       HotelBookState,
+
+      BusSearchState,
+      BusResultState,
+      BusBookState,
 
       BookingState,
       ApprovalState,

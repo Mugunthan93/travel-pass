@@ -162,6 +162,34 @@ ion-item.searchItem {
     opacity: 1;
 }
 
+ion-item.policy{
+    @include ion-item;
+    --inner-padding-start: 12px;
+    --inner-padding-end: 12px;
+    --padding-end: 16px;
+    --padding-top: 5px;
+    --padding-bottom: 5px;
+}
+
+ion-item.pointItem {
+    @include ion-item;
+    --padding-start: 10px;
+    --inner-padding-start: 12px;
+    --inner-padding-end: 12px;
+    --min-height: 60px;
+    --inner-padding-top: 40px;
+    --inner-padding-bottom: 40px;
+    margin: 10px 22px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 2px 6px #00000029;
+    border-radius: 8px;
+    opacity: 1;
+    ion-label:first-child{
+        white-space: pre-wrap;
+        min-width: calc(100% - 107px);
+    }
+}
+
 
 
 ion-item-divider{

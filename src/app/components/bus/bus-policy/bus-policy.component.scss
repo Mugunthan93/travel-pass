@@ -1,21 +1,9 @@
 
 
-
 ion-content{
-    ion-grid{
-        >ion-row{
-            >ion-col{
-                width: 50%;
-            }
-            >ion-col:last-child{
-                >ion-row{
-                    height: 100%;
-                    >ion-col{
-                        max-width: fit-content;
-                        margin: auto;
-                    }
-                }
-            }
+    ion-list{
+        ion-title{
+            padding: 0px !important;
         }
     }
 }

@@ -17,7 +17,6 @@ import { PoliciesComponent } from 'src/app/components/hotel/policies/policies.co
 import { AddGuestComponent } from 'src/app/components/hotel/add-guest/add-guest.component';
 import { TermsConditionsComponent } from 'src/app/components/hotel/terms-conditions/terms-conditions.component';
 import { BookConfirmationComponent } from 'src/app/components/flight/book-confirmation/book-confirmation.component';
-import { CustomCalendarComponent } from 'src/app/components/shared/custom-calendar/custom-calendar.component';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { FoodPipe } from 'src/app/pipes/food/food.pipe';
 import { PaymentComponent } from 'src/app/components/bus/payment/payment.component';
@@ -46,7 +45,6 @@ import { FareSummaryComponent } from 'src/app/components/hotel/fare-summary/fare
     AddGuestComponent,
     TermsConditionsComponent,
     BookConfirmationComponent,
-    CustomCalendarComponent,
     PaymentComponent,
     FareSummaryComponent,
     FoodPipe
@@ -60,7 +58,6 @@ import { FareSummaryComponent } from 'src/app/components/hotel/fare-summary/fare
     AddGuestComponent,
     TermsConditionsComponent,
     BookConfirmationComponent,
-    CustomCalendarComponent,
     PaymentComponent,
     FareSummaryComponent
   ]

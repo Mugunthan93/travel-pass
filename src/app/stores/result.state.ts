@@ -1,6 +1,7 @@
 import { State, Selector, Action, StateContext, Store } from '@ngxs/store';
 import { FlightResultState } from './result/flight.state';
 import { HotelResultState } from './result/hotel.state';
+import { BusResultState } from './result/bus.state';
 
 export interface result{
     mode: string,
@@ -30,7 +31,8 @@ export class ResultType {
     },
     children: [
         FlightResultState,
-        HotelResultState
+        HotelResultState,
+        BusResultState
     ]
 })
 export class ResultState {

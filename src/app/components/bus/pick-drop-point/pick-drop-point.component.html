@@ -1,65 +1,49 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start" (click)="dismiss()">
+      <ion-button>
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title>Select Pickup & Drop</ion-title>
   </ion-toolbar>
+    <ion-segment (ionChange)="changePoint($event)" value="all" class="points">
+      <ion-segment-button value="boarding" [ngClass]="{'point': !((selectedPoint$ | async) == 'boarding')}">
+        <ion-chip>
+          <ion-label>Boarding</ion-label>
+        </ion-chip>
+      </ion-segment-button>
+      <ion-segment-button value="dropping" [ngClass]="{'point': !((selectedPoint$ | async) == 'dropping')}">
+        <ion-chip>
+          <ion-label>Dropping</ion-label>
+        </ion-chip>
+      </ion-segment-button>
+    </ion-segment>
 </ion-header>
 
-<ion-content>
-  <ion-grid>
-    <ion-row class="ion-justify-content-center">
-      <ion-col size="11">
-        <ion-card class="tab">
-          <ion-card-content>
-            <ion-row>
-              <ion-col>
-                <ion-chip color="secondary">
-                  <ion-icon name="checkmark-circle"></ion-icon>
-                  <ion-text>Pickup Point</ion-text>
-                </ion-chip>
-              </ion-col>
-              <ion-col>
-                <ion-chip color="secondary">
-                  <ion-icon name="checkmark-circle"></ion-icon>
-                  <ion-text>Drop Point</ion-text>
-                </ion-chip>
-              </ion-col>
-            </ion-row>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-list lines="full">
-        <ion-row *ngFor="let point of points">
-          <ion-col>
-            <!-- <ion-row *ngIf="showDate(point,points)">
-              <ion-text>20-05-2020</ion-text>
-            </ion-row> -->
-            <ion-item (click)="selectpoint()">
-              <ion-text slot="start">14:30</ion-text>
-              <ion-row>
-                <ion-title>Rajapalayam</ion-title>
-                <ion-text>53A, Railway Feeder Road,Near Nadar High School,Rajapalayam</ion-text>
-              </ion-row>
-            </ion-item>
-          </ion-col>
-        </ion-row>
-      </ion-list>
-    </ion-row>
-  </ion-grid>
+<ion-content *ngIf="(selectedPoint$ | async) == 'boarding'">
+
+  <ion-item class="pointItem" *ngFor="let board of (boarding$ | async)" (click)="selectBoard(board)">
+    <ion-label class="bold" slot="start">{{ board.location }}</ion-label>
+    <ion-text class="bold" slot="end">{{ board.time }}</ion-text>
+  </ion-item>
+
 </ion-content>
 
-<ion-footer *ngIf="selectPoint">
+<ion-content *ngIf="(selectedPoint$ | async) == 'dropping'">
+
+  <ion-item class="pointItem" *ngFor="let drop of (dropping$ | async)" (click)="selectDrop(drop)">
+    <ion-label class="bold" slot="start">{{ drop.location }}</ion-label>
+    <ion-text class="bold medium" slot="end">{{ drop.time }}</ion-text>
+  </ion-item>
+
+</ion-content>
+
+<ion-footer>
   <ion-toolbar>
-    <ion-item>
-      <ion-row>
-        <ion-title>{{'1150' | currency : 'INR'}}</ion-title>
-        <ion-text>For 1 Seat</ion-text>
-      </ion-row>
-    </ion-item>
     <ion-buttons slot="end">
       <ion-button (click)="bookBus()">
-        <ion-text>Next</ion-text>
+        <ion-text>Book</ion-text>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>

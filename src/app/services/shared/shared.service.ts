@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { NativeHttpService } from '../http/native-http/native-http.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,14 @@ export class SharedService {
       "city": reqCity
     }
     return await this.http.get("/hotels/gethotelcities", param);
+  }
+
+  async busCity(reqCity: string): Promise<HTTPResponse> {
+    this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
+    const param: { [key: string]: string | string[] } = {
+      "city": reqCity
+    }
+    return await this.http.getfromtbo("/bus/getcities", param);
   }
 
   async getNationality(reqNationality: string): Promise<HTTPResponse> {

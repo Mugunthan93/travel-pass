@@ -10,6 +10,7 @@ import { StateReset } from 'ngxs-reset-plugin';
 import { Navigate } from '@ngxs/router-plugin';
 import { hotelForm, HotelSearchState } from 'src/app/stores/search/hotel.state';
 import { HotelResultState } from 'src/app/stores/result/hotel.state';
+import { busform, BusSearchState } from 'src/app/stores/search/bus.state';
 
 @Component({
   selector: 'app-result',
@@ -28,6 +29,7 @@ export class ResultPage implements OnInit {
   hotelSearch$: Observable<hotelForm>;
   totalGuest$: Observable<number>;
   totalHotels$: Observable<number>;
+  busSearch$: Observable<busform>;
 
   constructor(
     private store:Store,
@@ -50,6 +52,9 @@ export class ResultPage implements OnInit {
     this.hotelSearch$ = this.store.select(HotelSearchState.getSearchData);
     this.totalGuest$ = this.store.select(HotelSearchState.getGuest);
     this.totalHotels$ = this.store.select(HotelResultState.totalResult);
+
+    this.busSearch$ = this.store.select(BusSearchState.getSearchData);
+
   }
 
   back() {

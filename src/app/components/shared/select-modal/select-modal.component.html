@@ -17,12 +17,12 @@
     (ionInput)="search($event.target.value)" #city [placeholder]="'Select ' + title | titlecase">
   </ion-searchbar>
   
-  <ion-list-header class="searchHeading" *ngIf="type == 'flight'">
+  <ion-list-header class="searchHeading" *ngIf="type == 'flight' && title == 'city'">
     <ion-label class="bold large">City Name [ City Code ]</ion-label>
     <ion-label class="bold large" style="text-align: end;">Airport Name [ Airport Code ]</ion-label>
   </ion-list-header>
 
-  <ion-list-header class="searchHeading" *ngIf="type == 'hotel'">
+  <ion-list-header class="searchHeading" *ngIf="type == 'hotel' && title == 'city'">
     <ion-label class="bold large">City</ion-label>
     <ion-label class="bold large" style="text-align: end;">Country [ Country Code ]</ion-label>
   </ion-list-header>
@@ -30,6 +30,10 @@
   <ion-list-header class="searchHeading" *ngIf="title == 'nationality'">
     <ion-label class="bold large">Nationality</ion-label>
     <ion-label class="bold large" style="text-align: end;">Country Code</ion-label>
+  </ion-list-header>
+
+  <ion-list-header class="searchHeading" *ngIf="type == 'bus' && title == 'city'">
+    <ion-label class="bold large">City</ion-label>
   </ion-list-header>
 
 
@@ -50,6 +54,11 @@
     <ion-item class="searchItem" lines="none" *ngFor="let nation of (nationalities$ | async)" (click)="select(nation)">
       <ion-label class="bold large">{{nation.nationality}}</ion-label>
       <ion-text class="medium bold">{{nation.country_code}}</ion-text>
+    </ion-item>
+  </ion-list>
+  <ion-list *ngIf="(buscities$ | async).length > 0">
+    <ion-item class="searchItem" lines="none" *ngFor="let city of (buscities$ | async)" (click)="select(city)">
+      <ion-label class="bold large">{{city.station_name}}</ion-label>
     </ion-item>
   </ion-list>
 
