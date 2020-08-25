@@ -3,15 +3,48 @@
 @import "../base/fonts.scss";
 
 .ion2-calendar {
+    .startSelection{
+        position: relative !important;
+       >button {
+           &.days-btn {
+               background-color: #{$geraldine} !important;
+               >p {
+                   color:#{$white} !important;
+                   font-family: 'roboto-title' !important;
+                   font-size:#{$large-font} !important;
+               }
+
+           }
+       }
+    }
+
+    .endSelection {
+        position: relative !important;
+       >button{
+            &.days-btn {
+                background-color: #{$geraldine} !important;
+                >p {
+                    color:#{$white} !important;
+                    font-family: 'roboto-title' !important;
+                    font-size:#{$large-font} !important;
+                }
+
+            }
+       }
+    }
+
     button {
         &.days-btn{
             >p {
                 font-family: 'roboto-label' !important;
                 font-size:#{$small-font} !important;
+                
             }
         }
         &.days-btn.on-selected {
+            background-color: #{$geraldine} !important;
             >p {
+                color:#{$white} !important;
                 font-family: 'roboto-title' !important;
                 font-size:#{$large-font} !important;
             }

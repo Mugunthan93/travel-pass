@@ -1,3 +1,4 @@
+@import "../../../../../style/base/color.scss";
 @import "../../../../../style/util/mixins.scss";
 
 ion-content{
@@ -6,6 +7,7 @@ ion-content{
 
         >ion-card{
             width: -webkit-fill-available;
+            --background: #{$white};
             >ion-card-header{
                 display: flex;
                 flex-direction: column;

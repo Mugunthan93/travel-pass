@@ -456,7 +456,7 @@ export class HotelResultState{
                         });
                         return _.sortBy(result, (o) => {
                             return o.Price.PublishedPrice;
-                        }).slice(0,10);
+                        }).slice(0,20);
                     }
                 ),
                 tap(

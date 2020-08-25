@@ -50,10 +50,10 @@
           <ion-row>
             <ion-row>
               <ion-title class="medium">{{hotel.HotelName | titlecase}}</ion-title>
-              <ion-text>{{hotel.Address ? hotel.Address : hotel.HotelAddress}}</ion-text>
+              <ion-label>{{hotel.Address ? hotel.Address : hotel.HotelAddress}}</ion-label>
             </ion-row>
             <ion-row>
-              <ion-label>{{hotel.Price.PublishedPrice | currency : 'INR'}}</ion-label>
+              <ion-label class="bold">{{hotel.Price.PublishedPrice | currency : 'INR'}}</ion-label>
               <!-- <ion-text>{{'For ' + hotel.nights + ' Nights'}}</ion-text> -->
             </ion-row>
           </ion-row>
@@ -65,8 +65,8 @@
           <ion-item>
             <ion-row class="img">
               <ion-img [src]="loadImg(hotel)" (ionError)="changeImg($event)"></ion-img>
-              <ion-icon size="large" name="heart-outline"></ion-icon>
-              <ion-icon slot="start" name="heart-sharp" *ngIf="false"></ion-icon>
+              <!-- <ion-icon size="large" name="heart-outline"></ion-icon>
+              <ion-icon slot="start" name="heart-sharp" *ngIf="false"></ion-icon> -->
             </ion-row>
             <ion-row *ngIf="hotel.HotelFacilities">
               <ion-item class="facility">

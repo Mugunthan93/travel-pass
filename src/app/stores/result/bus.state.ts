@@ -275,8 +275,10 @@ export class BusResultState {
         return this.busService.seatLayout(payload)
             .pipe(
                 map(
-                    (response : HTTPResponse) => {
+                    (response: HTTPResponse) => {
+                        console.log(response);
                         const seatResponse: seatResponse = JSON.parse(response.data);
+                        console.log(seatResponse);
                         return seatResponse.seats;
                     }
                 ),

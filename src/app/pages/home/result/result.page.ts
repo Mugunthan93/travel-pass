@@ -11,6 +11,8 @@ import { Navigate } from '@ngxs/router-plugin';
 import { hotelForm, HotelSearchState } from 'src/app/stores/search/hotel.state';
 import { HotelResultState } from 'src/app/stores/result/hotel.state';
 import { busform, BusSearchState } from 'src/app/stores/search/bus.state';
+import { HotelFilterComponent } from 'src/app/components/hotel/hotel-filter/hotel-filter.component';
+import { BusFilterComponent } from 'src/app/components/bus/bus-filter/bus-filter.component';
 
 @Component({
   selector: 'app-result',
@@ -70,13 +72,30 @@ export class ResultPage implements OnInit {
     }
   }
 
-  async filter() {
+  async flightFilter() {
     const modal = await this.modalCtrl.create({
       component: TripFilterComponent
     });
 
     return modal.present();
   }
+
+  async hotelFilter() {
+    const modal = await this.modalCtrl.create({
+      component: HotelFilterComponent
+    });
+
+    return modal.present();
+  }
+
+  async busFilter() {
+    const modal = await this.modalCtrl.create({
+      component: BusFilterComponent
+    });
+
+    return modal.present();
+  }
+
 
   async mailTicket() {
     const modal = await this.modalCtrl.create({

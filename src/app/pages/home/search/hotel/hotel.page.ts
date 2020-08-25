@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { SelectModalComponent } from 'src/app/components/shared/select-modal/select-modal.component';
 import { AlertOptions } from '@ionic/core';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-hotel',
@@ -128,7 +129,7 @@ export class HotelPage implements OnInit {
 
     const options: CalendarModalOptions = {
       title: field.toLocaleUpperCase(),
-      pickMode: 'single',
+      pickMode: 'range',
       color: '#e87474',
       cssClass: 'ion2-calendar',
       weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -136,9 +137,10 @@ export class HotelPage implements OnInit {
       canBackwardsSelected: false,
       closeLabel: 'Close',
       doneLabel: 'OK',
-      defaultDate: this.hotelSearch.controls[field].value,
-      from: FromDate,
-      to: 0
+      defaultDateRange: {
+        from: FromDate,
+        to: 0
+      }
     }
 
     const modal = await this.modalCtrl.create({
@@ -151,11 +153,10 @@ export class HotelPage implements OnInit {
     modal.present();
 
     const event: any = await modal.onDidDismiss();
+    console.log(event.data);
     if (event.role == 'done') {
-      if (field == 'checkin' && event.data.dateObj > this.hotelSearch.controls['checkout'].value) {
-        this.hotelSearch.controls['checkout'].setValue(null);
-      }
-      this.hotelSearch.controls[field].patchValue(event.data.dateObj);
+      this.hotelSearch.controls['checkin'].patchValue(event.data.from.dateObj);
+      this.hotelSearch.controls['checkout'].patchValue(event.data.to.dateObj);
     }
     else if (event.role == 'cancel') {
       return;
@@ -184,14 +185,19 @@ export class HotelPage implements OnInit {
     }
   }
 
-  totalAdult() : string {
-    let rooms: roomguest[] = this.hotelSearch.value.room;
-    let adults: number = 0;
-    rooms.map(el => {
-      adults += el.NoOfAdults;
-    });
-
-    return adults + ' Adult';
+  totalAdult(): Observable<string> {
+    return this.rooms$
+      .pipe(
+        map(
+          (guest: roomguest[]) => {
+            let adults: number = 0;
+            let childrens: number = 0;
+            guest.forEach(el => adults += el.NoOfAdults);
+            guest.forEach(el => childrens += el.NoOfChild);
+            return adults + childrens + ' Adults';
+          }
+        )
+      )
   }
 
   openStar() {

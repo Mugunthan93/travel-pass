@@ -36,7 +36,13 @@
       <ion-button (click)="mailTicket()" *ngIf="mailStatus$ | async">
         <ion-icon class="Blink" name="mail"></ion-icon>
       </ion-button>
-      <ion-button (click)="filter()">
+      <ion-button (click)="flightFilter()" *ngIf="(resultMode$ | async) == 'flight'">
+        <ion-icon name="filter"></ion-icon>
+      </ion-button>
+      <ion-button (click)="hotelFilter()" *ngIf="(resultMode$ | async) == 'hotel'">
+        <ion-icon name="filter"></ion-icon>
+      </ion-button>
+      <ion-button (click)="busFilter()" *ngIf="(resultMode$ | async) == 'bus'">
         <ion-icon name="filter"></ion-icon>
       </ion-button>
     </ion-buttons>
