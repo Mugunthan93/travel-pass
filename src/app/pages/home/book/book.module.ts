@@ -22,6 +22,7 @@ import { FoodPipe } from 'src/app/pipes/food/food.pipe';
 import { PaymentComponent } from 'src/app/components/bus/payment/payment.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { FareSummaryComponent } from 'src/app/components/hotel/fare-summary/fare-summary.component';
+import { PassengerListComponent } from 'src/app/components/shared/passenger-list/passenger-list.component';
 
 @NgModule({
   imports: [
@@ -47,6 +48,7 @@ import { FareSummaryComponent } from 'src/app/components/hotel/fare-summary/fare
     BookConfirmationComponent,
     PaymentComponent,
     FareSummaryComponent,
+    PassengerListComponent,
     FoodPipe
   ],
   entryComponents: [
@@ -58,6 +60,7 @@ import { FareSummaryComponent } from 'src/app/components/hotel/fare-summary/fare
     AddGuestComponent,
     TermsConditionsComponent,
     BookConfirmationComponent,
+    PassengerListComponent,
     PaymentComponent,
     FareSummaryComponent
   ]

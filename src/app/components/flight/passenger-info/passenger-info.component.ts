@@ -30,8 +30,6 @@ export class PassengerInfoComponent implements OnInit {
 
   ngOnInit() {
 
-
-
     this.passengers$ = this.store.select(FLightBookState.getPassengers);
     this.selectedPassengers$ = this.store.select(FLightBookState.getSelectedPassengers);
     this.selected$ = this.store.select(FLightBookState.getSelected);

@@ -88,7 +88,25 @@ export class TripFilterComponent implements OnInit {
   }
 
   reset() {
-    this.filterForm.reset();
+
+    let airline: airlineName[] = [];
+
+    for (const key in this.filterForm.value.airlines) {
+      airline.push({
+        name: key,
+        value: false
+      });
+    }
+
+    let filter: flightFilter = {
+      stops: -1,
+      depatureHours: 24,
+      arrivalHours: 24,
+      corporateFare: false,
+      airlines: airline,
+      price: 0
+    }
+    this.store.dispatch(new GetFilter(filter));
   }
 
   filter() {
