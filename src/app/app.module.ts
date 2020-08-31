@@ -28,7 +28,6 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 
-
 @NgModule({
   declarations: [
     AppComponent,

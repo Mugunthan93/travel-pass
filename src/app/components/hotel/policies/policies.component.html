@@ -1,63 +1,32 @@
 <ion-header>
   <ion-toolbar>
-    <ion-text color="primary">Policy</ion-text>
-
+    <ion-buttons (click)="dismiss()" slot="start">
+      <ion-button>
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Hotel Policies</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <ion-row>
-          <ion-col>
-            <ion-text>Cancellation Policy</ion-text>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ul>
-            <li>
-              <ion-text>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Hic, atque deleniti quia, dicta aliquid, ex dignissimos corrupti debitis tenetur corporis laudantium itaque amet mollitia ad? Tempora vel natus molestias enim.≈</ion-text>
-            </li>
-          </ul>
-        </ion-row>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-row>
-          <ion-col>
-            <ion-text>Check-In Policy</ion-text>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ul>
-            <li>
-              <ion-text>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Hic, atque deleniti quia, dicta
-                aliquid, ex dignissimos corrupti debitis tenetur corporis laudantium itaque amet mollitia ad? Tempora
-                vel natus molestias enim.≈</ion-text>
-            </li>
-          </ul>
-        </ion-row>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-row>
-          <ion-col>
-            <ion-text>Hotel Policy</ion-text>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ul>
-            <li>
-              <ion-text>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Hic, atque deleniti quia, dicta
-                aliquid, ex dignissimos corrupti debitis tenetur corporis laudantium itaque amet mollitia ad? Tempora
-                vel natus molestias enim.≈</ion-text>
-            </li>
-          </ul>
-        </ion-row>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <ion-title>Cancellation Policies</ion-title>
+  <ion-card *ngFor="let policies of (roomDetail$ | async);let i = index">
+    <ion-card-header>
+      {{ cleanpolicy(policies.CancellationPolicy) }}
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label slot="start" class="large bold">From Date - To Date</ion-label>
+        <ion-label slot="end" class="large bold">Cancellation Charge</ion-label>
+      </ion-item>
+      <ion-item *ngFor="let policy of policies.CancellationPolicies; let i = index">
+        <ion-label slot="start" class="bold">{{ policy.FromDate | date : 'dd-MM-yyyy' }} -
+          {{ policy.ToDate | date : 'dd-MM-yyyy' }}</ion-label>
+        <ion-label slot="end">{{ policy.Charge | currency : 'INR' }}</ion-label>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+  <ion-title>Hotel Policies</ion-title>
+  <ion-label class="hotel-policy" [innerHTML]="decodeDescritption((blockedroom$ | async).HotelPolicyDetail)"></ion-label>
 </ion-content>

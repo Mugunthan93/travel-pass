@@ -118,7 +118,7 @@ export class SearchHotel {
         payload: null,
         rooms: [{
             ChildAge: [],
-            NoOfAdults: 0,
+            NoOfAdults: 1,
             NoOfChild: 0
         }]
     }

@@ -4,7 +4,7 @@ import { File, FileError, FileEntry, DirectoryEntry } from '@ionic-native/file/n
 import { FileTransferObject, FileTransfer, FileTransferError } from '@ionic-native/file-transfer/ngx';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { Observable, from, throwError, of, EMPTY } from 'rxjs';
-import { mergeMap, take, toArray, tap, catchError, skipWhile, takeWhile, flatMap, map, switchMap, exhaustMap, retryWhen, delayWhen, finalize, concatMap, ignoreElements, skip, find } from 'rxjs/operators';
+import { mergeMap, take, toArray, tap, catchError, skipWhile, takeWhile, flatMap, map, switchMap, exhaustMap, retryWhen, delayWhen, finalize, concatMap, ignoreElements, skip, find, groupBy, reduce, distinct, distinctUntilChanged, first, bufferCount, filter } from 'rxjs/operators';
 import { SearchHotel, HotelSearchState } from '../search/hotel.state';
 import { SharedService } from 'src/app/services/shared/shared.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
@@ -431,8 +431,6 @@ export class HotelResultState{
 
         let filteredhotelresult = action.response.HotelResults
             .filter(el => !_.isUndefined(el.SupplierHotelCodes));
-
-        let limit: number = states.getState().listlimit;
         
         return from(filteredhotelresult)
             .pipe(
@@ -454,15 +452,23 @@ export class HotelResultState{
                             hotelresponseList: result,
                             traceId: action.response.TraceId
                         });
-                        return _.sortBy(result, (o) => {
+
+                        let sorted = _.sortBy(result, (o) => {
                             return o.Price.PublishedPrice;
-                        }).slice(0,20);
+                        });
+
+                        return from(sorted)
+                            .pipe(
+                                take(states.getState().listlimit),
+                                toArray()
+                            )
                     }
                 ),
-                tap(
+                flatMap(el => el),
+                map(
                     (hotels) => {
                         console.log(hotels);
-                        states.dispatch(new DownloadResult(hotels));
+                        return states.dispatch(new DownloadResult(hotels));
                 })
             )
 
@@ -476,20 +482,18 @@ export class HotelResultState{
             .pipe(
                 mergeMap(
                     (el: hotelresponselist) => {
-                        console.log(el);
                         let traceId: string = states.getState().traceId;
                         let currentState: hotellist[] = states.getState().hotelList;
 
                         if (currentState.some(hotel => hotel.ResultIndex == el.ResultIndex)) {
                             return of(currentState.find(hotel => hotel.ResultIndex == el.ResultIndex));
                         }
+
                         return from(el.SupplierHotelCodes)
                             .pipe(
-                                takeWhile(el => el.CategoryIndex == 1),
+                                // takeWhile(el => el.CategoryIndex == 1),
                                 mergeMap(
                                     (supply: supplierhotelcodes) => {
-
-                                        console.log(supply);
 
                                         let hotelInfo = {
                                             CategoryId: supply.CategoryId,
@@ -501,7 +505,16 @@ export class HotelResultState{
 
                                         return from(this.hotelService.getHotelInfo(hotelInfo))
                                             .pipe(
+                                                catchError(
+                                                    (el) => {
+                                                        console.log(el);
+                                                        return of([]);
+                                                    }
+                                                ),
                                                 skipWhile((HTTPResponse: HTTPResponse) => {
+                                                    if (Array.isArray(HTTPResponse)) {
+                                                        return true;
+                                                    }
 
                                                     //Trace Expired
                                                     if (JSON.parse(HTTPResponse.data).response.Error.ErrorCode == 6) {
@@ -518,11 +531,6 @@ export class HotelResultState{
                                                     //Search Timeout, Try Again
                                                     if (JSON.parse(HTTPResponse.data).response.Error.ErrorCode == -4) {
                                                         console.log(JSON.parse(HTTPResponse.data).response);
-                                                        return true;
-                                                    }
-
-                                                    //proxy error
-                                                    if (HTTPResponse.status == 502) {
                                                         return true;
                                                     }
 
@@ -543,7 +551,6 @@ export class HotelResultState{
                                                         });
 
                                                         let mergeObj: hotellist = _.merge(omitedVal, el);
-                                                        mergeObj.currentSupplier = supply;
                                                         return mergeObj;
                                                     }
                                                 ),
@@ -555,13 +562,14 @@ export class HotelResultState{
                                                         }
                                                         return of(hotel);
                                                     }
-                                                )
+                                                ),
                                             )
                                     }
                                 ),
-                                toArray(),
-                                flatMap(
-                                    (hotels: hotellist[]) => {
+                                filter(hotel => hotel.Images && hotel.Images.length > 1),
+                                take(1),
+                                map(
+                                    (hotels: hotellist) => {
                                         console.log(hotels);
                                         return hotels;
                                     }
@@ -572,10 +580,11 @@ export class HotelResultState{
                 toArray(),
                 map(
                     (hotel) => {
-                        console.log(hotel);
+
                         states.patchState({
                             hotelList: hotel
                         });
+
                     }
                 ),
                 finalize(
@@ -626,6 +635,9 @@ export class HotelResultState{
     @Action(ViewHotel)
     viewHotel(states: StateContext<hotelresult>, action: ViewHotel) {
 
+        
+
+
         return of(action.hotel)
             .pipe(
                 skipWhile(hotel => {
@@ -641,16 +653,16 @@ export class HotelResultState{
                     (hotel: hotellist) => {
                         states.dispatch(new GetToken());
                         const token: string = states.getState().token;
-                        // let indexes: number[] = [];
+                        let indexes: number[] = [];
 
-                        // hotel.SupplierHotelCodes.forEach(
-                        //     (code) => {
-                        //         indexes.push(code.CategoryIndex);
-                        //     }
-                        // );
+                        hotel.SupplierHotelCodes.forEach(
+                            (code) => {
+                                indexes.push(code.CategoryIndex);
+                            }
+                        );
 
                         const viewPayload: viewPayload = {
-                            CategoryIndexes: [1],
+                            CategoryIndexes: indexes,
                             EndUserIp: "192.168.0.115",
                             HotelCode: action.hotel.HotelCode,
                             ResultIndex: action.hotel.ResultIndex,
@@ -669,6 +681,7 @@ export class HotelResultState{
                     (response: HTTPResponse) => {
                         console.log(response);
                         let hotelResponse: selectedHotel = JSON.parse(response.data).response;
+                        console.log(hotelResponse);
 
                         let roomDetail = hotelResponse.HotelRoomsDetails.map(
                             (detail) => {

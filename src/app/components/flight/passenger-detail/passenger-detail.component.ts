@@ -3,7 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { MealBaggageComponent } from '../meal-baggage/meal-baggage.component';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
-import { AddPassenger, passenger, EditPassenger, FLightBookState } from 'src/app/stores/book/flight.state';
+import { FLightBookState } from 'src/app/stores/book/flight.state';
 import * as moment from 'moment';
 import { BookState } from 'src/app/stores/book.state';
 import { company } from 'src/app/models/company';
@@ -15,6 +15,7 @@ import { RoundTripSearchState } from 'src/app/stores/search/flight/round-trip.st
 import { MultiCitySearchState } from 'src/app/stores/search/flight/multi-city.state';
 import { SearchState } from 'src/app/stores/search.state';
 import { SelectModalComponent } from '../../shared/select-modal/select-modal.component';
+import { flightpassenger, AddPassenger, EditPassenger, FlightPassengerState } from 'src/app/stores/passenger/flight.passenger.states';
 
 @Component({
   selector: 'app-passenger-detail',
@@ -24,7 +25,7 @@ import { SelectModalComponent } from '../../shared/select-modal/select-modal.com
 export class PassengerDetailComponent implements OnInit {
 
   @Input() form: string;
-  @Input() pax: passenger;
+  @Input() pax: flightpassenger;
 
   company: company;
 
@@ -169,7 +170,7 @@ export class PassengerDetailComponent implements OnInit {
   addPassenger() {
     this.formSubmit = true;
     if (this.Passenger.valid) {
-      let passenger: passenger = {
+      let passenger: flightpassenger = {
         Title: this.Passenger.value.Title,
         FirstName: this.Passenger.value.FirstName,
         LastName: this.Passenger.value.LastName,
@@ -215,9 +216,9 @@ export class PassengerDetailComponent implements OnInit {
     }
   }
 
-  leadPax(formType : string,pax : passenger) : boolean {
+  leadPax(formType : string,pax : flightpassenger) : boolean {
     if (formType == 'edit') {
-      if (this.store.selectSnapshot(FLightBookState.getLeadPassenger).IsLeadPax == this.pax.IsLeadPax) {
+      if (this.store.selectSnapshot(FlightPassengerState.getLeadPassenger).IsLeadPax == this.pax.IsLeadPax) {
         return this.pax.IsLeadPax;
       }
       else {

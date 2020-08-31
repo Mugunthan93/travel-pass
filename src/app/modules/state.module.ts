@@ -40,6 +40,10 @@ import { HotelBookState } from '../stores/book/hotel.state';
 import { BusSearchState } from '../stores/search/bus.state';
 import { BusResultState } from '../stores/result/bus.state';
 import { BusBookState } from '../stores/book/bus.state';
+import { PassengerState } from '../stores/passenger.state';
+import { FlightPassengerState } from '../stores/passenger/flight.passenger.states';
+import { HotelPassengerState } from '../stores/passenger/hotel.passenger.state';
+import { BusPassengerState } from '../stores/passenger/bus.passenger.state';
 
 @NgModule({
   declarations: [],
@@ -87,7 +91,13 @@ import { BusBookState } from '../stores/book/bus.state';
       
       FilterState,
       SortState,
-      SharedState
+      SharedState,
+
+      PassengerState,
+      FlightPassengerState,
+      HotelPassengerState,
+      BusPassengerState
+      
     ], { developmentMode: !environment.production }
     ),
     NgxsResetPluginModule.forRoot(),
@@ -106,7 +116,8 @@ import { BusBookState } from '../stores/book/bus.state';
         
         FilterState,
         SortState,
-        SharedState
+        SharedState,
+        PassengerState
       ]
     }),
     NgxsFormPluginModule.forRoot(),

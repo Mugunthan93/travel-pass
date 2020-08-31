@@ -1,20 +1,30 @@
 
-ion-grid{
-    >ion-row{
-        >ion-col{
-            margin:5px;
-            >ion-row:first-child{
-                height: 50px;
-                background: transparent;
-                border-radius: 8px;
-                >ion-col{
-                        align-self: center;
-                        >ion-text{
-                            margin-left:5px;
-                            font-weight:bold;
-                        }
-                }
-            }
+
+ion-header{
+    ion-title{
+        padding-left: 0px !important;
+    }
+}
+
+
+ion-title {
+    padding-left: 10px !important;
+}
+
+ion-content{
+    ion-title {
+        padding-left: 10px !important;
+    }
+    ion-item{
+        ion-label[slot="end"] {
+            min-width: min-content;
+            text-align: end;
         }
     }
+}
+
+ion-label.hotel-policy{
+    display: flex;
+    flex-direction: column;
+    padding: 0px 10px;
 }

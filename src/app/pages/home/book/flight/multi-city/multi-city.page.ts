@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
-import { PassengerInfoComponent } from 'src/app/components/flight/passenger-info/passenger-info.component';
 import { Observable } from 'rxjs';
-import { bookObj, CancellationRisk, FLightBookState } from 'src/app/stores/book/flight.state';
-import { MultiCitySearch, MultiCitySearchState } from 'src/app/stores/search/flight/multi-city.state';
+import { bookObj, CancellationRisk } from 'src/app/stores/book/flight.state';
+import { MultiCitySearchState } from 'src/app/stores/search/flight/multi-city.state';
 import { Store } from '@ngxs/store';
 import { BookConfirmationComponent } from 'src/app/components/flight/book-confirmation/book-confirmation.component';
 import { MultiCityBookState } from 'src/app/stores/book/flight/multi-city.state';
+import { PassengerListComponent } from 'src/app/components/shared/passenger-list/passenger-list.component';
+import { FlightPassengerState } from 'src/app/stores/passenger/flight.passenger.states';
 
 @Component({
   selector: 'app-multi-city',
@@ -35,8 +36,8 @@ export class MultiCityPage implements OnInit {
     this.flightDetail = this.store.select(MultiCityBookState.getFlightDetail);
     this.flightDetail.subscribe(flight => console.log(flight));
 
-    this.selected$ = this.store.select(FLightBookState.getSelected);
-    this.count$ = this.store.select(FLightBookState.getCount);
+    this.selected$ = this.store.select(FlightPassengerState.getSelected);
+    this.count$ = this.store.select(FlightPassengerState.getCount);
 
     this.selected$.subscribe(select => this.selected = select);
     this.count$.subscribe(count => this.count = count);
@@ -44,7 +45,7 @@ export class MultiCityPage implements OnInit {
 
   async addPassengerDetails() {
     const modal = await this.modalCtrl.create({
-      component: PassengerInfoComponent,
+      component: PassengerListComponent,
       keyboardClose:false,
       id: 'passenger-info'
     });

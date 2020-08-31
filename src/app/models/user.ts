@@ -6,7 +6,7 @@ export interface user {
   email: string;
   phone_number: string;
   dob: string;
-  PAN_number: string;
+  pan_number: string;
   aadhar_no: string;
   address: string;
   city: string;
@@ -41,6 +41,8 @@ export interface user {
   markup_charge: string;
   service_charge: string;
   is_rightsto_book: string;
+
+  staff_code: string;
 
 }
 

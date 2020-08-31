@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { bookObj, CancellationRisk, FLightBookState } from 'src/app/stores/book/flight.state';
+import { bookObj, CancellationRisk } from 'src/app/stores/book/flight.state';
 import { Store } from '@ngxs/store';
 import { ModalController, AlertController } from '@ionic/angular';
-import { MultiCitySearchState } from 'src/app/stores/search/flight/multi-city.state';
-import { MultiCityBookState } from 'src/app/stores/book/flight/multi-city.state';
-import { PassengerInfoComponent } from 'src/app/components/flight/passenger-info/passenger-info.component';
 import { BookConfirmationComponent } from 'src/app/components/flight/book-confirmation/book-confirmation.component';
-import { RoundTripSearch, RoundTripSearchState } from 'src/app/stores/search/flight/round-trip.state';
+import { RoundTripSearchState } from 'src/app/stores/search/flight/round-trip.state';
 import { InternationalBookState } from 'src/app/stores/book/flight/international.state';
+import { PassengerListComponent } from 'src/app/components/shared/passenger-list/passenger-list.component';
+import { FlightPassengerState } from 'src/app/stores/passenger/flight.passenger.states';
 
 @Component({
   selector: 'app-international',
@@ -37,8 +36,8 @@ export class InternationalPage implements OnInit {
     this.flightDetail = this.store.select(InternationalBookState.getFlightDetail);
     this.flightDetail.subscribe(flight => console.log(flight));
 
-    this.selected$ = this.store.select(FLightBookState.getSelected);
-    this.count$ = this.store.select(FLightBookState.getCount);
+    this.selected$ = this.store.select(FlightPassengerState.getSelected);
+    this.count$ = this.store.select(FlightPassengerState.getCount);
 
     this.selected$.subscribe(select => this.selected = select);
     this.count$.subscribe(count => this.count = count);
@@ -46,7 +45,7 @@ export class InternationalPage implements OnInit {
 
   async addPassengerDetails() {
     const modal = await this.modalCtrl.create({
-      component: PassengerInfoComponent,
+      component: PassengerListComponent,
       id: 'passenger-info'
     });
 

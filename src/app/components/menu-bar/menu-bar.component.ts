@@ -6,8 +6,8 @@ import { Logout } from 'src/app/stores/auth.state';
 import { UserState } from 'src/app/stores/user.state';
 import { Observable } from 'rxjs';
 import { MenuController, AlertController } from '@ionic/angular';
-import { Navigate } from '@ngxs/router-plugin';
 import { GetDashboard } from 'src/app/stores/dashboard.state';
+import { Navigate } from '@ngxs/router-plugin';
 
 @Component({
   selector: 'app-menu-bar',

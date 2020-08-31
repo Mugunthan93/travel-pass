@@ -96,17 +96,11 @@ export class HotelPage implements OnInit {
 
   loadData(evt: any) {
     this.store.dispatch(new AddHotels())
-      .subscribe(
-        async (res) => {
-          if (res.scroll == 'finished') {
-            await this.infinite.complete();
-          }
-          else if(res.scroll == "stopped") {
-            this.loading = "No more Hotels";
-            await this.infinite.complete();
-          }
+      .subscribe({
+        complete: async () => {
+          await evt.target.complete();
         }
-      );
+      });
   }
 
   loadImg(hotel: hotellist) {

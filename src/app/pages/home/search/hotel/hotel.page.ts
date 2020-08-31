@@ -40,8 +40,8 @@ export class HotelPage implements OnInit {
 
     this.hotelSearch = new FormGroup({
       'city': new FormControl(null, [Validators.required]),
-      'room': new FormControl(null, [Validators.required]),
-      'nationality': new FormControl(null, [Validators.required]),
+      'room': new FormControl([{ChildAge: [],NoOfAdults: 1,NoOfChild: 0}], [Validators.required]),
+      'nationality': new FormControl({country_code: "IN",nationality: "Indian"}, [Validators.required]),
       'star': new FormControl(0, [Validators.required]),
       'checkin': new FormControl(null, [Validators.required]),
       'checkout': new FormControl(null, [Validators.required])

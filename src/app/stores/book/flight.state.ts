@@ -12,15 +12,12 @@ import { MultiCityBookState } from './flight/multi-city.state';
 import { InternationalBookState } from './flight/international.state';
 import * as _ from 'lodash';
 import { SearchState } from '../search.state';
+import { flightpassenger } from '../passenger/flight.passenger.states';
 
 
 export interface flight{
-    passengers: passenger[],
-    passengerCount: number,
-    selectedPassengers: passenger[],
-
-    risk: string,
     
+    risk: string,
     mail: string[],
     purpose: string,
     comment: string,
@@ -114,7 +111,7 @@ export interface int_sendRequest {
 
 export interface passenger_details {
     kioskRequest: kioskRequest
-    passenger:passenger[]
+    passenger:flightpassenger[]
     flight_details: flightResult[]
     country_flag:string
     user_eligibility: user_eligibility
@@ -125,7 +122,7 @@ export interface passenger_details {
 
 export interface rt_passenger_details {
     kioskRequest: rt_kioskRequest
-    passenger: passenger[]
+    passenger: flightpassenger[]
     flight_details: flightResult[]
     country_flag: string
     user_eligibility: user_eligibility
@@ -136,7 +133,7 @@ export interface rt_passenger_details {
 
 export interface int_passenger_details {
     kioskRequest: rt_kioskRequest
-    passenger: passenger[]
+    passenger: flightpassenger[]
     flight_details: flightResult[]
     country_flag: string
     user_eligibility: user_eligibility
@@ -183,25 +180,6 @@ export interface value {
     currency: string
     nationalty: string
     option_label: string
-}
-
-export interface passenger extends addPassenger{
-    AddressLine1:string,
-    City: string,
-    CountryName: string,
-    CountryCode: string,
-    Email: string,
-    onwardExtraServices: services,
-    returnExtraServices: services,
-    PaxType: number,
-    IsLeadPax: boolean,
-    Gender: number,
-    GSTCompanyEmail: string,
-    GSTCompanyAddress: string,
-    GSTCompanyContactNumber:string,
-    GSTCompanyName: string,
-    GSTNumber: string,
-    Fare: fareObj
 }
 
 export interface services {
@@ -467,19 +445,6 @@ export interface seat{
     SeatWayType: number
 }
 
-export interface addPassenger {
-    Title: string,
-    FirstName: string,
-    LastName: string,
-    DateOfBirth: string,
-    ContactNo: string,
-    PassportNo: string,
-    PassportExpiry: string,
-
-    nationality?: string,
-    ftnumber?: string
-}
-
 
 ////////////////////////////////////////////////////
 
@@ -504,48 +469,6 @@ export class SetBaggage {
 export class CancellationRisk {
     static readonly type = "[flight_book] CancellationRisk";
     constructor(public risk: string) {
-    }
-}
-
-export class SetFirstPassengers {
-    static readonly type = "[flight_book] SetFirstPassengers";
-    constructor(public type : string) {
-
-    }
-}
-
-export class AddPassenger {
-    static readonly type = "[flight_book] AddPassenger";
-    constructor(public pass: passenger) {
-
-    }
-}
-
-export class EditPassenger {
-    static readonly type = "[flight_book] AddPassenger";
-    constructor(public pass: passenger,public pax : passenger) {
-
-    }
-}
-
-export class DeletePassenger {
-    static readonly type = "[flight_book] DeletePassenger";
-    constructor(public pax: passenger) {
-
-    }
-}
-
-export class SelectPassenger{
-    static readonly type = "[flight_book] SelectPassenger";
-    constructor(public pass: passenger) {
-
-    }
-}
-
-export class DeselectPassenger {
-    static readonly type = "[flight_book] DeselectPassenger";
-    constructor(public pass: passenger) {
-
     }
 }
 
@@ -594,10 +517,6 @@ export class SetNonVeg {
 @State<flight>({
     name: 'flight_book',
     defaults: {
-        passengers: [],
-        passengerCount: null,
-        selectedPassengers: [],
-
         risk: null,
         
         mail: [],
@@ -651,31 +570,6 @@ export class FLightBookState {
     @Selector()
     static getRisk(states: flight): string {
         return states.risk;
-    }
-
-    @Selector()
-    static getPassengers(states: flight) : passenger[] {
-        return states.passengers
-    }
-
-    @Selector()
-    static getLeadPassenger(states: flight): passenger {
-        return states.passengers[0]
-    }
-
-    @Selector()
-    static getSelectedPassengers(states: flight): passenger[] {
-        return states.selectedPassengers;
-    }
-
-    @Selector()
-    static getSelected(states: flight): number {
-        return states.selectedPassengers.length;
-    }
-
-    @Selector()
-    static getCount(states: flight): number {
-        return states.passengerCount;
     }
 
     @Selector()
@@ -842,119 +736,6 @@ export class FLightBookState {
             });
         }
 
-    }
-
-    @Action(AddPassenger)
-    addPassenger(states: StateContext<flight>, action: AddPassenger) {
-
-        let passengers = Object.assign([], states.getState().passengers);
-        passengers.push(action.pass);
-        passengers = _.uniqBy(passengers,passengers);
-
-        states.patchState({
-            passengers: passengers
-        });
-
-        this.modalCtrl.dismiss(null, null, 'passenger-details');
-    }
-
-    @Action(EditPassenger)
-    editPassenger(states: StateContext<flight>, action: EditPassenger) {
-
-        let passengers: passenger[] = Object.assign([], states.getState().passengers);
-        let filterPass: passenger[] = passengers.filter(el => !_.isEqual(el, action.pax));
-        filterPass.push(action.pass);
-
-        states.patchState({
-            passengers: filterPass
-        });
-
-        this.modalCtrl.dismiss(null, null, 'passenger-details');
-    }
-
-    @Action(DeletePassenger)
-    deletePassenger(states: StateContext<flight>, action: DeletePassenger) {
-
-        let passengers: passenger[] = Object.assign([], states.getState().passengers);
-        let filterPass: passenger[] = passengers.filter(el => !_.isEqual(el, action.pax));
-
-        states.patchState({
-            passengers: filterPass
-        });
-    }
-
-    @Action(SetFirstPassengers)
-    setFirstPassengers(states: StateContext<flight>, action: SetFirstPassengers) {
-
-        let passengerCount: number = 0;
-
-        switch (action.type) {
-            case 'one-way': passengerCount = this.store.selectSnapshot(OneWaySearchState.getAdult); break; 
-            case 'round-trip': passengerCount = this.store.selectSnapshot(RoundTripSearchState.getAdult); break; 
-            case 'multi-city': passengerCount = this.store.selectSnapshot(MultiCitySearchState.getAdult); break; 
-        }
-        
-        let passengers: passenger[] = [];
-
-        passengers[0] = {
-            AddressLine1: this.store.selectSnapshot(UserState.getAddress),
-            City: this.store.selectSnapshot(UserState.getCity),
-            CountryName: this.store.selectSnapshot(UserState.getCountryName),
-            CountryCode: null,
-            Email: this.store.selectSnapshot(UserState.getEmail),
-            onwardExtraServices: {
-                Meal: [],
-                MealTotal: 0,
-                BagTotal: 0,
-                Baggage : []
-            },
-            returnExtraServices: {
-                Meal: [],
-                MealTotal: 0,
-                BagTotal: 0,
-                Baggage: []
-            },
-            PaxType: 1,
-            IsLeadPax: true,
-            FirstName: this.store.selectSnapshot(UserState.getFirstName),
-            LastName: this.store.selectSnapshot(UserState.getLastName) == null ? '' : this.store.selectSnapshot(UserState.getLastName),
-            ContactNo: this.store.selectSnapshot(UserState.getContact),
-            DateOfBirth: this.store.selectSnapshot(UserState.getDOB),
-            PassportNo: this.store.selectSnapshot(UserState.getPassportNo),
-            PassportExpiry: this.store.selectSnapshot(UserState.getPassportExpiry),
-            Title: this.store.selectSnapshot(UserState.getTitle) == 'Female' ? 'Ms' : 'Mr',
-            Gender: this.store.selectSnapshot(UserState.getTitle) == 'Female' ? 2 : 1,
-            GSTCompanyEmail: this.store.selectSnapshot(CompanyState.gstCompanyEmail),
-            GSTCompanyAddress: this.store.selectSnapshot(CompanyState.gstCompanyAddress),
-            GSTCompanyContactNumber: this.store.selectSnapshot(CompanyState.getContact),
-            GSTCompanyName: this.store.selectSnapshot(CompanyState.getCompanyName),
-            GSTNumber: this.store.selectSnapshot(CompanyState.gstNumber),
-            Fare: states.getState().fare
-        }
-
-        states.patchState({
-            passengers: passengers,
-            passengerCount: passengerCount
-        });
-
-    }
-
-    @Action(SelectPassenger)
-    selectPassenger(states: StateContext<flight>, action: SelectPassenger) {
-        let passArray: passenger[] = Object.assign([], states.getState().selectedPassengers);
-        passArray.push(action.pass);
-        states.patchState({
-            selectedPassengers: passArray
-        });
-    }
-
-    @Action(DeselectPassenger)
-    deselectPassenger(states: StateContext <flight>, action: DeselectPassenger) {
-        let passArray = Object.assign([], states.getState().selectedPassengers);
-        const currentArray = passArray.filter(el => el !== action.pass);
-        states.patchState({
-            selectedPassengers: currentArray
-        });
     }
 
     @Action(CancellationRisk)

@@ -14,29 +14,37 @@
 </ion-header>
 
 <ion-content>
-  <!-- <ion-item>
-    <ion-label class="large" slot="start">Adults</ion-label>
-    <ion-label class="large bold" slot="end" style="text-align: end;">{{(selected$ | async)}}/{{(count$ | async)}}
-      Selected</ion-label>
-  </ion-item>
-  <ion-row *ngFor="let pax of (passengers$ | async)">
+  <ion-row *ngIf="(bookMode$ | async) == 'flight'">
     <ion-item>
-      <ion-checkbox slot="start" [value]="pax" (ionChange)="getPass($event)"
-        [checked]="(selectedPassengers$ | async).includes(pax)"
-        [disabled]="(selected$ | async) == (count$ | async) && !(selectedPassengers$ | async).includes(pax)">
-      </ion-checkbox>
-      <ion-row>
-        <ion-row>
-          <ion-label>{{pax.FirstName}} {{pax.LastName}}</ion-label>
-          <ion-label> {{ gender(pax) }}</ion-label>
-        </ion-row>
-      </ion-row>
+      <ion-label class="large" slot="start">Adults</ion-label>
+      <ion-label class="large bold" slot="end" style="text-align: end;">{{(selected$ | async)}}/{{(count$ | async)}}
+        Selected</ion-label>
     </ion-item>
-    <ion-icon name="close-sharp" (click)="deletePassneger(pax)"></ion-icon>
-    <ion-label class="bold" (click)="editPassenger(pax)">Edit</ion-label>
+    <ion-row *ngFor="let pax of (passengers$ | async)">
+      <ion-item>
+        <ion-checkbox slot="start" [value]="pax" (ionChange)="getPass($event)"
+          [checked]="(selectedPassengers$ | async).includes(pax)"
+          [disabled]="(selected$ | async) == (count$ | async) && !(selectedPassengers$ | async).includes(pax)">
+        </ion-checkbox>
+        <ion-label>{{pax.FirstName}} {{pax.LastName}}</ion-label>
+        <ion-label> {{ gender(pax) }}</ion-label>
+      </ion-item>
+      <ion-icon name="close-sharp" (click)="deletePassneger(pax)"></ion-icon>
+      <ion-label class="bold" (click)="editPassenger(pax)">Edit</ion-label>
+    </ion-row>
+    <ion-button class="add" (click)="getDetail()">
+      <ion-icon name="add"></ion-icon>
+      <ion-label class="bold">Add Adults</ion-label>
+    </ion-button>
   </ion-row>
-  <ion-button class="add" (click)="getDetail()">
-    <ion-icon name="add"></ion-icon>
-    <ion-label class="bold">Add Adults</ion-label>
-  </ion-button> -->
+  <ion-row *ngIf="(bookMode$ | async) == 'hotel'">
+    <ion-card>
+      <ion-card-header>
+    
+      </ion-card-header>
+      <ion-card-content>
+        
+      </ion-card-content>
+    </ion-card>
+  </ion-row>
 </ion-content>

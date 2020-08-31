@@ -14,7 +14,7 @@ import { HTTPResponse } from '@ionic-native/http/ngx';
 export interface hotelbook {
     blockedRoom: blockedRoom
     passengers: passengers[]
-    leadPass: passengers
+    selectedpassengers: passengers[]
     mail: string[]
     purpose: string
     comment: string
@@ -154,13 +154,6 @@ export class AddBlockRoom {
     }
 }
 
-export class AddLeadPan {
-    static readonly type = "[hotel_book] AddLeadPan";
-    constructor(public pan: string) {
-
-    }
-}
-
 export class MailCC {
     static readonly type = "[flight_book] MailCC";
     constructor(public mail: string[]) {
@@ -191,7 +184,7 @@ export class SendRequest {
     defaults: {
         blockedRoom: null,
         passengers: [],
-        leadPass : null,
+        selectedpassengers : [],
         mail: [],
         purpose: null,
         comment: null
@@ -231,6 +224,11 @@ export class HotelBookState {
         return states.comment;
     }
 
+    @Selector()
+    static getPassengers(states: hotelbook): passengers[] {
+        return states.passengers;
+    }
+
     @Action(AddBlockRoom)
     addBlockRoom(states: StateContext<hotelbook>, action: AddBlockRoom) {
 
@@ -240,28 +238,18 @@ export class HotelBookState {
             count: 1,
             FirstName: this.store.selectSnapshot(UserState.getFirstName),
             LastName: this.store.selectSnapshot(UserState.getFirstName),
-
             Email: this.store.selectSnapshot(UserState.getEmail),
             PAN: null,
             Title: this.store.selectSnapshot(UserState.getTitle) == 'Female' ? 'Ms' : 'Mr',
             Gender: this.store.selectSnapshot(UserState.getTitle)
         }
 
-
+        let passengers: passengers[] = Object.assign([],states.getState().passengers);
+        passengers.push(lead);
 
         states.patchState({
             blockedRoom: action.room,
-            leadPass: lead
-        });
-    }
-
-    @Action(AddLeadPan)
-    addLeadPan(states: StateContext<hotelbook>, action: AddLeadPan) {
-        let lead: passengers = Object.assign({}, states.getState().leadPass);
-        lead.PAN = action.pan;
-
-        states.patchState({
-            leadPass: lead
+            passengers : passengers
         });
     }
 
@@ -307,10 +295,7 @@ export class HotelBookState {
             }
         );
 
-        let lead = Object.assign({}, states.getState().leadPass);
-        let passengers : passengers[] = Object.assign([], states.getState().passengers);
-        
-        passengers.push(lead);
+        let passengers : passengers[] = Object.assign([], states.getState().selectedpassengers);
 
         passengers.sort((a,b) => {
             if (a.LeadPassenger == true) {

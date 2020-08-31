@@ -1,35 +1,32 @@
 @import "../../../../style/base/color.scss";
 
-ion-card.rules {
-    >ion-card-content {
-        >ion-row:not(:last-child) {
-            margin-top: 4px;
-            margin-bottom: 4px;
-        }
-
-        >ion-row {
-            >ion-col {
-                >ion-row:first-child {
-                    >ion-col {
-                        margin-left: 0px;
-                        border-bottom: 1px solid grey;
-                    }
-                }
-
-                >ion-row {
-                    >ion-col {
-                        margin-left: 10px;
-                    }
-                }
-            }
-        }
-
-        >ion-row:last-child {
-            >ion-col {
-                >ion-text {
-                    color: #{$malibu};
-                }
-            }
-        }
+ion-header{
+    ion-title{
+        padding-left: 0px !important;
     }
+}
+
+ion-segment-button.about-tab{
+    --indicator-height:0px;
+    ion-label{
+        color:#{$white};
+    }
+}
+
+ion-card-content{
+    ion-title {
+        padding-left: 0px !important;
+    }
+}
+
+ion-label.hotel-policy {
+    display: flex;
+    flex-direction: column;
+    padding: 0px 10px !important;
+}
+
+ion-label.about-hotel {
+    display: flex;
+    flex-direction: column;
+    padding: 0px 10px !important;
 }

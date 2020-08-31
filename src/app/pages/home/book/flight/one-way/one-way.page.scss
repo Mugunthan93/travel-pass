@@ -82,6 +82,7 @@ ion-content{
             }
         }
     }
+
     >ion-row{
         background:transparent;
         border: 2px solid #{$geraldine};
@@ -90,6 +91,7 @@ ion-content{
         border-radius: 4px;
         flex-direction: column;
     }
+    
     >ion-list.fare{
         ion-item{
             --padding-start: 16px;
@@ -103,6 +105,7 @@ ion-content{
                 text-align: end;
             }
         }
+        
     }
 
     ion-list.cancel-radio {

@@ -1,7 +1,7 @@
 import { Selector, Action, State, Store, StateContext } from '@ngxs/store';
 import { flightResult, flightData } from 'src/app/models/search/flight';
 import { SSR } from '../../result/flight.state';
-import { bookObj, value, FLightBookState, rt_uapi_params, rt_sendRequest, SetFirstPassengers, rt_kioskRequest, SetFare, SetMeal, SetBaggage } from '../flight.state';
+import { bookObj, value, FLightBookState, rt_uapi_params, rt_sendRequest, rt_kioskRequest, SetFare, SetMeal, SetBaggage } from '../flight.state';
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { DomesticResultState } from '../../result/flight/domestic.state';
 import { RoundTripSearch, RoundTripSearchState } from '../../search/flight/round-trip.state';
@@ -17,6 +17,7 @@ import { BookMode, BookType, BookState } from '../../book.state';
 import { LoadingController, AlertController, ModalController } from '@ionic/angular';
 import { StateReset } from 'ngxs-reset-plugin';
 import { ResultState } from '../../result.state';
+import { FlightPassengerState, SetFirstPassengers } from '../../passenger/flight.passenger.states';
 
 export interface domesticBook {
     departure: {  
@@ -235,11 +236,11 @@ export class DomesticBookState {
             }
         }
 
-        this.store.dispatch(new SetFare(states.getState().departure.fareQuote.Fare, states.getState().return.fareQuote.Fare));
-        this.store.dispatch(new SetFirstPassengers(this.store.selectSnapshot(SearchState.getSearchType)));
-        this.store.dispatch(new BookMode('flight'));
-        this.store.dispatch(new BookType('animated-round-trip'));
-        this.store.dispatch(new Navigate(['/', 'home', 'book', 'flight', 'round-trip','domestic']));
+        states.dispatch(new SetFare(states.getState().departure.fareQuote.Fare, states.getState().return.fareQuote.Fare));
+        states.dispatch(new SetFirstPassengers());
+        states.dispatch(new BookMode('flight'));
+        states.dispatch(new BookType('animated-round-trip'));
+        states.dispatch(new Navigate(['/', 'home', 'book', 'flight', 'round-trip','domestic']));
         loading.dismiss();
     }
 
@@ -372,7 +373,7 @@ export class DomesticBookState {
         sendReq = {
             passenger_details: {
                 kioskRequest: kioskRequest,
-                passenger: this.store.selectSnapshot(FLightBookState.getSelectedPassengers),
+                passenger: this.store.selectSnapshot(FlightPassengerState.getSelectedPassengers),
                 flight_details: [states.getState().departure.fareQuote, states.getState().return.fareQuote],
                 country_flag: this.store.selectSnapshot(RoundTripSearchState.getTripType) == 'domestic' ? "0" : "1",
                 user_eligibility: {

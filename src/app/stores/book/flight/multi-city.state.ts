@@ -1,5 +1,5 @@
 import { State, Action, Selector, Store, StateContext } from "@ngxs/store";
-import { bookObj, FLightBookState, sendRequest, SetFirstPassengers, kioskRequest, value, SetFare, SetMeal, SetBaggage } from '../flight.state';
+import { bookObj, FLightBookState, sendRequest, kioskRequest, value, SetFare, SetMeal, SetBaggage } from '../flight.state';
 import { flightResult, flightData } from 'src/app/models/search/flight';
 import { SSR } from '../../result/flight.state';
 import { Navigate } from '@ngxs/router-plugin';
@@ -17,6 +17,7 @@ import { BookMode, BookType, BookState } from '../../book.state';
 import { LoadingController, AlertController, ModalController } from '@ionic/angular';
 import { StateReset } from 'ngxs-reset-plugin';
 import { ResultState } from '../../result.state';
+import { FlightPassengerState, SetFirstPassengers } from '../../passenger/flight.passenger.states';
 
 
 export interface multicityBook {
@@ -157,11 +158,11 @@ export class MultiCityBookState {
 
         console.log(states.getState().fareQuote);
 
-        this.store.dispatch(new SetFare(states.getState().fareQuote.Fare));
-        this.store.dispatch(new SetFirstPassengers(this.store.selectSnapshot(SearchState.getSearchType)));
-        this.store.dispatch(new BookMode('flight'));
-        this.store.dispatch(new BookType('multi-city'));
-        this.store.dispatch(new Navigate(['/', 'home', 'book', 'flight', 'multi-city']));
+        states.dispatch(new SetFare(states.getState().fareQuote.Fare));
+        states.dispatch(new SetFirstPassengers());
+        states.dispatch(new BookMode('flight'));
+        states.dispatch(new BookType('multi-city'));
+        states.dispatch(new Navigate(['/', 'home', 'book', 'flight', 'multi-city']));
         loading.dismiss();
     }
 
@@ -257,7 +258,7 @@ export class MultiCityBookState {
         sendReq = {
             passenger_details: {
                 kioskRequest: kioskRequest,
-                passenger: this.store.selectSnapshot(FLightBookState.getSelectedPassengers),
+                passenger: this.store.selectSnapshot(FlightPassengerState.getSelectedPassengers),
                 flight_details: [states.getState().fareQuote],
                 country_flag: this.store.selectSnapshot(MultiCitySearchState.getTripType) == 'domestic' ? "0" : "1",
                 user_eligibility: {

@@ -12,19 +12,49 @@ ion-content{
             padding:10px 0px;
         }
 
-            >ion-row.checkinout{
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                >ion-row{
-                    display: flex;
-                    flex-direction: column;
-                }
-            }
-        
-            // >ion-row.selectpassenger{
-        
-            // }
+             >mat-accordion {
+                 @include flex-col-grid;
+                 width: 100%;
+                 margin-top: 5px;
+                 margin-bottom: 5px;
+                 height: auto;
+
+                 mat-expansion-panel {
+                     margin-top: 3px;
+                     margin-bottom: 3px;
+
+                     >mat-expansion-panel-header {
+                         background: transparent;
+                         padding-left: 10px;
+                         padding-right: 10px;
+                         border: 2px solid #{$geraldine};
+
+                         >::ng-deep span {
+                         }
+                     }
+
+                     ::ng-deep .mat-expansion-panel-body {
+                         padding: 0px;
+                         height: 100%;
+                         margin: 5px;
+
+                        >ion-row.checkinout {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+
+                            >ion-row {
+                                display: flex;
+                                flex-direction: column;
+                            }
+                        }
+                    }
+
+                     ::ng-deep .mat-expansion-indicator {
+                         color:#{$geraldine};
+                     }
+                 }
+             }
         
             >ion-row.pass-detail-1{
                 ion-select{
@@ -47,6 +77,15 @@ ion-content{
                     margin: 0px 6px;
                 }
             }
+
+            >ion-row.addpass {
+                background: transparent;
+                border: 2px solid #{$geraldine};
+
+                padding: 5px;
+                border-radius: 4px;
+                flex-direction: column;
+            }
         
             >ion-row.add-pass{
                 justify-content: space-around;
@@ -56,7 +95,29 @@ ion-content{
                     }
                 }
             }
+
     }
+
+        >ion-list.fare {
+            ion-item {
+                --padding-start: 16px;
+                --inner-padding-end: 16px;
+                --min-height: 40px;
+
+                >ion-radio {
+                    --border-radius: 20px;
+                    --inner-border-radius: 20px;
+                }
+
+                >ion-label:last-of-type {
+                    text-align: end;
+                }
+            }
+
+            mat-divider {
+                margin: 0px 10px;
+            }
+        }
 }
 
 

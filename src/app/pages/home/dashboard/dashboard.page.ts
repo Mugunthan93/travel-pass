@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
+import { Navigate } from '@ngxs/router-plugin';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,6 +30,6 @@ export class DashboardPage implements OnInit {
   }
   
   profile() {
-    
+    this.store.dispatch(new Navigate(['/', 'home', 'profile']));
   }
 }

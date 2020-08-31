@@ -7,7 +7,6 @@ import { IonicModule } from '@ionic/angular';
 import { BookPageRoutingModule } from './book-routing.module';
 
 import { BookPage } from './book.page';
-import { PassengerInfoComponent } from 'src/app/components/flight/passenger-info/passenger-info.component';
 import { PassengerDetailComponent } from 'src/app/components/flight/passenger-detail/passenger-detail.component';
 import { MealBaggageComponent } from 'src/app/components/flight/meal-baggage/meal-baggage.component';
 import { CalendarModule } from 'ion2-calendar';
@@ -21,7 +20,6 @@ import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { FoodPipe } from 'src/app/pipes/food/food.pipe';
 import { PaymentComponent } from 'src/app/components/bus/payment/payment.component';
 import { MatDividerModule } from '@angular/material/divider';
-import { FareSummaryComponent } from 'src/app/components/hotel/fare-summary/fare-summary.component';
 import { PassengerListComponent } from 'src/app/components/shared/passenger-list/passenger-list.component';
 
 @NgModule({
@@ -37,7 +35,6 @@ import { PassengerListComponent } from 'src/app/components/shared/passenger-list
   ],
   declarations: [
     BookPage,
-    PassengerInfoComponent,
     PassengerDetailComponent,
     MealBaggageComponent,
     FlightListComponent,
@@ -47,12 +44,10 @@ import { PassengerListComponent } from 'src/app/components/shared/passenger-list
     TermsConditionsComponent,
     BookConfirmationComponent,
     PaymentComponent,
-    FareSummaryComponent,
     PassengerListComponent,
     FoodPipe
   ],
   entryComponents: [
-    PassengerInfoComponent,
     PassengerDetailComponent,
     MealBaggageComponent,
     SpecialRequestComponent,
@@ -61,8 +56,7 @@ import { PassengerListComponent } from 'src/app/components/shared/passenger-list
     TermsConditionsComponent,
     BookConfirmationComponent,
     PassengerListComponent,
-    PaymentComponent,
-    FareSummaryComponent
+    PaymentComponent
   ]
 })
 export class BookPageModule {}

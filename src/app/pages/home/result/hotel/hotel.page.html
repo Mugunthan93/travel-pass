@@ -80,11 +80,11 @@
         </ion-card-content>
     
       </ion-card>
-      <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)" #infinite>
-        <ion-infinite-scroll-content loadingSpinner="bubbles" [loadingText]="loading">
-        </ion-infinite-scroll-content>
-      </ion-infinite-scroll>
     </ion-row>
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)" #infinite>
+      <ion-infinite-scroll-content loadingSpinner="bubbles" [loadingText]="loading">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
 
 
 </ion-content>

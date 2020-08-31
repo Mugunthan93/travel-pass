@@ -1,6 +1,32 @@
 import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
 import { user } from '../models/user';
 import { managers } from './book/flight.state';
+import { UserService } from '../services/user/user.service';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import * as moment from 'moment';
+
+
+export interface updateuser {
+    name: string
+    lastname: string
+    email: string
+    designation: string
+    phone_number: string
+    pan_number: string
+    passport_no: string
+    passport_expiry: string
+    dob: string
+    address: string
+    gender: string
+}
+
+export interface updateresponse {
+    status: string,
+    message: string,
+    data: number[],
+    status_code: number
+}
 
 export class GetUser {
     static readonly type = '[User] GetUser';
@@ -11,7 +37,7 @@ export class GetUser {
 
 export class UpdateUser {
     static readonly type = '[User] UpdateUser';
-    constructor(public user : user) {
+    constructor(public user : updateuser) {
 
     }
 }
@@ -24,9 +50,15 @@ export class UpdateUser {
 export class UserState {
 
     constructor(
-        private store:Store
+        private store: Store,
+        private userService : UserService
     ) {
 
+    }
+
+    @Selector()
+    static getUser(state: user): user {
+        return state;
     }
 
     @Selector()
@@ -140,7 +172,23 @@ export class UserState {
     }
 
     @Action(UpdateUser)
-    updateUser(states: StateContext<user>, action: UpdateUser) {
-        states.patchState(action.user);
+    updateUser(states: StateContext<user>, action: UpdateUser): Observable<void> {
+
+        let currentUser: user = Object.assign(states.getState(), action.user);
+        let currentId: number = states.getState().id;
+
+        return this.userService.updateUser(currentId, currentUser)
+            .pipe(
+                map(
+                    (response: updateresponse) => {
+                        if (response.status_code == 200)
+                        {   
+                            states.patchState(currentUser);
+                            console.log("update succesfully");
+                        }
+                    }
+                )
+            )
+
     }
 }
