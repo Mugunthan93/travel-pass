@@ -17,6 +17,8 @@ import { SharedModule } from 'src/app/modules/shared/shared.module';
     DomesticPageRoutingModule,
     SharedModule
   ],
-  declarations: [DomesticPage]
+  declarations: [
+    DomesticPage
+  ]
 })
 export class DomesticPageModule {}

@@ -8,7 +8,6 @@ import { MultiCityPageRoutingModule } from './multi-city-routing.module';
 
 import { MultiCityPage } from './multi-city.page';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
-import { ResultSortingComponent } from 'src/app/components/shared/result-sorting/result-sorting.component';
 
 @NgModule({
   imports: [

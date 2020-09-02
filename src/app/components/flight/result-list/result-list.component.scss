@@ -2,8 +2,23 @@
 @import "../../../../style/base/color.scss";
 
 ion-content{
+
+    >app-result-sorting {
+        display: flex;
+        height: 48px;
+        position: fixed;
+        z-index: 10;
+
+        &.round-trip {
+            width: 75vw;
+        }
+    }
+
     >ion-row {
+        position: absolute;
+        top: 48px;
         width: 100%;
+
         >ion-col {
             @include flex-col-grid;
             min-height: -webkit-fill-available;
@@ -198,6 +213,7 @@ ion-content{
             }
         }
     }
+    
 }
 
 

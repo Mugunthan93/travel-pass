@@ -8,7 +8,6 @@ import { OneWayPageRoutingModule } from './one-way-routing.module';
 
 import { OneWayPage } from './one-way.page';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
-import { ResultSortingComponent } from 'src/app/components/shared/result-sorting/result-sorting.component';
 
 @NgModule({
   imports: [

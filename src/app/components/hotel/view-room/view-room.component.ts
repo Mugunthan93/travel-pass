@@ -62,14 +62,9 @@ export class ViewRoomComponent implements OnInit {
     this.selectedCategory$.subscribe(console.log);
   }
 
-  getImage(img : string[]) : string {
-    let randomNum: number = Math.floor(Math.random() * Math.floor(img.length));
-    return this.webView.convertFileSrc(img[randomNum]);
+  getImage(img : string) : string {
+    return this.webView.convertFileSrc(img);
   }
-
-  // addRoom(room: hotelDetail) {
-  //   this.store.dispatch(new AddRoom(room));
-  // }
 
   removeRoom(room: hotelDetail) {
     this.store.dispatch(new RemoveRoom(room));

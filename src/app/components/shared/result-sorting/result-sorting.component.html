@@ -1,7 +1,6 @@
 <ion-content>
 
   <ion-segment (ionChange)="SortChange($event)">
-
     <ion-segment-button class="sort" [value]="button" layout="icon-end" *ngFor="let button of (buttons$ | async)"
       (click)="SortBy(button)" 
       [ngClass]="selectedButton(button)">

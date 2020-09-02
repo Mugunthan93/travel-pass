@@ -6,12 +6,14 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CalendarModule } from 'ion2-calendar';
 import { PipeModule } from '../pipe.module';
+import { ResultSortingComponent } from 'src/app/components/shared/result-sorting/result-sorting.component';
 
 
 
 @NgModule({
   declarations: [
-    ResultListComponent
+    ResultListComponent,
+    ResultSortingComponent
   ],
   imports: [
     CommonModule,

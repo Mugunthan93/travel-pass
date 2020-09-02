@@ -46,7 +46,7 @@ export interface hotelDetail {
     ChildCount?: number
     DayRates?: dayRates[]
     HotelSupplements?: any[]
-    Images?: string[]
+    Images?: string
     Inclusion?: string[]
     InfoSource?: string
     IsPANMandatory?: boolean
@@ -635,9 +635,6 @@ export class HotelResultState{
     @Action(ViewHotel)
     viewHotel(states: StateContext<hotelresult>, action: ViewHotel) {
 
-        
-
-
         return of(action.hotel)
             .pipe(
                 skipWhile(hotel => {
@@ -732,7 +729,8 @@ export class HotelResultState{
 
                         hotel.HotelRoomsDetails.forEach(
                             (el) => {
-                                el.Images = hotel.HotelDetail.Images;
+                                let randomNum: number = Math.floor(Math.random() * Math.floor(hotel.HotelDetail.Images.length));
+                                el.Images = hotel.HotelDetail.Images[randomNum];
                             }
                         );
 
@@ -886,6 +884,37 @@ export class HotelResultState{
                             .pipe(
                                 map(
                                     (dir: DirectoryEntry) => {
+                                        // return dir.nativeURL;
+                                        return hotel;
+
+                                    }
+                                ),
+                                // flatMap(el => this.checkNoMedia(hotel,el))
+                            )
+
+                    }
+                )
+            )
+    }
+
+    checkNoMedia(hotel: hotellist, path: string): Observable<hotellist> {
+        console.log(path + '.nomedia');
+        return this.fileService.checkFile(path + '.nomedia', '.nomedia')
+            .pipe(
+                map(
+                    (fileExist) => {
+                        console.log(fileExist);
+                        return hotel;
+                    }
+                ),
+                catchError(
+                    (error: FileError) => {
+                        console.log(error);
+                        return this.fileService.createFile(path + '.nomedia', '.nomedia')
+                            .pipe(
+                                map(
+                                    (file: FileEntry) => {
+                                        console.log(file);
                                         return hotel;
                                     }
                                 )

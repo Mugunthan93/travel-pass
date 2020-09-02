@@ -7,9 +7,9 @@ import { flightData } from 'src/app/models/search/flight';
 import { resultObj, fareRule, FlightResultState, AddEmailDetail, RemoveEmailDetail, itinerarytrip } from 'src/app/stores/result/flight.state';
 import { FairRuleComponent } from '../fair-rule/fair-rule.component';
 import { Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { ResultState } from 'src/app/stores/result.state';
-import { map } from 'rxjs/operators';
+import { map, flatMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { FlightDetailsComponent } from '../flight-details/flight-details.component';
 import { sortButton, SortState } from 'src/app/stores/result/sort.state';
@@ -63,7 +63,20 @@ export class ResultListComponent implements OnInit, AfterViewInit {
     this.type = this.store.selectSnapshot(ResultState.getResultType);
     this.itiMail = this.store.select(FlightResultState.getItinerary);
 
-    this.sortBy$ = this.store.select(SortState.getFlightSortBy);
+    this.sortBy$ = of(this.flightType)
+      .pipe(
+        flatMap(
+          (type : string) => {
+            if (type == 'departure') {
+              return this.store.select(SortState.getDepartureSortBy);
+            }
+            else if (type == 'return') {
+              return this.store.select(SortState.getReturnSortBy);
+            }
+            return this.store.select(SortState.getFlightSortBy);
+          }
+        )
+      )
 
     this.changeType();
     this.flightList.forEach(

@@ -198,10 +198,10 @@ export class OneWaySearchState extends BaseFlightSearch{
             this.store.dispatch(new OneWayResponse(data.response));
             console.log(data);
 
-            this.store.dispatch(new ResultMode('flight'));
-            this.store.dispatch(new ResultType('one-way'));
+            states.dispatch(new ResultMode('flight'));
+            states.dispatch(new ResultType('one-way'));
             await loading.dismiss();
-            this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'one-way']));
+            states.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'one-way']));
 
         }
         catch (error) {

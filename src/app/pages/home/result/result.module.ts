@@ -57,7 +57,6 @@ import { BusSeatlayoutComponent } from 'src/app/components/bus/bus-seatlayout/bu
     BusFilterComponent,
     FairRuleComponent,
     EmailItineraryComponent,
-    ResultSortingComponent,
     FlightDetailsComponent,
     SelectedFlightComponent,
 
@@ -79,7 +78,6 @@ import { BusSeatlayoutComponent } from 'src/app/components/bus/bus-seatlayout/bu
     BusFilterComponent,
     FairRuleComponent,
     EmailItineraryComponent,
-    ResultSortingComponent,
     FlightDetailsComponent,
     SelectedFlightComponent,
 
