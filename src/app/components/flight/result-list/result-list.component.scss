@@ -8,8 +8,10 @@ ion-content{
         height: 48px;
         position: fixed;
         z-index: 10;
-
+        width: -webkit-fill-available;
+        
         &.round-trip {
+            top: 34px;
             width: 75vw;
         }
     }

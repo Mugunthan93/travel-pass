@@ -47,6 +47,7 @@ export class SortPipe implements PipeTransform {
           return this.dateSorting(a, b, property, order);
         }
       });
+
       return arr;
 
     }

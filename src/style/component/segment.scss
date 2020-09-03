@@ -143,3 +143,15 @@ ion-segment.points {
         }
     }
 }
+
+ion-segment.filghtfilter {
+    ion-segment-button {
+        --background:#{$white};
+        --background-checked:#{$white};
+
+        --color:#{$geraldine};
+        --color-checked:#{$geraldine};
+
+        --indicator-color:#{$geraldine};
+    }
+}

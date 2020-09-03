@@ -7,7 +7,6 @@ import { map } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { DomesticResultState, SelectedDepartureFlight, SelectedReturnFlight } from 'src/app/stores/result/flight/domestic.state';
 import { GetFareQuoteSSR } from 'src/app/stores/book/flight/domestic.state';
-import { ResultState } from 'src/app/stores/result.state';
 
 @Component({
   selector: 'app-domestic',

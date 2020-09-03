@@ -1,4 +1,12 @@
 
+
+ion-header{
+    ion-title{
+        padding: 0px !important;
+    }
+}
+
+
 ion-content{
     >form{
         >ion-grid{
