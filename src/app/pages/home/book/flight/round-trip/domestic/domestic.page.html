@@ -19,7 +19,7 @@
             <ion-img src="../../../../../../assets/AirlineLogo/{{flight.airline.code}}.gif"></ion-img>
             <ion-row>
               <ion-label class="bold">{{flight.airline.name}}</ion-label>
-              <ion-text class="large bold">{{flight.airline.code}} - {{flight.airline.number}}</ion-text>
+              <ion-label class="large bold">{{flight.airline.code}} - {{flight.airline.number}}</ion-label>
             </ion-row>
           </ion-row>
           <ion-row slot="end">
@@ -28,21 +28,21 @@
         </ion-item>
         <ion-row>
           <ion-col>
-            <ion-text class="bold">({{flight.origin.code}}) {{flight.origin.date  | date : 'HH:mm'}}</ion-text>
-            <ion-text class="bold">{{flight.origin.date | date : 'EEE,d LLL' | titlecase}}</ion-text>
-            <ion-text class="bold">{{flight.origin.name}}</ion-text>
-            <ion-text class="bold">Terminal {{flight.origin.terminal}}</ion-text>
+            <ion-label class="bold">({{flight.origin.code}}) {{flight.origin.date  | date : 'HH:mm'}}</ion-label>
+            <ion-label class="bold">{{flight.origin.date | date : 'EEE,d LLL' | titlecase}}</ion-label>
+            <ion-label class="bold">{{flight.origin.name}}</ion-label>
+            <ion-label class="bold">Terminal {{flight.origin.terminal}}</ion-label>
           </ion-col>
           <ion-col>
             <ion-icon size="large" src="../../../../../../assets/icons/passage-of-time.svg"></ion-icon>
-            <ion-text class="bold">{{flight.duration}}</ion-text>
+            <ion-label class="bold">{{flight.duration}}</ion-label>
           </ion-col>
           <ion-col>
-            <ion-text class="bold">({{flight.destination.code}}) {{flight.destination.date  | date : 'HH:mm'}}
-            </ion-text>
-            <ion-text class="bold">{{flight.destination.date | date : 'EEE,d LLL' | titlecase}}</ion-text>
-            <ion-text class="bold">{{flight.destination.name}}</ion-text>
-            <ion-text class="bold">Terminal {{flight.destination.terminal}}</ion-text>
+            <ion-label class="bold">({{flight.destination.code}}) {{flight.destination.date  | date : 'HH:mm'}}
+            </ion-label>
+            <ion-label class="bold">{{flight.destination.date | date : 'EEE,d LLL' | titlecase}}</ion-label>
+            <ion-label class="bold">{{flight.destination.name}}</ion-label>
+            <ion-label class="bold">Terminal {{flight.destination.terminal}}</ion-label>
           </ion-col>
         </ion-row>
       </div>
@@ -66,7 +66,7 @@
             <ion-img src="../../../../../../assets/AirlineLogo/{{flight.airline.code}}.gif"></ion-img>
             <ion-row>
               <ion-label class="bold">{{flight.airline.name}}</ion-label>
-              <ion-text class="large bold">{{flight.airline.code}} - {{flight.airline.number}}</ion-text>
+              <ion-label class="large bold">{{flight.airline.code}} - {{flight.airline.number}}</ion-label>
             </ion-row>
           </ion-row>
           <ion-row slot="end">
@@ -75,21 +75,21 @@
         </ion-item>
         <ion-row>
           <ion-col>
-            <ion-text class="bold">({{flight.origin.code}}) {{flight.origin.date  | date : 'HH:mm'}}</ion-text>
-            <ion-text class="bold">{{flight.origin.date | date : 'EEE,d LLL' | titlecase}}</ion-text>
-            <ion-text class="bold">{{flight.origin.name}}</ion-text>
-            <ion-text class="bold">Terminal {{flight.origin.terminal}}</ion-text>
+            <ion-label class="bold">({{flight.origin.code}}) {{flight.origin.date  | date : 'HH:mm'}}</ion-label>
+            <ion-label class="bold">{{flight.origin.date | date : 'EEE,d LLL' | titlecase}}</ion-label>
+            <ion-label class="bold">{{flight.origin.name}}</ion-label>
+            <ion-label class="bold">Terminal {{flight.origin.terminal}}</ion-label>
           </ion-col>
           <ion-col>
             <ion-icon size="large" src="../../../../../../assets/icons/passage-of-time.svg"></ion-icon>
-            <ion-text class="bold">{{flight.duration}}</ion-text>
+            <ion-label class="bold">{{flight.duration}}</ion-label>
           </ion-col>
           <ion-col>
-            <ion-text class="bold">({{flight.destination.code}}) {{flight.destination.date  | date : 'HH:mm'}}
-            </ion-text>
-            <ion-text class="bold">{{flight.destination.date | date : 'EEE,d LLL' | titlecase}}</ion-text>
-            <ion-text class="bold">{{flight.destination.name}}</ion-text>
-            <ion-text class="bold">Terminal {{flight.destination.terminal}}</ion-text>
+            <ion-label class="bold">({{flight.destination.code}}) {{flight.destination.date  | date : 'HH:mm'}}
+            </ion-label>
+            <ion-label class="bold">{{flight.destination.date | date : 'EEE,d LLL' | titlecase}}</ion-label>
+            <ion-label class="bold">{{flight.destination.name}}</ion-label>
+            <ion-label class="bold">Terminal {{flight.destination.terminal}}</ion-label>
           </ion-col>
         </ion-row>
       </div>
@@ -100,22 +100,22 @@
     <ion-label>{{adult}} Adult</ion-label>
   </ion-row>
 
-  <ion-segment (ionChange)="changeSummary($event)" value="onward">
+  <ion-segment (ionChange)="changeSummary($event)" value="onward" class="round-trip-book">
     <ion-segment-button value="onward">
-      <ion-label>
+      <ion-label class="bold">
         Onward
       </ion-label>
     </ion-segment-button>
     <ion-segment-button value="return">
-      <ion-label>
+      <ion-label class="bold">
         Return
       </ion-label>
     </ion-segment-button>
   </ion-segment>
 
-  <ion-list>
+  <ion-list class="fare">
     <ion-list-header>
-      <ion-label>FARE SUMMARY</ion-label>
+      <ion-label class="bold large">FARE SUMMARY</ion-label>
     </ion-list-header>
     <ion-item>
       <ion-label slot="start">Base Fare</ion-label>
@@ -131,9 +131,9 @@
     </ion-item>
   </ion-list>
 
-  <ion-list>
+  <ion-list class="fare">
     <ion-list-header>
-      <ion-label>TOTAL SUMMARY</ion-label>
+      <ion-label class="bold large">TOTAL SUMMARY</ion-label>
     </ion-list-header>
 
     <!-- service charge -->
@@ -221,7 +221,7 @@
 
   <ion-item>
     <ion-label slot="start">{{'grand total' | uppercase}}</ion-label>
-    <ion-text slot="end" style="text-align: end"> {{ flightSummary.total.total | currency : 'INR'}}</ion-text>
+    <ion-label class="bold large" slot="end" style="text-align: end"> {{ flightSummary.total.total | currency : 'INR'}}</ion-label>
   </ion-item>
 
   <ion-list class="cancel-radio">

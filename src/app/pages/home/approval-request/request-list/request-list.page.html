@@ -1,3 +1,5 @@
+
+
 <ion-content *ngIf="!(allBookings | async)">
   <ion-card *ngFor="let newBooking of [1,2,3,4,5,6,7,8,9,10]">
     <ion-card-content>
@@ -49,21 +51,21 @@
     <ion-card-content>
       <ion-row>
         <ion-row>
-          <ion-text class="bold">{{allBooking.trip_requests.Segments[0].OriginName}}</ion-text>
+          <ion-label class="large">{{allBooking.trip_requests.Segments[0].OriginName}}</ion-label>
           <ion-label class="bold">From</ion-label>
         </ion-row>
         <ion-row>
-          <ion-text class="bold">{{tripType(allBooking)}}</ion-text>
+          <ion-label class="large">{{tripType(allBooking)}}</ion-label>
         </ion-row>
         <ion-row>
-          <ion-text class="bold">{{allBooking.trip_requests.Segments[0].DestinationName}}</ion-text>
+          <ion-label class="large">{{allBooking.trip_requests.Segments[0].DestinationName}}</ion-label>
           <ion-label class="bold">To</ion-label>
         </ion-row>
       </ion-row>
       <ion-row>
         <ion-row>
-          <ion-label class="medium bold">{{allBooking.travel_date | date : 'd'}}th</ion-label>
-          <ion-label class="medium bold">{{allBooking.travel_date | date : 'LLL, yyyy'}}</ion-label>
+          <ion-label class="medium bold">{{allBooking.updatedAt | date : 'd'}}th</ion-label>
+          <ion-label class="medium bold">{{allBooking.updatedAt | date : 'LLL, yyyy'}}</ion-label>
         </ion-row>
         <ion-chip>
           <ion-label class="medium bold">{{allBooking.passenger_details.fare_response.published_fare | currency: 'INR'}}
@@ -75,8 +77,8 @@
           <ion-label class="medium bold">Approve</ion-label>
         </ion-button>
         <ion-text *ngIf="allBooking.status == 'open' || allBooking.status == 'booked'"
-          class="large bolder booked">Approved</ion-text>
-        <ion-text class="large bolder rej" *ngIf="allBooking.status == 'rej'">Rejected</ion-text>
+          class="large bold booked">Approved</ion-text>
+        <ion-text class="large bold rej" *ngIf="allBooking.status == 'rej'">Rejected</ion-text>
       </ion-row>
     </ion-card-content>
   </ion-card>

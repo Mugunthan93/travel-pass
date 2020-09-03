@@ -45,34 +45,34 @@
   </ion-card>
 </ion-content>
 
-<ion-content>
-  <ion-card *ngFor="let historyBooking of (historyBookings | async | sort : 'id' : 'des')">
+<ion-content class="data">
+  <ion-card *ngFor="let historyBooking of (historyBookings | async | sort : 'id' : 'asc')">
     <ion-card-content>
       <ion-row>
         <ion-row>
-          <ion-text>{{historyBooking.trip_requests.Segments[0].OriginName}}</ion-text>
-          <ion-label>From</ion-label>
+          <ion-label class="large">{{historyBooking.trip_requests.Segments[0].OriginName}}</ion-label>
+          <ion-label class="bold">From</ion-label>
         </ion-row>
         <ion-row>
-          <ion-text>{{tripType(historyBooking)}}</ion-text>
+          <ion-label class="large">{{tripType(historyBooking)}}</ion-label>
         </ion-row>
         <ion-row>
-          <ion-text>{{historyBooking.trip_requests.Segments[0].DestinationName}}</ion-text>
-          <ion-label>To</ion-label>
+          <ion-label class="large">{{historyBooking.trip_requests.Segments[0].DestinationName}}</ion-label>
+          <ion-label class="bold">To</ion-label>
         </ion-row>
       </ion-row>
       <ion-row>
         <ion-row>
-          <ion-text class="medium bold">{{historyBooking.travel_date | date : 'd'}}th</ion-text>
-          <ion-text class="medium bold">{{historyBooking.travel_date | date : 'LLL'}}</ion-text>
+          <ion-label class="medium bold">{{historyBooking.updatedAt | date : 'd'}}th</ion-label>
+          <ion-label class="medium bold">{{historyBooking.updatedAt | date : 'LLL'}}</ion-label>
         </ion-row>
         <ion-chip>
-          <ion-text class="medium bold">
-            {{historyBooking.passenger_details.fare_response.published_fare | currency: 'INR'}}</ion-text>
+          <ion-label class="medium bold">
+            {{historyBooking.passenger_details.fare_response.published_fare | currency: 'INR'}}</ion-label>
         </ion-chip>
       </ion-row>
       <ion-row *ngFor="let pnr of getPNR(historyBooking.passenger_details.PNR)">
-        <ion-text (click)="viewFile(pnr)">View</ion-text>
+        <ion-label class="medium bold" (click)="viewFile(pnr)">View</ion-label>
         <ion-button (click)="downloadTicket(pnr)">
           <ion-label class="medium bold">Download</ion-label>
         </ion-button>

@@ -69,3 +69,17 @@ ion-content{
     
     }
 }
+
+ion-footer{
+    ion-toolabr{
+        ion-row{
+            ion-row:last-child{
+                ion-button{
+                    ion-label{
+                        padding:0px 8px;
+                    }
+                }
+            }
+        }
+    }
+}

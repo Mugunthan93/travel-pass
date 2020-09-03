@@ -68,6 +68,7 @@ export class ApprovalState {
         return state.selectedRequest;
     }
     
+    //getting approve list
     @Action(ApprovalRequest)
     async approveRequest(states: StateContext<Approval>, action: ApprovalRequest) {
         states.patchState({
@@ -107,6 +108,7 @@ export class ApprovalState {
 
     }
 
+    //getting selected approve req
     @Action(GetApproveRequest)
     async getApproveRequest(states: StateContext<Approval>, action: GetApproveRequest) {
         const modal = await this.modalCtrl.create({
@@ -130,6 +132,7 @@ export class ApprovalState {
 
     }
 
+    //accept req
     @Action(AcceptRequest)
     async acceptRequest(states: StateContext<Approval>) {
         const successAlert = await this.alertCtrl.create({
@@ -138,7 +141,7 @@ export class ApprovalState {
             buttons: [{
                 text: 'OK',
                 handler: () => {
-                    this.store.dispatch(new Navigate(['/', 'home', 'approval-request', states.getState().type, 'request-list']));
+                    this.store.dispatch(new ApprovalRequest('flight'));
                     successAlert.dismiss();
                 }
             }]
@@ -193,6 +196,7 @@ export class ApprovalState {
         }
     }
 
+    //decline req
     @Action(DeclineRequest)
     async declineRequest(states: StateContext<Approval>) {
 
@@ -202,7 +206,7 @@ export class ApprovalState {
             buttons: [{
                 text: 'OK',
                 handler: () => {
-                    this.store.dispatch(new Navigate(['/', 'home', 'approval-request', states.getState().type, 'request-list']));
+                    this.store.dispatch(new ApprovalRequest('flight'));
                     successAlert.dismiss();
                 }
             }]

@@ -3,11 +3,11 @@
 
 
 ion-content{
+
+
     >mat-accordion {
         @include flex-col-grid;
-        width: 100%;
-        margin-top: 5px;
-        margin-bottom: 5px;
+        margin: 5px;
         height: auto;
 
         mat-expansion-panel {
@@ -17,6 +17,7 @@ ion-content{
             >mat-expansion-panel-header {
                 padding-left: 10px;
                 padding-right: 10px;
+                border: 2px solid #{$suva-grey};
 
                 >::ng-deep span {
                     >ion-row {
@@ -86,6 +87,16 @@ ion-content{
 
             ::ng-deep .mat-expansion-indicator {
                 color:#{$geraldine};
+            }
+        }
+    }
+
+    ion-card{
+        ion-card-content{
+            ion-item{
+                ion-label{
+                    min-width: max-content;
+                }
             }
         }
     }

@@ -46,39 +46,39 @@
 </ion-content>
 
 <ion-content>
-  <ion-card *ngFor="let newBooking of (newBookings$ | async | sort : 'id' : 'des')">
+  <ion-card *ngFor="let newBooking of (newBookings$ | async | sort : 'id' : 'asc')">
     <ion-card-content>
       <ion-row>
         <ion-row>
-          <ion-text>
+          <ion-label class="large">
             {{newBooking.trip_requests.Segments[0] ? newBooking.trip_requests.Segments[0].OriginName : ''}}
-          </ion-text>
-          <ion-label>From</ion-label>
+          </ion-label>
+          <ion-label class="bold">From</ion-label>
         </ion-row>
         <ion-row>
-          <ion-text>{{tripType(newBooking)}}</ion-text>
+          <ion-label class="large">{{tripType(newBooking)}}</ion-label>
         </ion-row>
         <ion-row>
-          <ion-text>
+          <ion-label class="large">
             {{newBooking.trip_requests.Segments[0] ? newBooking.trip_requests.Segments[0].DestinationName : ''}}
-          </ion-text>
-          <ion-label>To</ion-label>
+          </ion-label>
+          <ion-label class="bold">To</ion-label>
         </ion-row>
       </ion-row>
       <ion-row>
         <ion-row>
-          <ion-text class="medium bold">{{newBooking.travel_date | date : 'd'}}th</ion-text>
-          <ion-text class="medium bold">{{newBooking.travel_date | date : 'LLL'}}</ion-text>
+          <ion-label class="medium bold">{{newBooking.updatedAt | date : 'd'}}th</ion-label>
+          <ion-label class="medium bold">{{newBooking.updatedAt | date : 'LLL'}}</ion-label>
         </ion-row>
         <ion-chip>
-          <ion-text class="medium bold">{{newBooking.passenger_details.fare_response.published_fare | currency: 'INR'}}
-          </ion-text>
+          <ion-label class="medium bold">{{newBooking.passenger_details.fare_response.published_fare | currency: 'INR'}}
+          </ion-label>
         </ion-chip>
       </ion-row>
       <ion-row>
-        <ion-text *ngIf="newBooking.status=='pending'" class="pending">Waiting For Approval</ion-text>
-        <ion-text *ngIf="newBooking.status == 'open'" class="open">Approved</ion-text>
-        <ion-text *ngIf="newBooking.status == 'rej'" class="rej">Rejected</ion-text>
+        <ion-label *ngIf="newBooking.status=='pending'" class="medium bold pending">Waiting For Approval</ion-label>
+        <ion-label *ngIf="newBooking.status == 'open'" class="medium bold open">Approved</ion-label>
+        <ion-label *ngIf="newBooking.status == 'rej'" class="medium bold rej">Rejected</ion-label>
       </ion-row>
     </ion-card-content>
   </ion-card>

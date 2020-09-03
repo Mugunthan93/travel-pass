@@ -3,6 +3,11 @@
 
 
 ion-content {
+
+    &.data{
+        --offset-top: 135px;
+    }
+    
     >ion-card {
         min-height: fit-content;
 
@@ -33,6 +38,12 @@ ion-content {
             >ion-row:last-child {
                 justify-content: space-between;
                 align-items: flex-end;
+
+                ion-button{
+                    ion-label{
+                        padding: 0px 8px;
+                    }
+                }
             }
         }
     }
