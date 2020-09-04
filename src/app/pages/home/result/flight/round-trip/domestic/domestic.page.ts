@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, QueryList } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, QueryList, OnDestroy } from '@angular/core';
 import { Gesture, GestureDetail } from '@ionic/core';
 import { AnimationController, Animation, GestureController, ModalController } from '@ionic/angular';
 import { resultObj } from 'src/app/stores/result/flight.state';
@@ -13,13 +13,15 @@ import { GetFareQuoteSSR } from 'src/app/stores/book/flight/domestic.state';
   templateUrl: './domestic.page.html',
   styleUrls: ['./domestic.page.scss'],
 })
-export class DomesticPage implements OnInit {
+export class DomesticPage implements OnInit,OnDestroy {
 
   departList$: Observable<resultObj[]>;
   returnList$: Observable<resultObj[]>;
 
   selectedDepartureFlight$: Observable<resultObj>;
   selectedReturnFlight$: Observable<resultObj>;
+
+  animationSub: Subscription;
 
   constructor(
     public animationCtrl: AnimationController,
@@ -39,8 +41,12 @@ export class DomesticPage implements OnInit {
     this.selectedReturnFlight$ = this.store.select(DomesticResultState.getSelectedReturnFlight);
 
     let animation: Observable<boolean> = concat(this.departList$, this.returnList$).pipe(map(el => true));
-    let animationSub: Subscription = animation.subscribe((res: boolean) => res ? this.animation() : null);
+    this.animationSub = animation.subscribe((res: boolean) => res ? this.animation() : null);
 
+  }
+
+  ngOnDestroy(): void {
+    this.animationSub.unsubscribe();
   }
   
   //animation

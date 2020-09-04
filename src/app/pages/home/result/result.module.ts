@@ -7,7 +7,6 @@ import { IonicModule } from '@ionic/angular';
 import { ResultPageRoutingModule } from './result-routing.module';
 
 import { ResultPage } from './result.page';
-import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
 import { FlightBaggageComponent } from 'src/app/components/flight/flight-baggage/flight-baggage.component';
 import { HotelFilterComponent } from 'src/app/components/hotel/hotel-filter/hotel-filter.component';
 import { LocationComponent } from 'src/app/components/hotel/location/location.component';
@@ -17,7 +16,6 @@ import { environment } from 'src/environments/environment';
 import { BusFilterComponent } from 'src/app/components/bus/bus-filter/bus-filter.component';
 import { FairRuleComponent } from 'src/app/components/flight/fair-rule/fair-rule.component';
 import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
-import { ResultSortingComponent } from 'src/app/components/shared/result-sorting/result-sorting.component';
 import { PipeModule } from 'src/app/modules/pipe.module';
 import { FlightDetailsComponent } from 'src/app/components/flight/flight-details/flight-details.component';
 import { SelectedFlightComponent } from 'src/app/components/flight/selected-flight/selected-flight.component';
@@ -29,6 +27,7 @@ import { BusPhotoComponent } from 'src/app/components/bus/bus-photo/bus-photo.co
 import { BusAmentiesComponent } from 'src/app/components/bus/bus-amenties/bus-amenties.component';
 import { BusPolicyComponent } from 'src/app/components/bus/bus-policy/bus-policy.component';
 import { BusSeatlayoutComponent } from 'src/app/components/bus/bus-seatlayout/bus-seatlayout.component';
+import { FlightFilterComponent } from 'src/app/components/flight/flight-filter/flight-filter.component';
 
 
 @NgModule({
@@ -49,7 +48,7 @@ import { BusSeatlayoutComponent } from 'src/app/components/bus/bus-seatlayout/bu
   ],
   declarations: [
     ResultPage,
-    TripFilterComponent,
+    FlightFilterComponent,
     FlightBaggageComponent,
     HotelFilterComponent,
     LocationComponent,
@@ -70,7 +69,7 @@ import { BusSeatlayoutComponent } from 'src/app/components/bus/bus-seatlayout/bu
     BusSeatlayoutComponent
   ],
   entryComponents: [
-    TripFilterComponent,
+    FlightFilterComponent,
     FlightBaggageComponent,
     HotelFilterComponent,
     LocationComponent,

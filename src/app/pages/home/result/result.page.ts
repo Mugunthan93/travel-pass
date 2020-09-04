@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { TripFilterComponent } from 'src/app/components/flight/trip-filter/trip-filter.component';
 import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 import { Observable } from 'rxjs';
 import { FlightResultState } from 'src/app/stores/result/flight.state';
@@ -13,6 +12,7 @@ import { HotelResultState } from 'src/app/stores/result/hotel.state';
 import { busform, BusSearchState } from 'src/app/stores/search/bus.state';
 import { HotelFilterComponent } from 'src/app/components/hotel/hotel-filter/hotel-filter.component';
 import { BusFilterComponent } from 'src/app/components/bus/bus-filter/bus-filter.component';
+import { FlightFilterComponent } from 'src/app/components/flight/flight-filter/flight-filter.component';
 
 @Component({
   selector: 'app-result',
@@ -74,7 +74,7 @@ export class ResultPage implements OnInit {
 
   async flightFilter() {
     const modal = await this.modalCtrl.create({
-      component: TripFilterComponent
+      component: FlightFilterComponent
     });
 
     return modal.present();

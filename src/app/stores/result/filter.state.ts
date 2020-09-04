@@ -1,5 +1,5 @@
 import { State, Selector, Action, StateContext } from '@ngxs/store';
-import { resultObj, flight } from './flight.state';
+import { resultObj } from './flight.state';
 import * as _ from 'lodash';
 
 
@@ -27,6 +27,7 @@ export interface airlineName {
     name: string,
     value:boolean
 }
+
 
 export class GetAirlines {
     static readonly type = '[Filter] GetAirlines';
