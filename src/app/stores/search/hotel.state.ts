@@ -120,7 +120,7 @@ export interface hotelresultlist {
     StarRating: number
     SupplierHotelCodes: supplierhotelcodes[]
     Facilities?: string[]
-    Images? : string[]
+    Images? : string
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -538,6 +538,12 @@ export class HotelSearchState {
             ReviewScore: null,
             RoomGuests: currentForm.room
         }
+        let staticpay: staticpayload = {
+            CityId: currentForm.city.cityid.toString(),
+            ClientId: "ApiIntegrationNew",
+            EndUserIp: "192.168.0.105",
+            IsCompactdata : true
+        }
         
         states.patchState({
             formData: action.hotelForm,
@@ -545,21 +551,35 @@ export class HotelSearchState {
         });
 
         let hotelResponse$ = this.hotelService.searchHotel(payload);
+        let dumpResponse$ = this.hotelService.getStaticData(staticpay);
 
         return loadingPresent$
             .pipe(
                 flatMap(
                     () => {
-                        return hotelResponse$
+                        return forkJoin([hotelResponse$, dumpResponse$])
                     }
                 ),
                 flatMap(
                     (response) => {
-                        let hotelresult: HTTPResponse = response;
-                        // let list2: any[] = JSON.parse(dumpresponse.data).ArrayOfBasicPropertyInfo.BasicPropertyInfo;
-                        // let list3: hotelresultlist[] = list1.map(el => _.pick(el, ["HotelCode", "Price", "ResultIndex", "StarRating", "SupplierHotelCodes"]));
-                        // let list4: staticresponselist[] = list2.map(el => _.pick(el, ["Address", "Attributes", "HotelName", "TBOHotelCode","VendorMessages"]));
+                        console.log(response);
+                        let hotelresult: HTTPResponse = response[0];
+                        let dumpresponse: HTTPResponse = response[1];
+
+                        let list1: any[] = JSON.parse(hotelresult.data).response.HotelResults.filter(el => el.IsTBOMapped);
+                        let list2: any[] = JSON.parse(dumpresponse.data).ArrayOfBasicPropertyInfo.BasicPropertyInfo;
+                        let list3: hotelresultlist[] = list1.map(el => _.pick(el, ["HotelCode", "Price", "ResultIndex", "StarRating", "SupplierHotelCodes"]));
+                        let list4: staticresponselist[] = list2.map(el => _.pick(el, ["Address", "Attributes", "HotelName", "TBOHotelCode","VendorMessages"]));
+                        let list5: (staticresponselist & hotelresultlist)[] = list3
+                            .map(
+                                (dump) => {
+                                    let result1 = list4.find(result => result.TBOHotelCode == dump.HotelCode);
+                                    return _.merge(dump, result1);
+                                }
+                            );
                         let list6: hotelresponse = JSON.parse(hotelresult.data).response;
+                        list6.HotelResults = list5;
+
                         states.dispatch(new HotelResponse(list6));
                         return loadingDismiss$
                     }
@@ -579,6 +599,4 @@ export class HotelSearchState {
             )
 
     }
-
-
 }

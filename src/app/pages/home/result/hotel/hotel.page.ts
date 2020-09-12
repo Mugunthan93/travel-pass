@@ -1,15 +1,23 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, SecurityContext } from '@angular/core';
 import { matExpansionAnimations } from '@angular/material/expansion';
 import { ModalController, IonInfiniteScroll } from '@ionic/angular';
 import { HotelFilterComponent } from 'src/app/components/hotel/hotel-filter/hotel-filter.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { hotellist, HotelResultState, ViewHotel, AddHotels } from 'src/app/stores/result/hotel.state';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Store } from '@ngxs/store';
 import * as _ from 'lodash';
 import { ViewHotelComponent } from 'src/app/components/hotel/view-hotel/view-hotel.component';
 import { sortButton, SortState } from 'src/app/stores/result/sort.state';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { staticresponselist, hotelresultlist, HotelSearchState, staticpayload, paragraph, subsection } from 'src/app/stores/search/hotel.state';
+import { HotelService } from 'src/app/services/hotel/hotel.service';
+import { HTTPResponse } from '@ionic-native/http/ngx';
+import { map, mergeMap, flatMap, catchError } from 'rxjs/operators';
+import { FileService } from 'src/app/services/file/file.service';
+import { File, FileEntry, FileError } from '@ionic-native/file/ngx';
+import { FileTransferError } from '@ionic-native/file-transfer/ngx';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-hotel',
@@ -22,22 +30,26 @@ export class HotelPage implements OnInit {
   @ViewChild('infinite', { static: true }) infinite: IonInfiniteScroll;
   skeletonHotel: number[] = [1,2,3,4,5,6,7,8];
 
-  hotelList$: Observable<hotellist[]>;
+  hotelList$: Observable<(staticresponselist & hotelresultlist)[]>;
   limit$: Observable<number>;
   isLoading: boolean = false;
   loading: string = "Loading Hotels";
-
   sortBy$: Observable<sortButton>;
+
+  length: number;
 
   constructor(
     public modalCtrl: ModalController,
     public router: Router,
     public activatedRoute: ActivatedRoute,
     private store: Store,
-    private webview : WebView
+    private webview: WebView,
+    private domSantizier : DomSanitizer
   ) { }
   
   ngOnInit() {
+    this.length = this.store.selectSnapshot(HotelResultState.getHotelLength);
+
     this.hotelList$ = this.store.select(HotelResultState.getHotelList);
     this.limit$ = this.store.select(HotelResultState.getLimit);
     this.sortBy$ = this.store.select(SortState.getHotelSortBy);
@@ -97,20 +109,37 @@ export class HotelPage implements OnInit {
   loadData(evt: any) {
     this.store.dispatch(new AddHotels())
       .subscribe({
-        complete: async () => {
-          await evt.target.complete();
+        complete: () => {
+          return this.limit$
+            .pipe(
+              map(
+                (limit : number) => {
+                  evt.target.complete();
+                  if (this.length < limit) {
+                    evt.target.disabled = true;
+                  }
+                }
+              )
+            );
         }
       });
   }
 
-  loadImg(hotel: hotellist) {
-    if (hotel.Images) {
-      return this.webview.convertFileSrc(hotel.Images[0]);
-    }
-    else {
-      return hotel.HotelPicture;
-    }
+  loadImg(hotel: (staticresponselist & hotelresultlist)): string {
+    return this.webview.convertFileSrc(hotel.Images);
   }
 
+  hotelDesc(hotel: (staticresponselist & hotelresultlist)) {
+    const fairRuleTemplate = hotel.VendorMessages.VendorMessage.map(
+      (el) => {
+        if (el.InfoType == '1') {
+          return (el.SubSection as unknown as subsection).Paragraph.Text.$t;
+        }
+      }
+    );
+    let sanitizedTemplate = this.domSantizier.sanitize(SecurityContext.HTML, fairRuleTemplate);
+    sanitizedTemplate = _.trim(sanitizedTemplate,',,,');
+    return sanitizedTemplate
+  }
   
 }

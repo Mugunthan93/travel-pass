@@ -13,9 +13,10 @@ import { FileService } from 'src/app/services/file/file.service';
 import { AddBlockRoom } from '../book/hotel.state';
 import { Navigate } from '@ngxs/router-plugin';
 import { BookMode } from '../book.state';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
 
 export interface hotelresult {
-    hotelresponseList: hotelresponselist[]
+    hotelresponseList: (staticresponselist & hotelresultlist)[]
     hotelList: (staticresponselist & hotelresultlist)[]
     traceId: string
     selectedHotel: selectedHotel
@@ -140,7 +141,7 @@ export interface hotelresponse {
         ErrorCode: number
         ErrorMessage: string
     }
-    HotelResults: hotelresponselist[]
+    HotelResults: (staticresponselist & hotelresultlist)[]
     NoOfRooms: number
     PreferredCurrency: string
     ResponseStatus: number
@@ -355,7 +356,8 @@ export class GetImage {
 export class HotelResultState{
 
     constructor(
-        private store : Store,
+        private store: Store,
+        private webView : WebView,
         private file : File,
         private hotelService: HotelService,
         private fileService : FileService,
@@ -372,7 +374,12 @@ export class HotelResultState{
     }
 
     @Selector()
-    static getResponselList(state: hotelresult): hotelresponselist[]  {
+    static getHotelLength(state: hotelresult): number {
+        return state.hotelList.length;
+    }
+
+    @Selector()
+    static getResponselList(state: hotelresult): (staticresponselist & hotelresultlist)[]  {
         return state.hotelresponseList;
     }
 
@@ -441,225 +448,22 @@ export class HotelResultState{
     @Action(HotelResponse)
     getHotelResponse(states: StateContext<hotelresult>, action: HotelResponse) {
 
-        let priceSortedResult: hotelresponselist[] = _.sortBy(action.response.HotelResults, (o) => {
+        let priceSortedResult: (staticresponselist & hotelresultlist)[] = _.sortBy(action.response.HotelResults, (o) => {
             return o.Price.PublishedPrice;
         });
 
-        states.patchState({
-            hotelresponseList: priceSortedResult,
-            traceId : action.response.TraceId
-        });
-
-        // return from(priceSortedResult)
-        //     .pipe(  
-        //         take(states.getState().listlimit),
-        //         mergeMap(
-        //             (result: hotelresponselist) => {
-        //                 let currentCity: string = this.store.selectSnapshot(HotelSearchState.getCityId);
-        //                 let staticPay: staticpayload = {
-        //                     CityId: currentCity,
-        //                     HotelId: result.HotelCode,
-        //                     ClientId: "ApiIntegrationNew",
-        //                     EndUserIp: "192.168.0.105"
-        //                 }
-        //                 let dumpResponse$ = this.hotelService.getStaticData(staticPay);
-        //                 return dumpResponse$.pipe(
-        //                     map(
-        //                         (response: HTTPResponse) => {
-
-        //                             let hotelDetail: any = JSON.parse(response.data).ArrayOfBasicPropertyInfo.BasicPropertyInfo;
-
-        //                             let resultDetail: hotelresultlist = _.pick(result, ["HotelCode", "Price", "ResultIndex", "StarRating", "SupplierHotelCodes"]);
-        //                             let pickedDetail: staticresponselist = _.pick(hotelDetail, ["Address", "Attributes", "HotelName", "TBOHotelCode", "VendorMessages"]);
-
-        //                             let allDetail: (hotelresultlist & staticresponselist) = _.merge(resultDetail, pickedDetail);
-
-        //                             allDetail.Facilities = _.uniq(_.compact(pickedDetail.VendorMessages.VendorMessage.flatMap(
-        //                                 (vendor) => {
-        //                                     if (vendor.InfoType == "12") {
-        //                                         if (Array.isArray(vendor.SubSection)) {
-        //                                             return vendor.SubSection.flatMap(
-        //                                                 (section) => {
-        //                                                     return (section.Paragraph as paragraph).Text.$t;
-        //                                                 }
-        //                                             );
-        //                                         }
-        //                                     }
-        //                                 }
-        //                             )));
-
-        //                             allDetail.Images = _.uniq(_.compact(pickedDetail.VendorMessages.VendorMessage.flatMap(
-        //                                 (vendor) => {
-        //                                     if (vendor.InfoType == "23") {
-        //                                         if (Array.isArray(vendor.SubSection)) {
-        //                                             return vendor.SubSection.flatMap(
-        //                                                 (section) => {
-        //                                                     if (Array.isArray(section.Paragraph)) {
-        //                                                         return section.Paragraph.flatMap(
-        //                                                             (para) => {
-        //                                                                 return para.URL;
-        //                                                             }
-        //                                                         );
-        //                                                     }
-        //                                                     else {
-        //                                                         return (section.Paragraph as paragraph).URL;
-        //                                                     }
-        //                                                 }
-        //                                             );
-        //                                         }
-        //                                         else {
-        //                                             return (vendor.SubSection as subsection).Paragraph.URL;
-        //                                         }
-        //                                     }
-        //                                 }
-        //                             )));
-
-        //                             allDetail.Images = allDetail.Images.filter(el => _.isString(el));
-        //                             console.log(allDetail);
-
-        //                             return allDetail;
-        //                         }
-        //                     ),
-        //                     flatMap((el) => {
-        //                         if (el.Images.length > 1) {
-        //                             return this.getImages(el);
-        //                         }
-        //                         return of(el);
-        //                     }),
-        //                     map(
-        //                         (detail) => {
-        //                             let index = _.findIndex(priceSortedResult, result);
-        //                             priceSortedResult.splice(index, 1, detail);
-        //                         }
-        //                     )
-        //                 );
-        //             }
-        //         ),
-        //         finalize(
-        //             () => {
-        //                 console.log(priceSortedResult);
-                        
-        //             }
-        //         )
-        //     )
-    }
-        
-
-    @Action(DownloadResult)
-    downloadresult(states: StateContext<hotelresult>, action: DownloadResult) : Observable<void> {
-
-        return from(action.list)
+        return from(priceSortedResult)
             .pipe(
-                mergeMap(
-                    (el: hotelresponselist) => {
-                        let traceId: string = states.getState().traceId;
-                        let currentState: (staticresponselist & hotelresultlist)[] = states.getState().hotelList;
-
-                        if (currentState.some(hotel => hotel.ResultIndex == el.ResultIndex)) {
-                            return of(currentState.find(hotel => hotel.ResultIndex == el.ResultIndex));
-                        }
-
-                        return from(el.SupplierHotelCodes)
-                            .pipe(
-                                // takeWhile(el => el.CategoryIndex == 1),
-                                mergeMap(
-                                    (supply: supplierhotelcodes) => {
-
-                                        let hotelInfo = {
-                                            CategoryId: supply.CategoryId,
-                                            EndUserIp: "192.168.0.115",
-                                            HotelCode: el.HotelCode,
-                                            ResultIndex: el.ResultIndex,
-                                            TraceId: traceId
-                                        }
-
-                                        return from(this.hotelService.getHotelInfo(hotelInfo))
-                                            .pipe(
-                                                catchError(
-                                                    (el) => {
-                                                        console.log(el);
-                                                        return of([]);
-                                                    }
-                                                ),
-                                                skipWhile((HTTPResponse: HTTPResponse) => {
-                                                    if (Array.isArray(HTTPResponse)) {
-                                                        return true;
-                                                    }
-
-                                                    //Trace Expired
-                                                    if (JSON.parse(HTTPResponse.data).response.Error.ErrorCode == 6) {
-                                                        // states.dispatch(new SearchHotel());
-                                                        return true;
-                                                    }
-
-                                                    //No rooms Available from UAPI
-                                                    if (JSON.parse(HTTPResponse.data).response.Error.ErrorCode == 2) {
-                                                        console.log(JSON.parse(HTTPResponse.data).response);
-                                                        return true;
-                                                    }
-                                                    
-                                                    //Search Timeout, Try Again
-                                                    if (JSON.parse(HTTPResponse.data).response.Error.ErrorCode == -4) {
-                                                        console.log(JSON.parse(HTTPResponse.data).response);
-                                                        return true;
-                                                    }
-
-                                                    return false;
-
-                                                    //maintainance - 503
-                                                    //forbidden - 403
-
-                                                }),
-                                                map(
-                                                    (supplyResponse: HTTPResponse) => {
-
-                                                        let hotelData: hotelinfoList = JSON.parse(supplyResponse.data).response.HotelDetails;
-                                                        let omitedVal = _.omitBy(hotelData, (val) => {
-                                                            return _.isNull(val) || (_.isString(val) && val.length < 1) ||
-                                                                (_.isString(val) && val == "https://images.cdnpath.com/Images/HotelNA.jpg") ||
-                                                                (_.isArray(val) && val.length < 1);
-                                                        });
-
-                                                        let mergeObj: hotellist = _.merge(omitedVal, el);
-                                                        return mergeObj;
-                                                    }
-                                                ),
-                                                flatMap((hotel) => this.checkDir(hotel)),
-                                                flatMap(
-                                                    (hotel) => {
-                                                        // if (!_.isUndefined(hotel.Images)) {
-                                                        //     return this.getImages(hotel);
-                                                        // }
-                                                        return of(hotel);
-                                                    }
-                                                ),
-                                            )
-                                    }
-                                ),
-                                filter(hotel => hotel.Images && hotel.Images.length > 1),
-                                take(1),
-                                map(
-                                    (hotels: hotellist) => {
-                                        console.log(hotels);
-                                        return hotels;
-                                    }
-                                )
-                            );
-                    }
-                ),
+                mergeMap(result => this.getImg(result)),
                 toArray(),
                 map(
-                    (hotel) => {
-
-                        // states.patchState({
-                        //     hotelList: hotel
-                        // });
-
-                    }
-                ),
-                finalize(
-                    () => {
-                        console.log("download result finished");
+                    (result) => {
+                        console.log(result);
+                        states.patchState({
+                            hotelresponseList: priceSortedResult,
+                            hotelList: result,
+                            traceId : action.response.TraceId
+                        });
                     }
                 )
             )
@@ -669,109 +473,9 @@ export class HotelResultState{
     addHotels(states: StateContext<hotelresult>) {
 
         let currentCount: number = states.getState().listlimit + 10;
-        let currentList: (hotelresultlist & staticresponselist)[] = Object.assign([], states.getState().hotelList);
-        
-        return from(currentList)
-            .pipe(
-                take(currentCount),
-                skipWhile(
-                    (hotel) => {
-                        return hotel.Images.length > 1;
-                    }
-                ),
-                mergeMap(
-                    (result: staticresponselist & hotelresultlist) => {
-                        let currentCity: string = this.store.selectSnapshot(HotelSearchState.getCityId);
-                        let staticPay: staticpayload = {
-                            CityId: currentCity,
-                            HotelId: result.HotelCode,
-                            ClientId: "ApiIntegrationNew",
-                            EndUserIp: "192.168.0.105"
-                        }
-                        let dumpResponse$ = this.hotelService.getStaticData(staticPay);
-                        return dumpResponse$.pipe(
-                            map(
-                                (response: HTTPResponse) => {
-
-                                    let hotelDetail: any = JSON.parse(response.data).ArrayOfBasicPropertyInfo.BasicPropertyInfo;
-
-                                    let resultDetail: hotelresultlist = _.pick(result, ["HotelCode", "Price", "ResultIndex", "StarRating", "SupplierHotelCodes"]);
-                                    let pickedDetail: staticresponselist = _.pick(hotelDetail, ["Address", "Attributes", "HotelName", "TBOHotelCode", "VendorMessages"]);
-
-                                    let allDetail: (hotelresultlist & staticresponselist) = _.merge(resultDetail, pickedDetail);
-
-                                    allDetail.Facilities = _.uniq(_.compact(pickedDetail.VendorMessages.VendorMessage.flatMap(
-                                        (vendor) => {
-                                            if (vendor.InfoType == "12") {
-                                                if (Array.isArray(vendor.SubSection)) {
-                                                    return vendor.SubSection.flatMap(
-                                                        (section) => {
-                                                            return (section.Paragraph as paragraph).Text.$t;
-                                                        }
-                                                    );
-                                                }
-                                            }
-                                        }
-                                    )));
-
-                                    allDetail.Images = _.uniq(_.compact(pickedDetail.VendorMessages.VendorMessage.flatMap(
-                                        (vendor) => {
-                                            if (vendor.InfoType == "23") {
-                                                if (Array.isArray(vendor.SubSection)) {
-                                                    return vendor.SubSection.flatMap(
-                                                        (section) => {
-                                                            if (Array.isArray(section.Paragraph)) {
-                                                                return section.Paragraph.flatMap(
-                                                                    (para) => {
-                                                                        return para.URL;
-                                                                    }
-                                                                );
-                                                            }
-                                                            else {
-                                                                return (section.Paragraph as paragraph).URL;
-                                                            }
-                                                        }
-                                                    );
-                                                }
-                                                else {
-                                                    return (vendor.SubSection as subsection).Paragraph.URL;
-                                                }
-                                            }
-                                        }
-                                    )));
-
-                                    allDetail.Images = allDetail.Images.filter(el => _.isString(el));
-
-                                    return allDetail;
-                                }
-                            ),
-                            flatMap((el) => {
-                                console.log(el);
-                                if (el.Images.length > 1) {
-                                    return this.getImages(el);
-                                }
-                                return of(el);
-                            }),
-                            map(
-                                (detail) => {
-                                    let index = _.findIndex(currentList, result);
-                                    currentList.splice(index, 1, detail);
-                                }
-                            )
-                        );
-                    }
-                ),
-                finalize(
-                    () => {
-                        console.log(currentList);
-                        states.patchState({
-                            listlimit: currentCount,
-                            hotelList: currentList
-                        });
-                    }
-                )
-            )
-            
+        states.patchState({
+            listlimit: currentCount
+        });
     }
 
     @Action(ViewHotel)
@@ -994,137 +698,96 @@ export class HotelResultState{
             )
     }
 
-    customizedObj(desObj: hotelinfoList, srcObj : hotelresponselist) {
-        if (_.isUndefined(desObj)) {
-            return srcObj;
+    getImg(hotel: (staticresponselist & hotelresultlist)): Observable<(staticresponselist & hotelresultlist)> {
+        let currentCity: string = this.store.selectSnapshot(HotelSearchState.getCityId);
+        let staticPay: staticpayload = {
+            CityId: currentCity,
+            HotelId: hotel.HotelCode,
+            ClientId: "ApiIntegrationNew",
+            EndUserIp: "192.168.0.105"
         }
-        else if (_.isUndefined(srcObj)) {
-            return desObj;
-        }
-
-        if (_.isNull(desObj)) {
-            return srcObj;
-        }
-        else if (_.isNull(srcObj)) {
-            return desObj;
-        }
-    }
-
-    checkDir(hotel : hotellist): Observable<hotellist> {
-        let folderPath: string = 'TravellersPass/Image/Hotel';
-
-        return this.fileService.checkDir(folderPath, hotel.HotelCode)
-            .pipe(
-                map(
-                    (dirExist: boolean) => {
-                        return hotel;
-                    }
-                ),
-                catchError(
-                    (error: FileError) => {
-                        return this.fileService.createDir(folderPath, hotel.HotelCode)
-                            .pipe(
-                                map(
-                                    (dir: DirectoryEntry) => {
-                                        // return dir.nativeURL;
-                                        return hotel;
-
-                                    }
-                                ),
-                                // flatMap(el => this.checkNoMedia(hotel,el))
-                            )
-
-                    }
-                )
-            )
-    }
-
-    checkNoMedia(hotel: hotellist, path: string): Observable<hotellist> {
-        console.log(path + '.nomedia');
-        return this.fileService.checkFile(path + '.nomedia', '.nomedia')
-            .pipe(
-                map(
-                    (fileExist) => {
-                        console.log(fileExist);
-                        return hotel;
-                    }
-                ),
-                catchError(
-                    (error: FileError) => {
-                        console.log(error);
-                        return this.fileService.createFile(path + '.nomedia', '.nomedia')
-                            .pipe(
-                                map(
-                                    (file: FileEntry) => {
-                                        console.log(file);
-                                        return hotel;
-                                    }
-                                )
-                            )
-
-                    }
-                )
-            )
-    }
-
-    getImages(hotel: (hotelresultlist & staticresponselist)): Observable<(hotelresultlist & staticresponselist)> {
-        return from(hotel.Images)
-            .pipe(
-                mergeMap(
-                    (img: string) => {
-
-                        let url: string = img;
-                        let splitedEl: string[] = img.split('/');
-
-                        let folderName: string = hotel.HotelCode;
-                        let folderPath: string = 'TravellersPass/Image/Hotel';
-
-                        let fileName: string = splitedEl[splitedEl.length - 1];
-                        let filePath: string = null;
-                        if (fileName.includes('.jpg')) {
-                            filePath = folderPath + '/' + folderName + '/' + fileName;
-                        }
-                        else {
-                            filePath = folderPath + '/' + folderName + '/' + fileName + '.jpg';
-                        }
-
-                        return this.fileService.checkFile(filePath, fileName)
-                            .pipe(
-                                map(
-                                    (fileExist) => {
-                                        return this.file.externalRootDirectory + filePath;
-                                    }
-                                ),
-                                catchError(
-                                    (error: FileError) => {
-                                        return this.fileService.downloadFile(url, filePath)
-                                            .pipe(
-                                                map(
-                                                    (files: FileEntry) => {
-                                                        let str: string = files.fullPath;
-                                                        return this.file.externalRootDirectory + str;
+        let dumpResponse$ = this.hotelService.getStaticData(staticPay);
+        return dumpResponse$.pipe(
+            flatMap(
+                (response: HTTPResponse) => {
+                    let hotelDetail: any = JSON.parse(response.data).ArrayOfBasicPropertyInfo.BasicPropertyInfo;
+                    let Images: any[] = _.uniq(_.compact(hotelDetail.VendorMessages.VendorMessage.flatMap(
+                        (vendor) => {
+                            if (vendor.InfoType == "23") {
+                                if (Array.isArray(vendor.SubSection)) {
+                                    return vendor.SubSection.flatMap(
+                                        (section) => {
+                                            if (Array.isArray(section.Paragraph)) {
+                                                return section.Paragraph.flatMap(
+                                                    (para) => {
+                                                        return para.URL;
                                                     }
-                                                ),
-                                                catchError(
-                                                    (err: FileTransferError) => {
-                                                        return of("");
-                                                    }
-                                                )
+                                                );
+                                            }
+                                            else {
+                                                return (section.Paragraph as paragraph).URL;
+                                            }
+                                        }
+                                    );
+                                }
+                                else {
+                                    return (vendor.SubSection as subsection).Paragraph.URL;
+                                }
+                            }
+                        }
+                    )));
+                    let filteredImg: string[] = Images.filter(el => _.isString(el));
+                    let url: string = filteredImg[0];
+                    let splitedEl: string[] = filteredImg[0].split('/');
+
+                    let folderName: string = hotel.HotelCode;
+                    let folderPath: string = 'TravellersPass/Image/Hotel';
+
+                    let fileName: string = splitedEl[splitedEl.length - 1];
+                    let filePath: string = null;
+                    if (fileName.includes('.jpg')) {
+                        filePath = folderPath + '/' + folderName + '/' + fileName;
+                    }
+                    else {
+                        filePath = folderPath + '/' + folderName + '/' + fileName + '.jpg';
+                    }
+
+                    return this.fileService.checkFile(filePath, fileName)
+                        .pipe(
+                            map(
+                                (fileExist) => {
+                                    return this.file.externalRootDirectory + filePath;
+                                }
+                            ),
+                            catchError(
+                                (error: FileError) => {
+                                    return this.fileService.downloadFile(url, filePath)
+                                        .pipe(
+                                            map(
+                                                (files: FileEntry) => {
+                                                    let str: string = files.fullPath;
+                                                    return this.file.externalRootDirectory + str;
+                                                }
+                                            ),
+                                            catchError(
+                                                (err: FileTransferError) => {
+                                                    return of("");
+                                                }
                                             )
-                                    }
-                                )
+                                        )
+                                }
                             )
-                    }
-                ),
-                skipWhile(el => el == ""),
-                take(10),
-                toArray(),
-                map(
-                    (el) => {
-                        hotel.Images = el;
-                        return hotel;
-                    }
-                )
+                        )
+
+                }
+            ),
+            map(
+                (str) => {
+                    console.log(str);
+                    hotel.Images = str;
+                    return hotel;
+                }
             )
+        );
     }
 }

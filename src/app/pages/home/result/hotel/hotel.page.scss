@@ -21,11 +21,11 @@ ion-content{
                     flex-direction: row;
                     justify-content: space-between;
                     >ion-row:nth-child(1){
-                        width:80%;
+                        width:75%;
                         flex-direction: column;
                     }
                     >ion-row:nth-child(2) {
-                        width:20%;
+                        width:25%;
                         display: flex;
                         flex-direction: column;
                         align-items: flex-end;
@@ -49,12 +49,9 @@ ion-content{
                             color: white;
                         }
                     }
-                    >ion-row{
-                        >ion-item{
-                            --min-height:50px;
-                            width: -webkit-fill-available;
-                            --padding-start: 16px;
-                        }
+                    >ion-row.headline{
+                        height: -webkit-fill-available;
+                        margin: 8px;
                     }
                 }
             }
