@@ -28,6 +28,7 @@ import { BusAmentiesComponent } from 'src/app/components/bus/bus-amenties/bus-am
 import { BusPolicyComponent } from 'src/app/components/bus/bus-policy/bus-policy.component';
 import { BusSeatlayoutComponent } from 'src/app/components/bus/bus-seatlayout/bus-seatlayout.component';
 import { FlightFilterComponent } from 'src/app/components/flight/flight-filter/flight-filter.component';
+import { SharedModule } from 'src/app/modules/shared/shared.module';
 
 
 @NgModule({
@@ -38,7 +39,7 @@ import { FlightFilterComponent } from 'src/app/components/flight/flight-filter/f
     IonicModule,
     ResultPageRoutingModule,
     MatExpansionModule,
-
+    SharedModule,
     PipeModule,
     AgmCoreModule.forRoot({
       // please get your own API key here:

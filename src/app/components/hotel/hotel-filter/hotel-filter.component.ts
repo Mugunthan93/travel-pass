@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { LocationComponent } from '../location/location.component';
+import { Observable } from 'rxjs';
+import { hotellist } from 'src/app/stores/result/hotel.state';
 
 @Component({
   selector: 'app-hotel-filter',
@@ -8,6 +10,8 @@ import { LocationComponent } from '../location/location.component';
   styleUrls: ['./hotel-filter.component.scss'],
 })
 export class HotelFilterComponent implements OnInit {
+
+  hotels: Observable<hotellist[]>;
 
   options = {
     budget: [
@@ -44,7 +48,11 @@ export class HotelFilterComponent implements OnInit {
     public modalCtrl : ModalController
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+
+    
+
+  }
   
   chipSelection(property: any, index: number) {
     console.log(property);

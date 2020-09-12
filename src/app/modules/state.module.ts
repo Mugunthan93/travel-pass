@@ -44,6 +44,9 @@ import { PassengerState } from '../stores/passenger.state';
 import { FlightPassengerState } from '../stores/passenger/flight.passenger.states';
 import { HotelPassengerState } from '../stores/passenger/hotel.passenger.state';
 import { BusPassengerState } from '../stores/passenger/bus.passenger.state';
+import { FlightFilterState } from '../stores/result/filter/flight.filter.state';
+import { DepartureFilterState } from '../stores/result/filter/departure.filter.state';
+import { ReturnFilterState } from '../stores/result/filter/return.filter.state';
 
 @NgModule({
   declarations: [],
@@ -90,6 +93,10 @@ import { BusPassengerState } from '../stores/passenger/bus.passenger.state';
       ApprovalState,
       
       FilterState,
+      FlightFilterState,
+      DepartureFilterState,
+      ReturnFilterState,
+
       SortState,
       SharedState,
 

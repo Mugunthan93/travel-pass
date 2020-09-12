@@ -27,6 +27,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { LimitPipe } from './pipes/limit/limit.pipe';
 
 @NgModule({
   declarations: [

@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { flightFilter, FilterState, GetFilter } from 'src/app/stores/result/filter.state';
 import { Store } from '@ngxs/store';
 import { ModalController } from '@ionic/angular';
 import * as _ from 'lodash';
 import { ResultState } from 'src/app/stores/result.state';
+import { FlightFilterState, flightFilter, SetFlightStops, SetFlightDeparture, SetFlightArrival, SetFlightPrice, SetFlightCorpFare, SetFlightAirlines, ResetFlightAirlines } from 'src/app/stores/result/filter/flight.filter.state';
+import { DepartureFilterState, SetDepStops, SetDepDeparture, SetDepArrival, SetDepPrice, SetDepCorpFare, SetDepAirlines, ResetDepartureAirlines } from 'src/app/stores/result/filter/departure.filter.state';
+import { ReturnFilterState, SetReStops, SetReDeparture, SetReArrival, SetRePrice, SetReCorpFare, SetReAirlines, ResetReturnAirlines } from 'src/app/stores/result/filter/return.filter.state';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-flight-filter',
@@ -13,10 +16,15 @@ import { ResultState } from 'src/app/stores/result.state';
 export class FlightFilterComponent implements OnInit {
 
   flightType: string;
+  type: string = 'departure';
 
   inputs: flightFilter;
   departure: flightFilter;
   return: flightFilter;
+
+  inputs$: Observable<flightFilter>;
+  departure$: Observable<flightFilter>;
+  return$: Observable<flightFilter>;
 
 
   constructor(
@@ -26,10 +34,22 @@ export class FlightFilterComponent implements OnInit {
 
   ngOnInit() {
     this.flightType = this.store.selectSnapshot(ResultState.getResultType);
+
+    if (this.flightType == 'animated-round-trip') {
+      if (this.type == 'departure') {
+        this.departure = this.store.selectSnapshot(DepartureFilterState.getFlightFilter);
+        this.departure$ = this.store.select(DepartureFilterState.getFlightFilter); 
+      }
+      else if (this.type == 'return') {
+        this.return = this.store.selectSnapshot(ReturnFilterState.getFlightFilter);
+        this.return$ = this.store.select(ReturnFilterState.getFlightFilter);
+      }
+    }
+    else if (this.flightType !== 'animated-round-trip') {
+      this.inputs = this.store.selectSnapshot(FlightFilterState.getFlightFilter);
+      this.inputs$ = this.store.select(FlightFilterState.getFlightFilter);
+    }
     
-    this.inputs = this.store.selectSnapshot(FilterState.getFlightFilter);
-    this.departure = this.store.selectSnapshot(FilterState.getDepartureFlightFilter);
-    this.return = this.store.selectSnapshot(FilterState.getReturnFlightFilter);
   }
 
   dismiss() {
@@ -37,97 +57,140 @@ export class FlightFilterComponent implements OnInit {
   }
 
   changeType(evt : CustomEvent) {
-    this.inputs = evt.detail.value;
+    this.type = evt.detail.value;
+    if (this.type == 'departure') {
+      this.departure = this.store.selectSnapshot(DepartureFilterState.getFlightFilter);
+      this.departure$ = this.store.select(DepartureFilterState.getFlightFilter);
+    }
+    else if (this.type == 'return') {
+      this.return = this.store.selectSnapshot(ReturnFilterState.getFlightFilter);
+      this.return$ = this.store.select(ReturnFilterState.getFlightFilter);
+    }
   }
 
-  chooseStop(evt : CustomEvent) {
-    this.inputs.stops = parseInt(evt.detail.value);
+  chooseStop(evt: CustomEvent) {
+    if (this.flightType == 'animated-round-trip') {
+      if (this.type == 'departure') {
+        this.store.dispatch(new SetDepStops(parseInt(evt.detail.value)));
+      }
+      else if (this.type == 'return') {
+        this.store.dispatch(new SetReStops(parseInt(evt.detail.value)));
+      }
+    }
+    else if (this.flightType !== 'animated-round-trip') {
+      this.store.dispatch(new SetFlightStops(parseInt(evt.detail.value)));
+    }
   }
 
   depRange(evt: CustomEvent) {
-    this.inputs.depatureHours = evt.detail.value;
+    if (this.flightType == 'animated-round-trip') {
+      if (this.type == 'departure') {
+        this.store.dispatch(new SetDepDeparture(evt.detail.value));
+      }
+      else if (this.type == 'return') {
+        this.store.dispatch(new SetReDeparture(evt.detail.value));
+      }
+    }
+    else if (this.flightType !== 'animated-round-trip') {
+      this.store.dispatch(new SetFlightDeparture(evt.detail.value));
+    }
   }
 
   reRange(evt: CustomEvent) {
-    this.inputs.arrivalHours = evt.detail.value;
+    if (this.flightType == 'animated-round-trip') {
+      if (this.type == 'departure') {
+        this.store.dispatch(new SetDepArrival(evt.detail.value));
+      }
+      else if (this.type == 'return') {
+        this.store.dispatch(new SetReArrival(evt.detail.value));
+      }
+    }
+    else if (this.flightType !== 'animated-round-trip') {
+      this.store.dispatch(new SetFlightArrival(evt.detail.value));
+    }
   }
 
   priceRange(evt: CustomEvent) {
-    this.inputs.price = evt.detail.value;
+    if (this.flightType == 'animated-round-trip') {
+      if (this.type == 'departure') {
+        this.store.dispatch(new SetDepPrice(evt.detail.value));
+      }
+      else if (this.type == 'return') {
+        this.store.dispatch(new SetRePrice(evt.detail.value));
+      }
+    }
+    else if (this.flightType !== 'animated-round-trip') {
+      this.store.dispatch(new SetFlightPrice(evt.detail.value));
+    }
   }
 
   corpFare(evt: CustomEvent) {
-    this.inputs.corporateFare = evt.detail.checked;
+    if (this.flightType == 'animated-round-trip') {
+      if (this.type == 'departure') {
+        this.store.dispatch(new SetDepCorpFare(evt.detail.checked));
+      }
+      else if (this.type == 'return') {
+        this.store.dispatch(new SetReCorpFare(evt.detail.checked));
+      }
+    }
+    else if (this.flightType !== 'animated-round-trip') {
+      this.store.dispatch(new SetFlightCorpFare(evt.detail.checked));
+    }
   }
 
   chooseAirline(evt: CustomEvent) {
-    this.inputs.airlines.forEach(
-      (el) => {
-        if (_.isEqual(evt.detail.value,el)) {
-          el.value = evt.detail.checked;
-        }
+    if (this.flightType == 'animated-round-trip') {
+      if (this.type == 'departure') {
+        this.store.dispatch(new SetDepAirlines(evt.detail.value, evt.detail.checked));
       }
-    );
+      else if (this.type == 'return') {
+        this.store.dispatch(new SetReAirlines(evt.detail.value, evt.detail.checked));
+      }
+    }
+    else if (this.flightType !== 'animated-round-trip') {
+      this.store.dispatch(new SetFlightAirlines(evt.detail.value, evt.detail.checked));
+    }
   }
 
   done() {
-    if (this.flightType == 'animated-round-trip') {
-      this.store.dispatch([new GetFilter(this.departure,'departure'), new GetFilter(this.return,'return')]);
-    }
-    else if (this.flightType !== 'animated-round-trip'){
-      this.store.dispatch(new GetFilter(this.inputs));
-    }
+    this.modalCtrl.dismiss();
   }
 
   reset() {
-    let newairlines = this.inputs.airlines.map(
-      (el) => {
-        el.value = false;
-        return el;
-      }
-    );
-
-    this.inputs = {
-      stops : -1,
-      depatureHours : 24,
-      arrivalHours : 24,
-      price : 0,
-      corporateFare: false,
-      airlines: newairlines
-    }
-
     if (this.flightType == 'animated-round-trip') {
-      let newdepairlines = this.departure.airlines.map(
-        (el) => {
-          el.value = false;
-          return el;
-        }
-      );
-
-      this.departure = {
-        stops: -1,
-        depatureHours: 24,
-        arrivalHours: 24,
-        price: 0,
-        corporateFare: false,
-        airlines: newdepairlines
+      if (this.type == 'departure') {
+        this.store.dispatch(
+          [
+            new SetDepStops(-1),
+            new SetDepDeparture(24),
+            new SetDepArrival(24),
+            new SetDepPrice(0),
+            new SetDepCorpFare(false),
+            new ResetDepartureAirlines()
+          ]);
       }
-
-      let newreairlines = this.return.airlines.map(
-        (el) => {
-          el.value = false;
-          return el;
-        }
-      );
-
-      this.return = {
-        stops: -1,
-        depatureHours: 24,
-        arrivalHours: 24,
-        price: 0,
-        corporateFare: false,
-        airlines: newreairlines
+      else if (this.type == 'return') {
+        this.store.dispatch(
+          [
+            new SetReStops(-1),
+            new SetReDeparture(24),
+            new SetReArrival(24),
+            new SetRePrice(0),
+            new SetReCorpFare(false),
+            new ResetReturnAirlines()
+          ]);
       }
+    }
+    else if (this.flightType !== 'animated-round-trip') {
+      this.store.dispatch(
+        [
+          new SetReStops(-1),
+          new SetReDeparture(24),
+          new SetReArrival(24),
+          new SetRePrice(0),
+          new SetReCorpFare(false),
+          new ResetFlightAirlines()
+        ]);
     }
   }
 

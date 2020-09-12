@@ -3,7 +3,7 @@ import { ModalController, IonSelect } from '@ionic/angular';
 import { GuestRoomComponent } from 'src/app/components/hotel/guest-room/guest-room.component';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { roomguest, HotelSearchState, HotelForm, SearchHotel } from 'src/app/stores/search/hotel.state';
+import { roomguest, HotelSearchState, SearchHotel } from 'src/app/stores/search/hotel.state';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { SelectModalComponent } from 'src/app/components/shared/select-modal/select-modal.component';
@@ -168,8 +168,7 @@ export class HotelPage implements OnInit {
     this.formSubmit = true;
     console.log(this.hotelSearch);
     if (this.hotelSearch.valid) {
-      this.store.dispatch(new HotelForm(this.hotelSearch.value));
-      this.store.dispatch(new SearchHotel());
+      this.store.dispatch(new SearchHotel(this.hotelSearch.value));
     }
   }
 

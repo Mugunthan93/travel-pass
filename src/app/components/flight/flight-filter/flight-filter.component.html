@@ -14,12 +14,12 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-segment class="filghtfilter" *ngIf="flightType == 'animated-round-trip'" [value]="departure"
+  <ion-segment class="filghtfilter" *ngIf="flightType == 'animated-round-trip'" value="departure"
     (ionChange)="changeType($event)">
-    <ion-segment-button [value]="departure">
+    <ion-segment-button value="departure">
       <ion-label>Departure</ion-label>
     </ion-segment-button>
-    <ion-segment-button [value]="return">
+    <ion-segment-button value="return">
       <ion-label>Return</ion-label>
     </ion-segment-button>
   </ion-segment>
@@ -27,11 +27,11 @@
 
 <ion-content>
 
-  <ion-grid>
+  <ion-grid *ngIf="flightType !== 'animated-round-trip'">
 
     <ion-label>Stops</ion-label>
     <ion-segment mode="ios" (ionChange)="chooseStop($event)"
-      [value]="inputs.stops">
+      [value]="(inputs$ | async).stops">
       <ion-segment-button value="-1">
         <ion-label>All</ion-label>
       </ion-segment-button>
@@ -46,9 +46,9 @@
       </ion-segment-button>
     </ion-segment>
 
-    <ion-label>Departure Time : {{ inputs.depatureHours }}</ion-label>
+    <ion-label>Departure Time : {{ (inputs$ | async).depatureHours }}</ion-label>
     <ion-range (ionChange)="depRange($event)" class="filter" pin="true" ticks="true" snaps="true" min="0" max="24"
-      [value]="inputs.depatureHours">
+      [value]="(inputs$ | async).depatureHours">
     </ion-range>
 
     <ion-row>
@@ -56,9 +56,9 @@
       <ion-label>24 Hours</ion-label>
     </ion-row>
 
-    <ion-label>Arrival Time : {{ inputs.arrivalHours }}</ion-label>
+    <ion-label>Arrival Time : {{ (inputs$ | async).arrivalHours }}</ion-label>
     <ion-range (ionChange)="reRange($event)" class="filter" pin="true" ticks="true" snaps="true" min="0" max="24"
-      [value]="inputs.arrivalHours">
+      [value]="(inputs$ | async).arrivalHours">
     </ion-range>
 
     <ion-row>
@@ -66,9 +66,9 @@
       <ion-label>24 Hours</ion-label>
     </ion-row>
 
-    <ion-label>Price : {{ inputs.price }}</ion-label>
+    <ion-label>Price : {{ (inputs$ | async).price }}</ion-label>
     <ion-range (ionChange)="priceRange($event)" class="filter" pin="true" ticks="true" snaps="true" min="1000"
-      max="100000" step="1000" [value]="inputs.price">
+      max="100000" step="1000" [value]="(inputs$ | async).price">
     </ion-range>
 
     <ion-row>
@@ -79,18 +79,156 @@
     <ion-item>
       <ion-label>Corporate Fare</ion-label>
       <ion-checkbox class="default" (ionChange)="corpFare($event)" slot="end"
-        [checked]="inputs.corporateFare">
+        [checked]="(inputs$ | async).corporateFare">
       </ion-checkbox>
     </ion-item>
 
     <ion-label>Preferred Airlines</ion-label>
 
     <ion-list>
-      <div *ngFor="let airline of inputs.airlines">
+      <div *ngFor="let airline of (inputs$ | async).airlines">
         <ion-item>
           <ion-label>{{airline.name}}</ion-label>
           <ion-checkbox class="default" slot="end" 
           [checked]="airline.value" (ionChange)="chooseAirline($event)" [value]="airline">
+          </ion-checkbox>
+        </ion-item>
+      </div>
+    </ion-list>
+  </ion-grid>
+
+  <ion-grid *ngIf="flightType == 'animated-round-trip' && type == 'departure'">
+
+    <ion-label>Stops</ion-label>
+    <ion-segment mode="ios" (ionChange)="chooseStop($event)" [value]="(departure$ | async).stops">
+      <ion-segment-button value="-1">
+        <ion-label>All</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="1">
+        <ion-label>Non-Stop</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="2">
+        <ion-label>1 Stop</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="3">
+        <ion-label>2 Stops</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <ion-label>Departure Time : {{ (departure$ | async).depatureHours }}</ion-label>
+    <ion-range (ionChange)="depRange($event)" class="filter" pin="true" ticks="true" snaps="true" min="0" max="24"
+      [value]="(departure$ | async).depatureHours">
+    </ion-range>
+
+    <ion-row>
+      <ion-label>0 Hours</ion-label>
+      <ion-label>24 Hours</ion-label>
+    </ion-row>
+
+    <ion-label>Arrival Time : {{ (departure$ | async).arrivalHours }}</ion-label>
+    <ion-range (ionChange)="reRange($event)" class="filter" pin="true" ticks="true" snaps="true" min="0" max="24"
+      [value]="(departure$ | async).arrivalHours">
+    </ion-range>
+
+    <ion-row>
+      <ion-label>0 Hours</ion-label>
+      <ion-label>24 Hours</ion-label>
+    </ion-row>
+
+    <ion-label>Price : {{ (departure$ | async).price }}</ion-label>
+    <ion-range (ionChange)="priceRange($event)" class="filter" pin="true" ticks="true" snaps="true" min="1000"
+      max="100000" step="1000" [value]="(departure$ | async).price">
+    </ion-range>
+
+    <ion-row>
+      <ion-label>1000</ion-label>
+      <ion-label>10,00,000</ion-label>
+    </ion-row>
+
+    <ion-item>
+      <ion-label>Corporate Fare</ion-label>
+      <ion-checkbox class="default" (ionChange)="corpFare($event)" slot="end"
+        [checked]="(departure$ | async).corporateFare">
+      </ion-checkbox>
+    </ion-item>
+
+    <ion-label>Preferred Airlines</ion-label>
+
+    <ion-list>
+      <div *ngFor="let airline of (departure$ | async).airlines">
+        <ion-item>
+          <ion-label>{{airline.name}}</ion-label>
+          <ion-checkbox class="default" slot="end" [checked]="airline.value" (ionChange)="chooseAirline($event)"
+            [value]="airline">
+          </ion-checkbox>
+        </ion-item>
+      </div>
+    </ion-list>
+  </ion-grid>
+
+  <ion-grid *ngIf="flightType == 'animated-round-trip' && type == 'return'">
+
+    <ion-label>Stops</ion-label>
+    <ion-segment mode="ios" (ionChange)="chooseStop($event)" [value]="(return$ | async).stops">
+      <ion-segment-button value="-1">
+        <ion-label>All</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="1">
+        <ion-label>Non-Stop</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="2">
+        <ion-label>1 Stop</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="3">
+        <ion-label>2 Stops</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <ion-label>Departure Time : {{ (return$ | async).depatureHours }}</ion-label>
+    <ion-range (ionChange)="depRange($event)" class="filter" pin="true" ticks="true" snaps="true" min="0" max="24"
+      [value]="(return$ | async).depatureHours">
+    </ion-range>
+
+    <ion-row>
+      <ion-label>0 Hours</ion-label>
+      <ion-label>24 Hours</ion-label>
+    </ion-row>
+
+    <ion-label>Arrival Time : {{ (return$ | async).arrivalHours }}</ion-label>
+    <ion-range (ionChange)="reRange($event)" class="filter" pin="true" ticks="true" snaps="true" min="0" max="24"
+      [value]="(return$ | async).arrivalHours">
+    </ion-range>
+
+    <ion-row>
+      <ion-label>0 Hours</ion-label>
+      <ion-label>24 Hours</ion-label>
+    </ion-row>
+
+    <ion-label>Price : {{ (return$ | async).price }}</ion-label>
+    <ion-range (ionChange)="priceRange($event)" class="filter" pin="true" ticks="true" snaps="true" min="1000"
+      max="100000" step="1000" [value]="(return$ | async).price">
+    </ion-range>
+
+    <ion-row>
+      <ion-label>1000</ion-label>
+      <ion-label>10,00,000</ion-label>
+    </ion-row>
+
+    <ion-item>
+      <ion-label>Corporate Fare</ion-label>
+      <ion-checkbox class="default" (ionChange)="corpFare($event)" slot="end"
+        [checked]="(return$ | async).corporateFare">
+      </ion-checkbox>
+    </ion-item>
+
+    <ion-label>Preferred Airlines</ion-label>
+
+    <ion-list>
+      <div *ngFor="let airline of (return$ | async).airlines">
+        <ion-item>
+          <ion-label>{{airline.name}}</ion-label>
+          <ion-checkbox class="default" slot="end" [checked]="airline.value" (ionChange)="chooseAirline($event)"
+            [value]="airline">
           </ion-checkbox>
         </ion-item>
       </div>

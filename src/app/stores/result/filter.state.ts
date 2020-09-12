@@ -1,164 +1,17 @@
-import { State, Selector, Action, StateContext } from '@ngxs/store';
-import { resultObj } from './flight.state';
-import * as _ from 'lodash';
+import { State } from '@ngxs/store';
+import { FlightFilterState } from './filter/flight.filter.state';
+import { DepartureFilterState } from './filter/departure.filter.state';
+import { ReturnFilterState } from './filter/return.filter.state';
 
-
-export interface filter {
-    flight: flightFilter
-    departure: flightFilter
-    return: flightFilter
-    hotel : hotelFilter
-}
-
-export interface flightFilter {
-    stops: number
-    depatureHours: number
-    arrivalHours: number
-    corporateFare: boolean
-    airlines: airlineName[]
-    price: number
-}
-
-export interface hotelFilter {
-
-}
-
-export interface airlineName {
-    name: string,
-    value:boolean
-}
-
-
-export class GetAirlines {
-    static readonly type = '[Filter] GetAirlines';
-    constructor(public result: resultObj[], public type? : string) {
-
-    }
-}
-
-export class GetFilter {
-    static readonly type = '[Filter] GetFilter';
-    constructor(public filter: flightFilter,public type? : string) {
-
-    }
-}
-
-@State<filter>({
+@State<any>({
     name: 'filter',
-    defaults: {
-        flight: {
-            stops: -1,
-            depatureHours: 24,
-            arrivalHours: 24,
-            corporateFare: false,
-            airlines: [],
-            price: 0
-        },
-        departure: {
-            stops: -1,
-            depatureHours: 24,
-            arrivalHours: 24,
-            corporateFare: false,
-            airlines: [],
-            price: 0
-        },
-        return: {
-            stops: -1,
-            depatureHours: 24,
-            arrivalHours: 24,
-            corporateFare: false,
-            airlines: [],
-            price: 0
-        },
-        hotel : null
-    }
+    children: [
+        FlightFilterState,
+        DepartureFilterState,
+        ReturnFilterState
+    ]
 })
 
 export class FilterState {
-
-    @Selector()
-    static getFlightFilter(states: filter) {
-        return states.flight;
-    }
-
-    @Selector()
-    static getDepartureFlightFilter(states: filter) {
-        return states.departure;
-    }
-
-    @Selector()
-    static getReturnFlightFilter(states: filter) {
-        return states.return;
-    }
-
-    @Action(GetAirlines)
-    getAirlines(states: StateContext<filter>, action: GetAirlines) {
-        let airlines: airlineName[] = [];
-        action.result.forEach(
-            (el) => {
-                airlines.push({
-                    name: el.name,
-                    value: false
-                });
-            }
-        );
-
-        if (action.type == 'departure') {
-            states.patchState({
-                departure: {
-                    stops: -1,
-                    depatureHours: 24,
-                    arrivalHours: 24,
-                    corporateFare: false,
-                    airlines: _.uniqBy(airlines, 'name'),
-                    price: 0
-                }
-            })
-        }
-        else if (action.type == 'return') {
-            states.patchState({
-                return: {
-                    stops: -1,
-                    depatureHours: 24,
-                    arrivalHours: 24,
-                    corporateFare: false,
-                    airlines: _.uniqBy(airlines, 'name'),
-                    price: 0
-                }
-            })
-        }
-        else {
-            states.patchState({
-                flight: {
-                    stops: -1,
-                    depatureHours: 24,
-                    arrivalHours: 24,
-                    corporateFare: false,
-                    airlines: _.uniqBy(airlines, 'name'),
-                    price: 0
-                }
-            })
-        }
-
-    }
-
-    @Action(GetFilter)
-    getFilter(states: StateContext<filter>, action: GetFilter) {
-        if (action.type == 'departure') {
-            states.patchState({
-                departure: action.filter
-            });
-        }
-        else if (action.type == 'return') {
-            states.patchState({
-                return: action.filter
-            });
-        }
-        else if(action.type == undefined){
-            states.patchState({
-                flight: action.filter
-            });
-        }
-    }
 
 }

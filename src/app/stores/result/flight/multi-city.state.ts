@@ -1,10 +1,9 @@
-import { resultObj, emailtrip, itinerarytrip, AddEmailTrips, fareRule, trips, baggage } from '../flight.state';
+import { resultObj, AddEmailTrips } from '../flight.state';
 import { Store, State, Action, StateContext, Selector } from '@ngxs/store';
-import { FlightService } from 'src/app/services/flight/flight.service';
-import { flightSearchResult, flightResult, flightData } from 'src/app/models/search/flight';
-import { GetAirlines, FilterState, filter } from '../filter.state';
+import { flightSearchResult } from 'src/app/models/search/flight';
 import * as moment from 'moment';
 import { BaseFlightResult } from './flight-result';
+import { FlightFilterState, flightFilter, GetAirlines } from '../filter/flight.filter.state';
 
 export interface multicityResult {
     value: resultObj[]
@@ -45,18 +44,18 @@ export class MultiCityResultState extends BaseFlightResult {
         super();
     }
 
-    @Selector([FilterState])
-    static getMultiWay(states: multicityResult, filterState: filter): resultObj[] {
+    @Selector([FlightFilterState])
+    static getMultiWay(states: multicityResult, filterState: flightFilter): resultObj[] {
         return states.value.filter(
             el =>
-                (filterState.flight.stops !== -1 ? el.stops == filterState.flight.stops : el) &&
-                (filterState.flight.price == 0 ? el : filterState.flight.price <= el.fare) &&
-                el.corporate == filterState.flight.corporateFare &&
-                moment(el.departure).hour() <= filterState.flight.depatureHours &&
-                moment(el.arrival).hour() <= filterState.flight.arrivalHours &&
+                (filterState.stops !== -1 ? el.stops == filterState.stops : el) &&
+                (filterState.price == 0 ? el : filterState.price <= el.fare) &&
+                el.corporate == filterState.corporateFare &&
+                moment(el.departure).hour() <= filterState.depatureHours &&
+                moment(el.arrival).hour() <= filterState.arrivalHours &&
                 (
-                    filterState.flight.airlines.some(air => air.value == true) ?
-                        filterState.flight.airlines.some(air => (air.name === el.name) && (air.value)) : el
+                    filterState.airlines.some(air => air.value == true) ?
+                        filterState.airlines.some(air => (air.name === el.name) && (air.value)) : el
                 )
         );
     }

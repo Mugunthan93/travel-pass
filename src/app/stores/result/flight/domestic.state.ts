@@ -1,11 +1,12 @@
 import { State, Store, StateContext, Action, Selector } from '@ngxs/store';
-import { resultObj, emailtrip, itinerarytrip, AddEmailTrips, trips, baggage, fareRule } from '../flight.state';
-import { flightSearchResult, flightResult, flightData } from 'src/app/models/search/flight';
-import { FilterState, filter, GetAirlines } from '../filter.state';
+import { resultObj, AddEmailTrips } from '../flight.state';
+import { flightSearchResult } from 'src/app/models/search/flight';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import { Navigate } from '@ngxs/router-plugin';
 import { BaseFlightResult } from './flight-result';
+import { DepartureFilterState, departureFilter, GetDepartureAirlines } from '../filter/departure.filter.state';
+import { ReturnFilterState, returnFilter, GetReturnAirlines } from '../filter/return.filter.state';
 
 export interface domesticResult {
     departure: {
@@ -66,34 +67,34 @@ export class DomesticResultState extends BaseFlightResult {
         super();
     }
 
-    @Selector([FilterState])
-    static getDomesticDepartureRoundTrip(states: domesticResult, filterState: filter): resultObj[] {
+    @Selector([DepartureFilterState])
+    static getDomesticDepartureRoundTrip(states: domesticResult, filterState: departureFilter): resultObj[] {
         return states.departure.value.filter(
             el =>
-                (filterState.departure.stops !== -1 ? el.stops == filterState.departure.stops : el) &&
-                (filterState.departure.price == 0 ? el : filterState.departure.price <= el.fare) &&
-                el.corporate == filterState.departure.corporateFare &&
-                moment(el.departure).hour() <= filterState.departure.depatureHours &&
-                moment(el.arrival).hour() <= filterState.departure.arrivalHours &&
+                (filterState.stops !== -1 ? el.stops == filterState.stops : el) &&
+                (filterState.price == 0 ? el : filterState.price <= el.fare) &&
+                el.corporate == filterState.corporateFare &&
+                moment(el.departure).hour() <= filterState.depatureHours &&
+                moment(el.arrival).hour() <= filterState.arrivalHours &&
                 (
-                    filterState.departure.airlines.some(air => air.value == true) ?
-                        filterState.departure.airlines.some(air => (air.name === el.name) && (air.value)) : el
+                    filterState.airlines.some(air => air.value == true) ?
+                        filterState.airlines.some(air => (air.name === el.name) && (air.value)) : el
                 )
         );
     }
 
-    @Selector([FilterState])
-    static getDomesticReturnRoundTrip(states: domesticResult, filterState: filter): resultObj[] {
+    @Selector([ReturnFilterState])
+    static getDomesticReturnRoundTrip(states: domesticResult, filterState: returnFilter): resultObj[] {
         return states.return.value.filter(
             el =>
-                (filterState.return.stops !== -1 ? el.stops == filterState.return.stops : el) &&
-                (filterState.return.price == 0 ? el : filterState.return.price <= el.fare) &&
-                el.corporate == filterState.return.corporateFare &&
-                moment(el.departure).hour() <= filterState.return.depatureHours &&
-                moment(el.arrival).hour() <= filterState.return.arrivalHours &&
+                (filterState.stops !== -1 ? el.stops == filterState.stops : el) &&
+                (filterState.price == 0 ? el : filterState.price <= el.fare) &&
+                el.corporate == filterState.corporateFare &&
+                moment(el.departure).hour() <= filterState.depatureHours &&
+                moment(el.arrival).hour() <= filterState.arrivalHours &&
                 (
-                    filterState.return.airlines.some(air => air.value == true) ?
-                        filterState.return.airlines.some(air => (air.name === el.name) && (air.value)) : el
+                    filterState.airlines.some(air => air.value == true) ?
+                        filterState.airlines.some(air => (air.name === el.name) && (air.value)) : el
                 )
         );
     }
@@ -154,8 +155,8 @@ export class DomesticResultState extends BaseFlightResult {
         this.store.dispatch(new AddEmailTrips(this.emailTrips(action.response.Results[0])));
         let newObs = new Observable(
             (Subscriber) => {
-                Subscriber.next(this.store.dispatch(new GetAirlines(states.getState().departure.value,'departure')))
-                Subscriber.next(this.store.dispatch(new GetAirlines(states.getState().return.value, 'return')))
+                Subscriber.next(this.store.dispatch(new GetDepartureAirlines(states.getState().departure.value,'departure')))
+                Subscriber.next(this.store.dispatch(new GetReturnAirlines(states.getState().return.value, 'return')))
                 Subscriber.complete();
             }
         );

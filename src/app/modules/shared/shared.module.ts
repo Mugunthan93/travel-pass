@@ -26,7 +26,8 @@ import { ResultSortingComponent } from 'src/app/components/shared/result-sorting
   ],
   exports: [
     ResultListComponent,
-    MatExpansionModule
+    MatExpansionModule,
+    ResultSortingComponent
   ]
 })
 export class SharedModule { }

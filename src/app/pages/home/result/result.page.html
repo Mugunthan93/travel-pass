@@ -47,6 +47,7 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
+    <app-result-sorting *ngIf="(resultMode$ | async) !== 'flight'"></app-result-sorting>
 </ion-header>
 <ion-content>
   <ion-router-outlet></ion-router-outlet>

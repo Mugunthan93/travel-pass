@@ -1,12 +1,15 @@
-import { State, Action, StateContext, Selector, Store  } from '@ngxs/store';
+import { State, Action, StateContext, Selector, Store, Select  } from '@ngxs/store';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { ModalController, AlertController, LoadingController } from '@ionic/angular';
-import { city, nationality, hotelcity } from '../shared.state';
-import { Navigate } from '@ngxs/router-plugin';
+import { nationality, hotelcity } from '../shared.state';
 import { HotelService } from 'src/app/services/hotel/hotel.service';
-import { hotelResponse, HotelResponse } from '../result/hotel.state';
+import { from, forkJoin, of, Observable } from 'rxjs';
+import { map, catchError, tap, flatMap } from 'rxjs/operators';
+import { HTTPResponse } from '@ionic-native/http/ngx';
+import { hotelprice, supplierhotelcodes, hotelresponse, HotelResponse } from '../result/hotel.state';
 import { ResultMode } from '../result.state';
+import { Navigate } from '@ngxs/router-plugin';
 
 export interface hotelsearch{
     formData : hotelForm
@@ -46,6 +49,78 @@ export interface roomguest {
     ChildAge: number[]
     NoOfAdults: number
     NoOfChild: number
+}
+
+export interface staticpayload {
+    CityId: string,
+    ClientId: string,
+    EndUserIp: string,
+    HotelId?: string,
+    IsCompactdata?: boolean
+}
+
+export interface staticresponselist{
+    Address: staticaddress
+    Attributes: staticattributes
+    HotelName: string
+    TBOHotelCode: string
+    VendorMessages: vendormessges
+}
+
+export interface vendormessges {
+    VendorMessage: vendormessage[]
+}
+
+export interface vendormessage {
+    InfoType: string
+    SubSection: subsection[]
+    Title: string
+
+}
+
+export interface subsection {
+    Paragraph: paragraph
+    SubTitle: string
+}
+
+export interface paragraph{
+    Text: text
+    URL: string
+}
+
+export interface text {
+    $t:string
+    ID: string
+    TextFormat: string
+}
+
+export interface staticaddress{
+    AddressLine: string[]
+    CityName: string
+    CountryName: { Code: string, $t: string }
+    PostalCode: string
+    StateProv: string
+    xmlns: string
+}
+
+export interface staticattributes {
+    Attribute: staticattribute[]
+    xmlns: string
+}
+
+export interface staticattribute {
+    AttributeName: string
+    AttributeType: string
+}
+
+export interface hotelresultlist {
+    HotelCode: string
+    Price: hotelprice
+    ResultIndex: number
+    StarRating: number
+    SupplierHotelCodes: supplierhotelcodes[]
+    Facilities?: string[]
+    Images? : string[]
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -100,15 +175,11 @@ export class DismissRoom {
     static readonly type = "[hotel_search] DismissRoom";
 }
 
-export class HotelForm{
-    static readonly type = "[hotel_search] HotelForm";
+export class SearchHotel {
+    static readonly type = "[hotel_search] SearchHotel";
     constructor(public hotelForm: hotelForm) {
 
     }
-}
-
-export class SearchHotel {
-    static readonly type = "[hotel_search] SearchHotel";
 }
 
 @State<hotelsearch>({
@@ -206,6 +277,11 @@ export class HotelSearchState {
     @Selector()
     static getPayload(state: hotelsearch): hotelsearchpayload {
         return state.payload;
+    }
+
+    @Selector()
+    static getCityId(state: hotelsearch): string {
+        return state.formData.city.cityid.toString();
     }
 
     @Action(AddRoom)
@@ -367,40 +443,83 @@ export class HotelSearchState {
 
     }
 
-    @Action(HotelForm)
-    HotelForm(states: StateContext<hotelsearch>, action: HotelForm) {
-        states.patchState({
-            formData : action.hotelForm
-        });
-    }
+    // @Action(SearchHotel)
+    // async searchHotel(states: StateContext<hotelsearch>) {
+
+    //     states.patchState({
+    //         payload: payload
+    //     });
+
+    //     try {
+    //         let hotelResponse = await this.hotelService.searchHotel(payload);
+    //         let hoteldata: hotelResponse = JSON.parse(hotelResponse.data);
+    //         states.dispatch(new HotelResponse(hoteldata.response));
+    //         states.dispatch(new ResultMode('hotel'));
+    //         this.loadingCtrl.dismiss(null, null, 'search-hotel');
+    //         states.dispatch(new Navigate(['/', 'home', 'result', 'hotel']));
+    //     }
+    //     catch (error) {
+    //         console.log(error);
+    //         if (error.status == -4) {
+    //             failedAlert.message = "Search Timeout, Try Again";
+    //         }
+    //         //no result error
+    //         if (error.status == 400) {
+    //             const errorString = JSON.parse(error.error);
+    //             failedAlert.message = errorString.message.response.Error.ErrorMessage;
+    //         }
+    //         //502 => proxy error
+    //         if (error.status == 502) {
+    //             failedAlert.message = "Server failed to get correct information";
+    //         }
+    //         //503 => service unavailable, Maintanence downtime
+    //         if (error.status == 503) {
+    //             failedAlert.message = "Server Maintanence Try again Later";
+    //         }
+    //         loading.dismiss();
+    //         failedAlert.present();
+    //     }
+
+    // }
 
     @Action(SearchHotel)
-    async searchHotel(states: StateContext<hotelsearch>) {
+    searchHotel(states: StateContext<hotelsearch>, action: SearchHotel) {
 
-        const loading = await this.loadingCtrl.create({
+        const loading$ = from(this.loadingCtrl.create({
             spinner: "crescent",
             id: 'search-hotel'
-        });
-        const failedAlert = await this.alertCtrl.create({
+        }));
+
+        let loadingPresent$ = loading$.pipe(
+            flatMap(
+                (loadingEl) => {
+                    loadingEl.message = "Searching Hotel....";
+                    return from(loadingEl.present());
+                }
+            )
+        );
+
+        let loadingDismiss$ = loading$.pipe(
+            flatMap(
+                (loadingEl) => {
+                    return from(loadingEl.dismiss());
+                }
+            )
+        );
+
+        const failedAlert$ = from(this.alertCtrl.create({
             header: 'Search Failed',
             buttons: [{
                 text: 'Ok',
                 role: 'ok',
                 cssClass: 'danger',
                 handler: (res) => {
-                    failedAlert.dismiss({
-                        data: false,
-                        role: 'failed'
-                    });
+                    return false;
                 }
             }]
-        });
+        }));
 
-        loading.message = "Searching Hotel...";
-        await loading.present();
-
-        let currentForm: hotelForm = states.getState().formData;
-
+        let currentForm: hotelForm = action.hotelForm;
         let payload: hotelsearchpayload = {
             CheckInDate: moment(currentForm.checkin).format('DD/MM/YYYY'),
             CityId: currentForm.city.cityid.toString(),
@@ -419,40 +538,47 @@ export class HotelSearchState {
             ReviewScore: null,
             RoomGuests: currentForm.room
         }
-
+        
         states.patchState({
+            formData: action.hotelForm,
             payload: payload
         });
 
-        try {
-            let hotelResponse = await this.hotelService.searchHotel(payload);
-            let hoteldata: hotelResponse = JSON.parse(hotelResponse.data);
-            states.dispatch(new HotelResponse(hoteldata.response));
-            states.dispatch(new ResultMode('hotel'));
-            this.loadingCtrl.dismiss(null, null, 'search-hotel');
-            states.dispatch(new Navigate(['/', 'home', 'result', 'hotel']));
-        }
-        catch (error) {
-            console.log(error);
-            if (error.status == -4) {
-                failedAlert.message = "Search Timeout, Try Again";
-            }
-            //no result error
-            if (error.status == 400) {
-                const errorString = JSON.parse(error.error);
-                failedAlert.message = errorString.message.response.Error.ErrorMessage;
-            }
-            //502 => proxy error
-            if (error.status == 502) {
-                failedAlert.message = "Server failed to get correct information";
-            }
-            //503 => service unavailable, Maintanence downtime
-            if (error.status == 503) {
-                failedAlert.message = "Server Maintanence Try again Later";
-            }
-            loading.dismiss();
-            failedAlert.present();
-        }
+        let hotelResponse$ = this.hotelService.searchHotel(payload);
+
+        return loadingPresent$
+            .pipe(
+                flatMap(
+                    () => {
+                        return hotelResponse$
+                    }
+                ),
+                flatMap(
+                    (response) => {
+                        let hotelresult: HTTPResponse = response;
+                        // let list2: any[] = JSON.parse(dumpresponse.data).ArrayOfBasicPropertyInfo.BasicPropertyInfo;
+                        // let list3: hotelresultlist[] = list1.map(el => _.pick(el, ["HotelCode", "Price", "ResultIndex", "StarRating", "SupplierHotelCodes"]));
+                        // let list4: staticresponselist[] = list2.map(el => _.pick(el, ["Address", "Attributes", "HotelName", "TBOHotelCode","VendorMessages"]));
+                        let list6: hotelresponse = JSON.parse(hotelresult.data).response;
+                        states.dispatch(new HotelResponse(list6));
+                        return loadingDismiss$
+                    }
+                ),
+                map(
+                    (value: boolean) => {
+                        states.dispatch(new ResultMode('hotel'));
+                        states.dispatch(new Navigate(['/', 'home', 'result', 'hotel']));
+                    }
+                ),
+                catchError(
+                    (error) => {
+                        console.log(error);
+                        return of(error);
+                    }
+                )
+            )
 
     }
+
+
 }
