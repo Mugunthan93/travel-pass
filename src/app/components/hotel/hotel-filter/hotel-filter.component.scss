@@ -1,47 +1,36 @@
-@import "../../../../style/base/color.scss";
+ion-header {
+    ion-title {
+        padding: 0px !important;
+    }
+}
 
-ion-grid{
-    margin-left:10px;
-    margin-right:10px;
-    >ion-row{
-        padding:10px;
-        border-bottom:1px solid #{$suva-grey};
-        >ion-col{
-            >ion-row:last-child{
-                >ion-col{
-                    >ion-item{
-                        --padding-start:0px;
-                        >ion-range{
-                            padding-left:0px;
-                            padding-right:0px;
-                        }
-                    }
-                }
+
+ion-content {
+    >ion-grid {
+        --ion-grid-padding: 10px !important;
+
+        >* {
+            margin: 4px 0px;
+        }
+
+        >ion-segment {
+            min-height: 40px !important;
+            >ion-segment-button {
+                min-width: 20px !important;
             }
         }
-    }
-}
 
-ion-chip{
-    ion-text{
-        font-size:xx-small;
-    }
-}
+        >ion-range {
+            margin: auto 4px;
+            padding: 0px;
+        }
 
-ion-footer{
-    >ion-row#book-button {
-        width: 100%;
+        >ion-item {
+            min-height: 50px;
+        }
 
-        >ion-col {
-            ion-button {
-                width: -webkit-fill-available;
-                --opacity: 1;
-                --background:#{$malibu};
-
-                ion-text {
-                    color: white;
-                }
-            }
+        >ion-row {
+            justify-content: space-between;
         }
     }
 }

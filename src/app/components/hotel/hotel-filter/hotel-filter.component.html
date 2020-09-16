@@ -1,22 +1,83 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" (click)="dismiss()">
       <ion-button>
         <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Sort & Filter</ion-title>
-    <ion-title>Showing 1280 of 1280 Properties</ion-title>
+    <ion-title>Hotel Filter</ion-title>
     <ion-buttons slot="end">
-      <ion-button>
-        <ion-text>RESET</ion-text>
+      <ion-button (click)="reset()">
+        <ion-label class="bold">RESET</ion-label>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+
   <ion-grid>
+    <ion-label>Star Rating</ion-label>
+    <ion-segment mode="ios" (ionChange)="chooseStarRating($event)" [value]="(inputs$ | async).starRating">
+      <ion-segment-button value="-1">
+        <ion-label>All</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="1">
+        <ion-label>One</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="2">
+        <ion-label>Two</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="3">
+        <ion-label>Three</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="4">
+        <ion-label>Four</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="5">
+        <ion-label>Five</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <ion-label>Price : {{ (inputs$ | async).price }}</ion-label>
+    <ion-range (ionChange)="priceRange($event)" class="filter" pin="true" ticks="true" snaps="true" min="1000"
+      max="100000" step="1000" [value]="(inputs$ | async).price">
+    </ion-range>
+
+    <ion-row>
+      <ion-label>1000</ion-label>
+      <ion-label>10,00,000</ion-label>
+    </ion-row>
+
+    <ion-label>Preferred Hotels</ion-label>
+
+    <ion-list>
+      <div *ngFor="let airline of (inputs$ | async).place">
+        <ion-item>
+          <ion-label>{{airline.name}}</ion-label>
+          <ion-checkbox class="default" slot="end" [checked]="airline.value" (ionChange)="choosePlaces($event)"
+            [value]="airline">
+          </ion-checkbox>
+        </ion-item>
+      </div>
+    </ion-list>
+
+  </ion-grid>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="end" (click)="dismiss()">
+      <ion-button>
+        <ion-label>Done</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+
+
+  <!-- <ion-grid>
     <ion-row>
       <ion-col>
         <ion-row>
@@ -65,7 +126,6 @@
         <ion-row>
           <ion-col>
             <ion-chip *ngFor="let location of options.location;let i = index" (click)="chipSelection(location,i)">
-              <!-- <ion-text>{{ budget.min | currency:'INR'}} - {{ budget.max | currency:'INR'}}</ion-text> -->
               <ion-icon name="close" *ngIf="budget.selection"></ion-icon>
             </ion-chip>
           </ion-col>
@@ -117,22 +177,4 @@
         </ion-row>
       </ion-col>
     </ion-row>
-  </ion-grid>
-
-
-</ion-content>
-
-<ion-footer>
-  <ion-row id="book-button">
-    <ion-col>
-      <ion-button>
-        <ion-text>Cancel</ion-text>
-      </ion-button>
-    </ion-col>
-    <ion-col>
-      <ion-button>
-        <ion-text>Apply</ion-text>
-      </ion-button>
-    </ion-col>
-  </ion-row>
-</ion-footer>
+  </ion-grid> -->

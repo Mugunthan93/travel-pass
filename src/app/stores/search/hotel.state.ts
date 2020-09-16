@@ -115,12 +115,15 @@ export interface staticattribute {
 
 export interface hotelresultlist {
     HotelCode: string
+    HotelPicture: string
     Price: hotelprice
     ResultIndex: number
     StarRating: number
     SupplierHotelCodes: supplierhotelcodes[]
     Facilities?: string[]
-    Images? : string
+    Images?: string
+    Description: string
+    Place: string
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -562,18 +565,19 @@ export class HotelSearchState {
                 ),
                 flatMap(
                     (response) => {
-                        console.log(response);
                         let hotelresult: HTTPResponse = response[0];
                         let dumpresponse: HTTPResponse = response[1];
 
                         let list1: any[] = JSON.parse(hotelresult.data).response.HotelResults.filter(el => el.IsTBOMapped);
                         let list2: any[] = JSON.parse(dumpresponse.data).ArrayOfBasicPropertyInfo.BasicPropertyInfo;
-                        let list3: hotelresultlist[] = list1.map(el => _.pick(el, ["HotelCode", "Price", "ResultIndex", "StarRating", "SupplierHotelCodes"]));
+
+                        console.log(list1,list2);
+                        let list3: hotelresultlist[] = list1.map(el => _.pick(el, ["HotelCode", "Price", "ResultIndex", "StarRating", "SupplierHotelCodes", "Place", "Description","HotelPicture"]));
                         let list4: staticresponselist[] = list2.map(el => _.pick(el, ["Address", "Attributes", "HotelName", "TBOHotelCode","VendorMessages"]));
                         let list5: (staticresponselist & hotelresultlist)[] = list3
                             .map(
                                 (dump) => {
-                                    let result1 = list4.find(result => result.TBOHotelCode == dump.HotelCode);
+                                    let result1 = list4.find(result => _.isEqual(result.TBOHotelCode,dump.HotelCode));
                                     return _.merge(dump, result1);
                                 }
                             );

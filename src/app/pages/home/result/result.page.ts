@@ -33,6 +33,8 @@ export class ResultPage implements OnInit {
   totalHotels$: Observable<number>;
   busSearch$: Observable<busform>;
 
+  loading$: Observable<number>;
+
   constructor(
     private store:Store,
     public modalCtrl : ModalController
@@ -56,6 +58,7 @@ export class ResultPage implements OnInit {
     this.totalHotels$ = this.store.select(HotelResultState.totalResult);
 
     this.busSearch$ = this.store.select(BusSearchState.getSearchData);
+    this.loading$ = this.store.select(HotelResultState.getLoading);
 
   }
 
@@ -82,7 +85,8 @@ export class ResultPage implements OnInit {
 
   async hotelFilter() {
     const modal = await this.modalCtrl.create({
-      component: HotelFilterComponent
+      component: HotelFilterComponent,
+      id: 'hotel-filter'
     });
 
     return modal.present();

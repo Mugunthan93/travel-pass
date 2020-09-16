@@ -3,6 +3,8 @@ import { ModalController } from '@ionic/angular';
 import { LocationComponent } from '../location/location.component';
 import { Observable } from 'rxjs';
 import { hotellist } from 'src/app/stores/result/hotel.state';
+import { Store } from '@ngxs/store';
+import { hotelFilter, HotelFilterState, SetStarRating, SetPlaces, SetHotelPrice, ResetPlaces } from 'src/app/stores/result/filter/hotel.filter.state';
 
 @Component({
   selector: 'app-hotel-filter',
@@ -12,7 +14,6 @@ import { hotellist } from 'src/app/stores/result/hotel.state';
 export class HotelFilterComponent implements OnInit {
 
   hotels: Observable<hotellist[]>;
-
   options = {
     budget: [
       { min: 0, max: 1500, selection: false },
@@ -39,19 +40,21 @@ export class HotelFilterComponent implements OnInit {
     ],
     location: []
   }
-
   budget = {
     selection: null
   }
 
+  inputs$ : Observable<hotelFilter>;
+  inputs: hotelFilter
+
   constructor(
+    private store : Store,
     public modalCtrl : ModalController
   ) { }
 
   ngOnInit() {
-
-    
-
+    this.inputs = this.store.selectSnapshot(HotelFilterState.getFilter);
+    this.inputs$ = this.store.select(HotelFilterState.getFilter)
   }
   
   chipSelection(property: any, index: number) {
@@ -72,6 +75,31 @@ export class HotelFilterComponent implements OnInit {
     );
 
     return await modal.present();
+  }
+
+  chooseStarRating(evt : CustomEvent) {
+    this.store.dispatch(new SetStarRating(parseInt(evt.detail.value)));
+  }
+
+  priceRange(evt: CustomEvent) {
+    this.store.dispatch(new SetHotelPrice(evt.detail.value));
+  }
+
+  choosePlaces(evt: CustomEvent) {
+    this.store.dispatch(new SetPlaces(evt.detail.value, evt.detail.checked));
+  }
+
+  reset() {
+    this.store.dispatch(
+      [
+        new SetStarRating(-1),
+        new SetHotelPrice(0),
+        new ResetPlaces()
+      ]);
+  }
+
+  dismiss() {
+    this.modalCtrl.dismiss(null, null,'hotel-filter');
   }
 
 

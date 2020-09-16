@@ -43,7 +43,6 @@
         hotel of (
           hotelList$ | async
            | sort : (sortBy$ | async).property : (sortBy$ | async).state
-           | limit : (limit$ | async)
         );let i = index"
         (click)="viewHotel(hotel)">
     
@@ -55,7 +54,8 @@
           <ion-row>
             <ion-row>
               <ion-title class="medium">{{hotel.HotelName | titlecase}}</ion-title>
-              <ion-label *ngFor="let add of hotel.Address.AddressLine">{{ add }}</ion-label>
+              <ion-label *ngFor="let add of address(hotel)">{{ add }}</ion-label>
+
             </ion-row>
             <ion-row>
               <ion-label class="bold">{{hotel.Price.PublishedPrice | currency : 'INR'}}</ion-label>
@@ -73,18 +73,12 @@
               <!-- <ion-icon size="large" name="heart-outline"></ion-icon>
               <ion-icon slot="start" name="heart-sharp" *ngIf="false"></ion-icon> -->
             </ion-row>
-            <ion-row class="headline" [innerHTML]="hotelDesc(hotel) | slice : 0 : 100">
+            <ion-row class="headline" [innerHTML]="hotel.Description | slice : 0 : 100">
             </ion-row>
-            <span>...</span>
           </ion-item>
         </ion-card-content>
     
       </ion-card>
     </ion-row>
-    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)" #infinite>
-      <ion-infinite-scroll-content loadingSpinner="bubbles" [loadingText]="loading">
-      </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
-
 
 </ion-content>

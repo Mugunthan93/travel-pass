@@ -55,19 +55,9 @@ export class HotelPage implements OnInit {
     this.sortBy$ = this.store.select(SortState.getHotelSortBy);
   }
 
-  async hotelFilter() {
-    const modal = await this.modalCtrl.create({
-      component: HotelFilterComponent,
-      id:'hotel-filter'
-    });
-
-    modal.onDidDismiss().then(
-      (filterData) => {
-        console.log(filterData);
-      }
-    );
-
-    return await modal.present();
+  address(hotel: (staticresponselist & hotelresultlist)) {
+    let address = hotel.Address.AddressLine.filter(el => !_.isObject(el));
+    return address.map(el => _.startCase(el));
   }
 
   async viewHotel(hotel: hotellist) {
@@ -109,7 +99,7 @@ export class HotelPage implements OnInit {
   loadData(evt: any) {
     this.store.dispatch(new AddHotels())
       .subscribe({
-        complete: () => {
+        next: () => {
           return this.limit$
             .pipe(
               map(
@@ -127,19 +117,6 @@ export class HotelPage implements OnInit {
 
   loadImg(hotel: (staticresponselist & hotelresultlist)): string {
     return this.webview.convertFileSrc(hotel.Images);
-  }
-
-  hotelDesc(hotel: (staticresponselist & hotelresultlist)) {
-    const fairRuleTemplate = hotel.VendorMessages.VendorMessage.map(
-      (el) => {
-        if (el.InfoType == '1') {
-          return (el.SubSection as unknown as subsection).Paragraph.Text.$t;
-        }
-      }
-    );
-    let sanitizedTemplate = this.domSantizier.sanitize(SecurityContext.HTML, fairRuleTemplate);
-    sanitizedTemplate = _.trim(sanitizedTemplate,',,,');
-    return sanitizedTemplate
   }
   
 }
