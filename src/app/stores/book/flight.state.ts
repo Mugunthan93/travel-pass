@@ -776,7 +776,6 @@ export class FLightBookState {
         }
     }
 
-
     passCount(type: string) : number {
         let passengerCount = 0;
         switch (type) {

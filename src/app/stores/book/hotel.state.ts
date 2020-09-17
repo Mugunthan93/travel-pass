@@ -1,14 +1,20 @@
 import { State, StateContext, Action, Selector, Store } from '@ngxs/store';
-import { dayRates, hotelprice, cancellationPolicy, hotelDetail, HotelResultState } from '../result/hotel.state';
+import { dayRates, hotelprice, cancellationPolicy, HotelResultState } from '../result/hotel.state';
 import { managers, user_eligibility } from './flight.state';
 import { hotelsearchpayload, HotelSearchState } from '../search/hotel.state';
 import { UserState } from '../user.state';
 import { CompanyState } from '../company.state';
 import * as moment from 'moment';
-import { of, from } from 'rxjs';
+import { of, from, forkJoin } from 'rxjs';
 import { HotelService } from 'src/app/services/hotel/hotel.service';
-import { tap, catchError } from 'rxjs/operators';
+import { tap, catchError, map, flatMap } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
+import { LoadingController, AlertController, ModalController } from '@ionic/angular';
+import { Navigate } from '@ngxs/router-plugin';
+import { StateReset } from 'ngxs-reset-plugin';
+import { SearchState } from '../search.state';
+import { ResultState } from '../result.state';
+import { BookState } from '../book.state';
 
 
 export interface hotelbook {
@@ -194,7 +200,10 @@ export class HotelBookState {
 
     constructor(
         private store: Store,
-        private hotelService: HotelService
+        private hotelService: HotelService,
+        public modalCtrl : ModalController,
+        public loadingCtrl: LoadingController,
+        public alertCtrl: AlertController
     ) {
 
     }
@@ -277,6 +286,55 @@ export class HotelBookState {
     @Action(SendRequest)
     sendRequest(states: StateContext<hotelbook>, action: SendRequest) {
 
+        let loading$ = from(this.loadingCtrl.create({
+            spinner: 'crescent',
+            message: 'Sending Request...',
+            id: 'send-req-loading'
+        })).pipe(
+            map(
+                (loadingEl) => {
+                    return from(loadingEl.present());
+                }
+            )
+        );
+
+        let failedAlert$ = from(this.alertCtrl.create({
+            header: 'Send Request Failed',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                handler: () => {
+                    return false;
+                }
+            }]
+        })).pipe(
+            flatMap(
+                (alertEl) => {
+                    return from(alertEl.present());
+                }
+            )
+        );
+
+        let successAlert$ = from(this.alertCtrl.create({
+            header: 'Request Success',
+            subHeader: 'Send Request Success',
+            message: 'Request Sent Successfully..',
+            buttons: [
+                {
+                    text: 'Ok',
+                    handler: () => {
+                        states.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']));
+                    }
+                }
+            ]
+        })).pipe(
+            flatMap(
+                (alertEl) => {
+                    return from(alertEl.present());
+                }
+            )
+        );
+
         let sgst: number = 0;
         let cgst: number = 0;
         let igst: number = 0;
@@ -358,22 +416,29 @@ export class HotelBookState {
             purpose: states.getState().purpose
         }
 
-        return from(this.hotelService.sendRequest(request))
+        let sendRequest$ = from(this.hotelService.sendRequest(request));
+
+        return forkJoin(loading$, sendRequest$)
             .pipe(
-                tap(
-                    (el : HTTPResponse) => {
+                flatMap(
+                    (el) => {
                         console.log(el);
-                        return of(el);
+                        if (el[1].status == 200) {  
+                            console.log(JSON.parse(el[1].data));
+                            return forkJoin(from(this.loadingCtrl.dismiss(null, null, 'send-req-loading')),successAlert$);
+                        }
+                        else {
+                            return forkJoin(from(this.loadingCtrl.dismiss(null, null, 'send-req-loading')), failedAlert$);
+                        }
                     }
                 ),
                 catchError(
-                    (err) => {
-                        console.log(err);
-                        return of(err);
+                    (error) => {
+                        console.log(error);
+                        return of(error);
                     }
                 )
-            )
-
+            );
     }
 
     serviceCharges(): number {

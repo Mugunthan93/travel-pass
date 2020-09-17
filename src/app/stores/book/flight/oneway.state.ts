@@ -204,12 +204,12 @@ export class OneWayBookState{
                 role: 'ok',
                 cssClass: 'danger',
                 handler: (res) => {
-                    this.store.dispatch(new Navigate(['/','home','dashboard','home-tab']));
+                    states.dispatch(new Navigate(['/','home','dashboard','home-tab']));
                     successAlert.dismiss({
                         data: false,
                         role: 'failed'
                     });
-                    this.store.dispatch(new StateReset(SearchState,ResultState,BookState));
+                    states.dispatch(new StateReset(SearchState,ResultState,BookState));
                     this.modalCtrl.dismiss(null, null, 'send-request');
                 }
             }]
