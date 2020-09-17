@@ -48,7 +48,7 @@
     </ion-buttons>
   </ion-toolbar>
     <app-result-sorting *ngIf="(resultMode$ | async) !== 'flight'"></app-result-sorting>
-    <ion-progress-bar *ngIf="((resultMode$ | async) !== 'flight') && ((loading$ | async) < 1)" [value]="loading$ | async">
+    <ion-progress-bar *ngIf="((resultMode$ | async) !== 'flight') && ((loading$ | async) < 0.999)" [value]="loading$ | async">
     </ion-progress-bar>
 </ion-header>
 <ion-content>

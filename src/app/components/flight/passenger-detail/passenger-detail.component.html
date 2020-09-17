@@ -124,8 +124,11 @@
       <ion-icon name="add"></ion-icon>
       <ion-text (click)="addMeal()">Meal & Baggage</ion-text>
     </ion-button>
-    <ion-button type="submit" expand="block" fill="solid">
-      <ion-label clas="medium bold">{{form == 'add' ? 'Add Passenger' : form == 'edit' ? 'Edit Passenger' : 'Add Passsenger'}}</ion-label>
+    <ion-button type="submit" expand="block" fill="solid" *ngIf="form == 'add'">
+      <ion-label clas="medium bold">Add Passenger</ion-label>
+    </ion-button>
+    <ion-button type="submit" expand="block" fill="solid" *ngIf="form == 'edit'">
+      <ion-label clas="medium bold">Edit Passenger</ion-label>
     </ion-button>
   </form>
 </ion-content>

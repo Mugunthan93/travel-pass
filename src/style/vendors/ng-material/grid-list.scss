@@ -8,8 +8,17 @@ mat-grid-list{
 
     mat-grid-tile{
 
+        figure{
+            display: flex;
+            flex-direction: column;
+        }
+
         ion-label {
             --color: #{$white};
+        }
+
+        ion-img{
+            width: 100%;
         }
     }
 }

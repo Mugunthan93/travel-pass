@@ -28,7 +28,7 @@
 
   <ion-card *ngFor="let room of (roomDetail$ | async) | room : (selectedCategory$ | async); let i = index">
     <ion-card-header>
-      <ion-img [src]="getImage(room.Images)"></ion-img>
+      <ion-img [src]="getHotelImage(room.Images)"></ion-img>
     </ion-card-header>
     <ion-card-content>
 
@@ -51,17 +51,17 @@
 
       <ion-row class="selectroom">
 
-        <ion-button (click)="bookHotel(room)">
+        <!-- <ion-button (click)="bookHotel(room)">
           <ion-label class="bold">PROCEED</ion-label>
-        </ion-button>
+        </ion-button> -->
 
-        <!-- <ion-button (click)="removeRoom(room)">
+        <ion-button (click)="removeRoom(room)">
           <ion-icon name="remove-outline"></ion-icon>
         </ion-button>
         <ion-label class="bold">{{ selectedRoom(room) | async }}</ion-label>
         <ion-button (click)="addRoom(room)">
           <ion-icon name="add-outline"></ion-icon>
-        </ion-button> -->
+        </ion-button>
       </ion-row>
 
     </ion-card-content>
@@ -69,15 +69,15 @@
 
 </ion-content>
 
-<ion-footer *ngIf="false">
+<ion-footer>
   <ion-toolbar>
     <ion-item>
       <ion-row class="room-cost">
-        <ion-label class="large bold white">Total:</ion-label>
-        <ion-label class="bold white">{{ totalCost() | async | currency : 'INR' }}</ion-label>
+        <ion-label class="large bold">Total:</ion-label>
+        <ion-label class="bold">{{ totalCost() | async | currency : 'INR' }}</ion-label>
       </ion-row>
     </ion-item>
-    <ion-buttons slot="end">
+    <ion-buttons slot="end" (click)="bookHotel()">
       <ion-button>
         <ion-label>CONTINUE</ion-label>
       </ion-button>

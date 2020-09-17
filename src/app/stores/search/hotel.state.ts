@@ -121,7 +121,7 @@ export interface hotelresultlist {
     StarRating: number
     SupplierHotelCodes: supplierhotelcodes[]
     Facilities?: string[]
-    Images?: string
+    Images?: string[]
     Description: string
     Place: string
 }
@@ -285,6 +285,11 @@ export class HotelSearchState {
     @Selector()
     static getCityId(state: hotelsearch): string {
         return state.formData.city.cityid.toString();
+    }
+
+    @Selector()
+    static getTotalRooms(state: hotelsearch) : number {
+        return state.rooms.length;
     }
 
     @Action(AddRoom)
@@ -577,12 +582,14 @@ export class HotelSearchState {
                         let list5: (staticresponselist & hotelresultlist)[] = list3
                             .map(
                                 (dump) => {
-                                    let result1 = list4.find(result => _.isEqual(result.TBOHotelCode,dump.HotelCode));
-                                    return _.merge(dump, result1);
+                                    if (list4.some(result => result.TBOHotelCode == dump.HotelCode)) {
+                                        let result1 = list4.find(result => result.TBOHotelCode == dump.HotelCode);
+                                        return _.merge(dump, result1);
+                                    }
                                 }
                             );
                         let list6: hotelresponse = JSON.parse(hotelresult.data).response;
-                        list6.HotelResults = list5;
+                        list6.HotelResults = _.compact(list5);
 
                         states.dispatch(new HotelResponse(list6));
                         return loadingDismiss$

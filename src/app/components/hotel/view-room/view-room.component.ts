@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable, of, BehaviorSubject, from, combineLatest } from 'rxjs';
+import { Observable, of, BehaviorSubject, from, combineLatest, iif } from 'rxjs';
 import { hotelForm, HotelSearchState } from 'src/app/stores/search/hotel.state';
 import { Store } from '@ngxs/store';
 import { HotelResultState, hotelDetail, selectedHotel, AddRoom, RemoveRoom, BlockRoom } from 'src/app/stores/result/hotel.state';
-import { ModalController } from '@ionic/angular';
-import { map, tap, withLatestFrom } from 'rxjs/operators';
+import { ModalController, AlertController } from '@ionic/angular';
+import { map, tap, withLatestFrom, flatMap } from 'rxjs/operators';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 
 @Component({
@@ -27,12 +27,16 @@ export class ViewRoomComponent implements OnInit {
   selectedCategory$ = new BehaviorSubject('all');
   selectedRoom$: Observable<hotelDetail[]>;
 
+  totalRoom: number;
+  selectionAlert$: Observable<void>;
+
   constructor(
     private store: Store,
     public modalCtrl : ModalController,
     public router: Router,
     public activatedRoute: ActivatedRoute,
-    public webView :WebView
+    public webView: WebView,
+    public alertCtrl : AlertController
   ) { }
 
   ngOnInit() {
@@ -47,12 +51,14 @@ export class ViewRoomComponent implements OnInit {
     this.roomDetail$ = this.store.select(HotelResultState.getRoomDetail);
 
     this.selectedRoom$ = this.store.select(HotelResultState.getSelectedRoom);
-
+    this.totalRoom = this.store.selectSnapshot(HotelSearchState.getTotalRooms);
   }
 
-  bookHotel(room: hotelDetail) {
-    console.log(room);
-    this.store.dispatch(new AddRoom(room));
+  getHotelImage(img : string) {
+    return this.webView.convertFileSrc(img);
+  }
+
+  bookHotel() {
     this.store.dispatch(new BlockRoom());
   }
 
@@ -62,8 +68,8 @@ export class ViewRoomComponent implements OnInit {
     this.selectedCategory$.subscribe(console.log);
   }
 
-  getImage(img : string) : string {
-    return this.webView.convertFileSrc(img);
+  addRoom(room: hotelDetail) {
+    this.store.dispatch(new AddRoom(room));
   }
 
   removeRoom(room: hotelDetail) {

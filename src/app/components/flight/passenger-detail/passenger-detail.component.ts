@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { MealBaggageComponent } from '../meal-baggage/meal-baggage.component';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -22,7 +22,7 @@ import { flightpassenger, AddPassenger, EditPassenger, FlightPassengerState } fr
   templateUrl: './passenger-detail.component.html',
   styleUrls: ['./passenger-detail.component.scss'],
 })
-export class PassengerDetailComponent implements OnInit {
+export class PassengerDetailComponent implements OnInit,OnChanges {
 
   @Input() form: string;
   @Input() pax: flightpassenger;
@@ -43,7 +43,6 @@ export class PassengerDetailComponent implements OnInit {
     passport: "^(?!^0+$)[a-zA-Z0-9]{6,9}$",
     gst:"^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$"
   }
-
 
   constructor(
     private store : Store,
@@ -105,7 +104,10 @@ export class PassengerDetailComponent implements OnInit {
 
     this.type = this.store.selectSnapshot(BookState.getBookType);
     this.Passenger.valueChanges.subscribe(el => console.log(this.Passenger));
+  }
 
+  ngOnChanges(changes: SimpleChanges) {
+    console.log(changes);
   }
   
   async addMeal() {
@@ -210,7 +212,7 @@ export class PassengerDetailComponent implements OnInit {
       if (this.form == 'add') {
         this.store.dispatch(new AddPassenger(passenger));
       }
-      else if (this.form == 'edit') {
+      else {
         this.store.dispatch(new EditPassenger(passenger,this.pax));
       }
     }

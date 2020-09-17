@@ -32,6 +32,8 @@ ion-content {
                 ion-label{
                     margin: 12px;
                 }
+
+                
                 // >*{
                 //     width: 35px;
                 //     margin: 4px 0px;
@@ -41,9 +43,10 @@ ion-content {
                 //     text-align: center;
                 // }
 
-                // ion-icon{
-                //     color: #{$white};
-                // }
+                ion-icon{
+                    color: #{$white};
+                    padding: 0px 5px;
+                }
             }
         }
     }
@@ -55,6 +58,12 @@ ion-footer{
         ion-row.room-cost{
             display: flex;
             flex-direction: column;
+            >ion-label{
+                color: #{$white};
+                &:first-child{
+                    font-size: 17px;
+                }
+            }
         }
     }
 }

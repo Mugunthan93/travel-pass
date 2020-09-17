@@ -2,10 +2,10 @@ import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
 import { HotelService } from 'src/app/services/hotel/hotel.service';
 import { File, FileError, FileEntry, DirectoryEntry } from '@ionic-native/file/ngx';
 import { FileTransferError } from '@ionic-native/file-transfer/ngx';
-import { LoadingController, ModalController } from '@ionic/angular';
-import { Observable, from, throwError, of, EMPTY } from 'rxjs';
+import { LoadingController, ModalController, AlertController } from '@ionic/angular';
+import { Observable, from, throwError, of, EMPTY, iif } from 'rxjs';
 import { mergeMap, take, toArray, tap, catchError, skipWhile, takeWhile, flatMap, map, switchMap, exhaustMap, retryWhen, delayWhen, finalize, concatMap, ignoreElements, skip, find, groupBy, reduce, distinct, distinctUntilChanged, first, bufferCount, filter, throttleTime } from 'rxjs/operators';
-import { SearchHotel, HotelSearchState, staticresponselist, hotelresultlist, staticpayload, paragraph, subsection } from '../search/hotel.state';
+import { SearchHotel, HotelSearchState, staticresponselist, hotelresultlist, staticpayload, paragraph, subsection, hotelsearchpayload, hotelForm } from '../search/hotel.state';
 import { SharedService } from 'src/app/services/shared/shared.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import * as _ from 'lodash';
@@ -32,12 +32,18 @@ export interface hotelresult {
 }
 
 export interface selectedHotel {
+    Error?:Error
     HotelDetail: hotellist
     HotelRoomsDetails: hotelDetail[]
     IsPolicyPerStay: boolean
     IsUnderCancellationAllowed: boolean
     RoomCombinationsArray: roomCombination[]
     resultIndex : number
+}
+
+export interface Error {
+    ErrorCode: number
+    ErrorMessage: string
 }
 
 export interface hotelDetail {
@@ -262,7 +268,7 @@ export interface hotellist {
 }
 
 export interface viewPayload {
-    CategoryIndexes: number[]
+    CategoryId: string
     EndUserIp: string
     HotelCode: string
     ResultIndex: number
@@ -370,7 +376,8 @@ export class HotelResultState{
         public loadingCtrl: LoadingController,
         private sharedService: SharedService,
         public modalCtrl: ModalController,
-        public domSantizier : DomSanitizer
+        public domSantizier: DomSanitizer,
+        public alertCtrl : AlertController
     ) {
 
     }
@@ -445,7 +452,6 @@ export class HotelResultState{
 
     @Action(GetToken)
     getToken(states: StateContext<hotelresult>) {
-
         return from(this.sharedService.getToken())
             .pipe(
                 map(
@@ -467,19 +473,16 @@ export class HotelResultState{
 
     @Action(HotelResponse)
     getHotelResponse(states: StateContext<hotelresult>, action: HotelResponse) {
-
         let priceSortedResult: (staticresponselist & hotelresultlist)[] = _.sortBy(action.response.HotelResults, (o) => {
             return o.Price.PublishedPrice;
         });
-
         states.patchState({
             hotelresponseList: priceSortedResult,
             traceId: action.response.TraceId
         });
-
         let x : number = 1 / priceSortedResult.length;
-        let resultarray: (staticresponselist & hotelresultlist)[][] = _.chunk(priceSortedResult, 70);
-        
+        let resultarray: (staticresponselist & hotelresultlist)[][] = _.chunk(priceSortedResult, 10);
+        console.log(resultarray);
         return from(resultarray)
             .pipe(
                 concatMap(
@@ -500,72 +503,27 @@ export class HotelResultState{
                                             pipe(
                                                 catchError(
                                                     (error) => {
+                                                        console.log(error);
                                                         return of(error);
                                                     }
                                                 ),
                                                 flatMap(
                                                     (response: HTTPResponse) => {
-
                                                         let currentX = states.getState().loading + x;
                                                         states.patchState({
                                                             loading: currentX
                                                         });
                                                         let hotelDetail: (staticresponselist & hotelresultlist) = JSON.parse(response.data).ArrayOfBasicPropertyInfo.BasicPropertyInfo;
-                                                        console.log(hotelDetail.Address);
+                                                        console.log(hotelDetail);
                                                         result.Place = this.hotelPlace(hotelDetail);
                                                         result.Description = this.hotelDesc(hotelDetail);
                                                         let Images: any[] = this.hotelImg(hotelDetail);
                                                         let filteredImg: string[] = Images.filter(el => _.isString(el));
-                                                        if (filteredImg.length > 0) {
-                                                            let url: string = filteredImg[0];
-                                                            let splitedEl: string[] = filteredImg[0].split('/');
-
-                                                            let folderName: string = result.HotelCode;
-                                                            let folderPath: string = 'TravellersPass/Image/Hotel';
-
-                                                            let fileName: string = splitedEl[splitedEl.length - 1];
-                                                            let filePath: string = null;
-                                                            if (fileName.includes('.jpg')) {
-                                                                filePath = folderPath + '/' + folderName + '/' + fileName;
-                                                            }
-                                                            else {
-                                                                filePath = folderPath + '/' + folderName + '/' + fileName + '.jpg';
-                                                            }
-                                                            return this.fileService.checkFile(filePath, fileName)
-                                                                .pipe(
-                                                                    map(
-                                                                        (fileExist) => {
-                                                                            return this.file.externalRootDirectory + filePath;
-                                                                        }
-                                                                    ),
-                                                                    catchError(
-                                                                        (error: FileError) => {
-                                                                            return this.fileService.downloadFile(url, filePath)
-                                                                                .pipe(
-                                                                                    map(
-                                                                                        (files: FileEntry) => {
-                                                                                            let str: string = files.fullPath;
-                                                                                            return this.file.externalRootDirectory + str;
-                                                                                        }
-                                                                                    ),
-                                                                                    catchError(
-                                                                                        (err: FileTransferError) => {
-                                                                                            return of("");
-                                                                                        }
-                                                                                    )
-                                                                                )
-                                                                        }
-                                                                    )
-                                                                )
-                                                        }
-                                                        else {
-                                                            return of(result.HotelPicture);
-                                                        }
+                                                        return this.checkImg(filteredImg, result);
                                                     }
                                                 ),
                                                 map(
-                                                    (str) => {
-                                                        console.log(str);
+                                                    (str : string[]) => {
                                                         result.Images = str;
                                                         return result;
                                                     }
@@ -573,6 +531,13 @@ export class HotelResultState{
                                             );
                                 }),
                                 toArray(),
+                                map(
+                                    (el) => {
+                                        let uniqArr = _.uniqWith(el, _.isEqual);
+                                        console.log(uniqArr);
+                                        return uniqArr;
+                                    }
+                                )
                             )
                     }
                 ),
@@ -581,7 +546,9 @@ export class HotelResultState{
                     (result) => {
                         let flatresult = result.flat();
                         states.dispatch(new GetPlaces(flatresult));
+                        let currentX = states.getState().loading;
                         states.patchState({
+                            loading: currentX,
                             hotelList: flatresult
                         });
                     }
@@ -591,7 +558,6 @@ export class HotelResultState{
 
     @Action(AddHotels)
     addHotels(states: StateContext<hotelresult>) {
-
         let currentCount: number = states.getState().listlimit + 10;
         states.patchState({
             listlimit: currentCount
@@ -600,7 +566,6 @@ export class HotelResultState{
 
     @Action(ViewHotel)
     viewHotel(states: StateContext<hotelresult>, action: ViewHotel) {
-
         return of(action.hotel)
             .pipe(
                 skipWhile(hotel => {
@@ -612,68 +577,118 @@ export class HotelResultState{
                     }
                     return skip;
                 }),
-                map(
+                flatMap(
                     (hotel: hotellist) => {
                         states.dispatch(new GetToken());
                         const token: string = states.getState().token;
-                        let indexes: number[] = [];
-
-                        hotel.SupplierHotelCodes.forEach(
-                            (code) => {
-                                indexes.push(code.CategoryIndex);
-                            }
-                        );
 
                         const viewPayload: viewPayload = {
-                            CategoryIndexes: indexes,
                             EndUserIp: "192.168.0.115",
-                            HotelCode: action.hotel.HotelCode,
-                            ResultIndex: action.hotel.ResultIndex,
                             TokenId: token,
-                            TraceId: states.getState().traceId
+                            TraceId: states.getState().traceId,
+                            ResultIndex: action.hotel.ResultIndex,
+                            HotelCode: action.hotel.HotelCode,
+                            CategoryId:action.hotel.SupplierHotelCodes[0].CategoryId
                         }
                         return from(this.hotelService.viewHotel(viewPayload));
-                    }
-                ),
-                flatMap(
-                    (response) => {
-                        return response;
                     }
                 ),
                 map(
                     (response: HTTPResponse) => {
                         console.log(response);
                         let hotelResponse: selectedHotel = JSON.parse(response.data).response;
-                        console.log(hotelResponse);
+                        //trace ID expired
+                        if (hotelResponse.Error.ErrorCode == 6) {
+                            let payload: hotelForm = this.store.selectSnapshot(HotelSearchState.getSearchData);
+                            states.dispatch(new SearchHotel(payload));
+                        }
+                        else {
+                            let roomDetail = hotelResponse.HotelRoomsDetails.map(
+                                (detail) => {
+                                    return _.omitBy(detail, (val) => {
+                                        return _.isNull(val) ||
+                                            (_.isString(val) && val.length < 1) ||
+                                            (_.isArray(val) && val.length < 1);
+                                    })
+                                }
+                            );
+                            roomDetail = _.filter(roomDetail, (n) => {
+                                return !_.isUndefined(n.DayRates);
+                            });
+    
+                            let selected: selectedHotel = Object.assign({}, {
+                                HotelDetail: action.hotel,
+                                HotelRoomsDetails: roomDetail,
+                                IsPolicyPerStay: hotelResponse.IsPolicyPerStay,
+                                IsUnderCancellationAllowed: hotelResponse.IsUnderCancellationAllowed,
+                                RoomCombinationsArray: hotelResponse.RoomCombinationsArray,
+                                resultIndex: action.hotel.ResultIndex
+                            });
+    
+                            states.patchState({
+                                selectedHotel: selected
+                            });
+    
+                            return selected;
+                        }
+                    }
+                ),
+                flatMap(
+                    (hotel: selectedHotel) => {
+                        return from(hotel.HotelDetail.Images)
+                            .pipe(
+                                mergeMap(
+                                    (img : string) => {
+                                        let url: string = img;
+                                        let splitedEl: string[] = img.split('/');
 
-                        let roomDetail = hotelResponse.HotelRoomsDetails.map(
-                            (detail) => {
-                                return _.omitBy(detail, (val) => {
-                                    return _.isNull(val) ||
-                                        (_.isString(val) && val.length < 1) ||
-                                        (_.isArray(val) && val.length < 1);
-                                })
-                            }
-                        );
+                                        let folderName: string = hotel.HotelDetail.HotelCode;
+                                        let folderPath: string = 'TravellersPass/Image/Hotel';
 
-                        roomDetail = _.filter(roomDetail, (n) => {
-                            return !_.isUndefined(n.DayRates);
-                        });
-
-                        let selected: selectedHotel = Object.assign({}, {
-                            HotelDetail: action.hotel,
-                            HotelRoomsDetails: roomDetail,
-                            IsPolicyPerStay: hotelResponse.IsPolicyPerStay,
-                            IsUnderCancellationAllowed: hotelResponse.IsUnderCancellationAllowed,
-                            RoomCombinationsArray: hotelResponse.RoomCombinationsArray,
-                            resultIndex: action.hotel.ResultIndex
-                        });
-
-                        states.patchState({
-                            selectedHotel: selected
-                        });
-
-                        return selected;
+                                        let fileName: string = splitedEl[splitedEl.length - 1];
+                                        let filePath: string = null;
+                                        if (fileName.includes('.jpg')) {
+                                            filePath = folderPath + '/' + folderName + '/' + fileName;
+                                        }
+                                        else {
+                                            filePath = folderPath + '/' + folderName + '/' + fileName + '.jpg';
+                                        }
+                                        return this.fileService.checkFile(filePath, fileName)
+                                            .pipe(
+                                                map(
+                                                    (fileExist) => {
+                                                        return this.file.externalRootDirectory + filePath;
+                                                    }
+                                                ),
+                                                catchError(
+                                                    (error: FileError) => {
+                                                        return this.fileService.downloadFile(url, filePath)
+                                                            .pipe(
+                                                                map(
+                                                                    (files: FileEntry) => {
+                                                                        let str: string = files.fullPath;
+                                                                        return this.file.externalRootDirectory + str;
+                                                                    }
+                                                                ),
+                                                                catchError(
+                                                                    (err: FileTransferError) => {
+                                                                        return of("");
+                                                                    }
+                                                                )
+                                                            )
+                                                    }
+                                                )
+                                            )
+                                    }
+                                ),
+                                toArray(),
+                                map(
+                                    (str : string[]) => {
+                                        hotel.HotelDetail.Images = str;
+                                        return hotel;
+                                    }
+                                )
+                            );
                     }
                 ),
                 map(
@@ -701,14 +716,7 @@ export class HotelResultState{
                         );
 
                         console.log(hotel);
-
                         return hotel;
-                    }
-                ),
-                catchError(
-                    (error) => {
-                        console.log(error);
-                        return error;
                     }
                 )
             )
@@ -717,11 +725,7 @@ export class HotelResultState{
     @Action(AddRoom)
     addRoom(states: StateContext<hotelresult>, action: AddRoom) {
         let rooms = Object.assign([], states.getState().selectedRoom);
-        let num = this.store.selectSnapshot(HotelSearchState.getRooms).length;
-
-        for (let i = 0; i < num;i ++) {
-            rooms.push(action.room);    
-        }
+        rooms.push(action.room);    
 
         states.patchState({
             selectedRoom : rooms
@@ -742,80 +746,123 @@ export class HotelResultState{
     @Action(BlockRoom)
     blockRoom(states: StateContext<hotelresult>) {
 
-        let room: hotelDetail[] = states.getState().selectedRoom;
+        let searchroomlength: number = this.store.selectSnapshot(HotelSearchState.getRooms).length;
+        let addedroomlength: number = states.getState().selectedRoom.length;
 
-        let pickedRooms : any = room.map(
-            (el: hotelDetail) => {
-
-                if (_.isUndefined(el.BedTypeCode)) {
-                    el.BedTypeCode = null;
+        let roomAlert$: Observable<void> = from(this.alertCtrl.create({
+            header: 'Rooms Exceed',
+            subHeader: 'Check Room Detail',
+            message: 'you have selected ' + searchroomlength + ' rooms but added ' + addedroomlength + ' rooms',
+            buttons: [
+                {
+                    text: 'OK',
+                    handler: () => {
+                        return true;
+                    }
                 }
-
-                if (_.isUndefined(el.Supplements)) {
-                    el.Supplements = null;
+            ]
+        })).pipe(
+            map(
+                (alertEl) => {
+                    alertEl.present();
                 }
-
-                if (el.SmokingPreference == "NoPreference") {
-                    el.SmokingPreference = 0;
+            )
+        );
+        let selectionAlert$ = from(this.alertCtrl.create({
+            header: 'Rooms Selection',
+            subHeader: 'Select the Room',
+            message: 'you have selected ' + addedroomlength + ' rooms out of ' + searchroomlength + ' rooms',
+            buttons: [
+                {
+                    text: 'OK',
+                    handler: () => {
+                        return true;
+                    }
                 }
-
-                el = _.pick(el, [
-                    'RoomIndex',
-                    'RoomTypeCode',
-                    'RoomTypeName',
-                    'RatePlanCode',
-                    'BedTypeCode',
-                    'SmokingPreference',
-                    'Supplements',
-                    'Price'
-                ]);
-
-                return el;
-            }
+            ]
+        })).pipe(
+            map(
+                (alertEl) => {
+                    console.log(alertEl);
+                    return from(alertEl.present());
+                }
+            )
         );
 
-        console.log(pickedRooms);
-
-        let blockpayload: blockRoomPayload = {
-            HotelRoomsDetails: pickedRooms,
-            ResultIndex: states.getState().selectedHotel.HotelDetail.ResultIndex,
-            HotelCode: states.getState().selectedHotel.HotelDetail.HotelCode,
-            HotelName: states.getState().selectedHotel.HotelDetail.HotelName,
-            GuestNationality: this.store.selectSnapshot(HotelSearchState.getNationality),
-            NoOfRooms: states.getState().selectedRoom.length.toString(),
-            ClientReferenceNo: 0,
-            IsVoucherBooking: 'true',
-            CategoryId: states.getState().selectedRoom[0].CategoryId,
-            EndUserIp: '192.168.0.115',
-            TokenId: null,
-            TraceId: states.getState().traceId
+        if (addedroomlength !== 0) {
+            let room: hotelDetail[] = states.getState().selectedRoom;
+            let pickedRooms: any = room.map(
+                (el: hotelDetail) => {
+                    if (_.isUndefined(el.BedTypeCode)) {
+                        el.BedTypeCode = null;
+                    }
+                    if (_.isUndefined(el.Supplements)) {
+                        el.Supplements = null;
+                    }
+                    if (el.SmokingPreference == "NoPreference") {
+                        el.SmokingPreference = 0;
+                    }
+                    el = _.pick(el, [
+                        'RoomIndex',
+                        'RoomTypeCode',
+                        'RoomTypeName',
+                        'RatePlanCode',
+                        'BedTypeCode',
+                        'SmokingPreference',
+                        'Supplements',
+                        'Price'
+                    ]);
+                    return el;
+                }
+            );
+            console.log(pickedRooms);
+            let blockpayload: blockRoomPayload = {
+                HotelRoomsDetails: pickedRooms,
+                ResultIndex: states.getState().selectedHotel.HotelDetail.ResultIndex,
+                HotelCode: states.getState().selectedHotel.HotelDetail.HotelCode,
+                HotelName: states.getState().selectedHotel.HotelDetail.HotelName,
+                GuestNationality: this.store.selectSnapshot(HotelSearchState.getNationality),
+                NoOfRooms: states.getState().selectedRoom.length.toString(),
+                ClientReferenceNo: 0,
+                IsVoucherBooking: 'true',
+                CategoryId: states.getState().selectedRoom[0].CategoryId,
+                EndUserIp: '192.168.0.115',
+                TokenId: null,
+                TraceId: states.getState().traceId
+            }
+            console.log(blockpayload);
+    
+            let blockroom$ = from(this.hotelService.blockHotel(blockpayload))
+                .pipe(
+                    tap(
+                        (response: HTTPResponse) => {
+                            console.log(response);
+                            let blockedRoom: any = JSON.parse(response.data).response;
+                            states.dispatch(new AddBlockRoom(blockedRoom));
+                            this.modalCtrl.dismiss(null, null, 'view-room');
+                            this.modalCtrl.dismiss(null, null, 'view-hotel');
+    
+                            states.dispatch(new BookMode('hotel'));
+    
+                            states.dispatch(new Navigate(['/', 'home', 'book', 'hotel']));
+                            return of(response);
+                        }
+                    ),
+                    catchError(
+                        (err) => {
+                            console.log(err);
+                            return of(err);
+                        }
+                    )
+                )
+    
+            return iif(() => searchroomlength !== addedroomlength, roomAlert$, blockroom$);
+        }
+        else {
+            return selectionAlert$;
         }
 
-        console.log(blockpayload);
-
-        return from(this.hotelService.blockHotel(blockpayload))
-            .pipe(
-                tap(
-                    (response: HTTPResponse) => {
-                        console.log(response);
-                        let blockedRoom: any = JSON.parse(response.data).response;
-                        states.dispatch(new AddBlockRoom(blockedRoom));
-                        this.modalCtrl.dismiss(null, null, 'view-room');
-                        this.modalCtrl.dismiss(null, null, 'view-hotel');
-
-                        states.dispatch(new BookMode('hotel'));
-
-                        states.dispatch(new Navigate(['/','home','book','hotel']));
-                        return of(response);
-                    }
-                ),
-                catchError(
-                    (err) => {
-                        console.log(err);
-                        return of(err);
-                    }
-                )
-            )
+        
     }
 
     hotelPlace(hotelObj: staticresponselist & hotelresultlist) {
@@ -877,7 +924,7 @@ export class HotelResultState{
         }
     }
 
-    hotelImg(hotel: staticresponselist & hotelresultlist) {
+    hotelImg(hotel: staticresponselist & hotelresultlist) : string[]{
         if (hotel.VendorMessages && Array.isArray(hotel.VendorMessages.VendorMessage)) {
             return _.uniq(_.compact(hotel.VendorMessages.VendorMessage.flatMap(
                 (vendor) => {
@@ -907,6 +954,58 @@ export class HotelResultState{
         }
         else {
             return [hotel.HotelPicture];
+        }
+    }
+
+    checkImg(filteredImg: string[], result: staticresponselist & hotelresultlist) {
+        if (filteredImg.length > 0) {
+            let url: string = filteredImg[0];
+            let splitedEl: string[] = filteredImg[0].split('/');
+
+            let folderName: string = result.HotelCode;
+            let folderPath: string = 'TravellersPass/Image/Hotel';
+
+            let fileName: string = splitedEl[splitedEl.length - 1];
+            let filePath: string = null;
+            if (fileName.includes('.jpg')) {
+                filePath = folderPath + '/' + folderName + '/' + fileName;
+            }
+            else {
+                filePath = folderPath + '/' + folderName + '/' + fileName + '.jpg';
+            }
+            return this.fileService.checkFile(filePath, fileName)
+                .pipe(
+                    map(
+                        (fileExist) => {
+                            filteredImg[0] = this.file.externalRootDirectory + filePath;
+                            return filteredImg;
+                        }
+                    ),
+                    catchError(
+                        (error: FileError) => {
+                            return this.fileService.downloadFile(url, filePath)
+                                .pipe(
+                                    map(
+                                        (files: FileEntry) => {
+                                            let str: string = files.fullPath;
+                                            filteredImg[0] = this.file.externalRootDirectory + str;
+                                            return filteredImg;
+                                        }
+                                    ),
+                                    catchError(
+                                        (err: FileTransferError) => {
+                                            filteredImg[0] = "";
+                                            return filteredImg;
+                                        }
+                                    )
+                                )
+                        }
+                    )
+                )
+        }
+        else {
+            filteredImg = [result.HotelPicture];
+            return of(filteredImg);
         }
     }
 }

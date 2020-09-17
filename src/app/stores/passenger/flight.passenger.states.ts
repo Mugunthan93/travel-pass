@@ -62,7 +62,7 @@ export class AddPassenger {
 }
 
 export class EditPassenger {
-    static readonly type = "[flight_book] AddPassenger";
+    static readonly type = "[flight_book] EditPassenger";
     constructor(public pass: flightpassenger, public pax: flightpassenger) {
 
     }
@@ -136,10 +136,9 @@ export class FlightPassengerState {
 
         let currentPass : flightpassenger[] = Object.assign([], states.getState().passengerList);
         currentPass.push(action.pass);
-        let passengers: flightpassenger[] = _.uniqBy(currentPass, action.pass);
 
         states.patchState({
-            passengerList: passengers
+            passengerList: currentPass
         });
 
         this.modalCtrl.dismiss(null, null, 'passenger-details');
@@ -149,7 +148,9 @@ export class FlightPassengerState {
     editPassenger(states: StateContext<flightpassengerstate>, action: EditPassenger) {
 
         let passengers: flightpassenger[] = Object.assign([], states.getState().passengerList);
-        let filterPass: flightpassenger[] = passengers.filter(el => !_.isEqual(el, action.pax));
+        let filterPass: flightpassenger[] = _.remove(passengers, (o) => {
+            return o.PassportNo !== action.pax.PassportNo
+        });
         filterPass.push(action.pass);
 
         states.patchState({
@@ -163,7 +164,9 @@ export class FlightPassengerState {
     deletePassenger(states: StateContext<flightpassengerstate>, action: DeletePassenger) {
 
         let passengers: flightpassenger[] = Object.assign([], states.getState().passengerList);
-        let filterPass: flightpassenger[] = passengers.filter(el => !_.isEqual(el, action.pax));
+        let filterPass: flightpassenger[] = _.remove(passengers, (o) => {
+            return o.PassportNo !== action.pax.PassportNo
+        });
 
         states.patchState({
             passengerList: filterPass

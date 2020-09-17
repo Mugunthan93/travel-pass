@@ -67,7 +67,7 @@ ion-toolbar {
         }
 
         >ion-row.one-way {
-            height: -webkit-fill-available;
+            height: 70px;
             justify-content: space-between;
 
             ion-col {
@@ -101,7 +101,7 @@ ion-toolbar {
         }
 
         >ion-row.animated-round-trip {
-            height: -webkit-fill-available;
+            height: 70px;
             justify-content: space-around;
 
             label {
@@ -127,10 +127,10 @@ ion-toolbar {
 
         >ion-row.multi-city {
 
+            height: 70px;
             justify-content: space-between;
             margin: 0px 10px;
             align-items: center;
-            height: -webkit-fill-available;
 
             >ion-label {
                 align-self: center;

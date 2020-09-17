@@ -1,22 +1,16 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, SecurityContext } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { matExpansionAnimations } from '@angular/material/expansion';
 import { ModalController, IonInfiniteScroll } from '@ionic/angular';
-import { HotelFilterComponent } from 'src/app/components/hotel/hotel-filter/hotel-filter.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { hotellist, HotelResultState, ViewHotel, AddHotels } from 'src/app/stores/result/hotel.state';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
 import * as _ from 'lodash';
 import { ViewHotelComponent } from 'src/app/components/hotel/view-hotel/view-hotel.component';
 import { sortButton, SortState } from 'src/app/stores/result/sort.state';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
-import { staticresponselist, hotelresultlist, HotelSearchState, staticpayload, paragraph, subsection } from 'src/app/stores/search/hotel.state';
-import { HotelService } from 'src/app/services/hotel/hotel.service';
-import { HTTPResponse } from '@ionic-native/http/ngx';
-import { map, mergeMap, flatMap, catchError } from 'rxjs/operators';
-import { FileService } from 'src/app/services/file/file.service';
-import { File, FileEntry, FileError } from '@ionic-native/file/ngx';
-import { FileTransferError } from '@ionic-native/file-transfer/ngx';
+import { staticresponselist, hotelresultlist } from 'src/app/stores/search/hotel.state';
+import { map } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
@@ -45,7 +39,9 @@ export class HotelPage implements OnInit {
     private store: Store,
     private webview: WebView,
     private domSantizier : DomSanitizer
-  ) { }
+  ) {
+
+  }
   
   ngOnInit() {
     this.length = this.store.selectSnapshot(HotelResultState.getHotelLength);
@@ -61,12 +57,10 @@ export class HotelPage implements OnInit {
   }
 
   async viewHotel(hotel: hotellist) {
-
     const modal = await this.modalCtrl.create({
       component: ViewHotelComponent,
       id: 'view-hotel'
     })
-
     this.store.dispatch(new ViewHotel(hotel))
       .subscribe({
         complete: async () => {
@@ -116,7 +110,7 @@ export class HotelPage implements OnInit {
   }
 
   loadImg(hotel: (staticresponselist & hotelresultlist)): string {
-    return this.webview.convertFileSrc(hotel.Images);
+    return this.webview.convertFileSrc(hotel.Images[0]);
   }
   
 }
