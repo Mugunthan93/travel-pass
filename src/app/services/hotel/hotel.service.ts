@@ -26,24 +26,28 @@ export class HotelService {
   }
 
   async getHotelInfo(hotelpayload: getHotelInfo): Promise<HTTPResponse> {
+    this.http.setReqTimeout(300);
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setData('json');
     return await this.http.post('/hotels/getHotelInfo',hotelpayload);
   }
 
-  async viewHotel(viewpayload: viewPayload): Promise<HTTPResponse> {
+  viewHotel(viewpayload: viewPayload): Observable<HTTPResponse> {
+    this.http.setReqTimeout(300);
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setData('json');
-    return await this.http.post('/hotels/getHotelRoom',viewpayload);
+    return from(this.http.post('/hotels/getHotelRoom',viewpayload));
   }
 
   async blockHotel(blockpayload: blockRoomPayload): Promise<HTTPResponse> {
+    this.http.setReqTimeout(300);
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setData('json');
     return await this.http.post('/hotels/blockRoom', blockpayload);
   }
 
   async sendRequest(hotelRequest: hotelRequest): Promise<HTTPResponse>  {
+    this.http.setReqTimeout(300);
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setData('json');
     return await this.http.post('/hotelRequest?email_notify=true', hotelRequest);

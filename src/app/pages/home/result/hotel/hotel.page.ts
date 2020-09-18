@@ -29,6 +29,7 @@ export class HotelPage implements OnInit {
   isLoading: boolean = false;
   loading: string = "Loading Hotels";
   sortBy$: Observable<sortButton>;
+  loading$: Observable<number>;
 
   length: number;
 
@@ -49,6 +50,9 @@ export class HotelPage implements OnInit {
     this.hotelList$ = this.store.select(HotelResultState.getHotelList);
     this.limit$ = this.store.select(HotelResultState.getLimit);
     this.sortBy$ = this.store.select(SortState.getHotelSortBy);
+
+    this.loading$ = this.store.select(HotelResultState.getLoading);
+
   }
 
   address(hotel: (staticresponselist & hotelresultlist)) {

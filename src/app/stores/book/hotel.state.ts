@@ -1,20 +1,17 @@
 import { State, StateContext, Action, Selector, Store } from '@ngxs/store';
 import { dayRates, hotelprice, cancellationPolicy, HotelResultState } from '../result/hotel.state';
 import { managers, user_eligibility } from './flight.state';
-import { hotelsearchpayload, HotelSearchState } from '../search/hotel.state';
+import { hotelsearchpayload, HotelSearchState, AddAdult } from '../search/hotel.state';
 import { UserState } from '../user.state';
 import { CompanyState } from '../company.state';
 import * as moment from 'moment';
 import { of, from, forkJoin } from 'rxjs';
 import { HotelService } from 'src/app/services/hotel/hotel.service';
-import { tap, catchError, map, flatMap } from 'rxjs/operators';
-import { HTTPResponse } from '@ionic-native/http/ngx';
+import { catchError, map, flatMap } from 'rxjs/operators';
 import { LoadingController, AlertController, ModalController } from '@ionic/angular';
 import { Navigate } from '@ngxs/router-plugin';
-import { StateReset } from 'ngxs-reset-plugin';
-import { SearchState } from '../search.state';
-import { ResultState } from '../result.state';
-import { BookState } from '../book.state';
+import { AddAdultPassenger, AddChildPassenger } from '../passenger/hotel.passenger.state';
+import { dispatch } from 'rxjs/internal/observable/pairs';
 
 
 export interface hotelbook {
@@ -121,6 +118,7 @@ export interface passengers{
     PAN?: string
     Title?: string
     Gender?: string
+    Age?: number
 }
 
 export interface basiscInfo{
@@ -244,21 +242,36 @@ export class HotelBookState {
         let lead: passengers = {
             PaxType: 1,
             LeadPassenger: true,
-            count: 1,
+            count: 0,
             FirstName: this.store.selectSnapshot(UserState.getFirstName),
             LastName: this.store.selectSnapshot(UserState.getFirstName),
             Email: this.store.selectSnapshot(UserState.getEmail),
-            PAN: null,
-            Title: this.store.selectSnapshot(UserState.getTitle) == 'Female' ? 'Ms' : 'Mr',
-            Gender: this.store.selectSnapshot(UserState.getTitle)
+            PAN: null
         }
 
-        let passengers: passengers[] = Object.assign([],states.getState().passengers);
-        passengers.push(lead);
+        states.dispatch(new AddAdultPassenger(lead));
+        let rooms = this.store.selectSnapshot(HotelSearchState.getRooms);
+
+        rooms.forEach(
+            (room) => {
+                room.ChildAge.forEach(
+                    (age) => {
+                        let child: passengers = {
+                            PaxType: 2,
+                            LeadPassenger: false,
+                            count: 1,
+                            Age: age,
+                            FirstName: null,
+                            LastName: null
+                        }
+                        states.dispatch(new AddChildPassenger(child));
+                    }
+                );
+            }
+        );
 
         states.patchState({
-            blockedRoom: action.room,
-            passengers : passengers
+            blockedRoom: action.room
         });
     }
 

@@ -1,6 +1,6 @@
 <ion-content>
 
-    <ion-row *ngIf="(hotelList$ | async).length == 0">
+    <ion-row *ngIf="(hotelList$ | async).length == 0 && ((loading$ | async) < 0.999)">
       <ion-card *ngFor="let hotel of skeletonHotel" style="height: 200px;">
         <ion-card-header style="height: 100px;">
           <ion-row style="width: 40%;height: 40px;">
@@ -35,6 +35,10 @@
           </ion-item>
         </ion-card-content>
       </ion-card>
+    </ion-row>
+
+    <ion-row *ngIf="(hotelList$ | async).length == 0 && ((loading$ | async) >= 1)" class="no-result">
+      <ion-title>No Result Found</ion-title>
     </ion-row>
 
     <ion-row *ngIf="(hotelList$ | async).length > 0">

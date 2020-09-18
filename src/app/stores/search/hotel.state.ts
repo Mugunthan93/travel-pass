@@ -5,7 +5,7 @@ import { ModalController, AlertController, LoadingController } from '@ionic/angu
 import { nationality, hotelcity } from '../shared.state';
 import { HotelService } from 'src/app/services/hotel/hotel.service';
 import { from, forkJoin, of, Observable } from 'rxjs';
-import { map, catchError, tap, flatMap } from 'rxjs/operators';
+import { map, catchError, tap, flatMap, concat } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { hotelprice, supplierhotelcodes, hotelresponse, HotelResponse } from '../result/hotel.state';
 import { ResultMode } from '../result.state';
@@ -294,18 +294,43 @@ export class HotelSearchState {
 
     @Action(AddRoom)
     addRoom(states: StateContext<hotelsearch>, action: AddRoom) {
+        
+        let currentRooms: roomguest[] = Object.assign([], states.getState().rooms);
+        let roomAlert$ = from(this.alertCtrl.create({
+            header: 'Room Exceed',
+            message: 'Cannot add more than 6 room',
+            buttons: [
+                {
+                    text: 'Ok',
+                    handler: () => {
+                        return true;
+                    }
+                }
+            ]
+        })).pipe(
+            map(
+                (alertEl) => {
+                    return from(alertEl.present());
+                }
+            )
+        );
 
-        let currentRooms : roomguest[] = Object.assign([],states.getState().rooms);
-        let room: roomguest = {
-            ChildAge: [],
-            NoOfAdults: 0,
-            NoOfChild: 0
+        if (currentRooms.length < 6) {
+            let room: roomguest = {
+                ChildAge: [],
+                NoOfAdults: 0,
+                NoOfChild: 0
+            }
+            currentRooms.push(room);
+    
+            states.patchState({
+                rooms: currentRooms
+            });
         }
-        currentRooms.push(room);
+        else {
+            return roomAlert$;
+        }
 
-        states.patchState({
-            rooms: currentRooms
-        });
     }
 
     @Action(DeleteRoom)
@@ -325,19 +350,45 @@ export class HotelSearchState {
 
     @Action(AddAdult)
     addAdult(states: StateContext<hotelsearch>, action: AddAdult) {
+
         let currentRooms: roomguest[] = states.getState().rooms;
-        let filteredRooms: roomguest[] = currentRooms.map(
-            (el: roomguest, ind: number, arr: roomguest[]) => {
-                let newEl = Object.assign({}, el);
-                if (ind == action.roomId) {
-                    newEl.NoOfAdults += 1;
+        let adultAlert$ = from(this.alertCtrl.create({
+            header: 'Adult Exceed',
+            message: 'Cannot add more than 8 Adult for each room',
+            buttons: [
+                {
+                    text: 'Ok',
+                    handler: () => {
+                        return true;
+                    }
                 }
-                return newEl;
-            }
+            ]
+        })).pipe(
+            map(
+                (alertEl) => {
+                    return from(alertEl.present());
+                }
+            )
         );
-        states.patchState({
-            rooms: filteredRooms
-        });
+
+        if (currentRooms[action.roomId].NoOfAdults < 8) {
+            let filteredRooms: roomguest[] = currentRooms.map(
+                (el: roomguest, ind: number, arr: roomguest[]) => {
+                    let newEl = Object.assign({}, el);
+                    if (ind == action.roomId) {
+                        newEl.NoOfAdults += 1;
+                    }
+                    return newEl;
+                }
+            );
+            states.patchState({
+                rooms: filteredRooms
+            });
+        }
+        else {
+            return adultAlert$;
+        }
+
     }
 
     @Action(RemoveAdult)
@@ -361,21 +412,47 @@ export class HotelSearchState {
 
     @Action(AddChild)
     addChild(states: StateContext<hotelsearch>, action: AddChild) {
+
         let currentRooms: roomguest[] = states.getState().rooms;
-        let filteredRooms: roomguest[] = currentRooms.map(
-            (el: roomguest, ind: number, arr: roomguest[]) => {
-                let newEl = Object.assign({}, el);
-                if (ind == action.roomId) {
-                    newEl.NoOfChild += 1;
-                    newEl.ChildAge = Object.assign([], el.ChildAge);
-                    newEl.ChildAge.push(null);
+        let childAlert$ = from(this.alertCtrl.create({
+            header: 'Adult Exceed',
+            message: 'Cannot add more than 2 children for each room',
+            buttons: [
+                {
+                    text: 'Ok',
+                    handler: () => {
+                        return true;
+                    }
                 }
-                return newEl;
-            }
+            ]
+        })).pipe(
+            map(
+                (alertEl) => {
+                    return from(alertEl.present());
+                }
+            )
         );
-        states.patchState({
-            rooms: filteredRooms
-        });
+
+        if (currentRooms[action.roomId].NoOfChild < 2) {
+            let filteredRooms: roomguest[] = currentRooms.map(
+                (el: roomguest, ind: number, arr: roomguest[]) => {
+                    let newEl = Object.assign({}, el);
+                    if (ind == action.roomId) {
+                        newEl.NoOfChild += 1;
+                        newEl.ChildAge = Object.assign([], el.ChildAge);
+                        newEl.ChildAge.push(null);
+                    }
+                    return newEl;
+                }
+            );
+            states.patchState({
+                rooms: filteredRooms
+            });
+        }
+        else {
+            return childAlert$;
+        }
+
     }
 
     @Action(RemoveChild)
@@ -418,77 +495,46 @@ export class HotelSearchState {
     }
 
     @Action(DismissRoom)
-    async dismissRoom(states: StateContext<hotelsearch>) {
+    dismissRoom(states: StateContext<hotelsearch>) {
 
-        let failedAlert = await this.alertCtrl.create({
+        let failedAlert$ = from(this.alertCtrl.create({
             header : 'Check Room Details',
             buttons: [{
-                text: 'ok',
-                handler: async () => {
-                    return await this.alertCtrl.dismiss();
+                text: 'Ok',
+                handler: () => {
+                    return true;
                 }
             }]
-        });
+        }));
 
-        if (states.getState().rooms.length >= 0 && states.getState().rooms.some((el) => el.NoOfAdults > 0)) {
-            this.modalCtrl.dismiss(states.getState().rooms);
+        if (states.getState().rooms.length >= 0
+            && states.getState().rooms.some((el) => el.NoOfAdults > 0 )
+            && states.getState().rooms.some((el) => el.NoOfChild > 0 ? !el.ChildAge.some(el => el == null) : true)
+            ) {
+            this.modalCtrl.dismiss(states.getState().rooms, null, 'guest-room');
         }
-        else if (states.getState().rooms.length <= 0 ) {
-            failedAlert.message = 'Add Atlease One Room';
-            failedAlert.present();
+        else {
+            return failedAlert$
+                .pipe(
+                    map(
+                        (alertEl) => {
+                            if (states.getState().rooms.length <= 0) {
+                                alertEl.message = 'Add Atlease One Room';
+                                return from(alertEl.present());
+                            }
+                            else if (states.getState().rooms.some((el) => el.NoOfAdults <= 0)) {
+                                alertEl.message = 'Add Atlease One Adult in all the Room';
+                                return from(alertEl.present());
+                            }
+                            else if (states.getState().rooms.some((el) => el.NoOfChild > 0 ? el.ChildAge.some(el => el == null) : true)) {
+                                alertEl.message = 'Check Age of all Childrens in all the Rooms';
+                                return from(alertEl.present());
+                            }
+                        }
+                    )
+                );
         }
-        else if (states.getState().rooms.some((el) => el.NoOfAdults <= 0)) {
-            failedAlert.message = 'Add Atlease One Adult in all the Room';
-            failedAlert.present();
-        }
-        else if (states.getState().rooms.some((el) => el.NoOfChild > 0)) {
-            if( states.getState().rooms.some( (el) => (el.NoOfChild != el.ChildAge.length || !el.ChildAge.some(el => el !== null) ) ) ) {
-                failedAlert.message = 'Check Age of all Childrens in all the Rooms';
-                failedAlert.present();
-            }    
-        }
-
-
     }
-
-    // @Action(SearchHotel)
-    // async searchHotel(states: StateContext<hotelsearch>) {
-
-    //     states.patchState({
-    //         payload: payload
-    //     });
-
-    //     try {
-    //         let hotelResponse = await this.hotelService.searchHotel(payload);
-    //         let hoteldata: hotelResponse = JSON.parse(hotelResponse.data);
-    //         states.dispatch(new HotelResponse(hoteldata.response));
-    //         states.dispatch(new ResultMode('hotel'));
-    //         this.loadingCtrl.dismiss(null, null, 'search-hotel');
-    //         states.dispatch(new Navigate(['/', 'home', 'result', 'hotel']));
-    //     }
-    //     catch (error) {
-    //         console.log(error);
-    //         if (error.status == -4) {
-    //             failedAlert.message = "Search Timeout, Try Again";
-    //         }
-    //         //no result error
-    //         if (error.status == 400) {
-    //             const errorString = JSON.parse(error.error);
-    //             failedAlert.message = errorString.message.response.Error.ErrorMessage;
-    //         }
-    //         //502 => proxy error
-    //         if (error.status == 502) {
-    //             failedAlert.message = "Server failed to get correct information";
-    //         }
-    //         //503 => service unavailable, Maintanence downtime
-    //         if (error.status == 503) {
-    //             failedAlert.message = "Server Maintanence Try again Later";
-    //         }
-    //         loading.dismiss();
-    //         failedAlert.present();
-    //     }
-
-    // }
 
     @Action(SearchHotel)
     searchHotel(states: StateContext<hotelsearch>, action: SearchHotel) {
@@ -522,7 +568,7 @@ export class HotelSearchState {
                 role: 'ok',
                 cssClass: 'danger',
                 handler: (res) => {
-                    return false;
+                    return true;
                 }
             }]
         }));
@@ -570,6 +616,7 @@ export class HotelSearchState {
                 ),
                 flatMap(
                     (response) => {
+                        console.log(response);
                         let hotelresult: HTTPResponse = response[0];
                         let dumpresponse: HTTPResponse = response[1];
 
@@ -604,7 +651,30 @@ export class HotelSearchState {
                 catchError(
                     (error) => {
                         console.log(error);
-                        return of(error);
+                        return forkJoin(loadingDismiss$,failedAlert$).pipe(
+                            map(
+                                (alert) => {
+                                    let failedAlert = alert[1];
+                                    if (error.status == -4) {
+                                        failedAlert.message = "Search Timeout, Try Again";
+                                    }
+                                    //no result error
+                                    if (error.status == 400) {
+                                        const errorString = JSON.parse(error.error);
+                                        failedAlert.message = errorString.message.response.Error.ErrorMessage;
+                                    }
+                                    //502 => proxy error
+                                    if (error.status == 502) {
+                                        failedAlert.message = "Server failed to get correct information";
+                                    }
+                                    //503 => service unavailable, Maintanence downtime
+                                    if (error.status == 503) {
+                                        failedAlert.message = "Server Maintanence Try again Later";
+                                    }
+                                    return from(failedAlert.present());
+                                }
+                            )
+                        );
                     }
                 )
             )

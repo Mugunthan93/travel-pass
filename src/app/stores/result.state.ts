@@ -2,6 +2,8 @@ import { State, Selector, Action, StateContext, Store } from '@ngxs/store';
 import { FlightResultState } from './result/flight.state';
 import { HotelResultState } from './result/hotel.state';
 import { BusResultState } from './result/bus.state';
+import { StateReset } from 'ngxs-reset-plugin';
+import { Navigate } from '@ngxs/router-plugin';
 
 export interface result{
     mode: string,
@@ -21,6 +23,10 @@ export class ResultType {
     constructor(public type: string) {
         
     }
+}
+
+export class ResultBack {
+    static readonly type = '[Result] ResultBack';
 }
 
 @State<result>({
@@ -68,5 +74,24 @@ export class ResultState {
             mode: action.mode
         });
     }
+
+    @Action(ResultBack)
+    resultBack(states: StateContext<result>) {
+        let resultMode: string = states.getState().mode;
+        let resultType: string = states.getState().type;
+
+        if (resultType == 'animated-round-trip') {
+            resultType = 'round-trip';
+        }
+        if (resultMode == 'flight') {
+            states.dispatch(new Navigate(['/', 'home', 'search', resultMode, resultType]));
+        }
+        else {
+            states.dispatch(new Navigate(['/', 'home', 'search', resultMode]));
+        }
+        states.dispatch(new StateReset(ResultState));
+    }
+
+
     
 }

@@ -20,7 +20,7 @@
               {{this.hotelSearch.value.room !== null ? this.hotelSearch.value.room.length + ' Room' : 'Add Room'}}
             </ion-text>
             <ion-text class="bold" [ngClass]="errorClass('room')">
-               {{this.hotelSearch.value.room !== null ? (totalAdult() | async) : 'Add Adult'}}
+               {{this.hotelSearch.value.room !== null ? (totalAdult() | async) : 'Add Guest'}}
             </ion-text>
           </ion-row>
           <ion-row (click)="selectNationality()">

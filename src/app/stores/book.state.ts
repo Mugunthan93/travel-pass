@@ -2,6 +2,8 @@ import { State, Selector, Action, Store, StateContext } from '@ngxs/store';
 import { FLightBookState } from './book/flight.state';
 import { HotelBookState } from './book/hotel.state';
 import { BusBookState } from './book/bus.state';
+import { StateReset } from 'ngxs-reset-plugin';
+import { Navigate } from '@ngxs/router-plugin';
 
 export interface book {
     mode: string,
@@ -20,6 +22,10 @@ export class BookMode {
     constructor(public mode: string) {
 
     }
+}
+
+export class BookBack {
+    static readonly type = "[book] BookBack"
 }
 
 @State<book>({
@@ -67,5 +73,22 @@ export class BookState {
         states.patchState({
             mode: action.mode
         });
+    }
+
+    @Action(BookBack)
+    bookback(states: StateContext<book>) {
+        let bookMode: string = states.getState().mode;
+        let bookType: string = states.getState().type;
+
+        if (bookType == 'animated-round-trip') {
+            bookType = 'round-trip';
+        }
+        if (bookMode == 'flight') {
+            states.dispatch(new Navigate(['/', 'home', 'result', bookMode, bookType]));
+        }
+        else {
+            states.dispatch(new Navigate(['/', 'home', 'result', bookMode]));
+        }
+        states.dispatch(new StateReset(BookState));
     }
 }

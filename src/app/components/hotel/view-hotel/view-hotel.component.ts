@@ -138,8 +138,8 @@ export class ViewHotelComponent implements OnInit {
     return await modal.present();
   }
 
-  async back() {
-    await this.modalCtrl.dismiss(null, null,'view-hotel');
+  back() {
+    this.modalCtrl.dismiss(null, null,'view-hotel');
   }
 
 }

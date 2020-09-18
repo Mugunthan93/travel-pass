@@ -20,7 +20,9 @@
       {{ (hotelSearch$ | async).city.destination }}
     </ion-title>
     <ion-title class="medium bold  back-modal" *ngIf="(resultMode$ | async) == 'hotel'">
-      {{ (hotelSearch$ | async).checkin | date : 'd LLL' }} - {{ (hotelSearch$ | async).checkout | date : 'd LLL' }} |
+      {{ 
+        (hotelSearch$ | async).checkin | date : 'd LLL' }} - {{ (hotelSearch$ | async).checkout | date : 'd LLL' }} |
+        {{ (hotelSearch$ | async).room.length }} Room |
       {{ (totalGuest$ | async) }} Guest | {{ totalHotels$ | async }} Hotels
     </ion-title>
 

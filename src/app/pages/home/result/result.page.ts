@@ -4,7 +4,7 @@ import { EmailItineraryComponent } from 'src/app/components/flight/email-itinera
 import { Observable } from 'rxjs';
 import { FlightResultState } from 'src/app/stores/result/flight.state';
 import { Store } from '@ngxs/store';
-import { ResultState } from 'src/app/stores/result.state';
+import { ResultState, ResultBack } from 'src/app/stores/result.state';
 import { StateReset } from 'ngxs-reset-plugin';
 import { Navigate } from '@ngxs/router-plugin';
 import { hotelForm, HotelSearchState } from 'src/app/stores/search/hotel.state';
@@ -63,16 +63,7 @@ export class ResultPage implements OnInit {
   }
 
   back() {
-    this.store.dispatch(new StateReset(ResultState));
-    if (this.resultType == 'animated-round-trip') {
-      this.resultType = 'round-trip';
-    }
-    if (this.resultMode == 'flight') {     
-      this.store.dispatch(new Navigate(['/', 'home', 'search', this.resultMode,this.resultType]));
-    }
-    else {
-      this.store.dispatch(new Navigate(['/', 'home', 'search', this.resultMode]));
-    }
+    this.store.dispatch(new ResultBack());
   }
 
   async flightFilter() {

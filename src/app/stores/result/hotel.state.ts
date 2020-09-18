@@ -391,11 +391,11 @@ export class HotelResultState{
     static getHotelList(state: hotelresult, filter: hotelFilter): (staticresponselist & hotelresultlist)[] {
         return state.hotelList.filter(
             el => 
-                filter.starRating !== -1 ? el.StarRating == filter.starRating : el &&
-                filter.price !== 0 ? el : filter.price <= el.Price.PublishedPrice &&
+                (filter.starRating !== -1 ? el.StarRating == filter.starRating : el) &&
+                (filter.price == 0 ? el : filter.price <= el.Price.PublishedPrice) &&
                 (
                     filter.place.some(air => air.value == true) ?
-                        filter.place.some(air => (air.name === el.Place) && (air.value)) : el
+                    filter.place.some(air => (air.name === el.Place) && (air.value)) : el
                 )
         );
     }
@@ -458,7 +458,7 @@ export class HotelResultState{
                     (response: HTTPResponse) => {
                         console.log(response.data);
                         states.patchState({
-                            token: response.data.TokenId
+                            token: JSON.parse(response.data).TokenId
                         });
                     }
                 ),
@@ -490,7 +490,8 @@ export class HotelResultState{
                         return from(result)
                             .pipe(
                                 mergeMap(
-                                    (result, ind) => {
+                                    (hotelObj, ind) => {
+                                        let result = Object.assign({}, hotelObj);
                                         let currentCity: string = this.store.selectSnapshot(HotelSearchState.getCityId);
                                         let staticPay: staticpayload = {
                                             CityId: currentCity,
@@ -575,6 +576,9 @@ export class HotelResultState{
                             skip = true;
                         }
                     }
+                    states.patchState({
+                        selectedRoom : []
+                    });
                     return skip;
                 }),
                 flatMap(
@@ -590,7 +594,7 @@ export class HotelResultState{
                             HotelCode: action.hotel.HotelCode,
                             CategoryId:action.hotel.SupplierHotelCodes[0].CategoryId
                         }
-                        return from(this.hotelService.viewHotel(viewPayload));
+                        return this.hotelService.viewHotel(viewPayload);
                     }
                 ),
                 map(
@@ -601,6 +605,11 @@ export class HotelResultState{
                         if (hotelResponse.Error.ErrorCode == 6) {
                             let payload: hotelForm = this.store.selectSnapshot(HotelSearchState.getSearchData);
                             states.dispatch(new SearchHotel(payload));
+                            return;
+                        }
+                        //no room found
+                        if (hotelResponse.Error.ErrorCode == 2) {
+                            return throwError(hotelResponse.Error.ErrorMessage);
                         }
                         else {
                             let roomDetail = hotelResponse.HotelRoomsDetails.map(
@@ -625,16 +634,13 @@ export class HotelResultState{
                                 resultIndex: action.hotel.ResultIndex
                             });
     
-                            states.patchState({
-                                selectedHotel: selected
-                            });
-    
                             return selected;
                         }
                     }
                 ),
                 flatMap(
-                    (hotel: selectedHotel) => {
+                    (hotelObj: selectedHotel) => {
+                        let hotel = Object.assign({},hotelObj);
                         return from(hotel.HotelDetail.Images)
                             .pipe(
                                 mergeMap(
@@ -683,8 +689,10 @@ export class HotelResultState{
                                 ),
                                 toArray(),
                                 map(
-                                    (str : string[]) => {
-                                        hotel.HotelDetail.Images = str;
+                                    (str: string[]) => {
+                                        let hoteldata = Object.assign({}, hotel.HotelDetail);
+                                        hoteldata.Images = Object.assign([], str);
+                                        hotel.HotelDetail = Object.assign({},hoteldata);
                                         return hotel;
                                     }
                                 )
@@ -692,9 +700,12 @@ export class HotelResultState{
                     }
                 ),
                 map(
-                    (hotel: selectedHotel) => {
+                    (hotelObj: selectedHotel) => {
+                        let hotel = Object.assign({}, hotelObj);
                         let category: string[] = Object.assign([], states.getState().roomCategory);
-                        hotel.HotelRoomsDetails.forEach(
+
+                        let roomDetail = Object.assign([], hotel.HotelRoomsDetails);
+                        roomDetail.forEach(
                             (el) => {
                                 if (el.Amenities) {
                                     let amen: string = _.lowerCase(el.Amenities[0]);
@@ -708,14 +719,20 @@ export class HotelResultState{
                             roomCategory: category
                         });
 
-                        hotel.HotelRoomsDetails.forEach(
+                        let imgRoomDetail = roomDetail.map(
                             (el) => {
                                 let randomNum: number = Math.floor(Math.random() * Math.floor(hotel.HotelDetail.Images.length));
-                                el.Images = hotel.HotelDetail.Images[randomNum];
+                                let currentEl = Object.assign({},el);
+                                currentEl.Images = hotel.HotelDetail.Images[randomNum];
+                                return currentEl;
                             }
                         );
 
+                        hotel.HotelRoomsDetails = Object.assign([], imgRoomDetail);
                         console.log(hotel);
+                        states.patchState({
+                            selectedHotel: hotel
+                        });
                         return hotel;
                     }
                 )
@@ -790,7 +807,7 @@ export class HotelResultState{
         );
 
         if (addedroomlength !== 0) {
-            let room: hotelDetail[] = states.getState().selectedRoom;
+            let room: hotelDetail[] = Object.assign([],states.getState().selectedRoom);
             let pickedRooms: any = room.map(
                 (el: hotelDetail) => {
                     if (_.isUndefined(el.BedTypeCode)) {
@@ -834,10 +851,13 @@ export class HotelResultState{
     
             let blockroom$ = from(this.hotelService.blockHotel(blockpayload))
                 .pipe(
-                    tap(
+                    map(
                         (response: HTTPResponse) => {
                             console.log(response);
                             let blockedRoom: any = JSON.parse(response.data).response;
+                            if (blockedRoom.Error.ErrorCode == 2) {
+                                return throwError(blockedRoom.Error.ErrorMessage);
+                            }
                             states.dispatch(new AddBlockRoom(blockedRoom));
                             this.modalCtrl.dismiss(null, null, 'view-room');
                             this.modalCtrl.dismiss(null, null, 'view-hotel');

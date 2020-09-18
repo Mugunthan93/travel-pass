@@ -6,7 +6,7 @@ ion-content {
     >ion-row{
         display: flex;
         flex-direction: column;
-        >ion-item:first-child {
+        >ion-item {
             --padding-end: 16px;
             --padding-start: 16px;
             --padding-top: 8px;

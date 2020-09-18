@@ -6,8 +6,10 @@ import { RoundTripSearchState } from '../search/flight/round-trip.state';
 import { MultiCitySearchState } from '../search/flight/multi-city.state';
 import { UserState } from '../user.state';
 import { CompanyState } from '../company.state';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 import { SearchState } from '../search.state';
+import { from } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 
 export interface flightpassengerstate {
@@ -89,6 +91,10 @@ export class DeselectPassenger {
     }
 }
 
+export class DismissFlightPassenger {
+    static readonly type = "[flight_book] DismissFlightPassenger";
+}
+
 @State<flightpassengerstate>({
     name: 'flight_passenger',
     defaults: {
@@ -101,6 +107,7 @@ export class FlightPassengerState {
 
     constructor(
         public modalCtrl: ModalController,
+        public alertCtrl: AlertController,
         private store : Store
     ) {
         
@@ -245,6 +252,46 @@ export class FlightPassengerState {
         states.patchState({
             selected: currentArray
         });
+    }
+
+    @Action(DismissFlightPassenger)
+    dismissFlightPassenger(states: StateContext<flightpassengerstate>) {
+
+        let passportValidation = null;
+        let passenger = states.getState().selected;
+
+        switch (this.store.selectSnapshot(SearchState.getSearchType)) {
+            case 'one-way': passportValidation = this.store.selectSnapshot(OneWaySearchState.getTripType); break;
+            case 'round-trip': passportValidation = this.store.selectSnapshot(RoundTripSearchState.getTripType); break;
+            case 'multi-city': passportValidation = this.store.selectSnapshot(MultiCitySearchState.getTripType); break;
+        }
+
+        let missing$ = from(this.alertCtrl.create({
+            header: 'Lead Detail Missing',
+            subHeader: 'Passport Number or Expiry Date missing',
+            id: 'passenger-check',
+            buttons: [{
+                text: "Ok",
+                handler: () => {
+                    return true;
+                }
+            }]
+        })).pipe(
+            map(
+                (missingEl) => {
+                    return from(missingEl.present());  
+                }
+            )
+        );
+
+        if (passportValidation == 'international') {
+            if (_.isNull(passenger[0].PassportNo) || _.isNull(passenger[0].PassportExpiry)) {
+                return missing$;
+            }
+        }
+        else {
+            this.modalCtrl.dismiss(null, null, 'passenger-info');
+        }
     }
 
 }

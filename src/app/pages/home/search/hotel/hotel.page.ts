@@ -79,7 +79,8 @@ export class HotelPage implements OnInit {
 
   async selectRoom() {
     const modal = await this.modalCtrl.create({
-      component: GuestRoomComponent
+      component: GuestRoomComponent,
+      id: 'guest-room'
     });
 
     modal.onDidDismiss().then(
@@ -193,7 +194,7 @@ export class HotelPage implements OnInit {
             let childrens: number = 0;
             guest.forEach(el => adults += el.NoOfAdults);
             guest.forEach(el => childrens += el.NoOfChild);
-            return adults + childrens + ' Adults';
+            return adults + childrens + ' Guest';
           }
         )
       )

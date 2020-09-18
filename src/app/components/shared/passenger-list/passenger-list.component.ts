@@ -1,16 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FLightBookState } from 'src/app/stores/book/flight.state';
 import { ModalController, AlertController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
 import { PassengerDetailComponent } from '../../flight/passenger-detail/passenger-detail.component';
-import { SearchState } from 'src/app/stores/search.state';
-import { OneWaySearchState } from 'src/app/stores/search/flight/oneway.state';
-import { RoundTripSearchState } from 'src/app/stores/search/flight/round-trip.state';
-import { MultiCitySearchState } from 'src/app/stores/search/flight/multi-city.state';
 import * as _ from 'lodash';
 import { BookState } from 'src/app/stores/book.state';
-import { flightpassenger, FlightPassengerState, SelectPassenger, DeselectPassenger, DeletePassenger } from 'src/app/stores/passenger/flight.passenger.states';
+import { flightpassenger, FlightPassengerState, SelectPassenger, DeselectPassenger, DeletePassenger, DismissFlightPassenger } from 'src/app/stores/passenger/flight.passenger.states';
+import { DismissHotelPassenger, HotelPassengerState, hotelpassenger } from 'src/app/stores/passenger/hotel.passenger.state';
+import { AddGuestComponent } from '../../hotel/add-guest/add-guest.component';
 
 @Component({
   selector: 'app-passenger-list',
@@ -20,11 +17,22 @@ import { flightpassenger, FlightPassengerState, SelectPassenger, DeselectPasseng
 export class PassengerListComponent implements OnInit {
 
   bookMode$: Observable<string>;
+  bookMode: string;
 
   passengers$: Observable<flightpassenger[]>;
   selectedPassengers$: Observable<flightpassenger[]>;
   selected$: Observable<number>;
   count$: Observable<number>;
+
+  hotelAdult$: Observable<hotelpassenger[]>;
+  selectAdult$: Observable<hotelpassenger[]>;
+  selectedAdult$: Observable<number>;
+  totalAdult$: Observable<number>;
+
+  hotelChildren$: Observable<hotelpassenger[]>;
+  selectChildren$: Observable<hotelpassenger[]>;
+  selectedChildren$: Observable<number>;
+  totalChildren$: Observable<number>;
 
   constructor(
     public modalCtrl: ModalController,
@@ -35,25 +43,54 @@ export class PassengerListComponent implements OnInit {
   ngOnInit() {
 
     this.bookMode$ = this.store.select(BookState.getBookMode);
+    this.bookMode = this.store.selectSnapshot(BookState.getBookMode);
 
     this.passengers$ = this.store.select(FlightPassengerState.getPassengers);
     this.selectedPassengers$ = this.store.select(FlightPassengerState.getSelectedPassengers);
     this.selected$ = this.store.select(FlightPassengerState.getSelected);
     this.count$ = this.store.select(FlightPassengerState.getCount);
 
+    this.hotelAdult$ = this.store.select(HotelPassengerState.GetAdult);
+    this.selectAdult$ = this.store.select(HotelPassengerState.GetSelectAdult);
+    this.totalAdult$ = this.store.select(HotelPassengerState.GetTotalAdult);
+    this.selectedAdult$ = this.store.select(HotelPassengerState.GetSelectedAdult);
+
+
+    this.hotelChildren$ = this.store.select(HotelPassengerState.GetChild);
+    this.selectChildren$ = this.store.select(HotelPassengerState.GetSelectChildren);
+    this.totalChildren$ = this.store.select(HotelPassengerState.GetTotalChildren);
+    this.selectedChildren$ = this.store.select(HotelPassengerState.GetSelectedChildren);
+
   }
 
-  async getDetail() {
-    const modal = await this.modalCtrl.create({
-      component: PassengerDetailComponent,
-      componentProps: {
-        form: 'add',
-        pax: null
-      },
-      id: 'passenger-details'
-    });
+  async getDetail(type : number) {
 
-    return await modal.present();
+    if (this.bookMode == 'flight') {
+      const modal = await this.modalCtrl.create({
+        component: PassengerDetailComponent,
+        componentProps: {
+          form: 'add',
+          pax: null
+        },
+        id: 'passenger-details'
+      });
+  
+      return await modal.present();
+    }
+    else if (this.bookMode == 'hotel') {
+      const modal = await this.modalCtrl.create({
+        component: AddGuestComponent,
+        componentProps: {
+          form: 'add',
+          pax: null,
+          paxtype: type
+        },
+        id: 'guest-details'
+      });
+
+      return await modal.present();
+    }
+
   }
 
   async editPassenger(pax: flightpassenger) {
@@ -97,43 +134,13 @@ export class PassengerListComponent implements OnInit {
     }
   }
 
-  passportValidation(): string {
-    switch (this.store.selectSnapshot(SearchState.getSearchType)) {
-      case 'one-way': return this.store.selectSnapshot(OneWaySearchState.getTripType); break;
-      case 'round-trip': return this.store.selectSnapshot(RoundTripSearchState.getTripType); break;
-      case 'multi-city': return this.store.selectSnapshot(MultiCitySearchState.getTripType); break;
-    }
-  }
-
   dismissInfo() {
-    this.selectedPassengers$.subscribe(
-      async (passenger: flightpassenger[]) => {
-
-        if (this.passportValidation() == 'international') {
-
-          let missing = await this.alertCtrl.create({
-            header: 'Lead Detail Missing',
-            subHeader: 'Passport Number or Expiry Date missing',
-            id: 'passenger-check',
-            buttons: [{
-              text: "Ok",
-              handler: () => {
-                missing.dismiss();
-              }
-            }]
-          });
-
-          if (_.isNull(passenger[0].PassportNo) || _.isNull(passenger[0].PassportExpiry)) {
-            return await missing.present();
-          }
-
-        }
-        else {
-          this.modalCtrl.dismiss(null, null, 'passenger-info');
-        }
-      }
-    );
-
+    if (this.bookMode == 'flight') {
+      this.store.dispatch(new DismissFlightPassenger());
+    }
+    else if (this.bookMode == 'hotel') {
+      this.store.dispatch(new DismissHotelPassenger());
+    }
   }
 
 }
