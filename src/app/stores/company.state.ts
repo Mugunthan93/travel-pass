@@ -26,6 +26,11 @@ export class CompanyState {
     }
 
     @Selector()
+    static getEmployees(state: company): user[] {
+        return state.Users;
+    }
+
+    @Selector()
     static getPCC(state: company): number {
         return state.PCC;
     }

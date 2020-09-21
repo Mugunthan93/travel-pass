@@ -16,6 +16,31 @@ $list-header-inner-border-width:0px;
 
 ion-list {
     background: transparent !important;
+
+    &.employee-list {
+        padding: 0px;
+
+        ion-item-divider{
+            --background: transparent;
+            --color: #{geraldine};
+            >ion-title{
+                padding-left: 20px !important;
+                --color:#{$geraldine};
+            }
+        }
+
+        ion-item{
+            --padding-start: 20px;
+            --padding-end: 20px;
+            min-height: 40px !important;
+            >ion-label{
+                margin: 16px 0px;
+            }
+        }
+
+
+    }
+
 }
 
 ion-list-header{

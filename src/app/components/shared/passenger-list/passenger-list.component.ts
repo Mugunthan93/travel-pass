@@ -1,13 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ModalController, AlertController } from '@ionic/angular';
+import { Observable, of } from 'rxjs';
+import { ModalController, AlertController, PopoverController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
 import { PassengerDetailComponent } from '../../flight/passenger-detail/passenger-detail.component';
 import * as _ from 'lodash';
 import { BookState } from 'src/app/stores/book.state';
 import { flightpassenger, FlightPassengerState, SelectPassenger, DeselectPassenger, DeletePassenger, DismissFlightPassenger } from 'src/app/stores/passenger/flight.passenger.states';
-import { DismissHotelPassenger, HotelPassengerState, hotelpassenger } from 'src/app/stores/passenger/hotel.passenger.state';
+import { DismissHotelPassenger, HotelPassengerState, hotelpassenger, SelectAdultPassenger, DeSelectAdultPassenger, SelectChildPassenger, DeSelectChildPassenger, DeleteAdultPassenger, DeleteChildPassenger } from 'src/app/stores/passenger/hotel.passenger.state';
 import { AddGuestComponent } from '../../hotel/add-guest/add-guest.component';
+import { user } from 'src/app/models/user';
+import { CompanyState } from 'src/app/stores/company.state';
+import { ListEmployeeComponent } from '../list-employee/list-employee.component';
+import { groupBy, mergeMap, toArray, map, reduce } from 'rxjs/operators';
 
 @Component({
   selector: 'app-passenger-list',
@@ -18,6 +22,8 @@ export class PassengerListComponent implements OnInit {
 
   bookMode$: Observable<string>;
   bookMode: string;
+
+  employees: user[];
 
   passengers$: Observable<flightpassenger[]>;
   selectedPassengers$: Observable<flightpassenger[]>;
@@ -37,6 +43,7 @@ export class PassengerListComponent implements OnInit {
   constructor(
     public modalCtrl: ModalController,
     public alertCtrl: AlertController,
+    public popCtrl: PopoverController,
     private store: Store
   ) { }
 
@@ -44,6 +51,8 @@ export class PassengerListComponent implements OnInit {
 
     this.bookMode$ = this.store.select(BookState.getBookMode);
     this.bookMode = this.store.selectSnapshot(BookState.getBookMode);
+
+    this.employees = this.store.selectSnapshot(CompanyState.getEmployees);
 
     this.passengers$ = this.store.select(FlightPassengerState.getPassengers);
     this.selectedPassengers$ = this.store.select(FlightPassengerState.getSelectedPassengers);
@@ -63,42 +72,15 @@ export class PassengerListComponent implements OnInit {
 
   }
 
-  async getDetail(type : number) {
+  //flight passenger function
 
-    if (this.bookMode == 'flight') {
-      const modal = await this.modalCtrl.create({
-        component: PassengerDetailComponent,
-        componentProps: {
-          form: 'add',
-          pax: null
-        },
-        id: 'passenger-details'
-      });
-  
-      return await modal.present();
-    }
-    else if (this.bookMode == 'hotel') {
-      const modal = await this.modalCtrl.create({
-        component: AddGuestComponent,
-        componentProps: {
-          form: 'add',
-          pax: null,
-          paxtype: type
-        },
-        id: 'guest-details'
-      });
+  async getDetail() {
 
-      return await modal.present();
-    }
-
-  }
-
-  async editPassenger(pax: flightpassenger) {
     const modal = await this.modalCtrl.create({
       component: PassengerDetailComponent,
       componentProps: {
-        form: 'edit',
-        pax: pax
+        form: 'add',
+        pax: null
       },
       id: 'passenger-details'
     });
@@ -113,6 +95,19 @@ export class PassengerListComponent implements OnInit {
     else if (!evt.detail.checked) {
       this.store.dispatch(new DeselectPassenger(evt.detail.value));
     }
+  }
+
+  async editPassenger(pax: flightpassenger) {
+    const modal = await this.modalCtrl.create({
+      component: PassengerDetailComponent,
+      componentProps: {
+        form: 'edit',
+        pax: pax
+      },
+      id: 'passenger-details'
+    });
+
+    return await modal.present();
   }
 
   deletePassneger(pax: flightpassenger) {
@@ -134,6 +129,127 @@ export class PassengerListComponent implements OnInit {
     }
   }
 
+  //hotel adult function
+
+  async addAdult() {
+    const modal = await this.modalCtrl.create({
+      component: AddGuestComponent,
+      componentProps: {
+        form: 'add',
+        pax: null,
+        paxtype: 1,
+        lead: false
+      },
+      id: 'guest-details'
+    });
+
+    return await modal.present();
+  }
+
+  async addEmployee(evt: CustomEvent) {
+    
+    let emp = of(...this.employees)
+      .pipe(
+        groupBy(p => p.designation),
+        mergeMap((group$) => group$.pipe(reduce((acc, cur) => [...acc, cur], []))),
+        toArray(),
+        map(
+          (el) => {
+            return el;
+          }
+        )
+      );
+
+    const popEmployee = await this.popCtrl.create({
+      component: ListEmployeeComponent,
+      componentProps: {
+        employee: emp
+      },
+      event: evt,
+      cssClass: 'employee-list',
+      id: 'employee-list',
+      translucent: true
+    });
+
+    return await popEmployee.present();
+  }
+
+  getAdult(evt: CustomEvent) {
+    if (evt.detail.checked) {
+      this.store.dispatch(new SelectAdultPassenger(evt.detail.value));
+    }
+    else if (!evt.detail.checked) {
+      this.store.dispatch(new DeSelectAdultPassenger(evt.detail.value));
+    }
+  }
+
+  async editAdult(pax : hotelpassenger) {
+    const modal = await this.modalCtrl.create({
+      component: AddGuestComponent,
+      componentProps: {
+        form: 'edit',
+        pax: pax,
+        paxtype: 1,
+        lead: pax.LeadPassenger
+      },
+      id: 'guest-details'
+    });
+
+    return await modal.present();
+
+  }
+
+  deleteAdult(pax: hotelpassenger) {
+    this.store.dispatch(new DeleteAdultPassenger(pax));
+  }
+
+  //hotel child function
+
+  async addChild() {
+    const modal = await this.modalCtrl.create({
+      component: AddGuestComponent,
+      componentProps: {
+        form: 'add',
+        pax: null,
+        paxtype: 2,
+        lead: false
+      },
+      id: 'guest-details'
+    });
+
+    return await modal.present();
+  }
+
+  async editChild(pax: hotelpassenger) {
+    const modal = await this.modalCtrl.create({
+      component: AddGuestComponent,
+      componentProps: {
+        form: 'edit',
+        pax: pax,
+        paxtype: 2,
+        lead: false
+      },
+      id: 'guest-details'
+    });
+
+    return await modal.present();
+  }
+
+  getChild(evt: CustomEvent) {
+    if (evt.detail.checked) {
+      this.store.dispatch(new SelectChildPassenger(evt.detail.value));
+    }
+    else if (!evt.detail.checked) {
+      this.store.dispatch(new DeSelectChildPassenger(evt.detail.value));
+    }
+  }
+
+  deleteChild(pax: hotelpassenger) {
+    this.store.dispatch(new DeleteChildPassenger(pax));
+  }
+
+
+  ///dismiss
   dismissInfo() {
     if (this.bookMode == 'flight') {
       this.store.dispatch(new DismissFlightPassenger());

@@ -10,14 +10,12 @@ import { HotelService } from 'src/app/services/hotel/hotel.service';
 import { catchError, map, flatMap } from 'rxjs/operators';
 import { LoadingController, AlertController, ModalController } from '@ionic/angular';
 import { Navigate } from '@ngxs/router-plugin';
-import { AddAdultPassenger, AddChildPassenger } from '../passenger/hotel.passenger.state';
+import { AddAdultPassenger, AddChildPassenger, HotelPassengerState } from '../passenger/hotel.passenger.state';
 import { dispatch } from 'rxjs/internal/observable/pairs';
 
 
 export interface hotelbook {
     blockedRoom: blockedRoom
-    passengers: passengers[]
-    selectedpassengers: passengers[]
     mail: string[]
     purpose: string
     comment: string
@@ -187,8 +185,6 @@ export class SendRequest {
     name: 'hotel_book',
     defaults: {
         blockedRoom: null,
-        passengers: [],
-        selectedpassengers : [],
         mail: [],
         purpose: null,
         comment: null
@@ -229,11 +225,6 @@ export class HotelBookState {
     @Selector()
     static getComment(states: hotelbook): string {
         return states.comment;
-    }
-
-    @Selector()
-    static getPassengers(states: hotelbook): passengers[] {
-        return states.passengers;
     }
 
     @Action(AddBlockRoom)
@@ -336,7 +327,12 @@ export class HotelBookState {
                 {
                     text: 'Ok',
                     handler: () => {
-                        states.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']));
+                        states.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']))
+                        .subscribe({
+                            complete: () => {
+                                this.modalCtrl.dismiss(null, null,'book-confirm');
+                                }
+                            });
                     }
                 }
             ]
@@ -366,7 +362,10 @@ export class HotelBookState {
             }
         );
 
-        let passengers : passengers[] = Object.assign([], states.getState().selectedpassengers);
+        let selectedadult = this.store.selectSnapshot(HotelPassengerState.GetSelectAdult);
+        let selectedchildren = this.store.selectSnapshot(HotelPassengerState.GetSelectChildren);
+
+        let passengers: passengers[] = Object.assign([], [...selectedadult, ...selectedchildren]);
 
         passengers.sort((a,b) => {
             if (a.LeadPassenger == true) {

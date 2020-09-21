@@ -1,43 +1,87 @@
 <ion-header>
   <ion-toolbar>
-    <ion-text>Add Guest</ion-text>
+    <ion-title>{{ form == 'add' ? 'Add' : 'Edit' }} {{ paxtype == '1' ? 'Adult' : 'Children' }}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeGuest()">
+        <ion-icon name="close-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <ion-row>
-          <ion-col size="3">
-            <ion-select value="Mr" okText="Okay" cancelText="Dismiss">
-              <ion-select-option value="Mr">Mr</ion-select-option>
-              <ion-select-option value="Ms">Ms</ion-select-option>
-              <ion-select-option value="Mrs">Mrs</ion-select-option>
-            </ion-select>
-          </ion-col>
-          <ion-col size="9">
-            <ion-input placeholder="First Name"></ion-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-input placeholder="Last Name"></ion-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-input placeholder="PAN Number"></ion-input>
-          </ion-col>
-        </ion-row>
-        <ion-row class="ion-justify-content-center">
-          <ion-col>
-              <ion-button expand="block">
-                <ion-text>Confirm</ion-text>
-              </ion-button>
-          </ion-col>
-        </ion-row>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <form [formGroup]="passengerForm" (ngSubmit)="passSubmit()">
+    <ion-list>
+      <ion-item>
+        <ion-label>First Name<span>*</span></ion-label>
+        <ion-input 
+        formControlName="first_name" 
+        class="form-control" 
+        [ngClass]="{
+        'is-valid': passengerForm.controls['first_name'].valid && formsubmit,
+        'is-invalid': passengerForm.controls['first_name'].invalid && formsubmit
+        }"
+        [value]="passengerForm.controls['first_name'].value !== null ? passengerForm.controls['first_name'].value : ''"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Last Name<span>*</span></ion-label>
+        <ion-input 
+        formControlName="last_name" 
+        class="form-control" 
+        [ngClass]="{
+        'is-valid': passengerForm.controls['last_name'].valid && formsubmit,
+        'is-invalid': passengerForm.controls['last_name'].invalid && formsubmit
+        }"
+        [value]="passengerForm.controls['last_name'].value !== null ? passengerForm.controls['last_name'].value : ''"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Email<span *ngIf="lead && paxtype == '1'">*</span></ion-label>
+        <ion-input 
+        formControlName="email" 
+        class="form-control" 
+        [ngClass]="{
+        'is-valid': passengerForm.controls['email'].valid && formsubmit,
+        'is-invalid': passengerForm.controls['email'].invalid && formsubmit
+        }"
+        [value]="passengerForm.controls['email'].value !== null ? passengerForm.controls['email'].value : ''"
+        [placeholder]="lead ? 'Enter Email' : 'Optional'"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>PAN Number<span *ngIf="lead && paxtype == '1'">*</span></ion-label>
+        <ion-input 
+        formControlName="pan" 
+        class="form-control" 
+        [ngClass]="{
+        'is-valid': passengerForm.controls['pan'].valid && formsubmit,
+        'is-invalid': passengerForm.controls['pan'].invalid && formsubmit
+        }"
+        [value]="passengerForm.controls['pan'].value !== null ? passengerForm.controls['pan'].value : ''"
+        [placeholder]="lead ? 'Enter Pan Number' : 'Optional'">
+      </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Age<span *ngIf="paxtype == '2'">*</span></ion-label>
+        <ion-select 
+        formControlName="age" 
+        [placeholder]="paxtype == '2' ? 'Select Child Age' : 'Optional'"
+        [interfaceOptions]="customAlertOptions"
+        (ionChange)="selectedAge($event)" 
+        [ngClass]="{
+        'is-valid': passengerForm.controls['age'].valid && formsubmit,
+        'is-invalid': passengerForm.controls['age'].invalid && formsubmit
+        }"
+        [value]="passengerForm.controls['age'].value !== null ? passengerForm.controls['age'].value : ''"
+        >
+          <ion-select-option *ngFor="let age of ages" [value]="age">{{age}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+    <ion-button type="submit">
+      <ion-label>{{ form == 'add' ? 'Add' : 'Edit' }} {{ paxtype == '1' ? 'Adult' : 'Children' }}</ion-label>
+    </ion-button>
+  </form>
 </ion-content>

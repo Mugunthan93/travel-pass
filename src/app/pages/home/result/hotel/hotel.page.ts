@@ -3,14 +3,14 @@ import { matExpansionAnimations } from '@angular/material/expansion';
 import { ModalController, IonInfiniteScroll } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
 import { hotellist, HotelResultState, ViewHotel, AddHotels } from 'src/app/stores/result/hotel.state';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { Store } from '@ngxs/store';
 import * as _ from 'lodash';
 import { ViewHotelComponent } from 'src/app/components/hotel/view-hotel/view-hotel.component';
 import { sortButton, SortState } from 'src/app/stores/result/sort.state';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { staticresponselist, hotelresultlist } from 'src/app/stores/search/hotel.state';
-import { map } from 'rxjs/operators';
+import { map, flatMap } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
@@ -60,17 +60,20 @@ export class HotelPage implements OnInit {
     return address.map(el => _.startCase(el));
   }
 
-  async viewHotel(hotel: hotellist) {
-    const modal = await this.modalCtrl.create({
+  viewHotel(hotel: hotellist) {
+    const viewmodal$ = from(this.modalCtrl.create({
       component: ViewHotelComponent,
       id: 'view-hotel'
-    })
-    this.store.dispatch(new ViewHotel(hotel))
-      .subscribe({
-        complete: async () => {
-          await modal.present();
-        }
-      });
+    }))
+      .pipe(
+        flatMap(
+          (modalEl) => {
+            return from(modalEl.present());
+          }
+        )
+    );
+    
+    this.store.dispatch(new ViewHotel(hotel, viewmodal$))
   }
 
   starRating(rating: number): string[] {

@@ -48,9 +48,9 @@ import { FlightFilterState } from '../stores/result/filter/flight.filter.state';
 import { DepartureFilterState } from '../stores/result/filter/departure.filter.state';
 import { ReturnFilterState } from '../stores/result/filter/return.filter.state';
 import { HotelFilterState } from '../stores/result/filter/hotel.filter.state';
+import { ViewHotelComponent } from '../components/hotel/view-hotel/view-hotel.component';
 
 @NgModule({
-  declarations: [],
   imports: [
     CommonModule,
     NgxsModule.forRoot([

@@ -6,6 +6,7 @@ ion-content {
     >ion-row{
         display: flex;
         flex-direction: column;
+
         >ion-item {
             --padding-end: 16px;
             --padding-start: 16px;
@@ -31,7 +32,10 @@ ion-content {
                 >ion-row {
                     width: -webkit-fill-available;
                     justify-content: space-between;
+                }
 
+                ion-label{
+                        min-width: -webkit-fill-available;
                 }
             }
             >ion-icon {
@@ -39,13 +43,24 @@ ion-content {
                 margin: auto;
                 font-size: 25px;
             }
-
             >ion-label{
                 width: 25%;
                 margin: auto;
                 text-align: center;
             }
     
+        }
+
+        ion-row.buttons{
+            display: flex;
+             >ion-button {
+                 margin: 16px;
+
+                 --padding-start: 6px;
+                 --padding-end: 6px;
+                 --padding-top: 6px;
+                 --padding-bottom: 6px;
+             }
         }
     
         >ion-button {

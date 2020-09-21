@@ -8,6 +8,7 @@ import { BookState } from 'src/app/stores/book.state';
 import { FilterState } from 'src/app/stores/result/filter.state';
 import { SortState } from 'src/app/stores/result/sort.state';
 import { SharedState } from 'src/app/stores/shared.state';
+import { PassengerState } from 'src/app/stores/passenger.state';
 
 @Component({
   selector: 'app-home-tab',
@@ -30,6 +31,7 @@ export class HomeTabPage implements OnInit {
         BookState,
         SharedState,
         FilterState,
+        PassengerState,
         SortState
       )
     );

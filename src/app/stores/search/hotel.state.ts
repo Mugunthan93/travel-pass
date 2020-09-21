@@ -604,8 +604,24 @@ export class HotelSearchState {
             payload: payload
         });
 
-        let hotelResponse$ = this.hotelService.searchHotel(payload);
-        let dumpResponse$ = this.hotelService.getStaticData(staticpay);
+        let hotelResponse$ = this.hotelService.searchHotel(payload)
+            .pipe(
+                map(
+                    (response: HTTPResponse) => {
+                        console.log(response);
+                        return response;
+                    }
+                )
+            );
+        let dumpResponse$ = this.hotelService.getStaticData(staticpay)
+            .pipe(
+                map(
+                    (response: HTTPResponse) => {
+                        console.log(response);
+                        return response;
+                    }
+                )
+            );
 
         return loadingPresent$
             .pipe(
