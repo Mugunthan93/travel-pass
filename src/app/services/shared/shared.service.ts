@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { NativeHttpService } from '../http/native-http/native-http.service';
 import { environment } from 'src/environments/environment';
+import { from, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +48,17 @@ export class SharedService {
 
   async getToken(): Promise<HTTPResponse> {
     return await this.http.get('/airlines/getToken', {});
+  }
+
+  getEligibility(companyId : number): Observable<HTTPResponse> {
+    return from(this.http.get('/eligibility/' + companyId, {}));
+  }
+
+  getTrainStation(station: string): Observable<HTTPResponse> {
+    const param: { [key: string]: string | string[] } = {
+      "station_name": station
+    }
+    return from(this.http.get('/train/gettrainlist',param));
   }
 
 }

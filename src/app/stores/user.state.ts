@@ -166,6 +166,11 @@ export class UserState {
         return state.approver == null;
     }
 
+    @Selector()
+    static getGrade(state : user): string {
+        return state.grade;
+    }
+
     @Action(GetUser)
     getUser(states: StateContext<user>, action: GetUser) {
         states.setState(action.user);

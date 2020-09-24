@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { SearchFlight, SearchHotel, SearchBus, UpcomingTrips } from 'src/app/stores/dashboard.state';
+import { SearchFlight, SearchHotel, SearchBus, UpcomingTrips, SearchTrain } from 'src/app/stores/dashboard.state';
 import { StateReset } from 'ngxs-reset-plugin';
 import { SearchState } from 'src/app/stores/search.state';
 import { ResultState } from 'src/app/stores/result.state';
@@ -50,8 +50,13 @@ export class HomeTabPage implements OnInit {
     this.store.dispatch(new SearchHotel());
   }
 
+  searchTrain() {
+    this.store.dispatch(new SearchTrain());
+  }
+
   searchCab() {
     
   }
+
 
 }

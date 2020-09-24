@@ -2,7 +2,11 @@
 
 ion-grid{
     @include flex-col-grid;
-    // --ion-grid-padding:8px !important;
+    >ion-row:first-child{
+        app-eligibility {
+                width: -webkit-fill-available;
+        }
+    }
     >ion-row:last-child{
         display: flex; 
         flex-flow: column;

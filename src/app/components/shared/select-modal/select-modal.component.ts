@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { IonInput, ModalController, IonSearchbar } from '@ionic/angular';
 import { Observable, of } from 'rxjs';
-import { city, hotelcity, SharedState, GetFlightCity, GetHotelCity, GetNationality, nationality, buscity, GetBusCity } from 'src/app/stores/shared.state';
+import { city, hotelcity, SharedState, GetFlightCity, GetHotelCity, GetNationality, nationality, buscity, GetBusCity, trainstation, GetTrainStation } from 'src/app/stores/shared.state';
 import { Store } from '@ngxs/store';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { SearchState } from 'src/app/stores/search.state';
@@ -23,6 +23,7 @@ export class SelectModalComponent implements OnInit {
   hotelcities$: Observable<hotelcity[]>;
   nationalities$: Observable<nationality[]>;
   buscities$: Observable<buscity[]>;
+  trainStations$: Observable<trainstation[]>;
 
   type: string;
 
@@ -46,6 +47,7 @@ export class SelectModalComponent implements OnInit {
     this.hotelcities$ = this.store.select(SharedState.hotelcities);
     this.nationalities$ = this.store.select(SharedState.nationalities);
     this.buscities$ = this.store.select(SharedState.buscities);
+    this.trainStations$ = this.store.select(SharedState.getTrainStations);
   }
 
   async select(selectedVal: any) {
@@ -68,7 +70,10 @@ export class SelectModalComponent implements OnInit {
       }
       else if (this.title == 'nationality') {
         return this.store.dispatch(new GetNationality(searchString));
-      } 
+      }
+      else if (this.title == 'Station') {
+        return this.store.dispatch(new GetTrainStation(searchString));
+      }
     }
   }
 

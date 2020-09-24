@@ -8,6 +8,8 @@ import { user } from '../models/user';
 import { StateResetAll } from 'ngxs-reset-plugin';
 import { UpcomingTrips } from './dashboard.state';
 import { SharedState } from './shared.state';
+import { GetEligibility } from './eligibility.state';
+import { company } from '../models/company';
 
 export interface auth {
     forgotToken : string
@@ -92,7 +94,8 @@ export class AuthState {
         loading.message = "Login User...";
         await loading.present();
 
-        let data : user = null;
+        let data: user = null;
+        let company: company = null;
 
         try {
             const userLoginResponse = await this.authService.login(action.username, action.password);
@@ -105,6 +108,7 @@ export class AuthState {
 
             this.store.dispatch(new GetUser(data));
             this.store.dispatch(new GetCompany(data.customer_id));
+            states.dispatch(new GetEligibility(data.customer_id));
             this.store.dispatch(new UpcomingTrips());
             loading.dismiss();
             this.store.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']));

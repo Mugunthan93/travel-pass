@@ -48,7 +48,11 @@ import { FlightFilterState } from '../stores/result/filter/flight.filter.state';
 import { DepartureFilterState } from '../stores/result/filter/departure.filter.state';
 import { ReturnFilterState } from '../stores/result/filter/return.filter.state';
 import { HotelFilterState } from '../stores/result/filter/hotel.filter.state';
-import { ViewHotelComponent } from '../components/hotel/view-hotel/view-hotel.component';
+import { EligibilityState } from '../stores/eligibility.state';
+import { TrainSearchState } from '../stores/search/train.state';
+import { TrainOneWaySearchState } from '../stores/search/train/oneway.state';
+import { TrainRoundTripSearchState } from '../stores/search/train/round-trip.state';
+import { TrainMultiCitySearchState } from '../stores/search/train/multi-city.state';
 
 @NgModule({
   imports: [
@@ -90,6 +94,11 @@ import { ViewHotelComponent } from '../components/hotel/view-hotel/view-hotel.co
       BusResultState,
       BusBookState,
 
+      TrainSearchState,
+      TrainOneWaySearchState,
+      TrainRoundTripSearchState,
+      TrainMultiCitySearchState,
+
       BookingState,
       ApprovalState,
       
@@ -101,6 +110,7 @@ import { ViewHotelComponent } from '../components/hotel/view-hotel/view-hotel.co
 
       SortState,
       SharedState,
+      EligibilityState,
 
       PassengerState,
       FlightPassengerState,
@@ -126,7 +136,8 @@ import { ViewHotelComponent } from '../components/hotel/view-hotel/view-hotel.co
         FilterState,
         SortState,
         SharedState,
-        PassengerState
+        PassengerState,
+        EligibilityState
       ]
     }),
     NgxsFormPluginModule.forRoot(),

@@ -42,6 +42,13 @@ export class SearchHotel {
     }
 }
 
+export class SearchTrain {
+    static readonly type = '[Dashboard] SearchTrain';
+    constructor() {
+
+    }
+}
+
 export class UpcomingTrips {
     static readonly type = '[Dashboard] UpcomingTrips';
     constructor() {
@@ -96,8 +103,17 @@ export class DashboardState{
     @Action(SearchHotel)
     searchHotel() {
         this.store.dispatch(new SearchMode('hotel'));
+        this.store.dispatch(new SearchType('one-way'));
         this.store.dispatch(new Navigate(['/', 'home', 'search','hotel']));
     }
+
+    @Action(SearchTrain)
+    searchTrain() {
+        this.store.dispatch(new SearchMode('train'));
+        this.store.dispatch(new SearchType('one-way'));
+        this.store.dispatch(new Navigate(['/', 'home', 'search', 'train','one-way']));
+    }
+
 
     @Action(UpcomingTrips)
     async upcomingTrips(states: StateContext<any>, action: UpcomingTrips) {

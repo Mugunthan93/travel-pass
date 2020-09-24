@@ -9,6 +9,7 @@ import { SearchPageRoutingModule } from './search-routing.module';
 import { SearchPage } from './search.page';
 import { PassengerModalComponent } from 'src/app/components/flight/passenger-modal/passenger-modal.component';
 import { CalendarModule } from 'ion2-calendar';
+import { EligibilityComponent } from 'src/app/components/shared/eligibility/eligibility.component';
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import { CalendarModule } from 'ion2-calendar';
   ],
   declarations: [
     SearchPage,
-    PassengerModalComponent
+    PassengerModalComponent,
+    EligibilityComponent
   ],
   entryComponents: [
     PassengerModalComponent

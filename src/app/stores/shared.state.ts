@@ -1,16 +1,16 @@
-import { State, Action, StateContext, Selector, actionMatcher } from '@ngxs/store';
+import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { SharedService } from '../services/shared/shared.service';
 import * as _ from 'lodash';
-import { from, of, iif } from 'rxjs';
-import { takeWhile } from 'lodash';
-import { takeUntil, skipWhile, startWith, debounceTime, distinctUntilChanged, switchMap, map, take } from 'rxjs/operators';
+import { from, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, map } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 
 export interface Shared {
     flightCity: city[],
     hotelCity: hotelcity[],
     nationality: nationality[],
-    busCity: buscity[]
+    busCity: buscity[],
+    trainStation : trainstation[]
 }
 
 export interface city {
@@ -46,6 +46,14 @@ export interface buscity {
     station_name: string
 }
 
+export interface trainstation {
+    location: "Chennai"
+    station_code: "MSB"
+    station_name: "Chennai Beach"
+}
+
+///////////////////////////////////////////
+
 export class GetFlightCity {
     static readonly type = '[Shared] GetFlightCity';
     constructor(public city : string) {
@@ -68,7 +76,14 @@ export class GetBusCity {
 }
 
 export class GetNationality {
-    static readonly type = '[hotel_search] GetNationality';
+    static readonly type = '[Shared] GetNationality';
+    constructor(public keyword: string) {
+
+    }
+}
+
+export class GetTrainStation {
+    static readonly type = '[Shared] GetTrainStation';
     constructor(public keyword: string) {
 
     }
@@ -80,7 +95,8 @@ export class GetNationality {
         flightCity: [],
         hotelCity: [],
         nationality: [],
-        busCity: []
+        busCity: [],
+        trainStation : []
     }
 })
 export class SharedState {
@@ -109,6 +125,11 @@ export class SharedState {
     @Selector()
     static buscities(state: Shared) {
         return state.busCity;
+    }
+
+    @Selector()
+    static getTrainStations(state : Shared) {
+        return state.trainStation;
     }
 
     @Action(GetFlightCity, {cancelUncompleted: true})
@@ -198,6 +219,29 @@ export class SharedState {
                         console.log(buscity);
                         states.patchState({
                             busCity: buscity
+                        });
+                    }
+                )
+            )
+    }
+
+    @Action(GetTrainStation)
+    getTrainStation(states: StateContext<Shared>, action: GetTrainStation) {
+        return of(action.keyword)
+            .pipe(
+                debounceTime(400),
+                distinctUntilChanged(),
+                switchMap(
+                    (str: string) => {
+                        return from(this.sharedService.getTrainStation(str))
+                    }
+                ),
+                map(
+                    (cities: HTTPResponse) => {
+                        const station: trainstation[] = JSON.parse(cities.data);
+                        console.log(station);
+                        states.patchState({
+                            trainStation: station
                         });
                     }
                 )

@@ -17,17 +17,15 @@ import { map } from 'rxjs/operators';
 })
 export class FlightPage implements OnInit {
 
-  flightType: string;
   journeyType$: Observable<string>;
 
   constructor(
-    public store: Store,
-    public activatedRoute : ActivatedRoute
+    public store: Store
   ) {
     
   }
   
-  async ngOnInit() {
+  ngOnInit() {
     this.journeyType$ = this.store.select(FlightSearchState.getJourneyType).pipe(map((type : number) => {
       if (type == 1) {
         return 'one-way';
@@ -42,7 +40,6 @@ export class FlightPage implements OnInit {
   }
 
   typeChange(evt : CustomEvent) {
-    console.log(evt, this.activatedRoute);
     this.store.dispatch(new JourneyType(evt.detail.value));
     this.store.dispatch(new SearchType(evt.detail.value));
     this.store.dispatch(new Navigate(['/','home','search','flight',evt.detail.value]));

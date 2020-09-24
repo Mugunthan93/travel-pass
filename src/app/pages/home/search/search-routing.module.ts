@@ -23,9 +23,13 @@ const routes: Routes = [
       {
         path: 'cab',
         loadChildren: () => import('./cab/cab.module').then( m => m.CabPageModule)
+      },
+      {
+        path: 'train',
+        loadChildren: () => import('./train/train.module').then( m => m.TrainPageModule)
       }
     ]
-  }
+  },
 ];
 
 @NgModule({

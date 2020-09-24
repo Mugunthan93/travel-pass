@@ -1,0 +1,19 @@
+<ion-item>
+    <ion-row slot="start">
+        <ion-label class="bold">
+            Approver : {{ approver | async | titlecase }}
+        </ion-label>
+        <ion-label class="bold">
+            DOMESTIC : {{ domesticLimit | async }}
+        </ion-label>
+    </ion-row>
+    <ion-row slot="end">
+        <ion-label class="bold">
+            Grade : {{ grade | async | titlecase }}
+        </ion-label>
+        <ion-label class="bold">
+            INTERNATIONAL : {{ internationalLimit | async }}
+        </ion-label>
+    </ion-row>
+</ion-item>
+
