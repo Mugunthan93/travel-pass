@@ -138,6 +138,15 @@ export class RoundTripPage implements OnInit {
 
   async selectDate(type : string) {
     console.log(this.roundTripForm.controls[type + '_date'].value);
+
+    let FromDate: Date = this.newDate;
+    if (type == 'return') {
+      if (this.roundTripForm.controls['departure_date'].value > this.roundTripForm.controls['return_date'].value) {
+        this.roundTripForm.controls['return_date'].setValue(null);
+      }
+      FromDate = this.roundTripForm.controls['departure_date'].value;
+    }
+
     const options: CalendarModalOptions = {
       title: type.toUpperCase(),
       pickMode: 'single',
@@ -149,7 +158,7 @@ export class RoundTripPage implements OnInit {
       closeLabel: 'Close',
       doneLabel: 'OK',
       defaultDate: this.roundTripForm.controls[type + '_date'].value,
-      from: this.newDate,
+      from: FromDate,
       to: 0
     }
     const modal = await this.modalCtrl.create({
@@ -162,7 +171,11 @@ export class RoundTripPage implements OnInit {
     modal.present();
 
     const event: any = await modal.onDidDismiss();
+
     if (event.role == 'done') {
+      if (type == 'departure' && (event.data.dateObj > this.roundTripForm.controls['return_date'].value)) {
+        this.roundTripForm.controls['return_date'].setValue(null);
+      }
       this.roundTripForm.controls[type + '_date'].patchValue(event.data.dateObj);
     }
     else if (event.role == 'cancel') {

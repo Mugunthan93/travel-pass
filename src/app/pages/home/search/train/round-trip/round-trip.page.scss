@@ -90,12 +90,11 @@ form {
                 display: flex;
                 flex-direction: column;
 
-                ion-label:first-child {
+                >ion-label:first-child {
                     margin: auto 0px 4px 0px;
                 }
 
-                ion-label:last-child {
-                    text-align: end;
+                >ion-label:last-child {
                     margin: 4px 0px auto 0px;
                 }
             }
@@ -159,6 +158,7 @@ form {
             }
 
             >ion-label:last-child {
+                text-align: end;
                 margin: 4px 0px auto 0px;
             }
         }
