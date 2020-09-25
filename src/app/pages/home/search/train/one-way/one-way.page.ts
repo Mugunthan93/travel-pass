@@ -7,8 +7,9 @@ import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { TrainSearchState } from 'src/app/stores/search/train.state';
 import { Store } from '@ngxs/store';
-import { distinctUntilChanged, switchMap, map } from 'rxjs/operators';
+import { distinctUntilChanged, switchMap, map, tap } from 'rxjs/operators';
 import { TrainOneWayForm } from 'src/app/stores/search/train/oneway.state';
+import { trainstation, city } from 'src/app/stores/shared.state';
 
 @Component({
   selector: 'app-one-way',
@@ -17,13 +18,15 @@ import { TrainOneWayForm } from 'src/app/stores/search/train/oneway.state';
 })
 export class OneWayPage implements OnInit {
 
-  oneWayForm: FormGroup;
   @ViewChild('select', { static: true }) select: IonSelect;
+  oneWayForm: FormGroup;
   classes: string[] = ['All Class', 'Sleeper Class', 'Third AC', 'Second AC', 'First AC', 'Second Seating', 'AC Chair Car', 'First Class', 'Third AC Economy'];
   customAlertOptions: AlertOptions;
   newDate: Date;
   formSubmit: boolean = false;
   trainType$: Observable<String>;
+
+  currentType: String;
 
   constructor(
     private store : Store,
@@ -33,8 +36,12 @@ export class OneWayPage implements OnInit {
   ngOnInit() {
 
     this.oneWayForm = new FormGroup({
-      from: new FormControl(null,[Validators.required]),
-      to: new FormControl(null, [Validators.required]),
+      from_name: new FormControl(null, [Validators.required]),
+      from_code: new FormControl(null),
+      from_location: new FormControl(null, [Validators.required]),
+      to_name: new FormControl(null, [Validators.required]),
+      to_code: new FormControl(null),
+      to_location: new FormControl(null, [Validators.required]),
       date: new FormControl(null, [Validators.required]),
       class: new FormControl(null, [Validators.required])
     });
@@ -42,10 +49,10 @@ export class OneWayPage implements OnInit {
     this.trainType$ = this.store.select(TrainSearchState.getTrainType)
       .pipe(
         map(
-          (str: string) => {
-            console.log(str);
+          (str : String) => {
             this.oneWayForm.reset();
             this.formSubmit = false;
+            this.currentType = str;
             return str;
           }
         )
@@ -58,8 +65,6 @@ export class OneWayPage implements OnInit {
 
     this.newDate = new Date();
 
-    this.oneWayForm.valueChanges.subscribe(el => console.log(el));
-
   }
 
   selectClass() {
@@ -71,26 +76,56 @@ export class OneWayPage implements OnInit {
     this.oneWayForm.controls['class'].setValue(evt.detail.value);
   }
 
-  async getStation(field : string) {
-    const modal = await this.modalCtrl.create({
-      component: SelectModalComponent,
-      componentProps: {
-        title: 'Station'
-      },
-    });
+  async getStation(field: string) {
+    if (this.currentType == 'domestic') {
+      const modal = await this.modalCtrl.create({
+        component: SelectModalComponent,
+        componentProps: {
+          title: 'Station',
+          category: 'domestic'
+        },
+      });
 
-    modal.onDidDismiss().then(
-      (selectedCity) => {
-        if (selectedCity.role == "backdrop") {
-          return;
+      modal.onDidDismiss().then(
+        (selectedStation) => {
+          if (selectedStation.role == "backdrop") {
+            return;
+          }
+          console.log(selectedStation);
+          let station: trainstation = selectedStation.data;
+          this.oneWayForm.controls[field + '_name'].patchValue(station.station_name);
+          this.oneWayForm.controls[field + '_code'].patchValue(station.station_code);
+          this.oneWayForm.controls[field + '_location'].patchValue(station.location);
+          console.log(this.oneWayForm);
         }
-        console.log(selectedCity);
-        this.oneWayForm.controls[field].patchValue(selectedCity.data);
-        console.log(this.oneWayForm);
-      }
-    );
+      );
 
-    return await modal.present();
+      return await modal.present();
+    }
+    else if (this.currentType == 'international') {
+      const modal = await this.modalCtrl.create({
+        component: SelectModalComponent,
+        componentProps: {
+          title: 'Station',
+          category: 'international'
+        },
+      });
+
+      modal.onDidDismiss().then(
+        (selectedStation) => {
+          if (selectedStation.role == "backdrop") {
+            return;
+          }
+          console.log(selectedStation);
+          let station: city = selectedStation.data;
+          this.oneWayForm.controls[field + '_code'].patchValue(station.city_code);
+          this.oneWayForm.controls[field + '_location'].patchValue(station.city_name);
+          console.log(this.oneWayForm);
+        }
+      );
+
+      return await modal.present();
+    }
   }
 
   async selectDate() {
@@ -147,7 +182,5 @@ export class OneWayPage implements OnInit {
       this.store.dispatch(new TrainOneWayForm(this.oneWayForm.value));
     }
   }
-
-
 
 }

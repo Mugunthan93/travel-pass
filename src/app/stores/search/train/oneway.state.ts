@@ -1,10 +1,7 @@
 import { State, Action, StateContext, Store } from '@ngxs/store';
-import { trainstation } from '../../shared.state';
-import { TrainSearchState } from '../train.state';
 
 export interface trainOnewaySearch {
-    formData: any,
-    payload: any
+    formData: trainonewayform
 }
 
 export class TrainOneWayForm {
@@ -15,10 +12,14 @@ export class TrainOneWayForm {
 }
 
 export class trainonewayform {
-    class: string
+    from_name: string
+    from_code: string
+    from_location: string
+    to_name: string
+    to_code: string
+    to_location: string
     date: Date
-    from: trainstation & string
-    to: trainstation & string
+    class: string
 }
 
 export interface trainonewayPayload {
@@ -28,8 +29,7 @@ export interface trainonewayPayload {
 @State<trainOnewaySearch>({
     name: 'trainOnewaySearch',
     defaults: {
-        formData: null,
-        payload: null
+        formData: null
     }
 })
 

@@ -1,9 +1,96 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>round-trip</ion-title>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content>
+<form [formGroup]="roundTripForm" (ngSubmit)="searchTrain()">
 
-</ion-content>
+  <ion-item>
+    <ion-row>
+      <ion-label class="bold large label">From Station</ion-label>
+      <ion-label class="value" [ngClass]="errorClass('from_location')" (click)="getStation('from')">
+        {{(this.roundTripForm.value.from_location !== null && this.roundTripForm.value.from_location !== '') ? this.roundTripForm.value.from_location : 'Select Station'}}
+      </ion-label>
+    </ion-row>
+    <ion-row *ngIf="(trainType$ | async) == 'international'">
+      <ion-label class="bold large label">Station Name</ion-label>
+      <input formControlName="from_name" [ngClass]="errorClass('from_name')" placeholder="Enter Station Name">
+    </ion-row>
+  </ion-item>
+
+  <ion-item>
+    <ion-row>
+      <ion-label class="bold large label">To Station</ion-label>
+      <ion-label class="value" [ngClass]="errorClass('to_location')" (click)="getStation('to')">
+        {{(this.roundTripForm.value.to_location !== null && this.roundTripForm.value.to_location !== '') ? this.roundTripForm.value.to_location : 'Select Station'}}
+      </ion-label>
+    </ion-row>
+    <ion-row *ngIf="(trainType$ | async) == 'international'">
+      <ion-label class="bold large label">To Station</ion-label>
+      <input formControlName="to_name" [ngClass]="errorClass('to_name')" placeholder="Enter Station Name">
+    </ion-row>
+  </ion-item>
+
+  <ion-item>
+    <ion-row slot="start" (click)="selectDate('departure')">
+      <ion-label class="bolder" [ngClass]="errorClass('departure_date')"
+        *ngIf="this.roundTripForm.value.departure_date !== null">
+        {{ this.roundTripForm.value.departure_date !== null ? (this.roundTripForm.value.departure_date | date : 'd') : '' }}
+      </ion-label>
+      <ion-row>
+        <ion-label [ngClass]="errorClass('departure_date')">
+          {{ this.roundTripForm.value.departure_date !== null ?  (this.roundTripForm.value.departure_date | date : 'LLL yyyy') : 'Select Departure' }}
+        </ion-label>
+        <ion-label [ngClass]="errorClass('departure_date')">
+          {{ this.roundTripForm.value.departure_date !== null ?  (this.roundTripForm.value.departure_date | date : 'EEE') : 'Date' }}
+        </ion-label>
+      </ion-row>
+    </ion-row>
+    <ion-row slot="end" (click)="selectClass('departure')">
+      <ion-label class="bold large">Departure Class</ion-label>
+      <ion-label [ngClass]="errorClass('departure_class')">
+        {{ this.roundTripForm.value.departure_class !== null ?  this.roundTripForm.value.departure_class : 'Select Class' }}
+      </ion-label>
+    </ion-row>
+  </ion-item>
+
+  <ion-item>
+    <ion-row slot="start" (click)="selectDate('return')">
+      <ion-label class="bolder" [ngClass]="errorClass('return_date')"
+        *ngIf="this.roundTripForm.value.return_date !== null">
+        {{ this.roundTripForm.value.return_date !== null ? (this.roundTripForm.value.return_date | date : 'd') : '' }}
+      </ion-label>
+      <ion-row>
+        <ion-label [ngClass]="errorClass('return_date')">
+          {{ this.roundTripForm.value.return_date !== null ?  (this.roundTripForm.value.return_date | date : 'LLL yyyy') : 'Select Return' }}
+        </ion-label>
+        <ion-label [ngClass]="errorClass('return_date')">
+          {{ this.roundTripForm.value.return_date !== null ?  (this.roundTripForm.value.return_date | date : 'EEE') : 'Date' }}
+        </ion-label>
+      </ion-row>
+    </ion-row>
+    <ion-row slot="end" (click)="selectClass('return')">
+      <ion-label class="bold large">Return Class</ion-label>
+      <ion-label [ngClass]="errorClass('return_class')">
+        {{ this.roundTripForm.value.return_class !== null ?  this.roundTripForm.value.return_class : 'Select Class' }}
+      </ion-label>
+    </ion-row>
+  </ion-item>
+
+  <ion-row>
+    <ion-button type="submit">
+      <ion-label>Continue</ion-label>
+    </ion-button>
+  </ion-row>
+
+  <ion-input formControlName="from_location" hidden></ion-input>
+  <ion-input formControlName="to_location" hidden></ion-input>
+  <ion-input formControlName="from_code" hidden></ion-input>
+  <ion-input formControlName="to_code" hidden></ion-input>
+  <ion-input formControlName="departure_date" hidden></ion-input>
+  <ion-select #depatureselect formControlName="departure_class" cancelText="Cancel" okText="Confirm"
+    [interfaceOptions]="customAlertOptions" (ionChange)="changeClass($event)" hidden>
+    <ion-select-option *ngFor="let class of classes" [value]="class">{{ class }}</ion-select-option>
+  </ion-select>
+  <ion-input formControlName="return_date" hidden></ion-input>
+  <ion-select #returnselect formControlName="return_class" cancelText="Cancel" okText="Confirm"
+    [interfaceOptions]="customAlertOptions" (ionChange)="changeClass($event)" hidden>
+    <ion-select-option *ngFor="let class of classes" [value]="class">{{ class }}</ion-select-option>
+  </ion-select>
+</form>

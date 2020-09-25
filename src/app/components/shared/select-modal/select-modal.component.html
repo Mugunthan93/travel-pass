@@ -17,7 +17,8 @@
     (ionInput)="search($event.target.value)" #city [placeholder]="'Select ' + title | titlecase">
   </ion-searchbar>
   
-  <ion-list-header class="searchHeading" *ngIf="type == 'flight' && title == 'city'">
+  <ion-list-header class="searchHeading"
+    *ngIf="(type == 'flight' && title == 'city') || (type == 'train' && category == 'international')">
     <ion-label class="bold large">City Name [ City Code ]</ion-label>
     <ion-label class="bold large" style="text-align: end;">Airport Name [ Airport Code ]</ion-label>
   </ion-list-header>
@@ -36,7 +37,7 @@
     <ion-label class="bold large">City</ion-label>
   </ion-list-header>
 
-    <ion-list-header class="searchHeading" *ngIf="type == 'train'">
+    <ion-list-header class="searchHeading" *ngIf="type == 'train' && category == 'domestic'">
       <ion-label class="bold large">Station</ion-label>
     </ion-list-header>
 

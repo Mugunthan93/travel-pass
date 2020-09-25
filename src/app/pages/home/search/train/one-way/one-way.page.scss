@@ -14,7 +14,7 @@ form {
             display: flex;
             flex-direction: column;
             height: 100px;
-            width: -webkit-fill-available;
+            width: 50%;
             >ion-label{
                 &.label{
                     --color: #000000 !important;

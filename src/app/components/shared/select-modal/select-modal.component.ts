@@ -17,6 +17,7 @@ import { map } from 'lodash';
 export class SelectModalComponent implements OnInit {
 
   @Input() title: string;
+  @Input() category: string;
   @ViewChild('city', { static: true, read: IonSearchbar }) cityInput: IonSearchbar;
 
   flightcities$: Observable<city[]>;
@@ -41,6 +42,7 @@ export class SelectModalComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.category);
     this.type = this.store.selectSnapshot(SearchState.getSearchMode);
 
     this.flightcities$ = this.store.select(SharedState.flightcities);
@@ -72,7 +74,12 @@ export class SelectModalComponent implements OnInit {
         return this.store.dispatch(new GetNationality(searchString));
       }
       else if (this.title == 'Station') {
-        return this.store.dispatch(new GetTrainStation(searchString));
+        if (this.category == 'domestic') {
+          return this.store.dispatch(new GetTrainStation(searchString));
+        }
+        else if (this.category == 'international') {
+          return this.store.dispatch(new GetFlightCity(searchString));
+        }
       }
     }
   }
