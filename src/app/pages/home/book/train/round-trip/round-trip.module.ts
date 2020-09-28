@@ -4,19 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { TrainPageRoutingModule } from './train-routing.module';
+import { RoundTripPageRoutingModule } from './round-trip-routing.module';
 
-import { TrainPage } from './train.page';
+import { RoundTripPage } from './round-trip.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    TrainPageRoutingModule
+    RoundTripPageRoutingModule
   ],
-  declarations: [
-    TrainPage
-  ]
+  declarations: [RoundTripPage]
 })
-export class TrainPageModule {}
+export class RoundTripPageModule {}

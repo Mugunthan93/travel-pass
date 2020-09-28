@@ -1,4 +1,5 @@
 <ion-content>
+  
   <mat-accordion multi="false" *ngIf="flightDetail | async">
     <mat-expansion-panel *ngFor="let flight of (flightDetail | async).trip;let i = index">
       <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">

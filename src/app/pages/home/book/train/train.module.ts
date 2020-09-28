@@ -15,8 +15,6 @@ import { TrainPage } from './train.page';
     IonicModule,
     TrainPageRoutingModule
   ],
-  declarations: [
-    TrainPage
-  ]
+  declarations: [TrainPage]
 })
 export class TrainPageModule {}

@@ -4,19 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { TrainPageRoutingModule } from './train-routing.module';
+import { MultiCityPageRoutingModule } from './multi-city-routing.module';
 
-import { TrainPage } from './train.page';
+import { MultiCityPage } from './multi-city.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    TrainPageRoutingModule
+    MultiCityPageRoutingModule
   ],
-  declarations: [
-    TrainPage
-  ]
+  declarations: [MultiCityPage]
 })
-export class TrainPageModule {}
+export class MultiCityPageModule {}

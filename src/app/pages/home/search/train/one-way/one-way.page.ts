@@ -4,12 +4,17 @@ import { AlertOptions } from '@ionic/core';
 import { IonSelect, ModalController } from '@ionic/angular';
 import { SelectModalComponent } from 'src/app/components/shared/select-modal/select-modal.component';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { TrainSearchState } from 'src/app/stores/search/train.state';
 import { Store } from '@ngxs/store';
-import { distinctUntilChanged, switchMap, map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { TrainOneWayForm } from 'src/app/stores/search/train/oneway.state';
 import { trainstation, city } from 'src/app/stores/shared.state';
+import { PassengerListComponent } from 'src/app/components/shared/passenger-list/passenger-list.component';
+import { AddTrainPassenger, trainpassenger } from 'src/app/stores/passenger/train.passenger.state';
+import { user } from 'src/app/models/user';
+import { UserState } from 'src/app/stores/user.state';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-one-way',
@@ -24,10 +29,11 @@ export class OneWayPage implements OnInit {
   customAlertOptions: AlertOptions;
   newDate: Date;
   formSubmit: boolean = false;
-  trainType$: Observable<String>;
-
+  
   currentType: String;
-
+  trainType$: Observable<String>;
+  user: user;
+  
   constructor(
     private store : Store,
     public modalCtrl : ModalController
@@ -64,7 +70,6 @@ export class OneWayPage implements OnInit {
     }
 
     this.newDate = new Date();
-
   }
 
   selectClass() {

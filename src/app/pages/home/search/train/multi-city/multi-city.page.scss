@@ -1,0 +1,161 @@
+@import "../../../../../../style/base/fonts.scss";
+@import "../../../../../../style/base/color.scss";
+
+
+ion-row.addgroup {
+    height: 50px;
+    justify-content: flex-end;
+    padding-right: 16px;
+    >ion-button {
+        ion-icon{
+            color:white;
+            margin-left: 8px;
+        }
+        >ion-label {
+            margin: 12px;
+        }
+    }
+}
+form{
+    height: -webkit-fill-available;
+    ion-content{
+        height: 80%;
+        --background: transparent;
+        >ion-row.form{
+            >ion-card{
+                width: -webkit-fill-available;
+                background: white;
+                margin: 8px 16px;
+                >ion-card-header{
+                    display: flex;
+                    ion-icon {
+                        font-size: xx-large;
+                    }
+                }
+                >ion-card-content{
+                    height: -webkit-fill-available;
+
+                    ion-item:not(:last-of-type) {
+                        border-bottom: 2px solid #{$suva-grey};
+                    }
+
+                    >ion-item:nth-child(1) {
+                        min-height:75px;
+
+                        ion-row {
+                            display: flex;
+                            flex-direction: column;
+                            height:75px;
+                            width: 50%;
+
+                            >ion-label {
+                                &.label {
+                                    --color: #000000 !important;
+                                    margin: auto 0px 4px 0px;
+                                }
+
+                                &.value {
+                                    margin: 4px 0px auto 0px;
+                                }
+                            }
+
+                            >input {
+                                margin: 4px 0px auto 0px;
+                                background: transparent;
+                                border-color: transparent;
+                                border-width: 0px;
+                                outline: none;
+                                padding: 0px;
+                            }
+                        }
+                    }
+
+                    >ion-item:nth-child(2) {
+                        min-height:75px;
+
+                        ion-row {
+                            display: flex;
+                            flex-direction: column;
+                            height:75px;
+                            width: 50%;
+
+                            >ion-label {
+                                &.label {
+                                    --color: #000000 !important;
+                                    margin: auto 0px 4px 0px;
+                                }
+
+                                &.value {
+                                    margin: 4px 0px auto 0px;
+                                }
+                            }
+
+                            >input {
+                                margin: 4px 0px auto 0px;
+                                background: transparent;
+                                border-color: transparent;
+                                border-width: 0px;
+                                outline: none;
+                                padding: 0px;
+                            }
+                        }
+                    }
+
+                    >ion-item:nth-child(3) {
+                        min-height:75px;
+
+                        >ion-row:first-child {
+                            display: flex;
+                            flex-direction: row;
+                            height:75px;
+
+                            >ion-label {
+                                margin: auto 0px;
+                                font-size:calc(2 * #{$large-font});
+                                margin-right: 8px;
+                            }
+
+                            >ion-row {
+                                display: flex;
+                                flex-direction: column;
+
+                                ion-label:first-child {
+                                    margin: auto 0px 4px 0px;
+                                }
+
+                                ion-label:last-child {
+                                    margin: 4px 0px auto 0px;
+                                }
+                            }
+                        }
+
+                        >ion-row:last-child {
+                            height:75px;
+                            display: flex;
+                            flex-direction: column;
+
+                            >ion-label:first-child {
+                                --color: #000000 !important;
+                                margin: auto 0px 4px 0px;
+                                text-align: right;
+                            }
+
+                            >ion-label:last-child {
+                                margin: 4px 0px auto 0px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ion-row.submit{
+        height: 20%;
+        justify-content: center;
+        >ion-button {
+            >ion-label {
+                margin: 20px;
+            }
+        }
+    }
+}

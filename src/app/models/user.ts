@@ -6,7 +6,7 @@ export interface user {
   email: string;
   phone_number: string;
   dob: string;
-  pan_number: string;
+  PAN_number: string;
   aadhar_no: string;
   address: string;
   city: string;

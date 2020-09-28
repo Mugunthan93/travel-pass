@@ -2,10 +2,7 @@ import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
 import { ModalController, PopoverController } from '@ionic/angular';
 import { from } from 'rxjs';
 import * as _ from 'lodash';
-import { ListEmployeeComponent } from 'src/app/components/shared/list-employee/list-employee.component';
 import { user } from 'src/app/models/user';
-import { CompanyState } from '../company.state';
-import { map, flatMap } from 'rxjs/operators';
 
 export interface hotelpassengerstate{
     adult: hotelpassenger[]
@@ -300,8 +297,6 @@ export class HotelPassengerState {
             selectedChildren: filterPass
         });
     }
-
-
 
     @Action(DismissHotelPassenger)
     dismissHotelPassenger(states: StateContext<hotelpassengerstate>) {

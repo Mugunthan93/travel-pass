@@ -62,6 +62,11 @@ export class UserState {
     }
 
     @Selector()
+    static getPANNumber(state: user): string {
+        return state.PAN_number;
+    }
+
+    @Selector()
     static getApproverName(state: user): string {
         return state.approver.name;
     }

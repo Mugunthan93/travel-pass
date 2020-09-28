@@ -4,6 +4,7 @@ import { HotelBookState } from './book/hotel.state';
 import { BusBookState } from './book/bus.state';
 import { StateReset } from 'ngxs-reset-plugin';
 import { Navigate } from '@ngxs/router-plugin';
+import { TrainBookState } from './book/train.state';
 
 export interface book {
     mode: string,
@@ -37,7 +38,8 @@ export class BookBack {
     children: [
         FLightBookState,
         HotelBookState,
-        BusBookState
+        BusBookState,
+        TrainBookState
     ]
 })
 
@@ -85,6 +87,9 @@ export class BookState {
         }
         if (bookMode == 'flight') {
             states.dispatch(new Navigate(['/', 'home', 'result', bookMode, bookType]));
+        }
+        if (bookMode == 'train') {
+            states.dispatch(new Navigate(['/', 'home', 'search', bookMode, bookType]));
         }
         else {
             states.dispatch(new Navigate(['/', 'home', 'result', bookMode]));

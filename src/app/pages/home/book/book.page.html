@@ -6,7 +6,8 @@
       </ion-button>
     </ion-buttons>
     <ion-title>
-      {{bookMode$ | async | titlecase}} Book {{ (bookMode$ | async) == 'flight' ? '['+(bookType$ | async)+']' : ''}}
+      {{bookMode$ | async | titlecase}} Book
+      {{ ((bookMode$ | async) == 'train' || (bookMode$ | async) == 'flight') ? '['+(bookType$ | async)+']' : ''}}
     </ion-title>
   </ion-toolbar>
 </ion-header>

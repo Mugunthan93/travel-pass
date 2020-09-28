@@ -1,4 +1,6 @@
-import { State, Action, StateContext, Store } from '@ngxs/store';
+import { State, Action, StateContext, Store, Selector } from '@ngxs/store';
+import { BookTrainOneWay, segments } from '../../book/train/one-way.state';
+import * as moment from 'moment';
 
 export interface trainOnewaySearch {
     formData: trainonewayform
@@ -22,10 +24,6 @@ export class trainonewayform {
     class: string
 }
 
-export interface trainonewayPayload {
-
-}
-
 @State<trainOnewaySearch>({
     name: 'trainOnewaySearch',
     defaults: {
@@ -36,9 +34,13 @@ export interface trainonewayPayload {
 export class TrainOneWaySearchState {
 
     constructor(
-        private store : Store
     ) {
 
+    }
+
+    @Selector()
+    static getOnewaySearch(state: trainOnewaySearch): trainonewayform {
+        return state.formData;
     }
 
     @Action(TrainOneWayForm)
@@ -46,6 +48,31 @@ export class TrainOneWaySearchState {
         states.patchState({
             formData: action.form
         });
+
+        let currentSegment: segments = {
+            OriginName: action.form.from_location,//location
+            OriginCountry: "", //""
+            OriginCountryCode: "", //""
+            OriginStation: action.form.from_name+"("+action.form.from_code+")", //station_name(station_code)
+
+            DestinationName: action.form.to_location,//location
+            DestinationCountry: "",//""
+            DestinationCountryCode: "",//""
+            DestinationStation: action.form.to_name + "(" + action.form.to_code + ")",//station_name(station_code)
+
+            Class: action.form.class,//class
+
+            PreferredArrivalTime: "",//""
+            PreferredDepartureTime: moment(action.form.date).format('YYYY-MM-DDTHH:mm:ss'),//date
+
+            trainName: null,//trainname
+            trainNumber: "",//""
+
+            Destination: action.form.to_code, //"staion code",
+            Origin: action.form.from_code //"staion_code",
+        }
+
+        states.dispatch(new BookTrainOneWay(currentSegment));
     }
 
 
