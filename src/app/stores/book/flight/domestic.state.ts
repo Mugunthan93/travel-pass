@@ -41,7 +41,7 @@ export class GetFareQuoteSSR {
 
 export class DomesticSendRequest {
     static readonly type = "[Domestic] DomesticSendRequest";
-    constructor() {
+    constructor(public comment: string, public mailCC: string[], public purpose: string) {
 
     }
 }
@@ -245,7 +245,7 @@ export class DomesticBookState {
     }
 
     @Action(DomesticSendRequest)
-    async roundTripSendRequest(states: StateContext<domesticBook>) {
+    async roundTripSendRequest(states: StateContext<domesticBook>, action: DomesticSendRequest) {
 
         const loading = await this.loadingCtrl.create({
             spinner: "crescent"
@@ -452,9 +452,9 @@ export class DomesticBookState {
                 }
             },
             managers: this.store.selectSnapshot(UserState.getApprover),
-            approval_mail_cc: this.store.selectSnapshot(FLightBookState.getCC),
-            purpose: this.store.selectSnapshot(FLightBookState.getPurpose),
-            comments: '[\"' + this.store.selectSnapshot(FLightBookState.getComment) + '\"]',
+            approval_mail_cc: action.mailCC,
+            purpose: action.purpose,
+            comments: '[\"' + action.comment + '\"]',
 
             booking_mode: "online",
             status: "pending",

@@ -34,7 +34,7 @@ export class GetFareQuoteSSR {
 
 export class InternationalSendRequest {
     static readonly type = "[international_book] SendRequest";
-    constructor() {
+    constructor(public comment: string, public mailCC: string[], public purpose: string) {
 
     }
 }
@@ -166,7 +166,7 @@ export class InternationalBookState {
     }
 
     @Action(InternationalSendRequest)
-    async internationalSendRequest(states: StateContext<internationalBook>) {
+    async internationalSendRequest(states: StateContext<internationalBook>, action: InternationalSendRequest) {
 
         const loading = await this.loadingCtrl.create({
             spinner: "crescent"
@@ -335,9 +335,9 @@ export class InternationalBookState {
                 }
             },
             managers: this.store.selectSnapshot(UserState.getApprover),
-            approval_mail_cc: this.store.selectSnapshot(FLightBookState.getCC),
-            purpose: this.store.selectSnapshot(FLightBookState.getPurpose),
-            comments: '[\"' + this.store.selectSnapshot(FLightBookState.getComment) + '\"]',
+            approval_mail_cc: action.mailCC,
+            purpose: action.purpose,
+            comments: '[\"' + action.comment + '\"]',
 
             booking_mode: "online",
             status: "pending",

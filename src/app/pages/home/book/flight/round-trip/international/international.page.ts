@@ -3,11 +3,11 @@ import { Observable } from 'rxjs';
 import { bookObj, CancellationRisk } from 'src/app/stores/book/flight.state';
 import { Store } from '@ngxs/store';
 import { ModalController, AlertController } from '@ionic/angular';
-import { BookConfirmationComponent } from 'src/app/components/flight/book-confirmation/book-confirmation.component';
 import { RoundTripSearchState } from 'src/app/stores/search/flight/round-trip.state';
 import { InternationalBookState } from 'src/app/stores/book/flight/international.state';
 import { PassengerListComponent } from 'src/app/components/shared/passenger-list/passenger-list.component';
 import { FlightPassengerState } from 'src/app/stores/passenger/flight.passenger.states';
+import { BookConfirmationComponent } from 'src/app/components/shared/book-confirmation/book-confirmation.component';
 
 @Component({
   selector: 'app-international',
@@ -66,7 +66,7 @@ export class InternationalPage implements OnInit {
     if (this.selected == this.count) {
       const modal = await this.modalCtrl.create({
         component: BookConfirmationComponent,
-        id: 'send-request',
+        id: 'book-confirm',
         keyboardClose: false
       });
 

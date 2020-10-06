@@ -34,7 +34,7 @@ export class GetFareQuoteSSR {
 
 export class MultiCitySendRequest {
     static readonly type = "[multicity_book] SendRequest";
-    constructor() {
+    constructor(public comment: string, public mailCC: string[], public purpose: string) {
 
     }
 }
@@ -167,7 +167,7 @@ export class MultiCityBookState {
     }
 
     @Action(MultiCitySendRequest)
-    async multicitySendRequest(states: StateContext<multicityBook>) {
+    async multicitySendRequest(states: StateContext<multicityBook>, action: MultiCitySendRequest) {
 
         const loading = await this.loadingCtrl.create({
             spinner: "crescent"
@@ -336,9 +336,9 @@ export class MultiCityBookState {
                 }
             },
             managers: this.store.selectSnapshot(UserState.getApprover),
-            approval_mail_cc: this.store.selectSnapshot(FLightBookState.getCC).toString(),
-            purpose: this.store.selectSnapshot(FLightBookState.getPurpose),
-            comments: '[\"' + this.store.selectSnapshot(FLightBookState.getComment) + '\"]',
+            approval_mail_cc: action.mailCC,
+            purpose: action.purpose,
+            comments: '[\"' + action.comment + '\"]',
 
             booking_mode: "online",
             status: "pending",

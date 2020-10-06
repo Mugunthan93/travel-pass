@@ -5,9 +5,9 @@ import { Observable } from 'rxjs';
 import { bookObj, CancellationRisk } from 'src/app/stores/book/flight.state';
 import { OneWaySearchState } from 'src/app/stores/search/flight/oneway.state';
 import { OneWayBookState } from 'src/app/stores/book/flight/oneway.state';
-import { BookConfirmationComponent } from 'src/app/components/flight/book-confirmation/book-confirmation.component';
 import { PassengerListComponent } from 'src/app/components/shared/passenger-list/passenger-list.component';
 import { FlightPassengerState } from 'src/app/stores/passenger/flight.passenger.states';
+import { BookConfirmationComponent } from 'src/app/components/shared/book-confirmation/book-confirmation.component';
 
 @Component({
   selector: 'app-one-way',
@@ -70,10 +70,9 @@ export class OneWayPage implements OnInit {
 
       const modal = await this.modalCtrl.create({
         component: BookConfirmationComponent,
-        id: 'send-request',
-        keyboardClose: false
+        id: 'book-confirm'
       });
-  
+
       return await modal.present();
 
     }

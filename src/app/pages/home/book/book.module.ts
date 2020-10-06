@@ -15,13 +15,14 @@ import { SpecialRequestComponent } from 'src/app/components/hotel/special-reques
 import { PoliciesComponent } from 'src/app/components/hotel/policies/policies.component';
 import { AddGuestComponent } from 'src/app/components/hotel/add-guest/add-guest.component';
 import { TermsConditionsComponent } from 'src/app/components/hotel/terms-conditions/terms-conditions.component';
-import { BookConfirmationComponent } from 'src/app/components/flight/book-confirmation/book-confirmation.component';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { FoodPipe } from 'src/app/pipes/food/food.pipe';
 import { PaymentComponent } from 'src/app/components/bus/payment/payment.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { PassengerListComponent } from 'src/app/components/shared/passenger-list/passenger-list.component';
 import { ListEmployeeComponent } from 'src/app/components/shared/list-employee/list-employee.component';
+import { TravellerDetailComponent } from 'src/app/components/train/traveller-detail/traveller-detail.component';
+import { BookConfirmationComponent } from 'src/app/components/shared/book-confirmation/book-confirmation.component';
 
 @NgModule({
   imports: [
@@ -46,6 +47,7 @@ import { ListEmployeeComponent } from 'src/app/components/shared/list-employee/l
     BookConfirmationComponent,
     PaymentComponent,
     PassengerListComponent,
+    TravellerDetailComponent,
     ListEmployeeComponent,
     FoodPipe
   ],
@@ -58,6 +60,7 @@ import { ListEmployeeComponent } from 'src/app/components/shared/list-employee/l
     TermsConditionsComponent,
     BookConfirmationComponent,
     PassengerListComponent,
+    TravellerDetailComponent,
     ListEmployeeComponent,
     PaymentComponent
   ]

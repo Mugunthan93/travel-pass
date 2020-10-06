@@ -43,9 +43,9 @@ export class GetFareQuoteSSR {
 
 }
 
-export class OneWaySendRequest {
-    static readonly type = "[OneWay] SendRequest";
-    constructor() {
+export class FlightOneWaySendRequest {
+    static readonly type = "[OneWay] FlightOneWaySendRequest";
+    constructor(public comment: string, public mailCC: string[], public purpose: string) {
 
     }
 }
@@ -174,8 +174,8 @@ export class OneWayBookState{
         loading.dismiss();
     }
 
-    @Action(OneWaySendRequest)
-    async onewaySendRequest(states: StateContext<onewayBook>) {
+    @Action(FlightOneWaySendRequest)
+    async onewaySendRequest(states: StateContext<onewayBook>, action: FlightOneWaySendRequest) {
 
         const loading = await this.loadingCtrl.create({
             spinner: "crescent"
@@ -345,9 +345,9 @@ export class OneWayBookState{
                 }
             },
             managers : this.store.selectSnapshot(UserState.getApprover),
-            approval_mail_cc: this.store.selectSnapshot(FLightBookState.getCC).toString(),
-            purpose: this.store.selectSnapshot(FLightBookState.getPurpose),
-            comments: '[\"' + this.store.selectSnapshot(FLightBookState.getComment) + '\"]',
+            approval_mail_cc: action.mailCC,
+            purpose: action.purpose,
+            comments: '[\"' + action.comment + '\"]',
         
             booking_mode : "online",
             status : "pending",

@@ -7,7 +7,7 @@ import { UserState } from 'src/app/stores/user.state';
 import { CompanyState } from 'src/app/stores/company.state';
 import { ResultState } from 'src/app/stores/result.state';
 import { AlertOptions } from '@ionic/core';
-import { MailCC, Purpose, Comments, SendRequest } from 'src/app/stores/book/hotel.state';
+import { MailCC, Purpose, Comments, SendRequest } from 'src/app/stores/book.state';
 
 @Component({
   selector: 'app-book-confirmation',

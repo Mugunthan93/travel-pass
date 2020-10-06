@@ -4,10 +4,10 @@ import { Observable } from 'rxjs';
 import { bookObj, CancellationRisk } from 'src/app/stores/book/flight.state';
 import { MultiCitySearchState } from 'src/app/stores/search/flight/multi-city.state';
 import { Store } from '@ngxs/store';
-import { BookConfirmationComponent } from 'src/app/components/flight/book-confirmation/book-confirmation.component';
 import { MultiCityBookState } from 'src/app/stores/book/flight/multi-city.state';
 import { PassengerListComponent } from 'src/app/components/shared/passenger-list/passenger-list.component';
 import { FlightPassengerState } from 'src/app/stores/passenger/flight.passenger.states';
+import { BookConfirmationComponent } from 'src/app/components/shared/book-confirmation/book-confirmation.component';
 
 @Component({
   selector: 'app-multi-city',
@@ -67,7 +67,7 @@ export class MultiCityPage implements OnInit {
     if (this.selected == this.count) {
       const modal = await this.modalCtrl.create({
         component: BookConfirmationComponent,
-        id: 'send-request',
+        id: 'book-confirm',
         keyboardClose: false
       });
 

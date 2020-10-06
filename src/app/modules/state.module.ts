@@ -56,6 +56,8 @@ import { TrainMultiCitySearchState } from '../stores/search/train/multi-city.sta
 import { TrainPassengerState } from '../stores/passenger/train.passenger.state';
 import { TrainBookState } from '../stores/book/train.state';
 import { TrainOneWayBookState } from '../stores/book/train/one-way.state';
+import { TrainMultiCityBookState } from '../stores/book/train/multi-city.state';
+import { TrainRoundTripBookState } from '../stores/book/train/round-trip.state';
 
 @NgModule({
   imports: [
@@ -106,6 +108,8 @@ import { TrainOneWayBookState } from '../stores/book/train/one-way.state';
       TrainBookState,
 
       TrainOneWayBookState,
+      TrainRoundTripBookState,
+      TrainMultiCityBookState,
 
       BookingState,
       ApprovalState,

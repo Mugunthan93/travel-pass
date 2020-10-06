@@ -1,6 +1,8 @@
-import { State, Action, StateContext } from '@ngxs/store';
-import { ModalController } from '@ionic/angular';
+import { State, Action, StateContext, Selector } from '@ngxs/store';
+import { ModalController, AlertController } from '@ionic/angular';
 import * as _ from 'lodash';
+import { from, Observable } from 'rxjs';
+import { map, flatMap } from 'rxjs/operators';
 
 
 export interface trainpassengerstate {
@@ -76,9 +78,30 @@ export class DismissTrainPassenger {
 export class TrainPassengerState {
 
     constructor(
-        public modalCtrl : ModalController
+        public modalCtrl: ModalController,
+        public alertCtrl: AlertController
     ) {
 
+    }
+
+    @Selector()
+    static getPassenger(state : trainpassengerstate) {
+        return state.passenger;
+    }
+
+    @Selector()
+    static getPassCount(state: trainpassengerstate) {
+        return state.passenger.length;
+    }
+
+    @Selector()
+    static getSelectPassenger(state: trainpassengerstate) {
+        return state.selected;
+    }
+
+    @Selector()
+    static getSelectedPassCount(state: trainpassengerstate) {
+        return state.passenger.length;
     }
 
     @Action(AddTrainPassenger)
@@ -90,7 +113,7 @@ export class TrainPassengerState {
             passenger: currentPass
         });
 
-        // this.modalCtrl.dismiss(null, null, 'guest-details');
+        this.modalCtrl.dismiss(null, null, 'traveller-details');
     }
 
     @Action(EditTrainPassenger)
@@ -105,7 +128,7 @@ export class TrainPassengerState {
             passenger: filterPass
         });
 
-        // this.modalCtrl.dismiss(null, null, 'guest-details');
+        this.modalCtrl.dismiss(null, null, 'traveller-details');
     }
 
     @Action(DeleteTrainPassenger)
@@ -144,6 +167,59 @@ export class TrainPassengerState {
         states.patchState({
             selected: filterPass
         });
+    }
+
+    @Action(DismissTrainPassenger)
+    dismissTrainPassenger(states: StateContext<trainpassengerstate>, action: DismissTrainPassenger) {
+
+        let least$ = from(this.alertCtrl.create({
+            header: 'Passenger Required',
+            subHeader: 'Minimum One Passenger Required',
+            id: 'passenger-check',
+            buttons: [{
+                text: "Ok",
+                handler: () => {
+                    return true;
+                }
+            }]
+        })).pipe(
+            flatMap(
+                (missingEl) => {
+                    return from(missingEl.present());
+                }
+            )
+        );
+
+        let lead$ = from(this.alertCtrl.create({
+            header: 'Lead Passenger Required',
+            subHeader: 'Lead Passenger is Required',
+            id: 'lead-check',
+            buttons: [{
+                text: "Ok",
+                handler: () => {
+                    return true;
+                }
+            }]
+        })).pipe(
+            flatMap(
+                (missingEl) => {
+                    return from(missingEl.present());
+                }
+            )
+        );
+        
+        let selected: trainpassenger[] = states.getState().selected;
+        if (selected.length < 1) {
+            return least$;
+        }
+        else {
+            if (selected.some(el => el.primary == true)) {
+                return from(this.modalCtrl.dismiss(null, null, 'passenger-info'));
+            }
+            else {
+                return lead$;
+            }
+        }
     }
 
 

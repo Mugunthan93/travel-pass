@@ -1,0 +1,146 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ form == 'add' ? 'Add' : 'Edit' }} {{ paxtype == 'Adult' ? 'Adult' : 'Children' }}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeTraveller()">
+        <ion-icon name="close-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="travellerForm" (ngSubmit)="passSubmit()">
+    <ion-list>
+
+      <ion-item>
+        <ion-label>Title<span>*</span></ion-label>
+        <ion-select 
+          formControlName="title" 
+          class="form-control" 
+          [ngClass]="errorClass('title')"
+          [placeholder]="'Select Title'"
+          [interfaceOptions]="interfaceOption('Select Title')"
+          (ionChange)="selectedTitle($event)" 
+          [value]="form == 'edit' ? this.travellerForm.controls['title'].value : ''">
+          <ion-select-option *ngFor="let title of titles" 
+            [value]="title">
+            {{ title }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>First Name<span>*</span></ion-label>
+        <ion-input 
+          type="text"
+          [ngClass]="errorClass('first_name')"
+          [value]="form == 'edit' ? this.travellerForm.controls['first_name'].value : ''"
+          class="form-control" 
+          formControlName="first_name" 
+          ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Last Name<span>*</span></ion-label>
+        <ion-input 
+          formControlName="last_name" 
+          class="form-control" 
+          [ngClass]="errorClass('last_name')"
+          [value]="form == 'edit' ? this.travellerForm.controls['last_name'].value : ''"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>ID Proof Type<span>*</span></ion-label>
+        <ion-select 
+          formControlName="idType"
+          class="form-control" 
+          [ngClass]="errorClass('idType')"
+          [placeholder]="'Select Proof Type'" 
+          [interfaceOptions]="interfaceOption('Select ID Proof')"
+          (ionChange)="selectedProofType($event)"
+          [value]="form == 'edit' ? this.travellerForm.controls['idType'].value : ''">
+          <ion-select-option *ngFor="let type of idtype" [value]="type">{{type}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>ID Proof Number<span>*</span></ion-label>
+        <ion-input 
+          formControlName="idNumber" 
+          class="form-control" 
+          [ngClass]="errorClass('idNumber')"
+          [value]="form == 'edit' ? this.travellerForm.controls['idNumber'].value : ''"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Age<span>*</span></ion-label>
+        <ion-select *ngIf="paxtype == 'Child'"
+          formControlName="age" 
+          class="form-control" 
+          [ngClass]="errorClass('age')"
+          [placeholder]="'Select Age'" 
+          [interfaceOptions]="interfaceOption('Select Age')"
+          (ionChange)="selectedAge($event)"
+          [value]="form == 'edit' ? this.travellerForm.controls['age'].value : ''">
+          <ion-select-option *ngFor="let age of ages" [value]="age">{{age}}</ion-select-option>
+        </ion-select>
+        <ion-input *ngIf="paxtype == 'Adult'"
+          formControlName="age"
+          class="form-control" 
+          [ngClass]="errorClass('age')"
+          [value]="form == 'edit' ? this.travellerForm.controls['age'].value : ''"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Preffered Seat<span>*</span></ion-label>
+        <ion-select 
+          formControlName="preferred_seat"
+          class="form-control" 
+          [ngClass]="errorClass('preferred_seat')"
+          [placeholder]="'Select Preffered Seat'" 
+          [interfaceOptions]="interfaceOption('Select Preffered Seat')"
+          (ionChange)="selectedSeat($event)"
+          [value]="form == 'edit' ? this.travellerForm.controls['preferred_seat'].value : ''">
+          <ion-select-option *ngFor="let seat of seats" [value]="seat">{{seat}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Email<span *ngIf="lead">*</span></ion-label>
+        <ion-input 
+          formControlName="email" 
+          class="form-control" 
+          [ngClass]="errorClass('email')"
+          [value]="form == 'edit' ? this.travellerForm.controls['email'].value : ''"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Phone Number<span *ngIf="lead">*</span></ion-label>
+        <ion-input 
+          formControlName="phone_number" 
+          class="form-control" 
+          [ngClass]="errorClass('phone_number')"
+          [value]="form == 'edit' ? this.travellerForm.controls['phone_number'].value : ''">
+        </ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Address<span *ngIf="lead">*</span></ion-label>
+        <ion-input 
+          formControlName="address" 
+          class="form-control" 
+          [ngClass]="errorClass('address')"
+          [value]="form == 'edit' ? this.travellerForm.controls['address'].value : ''"></ion-input>
+      </ion-item>
+
+    </ion-list>
+
+    <ion-button type="submit">
+      <ion-label>{{ form == 'add' ? 'Add' : 'Edit' }} {{ paxtype == 'Adult' ? 'Adult' : 'Children' }}</ion-label>
+    </ion-button>
+
+  </form>
+
+</ion-content>

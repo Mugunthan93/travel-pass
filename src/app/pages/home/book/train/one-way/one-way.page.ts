@@ -4,7 +4,9 @@ import { trainonewayform, TrainOneWaySearchState } from 'src/app/stores/search/t
 import { Observable } from 'rxjs';
 import { ModalController } from '@ionic/angular';
 import { PassengerListComponent } from 'src/app/components/shared/passenger-list/passenger-list.component';
-import { GetTrainName } from 'src/app/stores/book/train/one-way.state';
+import { GetRequest } from 'src/app/stores/book/train/one-way.state';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { BookConfirmationComponent } from 'src/app/components/shared/book-confirmation/book-confirmation.component';
 
 @Component({
   selector: 'app-one-way',
@@ -14,7 +16,10 @@ import { GetTrainName } from 'src/app/stores/book/train/one-way.state';
 export class OneWayPage implements OnInit {
 
   onewayForm: Observable<trainonewayform>;
-  requestSubmit: boolean = false;
+  types: string[] = ['Normal', 'Thakal'];
+  
+  bookForm: FormGroup;
+  formsubmit: boolean = false;
 
   constructor(
     private store: Store,
@@ -23,6 +28,10 @@ export class OneWayPage implements OnInit {
 
   ngOnInit() {
     this.onewayForm = this.store.select(TrainOneWaySearchState.getOnewaySearch);
+    this.bookForm = new FormGroup({
+      'train_name': new FormControl(null,[Validators.required]),
+      'book_type': new FormControl(null, [Validators.required])
+    });
   }
 
   async addPassengerDetails() {
@@ -41,20 +50,47 @@ export class OneWayPage implements OnInit {
     return await modal.present();
   }
 
-  trainname(evt : CustomEvent) {
-    this.store.dispatch(new GetTrainName(evt.detail.value));
+  trainname(evt: CustomEvent) {
+    this.bookForm.controls['train_name'].patchValue(evt.detail.value);
+    // this.store.dispatch(new GetTrainName(evt.detail.value));
   }
 
-  errorClass(value: string) {
+  errorClass(name: string) {
     return {
-      'initial': (value == null) && !this.requestSubmit,
-      'valid': (value !== null && value !== "") && this.requestSubmit,
-      'invalid':(value == null && value == "") && this.requestSubmit
+      'initial': (this.bookForm.controls[name].value == null) && !this.formsubmit,
+      'valid is-valid':
+        this.bookForm.controls[name].value !== null ||
+        (this.bookForm.controls[name].valid && !this.formsubmit) ||
+        (this.bookForm.controls[name].valid && this.formsubmit),
+      'invalid is-invalid':
+        (this.bookForm.controls[name].invalid && this.formsubmit)
     }
   }
 
-  sendRequest() {
-    this.requestSubmit = true;
+  interfaceOption(header: string) {
+    return {
+      header: header,
+      cssClass: 'cabinClass'
+    }
+  }
+
+  selectedBookType(evt: CustomEvent) {
+    this.bookForm.controls['book_type'].patchValue(evt.detail.value);
+    // this.store.dispatch(new TrainBookType(evt.detail.value));
+  }
+
+  async sendRequest() {
+    this.formsubmit = true;
+    console.log(this.bookForm);
+    if (this.bookForm.valid) {
+      this.store.dispatch(new GetRequest(this.bookForm.value.train_name, this.bookForm.value.book_type));
+      const modal = await this.modalCtrl.create({
+        component: BookConfirmationComponent,
+        id: 'book-confirm'
+      });
+
+      return await modal.present();
+    }
   }
 
 }

@@ -13,6 +13,7 @@
 <ion-content>
   <form [formGroup]="passengerForm" (ngSubmit)="passSubmit()">
     <ion-list>
+
       <ion-item>
         <ion-label>First Name<span>*</span></ion-label>
         <ion-input 
@@ -25,6 +26,7 @@
         [value]="passengerForm.controls['first_name'].value !== null ? passengerForm.controls['first_name'].value : ''"
         ></ion-input>
       </ion-item>
+
       <ion-item>
         <ion-label>Last Name<span>*</span></ion-label>
         <ion-input 
@@ -37,6 +39,7 @@
         [value]="passengerForm.controls['last_name'].value !== null ? passengerForm.controls['last_name'].value : ''"
         ></ion-input>
       </ion-item>
+
       <ion-item>
         <ion-label>Email<span *ngIf="lead && paxtype == '1'">*</span></ion-label>
         <ion-input 
@@ -50,6 +53,7 @@
         [placeholder]="lead ? 'Enter Email' : 'Optional'"
         ></ion-input>
       </ion-item>
+      
       <ion-item>
         <ion-label>PAN Number<span *ngIf="lead && paxtype == '1'">*</span></ion-label>
         <ion-input 
@@ -61,8 +65,9 @@
         }"
         [value]="passengerForm.controls['pan'].value !== null ? passengerForm.controls['pan'].value : ''"
         [placeholder]="lead ? 'Enter Pan Number' : 'Optional'">
-      </ion-input>
+        </ion-input>
       </ion-item>
+
       <ion-item>
         <ion-label>Age<span *ngIf="paxtype == '2'">*</span></ion-label>
         <ion-select 
@@ -79,6 +84,7 @@
           <ion-select-option *ngFor="let age of ages" [value]="age">{{age}}</ion-select-option>
         </ion-select>
       </ion-item>
+      
     </ion-list>
     <ion-button type="submit">
       <ion-label>{{ form == 'add' ? 'Add' : 'Edit' }} {{ paxtype == '1' ? 'Adult' : 'Children' }}</ion-label>

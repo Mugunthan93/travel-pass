@@ -12,6 +12,8 @@ import { user } from 'src/app/models/user';
 import { CompanyState } from 'src/app/stores/company.state';
 import { ListEmployeeComponent } from '../list-employee/list-employee.component';
 import { groupBy, mergeMap, toArray, map, reduce } from 'rxjs/operators';
+import { TrainPassengerState, trainpassengerstate, trainpassenger, SelectTrainPassenger, DeselectTrainPassenger, EditTrainPassenger, DeleteTrainPassenger, DismissTrainPassenger } from 'src/app/stores/passenger/train.passenger.state';
+import { TravellerDetailComponent } from '../../train/traveller-detail/traveller-detail.component';
 
 @Component({
   selector: 'app-passenger-list',
@@ -39,6 +41,11 @@ export class PassengerListComponent implements OnInit {
   selectChildren$: Observable<hotelpassenger[]>;
   selectedChildren$: Observable<number>;
   totalChildren$: Observable<number>;
+
+  trainPassengers$: Observable<trainpassenger[]>;
+  selectedTrainPassengers$: Observable<trainpassenger[]>;
+  selectedPass$: Observable<number>;
+  countPass$: Observable<number>;
 
   constructor(
     public modalCtrl: ModalController,
@@ -69,6 +76,11 @@ export class PassengerListComponent implements OnInit {
     this.selectChildren$ = this.store.select(HotelPassengerState.GetSelectChildren);
     this.totalChildren$ = this.store.select(HotelPassengerState.GetTotalChildren);
     this.selectedChildren$ = this.store.select(HotelPassengerState.GetSelectedChildren);
+
+    this.trainPassengers$ = this.store.select(TrainPassengerState.getPassenger);
+    this.selectedTrainPassengers$ = this.store.select(TrainPassengerState.getSelectPassenger);
+    this.selectedPass$ = this.store.select(TrainPassengerState.getSelectedPassCount);
+    this.countPass$ = this.store.select(TrainPassengerState.getPassCount);
 
   }
 
@@ -110,7 +122,7 @@ export class PassengerListComponent implements OnInit {
     return await modal.present();
   }
 
-  deletePassneger(pax: flightpassenger) {
+  deletePassenger(pax: flightpassenger) {
     this.store.dispatch(new DeletePassenger(pax));
   }
 
@@ -249,6 +261,51 @@ export class PassengerListComponent implements OnInit {
   }
 
 
+  ///train function
+
+  async addTrainPassenger(type : string) {
+    const modal = await this.modalCtrl.create({
+      component: TravellerDetailComponent,
+      componentProps: {
+        form: 'add',
+        pax: null,
+        paxtype: type,
+        lead: false
+      },
+      id: 'traveller-details'
+    });
+
+    return await modal.present();
+  }
+
+  getTrainPass(evt: CustomEvent) {
+    if (evt.detail.checked) {
+      this.store.dispatch(new SelectTrainPassenger(evt.detail.value));
+    }
+    else if (!evt.detail.checked) {
+      this.store.dispatch(new DeselectTrainPassenger(evt.detail.value));
+    }
+  }
+  
+  async editTrainPassenger(pax: trainpassenger) {
+    const modal = await this.modalCtrl.create({
+      component: TravellerDetailComponent,
+      componentProps: {
+        form: 'edit',
+        pax: pax,
+        paxtype: pax.pax_type,
+        lead: pax.primary
+      },
+      id: 'traveller-details'
+    });
+
+    return await modal.present();
+  }
+
+  deleteTrainPassenger(pax : trainpassenger) {
+    this.store.dispatch(new DeleteTrainPassenger(pax));
+  }
+
   ///dismiss
   dismissInfo() {
     if (this.bookMode == 'flight') {
@@ -256,6 +313,9 @@ export class PassengerListComponent implements OnInit {
     }
     else if (this.bookMode == 'hotel') {
       this.store.dispatch(new DismissHotelPassenger());
+    }
+    else if (this.bookMode == 'train') {
+      this.store.dispatch(new DismissTrainPassenger());
     }
   }
 

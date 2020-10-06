@@ -58,7 +58,7 @@ export interface fareObj{
 export interface sendRequest {
     passenger_details: passenger_details
     trip_requests: flightSearchPayload
-    approval_mail_cc: string
+    approval_mail_cc: string[]
     status: string
     purpose: string
     booking_mode: string
