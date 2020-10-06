@@ -84,13 +84,13 @@
   <ion-input formControlName="from_code" hidden></ion-input>
   <ion-input formControlName="to_code" hidden></ion-input>
   <ion-input formControlName="departure_date" hidden></ion-input>
-  <ion-select #depatureselect formControlName="departure_class" cancelText="Cancel" okText="Confirm"
-    [interfaceOptions]="customAlertOptions" (ionChange)="changeClass($event)" hidden>
+  <ion-select #departureselect formControlName="departure_class" cancelText="Cancel" okText="Confirm"
+    [interfaceOptions]="customAlertOptions" (ionChange)="changeClass($event,'departure')" hidden>
     <ion-select-option *ngFor="let class of classes" [value]="class">{{ class }}</ion-select-option>
   </ion-select>
   <ion-input formControlName="return_date" hidden></ion-input>
   <ion-select #returnselect formControlName="return_class" cancelText="Cancel" okText="Confirm"
-    [interfaceOptions]="customAlertOptions" (ionChange)="changeClass($event)" hidden>
+    [interfaceOptions]="customAlertOptions" (ionChange)="changeClass($event,'return')" hidden>
     <ion-select-option *ngFor="let class of classes" [value]="class">{{ class }}</ion-select-option>
   </ion-select>
 </form>

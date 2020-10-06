@@ -21,10 +21,7 @@ export interface busbook {
     customer_id: number
     booking_mode: string
     trip_type: string
-    comments: string
-    purpose: string
     cancellation_charges: any
-    approval_mail_cc: string[]
     status: string
     managers: managers
 }
@@ -88,6 +85,13 @@ export class GetBookDetail {
     }
 }
 
+export class BusRequest {
+    static readonly type = "[bus_book] BusRequest";
+    constructor(public comment: string, public mailCC: string[],public purpose : string) {
+
+    }
+}
+
 
 @State<busbook>({
     name: 'bus_book',
@@ -99,10 +103,7 @@ export class GetBookDetail {
         customer_id: null,
         booking_mode: null,
         trip_type: null,
-        comments: null,
-        purpose: null,
         cancellation_charges: null,
-        approval_mail_cc: [],
         status: null,
         managers: null
     }
@@ -185,6 +186,11 @@ export class BusBookState {
         
     }
 
+    @Action(BusRequest)
+    sendRequeststates(states :StateContext<busbook>, action: BusRequest) {
+
+    }
+
     serviceCharges(): number {
         let serviceCharge: number = 0;
         serviceCharge = this.store.selectSnapshot(CompanyState.getBusServiceCharge) * this.store.selectSnapshot(BusSearchState.getPassengersCount);
@@ -207,6 +213,8 @@ export class BusBookState {
             }
         }
     }
+
+
 
 
     

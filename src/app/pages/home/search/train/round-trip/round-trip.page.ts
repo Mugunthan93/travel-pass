@@ -20,12 +20,13 @@ export class RoundTripPage implements OnInit {
 
   @ViewChild('departureselect', { static: true }) departureselect: IonSelect;
   @ViewChild('returnselect', { static: true }) returnselect: IonSelect;
+
   roundTripForm: FormGroup;
   classes: string[] = ['All Class', 'Sleeper Class', 'Third AC', 'Second AC', 'First AC', 'Second Seating', 'AC Chair Car', 'First Class', 'Third AC Economy'];
   customAlertOptions: AlertOptions;
   newDate: Date;
   formSubmit: boolean = false;
-  trainType$: Observable<String>;
+  trainType$: Observable<string>;
 
   currentType: String;
 
@@ -52,7 +53,7 @@ export class RoundTripPage implements OnInit {
     this.trainType$ = this.store.select(TrainSearchState.getTrainType)
       .pipe(
         map(
-          (str: String) => {
+          (str: string) => {
             this.roundTripForm.reset();
             this.formSubmit = false;
             this.currentType = str;
@@ -79,9 +80,14 @@ export class RoundTripPage implements OnInit {
     }
   }
 
-  changeClass(evt: CustomEvent) {
+  changeClass(evt: CustomEvent, type : string) {
     console.log(evt);
-    this.roundTripForm.controls['class'].setValue(evt.detail.value);
+    if(type == 'departure') {
+      this.roundTripForm.controls['departure_class'].setValue(evt.detail.value);
+    }
+    else if(type == 'return') {
+      this.roundTripForm.controls['return_class'].setValue(evt.detail.value);
+    }
   }
 
   async getStation(field: string) {

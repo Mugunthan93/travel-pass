@@ -1,9 +1,82 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>multi-city</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
+  <form [formGroup]="bookForm" (ngSubmit)="sendRequest()">
 
+    <div formArrayName="train_name"  *ngFor="let name of train_name.controls; let i = index;">
+      <div [formGroupName]="i">
+
+        <mat-accordion multi="false">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">
+              <ion-row>
+                <ion-label class="large bold">
+                  Trip {{i + 1}} Details
+                </ion-label>
+                <ion-row>
+                  <ion-label>{{(multicityForm | async)[i].from_location}}</ion-label>
+                  <ion-icon name="arrow-forward-outline"></ion-icon>
+                  <ion-label>{{(multicityForm | async)[i].to_location}}</ion-label>
+                </ion-row>
+              </ion-row>
+            </mat-expansion-panel-header>
+            <div>
+              <ion-row>
+                <ion-col>
+                  <ion-text class="bold">{{ (multicityForm | async)[i].from_location }}({{ (multicityForm | async)[i].from_code }})</ion-text>
+                  <ion-text class="bold">{{ (multicityForm | async)[i].from_name }}</ion-text>
+                </ion-col>
+                <ion-col>
+                  <ion-text class="bold">{{ (multicityForm | async)[i].date | date : 'EEE,d LLL' | titlecase }}</ion-text>
+                  <ion-text class="bold">{{ (multicityForm | async)[i].class | uppercase }}</ion-text>
+                </ion-col>
+                <ion-col>
+                  <ion-text class="bold">{{ (multicityForm | async)[i].to_location }}({{ (multicityForm | async)[i].to_code }})</ion-text>
+                  <ion-text class="bold">{{ (multicityForm | async)[i].to_name }}</ion-text>
+                </ion-col>
+              </ion-row>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+    
+        <ion-item>
+          <ion-label class="bold">Trip {{i + 1}} Train Name</ion-label>
+          <ion-input
+            formControlName="name"
+            [ngClass]="errorClass(name)"
+            class="form-control"
+            (ionChange)="trainname($event,name)"
+            ></ion-input>
+        </ion-item>
+
+      </div>
+    </div>
+
+    <ion-row (click)="addPassengerDetails()">
+      <ion-label class="large bold">Passenger Details</ion-label>
+      <ion-label>Click to add Passenger Details</ion-label>
+    </ion-row>
+
+    <ion-item>
+      <ion-label class="bold">Book Type</ion-label>
+      <ion-select 
+        formControlName="book_type"
+        [ngClass]="errorTypeClass('book_type')"
+        class="form-control" 
+        [placeholder]="'Select Book Type'" 
+        [interfaceOptions]="interfaceOption('Select Book Type')"
+        (ionChange)="selectedBookType($event)">
+        <ion-select-option *ngFor="let type of types" [value]="type">
+          {{ type }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+  </form>
 </ion-content>
+
+<ion-footer>
+  <form [formGroup]="bookForm" (ngSubmit)="sendRequest()">
+    <ion-button type="submit">
+      <ion-label>Send Request</ion-label>
+    </ion-button>
+  </form>
+</ion-footer>

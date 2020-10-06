@@ -43,7 +43,7 @@
             </ion-item>
 
             <ion-item>
-              <ion-row slot="start" (click)="selectDate(trip)">
+              <ion-row slot="start" (click)="selectDate(trips.controls,i)">
                 <ion-label class="bolder" [ngClass]="errorClass(trip,'date')" *ngIf="trip.value.date !== null">
                   {{ trip.value.date !== null ? (trip.value.date | date : 'd') : '' }}
                 </ion-label>

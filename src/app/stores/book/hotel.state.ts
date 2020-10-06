@@ -7,18 +7,14 @@ import { CompanyState } from '../company.state';
 import * as moment from 'moment';
 import { of, from, forkJoin } from 'rxjs';
 import { HotelService } from 'src/app/services/hotel/hotel.service';
-import { catchError, map, flatMap } from 'rxjs/operators';
+import { catchError, flatMap } from 'rxjs/operators';
 import { LoadingController, AlertController, ModalController } from '@ionic/angular';
 import { Navigate } from '@ngxs/router-plugin';
 import { AddAdultPassenger, AddChildPassenger, HotelPassengerState } from '../passenger/hotel.passenger.state';
-import { dispatch } from 'rxjs/internal/observable/pairs';
 
 
 export interface hotelbook {
     blockedRoom: blockedRoom
-    mail: string[]
-    purpose: string
-    comment: string
 }
 
 export interface blockedRoom {
@@ -156,38 +152,17 @@ export class AddBlockRoom {
     }
 }
 
-export class MailCC {
-    static readonly type = "[flight_book] MailCC";
-    constructor(public mail: string[]) {
+export class HotelRequest {
+    static readonly type = "[hotel_book] HotelRequest";
+    constructor(public comment: string, public mailCC: string[],public purpose : string) {
 
     }
-}
-
-export class Purpose {
-    static readonly type = "[flight_book] Purpose";
-    constructor(public purpose: string) {
-
-    }
-}
-
-export class Comments {
-    static readonly type = "[flight_book] Comment";
-    constructor(public comment: string) {
-
-    }
-}
-
-export class SendRequest {
-    static readonly type = "[hotel_book] SendRequest";
 }
 
 @State<hotelbook>({
     name: 'hotel_book',
     defaults: {
-        blockedRoom: null,
-        mail: [],
-        purpose: null,
-        comment: null
+        blockedRoom: null
     }
 })
 export class HotelBookState {
@@ -210,21 +185,6 @@ export class HotelBookState {
     @Selector()
     static getRoomDetail(state: hotelbook): RoomDetails[] {
         return state.blockedRoom.HotelRoomsDetails;
-    }
-
-    @Selector()
-    static getCC(states: hotelbook): string[] {
-        return states.mail;
-    }
-
-    @Selector()
-    static getPurpose(states: hotelbook): string {
-        return states.purpose;
-    }
-
-    @Selector()
-    static getComment(states: hotelbook): string {
-        return states.comment;
     }
 
     @Action(AddBlockRoom)
@@ -266,36 +226,15 @@ export class HotelBookState {
         });
     }
 
-    @Action(MailCC)
-    mailCC(states: StateContext<hotelbook>, action: MailCC) {
-        states.patchState({
-            mail: action.mail
-        });
-    }
-
-    @Action(Purpose)
-    purpose(states: StateContext<hotelbook>, action: Purpose) {
-        states.patchState({
-            purpose: action.purpose
-        });
-    }
-
-    @Action(Comments)
-    comment(states: StateContext<hotelbook>, action: Comments) {
-        states.patchState({
-            comment: action.comment
-        });
-    }
-
-    @Action(SendRequest)
-    sendRequest(states: StateContext<hotelbook>, action: SendRequest) {
+    @Action(HotelRequest)
+    sendRequest(states: StateContext<hotelbook>, action: HotelRequest) {
 
         let loading$ = from(this.loadingCtrl.create({
             spinner: 'crescent',
             message: 'Sending Request...',
             id: 'send-req-loading'
         })).pipe(
-            map(
+            flatMap(
                 (loadingEl) => {
                     return from(loadingEl.present());
                 }
@@ -421,11 +360,11 @@ export class HotelBookState {
             user_id: this.store.selectSnapshot(UserState.getUserId),
             customer_id: this.store.selectSnapshot(UserState.getcompanyId),
             booking_mode: 'online',
-            approval_mail_cc: states.getState().mail,
+            approval_mail_cc: action.mailCC,
             managers: this.store.selectSnapshot(UserState.getApprover),
             trip_type: 'business',
-            comments: states.getState().comment,
-            purpose: states.getState().purpose
+            comments: action.comment,
+            purpose: action.purpose
         }
 
         let sendRequest$ = from(this.hotelService.sendRequest(request));

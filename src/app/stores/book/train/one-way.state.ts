@@ -3,10 +3,15 @@ import { UserState } from '../../user.state';
 import { trainpassenger, AddTrainPassenger, TrainPassengerState } from '../../passenger/train.passenger.state';
 import * as moment from 'moment';
 import { Navigate } from '@ngxs/router-plugin';
-import { BookMode, BookType } from '../../book.state';
+import { BookMode, BookState, BookType } from '../../book.state';
 import { TrainService } from 'src/app/services/train/train.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
-import { map } from 'rxjs/operators';
+import { catchError, flatMap, map } from 'rxjs/operators';
+import { ModalController, AlertController, LoadingController } from '@ionic/angular';
+import { StateReset } from 'ngxs-reset-plugin';
+import { forkJoin, from, of } from 'rxjs';
+import { ResultState } from '../../result.state';
+import { SearchState } from '../../search.state';
 
 
 export interface trainOnewayBook {
@@ -105,7 +110,10 @@ export class TrainOneWayBookState {
 
     constructor(
         private store: Store,
-        private trainService : TrainService
+        private trainService : TrainService,
+        public modalCtrl : ModalController,
+        public alertCtrl : AlertController,
+        public loadingCtrl : LoadingController
     ) {
 
     }
@@ -156,6 +164,61 @@ export class TrainOneWayBookState {
     @Action(TrainOneWayRequest)
     sendRequest(states: StateContext<trainOnewayBook>, action: TrainOneWayRequest) {
 
+        let loading$ = from(this.loadingCtrl.create({
+            spinner: 'crescent',
+            message: 'Sending Request...',
+            id: 'send-req-loading'
+        })).pipe(
+            flatMap(
+                (loadingEl) => {
+                    return from(loadingEl.present());
+                }
+            )
+        );
+
+        let failedAlert$ = from(this.alertCtrl.create({
+            header: 'Send Request Failed',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                handler: () => {
+                    return false;
+                }
+            }]
+        })).pipe(
+            flatMap(
+                (alertEl) => {
+                    return from(alertEl.present());
+                }
+            )
+        );
+
+        let successAlert$ = from(this.alertCtrl.create({
+            header: 'Request Success',
+            subHeader: 'Send Request Success',
+            message: 'Request Sent Successfully..',
+            buttons: [
+                {
+                    text: 'Ok',
+                    handler: () => {
+                        states.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']))
+                        .subscribe({
+                            complete: () => {
+                                this.modalCtrl.dismiss(null, null,'book-confirm');
+                                }
+                            });
+                    }
+                }
+            ]
+        })).pipe(
+            flatMap(
+                (alertEl) => {
+                    return from(alertEl.present());
+                }
+            )
+        );
+
+
         let passenger = this.store.selectSnapshot(TrainPassengerState.getPassenger);
         let req: train_oneway_request = {
             passenger_details: {
@@ -186,11 +249,26 @@ export class TrainOneWayBookState {
             managers: this.store.selectSnapshot(UserState.getApprover)
         }
 
-        return this.trainService.sendRequest(req)
+        let sendRequest$ = this.trainService.sendRequest(req)
+
+        return forkJoin(loading$, sendRequest$)
             .pipe(
-                map(
-                    (res : HTTPResponse) => {
-                        console.log(res);
+                flatMap(
+                    (el) => {
+                        console.log(el);
+                        if (el[1].status == 200) {  
+                            console.log(JSON.parse(el[1].data));
+                            return forkJoin(from(this.loadingCtrl.dismiss(null, null, 'send-req-loading')),successAlert$);
+                        }
+                        else {
+                            return forkJoin(from(this.loadingCtrl.dismiss(null, null, 'send-req-loading')), failedAlert$);
+                        }
+                    }
+                ),
+                catchError(
+                    (error) => {
+                        console.log(error);
+                        return of(error);
                     }
                 )
             );

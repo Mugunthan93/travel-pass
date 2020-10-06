@@ -1,7 +1,7 @@
 import { State, Selector, Action, Store, StateContext } from '@ngxs/store';
 import { FLightBookState } from './book/flight.state';
-import { HotelBookState } from './book/hotel.state';
-import { BusBookState } from './book/bus.state';
+import { HotelBookState, HotelRequest } from './book/hotel.state';
+import { BusBookState, BusRequest } from './book/bus.state';
 import { StateReset } from 'ngxs-reset-plugin';
 import { Navigate } from '@ngxs/router-plugin';
 import { TrainBookState } from './book/train.state';
@@ -10,11 +10,14 @@ import { from, Observable } from 'rxjs';
 import { LoadingController, AlertController, ModalController } from '@ionic/angular';
 import { SearchState } from './search.state';
 import { ResultState } from './result.state';
-import { map } from 'rxjs/operators';
+import { flatMap, map } from 'rxjs/operators';
 import { FlightOneWaySendRequest } from './book/flight/oneway.state';
 import { InternationalSendRequest } from './book/flight/international.state';
 import { DomesticSendRequest } from './book/flight/domestic.state';
 import { MultiCitySendRequest } from './book/flight/multi-city.state';
+import { HTTPResponse } from '@ionic-native/http/ngx';
+import { TrainRoundTripRequest } from './book/train/round-trip.state';
+import { TrainMultiCityRequest } from './book/train/multi-city.state';
 
 export interface book {
     mode: string,
@@ -151,81 +154,37 @@ export class BookState {
         let mailCC = states.getState().mail;
         let purpose = states.getState().purpose;
 
-        const loading$: Observable<HTMLIonLoadingElement>= from(this.loadingCtrl.create({
-            spinner: "crescent",
-            message: "Request Sending"
-        }));
-
-        const failedAlert$: Observable<HTMLIonAlertElement> = from(this.alertCtrl.create({
-            header: 'Send Request Failed',
-            buttons: [{
-                text: 'Ok',
-                role: 'ok',
-                cssClass: 'danger',
-                handler: (res) => {
-                    return true;
-                }
-            }]
-        }));
-
-        const successAlert$: Observable<HTMLIonAlertElement> = from(this.alertCtrl.create({
-            header: 'Send Request Success',
-            subHeader: 'Request status will be updated in My Bookings',
-            buttons: [{
-                text: 'Ok',
-                role: 'ok',
-                cssClass: 'danger',
-                handler: (res) => {
-                    states.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']));
-                    states.dispatch(new StateReset(SearchState, ResultState, BookState));
-                    this.modalCtrl.dismiss(null, null, 'send-request');
-                    return true;
-                }
-            }]
-        }));
-
-        return loading$
-            .pipe(
-                map(
-                    (loadingEl) => {
-                        if (mode == 'flight') {
-                            if (type == 'one-way') {
-                                states.dispatch(new FlightOneWaySendRequest(comment, mailCC, purpose));
-                            }
-                            else if (type == 'round-trip') {
-                                states.dispatch(new InternationalSendRequest(comment, mailCC, purpose));
-                            }
-                            else if (type == 'animated-round-trip') {
-                                states.dispatch(new DomesticSendRequest(comment, mailCC, purpose));
-                            }
-                            else if (type == 'multi-city') {
-                                states.dispatch(new MultiCitySendRequest(comment, mailCC, purpose));
-                            }
-                        }
-                        else if (mode == 'hotel') {
-                            
-                        }
-                        else if (mode == 'bus') {
-                            
-                        }
-                        else if (mode == 'train') {
-                            if (type == 'one-way') {
-                                states.dispatch(new TrainOneWayRequest(comment,mailCC,purpose));
-                            }
-                            else if (type == 'round-trip') {
-                
-                            }
-                            else if (type == 'multi-city') {
-                
-                            }
-                        }
-                        loadingEl.dismiss();
-                        return successAlert$;
-                    }
-                )
-            )
-
-
+        if (mode == 'flight') {
+            if (type == 'one-way') {
+                states.dispatch(new FlightOneWaySendRequest(comment, mailCC, purpose));
+            }
+            else if (type == 'round-trip') {
+                states.dispatch(new InternationalSendRequest(comment, mailCC, purpose));
+            }
+            else if (type == 'animated-round-trip') {
+                states.dispatch(new DomesticSendRequest(comment, mailCC, purpose));
+            }
+            else if (type == 'multi-city') {
+                states.dispatch(new MultiCitySendRequest(comment, mailCC, purpose));
+            }
+        }
+        else if (mode == 'hotel') {
+            states.dispatch(new HotelRequest(comment, mailCC, purpose))
+        }
+        else if (mode == 'bus') {
+            states.dispatch(new BusRequest(comment, mailCC, purpose));
+        }
+        else if (mode == 'train') {
+            if (type == 'one-way') {
+                states.dispatch(new TrainOneWayRequest(comment,mailCC,purpose));
+            }
+            else if (type == 'round-trip') {
+                states.dispatch(new TrainRoundTripRequest(comment,mailCC,purpose));
+            }
+            else if (type == 'multi-city') {
+                states.dispatch(new TrainMultiCityRequest(comment,mailCC,purpose));
+            }
+        } 
 
     }
 

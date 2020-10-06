@@ -24,7 +24,7 @@ export class MultiCityPage implements OnInit {
   customAlertOptions: AlertOptions;
   newDate: Date;
   formSubmit: boolean = false;
-  trainType$: Observable<String>;
+  trainType$: Observable<string>;
 
   currentType: String;
   trips: FormArray;
@@ -44,7 +44,7 @@ export class MultiCityPage implements OnInit {
     this.trainType$ = this.store.select(TrainSearchState.getTrainType)
       .pipe(
         map(
-          (str: String) => {
+          (str: string) => {
             this.formSubmit = false;
             if (this.currentType !== str) {
               this.multiCityForm.reset();
@@ -112,6 +112,22 @@ export class MultiCityPage implements OnInit {
           if (selectedStation.role == "backdrop") {
             return;
           }
+          if (field == 'to') {
+            if (form[i + 1]) {
+              let station: trainstation = selectedStation.data;
+              form[i+1].controls['from_name'].patchValue(station.station_name);
+              form[i+1].controls['from_code'].patchValue(station.station_code);
+              form[i+1].controls['from_location'].patchValue(station.location);
+            }
+            else{
+              this.addTrip();
+              let station: trainstation = selectedStation.data;
+              form[i+1].controls['from_name'].patchValue(station.station_name);
+              form[i+1].controls['from_code'].patchValue(station.station_code);
+              form[i+1].controls['from_location'].patchValue(station.location);
+            }
+        }
+          
           console.log(selectedStation);
           let station: trainstation = selectedStation.data;
           form[i].controls[field + '_name'].patchValue(station.station_name);
@@ -149,8 +165,29 @@ export class MultiCityPage implements OnInit {
     }
   }
 
-  async selectDate(form: FormGroup) {
-    console.log(form.controls['date'].value);
+  async selectDate(trips: any,i : number) {
+
+    console.log(trips[i].controls['date'].value);
+
+    let FromDate: Date = this.newDate;
+    if (i < 0) {
+      if (trips[i].controls['date'].value > trips[i + 1].controls['date'].value) {
+        trips[i + 1].controls['date'].setValue(null);
+      }
+    }
+    if (i >= 1) {
+      let k: number = i - 1;
+      let fromdateIndex: number = k;
+      for (k; k > -1; k --){
+        if (trips[k].controls['date'].value !== null) {
+          fromdateIndex = k;
+          break;
+        }
+      }
+      console.log(fromdateIndex);
+      FromDate = trips[fromdateIndex].controls['date'].value;
+    }
+
     const options: CalendarModalOptions = {
       title: 'DEPARTURE',
       pickMode: 'single',
@@ -161,8 +198,8 @@ export class MultiCityPage implements OnInit {
       canBackwardsSelected: false,
       closeLabel: 'Close',
       doneLabel: 'OK',
-      defaultDate: form.controls['date'].value,
-      from: this.newDate,
+      defaultDate: trips[i].controls['date'].value,
+      from: FromDate,
       to: 0
     }
     const modal = await this.modalCtrl.create({
@@ -176,7 +213,10 @@ export class MultiCityPage implements OnInit {
 
     const event: any = await modal.onDidDismiss();
     if (event.role == 'done') {
-      form.controls['date'].patchValue(event.data.dateObj);
+      if (i > 0 && (i !== (trips.length - 1)) && event.data.dateObj > trips[i+1].controls['date'].value) {
+        trips[i + 1].controls['date'].setValue(null);
+      }
+      trips[i].controls['date'].patchValue(event.data.dateObj);
     }
     else if (event.role == 'cancel') {
       return;

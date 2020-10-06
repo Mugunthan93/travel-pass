@@ -31,7 +31,7 @@ export class OneWayPage implements OnInit {
   formSubmit: boolean = false;
   
   currentType: String;
-  trainType$: Observable<String>;
+  trainType$: Observable<string>;
   user: user;
   
   constructor(
@@ -55,7 +55,7 @@ export class OneWayPage implements OnInit {
     this.trainType$ = this.store.select(TrainSearchState.getTrainType)
       .pipe(
         map(
-          (str : String) => {
+          (str : string) => {
             this.oneWayForm.reset();
             this.formSubmit = false;
             this.currentType = str;
