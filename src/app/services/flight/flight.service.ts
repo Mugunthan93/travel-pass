@@ -72,17 +72,9 @@ export class FlightService {
     return await this.http.get("/airlineRequest/" + ticketId, encrytkey);
   }
 
-  //approve the request
-  async approvalReq(ticketId : string, requestBody : any ): Promise<HTTPResponse> {
-    return await this.http.put("/airlineRequest/" + ticketId, requestBody);
-  }
-
-  // approver reqest list
-  async approvalReqList(userId: number): Promise<HTTPResponse> {
-    return await this.http.get("/allBookings/" + userId, {});
-  }
-
   async downloadTicket(pnr : string, filePath : string): Promise<HTTPResponse> {
     return await this.http.post("/airlines/airlineTicketing" + pnr + ".pdf", {});
   }
+
+
 }

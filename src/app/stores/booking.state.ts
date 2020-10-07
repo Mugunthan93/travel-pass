@@ -6,7 +6,7 @@ import { UserState } from './user.state';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { environment } from 'src/environments/environment';
 import { BookingService } from '../services/booking/booking.service';
-import { forkJoin, from } from 'rxjs';
+import { forkJoin, from, iif } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
@@ -79,38 +79,50 @@ export class BookingState {
         let newBooking = [];
         let historyBooking = [];
 
-        const userId: number = this.store.selectSnapshot(UserState.getUserId);        
         let menuclose$ = this.menuCtrl.isOpen('first');
-        let openBooking$ = this.bookingService.myBooking(action.type,userId,'open');
-        let pendingBooking$ = this.bookingService.myBooking(action.type,userId,'pending');
-        let rejBooking$ = this.bookingService.myBooking(action.type,userId,'rej');
-        let bookedBooking$ = this.bookingService.myBooking(action.type,userId,'booked');
+        let openBooking$ = this.bookingService.myBooking(action.type,'open');
+        let newBooking$ = this.bookingService.myBooking(action.type,'new');
+        let pendingBooking$ = this.bookingService.myBooking(action.type,'pending');
+        let bookedBooking$ = this.bookingService.myBooking(action.type,'booked');
+        let grabbedBooking$ = this.bookingService.myBooking(action.type,'grabbed');
 
-        return forkJoin(menuclose$,openBooking$,pendingBooking$,rejBooking$,bookedBooking$)
-            .pipe(
-                map(
-                    (response) => {
-                        let openArray = _.isUndefined(JSON.parse(response[1].data).data) ? [] : JSON.parse(response[1].data).data;
-                        let pendingArray = _.isUndefined(JSON.parse(response[2].data).data) ? [] : JSON.parse(response[2].data).data;
-                        let rejArray = _.isUndefined(JSON.parse(response[3].data).data) ? [] : JSON.parse(response[3].data).data;
-                        let bookedArray = _.isUndefined(JSON.parse(response[4].data).data) ? [] : JSON.parse(response[4].data).data;
+        let trainBooking$ = forkJoin(menuclose$,newBooking$,pendingBooking$,bookedBooking$,grabbedBooking$);
+        let otherBooking$ = forkJoin(menuclose$,openBooking$,pendingBooking$,bookedBooking$);
 
-                        newBooking.push(...openArray,...pendingArray,...rejArray);
+        return iif(
+            () => action.type == 'train', trainBooking$,otherBooking$
+        ).pipe(
+            map(
+                (response) => {
+                    console.log(response);
+                    let neworopenArray = _.isUndefined(JSON.parse(response[1].data).data) ? [] : JSON.parse(response[1].data).data;
+                    let pendingArray = _.isUndefined(JSON.parse(response[2].data).data) ? [] : JSON.parse(response[2].data).data;
+                    let bookedArray = _.isUndefined(JSON.parse(response[3].data).data) ? [] : JSON.parse(response[3].data).data;
+
+                    if(response[4]) {
+                        let grabbedArray = _.isUndefined(JSON.parse(response[4].data).data) ? [] : JSON.parse(response[4].data).data;
+                        newBooking.push(...neworopenArray,...pendingArray,...grabbedArray);
                         historyBooking.push(...bookedArray);
-
-                        console.log(openArray,pendingArray,rejArray);
-                        states.patchState({
-                            new: _.uniqBy(newBooking,'id'),
-                            history:_.uniqBy(historyBooking,'id'),
-                            type : action.type
-                        });
-
-                        if(response[0]) {
-                            return from(this.menuCtrl.close('first'));
-                        }
                     }
-                )
-            );
+                    else {
+                        newBooking.push(...neworopenArray,...pendingArray);
+                        historyBooking.push(...bookedArray);
+                    }
+
+
+                    console.log(neworopenArray,pendingArray);
+                    states.patchState({
+                        new: _.uniqBy(newBooking,'id'),
+                        history:_.uniqBy(historyBooking,'id'),
+                        type : action.type
+                    });
+
+                    if(response[0]) {
+                        return from(this.menuCtrl.close('first'));
+                    }
+                }
+            )
+        );
     }
 
     @Action(DownloadTicket)

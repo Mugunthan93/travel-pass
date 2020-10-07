@@ -6,6 +6,9 @@ import { UserState } from './user.state';
 import { ApproveRequestComponent } from '../components/flight/approve-request/approve-request.component';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import { forkJoin, from } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ApprovalService } from '../services/approval/approval.service';
 
 
 export interface Approval {
@@ -53,7 +56,8 @@ export class ApprovalState {
         public menuCtrl: MenuController,
         public flightService: FlightService,
         public modalCtrl: ModalController,
-        private alertCtrl : AlertController
+        private alertCtrl : AlertController,
+        private approvalService : ApprovalService
     ) {
 
     }
@@ -76,41 +80,44 @@ export class ApprovalState {
     //getting approve list
     @Action(ApprovalRequest)
     async approveRequest(states: StateContext<Approval>, action: ApprovalRequest) {
-        states.patchState({
-            type: action.type
-        });
-        
-        this.menuCtrl.close('first');
-        this.store.dispatch(new Navigate(['/', 'home', 'approval-request', states.getState().type, 'request-list']));
 
-        try {
-            const userId: number = this.store.selectSnapshot(UserState.getUserId);
-            const approvalReqResponse = await this.flightService.approvalReqList(userId);
-            console.log(approvalReqResponse);
-            let openBooking = JSON.parse(approvalReqResponse.data);
-            let partition = _.partition(openBooking, (el) => {
-                return  moment({}).isBefore(el.travel_date)
-            })
-            partition[0] = partition[0].sort((a,b) => {
-                if (moment(b.travel_date).isAfter(a.travel_date)) {
-                    return -1;
-                }
-                else if (moment(b.travel_date).isBefore(a.travel_date)) {
-                    return 1;
-                }
-                else {
-                    return 0;
-                }
-            })
-            states.patchState({
-                list: partition[0].concat(partition[1])
-            });
+        states.dispatch(new Navigate(['/', 'home', 'approval-request', states.getState().type, 'request-list']));
 
-        }
-        catch (error) {
-            console.log(error);
-        }
+        const userId: number = this.store.selectSnapshot(UserState.getUserId);        
+        let menuclose$ = this.menuCtrl.isOpen('first');
+        let approveReq$ = this.approvalService.getApprovalList(action.type, userId);
 
+        return forkJoin(menuclose$,approveReq$)
+            .pipe(
+                map(
+                    (response) => {
+                        let listResponse = response[1];
+                        let openBooking = JSON.parse(listResponse.data);
+                        let partition = _.partition(openBooking, (el) => {
+                            return  moment({}).isBefore(el.travel_date)
+                        })
+                        partition[0] = partition[0].sort((a,b) => {
+                            if (moment(b.travel_date).isAfter(a.travel_date)) {
+                                return -1;
+                            }
+                            else if (moment(b.travel_date).isBefore(a.travel_date)) {
+                                return 1;
+                            }
+                            else {
+                                return 0;
+                            }
+                        })
+                        states.patchState({
+                            list: partition[0].concat(partition[1]),
+                            type: action.type
+                        });
+
+                        if(response[0]) {
+                            return from(this.menuCtrl.close('first'));
+                        }
+                    }
+                )
+            );
     }
 
     //getting selected approve req
@@ -184,11 +191,11 @@ export class ApprovalState {
         console.log(reqbody);
         console.log(JSON.stringify(reqbody));
         try {
-            const acceptReqResponse = await this.flightService.approvalReq(req.id, reqbody);
+            const acceptReqResponse = await this.approvalService.approvalReq(req.id, reqbody);
             console.log(acceptReqResponse);
-            if (acceptReqResponse.status == 200) {
-                successAlert.present();
-            }
+            // if (acceptReqResponse.status == 200) {
+            //     successAlert.present();
+            // }
         }
         catch (error) {
             let errObj = JSON.parse(error.error);
@@ -249,11 +256,11 @@ export class ApprovalState {
         console.log(reqbody);
         console.log(JSON.stringify(reqbody));
         try {
-            const declineReqResponse = await this.flightService.approvalReq(req.id, reqbody);
+            const declineReqResponse = await this.approvalService.approvalReq(req.id, reqbody);
             console.log(declineReqResponse);
-            if (declineReqResponse.status == 200) {
-                successAlert.present();
-            }
+            // if (declineReqResponse.status == 200) {
+            //     successAlert.present();
+            // }
         }
         catch (error) {
             let errObj = JSON.parse(error.error);
