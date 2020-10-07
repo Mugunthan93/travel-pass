@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { ApprovalRequest } from 'src/app/stores/approval.state';
+import { ApprovalRequest, ApprovalState } from 'src/app/stores/approval.state';
 import { MenuController } from '@ionic/angular';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-approval-request',
@@ -15,7 +16,10 @@ export class ApprovalRequestPage implements OnInit {
     public menuCtrl: MenuController
   ) { }
 
+  type$ : Observable<string>;
+
   ngOnInit() {
+    this.type$ = this.store.select(ApprovalState);
   }
 
   async openMenu() {

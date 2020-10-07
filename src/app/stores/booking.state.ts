@@ -1,14 +1,17 @@
 import { State, Action, StateContext, Store, Selector } from "@ngxs/store";
 import { Navigate } from '@ngxs/router-plugin';
-import { MenuController, ModalController, LoadingController, AlertController } from '@ionic/angular';
+import { MenuController, LoadingController, AlertController } from '@ionic/angular';
 import { FlightService } from '../services/flight/flight.service';
 import { UserState } from './user.state';
-import { FilePath } from '@ionic-native/file-path/ngx';
-import { File } from '@ionic-native/file/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { environment } from 'src/environments/environment';
+import { BookingService } from '../services/booking/booking.service';
+import { forkJoin, from } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { HTTPResponse } from '@ionic-native/http/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
-
+import { File } from '@ionic-native/file/ngx';
+import * as _ from 'lodash';
 
 export interface booking {
     type: string
@@ -44,10 +47,11 @@ export class BookingState {
         private store: Store,
         public menuCtrl: MenuController,
         private flightService: FlightService,
-        private file: File,
-        private transfer: FileTransfer,
         public loadingCtrl: LoadingController,
         public alertCtrl: AlertController,
+        private bookingService : BookingService,
+        private file: File,
+        private transfer: FileTransfer,
         private fileOpener: FileOpener
     ) {
 
@@ -63,72 +67,50 @@ export class BookingState {
         return state.history;
     }
 
+    @Selector()
+    static getType(state : booking) : string {
+        return state.type;
+    }
+
     @Action(MyBooking)
-    async myflightBooking(states: StateContext<booking>, action: MyBooking) {
+    myBooking(states: StateContext<booking>, action: MyBooking) {
 
-        states.patchState({
-            type : action.type
-        });
-
-        this.menuCtrl.close('first');
-        this.store.dispatch(new Navigate(['/', 'home', 'my-booking', states.getState().type, 'new']));
-
+        states.dispatch(new Navigate(['/', 'home', 'my-booking', states.getState().type, 'new']));
         let newBooking = [];
         let historyBooking = [];
 
-        ///open try catch
-        try {
-            const userId: number = this.store.selectSnapshot(UserState.getUserId);
-            const myBookingResponse = await this.flightService.openBooking(userId);
-            let openBooking = JSON.parse(myBookingResponse.data);
-            console.log(openBooking);
-            newBooking.push(...openBooking.data);
-        }
-        catch (error) {
-            console.log(error);
-        }
+        const userId: number = this.store.selectSnapshot(UserState.getUserId);        
+        let menuclose$ = this.menuCtrl.isOpen('first');
+        let openBooking$ = this.bookingService.myBooking(action.type,userId,'open');
+        let pendingBooking$ = this.bookingService.myBooking(action.type,userId,'pending');
+        let rejBooking$ = this.bookingService.myBooking(action.type,userId,'rej');
+        let bookedBooking$ = this.bookingService.myBooking(action.type,userId,'booked');
 
-        /// pending try catch
-        try {
-            const userId: number = this.store.selectSnapshot(UserState.getUserId);
-            const myBookingResponse = await this.flightService.pendingBooking(userId);
-            let pendingBooking = JSON.parse(myBookingResponse.data);
-            console.log(pendingBooking);
-            newBooking.push(...pendingBooking.data);
-        }
-        catch (error) {
-            console.log(error);
-        }
+        return forkJoin(menuclose$,openBooking$,pendingBooking$,rejBooking$,bookedBooking$)
+            .pipe(
+                map(
+                    (response) => {
+                        let openArray = _.isUndefined(JSON.parse(response[1].data).data) ? [] : JSON.parse(response[1].data).data;
+                        let pendingArray = _.isUndefined(JSON.parse(response[2].data).data) ? [] : JSON.parse(response[2].data).data;
+                        let rejArray = _.isUndefined(JSON.parse(response[3].data).data) ? [] : JSON.parse(response[3].data).data;
+                        let bookedArray = _.isUndefined(JSON.parse(response[4].data).data) ? [] : JSON.parse(response[4].data).data;
 
+                        newBooking.push(...openArray,...pendingArray,...rejArray);
+                        historyBooking.push(...bookedArray);
 
-        //rej try catch
-        try {
-            const userId: number = this.store.selectSnapshot(UserState.getUserId);
-            const myBookingResponse = await this.flightService.rejBooking(userId);
-            let rejBooking = JSON.parse(myBookingResponse.data);
-            console.log(rejBooking);
-            newBooking.push(...rejBooking.data);
-        }
-        catch (error) {
-            console.log(error);
-        }
+                        console.log(openArray,pendingArray,rejArray);
+                        states.patchState({
+                            new: _.uniqBy(newBooking,'id'),
+                            history:_.uniqBy(historyBooking,'id'),
+                            type : action.type
+                        });
 
-        //booked try catch
-        try {
-            const userId: number = this.store.selectSnapshot(UserState.getUserId);
-            const myBookingResponse = await this.flightService.bookedBooking(userId);
-            let bookedBooking = JSON.parse(myBookingResponse.data);
-            console.log(bookedBooking);
-            historyBooking.push(...bookedBooking.data);
-        }
-        catch (error) {
-            console.log(error);
-        }
-
-        states.patchState({
-            new: newBooking,
-            history:historyBooking
-        });
+                        if(response[0]) {
+                            return from(this.menuCtrl.close('first'));
+                        }
+                    }
+                )
+            );
     }
 
     @Action(DownloadTicket)

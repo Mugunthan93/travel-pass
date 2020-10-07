@@ -67,6 +67,11 @@ export class ApprovalState {
     static getSelectedRequest(state: Approval) {
         return state.selectedRequest;
     }
+
+    @Selector()
+    static getType(state : Approval) : string {
+        return state.type;
+    }
     
     //getting approve list
     @Action(ApprovalRequest)

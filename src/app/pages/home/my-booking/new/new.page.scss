@@ -16,7 +16,7 @@ ion-content{
                 }
                 
                 >ion-row:last-child{
-                    >ion-text:last-child{
+                    >ion-label:last-child{
                         text-align: end;
                     }
                 }
@@ -32,15 +32,15 @@ ion-content{
             >ion-row:last-child{
                 justify-content: flex-end;
 
-                >ion-text.pending {
+                >ion-label.pending {
                     color: #{$malibu} !important;
                 }
 
-                >ion-text.open {
+                >ion-label.open {
                     color: #89f789 !important;
                 }
 
-                >ion-text.rej {
+                >ion-label.rej {
                     color: #{$geraldine} !important;
                 }
             }

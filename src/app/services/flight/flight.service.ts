@@ -6,7 +6,6 @@ import { environment } from 'src/environments/environment';
 import { fareRule } from '../../stores/result/flight.state';
 import { itineraryPayload } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 import { sendRequest, rt_sendRequest, int_sendRequest } from 'src/app/stores/book/flight.state';
-import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -76,52 +75,6 @@ export class FlightService {
   //approve the request
   async approvalReq(ticketId : string, requestBody : any ): Promise<HTTPResponse> {
     return await this.http.put("/airlineRequest/" + ticketId, requestBody);
-  }
-
-  //my booking - new
-  async openBooking(userId: number): Promise<HTTPResponse> {
-    
-    const startDate = moment().format('YYYY-MM-DD%2023:59:59.000+00:00');
-    const endDate = moment().subtract(7, "days").format('YYYY-MM-DD%2000:00:01.000+00:00'); 
-    const book = {
-      "booking_mode": "online"
-    }
-    
-    return await this.http.get("/airlineRequest/getairlinebyuserid/" + userId.toString() + "/open/" + endDate + "/" + startDate + "/0/999", book);
-  }
-
-  //my booking - new, history
-  async pendingBooking(userId: number): Promise<HTTPResponse> {
-
-    const startDate = moment().format('YYYY-MM-DD%2023:59:59.000+00:00');
-    const endDate = moment().subtract(7, "days").format('YYYY-MM-DD%2000:00:01.000+00:00'); 
-    const book = {
-      "booking_mode": "online"
-    }
-
-    return await this.http.get("/airlineRequest/getairlinebyuserid/" + userId.toString() + "/pending/" + endDate + "/" + startDate + "/0/999", book);
-  }
-
-  async bookedBooking(userId: number): Promise<HTTPResponse> {
-
-    const startDate = moment().format('YYYY-MM-DD%2023:59:59.000+00:00');
-    const endDate = moment().subtract(7, "days").format('YYYY-MM-DD%2000:00:01.000+00:00');
-    const book = {
-      "booking_mode": "online"
-    }
-
-    return await this.http.get("/airlineRequest/getairlinebyuserid/" + userId.toString() + "/booked/" + endDate + "/" + startDate + "/0/999", book);
-  }
-
-  async rejBooking(userId: number): Promise<HTTPResponse> {
-
-    const startDate = moment().format('YYYY-MM-DD%2023:59:59.000+00:00');
-    const endDate = moment().subtract(7, "days").format('YYYY-MM-DD%2000:00:01.000+00:00');
-    const book = {
-      "booking_mode": "online"
-    }
-
-    return await this.http.get("/airlineRequest/getairlinebyuserid/" + userId.toString() + "/rej/" + endDate + "/" + startDate + "/0/999", book);
   }
 
   // approver reqest list

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { IonTabButton, MenuController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
-import { MyBooking } from 'src/app/stores/booking.state';
+import { Observable } from 'rxjs';
+import { BookingState, MyBooking } from 'src/app/stores/booking.state';
 
 @Component({
   selector: 'app-my-booking',
@@ -15,7 +16,10 @@ export class MyBookingPage implements OnInit {
     public menuCtrl : MenuController
   ) { }
 
+  type$ : Observable<string>;
+
   ngOnInit() {
+    this.type$ = this.store.select(BookingState.getType);
   }
 
   async openMenu() {
