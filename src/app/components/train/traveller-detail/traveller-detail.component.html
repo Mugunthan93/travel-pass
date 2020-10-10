@@ -88,7 +88,7 @@
           <ion-select-option *ngFor="let age of ages" [value]="age">{{age}}</ion-select-option>
         </ion-select>
         
-        <ion-input *ngIf="paxtype == 'Adult'"
+        <ion-input *ngIf="paxtype == 'Adult'" type="number"
           formControlName="age"
           class="form-control" 
           [ngClass]="errorClass('age')"

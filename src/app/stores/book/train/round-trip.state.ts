@@ -165,10 +165,6 @@ export class TrainRoundTripBookState {
             )
         );
 
-        let userMail : string = this.store.selectSnapshot(UserState.getEmail);
-        let allCC : string[] = Object.assign([],action.mailCC);
-        allCC.push(userMail);
-
         let passenger = this.store.selectSnapshot(TrainPassengerState.getPassenger);
         let req: train_oneway_request = {
             passenger_details: {
@@ -180,9 +176,9 @@ export class TrainRoundTripBookState {
                 country_flag: 0
             },
             train_requests: {
-                AdultCount: 0,
-                ChildCount: 0,
-                InfantCount: 0,
+                AdultCount: '0',
+                ChildCount: '0',
+                InfantCount: '0',
                 JourneyType: this.store.selectSnapshot(TrainSearchState.getJourneyType),
                 Segments: [states.getState().departure,states.getState().return]
             },
@@ -192,7 +188,7 @@ export class TrainRoundTripBookState {
             booking_mode: 'offline',
             trip_type: this.store.selectSnapshot(TrainSearchState.getTravelType),
             comments: action.comment,
-            approval_mail_cc: allCC,
+            approval_mail_cc: action.mailCC,
             purpose: action.purpose,
             cancellation_charges: null,
             status: 'new',

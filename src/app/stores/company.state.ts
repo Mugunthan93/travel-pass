@@ -48,7 +48,7 @@ export class CompanyState {
 
     @Selector([UserState])
     static getManagerList(state: company,user : user) : user[] {
-        return state.Users.filter((el: user) => el.role == 'manager' && !_.isEqual(el,user));
+        return state.Users.filter((el: user) => !_.isEqual(el.id,user.id) && el.role == 'manager');
     }
 
     @Selector()

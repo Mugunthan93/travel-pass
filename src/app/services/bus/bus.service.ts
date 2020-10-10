@@ -4,6 +4,7 @@ import { from, Observable } from 'rxjs';
 import { NativeHttpService } from '../http/native-http/native-http.service';
 import { buspayload } from 'src/app/stores/search/bus.state';
 import { seatPayload } from 'src/app/stores/result/bus.state';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,8 @@ export class BusService {
       'inventoryType': payload.inventoryType.toString(),
       'routeScheduleId': payload.routeScheduleId.toString()
     }
+    this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
+    this.http.setData('json');
     return from(this.http.getfromtbo('/bus/e-tarvel/bus-Layout', params))
   }
 

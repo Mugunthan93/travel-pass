@@ -152,7 +152,7 @@ export class UserState {
         return {
             id: state.approver.id,
             name: state.approver.name,
-            email: state.approver.approver.email
+            email: state.approver.email
         }
     }
 
@@ -192,8 +192,9 @@ export class UserState {
                 map(
                     (response: updateresponse) => {
                         if (response.status_code == 200)
-                        {   
-                            states.patchState(currentUser);
+                        {
+                            let updatedUser : user = Object.assign(states.getState(), action.user); 
+                            states.patchState(updatedUser);
                             console.log("update succesfully");
                         }
                     }

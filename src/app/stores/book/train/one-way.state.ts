@@ -53,9 +53,9 @@ export interface train_oneway_request {
         country_flag: number
     },
     train_requests: {
-        AdultCount: number,
-        ChildCount: number,
-        InfantCount: number,
+        AdultCount: string,
+        ChildCount: string,
+        InfantCount: string,
         JourneyType: number,
         Segments: segments[]
     },
@@ -154,7 +154,7 @@ export class TrainOneWayBookState {
     @Action(GetRequest)
     getRequest(states: StateContext<trainOnewayBook>, action: GetRequest) {
         let currentsegment: segments = Object.assign({}, states.getState().Segments);
-        currentsegment.trainName = Object.assign({},action.name);
+        currentsegment.trainName = action.name;
 
         states.patchState({
             Segments: currentsegment,
@@ -219,10 +219,6 @@ export class TrainOneWayBookState {
             )
         );
 
-        let userMail : string = this.store.selectSnapshot(UserState.getEmail);
-        let allCC : string[] = Object.assign([],action.mailCC);
-        allCC.push(userMail);
-
         let passenger = this.store.selectSnapshot(TrainPassengerState.getPassenger);
         let req: train_oneway_request = {
             passenger_details: {
@@ -234,9 +230,9 @@ export class TrainOneWayBookState {
                 country_flag: 0
             },
             train_requests: {
-                AdultCount: 0,
-                ChildCount: 0,
-                InfantCount: 0,
+                AdultCount: '0',
+                ChildCount: '0',
+                InfantCount: '0',
                 JourneyType: this.store.selectSnapshot(TrainSearchState.getJourneyType),
                 Segments: [states.getState().Segments]
             },
@@ -245,8 +241,8 @@ export class TrainOneWayBookState {
             customer_id: this.store.selectSnapshot(UserState.getcompanyId),
             booking_mode: 'offline',
             trip_type: this.store.selectSnapshot(TrainSearchState.getTravelType),
-            comments: action.comment,
-            approval_mail_cc: allCC,
+            comments: null,
+            approval_mail_cc: action.mailCC,
             purpose: action.purpose,
             cancellation_charges: null,
             status: 'new',
@@ -261,7 +257,7 @@ export class TrainOneWayBookState {
                     (el) => {
                         console.log(el);
                         if (el[1].status == 200) {  
-                            console.log(JSON.parse(el[1].data));
+                            console.log(el[1].data);
                             return forkJoin(from(this.loadingCtrl.dismiss(null, null, 'send-req-loading')),successAlert$);
                         }
                         else {
