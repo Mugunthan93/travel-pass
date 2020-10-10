@@ -4,6 +4,11 @@ import { flightSearchResult } from 'src/app/models/search/flight';
 import * as moment from 'moment';
 import { BaseFlightResult } from './flight-result';
 import { FlightFilterState, flightFilter, GetAirlines } from '../filter/flight.filter.state';
+import { FlightSearchState } from '../../search/flight.state';
+import { CompanyState } from '../../company.state';
+import { MultiCitySearchState } from '../../search/flight/multi-city.state';
+import { OneWaySearchState } from '../../search/flight/oneway.state';
+import { RoundTripSearchState } from '../../search/flight/round-trip.state';
 
 export interface multicityResult {
     value: resultObj[]
@@ -74,13 +79,53 @@ export class MultiCityResultState extends BaseFlightResult {
 
     @Action(MultiCityResponse)
     multicityResponse(states: StateContext<multicityResult>, action: MultiCityResponse) {
+
+        let result : resultObj[] =  this.responseData(action.response.Results[0], action.response.TraceId);
+        console.log(this.getmarkup());
+        result.forEach(
+            (el,ind,arr) => {
+                if(this.getmarkup() !== 0) {
+                    el.fare = el.fare + ((el.fare / 100) * this.getmarkup());
+                    el.email.fare = el.email.fare + ((el.email.fare / 100) * this.getmarkup());
+    
+                    el.trips.forEach(
+                        (e,i,a) => {
+                            e.tripinfo.fare = e.tripinfo.fare + ((e.tripinfo.fare / 100) * this.getmarkup());
+                        }
+                    );
+                }
+            }
+        );
+
         states.patchState({
-            value: this.responseData(action.response.Results[0], action.response.TraceId),
+            value: result,
             traceId: action.response.TraceId
         });
 
         this.store.dispatch(new AddEmailTrips(this.emailTrips(action.response.Results[0])));
         this.store.dispatch(new GetAirlines(states.getState().value));
+    }
+
+    getmarkup() : number {
+        let journeyType : number = this.store.selectSnapshot(FlightSearchState.getJourneyType);
+        let type : string = null;
+
+        if(journeyType == 1) {
+            type = this.store.selectSnapshot(OneWaySearchState.getTripType);
+        }
+        else if(journeyType == 2) {
+            type = this.store.selectSnapshot(RoundTripSearchState.getTripType);
+        }
+        else if(journeyType == 3) {
+            type = this.store.selectSnapshot(MultiCitySearchState.getTripType);
+        }
+
+        if(type == 'domestic') {
+            return this.store.selectSnapshot(CompanyState.getDomesticMarkupCharge);
+        }
+        else if(type == 'international') {
+            return this.store.selectSnapshot(CompanyState.getInternationalMarkupCharge);
+        }
     }
 
 }

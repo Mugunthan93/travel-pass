@@ -24,7 +24,7 @@ export class NewPage implements OnInit {
   }
 
   tripType(booking: any) : Observable<string> {
-    console.log(booking);
+    // console.log(booking);
     return of(booking)
     .pipe(
       withLatestFrom(this.type$),
@@ -60,7 +60,7 @@ export class NewPage implements OnInit {
               return booking.trip_requests.Segments[0] ? booking.trip_requests.Segments[0].OriginName : '';
             }
             else if(type == 'hotel') {
-              return booking.guest_details.basiscInfo.HotelName;
+              return booking.guest_details.basiscInfo.CheckInDate;
             }
           }
         )
@@ -79,7 +79,7 @@ export class NewPage implements OnInit {
             return booking.trip_requests.Segments[0] ? booking.trip_requests.Segments[0].DestinationName : '';
           }
           else if(type == 'hotel') {
-            return booking.guest_details.roomDetails[0].RoomTypeName.replace('|',' ');
+            return booking.guest_details.basiscInfo.CheckOutDate;
           }
         }
       )

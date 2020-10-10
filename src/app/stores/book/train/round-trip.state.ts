@@ -9,6 +9,7 @@ import { BookMode, BookType } from '../../book.state';
 import { Navigate } from '@ngxs/router-plugin';
 import { from, forkJoin, of } from 'rxjs';
 import { catchError, flatMap } from 'rxjs/operators';
+import { TrainSearchState } from '../../search/train.state';
 
 export interface trainRoundTripBook {
     departure: segments
@@ -164,6 +165,9 @@ export class TrainRoundTripBookState {
             )
         );
 
+        let userMail : string = this.store.selectSnapshot(UserState.getEmail);
+        let allCC : string[] = Object.assign([],action.mailCC);
+        allCC.push(userMail);
 
         let passenger = this.store.selectSnapshot(TrainPassengerState.getPassenger);
         let req: train_oneway_request = {
@@ -179,16 +183,16 @@ export class TrainRoundTripBookState {
                 AdultCount: 0,
                 ChildCount: 0,
                 InfantCount: 0,
-                JourneyType: 1,
+                JourneyType: this.store.selectSnapshot(TrainSearchState.getJourneyType),
                 Segments: [states.getState().departure,states.getState().return]
             },
             transaction_id: null,
             user_id: this.store.selectSnapshot(UserState.getUserId),
             customer_id: this.store.selectSnapshot(UserState.getcompanyId),
             booking_mode: 'offline',
-            trip_type: 'business',
+            trip_type: this.store.selectSnapshot(TrainSearchState.getTravelType),
             comments: action.comment,
-            approval_mail_cc: action.mailCC,
+            approval_mail_cc: allCC,
             purpose: action.purpose,
             cancellation_charges: null,
             status: 'new',

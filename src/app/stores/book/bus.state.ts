@@ -2,28 +2,21 @@ import { State, Store, Action, StateContext } from '@ngxs/store';
 import { managers, user_eligibility } from './flight.state';
 import { busResponse, droppingPoint, boardingPoint, BusResultState } from '../result/bus.state';
 import { BusSearchState } from '../search/bus.state';
-import { ModalController } from '@ionic/angular';
+import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 import { Navigate } from '@ngxs/router-plugin';
 import { CompanyState } from '../company.state';
 import { GST } from './flight/oneway.state';
 import { UserState } from '../user.state';
 import * as moment from 'moment';
 import { BookMode } from '../book.state';
+import { forkJoin, from, of } from 'rxjs';
+import { catchError, flatMap } from 'rxjs/operators';
+import { BusService } from 'src/app/services/bus/bus.service';
 
 
 export interface busbook {
     passenger_details: passenger_details
     bus_requests: busrequests[]
-
-
-    transaction_id: any
-    user_id: number
-    customer_id: number
-    booking_mode: string
-    trip_type: string
-    cancellation_charges: any
-    status: string
-    managers: managers
 }
 
 export interface passenger_details {
@@ -72,8 +65,8 @@ export interface busrequests {
     sourceCity: string
     destinationCity: string
     doj: string
-    droppingPoint: droppingPoint
-    boardingPoint: boardingPoint
+    droppingPoint: droppingPoint[]
+    boardingPoint: boardingPoint[]
 }
 
 ////////////////////////////////////////////////////////////////
@@ -97,22 +90,17 @@ export class BusRequest {
     name: 'bus_book',
     defaults: {
         passenger_details: null,
-        bus_requests: [],
-        transaction_id: null,
-        user_id: null,
-        customer_id: null,
-        booking_mode: null,
-        trip_type: null,
-        cancellation_charges: null,
-        status: null,
-        managers: null
+        bus_requests: []
     }
 })
 export class BusBookState {
 
     constructor(
         private store: Store,
-        public modalCtrl : ModalController
+        public modalCtrl : ModalController,
+        public loadingCtrl : LoadingController,
+        public alertCtrl : AlertController,
+        private busService : BusService
     ) {
 
     }
@@ -126,8 +114,8 @@ export class BusBookState {
             sourceCity: this.store.selectSnapshot(BusSearchState.getPayload).sourceCity,
             destinationCity: this.store.selectSnapshot(BusSearchState.getPayload).destinationCity,
             doj: this.store.selectSnapshot(BusSearchState.getPayload).doj,
-            droppingPoint: action.boarding,
-            boardingPoint: action.dropping
+            droppingPoint: [action.boarding],
+            boardingPoint: [action.dropping]
         });
 
         let currenReq: busrequests[] = Object.assign([],states.getState().bus_requests);
@@ -179,15 +167,112 @@ export class BusBookState {
             bus_requests: currenReq
         });
 
-        this.modalCtrl.dismiss(null, null, 'seat-select');
         this.modalCtrl.dismiss(null, null, 'pick-drop');
+        this.modalCtrl.dismiss(null, null, 'seat-select');
         states.dispatch(new BookMode('bus'));
         states.dispatch(new Navigate(['/', 'home', 'book', 'bus']));
         
     }
 
     @Action(BusRequest)
-    sendRequeststates(states :StateContext<busbook>, action: BusRequest) {
+    sendRequest(states :StateContext<busbook>, action: BusRequest) {
+
+        let userMail : string = this.store.selectSnapshot(UserState.getEmail);
+        let allCC : string[] = action.mailCC;
+        allCC.push(userMail);
+
+        let sendreq = {
+            passenger_details: states.getState().passenger_details,
+            bus_requests: states.getState().bus_requests,
+            transaction_id: null,
+            user_id:  this.store.selectSnapshot(UserState.getUserId),
+            customer_id: this.store.selectSnapshot(UserState.getcompanyId),
+            booking_mode: "online",
+            trip_type: "business",
+            comments: action.comment,
+            purpose: action.purpose,
+            cancellation_charges: null,
+            status: "pending",
+            managers: this.store.selectSnapshot(UserState.getApprover)
+        }
+
+        let loading$ = from(this.loadingCtrl.create({
+            spinner: 'crescent',
+            message: 'Sending Request...',
+            id: 'send-req-loading'
+        })).pipe(
+            flatMap(
+                (loadingEl) => {
+                    return from(loadingEl.present());
+                }
+            )
+        );
+
+        let failedAlert$ = from(this.alertCtrl.create({
+            header: 'Send Request Failed',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                handler: () => {
+                    return false;
+                }
+            }]
+        })).pipe(
+            flatMap(
+                (alertEl) => {
+                    return from(alertEl.present());
+                }
+            )
+        );
+
+        let successAlert$ = from(this.alertCtrl.create({
+            header: 'Request Success',
+            subHeader: 'Send Request Success',
+            message: 'Request Sent Successfully..',
+            buttons: [
+                {
+                    text: 'Ok',
+                    handler: () => {
+                        states.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']))
+                        .subscribe({
+                            complete: () => {
+                                this.modalCtrl.dismiss(null, null,'book-confirm');
+                                }
+                            });
+                    }
+                }
+            ]
+        })).pipe(
+            flatMap(
+                (alertEl) => {
+                    return from(alertEl.present());
+                }
+            )
+        );
+
+        let sendRequest$ = from(this.busService.sendRequest(sendreq));
+
+        return forkJoin(loading$, sendRequest$)
+        .pipe(
+            flatMap(
+                (el) => {
+                    console.log(el);
+                    if (el[1].status == 200) {  
+                        console.log(JSON.parse(el[1].data));
+                        return forkJoin(from(this.loadingCtrl.dismiss(null, null, 'send-req-loading')),successAlert$);
+                    }
+                    else {
+                        return forkJoin(from(this.loadingCtrl.dismiss(null, null, 'send-req-loading')), failedAlert$);
+                    }
+                }
+            ),
+            catchError(
+                (error) => {
+                    console.log(error);
+                    return of(error);
+                }
+            )
+        );
 
     }
 

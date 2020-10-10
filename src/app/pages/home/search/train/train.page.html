@@ -13,6 +13,16 @@
         </ion-segment>
     </ion-row>
     <ion-row>
+        <ion-segment mode="ios" (ionChange)="travelChange($event)" [value]="travelType$ | async" class="search">
+            <ion-segment-button value="business" class="search">
+                <ion-text class="medium bold">Business</ion-text>
+            </ion-segment-button>
+            <ion-segment-button value="personal" class="search">
+                <ion-text class="medium bold">Personal</ion-text>
+            </ion-segment-button>
+        </ion-segment>
+    </ion-row>
+    <ion-row>
         <ion-segment mode="ios" (ionChange)="categoryChange($event)" [value]="trainType$ | async" class="search">
             <ion-segment-button value="domestic" class="search">
                 <ion-text class="medium bold">Domestic</ion-text>

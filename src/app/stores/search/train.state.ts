@@ -5,7 +5,8 @@ import { TrainMultiCitySearchState } from './train/multi-city.state';
 
 export interface trainsearch {
     JourneyType: number,
-    trainType : string
+    trainType : string,
+    travelType : string
 }
 
 
@@ -25,11 +26,19 @@ export class TrainType {
     }
 }
 
+export class TravelType {
+    static readonly type = "[train_search] TravelType";
+    constructor(public type: string) {
+
+    }
+}
+
 @State<trainsearch>({
     name: 'train_search',
     defaults: {
         JourneyType: 1,
-        trainType : 'domestic'
+        trainType : 'domestic',
+        travelType : 'business'
     },
     children: [
         TrainOneWaySearchState,
@@ -52,6 +61,11 @@ export class TrainSearchState {
     @Selector()
     static getTrainType(states: trainsearch): string {
         return states.trainType;
+    }
+
+    @Selector()
+    static getTravelType(states: trainsearch): string {
+        return states.travelType;
     }
 
     @Action(JourneyType)
@@ -77,6 +91,13 @@ export class TrainSearchState {
     trainType(states: StateContext<trainsearch>, action: TrainType) {
         states.patchState({
             trainType : action.type
+        });
+    }
+
+    @Action(TravelType)
+    travelType(states: StateContext<trainsearch>, action: TravelType) {
+        states.patchState({
+            travelType : action.type
         });
     }
 

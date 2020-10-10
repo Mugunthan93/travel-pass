@@ -94,7 +94,7 @@
   
       <ion-item>
         <ion-label class="bold">PAN Number</ion-label>
-        <ion-label *ngIf="!editMode">{{ (user$ | async).pan_number }}</ion-label>
+        <ion-label *ngIf="!editMode">{{ (user$ | async).PAN_number }}</ion-label>
         <ion-input *ngIf="editMode" type="text"
         [ngClass]="{
           'is-valid': edituser.controls['pan_number'].valid,

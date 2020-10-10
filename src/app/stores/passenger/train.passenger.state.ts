@@ -106,8 +106,23 @@ export class TrainPassengerState {
 
     @Action(AddTrainPassenger)
     addTrainPassenger(states: StateContext<trainpassengerstate>, action: AddTrainPassenger) {
-        let currentPass = Object.assign([], states.getState().passenger);
-        currentPass.push(action.pass);
+        let currentPass : trainpassenger[] = Object.assign([], states.getState().passenger);
+        let trainPass : trainpassenger = {
+            primary: action.pass.primary ? true : false,
+            email: action.pass.email,
+            name: action.pass.name,
+            lastName: action.pass.lastName,
+            Address: action.pass.Address,
+            mobile: action.pass.mobile,
+            idType: action.pass.idType,
+            idNumber: action.pass.idNumber,
+            title: action.pass.title,
+            sex: action.pass.sex,
+            age: action.pass.age,
+            pax_type: action.pass.pax_type,
+            prefSeat: action.pass.prefSeat
+        }
+        currentPass.push(trainPass);
 
         states.patchState({
             passenger: currentPass
@@ -117,12 +132,29 @@ export class TrainPassengerState {
     }
 
     @Action(EditTrainPassenger)
-    editTrainPssenger(states: StateContext<trainpassengerstate>, action: EditTrainPassenger) {
+    editTrainPassenger(states: StateContext<trainpassengerstate>, action: EditTrainPassenger) {
         let passengers: trainpassenger[] = Object.assign([], states.getState().passenger);
         let filterPass: trainpassenger[] = _.filter(passengers, (o) => {
             return !_.isEqual(o, action.pax)
         });
-        filterPass.push(action.pass);
+
+        let trainPass : trainpassenger = {
+            primary: action.pax.primary,
+            email: action.pass.email,
+            name: action.pass.name,
+            lastName: action.pass.lastName,
+            Address: action.pass.Address,
+            mobile: action.pass.mobile,
+            idType: action.pass.idType,
+            idNumber: action.pass.idNumber,
+            title: action.pass.title,
+            sex: action.pass.sex,
+            age: action.pass.age,
+            pax_type: action.pax.pax_type,
+            prefSeat: action.pass.prefSeat
+        }
+
+        filterPass.push(trainPass);
 
         states.patchState({
             passenger: filterPass

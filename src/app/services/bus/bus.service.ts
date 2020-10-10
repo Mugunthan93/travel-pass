@@ -20,12 +20,16 @@ export class BusService {
 
   seatLayout(payload: seatPayload): Observable<HTTPResponse> {
     let params: { [key: string]: string | string[] } = {
-      'inventoryType': payload.inventoryType.toString(),
-      'routeScheduleId': payload.routeScheduleId.toString(),
       'sourceCity': payload.sourceCity,
       'destinationCity': payload.destinationCity,
-      'doj': payload.doj
+      'doj': payload.doj,
+      'inventoryType': payload.inventoryType.toString(),
+      'routeScheduleId': payload.routeScheduleId.toString()
     }
     return from(this.http.getfromtbo('/bus/e-tarvel/bus-Layout', params))
+  }
+
+  sendRequest(req : any) : Observable<HTTPResponse> {
+    return from(this.http.post('/busRequest?email_notify=true',req));
   }
 }

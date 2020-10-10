@@ -1,11 +1,14 @@
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { buscity } from '../shared.state';
 import * as moment from 'moment';
-import { from, of, throwError } from 'rxjs';
+import { forkJoin, from, of, throwError } from 'rxjs';
 import { BusService } from 'src/app/services/bus/bus.service';
-import { map, catchError, tap } from 'rxjs/operators';
+import { map, catchError, tap, flatMap } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { busResponse, BusResponse } from '../result/bus.state';
+import { AlertController, LoadingController } from '@ionic/angular';
+import { ResultMode } from '../result.state';
+import { Navigate } from '@ngxs/router-plugin';
 
 
 export interface bussearch {
@@ -57,7 +60,9 @@ export class SearchBus {
 export class BusSearchState {
 
     constructor(
-        private busService : BusService
+        private busService : BusService,
+        public loadingCtrl : LoadingController,
+        public alertCtrl : AlertController
     ) {
         
     }
@@ -80,6 +85,43 @@ export class BusSearchState {
     @Action(SearchBus)
     searchBus(states: StateContext<bussearch>, action: SearchBus) {
 
+        
+        const loading$ = from(this.loadingCtrl.create({
+            spinner: "crescent",
+            id: 'search-hotel'
+        }));
+
+        let loadingPresent$ = loading$.pipe(
+            flatMap(
+                (loadingEl) => {
+                    loadingEl.message = "Searching Bus....";
+                    return from(loadingEl.present());
+                }
+            )
+        );
+
+        let loadingDismiss$ = loading$.pipe(
+            flatMap(
+                (loadingEl) => {
+                    return from(loadingEl.dismiss());
+                }
+            )
+        );
+
+        const failedAlert$ = from(this.alertCtrl.create({
+            header: 'Search Failed',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                cssClass: 'danger',
+                handler: (res) => {
+                    return true;
+                }
+            }]
+        }));
+
+
+
         let searchPayload: buspayload = {
             'sourceCity': action.form.source.station_name,
             'destinationCity': action.form.destination.station_name,
@@ -91,22 +133,59 @@ export class BusSearchState {
             payload : searchPayload
         });
 
-        return this.busService.searchBus(searchPayload)
-            .pipe(
-                tap(
-                    (response: HTTPResponse) => {
-                        const busresponse: busSearchResponse = JSON.parse(response.data);
-                        console.log(busresponse);
-                        states.dispatch(new BusResponse(busresponse.apiAvailableBuses));
-                    }
-                ),
-                catchError(
-                    (err) => {
-                        console.log(err);
-                        return of(err);
-                    }
-                )
+        return loadingPresent$.pipe(
+            flatMap(
+                () => { 
+                    return this.busService.searchBus(searchPayload)
+                        .pipe(
+                            flatMap(
+                                (response: HTTPResponse) => {
+                                    const busresponse: busSearchResponse = JSON.parse(response.data);
+                                    console.log(busresponse);
+                                    states.dispatch(new BusResponse(busresponse.apiAvailableBuses));
+                                    return loadingDismiss$
+                                }
+                            ),
+                            map(
+                                (value) => {
+                                    states.dispatch(new ResultMode('bus'));
+                                    states.dispatch(new Navigate(['/', 'home', 'result', 'bus']));
+                                }
+                            ),
+                            catchError(
+                                (error) => {
+                                    console.log(error);
+                                    return forkJoin(loadingDismiss$,failedAlert$).pipe(
+                                        map(
+                                            (alert) => {
+                                                let failedAlert = alert[1];
+                                                if (error.status == -4) {
+                                                    failedAlert.message = "Search Timeout, Try Again";
+                                                }
+                                                //no result error
+                                                if (error.status == 400) {
+                                                    const errorString = JSON.parse(error.error);
+                                                    failedAlert.message = errorString.message.response.Error.ErrorMessage;
+                                                }
+                                                //502 => proxy error
+                                                if (error.status == 502) {
+                                                    failedAlert.message = "Server failed to get correct information";
+                                                }
+                                                //503 => service unavailable, Maintanence downtime
+                                                if (error.status == 503) {
+                                                    failedAlert.message = "Server Maintanence Try again Later";
+                                                }
+                                                return from(failedAlert.present());
+                                            }
+                                        )
+                                    );
+                                }
+                            )
+                        )
+                }
             )
+        );
+
 
     }
 

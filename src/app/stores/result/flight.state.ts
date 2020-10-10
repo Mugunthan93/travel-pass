@@ -1,4 +1,4 @@
-import { State, Selector, Action, StateContext } from '@ngxs/store';
+import { State, Selector, Action, StateContext, Store } from '@ngxs/store';
 import { flightData } from 'src/app/models/search/flight';
 import * as _ from "lodash";
 import { OneWayResultState } from './flight/oneway.state';
@@ -9,6 +9,11 @@ import { itineraryPayload } from 'src/app/components/flight/email-itinerary/emai
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { ModalController, AlertController } from '@ionic/angular';
 import { sortButton } from './sort.state';
+import { CompanyState } from '../company.state';
+import { FlightSearchState } from '../search/flight.state';
+import { MultiCitySearchState } from '../search/flight/multi-city.state';
+import { OneWaySearchState } from '../search/flight/oneway.state';
+import { RoundTripSearchState } from '../search/flight/round-trip.state';
 
 export interface flight {
     emailtrip: emailtrip,
@@ -54,7 +59,7 @@ export interface flightDetail {
     day:boolean,
     stops: string,
     seats: number,
-    fare: number,
+    fare?: number,
     currency: string
 }
 
@@ -192,6 +197,7 @@ export class FlightSortBy {
 export class FlightResultState{
 
     constructor(
+        private store : Store,
         private flightService: FlightService,
         public modalCtrl: ModalController,
         public alertCtrl:AlertController

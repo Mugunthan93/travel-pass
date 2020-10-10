@@ -9,6 +9,7 @@ import * as _ from 'lodash';
 import { busrequests, GetBookDetail } from '../book/bus.state';
 import { UserState } from '../user.state';
 import { CompanyState } from '../company.state';
+import { BookMode, BookType } from '../book.state';
 
 export interface busresult {
     buses: busResponse[]
@@ -254,8 +255,6 @@ export class BusResultState {
         states.patchState({
             buses : action.response
         });
-        states.dispatch(new ResultMode('bus'));
-        states.dispatch(new Navigate(['/','home','result','bus']));
     }
 
     @Action(SeatLayout)
@@ -282,7 +281,7 @@ export class BusResultState {
                         return seatResponse.seats;
                     }
                 ),
-                tap(
+                map(
                     (seats: seat[]) => {
                         if (seats.some(el => el.zIndex == 1)) {
                             let lower: seat[][] = _.partition(seats, (s: seat) => {

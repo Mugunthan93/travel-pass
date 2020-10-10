@@ -12,6 +12,7 @@ import { StateReset } from 'ngxs-reset-plugin';
 import { forkJoin, from, of } from 'rxjs';
 import { ResultState } from '../../result.state';
 import { SearchState } from '../../search.state';
+import { TrainSearchState } from '../../search/train.state';
 
 
 export interface trainOnewayBook {
@@ -52,10 +53,10 @@ export interface train_oneway_request {
         country_flag: number
     },
     train_requests: {
-        AdultCount: 0,
-        ChildCount: 0,
-        InfantCount: 0,
-        JourneyType: 1,
+        AdultCount: number,
+        ChildCount: number,
+        InfantCount: number,
+        JourneyType: number,
         Segments: segments[]
     },
     transaction_id: any,
@@ -218,6 +219,9 @@ export class TrainOneWayBookState {
             )
         );
 
+        let userMail : string = this.store.selectSnapshot(UserState.getEmail);
+        let allCC : string[] = Object.assign([],action.mailCC);
+        allCC.push(userMail);
 
         let passenger = this.store.selectSnapshot(TrainPassengerState.getPassenger);
         let req: train_oneway_request = {
@@ -233,16 +237,16 @@ export class TrainOneWayBookState {
                 AdultCount: 0,
                 ChildCount: 0,
                 InfantCount: 0,
-                JourneyType: 1,
+                JourneyType: this.store.selectSnapshot(TrainSearchState.getJourneyType),
                 Segments: [states.getState().Segments]
             },
             transaction_id: null,
             user_id: this.store.selectSnapshot(UserState.getUserId),
             customer_id: this.store.selectSnapshot(UserState.getcompanyId),
             booking_mode: 'offline',
-            trip_type: 'business',
+            trip_type: this.store.selectSnapshot(TrainSearchState.getTravelType),
             comments: action.comment,
-            approval_mail_cc: action.mailCC,
+            approval_mail_cc: allCC,
             purpose: action.purpose,
             cancellation_charges: null,
             status: 'new',

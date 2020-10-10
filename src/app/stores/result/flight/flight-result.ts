@@ -5,7 +5,8 @@ import * as _ from 'lodash';
 
 export class BaseFlightResult {
 
-    constructor() {
+    constructor(
+    ) {
 
     }
 
@@ -25,7 +26,9 @@ export class BaseFlightResult {
     resultObj(result: flightResult, traceId: string): resultObj {
 
         let resultObj: resultObj;
+
         let trips: trips[] = new Array(result.Segments.length);
+
         let totalDuration: number = 0;
         let lastArrival: string;
         let stops: number = 0;
@@ -125,7 +128,7 @@ export class BaseFlightResult {
         resultObj = {
             name: result.Segments[0][0].Airline.AirlineName,
             corporate : _.isNull(result.AirlineRemark) ? false : true,
-            fare: result.Fare.PublishedFare,
+            fare: result.Fare.PublishedFare, //change
             refund: result.IsRefundable,
             Duration: totalDuration,
             departure: result.Segments[0][0].Origin.DepTime,
@@ -137,7 +140,7 @@ export class BaseFlightResult {
             connectingFlights: result.Segments,
             fareRule: fareRule,
             stops: stops,
-            email: email
+            email: email //change
         };
 
         return resultObj;

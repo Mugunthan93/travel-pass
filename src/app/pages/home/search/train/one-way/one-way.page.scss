@@ -7,9 +7,10 @@ form {
     margin: 0px 16px;
     ion-item{
         border-bottom: 2px solid #{$suva-grey};
+        min-height: 80px;
+        height: 80px;
     }
     >ion-item:nth-child(1){
-        min-height: 100px;
         ion-row{
             display: flex;
             flex-direction: column;
@@ -35,7 +36,6 @@ form {
         }
     }
     >ion-item:nth-child(2) {
-        min-height: 100px;
         ion-row {
             display: flex;
             flex-direction: column;
@@ -63,7 +63,6 @@ form {
         }
     }
     >ion-item:nth-child(3) {
-        min-height: 100px;
 
         >ion-row:first-child {
             display: flex;

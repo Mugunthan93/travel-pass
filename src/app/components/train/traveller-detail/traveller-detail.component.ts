@@ -4,6 +4,8 @@ import { ModalController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
 import { ValidatorFn, Validators, FormGroup, FormControl } from '@angular/forms';
 import { AlertOptions } from '@ionic/core';
+import { map } from 'rxjs/operators';
+import { ProofValidator } from 'src/app/validator/proof.validator';
 
 @Component({
   selector: 'app-traveller-detail',
@@ -30,20 +32,8 @@ export class TravellerDetailComponent implements OnInit {
     phone_number: "^[0-9]{10}$",
     aadhar: "^[2-9]{1}[0-9]{3}\\s[0-9]{4}\\s[0-9]{4}$",
     voter:"^([a-zA-Z]){3}([0-9]){7}?$",
-    pan: "[A-Z]{5}[0-9]{4}[A-Z]{1}",
+    pan: "^[A-Z]{5}[0-9]{4}[A-Z]{1}$",
     passport: "^(?!^0+$)[a-zA-Z0-9]{6,9}$"
-  }
-
-  idNumberValid = () => {
-    let type = this.travellerForm.controls['idType'].value;
-    switch (type) {
-      case 'Aadhar Card': return [Validators.required, Validators.pattern(this.regex.aadhar)];
-      case 'Voter ID Card': return [Validators.required, Validators.pattern(this.regex.voter)];
-      case 'Driving License': return [Validators.required];
-      case 'PAN Card': return [Validators.required, Validators.pattern(this.regex.pan)];
-      case 'Passport': return [Validators.required, Validators.pattern(this.regex.passport)];
-      default: return [Validators.required];
-    }
   }
 
   formsubmit: boolean = false;
@@ -55,41 +45,48 @@ export class TravellerDetailComponent implements OnInit {
 
   ngOnInit() {
 
+    console.log(this.paxtype);
+
     if (this.form == 'add') {
       this.travellerForm = new FormGroup({
         title: new FormControl(null, [Validators.required]),
-        first_name: new FormControl(null, [Validators.required, Validators.pattern(this.regex.alphaonly)]),
-        last_name: new FormControl(null, [Validators.required, Validators.pattern(this.regex.alphaonly)]),
-        idType: new FormControl(null, [Validators.required]),
-        idNumber: new FormControl(null),
-        age: new FormControl(null, [Validators.required]),
-        preferred_seat: new FormControl(null,[Validators.required]),
+        name: new FormControl(null, [Validators.required, Validators.pattern(this.regex.alphaonly)]),
+        lastName: new FormControl(null, [Validators.required, Validators.pattern(this.regex.alphaonly)]),
+        idType: new FormControl('PAN Card', [Validators.required]),
+        idNumber: new FormControl(null,[Validators.required,,ProofValidator('Pan Card')]),
+        prefSeat: new FormControl(null,[Validators.required]),
 
         email: new FormControl(null, this.lead ? [Validators.required] : []),
-        phone_number: new FormControl(null, this.lead ? [Validators.required] : []),
-        address: new FormControl(null, this.lead ? [Validators.required] : [])
+        mobile: new FormControl(null, this.lead ? [Validators.required] : []),
+        Address: new FormControl(null, this.lead ? [Validators.required] : [])
       });
     }
     else if (this.form == 'edit') {
       this.travellerForm = new FormGroup({
 
         title: new FormControl(this.pax.sex == 'M' ? 'Mr' : 'Ms', [Validators.required]),
-        first_name: new FormControl(this.pax.name, [Validators.required, Validators.pattern(this.regex.alphaonly)]),
-        last_name: new FormControl(this.pax.lastName, [Validators.required, Validators.pattern(this.regex.alphaonly)]),
+        name: new FormControl(this.pax.name, [Validators.required, Validators.pattern(this.regex.alphaonly)]),
+        lastName: new FormControl(this.pax.lastName, [Validators.required, Validators.pattern(this.regex.alphaonly)]),
         idType: new FormControl(this.pax.idType, [Validators.required]),
-        idNumber: new FormControl(this.pax.idNumber),
+        idNumber: new FormControl(this.pax.idNumber, [Validators.required, ProofValidator(this.pax.idType)]),
         age: new FormControl(this.pax.age, [Validators.required]),
-        preferred_seat: new FormControl(this.pax.prefSeat, [Validators.required]),
+        prefSeat: new FormControl(this.pax.prefSeat, [Validators.required]),
 
 
         email: new FormControl(this.pax.email, this.lead ? [Validators.required] : []),
-        phone_number: new FormControl(this.pax.mobile, this.lead ? [Validators.required] : []),
-        address: new FormControl(this.pax.Address, this.lead ? [Validators.required] : []),
+        mobile: new FormControl(this.pax.mobile, this.lead ? [Validators.required] : []),
+        Address: new FormControl(this.pax.Address, this.lead ? [Validators.required] : []),
       });
-
+      
     }
-    this.travellerForm.controls['idNumber'].setValidators(this.idNumberValid);
-    this.travellerForm.valueChanges.subscribe(el => console.log(el));
+
+    // this.travellerForm.controls['idType'].valueChanges.subscribe(
+    //   (el) => {
+    //     console.log(el);
+    //     this.travellerForm.controls['idNumber'].setValidators([Validators.required, ProofValidator(el.idType)]);
+    //     this.travellerForm.controls['idNumber'].updateValueAndValidity();
+    //   }
+    // );
 
   }
 
@@ -123,10 +120,12 @@ export class TravellerDetailComponent implements OnInit {
 
   selectedProofType(evt: CustomEvent) {
     this.travellerForm.controls['idType'].patchValue(evt.detail.value);
+    this.travellerForm.controls['idNumber'].setValidators([Validators.required, ProofValidator(evt.detail.value)]);
+    this.travellerForm.controls['idNumber'].updateValueAndValidity();
   }
 
   selectedSeat(evt: CustomEvent) {
-    this.travellerForm.controls['preferred_seat'].patchValue(evt.detail.value);
+    this.travellerForm.controls['prefSeat'].patchValue(evt.detail.value);
   }
 
   closeTraveller() {

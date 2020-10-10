@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Observable, combineLatest } from 'rxjs';
-import { HotelSearchState } from 'src/app/stores/search/hotel.state';
 import { SearchState } from 'src/app/stores/search.state';
 import { EligibilityState } from 'src/app/stores/eligibility.state';
 import { map } from 'rxjs/operators';
 import { UserState } from 'src/app/stores/user.state';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-eligibility',
@@ -37,10 +37,10 @@ export class EligibilityComponent implements OnInit {
           (el) => {
             switch (el[0])
             {
-              case 'flight': return el[1].flight;
-              case 'hotel': return el[1].hotel;
-              case 'bus': return el[1].bus;
-              case 'train': return el[1].train;
+              case 'flight': return (el[1].flight == 'false' || el[1].flight == 'true') ? '0' : el[1].flight;
+              case 'hotel': return (el[1].hotel == 'false' || el[1].hotel == 'true') ? '0' : el[1].hotel;
+              case 'bus': return (el[1].bus == 'false' || el[1].bus == 'true') ? '0' : el[1].bus;
+              case 'train': return (el[1].train == 'false' || el[1].train == 'true') ? '0' : el[1].train;
               default: return;
             }
           }
@@ -51,10 +51,10 @@ export class EligibilityComponent implements OnInit {
         map(
           (el) => {
             switch (el[0]) {
-              case 'flight': return el[1].flight;
-              case 'hotel': return el[1].hotel;
-              case 'bus': return el[1].bus;
-              case 'train': return el[1].train;
+              case 'flight': return (el[1].flight == 'false' || el[1].flight == 'true') ? '0' : el[1].flight;
+              case 'hotel': return (el[1].hotel == 'false' || el[1].hotel == 'true') ? '0' : el[1].hotel;
+              case 'bus': return (el[1].bus == 'false' || el[1].bus == 'true') ? '0' : el[1].bus;
+              case 'train': return (el[1].train == 'false' || el[1].train == 'true') ? '0' : el[1].train;
               default: return;
             }
           }

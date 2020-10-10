@@ -7,6 +7,11 @@ import { Navigate } from '@ngxs/router-plugin';
 import { BaseFlightResult } from './flight-result';
 import { DepartureFilterState, departureFilter, GetDepartureAirlines } from '../filter/departure.filter.state';
 import { ReturnFilterState, returnFilter, GetReturnAirlines } from '../filter/return.filter.state';
+import { CompanyState } from '../../company.state';
+import { FlightSearchState } from '../../search/flight.state';
+import { MultiCitySearchState } from '../../search/flight/multi-city.state';
+import { OneWaySearchState } from '../../search/flight/oneway.state';
+import { RoundTripSearchState } from '../../search/flight/round-trip.state';
 
 export interface domesticResult {
     departure: {
@@ -139,14 +144,47 @@ export class DomesticResultState extends BaseFlightResult {
 
     @Action(DomesticResponse)
     domesticResponse(states: StateContext<domesticResult>, action: DomesticResponse) {
+
+        let result1 : resultObj[] =  this.responseData(action.response.Results[0], action.response.TraceId);
+        let result2 : resultObj[] =  this.responseData(action.response.Results[1], action.response.TraceId);
+        console.log(this.getmarkup());
+        result1.forEach(
+            (el,ind,arr) => {
+                if(this.getmarkup() !== 0) {
+                    el.fare = el.fare + ((el.fare / 100) * this.getmarkup());
+                    el.email.fare = el.email.fare + ((el.email.fare / 100) * this.getmarkup());
+    
+                    el.trips.forEach(
+                        (e,i,a) => {
+                            e.tripinfo.fare = e.tripinfo.fare + ((e.tripinfo.fare / 100) * this.getmarkup());
+                        }
+                    );
+                }
+            }
+        );
+        result2.forEach(
+            (el,ind,arr) => {
+                if(this.getmarkup() !== 0) {
+                    el.fare = el.fare + ((el.fare / 100) * this.getmarkup());
+                    el.email.fare = el.email.fare + ((el.email.fare / 100) * this.getmarkup());
+    
+                    el.trips.forEach(
+                        (e,i,a) => {
+                            e.tripinfo.fare = e.tripinfo.fare + ((e.tripinfo.fare / 100) * this.getmarkup());
+                        }
+                    );
+                }
+            }
+        );
+
         states.patchState({
             departure: {
-                value: this.responseData(action.response.Results[0], action.response.TraceId),
+                value: result1,
                 traceId: action.response.TraceId,
                 selectedFlight:null
             },
             return: {
-                value: this.responseData(action.response.Results[1], action.response.TraceId),
+                value: result2,
                 traceId: action.response.TraceId,
                 selectedFlight:null
             }
@@ -173,5 +211,27 @@ export class DomesticResultState extends BaseFlightResult {
             // this.store.dispatch(new GetAirlines(states.getState().departure.value));
             // this.store.dispatch(new GetAirlines(states.getState().return.value));
             // this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'round-trip','domestic']));
+    }
+
+    getmarkup() : number {
+        let journeyType : number = this.store.selectSnapshot(FlightSearchState.getJourneyType);
+        let type : string = null;
+
+        if(journeyType == 1) {
+            type = this.store.selectSnapshot(OneWaySearchState.getTripType);
+        }
+        else if(journeyType == 2) {
+            type = this.store.selectSnapshot(RoundTripSearchState.getTripType);
+        }
+        else if(journeyType == 3) {
+            type = this.store.selectSnapshot(MultiCitySearchState.getTripType);
+        }
+
+        if(type == 'domestic') {
+            return this.store.selectSnapshot(CompanyState.getDomesticMarkupCharge);
+        }
+        else if(type == 'international') {
+            return this.store.selectSnapshot(CompanyState.getInternationalMarkupCharge);
+        }
     }
 }

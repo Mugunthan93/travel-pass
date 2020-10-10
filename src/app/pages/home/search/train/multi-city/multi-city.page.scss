@@ -19,7 +19,7 @@ ion-row.addgroup {
 form{
     height: -webkit-fill-available;
     ion-content{
-        height: 80%;
+        height: 75%;
         --background: transparent;
         >ion-row.form{
             >ion-card{
@@ -150,7 +150,7 @@ form{
         }
     }
     ion-row.submit{
-        height: 20%;
+        height: 25%;
         justify-content: center;
         >ion-button {
             >ion-label {

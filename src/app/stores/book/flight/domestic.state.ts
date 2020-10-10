@@ -353,22 +353,26 @@ export class DomesticBookState {
         }
 
         let published_fare = (
-            states.getState().departure.fareQuote.Fare.PublishedFare - (states.getState().departure.fareQuote.FareBreakdown[0].TaxBreakUp[0].value - states.getState().departure.fareQuote.Fare.OtherCharges) +
-            (this.markupCharges() * states.getState().departure.fareQuote.Fare.PublishedFare) +
-            states.getState().departure.fareQuote.Fare.TaxBreakup[0].value +
+            states.getState().departure.fareQuote.Fare.PublishedFare +
+            this.markupCharges(states.getState().departure.fareQuote.Fare.PublishedFare) +
             states.getState().departure.fareQuote.Fare.OtherCharges +
             this.serviceCharges() +
             this.GST().sgst +
             this.GST().cgst +
-            this.GST().igst) + (
-            states.getState().return.fareQuote.Fare.PublishedFare - (states.getState().return.fareQuote.FareBreakdown[0].TaxBreakUp[0].value - states.getState().return.fareQuote.Fare.OtherCharges) +
-            (this.markupCharges() * states.getState().return.fareQuote.Fare.PublishedFare) +
-            states.getState().return.fareQuote.Fare.TaxBreakup[0].value +
+            this.GST().igst
+            ) + (
+            states.getState().return.fareQuote.Fare.PublishedFare +
+            this.markupCharges(states.getState().return.fareQuote.Fare.PublishedFare) +
             states.getState().return.fareQuote.Fare.OtherCharges +
-                this.serviceCharges() +
-                this.GST().sgst +
-                this.GST().cgst +
-                this.GST().igst)
+            this.serviceCharges() +
+            this.GST().sgst +
+            this.GST().cgst +
+            this.GST().igst
+            );
+        
+        let userMail : string = this.store.selectSnapshot(UserState.getEmail);
+        let allCC : string[] = action.mailCC;
+        allCC.push(userMail);
 
         sendReq = {
             passenger_details: {
@@ -381,10 +385,16 @@ export class DomesticBookState {
                     msg: null,
                     company_type: "corporate"
                 },
-                published_fare: published_fare,
+                published_fare: (states.getState().departure.fareQuote.Fare.PublishedFare - states.getState().departure.fareQuote.Fare.TaxBreakup[0].value) +
+                this.markupCharges(states.getState().departure.fareQuote.Fare.PublishedFare) + 
+                (states.getState().return.fareQuote.Fare.PublishedFare - states.getState().return.fareQuote.Fare.TaxBreakup[0].value) +
+                this.markupCharges(states.getState().return.fareQuote.Fare.PublishedFare),
                 uapi_params: uapi_params,
                 fare_response: {
-                    published_fare: published_fare,
+                    published_fare: (states.getState().departure.fareQuote.Fare.PublishedFare - states.getState().departure.fareQuote.Fare.TaxBreakup[0].value) +
+                    this.markupCharges(states.getState().departure.fareQuote.Fare.PublishedFare) + 
+                    (states.getState().return.fareQuote.Fare.PublishedFare - states.getState().return.fareQuote.Fare.TaxBreakup[0].value) +
+                    this.markupCharges(states.getState().return.fareQuote.Fare.PublishedFare),
                     cancellation_risk: this.store.selectSnapshot(FLightBookState.getRisk),
                     charges_details: {
                         GST_total: 0,
@@ -452,7 +462,7 @@ export class DomesticBookState {
                 }
             },
             managers: this.store.selectSnapshot(UserState.getApprover),
-            approval_mail_cc: action.mailCC,
+            approval_mail_cc: allCC,
             purpose: action.purpose,
             comments: '[\"' + action.comment + '\"]',
 
@@ -496,15 +506,14 @@ export class DomesticBookState {
                     SGST: this.GST().sgst,
                     CGST: this.GST().cgst,
                     IGST: this.GST().igst,
-                    flight: data.Fare.PublishedFare - (data.FareBreakdown[0].TaxBreakUp[0].value - data.Fare.OtherCharges),
+                    flight: (data.Fare.PublishedFare - data.Fare.TaxBreakup[0].value) + this.markupCharges(data.Fare.PublishedFare),
                     k3: data.Fare.TaxBreakup[0].value,
                     other: data.Fare.OtherCharges,
                     extraMeals: null,
                     extraBaggage: null,
                     total: (
-                        data.Fare.PublishedFare - (data.FareBreakdown[0].TaxBreakUp[0].value - data.Fare.OtherCharges) +
-                        (this.markupCharges() * data.Fare.PublishedFare) +
-                        data.Fare.TaxBreakup[0].value +
+                        data.Fare.PublishedFare + 
+                        this.markupCharges(data.Fare.PublishedFare) +
                         data.Fare.OtherCharges +
                         this.serviceCharges() +
                         this.GST().sgst +
@@ -585,16 +594,25 @@ export class DomesticBookState {
         }
     }
 
-    markupCharges(): number {
-        let markupCharge: number = 0;
+    markupCharges(fare : number): number {
+        let domesticmarkup = this.store.selectSnapshot(CompanyState.getDomesticMarkupCharge);
+        let intmarkup = this.store.selectSnapshot(CompanyState.getDomesticMarkupCharge);
+
         if (this.store.selectSnapshot(RoundTripSearchState.getTripType) == 'domestic') {
-            markupCharge = this.store.selectSnapshot(CompanyState.getDomesticMarkupCharge) / 100;
-            console.log(markupCharge);
+            if(domesticmarkup !== 0){
+                return (fare / 100) * domesticmarkup;
+            }
+            else {
+                return 0;
+            }
         }
         else if (this.store.selectSnapshot(RoundTripSearchState.getTripType) == 'international') {
-            markupCharge = this.store.selectSnapshot(CompanyState.getInternationalMarkupCharge) / 100;
-            console.log(markupCharge);
+            if(intmarkup !== 0){
+                return (fare / 100) * intmarkup;
+            }
+            else {
+                return 0;
+            }
         }
-        return parseInt(markupCharge.toFixed(2));
     }
 }

@@ -35,20 +35,20 @@
         <ion-label>First Name<span>*</span></ion-label>
         <ion-input 
           type="text"
-          [ngClass]="errorClass('first_name')"
-          [value]="form == 'edit' ? this.travellerForm.controls['first_name'].value : ''"
+          [ngClass]="errorClass('name')"
+          [value]="form == 'edit' ? this.travellerForm.controls['name'].value : ''"
           class="form-control" 
-          formControlName="first_name" 
+          formControlName="name" 
           ></ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label>Last Name<span>*</span></ion-label>
         <ion-input 
-          formControlName="last_name" 
+          formControlName="lastName" 
           class="form-control" 
-          [ngClass]="errorClass('last_name')"
-          [value]="form == 'edit' ? this.travellerForm.controls['last_name'].value : ''"></ion-input>
+          [ngClass]="errorClass('lastName')"
+          [value]="form == 'edit' ? this.travellerForm.controls['lastName'].value : ''"></ion-input>
       </ion-item>
 
       <ion-item>
@@ -57,7 +57,7 @@
           formControlName="idType"
           class="form-control" 
           [ngClass]="errorClass('idType')"
-          [placeholder]="'Select Proof Type'" 
+          [placeholder]="form == 'edit' ? this.travellerForm.controls['idType'].value : 'Select Proof Type'" 
           [interfaceOptions]="interfaceOption('Select ID Proof')"
           (ionChange)="selectedProofType($event)"
           [value]="form == 'edit' ? this.travellerForm.controls['idType'].value : ''">
@@ -76,6 +76,7 @@
 
       <ion-item>
         <ion-label>Age<span>*</span></ion-label>
+
         <ion-select *ngIf="paxtype == 'Child'"
           formControlName="age" 
           class="form-control" 
@@ -86,23 +87,26 @@
           [value]="form == 'edit' ? this.travellerForm.controls['age'].value : ''">
           <ion-select-option *ngFor="let age of ages" [value]="age">{{age}}</ion-select-option>
         </ion-select>
+        
         <ion-input *ngIf="paxtype == 'Adult'"
           formControlName="age"
           class="form-control" 
           [ngClass]="errorClass('age')"
-          [value]="form == 'edit' ? this.travellerForm.controls['age'].value : ''"></ion-input>
+          [value]="form == 'edit' ? this.travellerForm.controls['age'].value : ''">
+        </ion-input>
+
       </ion-item>
 
       <ion-item>
         <ion-label>Preffered Seat<span>*</span></ion-label>
         <ion-select 
-          formControlName="preferred_seat"
+          formControlName="prefSeat"
           class="form-control" 
-          [ngClass]="errorClass('preferred_seat')"
+          [ngClass]="errorClass('prefSeat')"
           [placeholder]="'Select Preffered Seat'" 
           [interfaceOptions]="interfaceOption('Select Preffered Seat')"
           (ionChange)="selectedSeat($event)"
-          [value]="form == 'edit' ? this.travellerForm.controls['preferred_seat'].value : ''">
+          [value]="form == 'edit' ? this.travellerForm.controls['prefSeat'].value : ''">
           <ion-select-option *ngFor="let seat of seats" [value]="seat">{{seat}}</ion-select-option>
         </ion-select>
       </ion-item>
@@ -119,20 +123,20 @@
       <ion-item>
         <ion-label>Phone Number<span *ngIf="lead">*</span></ion-label>
         <ion-input 
-          formControlName="phone_number" 
+          formControlName="mobile" 
           class="form-control" 
-          [ngClass]="errorClass('phone_number')"
-          [value]="form == 'edit' ? this.travellerForm.controls['phone_number'].value : ''">
+          [ngClass]="errorClass('mobile')"
+          [value]="form == 'edit' ? this.travellerForm.controls['mobile'].value : ''">
         </ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label>Address<span *ngIf="lead">*</span></ion-label>
         <ion-input 
-          formControlName="address" 
+          formControlName="Address" 
           class="form-control" 
-          [ngClass]="errorClass('address')"
-          [value]="form == 'edit' ? this.travellerForm.controls['address'].value : ''"></ion-input>
+          [ngClass]="errorClass('Address')"
+          [value]="form == 'edit' ? this.travellerForm.controls['Address'].value : ''"></ion-input>
       </ion-item>
 
     </ion-list>
