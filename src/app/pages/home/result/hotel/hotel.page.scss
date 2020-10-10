@@ -59,9 +59,11 @@ ion-content{
 
     }
 
-    >ion-row.no-result{
-        text-align: center;
+    >ion-row.no-bus{
         height: -webkit-fill-available;
+        >ion-title{
+            text-align: center;
+        }
     }
 
 }

@@ -1,38 +1,53 @@
 
 
-ion-item{
-    --padding-end:16px;
+ion-header {
+    ion-title {
+        padding: 0px !important;
+    }
 }
 
-ion-content{
-    >ion-row:last-child{
-        >ion-col{
-            max-width: fit-content;
-            >ion-list{
-                >ion-row{
-                    >ion-col{
-                        max-width: fit-content;
-                        ion-chip{
-                            display: flex;
-                            flex-direction: column;
-                            height: fit-content;
-                            width: fit-content;
-                        }
-                    }
-                }
-            }
+
+ion-content {
+    >ion-grid {
+        --ion-grid-padding: 10px !important;
+
+        >* {
+            margin: 4px 0px;
+        }
+
+        >ion-segment {
+            min-height: 40px !important;
+        }
+
+        >ion-range {
+            margin: 20px 4px;
+            padding: 0px;
+            max-height: 20px !important;
+        }
+
+        >ion-item{
+            min-height: 50px;
+        }
+
+        >ion-row {
+            justify-content: space-between;
         }
     }
 }
 
 ion-footer {
-    >ion-row#book-button {
-        width: 100%;
+    ion-toolbar {
+        ion-button {
+            margin: 0px 0px 0px 0px;
+            width: 50%;
+        }
 
-        >ion-col {
-            ion-button {
-                width: -webkit-fill-available;
-            }
+        ion-button:first-child {
+            float: left;
+        }
+
+        ion-button:last-child {
+            float: right;
         }
     }
 }

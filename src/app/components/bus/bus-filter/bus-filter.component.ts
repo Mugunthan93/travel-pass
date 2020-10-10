@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
+import { Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { busFilter, BusFilterState, ResetBusType, SetBusArrival, SetBusDeparture, SetBusType } from 'src/app/stores/result/filter/bus.filter.state';
 
 @Component({
   selector: 'app-bus-filter',
@@ -8,116 +11,49 @@ import { AlertController } from '@ionic/angular';
 })
 export class BusFilterComponent implements OnInit {
 
-  Tabs: string;
+  inputs: busFilter;
+  inputs$: Observable<busFilter>;
 
-  sort: any[];
-  filter1: any[];
-  filter2: any[];
 
   constructor(
-    public alertCtrl : AlertController
+    private store: Store,
+    public modalCtrl : ModalController
   ) { }
 
   ngOnInit() {
-    this.sort = [
-      {
-        name: "Rating",
-        value: [
-        { name:"highest" }
-        ],
-        selected: null
-      },
-      {
-        name: "Price",
-        value: [
-        { name: "Cheapest" }
-        ],
-        selected: null
-      },
-      {
-        name: "Duration",
-        value: [
-        { name:"Shortest" }
-        ],
-        selected: null
-      },
-      {
-        name: "Departure",
-        value: [
-          { name: "Early" },
-          { name: "late"}
-        ],
-        selected: null
-      },
-      {
-        name: "Arrival",
-        value: [
-          { name: "Early" },
-          { name: "late" }
-        ],
-        selected: null
-      }
-    ];
-    this.filter1 = [
-      {
-        name: "Boarding Points",
-        chips: [
-          { name: "others",selection:false },
-          { name: "koyambedu",selection:false }
-        ]
-      },
-      {
-        name: "Droping Points",
-        chips: [
-          { name: "others", selection: false  }
-        ]
-      },
-      {
-        name: "Travel Operators",
-        chips: [
-          { name: "others", selection: false  },
-          { name: "Parveen Travels", selection: false  },
-          { name: "SRS Travels", selection: false  }
-        ]
-      },
-      {
-        name: "Bus Type",
-        chips: [
-          { name: "Non AC Seater", selection: false  },
-          { name: "Non AC Sleeper", selection: false  },
-          { name: "AC Sleeper", selection: false  }
-        ]
-      }
-    ]
-    this.filter2 = [
-      {
-        name: "Pickup Time",
-        duration: [
-          { name: "afternoon", value: "11 AM to 6 AM" },
-          { name: "evening",value: "6 PM to 11 PM" }
-        ],
-        type: 'time'
-      },
-      {
-        name: "Drop Time",
-        duration: [
-          { name: "morning", value: "11 AM to 6 PM", icon: "" },
-          { name: "night", value: "6 PM to 11 PM", icon: "" }
-        ],
-        type: 'time'
-      },
-    ];
-
-    this.Tabs = "sortby";
+    this.inputs = this.store.selectSnapshot(BusFilterState.getBusFilter);
+    this.inputs$ = this.store.select(BusFilterState.getBusFilter);
+    
   }
 
-  selectTab(evt) {
-    this.Tabs = evt.detail.value;
+  dismiss() {
+    this.modalCtrl.dismiss();
   }
 
-  chipSelection(property: any) {
-    console.log(property);
-    property.selection = !property.selection;
+  depRange(evt: CustomEvent) {
+    this.store.dispatch(new SetBusDeparture(evt.detail.value));
   }
+
+  reRange(evt: CustomEvent) {
+    this.store.dispatch(new SetBusArrival(evt.detail.value));
+  }
+
+  chooseAirline(evt: CustomEvent) {
+    this.store.dispatch(new SetBusType(evt.detail.value, evt.detail.checked));
+  }
+
+  done() {
+    this.modalCtrl.dismiss();
+  }
+
+  reset() {
+    this.store.dispatch(
+      [
+        new SetBusDeparture(24),
+        new SetBusArrival(24),
+        new ResetBusType()
+      ]);
+  }
+
 
 }

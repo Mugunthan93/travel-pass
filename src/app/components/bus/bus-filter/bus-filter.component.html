@@ -1,90 +1,68 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title>
-      <ion-text>Sort & Filter</ion-text>
+      Bus Filter
     </ion-title>
-    <ion-title>
-      <ion-text>4 buses found</ion-text>
-    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="reset()">
+        <ion-label class="bold">RESET</ion-label>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-segment value="sortby" (ionChange)="selectTab($event)">
-    <ion-segment-button value="sortby">
-      <ion-text>SORT BY</ion-text>
-    </ion-segment-button>
-    <ion-segment-button value="filter">
-      <ion-text>FILTER</ion-text>
-    </ion-segment-button>
-  </ion-segment>
-  <ion-list *ngIf="this.Tabs == 'sortby'">
-    <ion-item *ngFor="let item of sort">
-      <ion-label>{{item.name}}</ion-label>
-      <ion-select [placeholder]="item.selected == null ? 'None' : item.selected.name">
-        <ion-select-option *ngFor="let i of item.value" [value]="i.name">{{i.name}}</ion-select-option>
-        <ion-select-option value="none">None</ion-select-option>
-      </ion-select>
-    </ion-item>
-  </ion-list>
-  <ion-row *ngIf="this.Tabs == 'filter'">
-    <ion-col>
-      <ion-list *ngFor="let filter of filter1">
-        <ion-list-header>{{filter.name}}</ion-list-header>
+
+  <ion-grid>
+
+    <ion-label>Departure Time : {{ (inputs$ | async).depatureHours }}</ion-label>
+    <ion-range (ionChange)="depRange($event)" class="filter" pin="true" ticks="true" snaps="true" min="0" max="24"
+      [value]="(inputs$ | async).depatureHours">
+    </ion-range>
+
+    <ion-row>
+      <ion-label>0 Hours</ion-label>
+      <ion-label>24 Hours</ion-label>
+    </ion-row>
+
+    <ion-label>Arrival Time : {{ (inputs$ | async).arrivalHours }}</ion-label>
+    <ion-range (ionChange)="reRange($event)" class="filter" pin="true" ticks="true" snaps="true" min="0" max="24"
+      [value]="(inputs$ | async).arrivalHours">
+    </ion-range>
+
+    <ion-row>
+      <ion-label>0 Hours</ion-label>
+      <ion-label>24 Hours</ion-label>
+    </ion-row>
+
+    <ion-label>Bus Type</ion-label>
+
+    <ion-list>
+      <div *ngFor="let bus of (inputs$ | async).busType">
         <ion-item>
-          <ion-row>
-            <ion-col>
-              <ion-chip *ngFor="let item of filter.chips" (click)="chipSelection(item)">
-                <ion-label>{{item.name}}</ion-label>
-                <ion-icon name="close" *ngIf="item.selection"></ion-icon>
-              </ion-chip>
-            </ion-col>
-          </ion-row>
+          <ion-label>{{bus.name}}</ion-label>
+          <ion-checkbox class="default" slot="end" 
+          [checked]="bus.value" (ionChange)="chooseAirline($event)" [value]="bus">
+          </ion-checkbox>
         </ion-item>
-      </ion-list>
-    </ion-col>
-  </ion-row>
-  <ion-row *ngIf="this.Tabs == 'filter'">
-    <ion-col size="12">
-      <ion-list *ngFor="let filter of filter2">
-        <ion-list-header>{{filter.name}}</ion-list-header>
-        <ion-row class="ion-justify-content-around">
-          <ion-col *ngFor="let item of filter.duration" (click)="chipSelection(item)">
-            <ion-chip>
-              <ion-row>
-                <ion-col>
-                  <ion-icon src="item.icon"></ion-icon>
-                </ion-col>
-              </ion-row>
-              <ion-row>
-                <ion-col>
-                  <ion-text>{{item.name}}</ion-text>
-                </ion-col>
-              </ion-row>
-              <ion-row>
-                <ion-col>
-                  <ion-text>{{item.value}}</ion-text>
-                </ion-col>
-              </ion-row>
-            </ion-chip>
-          </ion-col>
-        </ion-row>
-      </ion-list>
-    </ion-col>
-  </ion-row>
+      </div>
+    </ion-list>
+  </ion-grid>
+
 </ion-content>
 
 <ion-footer>
-  <ion-row id="book-button">
-    <ion-col>
-      <ion-button>
-        <ion-text>Cancel</ion-text>
-      </ion-button>
-    </ion-col>
-    <ion-col>
-      <ion-button>
-        <ion-text>Apply</ion-text>
-      </ion-button>
-    </ion-col>
-  </ion-row>
+  <ion-toolbar>
+    <ion-button size="large" (click)="dismiss()">
+      <ion-label class="bold">Cancel</ion-label>
+    </ion-button>
+    <ion-button size="large" (click)="done()">
+      <ion-label class="bold">Done</ion-label>
+    </ion-button>
+  </ion-toolbar>
 </ion-footer>

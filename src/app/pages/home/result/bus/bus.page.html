@@ -2,6 +2,10 @@
 
 <ion-content>
 
+  <ion-row class="no-bus" *ngIf="(busresut$ | async | sort : (sortBy$ | async).property : (sortBy$ | async).state).length == 0">
+    <ion-title class="large bold">No Bus Found</ion-title>
+  </ion-row>
+
   <ion-card *ngFor="let item of (busresut$ | async | sort : (sortBy$ | async).property : (sortBy$ | async).state)"
     (click)="selectBus(item)">
     <ion-card-header>

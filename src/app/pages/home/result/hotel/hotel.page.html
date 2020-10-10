@@ -24,7 +24,7 @@
               <!-- <ion-icon size="large" name="heart-outline"></ion-icon>
               <ion-icon slot="start" name="heart-sharp" *ngIf="false"></ion-icon> -->
             </ion-row>
-            <ion-row *ngIf="hotel.HotelFacilities">
+            <ion-row>
               <ion-item class="facility">
                 <ion-skeleton-text animated></ion-skeleton-text>
               </ion-item>
@@ -37,19 +37,12 @@
       </ion-card>
     </ion-row>
 
-    <ion-row *ngIf="(hotelList$ | async).length == 0 && ((loading$ | async) >= 1)" class="no-result">
-      <ion-title>No Result Found</ion-title>
+    <ion-row class="no-bus" *ngIf="(hotelList$ | async | sort : (sortBy$ | async).property : (sortBy$ | async).state).length == 0">
+      <ion-title class="large bold">No Hotels Found</ion-title>
     </ion-row>
 
     <ion-row *ngIf="(hotelList$ | async).length > 0">
-      <ion-card
-        *ngFor="let 
-        hotel of (
-          hotelList$ | async
-           | sort : (sortBy$ | async).property : (sortBy$ | async).state
-        );let i = index"
-        (click)="viewHotel(hotel)">
-    
+      <ion-card *ngFor="let hotel of (hotelList$ | async | sort : (sortBy$ | async).property : (sortBy$ | async).state);let i = index" (click)="viewHotel(hotel)">
         <ion-card-header>
           <ion-row>
             <ion-icon size="large" [name]="star == 'full' ? 'star' : star == 'half' ? 'star-half' : 'star'"

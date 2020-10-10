@@ -1,15 +1,12 @@
 import { State, Action, StateContext, Selector, Store } from "@ngxs/store";
-import { Navigate } from '@ngxs/router-plugin';
-import { ResultMode } from '../result.state';
 import { buspayload, BusSearchState } from '../search/bus.state';
 import { BusService } from 'src/app/services/bus/bus.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import * as _ from 'lodash';
-import { busrequests, GetBookDetail } from '../book/bus.state';
-import { UserState } from '../user.state';
-import { CompanyState } from '../company.state';
-import { BookMode, BookType } from '../book.state';
+import { GetBookDetail } from '../book/bus.state';
+import { busFilter, BusFilterState, GetBusType } from './filter/bus.filter.state';
+import * as moment from 'moment';
 
 export interface busresult {
     buses: busResponse[]
@@ -185,9 +182,17 @@ export class BusResultState {
 
     }
 
-    @Selector()
-    static getBusResult(state: busresult) : busResponse[] {
-        return state.buses;
+    @Selector([BusFilterState])
+    static getBusResult(state: busresult, filterState : busFilter) : busResponse[] {
+        return state.buses.filter(
+            el =>
+                moment(el.departureTime, ["h:mm A"]).hour() <= filterState.depatureHours &&
+                moment(el.arrivalTime, ["h:mm A"]).hour() <= filterState.arrivalHours &&
+                (
+                    filterState.busType.some(air => air.value == true) ?
+                        filterState.busType.some(air => (air.name === el.operatorName) && (air.value)) : el
+                )
+        );
     }
 
     @Selector()
@@ -252,8 +257,10 @@ export class BusResultState {
             }
         );
 
+        states.dispatch(new GetBusType(response));
+
         states.patchState({
-            buses : action.response
+            buses : response2
         });
     }
 

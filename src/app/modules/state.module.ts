@@ -58,6 +58,7 @@ import { TrainBookState } from '../stores/book/train.state';
 import { TrainOneWayBookState } from '../stores/book/train/one-way.state';
 import { TrainMultiCityBookState } from '../stores/book/train/multi-city.state';
 import { TrainRoundTripBookState } from '../stores/book/train/round-trip.state';
+import { BusFilterState } from '../stores/result/filter/bus.filter.state';
 
 @NgModule({
   imports: [
@@ -119,6 +120,7 @@ import { TrainRoundTripBookState } from '../stores/book/train/round-trip.state';
       DepartureFilterState,
       ReturnFilterState,
       HotelFilterState,
+      BusFilterState,
 
       SortState,
       SharedState,

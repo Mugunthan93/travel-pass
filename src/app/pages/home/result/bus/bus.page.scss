@@ -2,6 +2,7 @@
 @import "../../../../../style/base/color.scss";
 
 ion-content{
+
     >mat-accordion{
         >mat-expansion-panel{
             >mat-expansion-panel-header{
@@ -78,6 +79,14 @@ ion-content{
             }
         }
     }
+
+    >ion-row.no-bus{
+        height: -webkit-fill-available;
+        >ion-title{
+            text-align: center;
+        }
+    }
+
     >ion-card{
         >ion-card-header{
             >ion-row{
