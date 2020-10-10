@@ -30,12 +30,12 @@
         <ion-label *ngIf="!editMode">{{ (user$ | async).name | titlecase }}</ion-label>
         <ion-input type="text" 
         [ngClass]="{
-        'is-valid': edituser.controls['first_name'].valid,
-        'is-invalid': edituser.controls['first_name'].invalid
+        'is-valid': edituser.controls['name'].valid,
+        'is-invalid': edituser.controls['name'].invalid
         }"
         *ngIf="editMode" 
         class="form-control" 
-        formControlName="first_name"></ion-input>
+        formControlName="name"></ion-input>
       </ion-item>
   
   
@@ -44,12 +44,12 @@
         <ion-label *ngIf="!editMode">{{ (user$ | async).lastname | titlecase }}</ion-label>
         <ion-input type="text"
         [ngClass]="{
-        'is-valid': edituser.controls['last_name'].valid,
-        'is-invalid': edituser.controls['last_name'].invalid
+        'is-valid': edituser.controls['lastname'].valid,
+        'is-invalid': edituser.controls['lastname'].invalid
         }"
         *ngIf="editMode" 
         class="form-control" 
-        formControlName="last_name"></ion-input>
+        formControlName="lastname"></ion-input>
       </ion-item>
   
       <ion-item>
@@ -97,11 +97,11 @@
         <ion-label *ngIf="!editMode">{{ (user$ | async).PAN_number }}</ion-label>
         <ion-input *ngIf="editMode" type="text"
         [ngClass]="{
-          'is-valid': edituser.controls['pan_number'].valid,
-          'is-invalid': edituser.controls['pan_number'].invalid
+          'is-valid': edituser.controls['PAN_number'].valid,
+          'is-invalid': edituser.controls['PAN_number'].invalid
         }"
         class="form-control"
-        formControlName="pan_number"></ion-input>
+        formControlName="PAN_number"></ion-input>
       </ion-item>
   
       <ion-item>

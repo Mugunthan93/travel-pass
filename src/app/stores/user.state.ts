@@ -182,9 +182,10 @@ export class UserState {
     }
 
     @Action(UpdateUser)
-    updateUser(states: StateContext<user>, action: UpdateUser): Observable<void> {
+    updateUser(states: StateContext<user>, action: UpdateUser) {
 
-        let currentUser: user = Object.assign(states.getState(), action.user);
+        let user = Object.assign({},states.getState());
+        let currentUser: user = Object.assign(user, action.user);
         let currentId: number = states.getState().id;
 
         return this.userService.updateUser(currentId, currentUser)
@@ -193,7 +194,7 @@ export class UserState {
                     (response: updateresponse) => {
                         if (response.status_code == 200)
                         {
-                            let updatedUser : user = Object.assign(states.getState(), action.user); 
+                            let updatedUser : user = Object.assign(user, action.user); 
                             states.patchState(updatedUser);
                             console.log("update succesfully");
                         }

@@ -47,8 +47,7 @@ export class UserService {
       .pipe(
         map(
           (response: HTTPResponse) => {
-            console.log(response);
-            return response;
+            return JSON.parse(response.data);
           }
         )
       )

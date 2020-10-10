@@ -38,12 +38,12 @@ export class ProfilePage implements OnInit {
     this.user$.subscribe(
       (user : user) => {
         this.edituser = new FormGroup({
-          'first_name': new FormControl(user.name, [Validators.required, Validators.minLength(3), Validators.pattern(this.regex.alphaonly)]),
-          'last_name': new FormControl(user.lastname, [Validators.required, Validators.minLength(3), Validators.pattern(this.regex.alphaonly)]),
+          'name': new FormControl(user.name, [Validators.required, Validators.minLength(3), Validators.pattern(this.regex.alphaonly)]),
+          'lastname': new FormControl(user.lastname, [Validators.required, Validators.minLength(3), Validators.pattern(this.regex.alphaonly)]),
           'email': new FormControl(user.email, [Validators.required, Validators.pattern(this.regex.email)]),
           'designation': new FormControl(user.designation, [Validators.required]),
           'phone_number': new FormControl(user.phone_number, [Validators.required, Validators.pattern(this.regex.phone_number)]),
-          'pan_number': new FormControl(user.PAN_number, [Validators.required]),
+          'PAN_number': new FormControl(user.PAN_number, [Validators.required]),
           'passport_no': new FormControl(user.passport_no, [Validators.required, Validators.pattern(this.regex.passport)]),
           'passport_expiry': new FormControl(user.passport_expiry, [Validators.required]),
           'dob': new FormControl(user.dob, [Validators.required]),
@@ -60,12 +60,12 @@ export class ProfilePage implements OnInit {
     this.user$.subscribe(
       (user: user) => {
 
-        this.edituser.controls['first_name'].patchValue(user.name);
-        this.edituser.controls['last_name'].patchValue(user.lastname);
+        this.edituser.controls['name'].patchValue(user.name);
+        this.edituser.controls['lastname'].patchValue(user.lastname);
         this.edituser.controls['email'].patchValue(user.email);
         this.edituser.controls['designation'].patchValue(user.designation);
         this.edituser.controls['phone_number'].patchValue(user.phone_number);
-        this.edituser.controls['pan_number'].patchValue(user.PAN_number);
+        this.edituser.controls['PAN_number'].patchValue(user.PAN_number);
         this.edituser.controls['passport_no'].patchValue(user.passport_no);
         this.edituser.controls['passport_expiry'].patchValue(user.passport_expiry);
         this.edituser.controls['dob'].patchValue(user.dob);
@@ -82,24 +82,7 @@ export class ProfilePage implements OnInit {
       this.store.dispatch(new UpdateUser(this.edituser.value))
         .subscribe({
           complete: () => {
-            this.user$.subscribe(
-              (user: user) => {
-
-                this.edituser.controls['first_name'].patchValue(user.name);
-                this.edituser.controls['last_name'].patchValue(user.lastname);
-                this.edituser.controls['email'].patchValue(user.email);
-                this.edituser.controls['designation'].patchValue(user.designation);
-                this.edituser.controls['phone_number'].patchValue(user.phone_number);
-                this.edituser.controls['pan_number'].patchValue(user.PAN_number);
-                this.edituser.controls['passport_no'].patchValue(user.passport_no);
-                this.edituser.controls['passport_expiry'].patchValue(user.passport_expiry);
-                this.edituser.controls['dob'].patchValue(user.dob);
-                this.edituser.controls['address'].patchValue(user.address);
-                this.edituser.controls['gender'].patchValue(user.gender);
-
-                this.editMode = false;
-              }
-            );
+            this.editMode = false;
           }
         });
     }

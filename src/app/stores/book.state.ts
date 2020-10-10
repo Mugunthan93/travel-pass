@@ -6,16 +6,11 @@ import { StateReset } from 'ngxs-reset-plugin';
 import { Navigate } from '@ngxs/router-plugin';
 import { TrainBookState } from './book/train.state';
 import { TrainOneWayRequest } from './book/train/one-way.state';
-import { from, Observable } from 'rxjs';
 import { LoadingController, AlertController, ModalController } from '@ionic/angular';
-import { SearchState } from './search.state';
-import { ResultState } from './result.state';
-import { flatMap, map } from 'rxjs/operators';
 import { FlightOneWaySendRequest } from './book/flight/oneway.state';
 import { InternationalSendRequest } from './book/flight/international.state';
 import { DomesticSendRequest } from './book/flight/domestic.state';
 import { MultiCitySendRequest } from './book/flight/multi-city.state';
-import { HTTPResponse } from '@ionic-native/http/ngx';
 import { TrainRoundTripRequest } from './book/train/round-trip.state';
 import { TrainMultiCityRequest } from './book/train/multi-city.state';
 
