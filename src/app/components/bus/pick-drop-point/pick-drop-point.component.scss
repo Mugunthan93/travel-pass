@@ -1,3 +1,5 @@
+@import "../../../../style/base/color.scss";
+
 ion-content {
     >ion-grid {
         >ion-row:nth-child(1) {
@@ -59,4 +61,8 @@ ion-footer {
             }
         }
     }
+}
+
+.selectedItem {
+    background-color: #{$onahau} !important;
 }

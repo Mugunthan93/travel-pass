@@ -15,6 +15,8 @@ export class PickDropPointComponent implements OnInit {
   selectedPoint$: BehaviorSubject<string> = new BehaviorSubject<string>('boarding');
   boarding$: Observable<boardingPoint[]>;
   dropping$: Observable<droppingPoint[]>;
+  selectedboarding: boardingPoint;
+  selecteddropping: droppingPoint;
 
   constructor(
     private store: Store,
@@ -24,6 +26,9 @@ export class PickDropPointComponent implements OnInit {
   ngOnInit() {
     this.boarding$ = this.store.select(BusResultState.getBoardingPoints);
     this.dropping$ = this.store.select(BusResultState.getDroppingPoints);
+
+    this.selectedboarding = this.store.selectSnapshot(BusResultState.getBoardingPoint);
+    this.selecteddropping = this.store.selectSnapshot(BusResultState.getDroppingPoint);
   }
 
   changePoint(evt: CustomEvent) {

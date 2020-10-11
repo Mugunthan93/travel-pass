@@ -23,7 +23,8 @@
 
 <ion-content *ngIf="(selectedPoint$ | async) == 'boarding'">
 
-  <ion-item class="pointItem" *ngFor="let board of (boarding$ | async)" (click)="selectBoard(board)">
+  <ion-item class="pointItem" *ngFor="let board of (boarding$ | async)" (click)="selectBoard(board)"
+    [ngClass]="{'selectedItem':board == selectedboarding,'':board !==selectedboarding}">
     <ion-label class="bold" slot="start">{{ board.location }}</ion-label>
     <ion-text class="bold" slot="end">{{ board.time }}</ion-text>
   </ion-item>
@@ -32,7 +33,8 @@
 
 <ion-content *ngIf="(selectedPoint$ | async) == 'dropping'">
 
-  <ion-item class="pointItem" *ngFor="let drop of (dropping$ | async)" (click)="selectDrop(drop)">
+  <ion-item class="pointItem" *ngFor="let drop of (dropping$ | async)" (click)="selectDrop(drop)"
+    [ngClass]="{'selectedItem':drop == selecteddropping,'':drop !==selecteddropping}">
     <ion-label class="bold" slot="start">{{ drop.location }}</ion-label>
     <ion-text class="bold medium" slot="end">{{ drop.time }}</ion-text>
   </ion-item>

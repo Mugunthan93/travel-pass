@@ -1,83 +1,175 @@
 
 <ion-content>
+
   <ion-card>
     <mat-accordion>
       <mat-expansion-panel>
         <mat-expansion-panel-header collapsedHeight="60px" expandedHeight="60px">
           <ion-title>
-            Parveen Travels
+            {{ (busDetail$ | async).operatorName }}
           </ion-title>
           <ion-label>
-            Non AC Semi Sleeper(2+2)
+            {{ (busDetail$ | async).busType }}
           </ion-label>
         </mat-expansion-panel-header>
         <ion-row class="ion-justify-content-between">
           <ion-col>
-            <ion-card-title>
-              17:45 <ion-text class="medium bold">20 may</ion-text>
-            </ion-card-title>
-            <ion-text class="medium bold">
-              Adyar Perungalathur
-            </ion-text>
+            <label>
+              {{ (busDetail$ | async).departureTime }}
+            </label>
           </ion-col>
           <ion-col>
-            <ion-card-title>
-              17:45 <ion-text class="medium bold">20 may</ion-text>
-            </ion-card-title>
-            <ion-text class="medium bold">
-              Adyar Perungalathur
-            </ion-text>
+            <label>
+              {{ (busDetail$ | async).arrivalTime }}
+            </label>
           </ion-col>
         </ion-row>
       </mat-expansion-panel>
     </mat-accordion>
   </ion-card>
+
+  <ion-row class="addpass" (click)="addPassengerDetails()">
+    <ion-label class="large bold">Passenger Details</ion-label>
+    <ion-label>{{ totalSeat$ | async}} Seats</ion-label>
+  </ion-row>
+
   <ion-card>
     <ion-card-header>
-      <ion-card-title>
-        Travellers Details
-      </ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
       <ion-row class="ion-justify-content-between">
         <ion-col>
-          <ion-card-title>Name</ion-card-title>
+          <ion-text class="medium bold">  </ion-text>
+          <ion-text class="bold">  </ion-text>
         </ion-col>
         <ion-col>
-          <ion-card-title>Seat 16</ion-card-title>
-          <ion-text>Seater</ion-text>
+          <ion-text class="medium bold">Seat Number</ion-text>
+          <ion-text class="bold">{{ (selectedSeat$ | async)[0].id }}</ion-text>
         </ion-col>
       </ion-row>
-      <ion-item class="form-control">
-        <ion-input type="text" value="Marriappan" readonly="true"></ion-input>
-        <ion-icon slot="end" name="person"></ion-icon>
-      </ion-item>
-      <ion-row>
-        <ion-col>
-          <ion-card-title>Age</ion-card-title>
-          <ion-row>
-            <ion-item class="form-control">
-              <ion-input type="text" value="30" readonly="true"></ion-input>
-            </ion-item>
+      <mat-divider></mat-divider>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-row slot="start">
+            <ion-text class="medium bold">Base Fare</ion-text>
           </ion-row>
-        </ion-col>
-        <ion-col>
-          <ion-card-title>Gender</ion-card-title>
-          <ion-row>
-            <ion-segment>
-              <ion-segment-button>
-                <ion-text>Male</ion-text>
-              </ion-segment-button>
-              <ion-segment-button>
-                <ion-text>Female</ion-text>
-              </ion-segment-button>
-            </ion-segment>
+          <ion-row slot="end">
+            <ion-text class="medium bold">{{ (busDetail$ | async).fare | currency : 'INR'}}</ion-text>
           </ion-row>
-        </ion-col>
-      </ion-row>
+        </ion-item>
+        <mat-divider></mat-divider>
+        <ion-item>
+          <ion-row slot="start">
+            <ion-text class="medium bold">Service Charges</ion-text>
+          </ion-row>
+          <ion-row slot="end">
+            <ion-text class="medium bold">{{ (fareDetail$ | async).service_Charges | currency : 'INR'}}</ion-text>
+          </ion-row>
+        </ion-item>
+        <ion-item>
+          <ion-row slot="start">
+            <ion-text class="medium bold">Other Charges</ion-text>
+          </ion-row>
+          <ion-row slot="end">
+            <ion-text class="medium bold">{{ 0 | currency : 'INR'}}</ion-text>
+          </ion-row>
+        </ion-item>
+        <ion-item>
+          <ion-row slot="start">
+            <ion-text class="medium bold">SGST(9%)</ion-text>
+          </ion-row>
+          <ion-row slot="end">
+            <ion-text class="medium bold">{{ (fareDetail$ | async).sgst_Charges | currency : 'INR'}}</ion-text>
+          </ion-row>
+        </ion-item>
+        <ion-item>
+          <ion-row slot="start">
+            <ion-text class="medium bold">CGST(9%)</ion-text>
+          </ion-row>
+          <ion-row slot="end">
+            <ion-text class="medium bold">{{ (fareDetail$ | async).cgst_Charges | currency : 'INR'}}</ion-text>
+          </ion-row>
+        </ion-item>
+        <ion-item>
+          <ion-row slot="start">
+            <ion-text class="medium bold">IGST(9%)</ion-text>
+          </ion-row>
+          <ion-row slot="end">
+            <ion-text class="medium bold">{{ (fareDetail$ | async).igst_Charges | currency : 'INR'}}</ion-text>
+          </ion-row>
+        </ion-item>
+        <mat-divider></mat-divider>
+        <ion-item>
+          <ion-row slot="start">
+            <ion-text class="medium bold">Net Payable</ion-text>
+          </ion-row>
+          <ion-row slot="end">
+            <ion-text class="medium bold">{{ (fareDetail$ | async).total_amount | currency : 'INR'}}</ion-text>
+          </ion-row>
+        </ion-item>
+      </ion-list>
     </ion-card-content>
   </ion-card>
-  <ion-card>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar class="book-footer">
+    <ion-buttons slot="end">
+      <ion-button (click)="sendRequest()">
+        <ion-label class="medium bold">Send Request</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+
+<!-- <ion-card>
+  <ion-card-header>
+    <ion-card-title>
+      Travellers Details
+    </ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-row class="ion-justify-content-between">
+      <ion-col>
+        <ion-card-title>Name</ion-card-title>
+      </ion-col>
+      <ion-col>
+        <ion-card-title>Seat 16</ion-card-title>
+        <ion-text>Seater</ion-text>
+      </ion-col>
+    </ion-row>
+    <ion-item class="form-control">
+      <ion-input type="text" value="Marriappan" readonly="true"></ion-input>
+      <ion-icon slot="end" name="person"></ion-icon>
+    </ion-item>
+    <ion-row>
+      <ion-col>
+        <ion-card-title>Age</ion-card-title>
+        <ion-row>
+          <ion-item class="form-control">
+            <ion-input type="text" value="30" readonly="true"></ion-input>
+          </ion-item>
+        </ion-row>
+      </ion-col>
+      <ion-col>
+        <ion-card-title>Gender</ion-card-title>
+        <ion-row>
+          <ion-segment>
+            <ion-segment-button>
+              <ion-text>Male</ion-text>
+            </ion-segment-button>
+            <ion-segment-button>
+              <ion-text>Female</ion-text>
+            </ion-segment-button>
+          </ion-segment>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ion-card-content>
+</ion-card> -->
+
+  <!-- <ion-card>
     <ion-card-header>
       <ion-item>
         <ion-row>
@@ -98,6 +190,7 @@
       </ion-item>
     </ion-card-content>
   </ion-card>
+
   <ion-card>
     <ion-card-header>
       <ion-item>
@@ -119,6 +212,7 @@
       </ion-item>
     </ion-card-content>
   </ion-card>
+
   <ion-list>
     <ion-radio-group>
       <ion-item>
@@ -134,6 +228,7 @@
       </ion-item>
     </ion-radio-group>
   </ion-list>
+
   <ion-list>
     <ion-item>
       <ion-row>
@@ -142,21 +237,4 @@
       </ion-row>
       <ion-checkbox class="default" slot="start"></ion-checkbox>
     </ion-item>
-  </ion-list>
-</ion-content>
-
-<ion-footer>
-  <ion-toolbar class="book-footer">
-    <ion-item>
-      <ion-row>
-        <ion-label>{{'1150' | currency : 'INR'}}</ion-label>
-        <ion-label class="small">For 1 Seat</ion-label>
-      </ion-row>
-    </ion-item>
-    <ion-buttons slot="end">
-      <ion-button (click)="busPayment()">
-        <ion-label class="medium bold">Next</ion-label>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-footer>
+  </ion-list> -->

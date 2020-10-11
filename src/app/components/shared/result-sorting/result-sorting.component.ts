@@ -86,7 +86,9 @@ export class ResultSortingComponent implements OnInit, OnChanges {
         }
       })
     );
-    this.currentButton$.subscribe((el) => (this.currentButton = el));
+    if (this.currentButton$) {
+      this.currentButton$.subscribe((el) => (this.currentButton = el));
+    }
   }
 
   SortChange(evt: CustomEvent) {
