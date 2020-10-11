@@ -18,6 +18,7 @@ import { RoundTripSearchState } from '../search/flight/round-trip.state';
 export interface flight {
     emailtrip: emailtrip,
     emailItinerary: itinerarytrip[]
+    flightType: string
 }
 
 export interface resultObj {
@@ -180,99 +181,115 @@ export class FlightSortBy {
     }
 }
 
+export class ChangeFlightType {
+  static readonly type = "[Flight] ChangeFlightType";
+  constructor(public type: string) {}
+}
+
 @State<flight>({
-    name: 'flight_result',
-    defaults: {
-        emailtrip: null,
-        emailItinerary: []
-    },
-    children: [
-        OneWayResultState,
-        DomesticResultState,
-        InternationalResultState,
-        MultiCityResultState
-    ]
+  name: "flight_result",
+  defaults: {
+    emailtrip: null,
+    emailItinerary: [],
+    flightType: null,
+  },
+  children: [
+    OneWayResultState,
+    DomesticResultState,
+    InternationalResultState,
+    MultiCityResultState,
+  ],
 })
+export class FlightResultState {
+  constructor(
+    private store: Store,
+    private flightService: FlightService,
+    public modalCtrl: ModalController,
+    public alertCtrl: AlertController
+  ) {}
 
-export class FlightResultState{
+  @Selector()
+  static getFlightType(states: flight): string {
+    return states.flightType;
+  }
 
-    constructor(
-        private store : Store,
-        private flightService: FlightService,
-        public modalCtrl: ModalController,
-        public alertCtrl:AlertController
-    ) {
+  @Selector()
+  static mailStatus(states: flight): boolean {
+    return states.emailItinerary.length == 0 ? false : true;
+  }
 
+  @Selector()
+  static getItinerary(states: flight): itinerarytrip[] {
+    return states.emailItinerary;
+  }
+
+  @Selector()
+  static getemailTrip(states: flight): emailtrip {
+    return states.emailtrip;
+  }
+
+  @Action(ChangeFlightType)
+  changeFlightType(states: StateContext<flight>, action: ChangeFlightType) {
+    states.patchState({
+      flightType: action.type,
+    });
+  }
+
+  @Action(AddEmailTrips)
+  addEmailTrips(states: StateContext<flight>, action: AddEmailTrips) {
+    states.patchState({
+      emailtrip: action.emailtrip,
+    });
+  }
+
+  @Action(AddEmailDetail)
+  addEmailDetail(states: StateContext<flight>, action: AddEmailDetail) {
+    let emailArray = Object.assign([], states.getState().emailItinerary);
+    if (emailArray == null) {
+      emailArray = [];
     }
+    emailArray.push(action.flightItem);
+    states.patchState({
+      emailItinerary: emailArray,
+    });
+  }
 
-    @Selector()
-    static mailStatus(states: flight): boolean {
-        return states.emailItinerary.length == 0 ? false : true;
+  @Action(RemoveEmailDetail)
+  removeEmailDetail(states: StateContext<flight>, action: RemoveEmailDetail) {
+    let emailArray = Object.assign([], states.getState().emailItinerary);
+    const currentArray = emailArray.filter((el) => el !== action.flightItem);
+    states.patchState({
+      emailItinerary: currentArray,
+    });
+  }
+
+  @Action(SendEmail)
+  async sendEmail(states: StateContext<flight>, action: SendEmail) {
+    const alert = await this.alertCtrl.create({
+      header: "Mail Success",
+      subHeader: "Mail Sent",
+      buttons: [
+        {
+          text: "Ok",
+          handler: () => {
+            return true;
+          },
+        },
+      ],
+    });
+
+    try {
+      const emailResponse = await this.flightService.emailItinerary(
+        action.itiPayload
+      );
+      console.log(emailResponse);
+      states.patchState({
+        emailItinerary: [],
+      });
+      this.modalCtrl.dismiss();
+      alert.present();
+    } catch (error) {
+      console.log(error);
     }
-
-    @Selector()
-    static getItinerary(states: flight): itinerarytrip[] {
-        return states.emailItinerary;
-    }
-
-    @Selector()
-    static getemailTrip(states: flight): emailtrip {
-        return states.emailtrip;
-    }
-
-    @Action(AddEmailTrips)
-    addEmailTrips(states: StateContext<flight>, action: AddEmailTrips) {
-        states.patchState({
-            emailtrip : action.emailtrip
-        });
-    }
-
-    @Action(AddEmailDetail)
-    addEmailDetail(states: StateContext<flight>, action: AddEmailDetail) {
-        let emailArray = Object.assign([], states.getState().emailItinerary);
-        if (emailArray == null) {
-            emailArray = [];
-        }
-        emailArray.push(action.flightItem);
-        states.patchState({
-            emailItinerary: emailArray
-        });
-    }
-
-    @Action(RemoveEmailDetail)
-    removeEmailDetail(states: StateContext<flight>, action: RemoveEmailDetail) {
-        let emailArray = Object.assign([], states.getState().emailItinerary);
-        const currentArray = emailArray.filter(el => el !== action.flightItem);
-        states.patchState({
-            emailItinerary: currentArray
-        });
-    }
-
-    @Action(SendEmail)
-    async sendEmail(states: StateContext<flight>, action: SendEmail) {
-
-        const alert = await this.alertCtrl.create({
-            header: 'Mail Success',
-            subHeader: 'Mail Sent',
-            buttons: [{
-                text: 'Ok',
-                handler: () => {
-                    return true;
-                }
-            }]
-        });
-
-        try {
-            const emailResponse = await this.flightService.emailItinerary(action.itiPayload);
-            console.log(emailResponse);
-            states.patchState({
-                emailItinerary :[]
-            });
-            this.modalCtrl.dismiss();
-            alert.present();
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }
+  }
 }

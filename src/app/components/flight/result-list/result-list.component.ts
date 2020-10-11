@@ -9,7 +9,7 @@ import { FairRuleComponent } from '../fair-rule/fair-rule.component';
 import { Store } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
 import { ResultState } from 'src/app/stores/result.state';
-import { map, flatMap } from 'rxjs/operators';
+import { map, flatMap, withLatestFrom } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { FlightDetailsComponent } from '../flight-details/flight-details.component';
 import { sortButton, SortState } from 'src/app/stores/result/sort.state';
@@ -28,11 +28,9 @@ import { sortButton, SortState } from 'src/app/stores/result/sort.state';
     ])
   ]
 })
-export class ResultListComponent implements OnInit, AfterViewInit {
-  
-  @ViewChildren('colref', { read: ElementRef }) columns: QueryList<ElementRef>;
-  @Output() getsColumns: EventEmitter<QueryList<ElementRef>> = new EventEmitter<QueryList<ElementRef>>(true);
-  @Input() flightType: string;
+export class ResultListComponent implements OnInit {
+
+  flightType: Observable<string>;
 
   @Input() flightList: resultObj[];
   @Input() selectedFlights: any;
@@ -40,8 +38,6 @@ export class ResultListComponent implements OnInit, AfterViewInit {
   @Output() getFlightValue: EventEmitter<any> = new EventEmitter<any>(null);
 
   selectedFlight = null;
-  flightHeight: any;
-  itemList: number = 60;
   state: string[] = [];
 
   type: string;
@@ -62,8 +58,9 @@ export class ResultListComponent implements OnInit, AfterViewInit {
     
     this.type = this.store.selectSnapshot(ResultState.getResultType);
     this.itiMail = this.store.select(FlightResultState.getItinerary);
+    this.flightType = this.store.select(FlightResultState.getFlightType);
 
-    this.sortBy$ = of(this.flightType)
+    this.sortBy$ = this.flightType
       .pipe(
         flatMap(
           (type : string) => {
@@ -85,10 +82,6 @@ export class ResultListComponent implements OnInit, AfterViewInit {
       }
     );
     
-  }
-
-  ngAfterViewInit(): void {
-    this.getsColumns.emit(this.columns);
   }
 
   rotate(index: number) : void {

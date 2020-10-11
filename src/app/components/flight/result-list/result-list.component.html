@@ -1,18 +1,13 @@
 <ion-content>
-  <app-result-sorting
-    [ngClass]="{'round-trip': type == 'animated-round-trip'}"
-    [type]="flightType">
-  </app-result-sorting>
   <ion-row>
     <ion-col>
       <ion-text *ngIf="(flightList | sort : (sortBy$ | async).property : (sortBy$ | async).state ).length == 0">No
-        result found</ion-text>
-      <mat-accordion multi="false">
-        <mat-expansion-panel 
-          [hideToggle]="true"  
-            *ngFor="let item of (flightList | sort : (sortBy$ | async).property : (sortBy$ | async).state );let i =
-            index"
-            #panel>
+        result found
+      </ion-text>
+      <ion-virtual-scroll 
+        [items]="flightList | sort : (sortBy$ | async).property : (sortBy$ | async).state"
+        approxItemHeight="60px">
+        <mat-expansion-panel [hideToggle]="true" #panel *virtualItem="let item;let i = index">
           <mat-expansion-panel-header 
             [collapsedHeight]="'fit-content'" 
             [expandedHeight]="'fit-content'" 
@@ -37,22 +32,22 @@
                   <ion-col>
                     <ion-img src="../../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
                   </ion-col>
-                  <ion-col #colref [ngClass]="{'col-grow': flightType == 'return', 'col-shrink': flightType == 'departure'}">
-                      <ion-text class="bold" [ngClass]="{'small': type == 'animated-round-trip'}">
+                  <ion-col>
+                      <ion-text class="bold">
                         {{i.tripinfo.depTime | date : 'HH:mm'}} - {{i.tripinfo.arrTime | date : 'HH:mm'}}</ion-text>
-                      <ion-text class="bold" [ngClass]="{'small': type == 'animated-round-trip'}">
+                      <ion-text class="bold">
                         {{i.tripinfo.class | titlecase }}</ion-text>
                   </ion-col>
-                  <ion-col #colref [ngClass]="{'col-grow': flightType == 'return', 'col-shrink': flightType == 'departure'}">
-                    <ion-text class="bold" [ngClass]="{'small': type == 'animated-round-trip'}">
+                  <ion-col>
+                    <ion-text class="bold">
                       {{i.tripinfo.duration}}{{i.tripinfo.day ? '(+1Day)' : ''}}</ion-text>
-                    <ion-text class="bold" [ngClass]="{'small': type == 'animated-round-trip'}">{{i.tripinfo.stops}}
+                    <ion-text class="bold">{{i.tripinfo.stops}}
                     </ion-text>
                   </ion-col>
                   <ion-col *ngIf="flightPrice">
-                    <ion-label class="bold" [ngClass]="{'small': type == 'animated-round-trip'}">
+                    <ion-label class="bold">
                       {{i.tripinfo.fare | currency : i.tripinfo.currency }}</ion-label>
-                    <ion-text class="bold" [ngClass]="{'small': type == 'animated-round-trip'}">
+                    <ion-text class="bold">
                       {{i.tripinfo.seats + ' Seat Left' }}</ion-text>
                   </ion-col>
                 </ion-row>
@@ -86,7 +81,7 @@
             </ion-row>
           </ion-row>
         </mat-expansion-panel>
-      </mat-accordion>
+      </ion-virtual-scroll>
     </ion-col>
   </ion-row>
 </ion-content>

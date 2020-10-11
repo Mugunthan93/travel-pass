@@ -9,6 +9,7 @@ import { InternationalResponse } from '../../result/flight/international.state';
 import { DomesticResponse } from '../../result/flight/domestic.state';
 import { BaseFlightSearch } from './filght-search';
 import * as moment from 'moment';
+import { ChangeFlightType } from '../../result/flight.state';
 
 
 export interface roundtripSearch {
@@ -218,6 +219,7 @@ export class RoundTripSearchState extends BaseFlightSearch {
             }
             else if (data.response.Results.length == 2) {
                 this.store.dispatch(new ResultType('animated-round-trip'));
+                states.dispatch(new ChangeFlightType('departure'));
                 this.store.dispatch(new DomesticResponse (data.response));
 
             }

@@ -3,22 +3,7 @@
 
 ion-content{
 
-    >app-result-sorting {
-        display: flex;
-        height: 48px;
-        position: fixed;
-        z-index: 10;
-        width: -webkit-fill-available;
-        
-        &.round-trip {
-            top: 34px;
-            width: 75vw;
-        }
-    }
-
     >ion-row {
-        position: absolute;
-        top: 48px;
         width: 100%;
 
         >ion-col {
@@ -28,10 +13,7 @@ ion-content{
                 text-align: center;
                 margin-top: 20px;
             }
-            >mat-accordion {
-                @include flex-col-grid;
-                height:100%;
-                flex-grow:1;
+            ion-virtual-scroll{
                 >mat-expansion-panel {
     
                     >mat-expansion-panel-header {
@@ -42,7 +24,7 @@ ion-content{
                         >::ng-deep span {
                             width: 100%;
                             @include flex-col-grid;
-
+    
                             >ion-row.two{
                                 >ion-row.heading{
                                     height : 17px !important; 
@@ -59,15 +41,15 @@ ion-content{
                                     }
                                 }
                             }
-
+    
                             >ion-row:first-child {
                                 padding: 5px 0px;
                                 justify-content: space-between;
-
+    
                                 >*{
                                     margin:0px auto;
                                 }
-
+    
                                 >ion-text{
                                     align-self: flex-end;
                                 }
@@ -75,7 +57,7 @@ ion-content{
                                 >ion-label{
                                     margin-left:4px;
                                 }
-
+    
                                 >ion-item{
                                     align-self: flex-end;
                                     --min-height: 17px;
@@ -88,27 +70,27 @@ ion-content{
                                         overflow: inherit;
                                     }
                                 }
-
+    
                             }
     
                             >ion-row{
                                 width: 100%;
                                 height: fit-content;
-
+    
                                 >ion-text{
                                     white-space: nowrap;
                                     margin: auto;
                                 }
-
+    
                                 ion-title{
                                     margin: 0px 8px;
                                 }
-
+    
                                 >ion-row{
                                     width: -webkit-fill-available;
                                     justify-content: space-around;
                                     height: 55px !important;
-
+    
                                     >ion-col:nth-child(1) {
                                         display: flex;
                                         flex-direction: row;
@@ -162,11 +144,11 @@ ion-content{
                                             }
                                         }
                                     }
-
+    
                                 }
-
+    
                             }
-
+    
                             >ion-row:last-of-type{
                                 justify-content: flex-end;
                                 padding: 6px 0px;
@@ -174,16 +156,16 @@ ion-content{
                                     margin: 0px 10px;
                                     align-self: center;
                                 }
-
+    
                                 ion-checkbox {
                                     margin: 0px 5px;
                                 }
                             }
-
+    
                             >ion-button{
                                 margin:0px;
                                 height: 30px;
-
+    
                                 >ion-icon{
                                     color : #{$white} !important;
                                 }
@@ -194,12 +176,12 @@ ion-content{
                     ::ng-deep .mat-expansion-panel-body {
                         border-bottom: 1px solid #c6c6c6;
                         padding: 0px;
-
+    
                         >ion-row {
                             background: #FFFFFF;
                             height: fit-content;
                             padding: 10px 0px;
-
+    
                             >ion-row{
                                 display: flex;
                                 flex-direction: column;
@@ -213,6 +195,11 @@ ion-content{
                     }
                 }
             }
+            // >mat-accordion {
+            //     @include flex-col-grid;
+            //     height:100%;
+            //     flex-grow:1;
+            // }
         }
     }
     

@@ -1,19 +1,19 @@
 <ion-content>
   <mat-accordion multi="false">
-    <mat-expansion-panel *ngFor="let flight of depFlightDetail.trip;let i = index">
+    <mat-expansion-panel *ngFor="let flights of depFlightDetail.trip;let i = index">
       <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">
         <ion-row>
           <ion-label class="large bold">
             {{'Onward Trip Details'}}
           </ion-label>
           <ion-row>
-            <ion-label>{{flight.origin}}</ion-label>
+            <ion-label>{{flights.origin}}</ion-label>
             <ion-icon src="../../../../../../assets/icons/flight.svg"></ion-icon>
-            <ion-label>{{flight.destination}}</ion-label>
+            <ion-label>{{flights.destination}}</ion-label>
           </ion-row>
         </ion-row>
       </mat-expansion-panel-header>
-      <div *ngFor="let flight of flight.connecting_flight;let i = index">
+      <div *ngFor="let flight of flights.connecting_flight;let i = index">
         <ion-item>
           <ion-row slot="start">
             <ion-img src="../../../../../../assets/AirlineLogo/{{flight.airline.code}}.gif"></ion-img>
@@ -47,20 +47,20 @@
         </ion-row>
       </div>
     </mat-expansion-panel>
-    <mat-expansion-panel *ngFor="let flight of reFlightDetail.trip;let i = index">
+    <mat-expansion-panel *ngFor="let flights of reFlightDetail.trip;let i = index">
       <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">
         <ion-row>
           <ion-label class="large bold">
             {{'Return Trip Details'}}
           </ion-label>
           <ion-row>
-            <ion-label>{{flight.origin}}</ion-label>
+            <ion-label>{{flights.origin}}</ion-label>
             <ion-icon src="../../../../../../assets/icons/flight.svg"></ion-icon>
-            <ion-label>{{flight.destination}}</ion-label>
+            <ion-label>{{flights.destination}}</ion-label>
           </ion-row>
         </ion-row>
       </mat-expansion-panel-header>
-      <div *ngFor="let flight of flight.connecting_flight;let i = index">
+      <div *ngFor="let flight of flights.connecting_flight;let i = index">
         <ion-item>
           <ion-row slot="start">
             <ion-img src="../../../../../../assets/AirlineLogo/{{flight.airline.code}}.gif"></ion-img>

@@ -1,10 +1,26 @@
 <ion-content>
-  <app-result-list [flightList]="(departList$ | async)" [selectedFlights]="(selectedDepartureFlight$ | async)"
-    (getFlightValue)="currentDepartureFlight($event)" *ngIf="(flightType$ | async) == 'departure'">
-  </app-result-list>
-  <app-result-list [flightList]="(returnList$ | async)" [selectedFlights]="(selectedDepartureFlight$ | async)"
-    (getFlightValue)="currentReturnFlight($event)" *ngIf="(flightType$ | async) == 'return'">
-  </app-result-list>
+  <ion-row #content>
+    <ion-row class="depart-shrink" #departure>
+      <ion-title>DEPARTURE</ion-title>
+      <app-result-list 
+        [flightList]="(departList$ | async)" 
+        [selectedFlights]="(selectedDepartureFlight$ | async)"
+        (getFlightValue)="currentDepartureFlight($event)" 
+        [flightType]="'departure'" 
+        (getsColumns)="departuredColumns($event)">
+      </app-result-list>
+    </ion-row>
+    <ion-row class="return-grow" #return>
+      <ion-title>RETURN</ion-title>
+      <app-result-list 
+        [flightList]="(returnList$ | async)" 
+        [selectedFlights]="(selectedDepartureFlight$ | async)"
+        (getFlightValue)="currentReturnFlight($event)" 
+        [flightType]="'return'" 
+        (getsColumns)="returnedColumns($event)">
+      </app-result-list>
+    </ion-row>
+  </ion-row>
 </ion-content>
 
 <ion-footer *ngIf="(selectedDepartureFlight$ | async) !== null && (selectedReturnFlight$ | async) !== null">
