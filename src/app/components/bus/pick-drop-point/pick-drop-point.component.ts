@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { Navigate } from '@ngxs/router-plugin';
 import { ModalController } from '@ionic/angular';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { boardingPoint, droppingPoint, BusResultState, AddBoardingPoint, AddDroppingPoint, GetBusBook } from 'src/app/stores/result/bus.state';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-pick-drop-point',
@@ -26,9 +26,6 @@ export class PickDropPointComponent implements OnInit {
   ngOnInit() {
     this.boarding$ = this.store.select(BusResultState.getBoardingPoints);
     this.dropping$ = this.store.select(BusResultState.getDroppingPoints);
-
-    this.selectedboarding = this.store.selectSnapshot(BusResultState.getBoardingPoint);
-    this.selecteddropping = this.store.selectSnapshot(BusResultState.getDroppingPoint);
   }
 
   changePoint(evt: CustomEvent) {
@@ -41,14 +38,23 @@ export class PickDropPointComponent implements OnInit {
 
   selectBoard(pt : boardingPoint) {
     this.store.dispatch(new AddBoardingPoint(pt));
+    this.selectedboarding = pt;
   }
 
   selectDrop(pt : droppingPoint) {
     this.store.dispatch(new AddDroppingPoint(pt));
+    this.selecteddropping = pt;
   }
 
   dismiss() {
     this.modalCtrl.dismiss(null, null,'pick-drop');
+  }
+
+  selectColor(item,pt) {
+    return {
+      'selectedItem': _.isEqual(item,pt),
+      '':  !_.isEqual(item,pt)
+    }
   }
 
 }

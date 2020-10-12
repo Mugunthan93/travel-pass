@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { BookingState } from 'src/app/stores/booking.state';
-import { observable, Observable, of } from 'rxjs';
-import { map, withLatestFrom } from 'rxjs/operators';
+import { combineLatest, observable, Observable, of } from 'rxjs';
+import { debounceTime, map, withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'app-new',
@@ -23,90 +23,23 @@ export class NewPage implements OnInit {
     this.type$ = this.store.select(BookingState.getType);
   }
 
-  tripType(booking: any) : Observable<string> {
+  tripType(booking: any) : string {
     // console.log(booking);
-    return of(booking)
-    .pipe(
-      withLatestFrom(this.type$),
-      map(
-        (booktype) => {
-          let type = booktype[1];
-          let booking = booktype[0];
-          if(type == 'flight') {
-            switch (booking.trip_requests.JourneyType) {
-              case 1: return 'One Way'; break;
-              case 2: return 'Round Trip'; break;
-              case 3: return 'Multi City'; break;
-              default: return '';
-            }
-          }
-          else if(type == 'hotel') {
-            return '';
-          }
-        }
-      )
-    );
-  }
-
-  originName(booking : any) : Observable<string> {
-    return of(booking)
-      .pipe(
-        withLatestFrom(this.type$),
-        map(
-          (booktype) => {
-            let type = booktype[1];
-            let booking = booktype[0];
-            if(type == 'flight') {
-              return booking.trip_requests.Segments[0] ? booking.trip_requests.Segments[0].OriginName : '';
-            }
-            else if(type == 'hotel') {
-              return booking.guest_details.basiscInfo.CheckInDate;
-            }
-          }
-        )
-      );
-  }
-
-  DestinationName(booking : any) : Observable<string> {
-    return of(booking)
-    .pipe(
-      withLatestFrom(this.type$),
-      map(
-        (booktype) => {
-          let type = booktype[1];
-          let booking = booktype[0];
-          if(type == 'flight') {
-            return booking.trip_requests.Segments[0] ? booking.trip_requests.Segments[0].DestinationName : '';
-          }
-          else if(type == 'hotel') {
-            return booking.guest_details.basiscInfo.CheckOutDate;
-          }
-        }
-      )
-    );
+    if(booking.trip_requests.JourneyType) {
+      switch (booking.trip_requests.JourneyType) {
+        case 1: return 'One Way'; break;
+        case 2: return 'Round Trip'; break;
+        case 3: return 'Multi City'; break;
+        default: return '';
+      }
+    }
+    else {
+      return '';
+    }
   }
 
   updateDate(booking : any) : string {
     return booking.updatedAt;
-  }
-
-  fare(booking : any) : Observable<string> {
-    return of(booking)
-    .pipe(
-      withLatestFrom(this.type$),
-      map(
-        (booktype) => {
-          let type = booktype[1];
-          let booking = booktype[0];
-          if(type == 'flight') {
-            return booking.passenger_details.fare_response.published_fare;
-          }
-          else if(type == 'hotel') {
-            return booking.guest_details.basiscInfo.TotalBaseFare;
-          }
-        }
-      )
-    );
   }
 
 }

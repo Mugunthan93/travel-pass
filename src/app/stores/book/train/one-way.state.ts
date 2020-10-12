@@ -245,7 +245,7 @@ export class TrainOneWayBookState {
             approval_mail_cc: action.mailCC,
             purpose: action.purpose,
             cancellation_charges: null,
-            status: 'new',
+            status: 'pending',
             managers: this.store.selectSnapshot(UserState.getApprover)
         }
 

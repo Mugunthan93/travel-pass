@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { BookingState, DownloadTicket } from 'src/app/stores/booking.state';
-import { Observable } from 'rxjs';
+import { BookingState, DownloadTicket, ViewFile } from 'src/app/stores/booking.state';
+import { combineLatest, Observable, of } from 'rxjs';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { AlertController } from '@ionic/angular';
+import { map, withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'app-history',
@@ -14,6 +15,7 @@ import { AlertController } from '@ionic/angular';
 export class HistoryPage implements OnInit {
 
   historyBookings: Observable<any[]>;
+  type$: Observable<string>;
 
   constructor(
     private store: Store,
@@ -25,10 +27,12 @@ export class HistoryPage implements OnInit {
   ngOnInit() {
     console.log(this.file);
     this.historyBookings = this.store.select(BookingState.getHistoryBooking);
+    this.type$ = this.store.select(BookingState.getType);
   }
 
-  tripType(book: any) {
-    switch (book.trip_requests.JourneyType) {
+  tripType(booking: any) : string {
+    // console.log(booking);
+    switch (booking.trip_requests.JourneyType) {
       case 1: return 'One Way'; break;
       case 2: return 'Round Trip'; break;
       case 3: return 'Multi City'; break;
@@ -36,32 +40,88 @@ export class HistoryPage implements OnInit {
     }
   }
 
-  async viewFile(pnr: string) {
-    try {
-      console.log(this.file.externalRootDirectory + '/TravellersPass/Ticket/' + pnr + ".pdf");
-      await this.fileOpener.open(this.file.externalRootDirectory + '/TravellersPass/Ticket/' + pnr + ".pdf", 'application/pdf');
-    }
-    catch (error) {
-      if (error.status == 9) {
-        const failedAlert = await this.alertCtrl.create({
-          header: 'File Error',
-          subHeader: 'File Not Found',
-          buttons: [
-            {
-              text: 'Retry',
-              handler: () => {
-                this.store.dispatch(new DownloadTicket(pnr));
-              }
+  originName(booking : any) : Observable<string> {
+    return combineLatest(of(booking),this.type$)
+      .pipe(
+        map(
+          (booktype) => {
+            let type = booktype[1];
+            let booking = booktype[0];
+            if(type == 'flight') {
+              return booking.trip_requests.Segments[0] ? booking.trip_requests.Segments[0].OriginName : '';
             }
-          ]
-        });
-        failedAlert.present();
-      }
-    }
+            else if(type == 'hotel') {
+              return booking.guest_details.basiscInfo.CheckInDate;
+            }
+            else if(type == 'bus') {
+              return booking.bus_requests[0].sourceCity;
+            }
+            else if(type == 'train') {
+              return booking.train_requests.Segments[0].OriginName;
+            }
+          }
+        )
+      );
   }
 
-  getPNR(pnr : string) : string[] {
-    return JSON.parse(pnr);
+  DestinationName(booking : any) : Observable<string> {
+    return combineLatest(of(booking),this.type$)
+    .pipe(
+      map(
+        (booktype) => {
+          let type = booktype[1];
+          let booking = booktype[0];
+          if(type == 'flight') {
+            return booking.trip_requests.Segments[0] ? booking.trip_requests.Segments[0].DestinationName : '';
+          }
+          else if(type == 'hotel') {
+            return booking.guest_details.basiscInfo.CheckOutDate;
+          }
+          else if(type == 'bus') {
+            return booking.bus_requests[0].destinationCity;
+          }
+          else if(type == 'train') {
+            return booking.train_requests.Segments[0].DestinationName;
+          }
+        }
+      )
+    );
+  }
+
+  updateDate(booking : any) : string {
+    return booking.updatedAt;
+  }
+
+  fare(booking : any) : Observable<string> {
+    return combineLatest(of(booking),this.type$)
+    .pipe(
+      map(
+        (booktype) => {
+          let type = booktype[1];
+          let booking = booktype[0];
+          if(type == 'flight') {
+            return booking.passenger_details.fare_response.published_fare;
+          }
+          else if(type == 'hotel') {
+            return booking.guest_details.basiscInfo.TotalBaseFare;
+          }
+          else if(type == 'bus') {
+            return booking.passenger_details.fareDetails.total_amount;
+          }
+          else if(type == 'train') {
+            return booking.passenger_details.basiscInfo.TotalBaseFare;
+          }
+        }
+      )
+    );
+  }
+
+  viewFile(pnr: string) {
+    this.store.dispatch(new ViewFile(pnr));
+  }
+
+  getPNR(booking : any) : string[] {
+    return JSON.parse(booking.passenger_details.PNR);
   }
 
   downloadTicket(pnr : string) {

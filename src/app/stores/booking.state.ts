@@ -7,7 +7,7 @@ import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ng
 import { environment } from 'src/environments/environment';
 import { BookingService } from '../services/booking/booking.service';
 import { forkJoin, from, iif } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { catchError, flatMap, map } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { File } from '@ionic-native/file/ngx';
@@ -29,6 +29,13 @@ export class MyBooking {
 export class DownloadTicket {
     static readonly type = "[booking] DownloadTicket";
     constructor(public booked : string) {
+
+    }
+}
+
+export class ViewFile {
+    static readonly type = "[booking] ViewFile";
+    constructor(public pnr : string) {
 
     }
 }
@@ -75,7 +82,7 @@ export class BookingState {
     @Action(MyBooking)
     myBooking(states: StateContext<booking>, action: MyBooking) {
 
-        states.dispatch(new Navigate(['/', 'home', 'my-booking', states.getState().type, 'new']));
+        states.dispatch(new Navigate(['/', 'home', 'my-booking', action.type, 'new']));
         let newBooking = [];
         let historyBooking = [];
 
@@ -92,7 +99,7 @@ export class BookingState {
         return iif(
             () => action.type == 'train', trainBooking$,otherBooking$
         ).pipe(
-            map(
+            flatMap(
                 (response) => {
                     console.log(response);
                     let neworopenArray = _.isUndefined(JSON.parse(response[1].data).data) ? [] : JSON.parse(response[1].data).data;
@@ -109,17 +116,31 @@ export class BookingState {
                         historyBooking.push(...bookedArray);
                     }
 
+                    let newbook = null;
+                    let historybook = null;
 
-                    console.log(neworopenArray,pendingArray);
+                    if(action.type == 'train') {
+                        newbook = _.uniqBy(newBooking,'id').filter(el => action.type == 'train' && !_.isString(el.train_requests));
+                        historybook = _.uniqBy(historyBooking,'id').filter(el => action.type == 'train' && !_.isString(el.train_requests));
+                    }
+                    else {
+                        newbook = _.uniqBy(newBooking,'id');
+                        historybook = _.uniqBy(historyBooking,'id');  
+                    }
+
+
+                    console.log(newbook,historybook);
                     states.patchState({
-                        new: _.uniqBy(newBooking,'id'),
-                        history:_.uniqBy(historyBooking,'id'),
+                        new: newbook,
+                        history:historybook,
                         type : action.type
                     });
 
-                    if(response[0]) {
-                        return from(this.menuCtrl.close('first'));
-                    }
+                    console.log(states.getState().new,states.getState().history);
+
+                    return from(this.menuCtrl.close('first'));
+                    // if(response[0]){
+                    // }
                 }
             )
         );
@@ -184,6 +205,41 @@ export class BookingState {
             await loadingAlert.dismiss();
             await failedAlert.present();
         }
+    }
+
+    @Action(ViewFile)
+    viewFile(states: StateContext<booking>, action: ViewFile) {
+        
+        const failedAlert$ = from(this.alertCtrl.create({
+            header: 'File Error',
+            subHeader: 'File Not Found',
+            buttons: [
+              {
+                text: 'Retry',
+                handler: () => {
+                  this.store.dispatch(new DownloadTicket(action.pnr));
+                }
+              }
+            ]
+          }))
+          .pipe(
+              map(
+                  (alert) => {
+                    return from(alert.present());
+                  }
+              )
+          );
+        let fileopener$ = from(this.fileOpener.open(this.file.externalRootDirectory + '/TravellersPass/Ticket/' + action.pnr + ".pdf", 'application/pdf'));
+
+        return fileopener$.pipe(
+            catchError(
+                (error) => {
+                    if(error.status == 9) {
+                        return failedAlert$;
+                    }
+                }
+            )
+        );
     }
 
 }

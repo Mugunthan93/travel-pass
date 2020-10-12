@@ -20,7 +20,8 @@ export class BookingService {
 
     let typeUrl : string= this.typeUrl1(type);      
     let typeUrl2 : string = this.typeUrl2(type);
-    let id : number = this.getId(type);
+    const userId: number = this.store.selectSnapshot(UserState.getUserId);  
+    let id : number = userId;
     const startDate = moment({}).add(1,'days').format('YYYY-MM-DD%2023:59:59.000+00:00');
     const endDate = moment({}).subtract(1, "months").format('YYYY-MM-DD%2000:00:01.000+00:00'); 
     const book = this.bookUrl(type);
@@ -29,7 +30,7 @@ export class BookingService {
 
   typeUrl1(type : string) {
     switch(type) {
-      case 'flight' : return '/airlineRequest/';
+      case 'flight' : return '/airlineRequest/getairlinebyuserid/';
       case 'hotel' : return '/hotelRequest/gethotelbyuserid/';
       case 'bus' : return '/busRequest/getbusByUser/';
       case 'train': return '/trainRequest/gettrainbyuserid/';
@@ -54,14 +55,14 @@ export class BookingService {
     }
   }
 
-  getId(type : string) {
-    const companyId: number = this.store.selectSnapshot(UserState.getcompanyId);        
-    const userId: number = this.store.selectSnapshot(UserState.getUserId);  
-    switch(type) {
-      case 'flight' : return companyId;
-      case 'hotel' : return userId;
-      case 'bus' : return userId;
-      case 'train': return userId;
-    }
-  }
+  // getId(type : string) {
+  //   const companyId: number = this.store.selectSnapshot(UserState.getcompanyId);        
+  //   const userId: number = this.store.selectSnapshot(UserState.getUserId);  
+  //   switch(type) {
+  //     case 'flight' : return companyId;
+  //     case 'hotel' : return userId;
+  //     case 'bus' : return userId;
+  //     case 'train': return userId;
+  //   }
+  // }
 }

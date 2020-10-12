@@ -37,7 +37,7 @@ export class BusPage implements OnInit {
     const modal = await this.modalCtrl.create({
       component: PassengerListComponent,
       keyboardClose: false,
-      id: "passenger-list",
+      id: 'passenger-info',
     });
 
     modal.onDidDismiss().then((resData) => {

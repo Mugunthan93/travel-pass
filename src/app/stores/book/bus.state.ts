@@ -1,6 +1,6 @@
 import { State, Store, Action, StateContext, Selector } from '@ngxs/store';
 import { managers, user_eligibility } from './flight.state';
-import { busResponse, droppingPoint, boardingPoint, BusResultState } from '../result/bus.state';
+import { busResponse, droppingPoint, boardingPoint, BusResultState, seat } from '../result/bus.state';
 import { BusSearchState } from '../search/bus.state';
 import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 import { Navigate } from '@ngxs/router-plugin';
@@ -12,6 +12,7 @@ import { BookMode } from '../book.state';
 import { forkJoin, from, of } from 'rxjs';
 import { catchError, flatMap } from 'rxjs/operators';
 import { BusService } from 'src/app/services/bus/bus.service';
+import { AddBusPassenger, buspassenger, BusPassengerState } from '../passenger/bus.passenger.state';
 
 
 export interface busbook {
@@ -20,34 +21,10 @@ export interface busbook {
 }
 
 export interface passenger_details {
-    blockSeatPaxDetails: blockseat[]
+    blockSeatPaxDetails: buspassenger[]
     selectedbus: busResponse[]
     fareDetails: fareDetails
     userEligibility: user_eligibility
-}
-
-export interface blockseat {
-    primary: boolean,
-    email: string,
-    name: string,
-    lastName: string,
-    Address: string,
-    mobile: string,
-    idType: string,
-    idNumber: string,
-    title: string,
-    sex: string,
-    age: string,
-    seatNbr: any,
-    fare: number,
-    serviceTaxAmount: number,
-    operatorServiceChargeAbsolute: number,
-    totalFareWithTaxes: number,
-    ladiesSeat: boolean,
-    nameOnId: string,
-    ac: boolean,
-    sleeper: boolean,
-    prefSeat: string
 }
 
 export interface fareDetails {
@@ -135,7 +112,7 @@ export class BusBookState {
     );
     currenReq.push(busrequest);
 
-    let leadPassenger: blockseat = {
+    let leadPassenger: buspassenger = {
       primary: true,
       email: this.store.selectSnapshot(UserState.getEmail),
       name: this.store.selectSnapshot(UserState.getFirstName),
@@ -144,26 +121,22 @@ export class BusBookState {
       mobile: this.store.selectSnapshot(UserState.getContact),
       idType: "PAN Card",
       idNumber: this.store.selectSnapshot(UserState.getPassportNo),
-      title:
-        this.store.selectSnapshot(UserState.getTitle) == "Female" ? "Ms" : "Mr",
-      sex:
-        this.store.selectSnapshot(UserState.getTitle) == "Female" ? "F" : "M",
-      age: moment()
-        .diff(this.store.selectSnapshot(UserState.getDOB), "years", false)
-        .toString(),
+      title:this.store.selectSnapshot(UserState.getTitle) == "Female" ? "Ms" : "Mr",
+      sex:this.store.selectSnapshot(UserState.getTitle) == "Female" ? "F" : "M",
+      age: moment().diff(this.store.selectSnapshot(UserState.getDOB), "years", false).toString(),
       seatNbr: null,
       fare: parseInt(action.currentbus.fare),
-      serviceTaxAmount: 54.5,
+      serviceTaxAmount: 0,
       operatorServiceChargeAbsolute: 0,
-      totalFareWithTaxes: parseInt(action.currentbus.fare) + 54.5,
-      ladiesSeat: this.store.selectSnapshot(BusResultState.getselectedSeat)[0]
-        .ladiesSeat,
+      totalFareWithTaxes: parseInt(action.currentbus.fare),
+      ladiesSeat: this.store.selectSnapshot(BusResultState.getselectedSeat)[0].ladiesSeat,
       nameOnId: this.store.selectSnapshot(UserState.getFirstName),
       ac: this.store.selectSnapshot(BusResultState.getselectedSeat)[0].ac,
-      sleeper: this.store.selectSnapshot(BusResultState.getselectedSeat)[0]
-        .sleeper,
+      sleeper: this.store.selectSnapshot(BusResultState.getselectedSeat)[0].sleeper,
       prefSeat: this.store.selectSnapshot(BusResultState.SeatNumbers)[0],
     };
+
+    states.dispatch(new AddBusPassenger(leadPassenger));
 
     let passenger_details: passenger_details = {
       blockSeatPaxDetails: [leadPassenger],
@@ -207,8 +180,11 @@ export class BusBookState {
     let allCC: string[] = action.mailCC;
     allCC.push(userMail);
 
+    let detail = Object.assign({},states.getState().passenger_details);
+    detail.blockSeatPaxDetails = this.store.selectSnapshot(BusPassengerState.getSelectPassenger);
+
     let sendreq = {
-      passenger_details: states.getState().passenger_details,
+      passenger_details: detail,
       bus_requests: states.getState().bus_requests,
       transaction_id: null,
       user_id: this.store.selectSnapshot(UserState.getUserId),

@@ -91,6 +91,7 @@ export interface hotelRequest {
     trip_type: string
     comments: string
     purpose: string
+    status : string
 }
 
 export interface guest_details{
@@ -358,7 +359,7 @@ export class HotelBookState {
                 }
             },
             hotel_requests: this.store.selectSnapshot(HotelSearchState.getPayload),
-            
+            status: "pending",
             transaction_id: null,
             user_id: this.store.selectSnapshot(UserState.getUserId),
             customer_id: this.store.selectSnapshot(UserState.getcompanyId),

@@ -14,6 +14,8 @@ import { ListEmployeeComponent } from '../list-employee/list-employee.component'
 import { groupBy, mergeMap, toArray, map, reduce } from 'rxjs/operators';
 import { TrainPassengerState, trainpassengerstate, trainpassenger, SelectTrainPassenger, DeselectTrainPassenger, EditTrainPassenger, DeleteTrainPassenger, DismissTrainPassenger } from 'src/app/stores/passenger/train.passenger.state';
 import { TravellerDetailComponent } from '../../train/traveller-detail/traveller-detail.component';
+import { BusPassengerDetailComponent } from '../../bus/bus-passenger-detail/bus-passenger-detail.component';
+import { buspassenger, BusPassengerState, DeleteBusPassenger, DeselectBusPassenger, DismissBusPassenger, SelectBusPassenger } from 'src/app/stores/passenger/bus.passenger.state';
 
 @Component({
   selector: 'app-passenger-list',
@@ -46,6 +48,11 @@ export class PassengerListComponent implements OnInit {
   selectedTrainPassengers$: Observable<trainpassenger[]>;
   selectedPass$: Observable<number>;
   countPass$: Observable<number>;
+
+  busPassengers$: Observable<buspassenger[]>;
+  selectedBusPassengers$: Observable<buspassenger[]>;
+  selectedBusPass$: Observable<number>;
+  countBusPass$: Observable<number>;
 
   constructor(
     public modalCtrl: ModalController,
@@ -81,6 +88,11 @@ export class PassengerListComponent implements OnInit {
     this.selectedTrainPassengers$ = this.store.select(TrainPassengerState.getSelectPassenger);
     this.selectedPass$ = this.store.select(TrainPassengerState.getSelectedPassCount);
     this.countPass$ = this.store.select(TrainPassengerState.getPassCount);
+
+    this.busPassengers$ = this.store.select(BusPassengerState.getPassenger);
+    this.selectedBusPassengers$ = this.store.select(BusPassengerState.getSelectPassenger);
+    this.selectedBusPass$ = this.store.select(BusPassengerState.getSelectedPassCount);
+    this.countBusPass$ = this.store.select(BusPassengerState.getPassCount);
 
   }
 
@@ -306,6 +318,50 @@ export class PassengerListComponent implements OnInit {
     this.store.dispatch(new DeleteTrainPassenger(pax));
   }
 
+  //bus function
+
+  async addBusPassenger() {
+    const modal = await this.modalCtrl.create({
+      component: BusPassengerDetailComponent,
+      componentProps: {
+        form: 'add',
+        pax: null,
+        lead: false
+      },
+      id: 'bus-details'
+    });
+
+    return await modal.present();
+  }
+
+  getBusPass(evt: CustomEvent) {
+    if (evt.detail.checked) {
+      this.store.dispatch(new SelectBusPassenger(evt.detail.value));
+    }
+    else if (!evt.detail.checked) {
+      this.store.dispatch(new DeselectBusPassenger(evt.detail.value));
+    }
+  }
+  
+  async editBusPassenger(pax: buspassenger) {
+    const modal = await this.modalCtrl.create({
+      component: BusPassengerDetailComponent,
+      componentProps: {
+        form: 'edit',
+        pax: pax,
+        lead: pax.primary
+      },
+      id: 'bus-details'
+    });
+
+    return await modal.present();
+  }
+
+  deleteBusPassenger(pax : buspassenger) {
+    this.store.dispatch(new DeleteBusPassenger(pax));
+  }
+
+
   ///dismiss
   dismissInfo() {
     if (this.bookMode == 'flight') {
@@ -316,6 +372,9 @@ export class PassengerListComponent implements OnInit {
     }
     else if (this.bookMode == 'train') {
       this.store.dispatch(new DismissTrainPassenger());
+    }
+    else if(this.bookMode == 'bus') {
+      this.store.dispatch(new DismissBusPassenger());
     }
   }
 

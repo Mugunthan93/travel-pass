@@ -1,6 +1,6 @@
 
 <ion-content *ngIf="!(historyBookings | async)">
-  <ion-card *ngFor="let newBooking of [1,2,3,4,5,6,7,8,9,10]">
+  <ion-card *ngFor="let historyBooking of [1,2,3,4,5,6,7,8,9,10]">
     <ion-card-content>
       <ion-row>
         <ion-row style="width:25%">
@@ -48,30 +48,109 @@
 <ion-content class="data">
   <ion-card *ngFor="let historyBooking of (historyBookings | async | sort : 'id' : 'asc')">
     <ion-card-content>
-      <ion-row>
+
+      <ion-row *ngIf="(type$ | async) == 'flight'">
         <ion-row>
-          <ion-label class="large">{{historyBooking.trip_requests.Segments[0].OriginName}}</ion-label>
-          <ion-label class="bold">From</ion-label>
+          <ion-label class="large">
+            {{ historyBooking.trip_requests.Segments[0].OriginName }}
+          </ion-label>
+          <ion-label class="bold">
+            From
+          </ion-label>
         </ion-row>
         <ion-row>
-          <ion-label class="large">{{tripType(historyBooking)}}</ion-label>
+          <ion-label class="large">{{ tripType(historyBooking) }}</ion-label>
         </ion-row>
         <ion-row>
-          <ion-label class="large">{{historyBooking.trip_requests.Segments[0].DestinationName}}</ion-label>
-          <ion-label class="bold">To</ion-label>
+          <ion-label class="large">
+            {{ historyBooking.trip_requests.Segments[0].DestinationName }}
+          </ion-label>
+          <ion-label class="bold">
+            To
+          </ion-label>
         </ion-row>
       </ion-row>
+
+      <ion-row *ngIf="(type$ | async) == 'hotel'">
+        <ion-row>
+          <ion-label class="large">
+            {{ historyBooking.guest_details.basiscInfo.CheckInDate }}
+          </ion-label>
+          <ion-label class="bold">
+            Check In
+          </ion-label>
+        </ion-row>
+        <ion-row>
+          <ion-label class="large"> </ion-label>
+        </ion-row>
+        <ion-row>
+          <ion-label class="large">
+            {{ historyBooking.guest_details.basiscInfo.CheckOutDate }}
+          </ion-label>
+          <ion-label class="bold">
+            Check Out
+          </ion-label>
+        </ion-row>
+      </ion-row>
+
+      <ion-row *ngIf="(type$ | async) == 'bus'">
+        <ion-row>
+          <ion-label class="large">
+            {{ historyBooking.bus_requests[0].sourceCity }}
+          </ion-label>
+          <ion-label class="bold">
+            From
+          </ion-label>
+        </ion-row>
+        <ion-row>
+          <ion-label class="large"> </ion-label>
+        </ion-row>
+        <ion-row>
+          <ion-label class="large">
+            {{ historyBooking.bus_requests[0].destinationCity }}
+          </ion-label>
+          <ion-label class="bold">
+            To
+          </ion-label>
+        </ion-row>
+      </ion-row>
+
+      <ion-row *ngIf="(type$ | async) == 'train'">
+        <ion-row>
+          <ion-label class="large">
+            {{ historyBooking.train_requests.Segments[0].OriginName }}
+          </ion-label>
+          <ion-label class="bold">
+            From
+          </ion-label>
+        </ion-row>
+        <ion-row>
+          <ion-label class="large">{{ tripType(historyBooking) }}</ion-label>
+        </ion-row>
+        <ion-row>
+          <ion-label class="large">
+            {{ historyBooking.train_requests.Segments[0].DestinationName }}
+          </ion-label>
+          <ion-label class="bold">
+            To
+          </ion-label>
+        </ion-row>
+      </ion-row>
+
       <ion-row>
         <ion-row>
-          <ion-label class="medium bold">{{historyBooking.updatedAt | date : 'd'}}th</ion-label>
-          <ion-label class="medium bold">{{historyBooking.updatedAt | date : 'LLL'}}</ion-label>
+          <ion-label class="medium bold">{{ updateDate(historyBooking) | date : 'd'}}th</ion-label>
+          <ion-label class="medium bold">{{ updateDate(historyBooking) | date : 'LLL'}}</ion-label>
         </ion-row>
         <ion-chip>
-          <ion-label class="medium bold">
-            {{historyBooking.passenger_details.fare_response.published_fare | currency: 'INR'}}</ion-label>
+          <ion-label class="medium bold" *ngIf="(type$ | async) == 'flight'">{{ historyBooking.passenger_details.fare_response.published_fare | currency: 'INR'}}</ion-label>
+          <ion-label class="medium bold" *ngIf="(type$ | async) == 'hotel'">{{ historyBooking.guest_details.basiscInfo.TotalBaseFare | currency: 'INR'}}</ion-label>
+          <ion-label class="medium bold" *ngIf="(type$ | async) == 'bus'">{{ historyBooking.passenger_details.fareDetails.total_amount | currency: 'INR'}}</ion-label>
+          <ion-label class="medium bold" *ngIf="(type$ | async) == 'train'">{{  historyBooking.passenger_details.basiscInfo.TotalBaseFare | currency: 'INR'}}</ion-label>
         </ion-chip>
       </ion-row>
-      <ion-row *ngFor="let pnr of getPNR(historyBooking.passenger_details.PNR)">
+
+      <ion-row *ngFor="let pnr of getPNR(historyBooking)">
         <ion-label class="medium bold" (click)="viewFile(pnr)">View</ion-label>
         <ion-button (click)="downloadTicket(pnr)">
           <ion-label class="medium bold">Download</ion-label>

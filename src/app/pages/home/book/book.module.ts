@@ -23,6 +23,7 @@ import { PassengerListComponent } from 'src/app/components/shared/passenger-list
 import { ListEmployeeComponent } from 'src/app/components/shared/list-employee/list-employee.component';
 import { TravellerDetailComponent } from 'src/app/components/train/traveller-detail/traveller-detail.component';
 import { BookConfirmationComponent } from 'src/app/components/shared/book-confirmation/book-confirmation.component';
+import { BusPassengerDetailComponent } from 'src/app/components/bus/bus-passenger-detail/bus-passenger-detail.component';
 
 @NgModule({
   imports: [
@@ -48,6 +49,7 @@ import { BookConfirmationComponent } from 'src/app/components/shared/book-confir
     PaymentComponent,
     PassengerListComponent,
     TravellerDetailComponent,
+    BusPassengerDetailComponent,
     ListEmployeeComponent,
     FoodPipe
   ],
@@ -61,6 +63,7 @@ import { BookConfirmationComponent } from 'src/app/components/shared/book-confir
     BookConfirmationComponent,
     PassengerListComponent,
     TravellerDetailComponent,
+    BusPassengerDetailComponent,
     ListEmployeeComponent,
     PaymentComponent
   ]
