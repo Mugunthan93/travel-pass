@@ -7,7 +7,7 @@ import { ApproveRequestComponent } from '../components/flight/approve-request/ap
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { forkJoin, from } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, flatMap } from 'rxjs/operators';
 import { ApprovalService } from '../services/approval/approval.service';
 
 
@@ -79,9 +79,9 @@ export class ApprovalState {
     
     //getting approve list
     @Action(ApprovalRequest)
-    async approveRequest(states: StateContext<Approval>, action: ApprovalRequest) {
+    approveRequest(states: StateContext<Approval>, action: ApprovalRequest) {
 
-        states.dispatch(new Navigate(['/', 'home', 'approval-request', states.getState().type, 'request-list']));
+        states.dispatch(new Navigate(['/', 'home', 'approval-request', action.type, 'request-list']));
 
         const userId: number = this.store.selectSnapshot(UserState.getUserId);        
         let menuclose$ = this.menuCtrl.isOpen('first');
@@ -89,32 +89,35 @@ export class ApprovalState {
 
         return forkJoin(menuclose$,approveReq$)
             .pipe(
-                map(
+                flatMap(
                     (response) => {
+
                         let listResponse = response[1];
                         let openBooking = JSON.parse(listResponse.data);
-                        let partition = _.partition(openBooking, (el) => {
-                            return  moment({}).isBefore(el.travel_date)
-                        })
-                        partition[0] = partition[0].sort((a,b) => {
-                            if (moment(b.travel_date).isAfter(a.travel_date)) {
-                                return -1;
-                            }
-                            else if (moment(b.travel_date).isBefore(a.travel_date)) {
-                                return 1;
-                            }
-                            else {
-                                return 0;
-                            }
-                        })
+                        // let partition = _.partition(openBooking, (el) => {
+                        //     return  moment({}).isBefore(el.travel_date)
+                        // })
+
+                        // partition[0] = partition[0].sort((a,b) => {
+                        //     if (moment(b.travel_date).isAfter(a.travel_date)) {
+                        //         return -1;
+                        //     }
+                        //     else if (moment(b.travel_date).isBefore(a.travel_date)) {
+                        //         return 1;
+                        //     }
+                        //     else {
+                        //         return 0;
+                        //     }
+                        // })
+
+                        // let book = partition[0].concat(partition[1]);
+
                         states.patchState({
-                            list: partition[0].concat(partition[1]),
-                            type: action.type
+                          list: openBooking,
+                          type: action.type,
                         });
 
-                        if(response[0]) {
-                            return from(this.menuCtrl.close('first'));
-                        }
+                        return from(this.menuCtrl.close('first'));
                     }
                 )
             );

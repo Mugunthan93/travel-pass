@@ -11,16 +11,18 @@ import { ApprovalState, GetApproveRequest } from 'src/app/stores/approval.state'
 export class RequestListPage implements OnInit {
 
   allBookings: Observable<any[]>;
+  type$: Observable<string>;
 
   constructor(
     private store: Store
   ) { }
 
   ngOnInit() {
+    this.type$ = this.store.select(ApprovalState.getType);
     this.allBookings = this.store.select(ApprovalState.getAllBookings);
   }
 
-  async getApprove(id : number) {
+  getApprove(id : number) {
     this.store.dispatch(new GetApproveRequest(id));
   }
 

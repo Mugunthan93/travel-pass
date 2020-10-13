@@ -254,10 +254,6 @@ export class InternationalBookState {
         let userId: number = this.store.selectSnapshot(UserState.getUserId);
         let vendorId: number = environment.vendorID;
 
-        let userMail : string = this.store.selectSnapshot(UserState.getEmail);
-        let allCC : string[] = action.mailCC;
-        allCC.push(userMail);
-
         sendReq = {
             passenger_details: {
                 kioskRequest: kioskRequest,
@@ -340,7 +336,7 @@ export class InternationalBookState {
                 }
             },
             managers: this.store.selectSnapshot(UserState.getApprover),
-            approval_mail_cc: allCC,
+            approval_mail_cc: action.mailCC,
             purpose: action.purpose,
             comments: '[\"' + action.comment + '\"]',
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { ApprovalRequest, ApprovalState } from 'src/app/stores/approval.state';
-import { MenuController } from '@ionic/angular';
+import { MenuController, LoadingController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -13,21 +13,32 @@ export class ApprovalRequestPage implements OnInit {
 
   constructor(
     private store: Store,
-    public menuCtrl: MenuController
+    public menuCtrl: MenuController,
+    public loadingCtrl : LoadingController
   ) { }
 
   type$ : Observable<string>;
 
   ngOnInit() {
-    this.type$ = this.store.select(ApprovalState);
+    this.type$ = this.store.select(ApprovalState.getType);
   }
 
   async openMenu() {
     this.menuCtrl.open('first');
   }
 
-  viewApproval(type: string) {
-    this.store.dispatch(new ApprovalRequest(type));
+  async viewApproval(type: string) {
+    let loading = await this.loadingCtrl.create({
+      message: "loading " + type + " list",
+    });
+    await loading.present();
+    this.store.dispatch(new ApprovalRequest(type))
+      .subscribe({
+        complete: async () => {
+          console.log('completed');
+          await loading.dismiss();
+        }
+      });
   }
 
 }

@@ -317,11 +317,7 @@ export class HotelBookState {
             else {
                 return 0;
             }
-        });
-
-        let userMail : string = this.store.selectSnapshot(UserState.getEmail);
-        let allCC : string[] = action.mailCC;
-        allCC.push(userMail);    
+        });    
 
         let request: hotelRequest = {
             guest_details: {
@@ -364,7 +360,7 @@ export class HotelBookState {
             user_id: this.store.selectSnapshot(UserState.getUserId),
             customer_id: this.store.selectSnapshot(UserState.getcompanyId),
             booking_mode: 'online',
-            approval_mail_cc: allCC,
+            approval_mail_cc: action.mailCC,
             managers: this.store.selectSnapshot(UserState.getApprover),
             trip_type: 'business',
             comments: action.comment,

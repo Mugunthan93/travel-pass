@@ -176,9 +176,6 @@ export class BusBookState {
 
   @Action(BusRequest)
   sendRequest(states: StateContext<busbook>, action: BusRequest) {
-    let userMail: string = this.store.selectSnapshot(UserState.getEmail);
-    let allCC: string[] = action.mailCC;
-    allCC.push(userMail);
 
     let detail = Object.assign({},states.getState().passenger_details);
     detail.blockSeatPaxDetails = this.store.selectSnapshot(BusPassengerState.getSelectPassenger);
@@ -195,6 +192,7 @@ export class BusBookState {
       purpose: action.purpose,
       cancellation_charges: null,
       status: "pending",
+      approval_mail_cc: action.mailCC,
       managers: this.store.selectSnapshot(UserState.getApprover),
     };
 

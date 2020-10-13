@@ -501,6 +501,7 @@ export class HotelResultState{
                                         let dumpResponse$ = this.hotelService.getStaticData(staticPay);
                                         return dumpResponse$.
                                             pipe(
+                                                skipWhile(el => el.status == -2),
                                                 catchError(
                                                     (error) => {
                                                         console.log(error);

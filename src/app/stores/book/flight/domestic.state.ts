@@ -369,10 +369,6 @@ export class DomesticBookState {
             this.GST().cgst +
             this.GST().igst
             );
-        
-        let userMail : string = this.store.selectSnapshot(UserState.getEmail);
-        let allCC : string[] = action.mailCC;
-        allCC.push(userMail);
 
         sendReq = {
             passenger_details: {
@@ -462,7 +458,7 @@ export class DomesticBookState {
                 }
             },
             managers: this.store.selectSnapshot(UserState.getApprover),
-            approval_mail_cc: allCC,
+            approval_mail_cc: action.mailCC,
             purpose: action.purpose,
             comments: '[\"' + action.comment + '\"]',
 

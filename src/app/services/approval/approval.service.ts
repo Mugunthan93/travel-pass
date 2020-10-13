@@ -26,7 +26,8 @@ export class ApprovalService {
     switch(type) {
       case 'flight' : return '/allBookings/';
       case 'hotel' : return '/hotelRequest/approval/';
-      case 'bus' : return '/busRequest/approval/';
+      case 'bus': return '/busRequest/approval/';
+      case 'train': return '/trainRequest/approval/';
     }
   }
 }

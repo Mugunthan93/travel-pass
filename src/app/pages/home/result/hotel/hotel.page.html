@@ -41,8 +41,8 @@
       <ion-title class="large bold">No Hotels Found</ion-title>
     </ion-row>
 
-    <ion-row *ngIf="(hotelList$ | async).length > 0">
-      <ion-card *ngFor="let hotel of (hotelList$ | async | sort : (sortBy$ | async).property : (sortBy$ | async).state);let i = index" (click)="viewHotel(hotel)">
+    <ion-virtual-scroll *ngIf="(hotelList$ | async).length > 0" [items]="hotelList$ | async | sort : (sortBy$ | async).property : (sortBy$ | async).state" approxItemHeight="232px">
+      <ion-card *virtualItem="let hotel;let i = index" (click)="viewHotel(hotel)">
         <ion-card-header>
           <ion-row>
             <ion-icon size="large" [name]="star == 'full' ? 'star' : star == 'half' ? 'star-half' : 'star'"
@@ -60,9 +60,9 @@
             </ion-row>
           </ion-row>
         </ion-card-header>
-    
-    
-    
+
+
+
         <ion-card-content>
           <ion-item>
             <ion-row class="img">
@@ -74,8 +74,42 @@
             </ion-row>
           </ion-item>
         </ion-card-content>
+
+      </ion-card>
+    </ion-virtual-scroll>
+
+    <!-- <ion-row *ngIf="(hotelList$ | async).length > 0">
+      <ion-card *ngFor="let hotel of (hotelList$ | async | sort : (sortBy$ | async).property : (sortBy$ | async).state);let i = index" (click)="viewHotel(hotel)">
+        <ion-card-header>
+          <ion-row>
+            <ion-icon size="large" [name]="star == 'full' ? 'star' : star == 'half' ? 'star-half' : 'star'"
+              *ngFor="let star of starRating(hotel.StarRating)"></ion-icon>
+          </ion-row>
+          <ion-row>
+            <ion-row>
+              <ion-title class="medium">{{hotel.HotelName | titlecase}}</ion-title>
+              <ion-label *ngFor="let add of address(hotel)">{{ add }}</ion-label>
+
+            </ion-row>
+            <ion-row>
+              <ion-label class="bold">{{hotel.Price.PublishedPrice | currency : 'INR'}}</ion-label>
+            </ion-row>
+          </ion-row>
+        </ion-card-header>
+    
+    
+    
+        <ion-card-content>
+          <ion-item>
+            <ion-row class="img">
+              <ion-img [src]="loadImg(hotel)" (ionError)="changeImg($event)"></ion-img>
+            </ion-row>
+            <ion-row class="headline" [innerHTML]="hotel.Description | slice : 0 : 100">
+            </ion-row>
+          </ion-item>
+        </ion-card-content>
     
       </ion-card>
-    </ion-row>
+    </ion-row> -->
 
 </ion-content>
