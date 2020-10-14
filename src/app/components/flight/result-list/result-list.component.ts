@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, QueryList, ElementRef, ViewChildren, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, QueryList, ElementRef, ViewChildren, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { matExpansionAnimations, MatExpansionPanel } from '@angular/material/expansion';
 import { ModalController } from '@ionic/angular';
 import { FlightBaggageComponent } from '../flight-baggage/flight-baggage.component';
@@ -53,6 +53,8 @@ export class ResultListComponent implements OnInit {
     private store : Store
   ) {
   }
+
+
 
   ngOnInit() {
     

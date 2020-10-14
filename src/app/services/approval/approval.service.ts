@@ -14,12 +14,26 @@ export class ApprovalService {
 
   getApprovalList(type : string, userId : number): Observable<HTTPResponse> {
     let typeUrl : string = this.typeUrl(type);
-    return from(this.http.get( typeUrl + userId, {}));
+    const encrytkey = {
+      "encrytkey": "wMMtGeHb0WCq9oppu3n6Apvco0Bt6zaT0sJVwsSXlxM="
+    }
+    return from(this.http.get( typeUrl + userId, encrytkey));
+  }
+
+  
+  //get ticket by manager from approval request list 
+  getReqTicket(ticketId: string,type : string): Observable<HTTPResponse> {
+    const encrytkey = {
+      "encrytkey": "wMMtGeHb0WCq9oppu3n6Apvco0Bt6zaT0sJVwsSXlxM="
+    }
+    let approveUrl : string = this.approveUrl(type);
+    return from(this.http.get(approveUrl + ticketId, encrytkey));
   }
 
   //approve the request
-  approvalReq(ticketId : string, requestBody : any ): Observable<HTTPResponse> {
-    return from(this.http.put("/airlineRequest/" + ticketId, requestBody));
+  approvalReq(type : string, ticketId : string, requestBody : any ): Observable<HTTPResponse> {
+    let approveUrl : string = this.approveUrl(type);
+    return from(this.http.put(approveUrl + ticketId, requestBody));
   }
 
   typeUrl(type : string) {
@@ -30,4 +44,14 @@ export class ApprovalService {
       case 'train': return '/trainRequest/approval/';
     }
   }
+
+  approveUrl(type : string) {
+    switch(type) {
+      case 'flight' : return '/airlineRequest/';
+      case 'hotel' : return '/hotelRequest/';
+      case 'bus': return '/busRequest/';
+      case 'train': return '/trainRequest/';
+    }
+  }
+
 }

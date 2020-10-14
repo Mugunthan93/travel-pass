@@ -28,17 +28,7 @@ export class ApprovalRequestPage implements OnInit {
   }
 
   async viewApproval(type: string) {
-    let loading = await this.loadingCtrl.create({
-      message: "loading " + type + " list",
-    });
-    await loading.present();
-    this.store.dispatch(new ApprovalRequest(type))
-      .subscribe({
-        complete: async () => {
-          console.log('completed');
-          await loading.dismiss();
-        }
-      });
+    this.store.dispatch(new ApprovalRequest(type));
   }
 
 }

@@ -64,14 +64,6 @@ export class FlightService {
     return await this.http.post("/airlineRequest?email_notify=true", request);
   }
 
-  //get ticket by manager from approval request list 
-  async getReqTicket(ticketId: string): Promise<HTTPResponse> {
-    const encrytkey = {
-      "encrytkey": "wMMtGeHb0WCq9oppu3n6Apvco0Bt6zaT0sJVwsSXlxM="
-    }
-    return await this.http.get("/airlineRequest/" + ticketId, encrytkey);
-  }
-
   async downloadTicket(pnr : string, filePath : string): Promise<HTTPResponse> {
     return await this.http.post("/airlines/airlineTicketing" + pnr + ".pdf", {});
   }

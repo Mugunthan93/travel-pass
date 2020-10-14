@@ -7,8 +7,6 @@ import { IonicModule } from '@ionic/angular';
 import { ApprovalRequestPageRoutingModule } from './approval-request-routing.module';
 
 import { ApprovalRequestPage } from './approval-request.page';
-import { ApproveRequestComponent } from 'src/app/components/flight/approve-request/approve-request.component';
-import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   imports: [

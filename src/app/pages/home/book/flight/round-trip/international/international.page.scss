@@ -22,11 +22,10 @@ ion-content {
 
                 >::ng-deep span {
                     >ion-row {
+                        width: 300px;
                         display: flex;
                         flex-direction: column;
-
-                        >ion-row {
-                            width: 150px;
+                        >ion-row{
                             justify-content: space-between;
                         }
                     }

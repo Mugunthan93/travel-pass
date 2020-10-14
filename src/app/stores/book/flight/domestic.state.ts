@@ -6,7 +6,7 @@ import { FlightService } from 'src/app/services/flight/flight.service';
 import { DomesticResultState } from '../../result/flight/domestic.state';
 import { RoundTripSearch, RoundTripSearchState } from '../../search/flight/round-trip.state';
 import * as moment from 'moment';
-import { CompanyState } from '../../company.state';
+import { CompanyState, GetCompany } from '../../company.state';
 import { GST } from './oneway.state';
 import { city } from '../../shared.state';
 import { UserState } from '../../user.state';
@@ -132,6 +132,9 @@ export class DomesticBookState {
 
         loading.message = "Checking Flight Availability";
         loading.present();
+
+        let companyId = this.store.selectSnapshot(UserState.getcompanyId);
+        states.dispatch(new GetCompany(companyId));
 
         try {
             const departureFQResponse = await this.flightService.fairQuote(this.store.selectSnapshot(DomesticResultState.getSelectedDepartureFlight).fareRule);

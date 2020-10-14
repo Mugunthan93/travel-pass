@@ -76,7 +76,7 @@ export class DomesticResultState extends BaseFlightResult {
         return states.departure.value.filter(
             el =>
                 (filterState.stops !== -1 ? el.stops == filterState.stops : el) &&
-                (filterState.price == 0 ? el : filterState.price <= el.fare) &&
+                (filterState.price == 0 ? el : filterState.price >= el.fare) &&
                 (filterState.corporateFare == false ? el : el.corporate == filterState.corporateFare) &&
                 moment(el.departure).hour() <= filterState.depatureHours &&
                 moment(el.arrival).hour() <= filterState.arrivalHours &&
@@ -92,7 +92,7 @@ export class DomesticResultState extends BaseFlightResult {
         return states.return.value.filter(
             el =>
                 (filterState.stops !== -1 ? el.stops == filterState.stops : el) &&
-                (filterState.price == 0 ? el : filterState.price <= el.fare) &&
+                (filterState.price == 0 ? el : filterState.price >= el.fare) &&
                 (filterState.corporateFare == false ? el : el.corporate == filterState.corporateFare) &&
                 moment(el.departure).hour() <= filterState.depatureHours &&
                 moment(el.arrival).hour() <= filterState.arrivalHours &&

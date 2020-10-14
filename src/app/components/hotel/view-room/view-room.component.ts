@@ -55,7 +55,8 @@ export class ViewRoomComponent implements OnInit {
   }
 
   getHotelImage(img : string) {
-    return this.webView.convertFileSrc(img);
+    return img;
+    // return this.webView.convertFileSrc(img);
   }
 
   bookHotel() {

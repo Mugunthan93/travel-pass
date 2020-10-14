@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { ApprovalState, AcceptRequest, DeclineRequest } from 'src/app/stores/approval.state';
+import { ApprovalState, HandleRequest } from 'src/app/stores/approval.state';
 import { ModalController } from '@ionic/angular';
 import * as moment from 'moment';
 
@@ -24,11 +24,11 @@ export class ApproveRequestComponent implements OnInit {
   }
   
   approveRequest() {
-    this.store.dispatch(new AcceptRequest());
+    this.store.dispatch(new HandleRequest('open'));
   }
 
   declineRequest() {
-    this.store.dispatch(new DeclineRequest());
+    this.store.dispatch(new HandleRequest('req'));
   }
 
   duration(duration : number) {

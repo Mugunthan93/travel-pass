@@ -131,7 +131,7 @@ export class AuthState {
         const logout = await this.authService.logout();
         sessionStorage.clear();
 
-        this.store.dispatch(new StateResetAll(SharedState));
+        this.store.dispatch(new StateResetAll());
         this.menuCtrl.toggle('first');
         this.store.dispatch(new Navigate(['/', 'auth']));
         

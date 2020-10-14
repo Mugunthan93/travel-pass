@@ -117,7 +117,8 @@ export class HotelPage implements OnInit {
   }
 
   loadImg(hotel: (staticresponselist & hotelresultlist)): string {
-    return this.webview.convertFileSrc(hotel.Images[0]);
+    return hotel.Images[0];
+    // return this.webview.convertFileSrc(hotel.Images[0]);
   }
   
 }

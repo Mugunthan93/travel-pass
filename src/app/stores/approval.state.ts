@@ -1,14 +1,14 @@
 import { State, Action, StateContext, Store, Selector } from "@ngxs/store";
 import { Navigate } from '@ngxs/router-plugin';
-import { MenuController, ModalController, AlertController } from '@ionic/angular';
+import { MenuController, ModalController, AlertController, LoadingController } from '@ionic/angular';
 import { FlightService } from '../services/flight/flight.service';
 import { UserState } from './user.state';
-import { ApproveRequestComponent } from '../components/flight/approve-request/approve-request.component';
 import * as _ from 'lodash';
-import * as moment from 'moment';
-import { forkJoin, from } from 'rxjs';
-import { map, flatMap } from 'rxjs/operators';
+import { forkJoin, from, iif, of, throwError } from 'rxjs';
+import { map, flatMap, catchError } from 'rxjs/operators';
 import { ApprovalService } from '../services/approval/approval.service';
+import { HTTPResponse } from '@ionic-native/http/ngx';
+import { ApproveRequestComponent } from '../components/shared/approve-request/approve-request.component';
 
 
 export interface Approval {
@@ -31,12 +31,11 @@ export class GetApproveRequest {
     }
 }
 
-export class AcceptRequest {
-    static readonly type = "[approval] AcceptRequest";
-}
+export class HandleRequest {
+    static readonly type = "[approval] HandleRequest";
+    constructor(public status : string) {
 
-export class DeclineRequest {
-    static readonly type = "[approval] DeclineRequest";
+    }
 }
 
 
@@ -56,6 +55,7 @@ export class ApprovalState {
         public menuCtrl: MenuController,
         public flightService: FlightService,
         public modalCtrl: ModalController,
+        public loadingCtrl: LoadingController,
         private alertCtrl : AlertController,
         private approvalService : ApprovalService
     ) {
@@ -81,19 +81,26 @@ export class ApprovalState {
     @Action(ApprovalRequest)
     approveRequest(states: StateContext<Approval>, action: ApprovalRequest) {
 
-        states.dispatch(new Navigate(['/', 'home', 'approval-request', action.type, 'request-list']));
+        states.patchState({
+            list : null,
+            type : action.type
+        });
+        states.dispatch([new Navigate(['/', 'home', 'approval-request', action.type, 'request-list'])]); 
 
+        let menuclose$ = from(this.menuCtrl.isOpen('first')).pipe(flatMap(el => iif(() => el,from(this.menuCtrl.close('first')),of(true))));
         const userId: number = this.store.selectSnapshot(UserState.getUserId);        
-        let menuclose$ = this.menuCtrl.isOpen('first');
         let approveReq$ = this.approvalService.getApprovalList(action.type, userId);
-
-        return forkJoin(menuclose$,approveReq$)
-            .pipe(
-                flatMap(
-                    (response) => {
-
-                        let listResponse = response[1];
-                        let openBooking = JSON.parse(listResponse.data);
+        
+        return forkJoin(menuclose$)
+        .pipe(
+            flatMap(
+                (response) => {
+                    return forkJoin(approveReq$);
+                }
+            ),
+            map(
+                (response) => {
+                        let openBooking = JSON.parse(response[0].data);
                         // let partition = _.partition(openBooking, (el) => {
                         //     return  moment({}).isBefore(el.travel_date)
                         // })
@@ -116,8 +123,6 @@ export class ApprovalState {
                           list: openBooking,
                           type: action.type,
                         });
-
-                        return from(this.menuCtrl.close('first'));
                     }
                 )
             );
@@ -125,155 +130,80 @@ export class ApprovalState {
 
     //getting selected approve req
     @Action(GetApproveRequest)
-    async getApproveRequest(states: StateContext<Approval>, action: GetApproveRequest) {
-        const modal = await this.modalCtrl.create({
-            component : ApproveRequestComponent
-        });
+    getApproveRequest(states: StateContext<Approval>, action: GetApproveRequest) {
+        const modal$ = from(this.modalCtrl.create({
+            component : ApproveRequestComponent,
+            id : 'get-approve-item'
+        })).pipe(flatMap(el => from(el.present())));
 
-        try {
-            const getApprovalReqResponse = await this.flightService.getReqTicket(action.id.toString());
-            console.log(getApprovalReqResponse);
-            let response = JSON.parse(getApprovalReqResponse.data);
+        let getapprove$ = this.approvalService.getReqTicket(action.id.toString(),states.getState().type);
+        return getapprove$.pipe(
+            flatMap(
+                (response) => {
+                    let responsedata = JSON.parse(response.data);
 
-            states.patchState({
-                selectedRequest: response.data[0]
-            });
-            return await modal.present();
-
-        }
-        catch (error) {
-            console.log(error);
-        }
-
+                    states.patchState({
+                        selectedRequest: responsedata.data[0]
+                    });
+                    return modal$;
+                }
+            )
+        );
+        
     }
 
-    //accept req
-    @Action(AcceptRequest)
-    async acceptRequest(states: StateContext<Approval>) {
-        const successAlert = await this.alertCtrl.create({
+    @Action(HandleRequest)
+    handleRequest(states: StateContext<Approval>, action: HandleRequest) {
+
+        const successAlert$ = from(this.alertCtrl.create({
             header: 'Approve Success',
             subHeader: 'Request has been approved successfully',
             buttons: [{
                 text: 'OK',
                 handler: () => {
-                    this.store.dispatch(new ApprovalRequest('flight'));
-                    successAlert.dismiss();
+                    states.dispatch(new ApprovalRequest(states.getState().type));
                 }
             }]
-        });
-        let failedAlert = await this.alertCtrl.create({
+        })).pipe(flatMap(el => from(el.present())));
+        let failedAlert$ = from(this.alertCtrl.create({
             header: 'Approve Failed',
             subHeader: 'Failed to Approve the Request',
             buttons: [{
                 text: 'Cancel',
                 handler: () => {
-                    successAlert.dismiss();
+                    states.dispatch(new ApprovalRequest(states.getState().type));
                 }
             }]
-        });
+        }));
+
+        let reqbody = Object.assign({}, states.getState().selectedRequest);
+        reqbody.status = action.status;
+
+        let approveReq$ = this.approvalService.approvalReq(states.getState().type,reqbody.id, reqbody); 
         
-        let req = Object.assign({}, states.getState().selectedRequest);
-        let reqbody = {
-            passenger_details: req.passenger_details,
-            booking_mode: req.booking_mode,
-            assigned_to: req.assigned_to,
-            assigned_by: req.assigned_by,
-            comments: req.comments,
-            trip_requests: req.trip_requests,
-            cancellation_remarks: req.cancellation_remarks,
-            trip_type: req.trip_type,
-            customer_id: req.customer_id,
-            status: 'open',
-            transaction_id: req.transaction_id,
-            managers: req.managers,
-            user_id: req.user_id,
-            req_id: req.id,
-            traveller_id: req.traveller_id,
-            travel_date: req.travel_date
-        }
-        console.log(reqbody);
-        console.log(JSON.stringify(reqbody));
-        try {
-            const acceptReqResponse = await this.approvalService.approvalReq(req.id, reqbody);
-            console.log(acceptReqResponse);
-            // if (acceptReqResponse.status == 200) {
-            //     successAlert.present();
-            // }
-        }
-        catch (error) {
-            let errObj = JSON.parse(error.error);
-            if (errObj.status_code == 500) {
-                failedAlert.message = errObj.message;
-                failedAlert.present();
-            }
-            console.log(errObj);
-            console.log(error);
-        }
-    }
-
-    //decline req
-    @Action(DeclineRequest)
-    async declineRequest(states: StateContext<Approval>) {
-
-        const successAlert = await this.alertCtrl.create({
-            header: 'Decline Success',
-            subHeader: 'Request has been Decline successfully',
-            buttons: [{
-                text: 'OK',
-                handler: () => {
-                    this.store.dispatch(new ApprovalRequest('flight'));
-                    successAlert.dismiss();
+        return forkJoin(approveReq$,successAlert$,failedAlert$).pipe(
+            flatMap(
+                (response) => {
+                    if (response[0].status == 200) {
+                        return from(successAlert$);
+                    }
                 }
-            }]
-        });
-        let failedAlert = await this.alertCtrl.create({
-            header: 'Decline Failed',
-            subHeader: 'Failed to decline the Request',
-            buttons: [{
-                text: 'Cancel',
-                handler: () => {
-                    successAlert.dismiss();
+            ),
+            catchError(
+                (error : HTTPResponse) => {
+                let errObj = JSON.parse(error.error);
+                if (errObj.status_code == 500) {
+                    return failedAlert$.pipe(
+                        flatMap(
+                            (el) => {
+                                el.message = errObj.message;
+                                return from(el.present());
+                            }
+                        )
+                    );
                 }
-            }]
-        });
-
-        let req = Object.assign({}, states.getState().selectedRequest);
-        let reqbody = {
-            passenger_details: req.passenger_details,
-            booking_mode: req.booking_mode,
-            assigned_to: req.assigned_to,
-            assigned_by: req.assigned_by,
-            comments: req.comments,
-            trip_requests: req.trip_requests,
-            cancellation_remarks: req.cancellation_remarks,
-            trip_type: req.trip_type,
-            customer_id: req.customer_id,
-            status: 'rej',
-            transaction_id: req.transaction_id,
-            managers: req.managers,
-            user_id: req.user_id,
-            req_id: req.id,
-            traveller_id: req.traveller_id,
-            travel_date: req.travel_date
-        }
-        console.log(reqbody);
-        console.log(JSON.stringify(reqbody));
-        try {
-            const declineReqResponse = await this.approvalService.approvalReq(req.id, reqbody);
-            console.log(declineReqResponse);
-            // if (declineReqResponse.status == 200) {
-            //     successAlert.present();
-            // }
-        }
-        catch (error) {
-            let errObj = JSON.parse(error.error);
-            if (errObj.status_code == 500) {
-                failedAlert.message = errObj.message;
-                failedAlert.present();
-            }
-            console.log(errObj);
-            console.log(error);
-        }
+            })
+        );
     }
 
 

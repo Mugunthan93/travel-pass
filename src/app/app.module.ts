@@ -18,7 +18,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { StateModule } from './modules/state.module';
 import { Network } from '@ionic-native/network/ngx';
 import { AndroidFullScreen } from '@ionic-native/android-full-screen/ngx';
-import { ApproveRequestComponent } from './components/flight/approve-request/approve-request.component';
+import { ApproveRequestComponent } from './components/shared/approve-request/approve-request.component';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { File } from '@ionic-native/file/ngx';

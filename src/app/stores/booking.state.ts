@@ -86,7 +86,7 @@ export class BookingState {
         let newBooking = [];
         let historyBooking = [];
 
-        let menuclose$ = this.menuCtrl.isOpen('first');
+        let menuclose$ = from(this.menuCtrl.isOpen('first'));
         let openBooking$ = this.bookingService.myBooking(action.type,'open');
         let newBooking$ = this.bookingService.myBooking(action.type,'new');
         let pendingBooking$ = this.bookingService.myBooking(action.type,'pending');
@@ -138,9 +138,9 @@ export class BookingState {
 
                     console.log(states.getState().new,states.getState().history);
 
-                    return from(this.menuCtrl.close('first'));
-                    // if(response[0]){
-                    // }
+                    if(response[0]){
+                        return from(this.menuCtrl.close('first'));
+                    }
                 }
             )
         );

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ModalController, LoadingController } from '@ionic/angular';
 import { EmailItineraryComponent } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 import { Observable } from 'rxjs';
@@ -39,7 +39,8 @@ export class ResultPage implements OnInit {
   constructor(
     private store: Store,
     public modalCtrl: ModalController,
-    public loadingCtrl: LoadingController
+    public loadingCtrl: LoadingController,
+    private changeDet: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -58,6 +59,12 @@ export class ResultPage implements OnInit {
     this.loading$ = this.store.select(HotelResultState.getLoading);
 
     this.busSearch$ = this.store.select(BusSearchState.getSearchData);
+  }
+
+  
+  ionViewWillEnter() {
+    console.log(this.changeDet);
+    this.changeDet.detectChanges();
   }
 
   async changeResult(evt: CustomEvent) {

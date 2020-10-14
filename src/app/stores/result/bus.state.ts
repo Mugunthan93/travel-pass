@@ -177,14 +177,9 @@ export class BusResultState {
   static getBusResult(state: busresult, filterState: busFilter): busResponse[] {
     return state.buses.filter(
       (el) =>
-        moment(el.departureTime, ["h:mm A"]).hour() <=
-          filterState.depatureHours &&
+        moment(el.departureTime, ["h:mm A"]).hour() <= filterState.depatureHours &&
         moment(el.arrivalTime, ["h:mm A"]).hour() <= filterState.arrivalHours &&
-        (filterState.busType.some((air) => air.value == true)
-          ? filterState.busType.some(
-              (air) => air.name === el.operatorName && air.value
-            )
-          : el)
+        (filterState.busType.some((air) => air.value == true) ? filterState.busType.some((air) => air.name === el.operatorName && air.value): el)
     );
   }
 
@@ -250,7 +245,6 @@ export class BusResultState {
   @Action(BusResponse)
   getBusResponse(states: StateContext<busresult>, action: BusResponse) {
     let response: busResponse[] = Object.assign([], action.response);
-
     let response2: busResponse[] = response.map((res: busResponse) => {
       let el = res;
       if (el.fare.includes(",")) {
@@ -270,6 +264,7 @@ export class BusResultState {
 
   @Action(SeatLayout)
   getSeatLayout(states: StateContext<busresult>, action: SeatLayout) {
+
     states.patchState({
       currentbus: action.busDetail,
     });

@@ -8,7 +8,7 @@ import { OneWayResultState } from '../../result/flight/oneway.state';
 import { OneWaySearch, OneWaySearchState } from '../../search/flight/oneway.state';
 import { SearchState } from '../../search.state';
 import { city } from '../../shared.state';
-import { CompanyState } from '../../company.state';
+import { CompanyState, GetCompany } from '../../company.state';
 import { environment } from 'src/environments/environment';
 import { UserState } from '../../user.state';
 import * as moment from 'moment';
@@ -108,6 +108,9 @@ export class OneWayBookState{
 
         loading.message = "Checking Flight Availability";
         loading.present();
+
+        let companyId = this.store.selectSnapshot(UserState.getcompanyId);
+        states.dispatch(new GetCompany(companyId));
 
         try {
             const fairQuoteResponse = await this.flightService.fairQuote(this.store.selectSnapshot(OneWayResultState.getSelectedFlight).fareRule);
