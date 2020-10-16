@@ -3,8 +3,8 @@ import { HotelService } from 'src/app/services/hotel/hotel.service';
 import { File, FileError, FileEntry, DirectoryEntry } from '@ionic-native/file/ngx';
 import { FileTransferError } from '@ionic-native/file-transfer/ngx';
 import { LoadingController, ModalController, AlertController } from '@ionic/angular';
-import { Observable, from, throwError, of, EMPTY, iif, forkJoin } from 'rxjs';
-import { mergeMap, take, toArray, tap, catchError, skipWhile, takeWhile, flatMap, map, switchMap, exhaustMap, retryWhen, delayWhen, finalize, concatMap, ignoreElements, skip, find, groupBy, reduce, distinct, distinctUntilChanged, first, bufferCount, filter, throttleTime, concat } from 'rxjs/operators';
+import { Observable, from, throwError, of, EMPTY, iif, forkJoin, concat } from 'rxjs';
+import { mergeMap, take, toArray, tap, catchError, skipWhile, takeWhile, flatMap, map, switchMap, exhaustMap, retryWhen, delayWhen, finalize, concatMap, ignoreElements, skip, find, groupBy, reduce, distinct, distinctUntilChanged, first, bufferCount, filter, throttleTime } from 'rxjs/operators';
 import { SearchHotel, HotelSearchState, staticresponselist, hotelresultlist, staticpayload, paragraph, subsection, hotelsearchpayload, hotelForm } from '../search/hotel.state';
 import { SharedService } from 'src/app/services/shared/shared.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
@@ -13,11 +13,9 @@ import { FileService } from 'src/app/services/file/file.service';
 import { AddBlockRoom } from '../book/hotel.state';
 import { Navigate } from '@ngxs/router-plugin';
 import { BookMode } from '../book.state';
-import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SecurityContext } from '@angular/core';
 import { GetPlaces, HotelFilterState, hotelFilter } from './filter/hotel.filter.state';
-import { ViewHotelComponent } from 'src/app/components/hotel/view-hotel/view-hotel.component';
 
 export interface hotelresult {
     hotelresponseList: (staticresponselist & hotelresultlist)[]
@@ -98,7 +96,7 @@ export interface dayRates {
 }
 
 export interface roomCombination {
-
+    RoomIndex : number[];
 }
 
 export interface getHotelInfo {
@@ -629,6 +627,9 @@ export class HotelResultState{
                         else if (hotelResponse.Error.ErrorCode == 2) {
                             return true;
                         }
+                        else {
+                            return false;
+                        }
                     }
                 ),
                 map(
@@ -648,6 +649,7 @@ export class HotelResultState{
                         roomDetail = _.filter(roomDetail, (n) => {
                             return !_.isUndefined(n.DayRates);
                         });
+                        roomDetail = _.uniqBy(roomDetail, 'RoomIndex');
                         let selected: selectedHotel = Object.assign({}, {
                             HotelDetail: action.hotel,
                             HotelRoomsDetails: roomDetail,
@@ -754,7 +756,7 @@ export class HotelResultState{
                         states.patchState({
                             selectedHotel: hotel
                         });
-                        return forkJoin(from(this.loadingCtrl.dismiss(null, null, 'retrive-hotel')),action.modal);
+                        return concat(from(this.loadingCtrl.dismiss(null, null, 'retrive-hotel')),action.modal);
                     }
                 )
             );
@@ -902,11 +904,24 @@ export class HotelResultState{
                             .pipe(
                                 map(
                                     (response: HTTPResponse) => {
+                                        console.log(response);
                                         let blockedRoom: any = JSON.parse(response.data).response;
                                         if (blockedRoom.Error.ErrorCode == 2) {
                                             return concat(from(loadingEl.dismiss()),this.errorAlert(blockedRoom.Error.ErrorCode));
                                         }
                                         return response;
+                                    }
+                                ),
+                                skipWhile(
+                                    (response : HTTPResponse) => {
+                                        console.log(response);
+                                        let blockedRoom: any = JSON.parse(response.data).response;
+                                        if (blockedRoom.Error.ErrorCode == 2) {
+                                            return true;
+                                        }
+                                        else {
+                                            return false;
+                                        }
                                     }
                                 ),
                                 map(
@@ -936,7 +951,7 @@ export class HotelResultState{
                             return blockroom$;
                         }
                         else {
-                            return forkJoin(from(loadingEl.dismiss()),roomAlert$);
+                            return concat(from(loadingEl.dismiss()),roomAlert$);
                         }
                     }
                 )

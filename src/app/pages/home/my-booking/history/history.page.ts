@@ -16,6 +16,7 @@ export class HistoryPage implements OnInit {
 
   historyBookings: Observable<any[]>;
   type$: Observable<string>;
+  loading$: Observable<boolean>;
 
   constructor(
     private store: Store,
@@ -28,6 +29,8 @@ export class HistoryPage implements OnInit {
     console.log(this.file);
     this.historyBookings = this.store.select(BookingState.getHistoryBooking);
     this.type$ = this.store.select(BookingState.getType);
+    this.loading$ = this.store.select(BookingState.getLoading);
+
   }
 
   tripType(booking: any) : string {

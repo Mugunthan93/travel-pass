@@ -30,9 +30,9 @@ export class AddGuestComponent implements OnInit {
     pan: "[A-Z]{5}[0-9]{4}[A-Z]{1}"
   }
 
-  emailValid: ValidatorFn[] = this.paxtype == "1" ? [Validators.required, Validators.pattern(this.regex.email)] : [];
-  panValid: ValidatorFn[] = this.paxtype == "1" ? [Validators.required,Validators.pattern(this.regex.pan)] : [];
-  childValid: ValidatorFn[] = this.paxtype == "2" ? [Validators.required] : [];
+  emailValid: ValidatorFn[];
+  panValid: ValidatorFn[];
+  childValid: ValidatorFn[];
 
   formsubmit: boolean = false;
 
@@ -42,6 +42,10 @@ export class AddGuestComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    this.emailValid = this.paxtype == "1" ? [Validators.required, Validators.pattern(this.regex.email)] : [];
+    this.panValid = this.paxtype == "1" ? [Validators.required,Validators.pattern(this.regex.pan)] : [];
+    this.childValid = this.paxtype == "2" ? [Validators.required] : [];
 
     this.customAlertOptions = {
       header: 'Child Age',

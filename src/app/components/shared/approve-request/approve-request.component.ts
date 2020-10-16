@@ -4,6 +4,7 @@ import { Store } from '@ngxs/store';
 import { ApprovalState, HandleRequest } from 'src/app/stores/approval.state';
 import { ModalController } from '@ionic/angular';
 import * as moment from 'moment';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-approve-request',
@@ -12,7 +13,8 @@ import * as moment from 'moment';
 })
 export class ApproveRequestComponent implements OnInit {
 
-  flightDetail$ : Observable<any>;
+  Detail$ : Observable<any>;
+  type : string;
 
   constructor(
     private store: Store,
@@ -20,7 +22,8 @@ export class ApproveRequestComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.flightDetail$ = this.store.select(ApprovalState.getSelectedRequest);
+    this.Detail$ = this.store.select(ApprovalState.getSelectedRequest);
+    this.type = this.store.selectSnapshot(ApprovalState.getType);
   }
   
   approveRequest() {
@@ -28,7 +31,7 @@ export class ApproveRequestComponent implements OnInit {
   }
 
   declineRequest() {
-    this.store.dispatch(new HandleRequest('req'));
+    this.store.dispatch(new HandleRequest('rej'));
   }
 
   duration(duration : number) {
@@ -37,6 +40,27 @@ export class ApproveRequestComponent implements OnInit {
 
   dismiss() {
     this.modalCtrl.dismiss();
+  }
+
+  passenger() : Observable<any[]> {
+    return this.Detail$
+      .pipe(
+        map(
+          (detail) => {
+            switch(this.type){
+              case 'flight' : return detail.passenger_details.passenger;
+              case 'hotel' : return detail.guest_details.passengers;
+            }
+          }
+        )
+      );
+  }
+
+  passengerTitle(passenger : any,i : number) {
+    switch(this.type) {
+      case 'flight' : passenger.IsLeadPax ? 'Lead Passenger' : 'Passenger ' + i;
+      case 'hotel' : passenger.LeadPassenger ? 'Lead Passenger' : 'Passenger ' + i
+    }
   }
 
 }

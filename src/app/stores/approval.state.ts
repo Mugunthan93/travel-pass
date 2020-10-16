@@ -15,6 +15,7 @@ export interface Approval {
     type: string
     list: any,
     selectedRequest: any
+    loading : boolean
 }
 
 export class ApprovalRequest {
@@ -44,8 +45,9 @@ export class HandleRequest {
     name: 'approval',
     defaults: {
         type: 'flight',
-        list: null,
-        selectedRequest : null
+        list: [],
+        selectedRequest : null,
+        loading : true
     }
 })
 export class ApprovalState {
@@ -76,14 +78,20 @@ export class ApprovalState {
     static getType(state : Approval) : string {
         return state.type;
     }
+
+    @Selector()
+    static getLoading(state : Approval) : boolean {
+        return state.loading;
+    }
     
     //getting approve list
-    @Action(ApprovalRequest)
+    @Action(ApprovalRequest, { cancelUncompleted: true })
     approveRequest(states: StateContext<Approval>, action: ApprovalRequest) {
 
         states.patchState({
             list : null,
-            type : action.type
+            type : action.type,
+            loading : true
         });
         states.dispatch([new Navigate(['/', 'home', 'approval-request', action.type, 'request-list'])]); 
 
@@ -100,6 +108,7 @@ export class ApprovalState {
             ),
             map(
                 (response) => {
+                    console.log(response);
                         let openBooking = JSON.parse(response[0].data);
                         // let partition = _.partition(openBooking, (el) => {
                         //     return  moment({}).isBefore(el.travel_date)
@@ -122,6 +131,7 @@ export class ApprovalState {
                         states.patchState({
                           list: openBooking,
                           type: action.type,
+                          loading : false
                         });
                     }
                 )
@@ -141,9 +151,8 @@ export class ApprovalState {
             flatMap(
                 (response) => {
                     let responsedata = JSON.parse(response.data);
-
                     states.patchState({
-                        selectedRequest: responsedata.data[0]
+                        selectedRequest: this.getRequest(states.getState().type,responsedata)
                     });
                     return modal$;
                 }
@@ -181,11 +190,11 @@ export class ApprovalState {
 
         let approveReq$ = this.approvalService.approvalReq(states.getState().type,reqbody.id, reqbody); 
         
-        return forkJoin(approveReq$,successAlert$,failedAlert$).pipe(
+        return approveReq$.pipe(
             flatMap(
                 (response) => {
                     if (response[0].status == 200) {
-                        return from(successAlert$);
+                        return successAlert$;
                     }
                 }
             ),
@@ -204,6 +213,13 @@ export class ApprovalState {
                 }
             })
         );
+    }
+
+    getRequest(type,data) {
+        switch(type) {
+            case 'flight' : return data.data[0];
+            case 'hotel' : return data[0];
+        }
     }
 
 

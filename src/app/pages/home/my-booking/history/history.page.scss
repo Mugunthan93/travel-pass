@@ -1,47 +1,52 @@
 @import "../../../../../style/base/color.scss";
 @import "../../../../../style/util/mixins.scss";
 
-
-ion-content {
+ion-content{
 
     &.data{
         --offset-top: 135px;
     }
+
+    >ion-virtual-scroll{
+        >ion-card{
+            min-height: fit-content;
     
-    >ion-card {
-        min-height: fit-content;
-
-        >ion-card-content {
-            >ion-row {
-                justify-content: space-between;
-                margin: 10px 0px;
-
-                >ion-row {
-                    flex-direction: column;
-                }
-
-                >ion-row:last-child {
-                    >ion-text:last-child {
-                        text-align: end;
+            >ion-card-content{
+                >ion-row{
+                    justify-content: space-between;
+                    margin: 10px 0px;
+    
+                    >ion-row{
+                        flex-direction: column;
+                    }
+                    
+                    >ion-row:last-child{
+                        >ion-label:last-child{
+                            text-align: end;
+                        }
                     }
                 }
-            }
-
-            >ion-row:nth-child(2) {
-                >ion-chip {
-                    align-self: center;
-                    padding-right: 24px;
-                    margin: 0px -32px 0px 0px;
+                >ion-row:nth-child(2) {
+                    >ion-chip{
+                            align-self: center;
+                            padding-right: 24px;
+                            margin: 0px -32px 0px 0px;
+                    }
                 }
-            }
-
-            >ion-row:last-child {
-                justify-content: space-between;
-                align-items: flex-end;
-
-                ion-button{
-                    ion-label{
-                        padding: 0px 8px;
+        
+                >ion-row:last-child{
+                    justify-content: flex-end;
+    
+                    >ion-label.pending {
+                        color: #{$malibu} !important;
+                    }
+    
+                    >ion-label.open {
+                        color: #89f789 !important;
+                    }
+    
+                    >ion-label.rej {
+                        color: #{$geraldine} !important;
                     }
                 }
             }

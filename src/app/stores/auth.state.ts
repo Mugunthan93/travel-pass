@@ -2,14 +2,25 @@ import { State, Action, StateContext, Store } from '@ngxs/store';
 import { AuthService } from '../services/auth/auth.service';
 import { Navigate } from '@ngxs/router-plugin';
 import { LoadingController, AlertController, MenuController } from '@ionic/angular';
-import { GetUser } from './user.state';
-import { GetCompany } from './company.state';
+import { GetUser, UserState } from './user.state';
+import { CompanyState, GetCompany } from './company.state';
 import { user } from '../models/user';
-import { StateResetAll } from 'ngxs-reset-plugin';
-import { UpcomingTrips } from './dashboard.state';
-import { SharedState } from './shared.state';
-import { GetEligibility } from './eligibility.state';
+import { StateClear, StateReset, StateResetAll } from 'ngxs-reset-plugin';
+import { DashboardState, UpcomingTrips } from './dashboard.state';
+import { EligibilityState, GetEligibility } from './eligibility.state';
 import { company } from '../models/company';
+import { concat, from } from 'rxjs';
+import { flatMap, map } from 'rxjs/operators';
+import { HTTPResponse } from '@ionic-native/http/ngx';
+import { ApprovalState } from './approval.state';
+import { BookState } from './book.state';
+import { BookingState } from './booking.state';
+import { PassengerState } from './passenger.state';
+import { ResultState } from './result.state';
+import { FilterState } from './result/filter.state';
+import { SortState } from './result/sort.state';
+import { SearchState } from './search.state';
+import { SharedState } from './shared.state';
 
 export interface auth {
     forgotToken : string
@@ -126,14 +137,41 @@ export class AuthState {
     }
 
     @Action(Logout)
-    async Logout(states: StateContext<auth>, action: Logout) {
+    Logout(states: StateContext<auth>, action: Logout) {
 
-        const logout = await this.authService.logout();
-        sessionStorage.clear();
-
-        this.store.dispatch(new StateResetAll());
-        this.menuCtrl.toggle('first');
-        this.store.dispatch(new Navigate(['/', 'auth']));
+        return from(this.authService.logout())
+            .pipe(
+                flatMap(
+                    (response : HTTPResponse) => {
+                        if(response.status == 200) {
+                            sessionStorage.clear();
+                            return concat(
+                                states.dispatch(new StateReset(
+                                    AuthState,
+                                    UserState,
+                                    CompanyState,
+                                    DashboardState,
+                            
+                                    SearchState,
+                                    ResultState,
+                                    BookState,
+                            
+                                    BookingState,
+                                    ApprovalState,
+                                    
+                                    FilterState,
+                                    SortState,
+                                    SharedState,
+                                    PassengerState,
+                                    EligibilityState
+                                )),
+                                from(this.menuCtrl.toggle('first')),
+                                states.dispatch(new Navigate(['/', 'auth']))
+                            );
+                        }
+                    }
+                ),
+            );
         
     }
 

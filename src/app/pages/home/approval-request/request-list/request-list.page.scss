@@ -1,31 +1,22 @@
 @import "../../../../../style/util/mixins.scss";
 @import "../../../../../style/base/color.scss";
 
-ion-content {
-    >ion-row.loading{
-        display: flex;
-        height: 50px;
-        justify-content: center;
-        margin: 20px auto auto auto;
-        >ion-label{
-            font-size: 20px;
-        }
-    }
+ion-content{
     >ion-virtual-scroll{
-        >ion-card {
+        >ion-card{
             min-height: fit-content;
     
-            >ion-card-content {
-                >ion-row {
+            >ion-card-content{
+                >ion-row{
                     justify-content: space-between;
                     margin: 10px 0px;
     
-                    >ion-row {
+                    >ion-row{
                         flex-direction: column;
                     }
-    
+                    
                     >ion-row:last-child {
-                        >ion-text:last-child {
+                        >ion-label:last-child {
                             text-align: end;
                         }
                     }
@@ -36,16 +27,14 @@ ion-content {
                         }
                     }
                 }
-    
                 >ion-row:nth-child(2) {
-                    >ion-chip {
-                        background: #{$geraldine};
-                        align-self: center;
-                        padding-right: 24px;
-                        margin: 0px -32px 0px 0px;
+                    >ion-chip{
+                            align-self: center;
+                            padding-right: 24px;
+                            margin: 0px -32px 0px 0px;
                     }
                 }
-    
+        
                 >ion-row:last-child {
                     justify-content: flex-end;
     

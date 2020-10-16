@@ -7,49 +7,52 @@ ion-segment-button{
 
 ion-content {
 
-    >ion-card{
-        >ion-card-header{
-            padding: 0px;
-            >ion-img{
-                    height: 100px;
-                    object-fit: cover;
-            }
-        }
-
-        >ion-card-content{
-            background: #dadada;
-            >ion-title{
-                padding-left: 0px !important;
-            }
-            >ion-row{
-                justify-content: space-between;
-                padding-top: 8px;
-            }
-
-            >ion-row.selectroom {
-                justify-content: flex-end;
-
-                ion-label{
-                    margin: 12px;
+    >ion-virtual-scroll{
+        >ion-card{
+            >ion-card-header{
+                padding: 0px;
+                >ion-img{
+                        height: 100px;
+                        object-fit: cover;
                 }
-
-                
-                // >*{
-                //     width: 35px;
-                //     margin: 4px 0px;
-                // }
-                // >ion-label{
-                //     align-self: center;
-                //     text-align: center;
-                // }
-
-                ion-icon{
-                    color: #{$white};
-                    padding: 0px 5px;
+            }
+    
+            >ion-card-content{
+                background: #dadada;
+                >ion-title{
+                    padding-left: 0px !important;
+                }
+                >ion-row{
+                    justify-content: space-between;
+                    padding-top: 8px;
+                }
+    
+                >ion-row.selectroom {
+                    justify-content: flex-end;
+    
+                    ion-label{
+                        margin: 12px;
+                    }
+    
+                    
+                    // >*{
+                    //     width: 35px;
+                    //     margin: 4px 0px;
+                    // }
+                    // >ion-label{
+                    //     align-self: center;
+                    //     text-align: center;
+                    // }
+    
+                    ion-icon{
+                        color: #{$white};
+                        padding: 0px 5px;
+                    }
                 }
             }
         }
     }
+
 }
 
 ion-footer{

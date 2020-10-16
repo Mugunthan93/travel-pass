@@ -1,9 +1,54 @@
 
 
-<ion-content>
-  <ion-row class="loading" *ngIf="(allBookings | async | sort : 'id' : 'asc').length == 0">
-    <ion-label><ion-spinner></ion-spinner>{{ ' loading ' + (type$ | async) + ' list' }}</ion-label>
-  </ion-row>
+<ion-content *ngIf="(loading$ | async)">
+  <ion-virtual-scroll  [items]="[1,2,3,4,5,6,7,8,9,0]" approxItemHeight="60px">
+    <ion-card *virtualItem="let allBooking">
+      <ion-card-content>
+        <ion-row>
+          <ion-row style="width:25%">
+            <ion-text>
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-text>
+            <ion-label>From</ion-label>
+          </ion-row>
+          <ion-row style="width:25%">
+            <ion-text>
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-text>
+          </ion-row>
+          <ion-row style="width:25%">
+            <ion-text>
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-text>
+            <ion-label>To</ion-label>
+          </ion-row>
+        </ion-row>
+        <ion-row>
+          <ion-row style="width:30%">
+            <ion-text class="medium bold">
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-text>
+            <ion-text class="medium bold">
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-text>
+          </ion-row>
+          <ion-chip style="width:25%">
+            <ion-text class="medium bold">
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-text>
+          </ion-chip>
+        </ion-row>
+        <ion-row>
+          <ion-text style="width:25%">
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </ion-text>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+  </ion-virtual-scroll>
+</ion-content>
+
+<ion-content  *ngIf="!(loading$ | async)">
   <ion-virtual-scroll [items]="allBookings | async | sort : 'id' : 'asc'" approxItemHeight="60px">
     <ion-card *virtualItem="let allBooking">
       <ion-card-content>

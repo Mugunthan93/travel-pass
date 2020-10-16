@@ -135,7 +135,6 @@ import { BusFilterState } from '../stores/result/filter/bus.filter.state';
     ], { developmentMode: !environment.production }
     ),
     NgxsResetPluginModule.forRoot(),
-    NgxsFormPluginModule.forRoot(),
     NgxsStoragePluginModule.forRoot({
       key: [
         UserState,

@@ -17,6 +17,7 @@ export interface booking {
     type: string
     new: any[]
     history: any[]
+    loading : boolean
 }
 
 export class MyBooking {
@@ -43,9 +44,10 @@ export class ViewFile {
 @State<booking>({
     name: 'booking',
     defaults: {
-        type: null,
-        new: null,
-        history: null
+        type: 'flight',
+        new: [],
+        history: [],
+        loading: true
     }
 })
 export class BookingState {
@@ -79,10 +81,22 @@ export class BookingState {
         return state.type;
     }
 
+    @Selector()
+    static getLoading(state : booking) : boolean {
+        return state.loading;
+    }
+
     @Action(MyBooking)
     myBooking(states: StateContext<booking>, action: MyBooking) {
 
+        states.patchState({
+            new: [],
+            history: [],
+            type : action.type
+        });
+
         states.dispatch(new Navigate(['/', 'home', 'my-booking', action.type, 'new']));
+
         let newBooking = [];
         let historyBooking = [];
 
@@ -133,10 +147,9 @@ export class BookingState {
                     states.patchState({
                         new: newbook,
                         history:historybook,
-                        type : action.type
+                        type : action.type,
+                        loading : false
                     });
-
-                    console.log(states.getState().new,states.getState().history);
 
                     if(response[0]){
                         return from(this.menuCtrl.close('first'));

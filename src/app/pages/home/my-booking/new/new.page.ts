@@ -13,6 +13,7 @@ export class NewPage implements OnInit {
 
   newBookings$: Observable<any[]>;
   type$ : Observable<string>;
+  loading$: Observable<boolean>;
 
   constructor(
     private store : Store
@@ -21,6 +22,8 @@ export class NewPage implements OnInit {
   ngOnInit() {
     this.newBookings$ = this.store.select(BookingState.getNewBooking);
     this.type$ = this.store.select(BookingState.getType);
+    this.loading$ = this.store.select(BookingState.getLoading);
+
   }
 
   tripType(booking: any) : string {

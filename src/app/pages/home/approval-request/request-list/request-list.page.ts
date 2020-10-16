@@ -12,6 +12,7 @@ export class RequestListPage implements OnInit {
 
   allBookings: Observable<any[]>;
   type$: Observable<string>;
+  loading$ : Observable<boolean>;
 
   constructor(
     private store: Store
@@ -20,6 +21,7 @@ export class RequestListPage implements OnInit {
   ngOnInit() {
     this.type$ = this.store.select(ApprovalState.getType);
     this.allBookings = this.store.select(ApprovalState.getAllBookings);
+    this.loading$ = this.store.select(ApprovalState.getLoading);
   }
 
   getApprove(id : number) {

@@ -10,52 +10,77 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
 <ion-content>
-  <mat-accordion multi="false"
-    *ngFor="let flight of (flightDetail$ | async).passenger_details.flight_details;let i = index">
-    <mat-expansion-panel *ngFor="let seg of flight.Segments;let i = index">
-      <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">
-        <ion-row>
-          <ion-label class="large bold">
-            Trip {{i+1}}
-          </ion-label>
+
+  <div *ngIf="type == 'flight'">
+    <mat-accordion class="flight" multi="false" *ngFor="let flight of (Detail$ | async).passenger_details.flight_details;let i = index">
+      <mat-expansion-panel *ngFor="let seg of flight.Segments;let i = index">
+        <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">
           <ion-row>
-            <ion-label>{{seg[0].Origin.Airport.CityName}}</ion-label>
-            <ion-icon src="../../../../../../assets/icons/flight.svg"></ion-icon>
-            <ion-label>{{seg[seg.length - 1].Destination.Airport.CityName}}</ion-label>
-          </ion-row>
-        </ion-row>
-      </mat-expansion-panel-header>
-      <div *ngFor="let s of seg;let i = index">
-        <ion-item>
-          <ion-row slot="start">
-            <ion-img src="../../../../../../assets/AirlineLogo/{{s.Airline.AirlineCode}}.gif"></ion-img>
+            <ion-label class="large bold">
+              Trip {{i+1}}
+            </ion-label>
             <ion-row>
-              <ion-label class="bold">{{s.Airline.AirlineName}}</ion-label>
-              <ion-label>{{s.Airline.AirlineCode}} - {{s.Airline.FlightNumber}}</ion-label>
+              <ion-label>{{seg[0].Origin.Airport.CityName}}</ion-label>
+              <ion-icon src="../../../../../../assets/icons/flight.svg"></ion-icon>
+              <ion-label>{{seg[seg.length - 1].Destination.Airport.CityName}}</ion-label>
             </ion-row>
           </ion-row>
-        </ion-item>
-        <ion-row>
-          <ion-col>
-            <ion-label class="bold">({{s.Origin.Airport.AirportCode}}) {{s.Origin.DepTime  | date : 'HH:mm'}}</ion-label>
-            <ion-label class="bold">{{s.Origin.DepTime | date : 'EEE,d LLL' | titlecase}}</ion-label>
-            <ion-label class="bold">{{s.Origin.Airport.AirportName}}</ion-label>
-          </ion-col>
-          <ion-col>
-            <ion-icon size="large" src="../../../../../../assets/icons/passage-of-time.svg"></ion-icon>
-            <ion-label class="bold">{{s.Duration}} Mins</ion-label>
-          </ion-col>
-          <ion-col>
-            <ion-label class="bold">({{s.Destination.Airport.AirportCode}}) {{s.Destination.ArrTime  | date : 'HH:mm'}}
-            </ion-label>
-            <ion-label class="bold">{{s.Destination.ArrTime | date : 'EEE,d LLL' | titlecase}}</ion-label>
-            <ion-label class="bold">{{s.Destination.Airport.AirportName}}</ion-label>
-          </ion-col>
+        </mat-expansion-panel-header>
+        <div *ngFor="let s of seg;let i = index">
+          <ion-item>
+            <ion-row slot="start">
+              <ion-img src="../../../../../../assets/AirlineLogo/{{s.Airline.AirlineCode}}.gif"></ion-img>
+              <ion-row>
+                <ion-label class="bold">{{s.Airline.AirlineName}}</ion-label>
+                <ion-label>{{s.Airline.AirlineCode}} - {{s.Airline.FlightNumber}}</ion-label>
+              </ion-row>
+            </ion-row>
+          </ion-item>
+          <ion-row>
+            <ion-col>
+              <ion-label class="bold">({{s.Origin.Airport.AirportCode}}) {{s.Origin.DepTime  | date : 'HH:mm'}}</ion-label>
+              <ion-label class="bold">{{s.Origin.DepTime | date : 'EEE,d LLL' | titlecase}}</ion-label>
+              <ion-label class="bold">{{s.Origin.Airport.AirportName}}</ion-label>
+            </ion-col>
+            <ion-col>
+              <ion-icon size="large" src="../../../../../../assets/icons/passage-of-time.svg"></ion-icon>
+              <ion-label class="bold">{{s.Duration}} Mins</ion-label>
+            </ion-col>
+            <ion-col>
+              <ion-label class="bold">({{s.Destination.Airport.AirportCode}}) {{s.Destination.ArrTime  | date : 'HH:mm'}}
+              </ion-label>
+              <ion-label class="bold">{{s.Destination.ArrTime | date : 'EEE,d LLL' | titlecase}}</ion-label>
+              <ion-label class="bold">{{s.Destination.Airport.AirportName}}</ion-label>
+            </ion-col>
+          </ion-row>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+  <div *ngIf="type == 'hotel'">
+    <mat-accordion class="hotel">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">
+          <ion-title class="bold">{{ (Detail$ | async).guest_details.basiscInfo.HotelName }}</ion-title>
+        </mat-expansion-panel-header>
+        <ion-row class="checkinout">
+          <ion-row>
+            <ion-label class="bold">CHECK IN</ion-label>
+            <ion-label>{{ (Detail$ | async).guest_details.basiscInfo.CheckInDate | date : 'EEE,d LLL' }}</ion-label>
+          </ion-row>
+          <ion-icon src="../../../../../assets/ionicons/chevron-forward-outline.svg"></ion-icon>
+          <ion-row>
+            <ion-label class="bold">CHECK OUT</ion-label>
+            <ion-label>{{ (Detail$ | async).guest_details.basiscInfo.CheckOutDate | date : 'EEE,d LLL' }}</ion-label>
+          </ion-row>
         </ion-row>
-      </div>
-    </mat-expansion-panel>
-  </mat-accordion>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
   <ion-card>
     <ion-card-header>
       <ion-card-subtitle>
@@ -65,15 +90,15 @@
       </ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
-      <ion-card *ngFor="let passenger of (flightDetail$ | async).passenger_details.passenger; let i = index">
+      <ion-card *ngFor="let passenger of (passenger() | async); let i = index">
         <ion-card-header>
           <ion-card-subtitle>
             <ion-label class="large bold">
-              {{ passenger.IsLeadPax ? 'Lead Passenger' : 'Passenger ' + i }}
+              {{ passengerTitle(passenger,i) }}
             </ion-label>
           </ion-card-subtitle>
         </ion-card-header>
-        <ion-card-content>
+        <ion-card-content *ngIf="type == 'flight'">
           <ion-item>
             <ion-label class="bold" slot="start">Name</ion-label>
             <ion-label class="bold large" slot="end">{{passenger.FirstName+" "+passenger.LastName}}</ion-label>
@@ -87,10 +112,25 @@
             <ion-label class="bold large" slot="end">{{passenger.ContactNo}}</ion-label>
           </ion-item>
         </ion-card-content>
+        <ion-card-content *ngIf="type == 'hotel'">
+          <ion-item>
+            <ion-label class="bold" slot="start">Name</ion-label>
+            <ion-label class="bold large" slot="end">{{passenger.FirstName+" "+passenger.LastName}}</ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label class="bold" slot="start">Email</ion-label>
+            <ion-label class="bold large" slot="end">{{passenger.Email}}</ion-label>
+          </ion-item>
+          <ion-item *ngIf="passenger.LeadPassenger">
+            <ion-label class="bold" slot="start">PAN Number</ion-label>
+            <ion-label class="bold large" slot="end">{{passenger.PAN}}</ion-label>
+          </ion-item>
+        </ion-card-content>
       </ion-card>
     </ion-card-content>
   </ion-card>
 </ion-content>
+
 <ion-footer>
   <ion-toolbar>
     <ion-buttons slot="start">
