@@ -43,10 +43,12 @@ export class SortPipe implements PipeTransform {
           return this.numberSorting(a.Price, b.Price, property, order);
         }
         //date sorting
-        else if (property == 'departure' || property == 'arrival') {
+        else if (property == 'departure' || property == 'arrival' || property == 'createdAt') {
           return this.dateSorting(a, b, property, order);
         }
       });
+
+      console.log(arr);
 
       return arr;
 

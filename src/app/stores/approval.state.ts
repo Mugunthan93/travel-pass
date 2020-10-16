@@ -4,11 +4,12 @@ import { MenuController, ModalController, AlertController, LoadingController } f
 import { FlightService } from '../services/flight/flight.service';
 import { UserState } from './user.state';
 import * as _ from 'lodash';
-import { forkJoin, from, iif, of, throwError } from 'rxjs';
+import { forkJoin, from, iif, of } from 'rxjs';
 import { map, flatMap, catchError } from 'rxjs/operators';
 import { ApprovalService } from '../services/approval/approval.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { ApproveRequestComponent } from '../components/shared/approve-request/approve-request.component';
+import * as moment from 'moment';
 
 
 export interface Approval {
@@ -158,6 +159,7 @@ export class ApprovalState {
                 }
             )
         );
+
         
     }
 
@@ -187,6 +189,8 @@ export class ApprovalState {
 
         let reqbody = Object.assign({}, states.getState().selectedRequest);
         reqbody.status = action.status;
+
+        console.log(JSON.stringify(reqbody));
 
         let approveReq$ = this.approvalService.approvalReq(states.getState().type,reqbody.id, reqbody); 
         

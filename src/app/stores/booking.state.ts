@@ -6,7 +6,7 @@ import { UserState } from './user.state';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { environment } from 'src/environments/environment';
 import { BookingService } from '../services/booking/booking.service';
-import { forkJoin, from, iif } from 'rxjs';
+import { forkJoin, from, iif, of } from 'rxjs';
 import { catchError, flatMap, map } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
@@ -154,6 +154,10 @@ export class BookingState {
                     if(response[0]){
                         return from(this.menuCtrl.close('first'));
                     }
+                    else {
+                        return of(true);
+                    }
+
                 }
             )
         );

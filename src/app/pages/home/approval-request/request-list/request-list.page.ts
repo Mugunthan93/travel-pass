@@ -30,9 +30,9 @@ export class RequestListPage implements OnInit {
 
   tripType(book : any) {
     switch (book.trip_requests.JourneyType) {
-      case 1: return 'One Way'; break;
-      case 2: return 'Round Trip'; break;
-      case 3: return 'Multi City'; break;
+      case 1: return 'One Way';
+      case 2: return 'Round Trip';
+      case 3: return 'Multi City';
       default: return '';
     }
   }

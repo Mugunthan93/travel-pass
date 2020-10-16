@@ -48,7 +48,7 @@
 </ion-content>
 
 <ion-content class="data" *ngIf="!(loading$ | async)">
-  <ion-virtual-scroll [items]="(historyBookings | async | sort : 'id' : 'asc')"  approxItemHeight="60px">
+  <ion-virtual-scroll [items]="(historyBookings | async | sort : 'createdAt' : 'des')"  approxItemHeight="60px">
     <ion-card *virtualItem="let historyBooking">
       <ion-card-content>
         <ion-row *ngIf="(type$ | async) == 'flight'">
@@ -145,7 +145,7 @@
             <ion-label class="medium bold">{{ updateDate(historyBooking) | date : 'LLL'}}</ion-label>
           </ion-row>
           <ion-chip>
-            <ion-label class="medium bold" *ngIf="(type$ | async) == 'flight'">{{ historyBooking.passenger_details.fare_response.published_fare | currency: 'INR'}}</ion-label>
+            <ion-label class="medium bold" *ngIf="(type$ | async) == 'flight'">{{ historyBooking.passenger_details.published_fare | currency: 'INR'}}</ion-label>
             <ion-label class="medium bold" *ngIf="(type$ | async) == 'hotel'">{{ historyBooking.guest_details.basiscInfo.TotalBaseFare | currency: 'INR'}}</ion-label>
             <ion-label class="medium bold" *ngIf="(type$ | async) == 'bus'">{{ historyBooking.passenger_details.fareDetails.total_amount | currency: 'INR'}}</ion-label>
             <ion-label class="medium bold" *ngIf="(type$ | async) == 'train'">{{  historyBooking.passenger_details.basiscInfo.TotalBaseFare | currency: 'INR'}}</ion-label>
