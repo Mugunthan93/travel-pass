@@ -4,7 +4,7 @@ import { MenuController, ModalController, AlertController, LoadingController } f
 import { FlightService } from '../services/flight/flight.service';
 import { UserState } from './user.state';
 import * as _ from 'lodash';
-import { forkJoin, from, iif, of } from 'rxjs';
+import { concat, forkJoin, from, iif, of } from 'rxjs';
 import { map, flatMap, catchError } from 'rxjs/operators';
 import { ApprovalService } from '../services/approval/approval.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
@@ -172,7 +172,10 @@ export class ApprovalState {
             buttons: [{
                 text: 'OK',
                 handler: () => {
-                    states.dispatch(new ApprovalRequest(states.getState().type));
+                    return concat(
+                        from(this.modalCtrl.dismiss('get-approve-item')),
+                        states.dispatch(new ApprovalRequest(states.getState().type))
+                    );
                 }
             }]
         })).pipe(flatMap(el => from(el.present())));
@@ -187,24 +190,37 @@ export class ApprovalState {
             }]
         }));
 
+
+        let req = null;
+
         let reqbody = Object.assign({}, states.getState().selectedRequest);
         reqbody.status = action.status;
+        if(states.getState().type == 'bus') {
+            reqbody.req_id = reqbody.id;
+            reqbody = _.omit(reqbody,['cancellation_charges','cancellation_remarks','createdAt','id','reschedule_remarks','updatedAt']);
+        }
 
         console.log(JSON.stringify(reqbody));
 
-        let approveReq$ = this.approvalService.approvalReq(states.getState().type,reqbody.id, reqbody); 
+        let id = this.getId(states.getState().type,reqbody);
+
+        let approveReq$ = this.approvalService.approvalReq(states.getState().type,id, reqbody); 
         
         return approveReq$.pipe(
             flatMap(
                 (response) => {
-                    if (response[0].status == 200) {
+                    if (response.status == 200) {
                         return successAlert$;
                     }
                 }
             ),
             catchError(
                 (error : HTTPResponse) => {
-                let errObj = JSON.parse(error.error);
+                console.log(error);
+                let errObj = null;
+                if(error.error) {
+                    errObj = JSON.parse(error.error);
+                }
                 if (errObj.status_code == 500) {
                     return failedAlert$.pipe(
                         flatMap(
@@ -223,6 +239,15 @@ export class ApprovalState {
         switch(type) {
             case 'flight' : return data.data[0];
             case 'hotel' : return data[0];
+            case 'bus' : return data[0];
+        }
+    }
+
+    getId(type,req) {
+        switch(type) {
+            case 'flight' : return req.id;
+            case 'hotel' : return req.id;
+            case 'bus' : return req.req_id;
         }
     }
 

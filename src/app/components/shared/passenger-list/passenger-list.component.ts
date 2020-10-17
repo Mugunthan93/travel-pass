@@ -16,6 +16,7 @@ import { TrainPassengerState, trainpassengerstate, trainpassenger, SelectTrainPa
 import { TravellerDetailComponent } from '../../train/traveller-detail/traveller-detail.component';
 import { BusPassengerDetailComponent } from '../../bus/bus-passenger-detail/bus-passenger-detail.component';
 import { buspassenger, BusPassengerState, DeleteBusPassenger, DeselectBusPassenger, DismissBusPassenger, SelectBusPassenger } from 'src/app/stores/passenger/bus.passenger.state';
+import { CheckPassenger } from 'src/app/stores/passenger.state';
 
 @Component({
   selector: 'app-passenger-list',
@@ -93,6 +94,8 @@ export class PassengerListComponent implements OnInit {
     this.selectedBusPassengers$ = this.store.select(BusPassengerState.getSelectPassenger);
     this.selectedBusPass$ = this.store.select(BusPassengerState.getSelectedPassCount);
     this.countBusPass$ = this.store.select(BusPassengerState.getPassCount);
+
+    this.store.dispatch(new CheckPassenger());
 
   }
 

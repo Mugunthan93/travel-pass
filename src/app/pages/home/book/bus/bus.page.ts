@@ -9,6 +9,7 @@ import { PassengerListComponent } from 'src/app/components/shared/passenger-list
 import { BusSearchState } from 'src/app/stores/search/bus.state';
 import { BusBookState, fareDetails } from 'src/app/stores/book/bus.state';
 import { BookConfirmationComponent } from 'src/app/components/shared/book-confirmation/book-confirmation.component';
+import { GetSendRequest } from 'src/app/stores/book.state';
 
 @Component({
   selector: "app-bus",
@@ -47,12 +48,7 @@ export class BusPage implements OnInit {
     return await modal.present();
   }
 
-  async sendRequest() {
-    const modal = await this.modalCtrl.create({
-      component: BookConfirmationComponent,
-      id: "book-confirm",
-    });
-
-    return await modal.present();
+  sendRequest() {
+    this.store.dispatch(new GetSendRequest());
   }
 }

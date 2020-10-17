@@ -13,6 +13,10 @@ import { DomesticSendRequest } from './book/flight/domestic.state';
 import { MultiCitySendRequest } from './book/flight/multi-city.state';
 import { TrainRoundTripRequest } from './book/train/round-trip.state';
 import { TrainMultiCityRequest } from './book/train/multi-city.state';
+import { from } from 'rxjs/internal/observable/from';
+import { flatMap } from 'rxjs/operators';
+import { PassengerState } from './passenger.state';
+import { BookConfirmationComponent } from '../components/shared/book-confirmation/book-confirmation.component';
 
 export interface book {
     mode: string,
@@ -59,6 +63,10 @@ export class Comments {
 
 export class SendRequest {
     static readonly type = "[book] SendRequest";
+}
+
+export class GetSendRequest {
+    static readonly type = "[book] GetSendRequest";
 }
 
 export class BookBack {
@@ -177,10 +185,46 @@ export class BookState {
                 states.dispatch(new TrainRoundTripRequest(comment,mailCC,purpose));
             }
             else if (type == 'multi-city') {
-                states.dispatch(new TrainMultiCityRequest(comment,mailCC,purpose));
+               states.dispatch(new TrainMultiCityRequest(comment,mailCC,purpose));
             }
         } 
+    }
 
+    @Action(GetSendRequest)
+    getSendRequest(states: StateContext<book>) {
+        let passegerSelect$ = from(this.alertCtrl.create({
+            header : 'Select Passenger',
+            message : 'Select Your passenger to send request',
+            buttons : [{
+                text : 'OK',
+                handler : () => {
+                    return true;
+                }
+            }]
+         })).pipe(flatMap(el => from(el.present())));
+ 
+         const modal$ = from(this.modalCtrl.create({
+             component: BookConfirmationComponent,
+             id: "book-confirm",
+           })).pipe(flatMap(el => from(el.present())));
+ 
+         let check_passenger$ =  this.store.select(PassengerState.getCheckPassenger);
+ 
+         return check_passenger$
+             .pipe(
+                 flatMap(
+                     (check) => {
+                         if(check == false) {
+                             console.log(check + ' passenger is not selected');
+                             return passegerSelect$;
+                         }
+                         else if(check == true) {
+                             console.log(check + ' passenger is selected');
+                             return modal$
+                         }
+                     }
+                 )
+             );
     }
 
     @Action(BookBack)

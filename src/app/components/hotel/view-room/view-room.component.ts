@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Observable, of, BehaviorSubject, from, combineLatest, iif } from 'rxjs';
 import { hotelForm, HotelSearchState } from 'src/app/stores/search/hotel.state';
 import { Store } from '@ngxs/store';
-import { HotelResultState, hotelDetail, selectedHotel, AddRoom, RemoveRoom, BlockRoom, roomCombination } from 'src/app/stores/result/hotel.state';
+import { HotelResultState, hotelDetail, selectedHotel, AddRoom, RemoveRoom, BlockRoom, roomCombination, ResetRoom } from 'src/app/stores/result/hotel.state';
 import { ModalController, AlertController } from '@ionic/angular';
 import { map, tap, withLatestFrom, flatMap, switchMap } from 'rxjs/operators';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
@@ -117,6 +117,7 @@ export class ViewRoomComponent implements OnInit {
   }
 
   back() {
+    this.store.dispatch(new ResetRoom());
     this.modalCtrl.dismiss(null, null,'view-room');
   }
 

@@ -1,5 +1,5 @@
 import { State, Action, StateContext, Selector, Store } from "@ngxs/store";
-import { buspayload, BusSearchState } from '../search/bus.state';
+import { buspayload, bussearch, BusSearchState } from '../search/bus.state';
 import { BusService } from 'src/app/services/bus/bus.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { map } from 'rxjs/operators';
@@ -227,14 +227,32 @@ export class BusResultState {
     return flatPolicy;
   }
 
-  @Selector()
-  static getBoardingPoints(state: busresult): boardingPoint[] {
-    return state.currentbus.boardingPoints;
+  @Selector([BusSearchState])
+  static getBoardingPoints(state: busresult,searchstate : bussearch): boardingPoint[] {
+    if(state.currentbus.boardingPoints == null) {
+      return [{
+        id: null,
+        location: searchstate.payload.sourceCity,
+        time: null
+      }]
+    }
+    else {
+      return state.currentbus.boardingPoints;
+    }
   }
 
-  @Selector()
-  static getDroppingPoints(state: busresult): droppingPoint[] {
-    return state.currentbus.droppingPoints;
+  @Selector([BusSearchState])
+  static getDroppingPoints(state: busresult,searchstate : bussearch): droppingPoint[] {
+    if(state.currentbus.droppingPoints == null) {
+      return [{
+        id: null,
+        location: searchstate.payload.destinationCity,
+        time: null
+      }]
+    }
+    else {
+      return state.currentbus.droppingPoints;
+    }
   }
 
   @Selector()
@@ -253,7 +271,7 @@ export class BusResultState {
         ) as unknown) as string;
       }
       return el;
-    });
+    }).filter(el => el.fare !== '0.0');
 
     states.dispatch(new GetBusType(response));
 

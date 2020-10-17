@@ -71,8 +71,8 @@ export class SeatSelectComponent implements OnInit {
     return await modal.present();
   }
 
-  dismiss() {
-    this.modalCtrl.dismiss(null, null,'seat-select');
+  async dismiss() {
+    return await this.modalCtrl.dismiss(null, null,'seat-select');
   }
 
 }

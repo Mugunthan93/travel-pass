@@ -9,8 +9,8 @@ import { GST } from './flight/oneway.state';
 import { UserState } from '../user.state';
 import * as moment from 'moment';
 import { BookMode } from '../book.state';
-import { forkJoin, from, of } from 'rxjs';
-import { catchError, flatMap } from 'rxjs/operators';
+import { concat, forkJoin, from, of } from 'rxjs';
+import { catchError, flatMap, map } from 'rxjs/operators';
 import { BusService } from 'src/app/services/bus/bus.service';
 import { AddBusPassenger, buspassenger, BusPassengerState } from '../passenger/bus.passenger.state';
 
@@ -96,13 +96,11 @@ export class BusBookState {
       {
         inventoryType: action.currentbus.inventoryType,
         routeScheduleId: action.currentbus.routeScheduleId,
-        sourceCity: this.store.selectSnapshot(BusSearchState.getPayload)
-          .sourceCity,
-        destinationCity: this.store.selectSnapshot(BusSearchState.getPayload)
-          .destinationCity,
+        sourceCity: this.store.selectSnapshot(BusSearchState.getPayload).sourceCity,
+        destinationCity: this.store.selectSnapshot(BusSearchState.getPayload).destinationCity,
         doj: this.store.selectSnapshot(BusSearchState.getPayload).doj,
-        droppingPoint: [action.boarding],
-        boardingPoint: [action.dropping],
+        boardingPoint: [action.boarding],
+        droppingPoint: [action.dropping]
       }
     );
 
@@ -168,10 +166,13 @@ export class BusBookState {
       bus_requests: currenReq,
     });
 
-    this.modalCtrl.dismiss(null, null, "pick-drop");
-    this.modalCtrl.dismiss(null, null, "seat-select");
-    states.dispatch(new BookMode("bus"));
-    states.dispatch(new Navigate(["/", "home", "book", "bus"]));
+    return concat(
+      from(this.modalCtrl.dismiss(null, null, "pick-drop")),
+      from(this.modalCtrl.dismiss(null, null, "seat-select")),
+      states.dispatch(new BookMode("bus")),
+      states.dispatch(new Navigate(["/", "home", "book", "bus"]))
+    );
+
   }
 
   @Action(BusRequest)
@@ -196,85 +197,82 @@ export class BusBookState {
       managers: this.store.selectSnapshot(UserState.getApprover),
     };
 
-    let loading$ = from(
-      this.loadingCtrl.create({
-        spinner: "crescent",
-        message: "Sending Request...",
-        id: "send-req-loading",
-      })
-    ).pipe(
-      flatMap((loadingEl) => {
-        return from(loadingEl.present());
-      })
-    );
+    let loading$ = from(this.loadingCtrl.create({
+      spinner: 'crescent',
+      message: 'Sending Request...',
+      id: 'send-req-loading'
+  })).pipe(
+      flatMap(
+          (loadingEl) => {
+              return from(loadingEl.present());
+          }
+      )
+  );
 
-    let failedAlert$ = from(
-      this.alertCtrl.create({
-        header: "Send Request Failed",
-        buttons: [
-          {
-            text: "Ok",
-            role: "ok",
-            handler: () => {
+  let failedAlert$ = from(this.alertCtrl.create({
+      header: 'Send Request Failed',
+      buttons: [{
+          text: 'Ok',
+          role: 'ok',
+          handler: () => {
               return false;
-            },
-          },
-        ],
-      })
-    ).pipe(
-      flatMap((alertEl) => {
-        return from(alertEl.present());
-      })
-    );
+          }
+      }]
+  })).pipe(
+      flatMap(
+          (alertEl) => {
+              return from(alertEl.present());
+          }
+      )
+  );
 
-    let successAlert$ = from(
-      this.alertCtrl.create({
-        header: "Request Success",
-        subHeader: "Send Request Success",
-        message: "Request Sent Successfully..",
-        buttons: [
+  let successAlert$ = from(this.alertCtrl.create({
+      header: 'Request Success',
+      subHeader: 'Send Request Success',
+      message: 'Request Sent Successfully..',
+      buttons: [
           {
-            text: "Ok",
-            handler: () => {
-              states
-                .dispatch(new Navigate(["/", "home", "dashboard", "home-tab"]))
-                .subscribe({
-                  complete: () => {
-                    this.modalCtrl.dismiss(null, null, "book-confirm");
-                  },
-                });
-            },
-          },
-        ],
-      })
-    ).pipe(
-      flatMap((alertEl) => {
-        return from(alertEl.present());
-      })
-    );
+              text: 'Ok',
+              handler: () => {
+                  states.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']))
+                  .subscribe({
+                      complete: () => {
+                          this.modalCtrl.dismiss(null, null,'book-confirm');
+                          }
+                      });
+              }
+          }
+      ]
+  })).pipe(
+      flatMap(
+          (alertEl) => {
+              return from(alertEl.present());
+          }
+      )
+  );
 
     let sendRequest$ = from(this.busService.sendRequest(sendreq));
 
-    return forkJoin(loading$, sendRequest$).pipe(
-      flatMap((el) => {
-        console.log(el);
-        if (el[1].status == 200) {
-          console.log(JSON.parse(el[1].data));
-          return forkJoin(
-            from(this.loadingCtrl.dismiss(null, null, "send-req-loading")),
-            successAlert$
-          );
-        } else {
-          return forkJoin(
-            from(this.loadingCtrl.dismiss(null, null, "send-req-loading")),
-            failedAlert$
-          );
-        }
-      }),
-      catchError((error) => {
-        console.log(error);
-        return of(error);
-      })
+    return forkJoin(loading$, sendRequest$)
+    .pipe(
+        flatMap(
+            (el) => {
+                console.log(el);
+                if (el[1].status == 200) {  
+                    console.log(JSON.parse(el[1].data));
+                    return forkJoin(from(this.loadingCtrl.dismiss(null, null, 'send-req-loading')),successAlert$);
+                }
+                else {
+                    return forkJoin(from(this.loadingCtrl.dismiss(null, null, 'send-req-loading')), failedAlert$);
+                }
+            }
+        ),
+        catchError(
+            (error) => {
+                console.log(error);
+                return of(error);
+            }
+        )
     );
   }
 

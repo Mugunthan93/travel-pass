@@ -50,6 +50,7 @@ export class ApproveRequestComponent implements OnInit {
             switch(this.type){
               case 'flight' : return detail.passenger_details.passenger;
               case 'hotel' : return detail.guest_details.passengers;
+              case 'bus' : return detail.passenger_details.blockSeatPaxDetails;
             }
           }
         )

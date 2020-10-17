@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { from, Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { NativeHttpService } from '../http/native-http/native-http.service';
 
 @Injectable({
@@ -32,6 +33,8 @@ export class ApprovalService {
 
   //approve the request
   approvalReq(type : string, ticketId : string, requestBody : any ): Observable<HTTPResponse> {
+    this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
+    this.http.setData('json');
     let approveUrl : string = this.approveUrl(type);
     return from(this.http.put(approveUrl + ticketId, requestBody));
   }

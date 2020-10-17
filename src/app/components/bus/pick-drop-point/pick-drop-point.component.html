@@ -36,7 +36,7 @@
   <ion-item class="pointItem" *ngFor="let drop of (dropping$ | async)" (click)="selectDrop(drop)"
     [ngClass]="selectColor(drop,selecteddropping)">
     <ion-label class="bold" slot="start">{{ drop.location }}</ion-label>
-    <ion-text class="bold medium" slot="end">{{ drop.time }}</ion-text>
+    <ion-text class="bold medium" slot="end">{{ (drop.time !== null) ? drop.time : '' }}</ion-text>
   </ion-item>
 
 </ion-content>

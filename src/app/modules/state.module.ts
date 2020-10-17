@@ -59,10 +59,13 @@ import { TrainOneWayBookState } from '../stores/book/train/one-way.state';
 import { TrainMultiCityBookState } from '../stores/book/train/multi-city.state';
 import { TrainRoundTripBookState } from '../stores/book/train/round-trip.state';
 import { BusFilterState } from '../stores/result/filter/bus.filter.state';
+import { BookConfirmationComponent } from '../components/shared/book-confirmation/book-confirmation.component';
+import { IonicModule } from '@ionic/angular';
 
 @NgModule({
   imports: [
     CommonModule,
+    IonicModule,
     NgxsModule.forRoot([
 
       AuthState,
@@ -164,6 +167,12 @@ import { BusFilterState } from '../stores/result/filter/bus.filter.state';
       name: 'Auth',
       disabled: true
     })
+  ],
+  declarations : [
+    BookConfirmationComponent
+  ],
+  entryComponents : [
+    BookConfirmationComponent
   ]
 })
   

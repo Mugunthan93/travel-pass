@@ -348,6 +348,10 @@ export class GetImage {
     }
 }
 
+export class ResetRoom{
+    static readonly type = "[hotel_result] ResetRoom";
+}
+
 @State<hotelresult>({
     name: 'hotel_result',
     defaults: {
@@ -442,9 +446,17 @@ export class HotelResultState{
         return states.selectedRoom
     }
 
+    
     @Selector()
     static getHotelCode(states: hotelresult) : string {
         return states.selectedHotel.HotelDetail.HotelCode
+    }
+    
+    @Action(ResetRoom)
+    resetRoom(states: StateContext<hotelresult>) {
+        states.patchState({
+            selectedRoom : []
+        });
     }
 
     @Action(GetToken)
