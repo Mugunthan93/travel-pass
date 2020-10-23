@@ -12,7 +12,6 @@
 </ion-header>
 
 <ion-content>
-
   <div *ngIf="type == 'flight'">
     <mat-accordion class="flight" multi="true" *ngFor="let flight of (Detail$ | async).passenger_details.flight_details;let i = index">
       <mat-expansion-panel *ngFor="let seg of flight.Segments;let i = index" expanded="true">

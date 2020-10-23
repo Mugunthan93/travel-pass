@@ -154,11 +154,19 @@
 
         <ion-row *ngFor="let pnr of getPNR(historyBooking)">
           <ion-label class="medium bold" (click)="viewFile(pnr)">View</ion-label>
+          <ion-button (click)="rescheduleTicket(historyBooking)">
+            <ion-label class="medium bold">Reschedule</ion-label>
+          </ion-button>
+          <ion-button (click)="cancelTicket(historyBooking)">
+            <ion-label class="medium bold">Cancel</ion-label>
+          </ion-button>
           <ion-button (click)="downloadTicket(pnr)">
             <ion-label class="medium bold">Download</ion-label>
           </ion-button>
         </ion-row>
       </ion-card-content>
+
     </ion-card>
+
   </ion-virtual-scroll>
 </ion-content>

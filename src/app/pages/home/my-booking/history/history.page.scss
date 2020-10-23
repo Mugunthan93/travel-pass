@@ -35,7 +35,17 @@ ion-content{
                 }
         
                 >ion-row:last-child{
-                    justify-content: flex-end;
+                    justify-content: space-between;
+
+                    >ion-label{
+                        align-self: center;
+                    }
+                    
+                    >ion-button{
+                        >ion-label{
+                            padding:10px;
+                        }
+                    }
     
                     >ion-label.pending {
                         color: #{$malibu} !important;

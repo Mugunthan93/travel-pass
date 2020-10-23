@@ -28,28 +28,37 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { LimitPipe } from './pipes/limit/limit.pipe';
+import { RescheduleComponent } from './components/shared/reschedule/reschedule.component';
+import { CancellationComponent } from './components/shared/cancellation/cancellation.component';
+import { SelectModalComponent } from './components/shared/select-modal/select-modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ApproveRequestComponent
+    ApproveRequestComponent,
+    RescheduleComponent,
+    CancellationComponent,
+    SelectModalComponent
   ],
   entryComponents: [
-    ApproveRequestComponent
+    ApproveRequestComponent,
+    RescheduleComponent,
+    CancellationComponent,
+    SelectModalComponent
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot({
-      mode:'md',
+      mode: "md",
       scrollPadding: false,
-      scrollAssist: false
+      scrollAssist: false,
     }),
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     MatExpansionModule,
-    StateModule
+    StateModule,
   ],
   providers: [
     Platform,
@@ -69,13 +78,13 @@ import { LimitPipe } from './pipes/limit/limit.pipe';
     WebView,
     {
       provide: NativeHttpService,
-      useFactory: (platform : Platform,http : HTTP) => {
-        return new NativeHttpService(platform,http);
+      useFactory: (platform: Platform, http: HTTP) => {
+        return new NativeHttpService(platform, http);
       },
-      deps:[Platform,HTTP]
+      deps: [Platform, HTTP],
     },
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

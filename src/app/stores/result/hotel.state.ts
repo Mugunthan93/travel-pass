@@ -384,6 +384,11 @@ export class HotelResultState{
     }
 
     @Selector()
+    static getToken(state: hotelresult) : string {
+        return state.token;
+    }
+
+    @Selector()
     static getLoading(state: hotelresult) : number {
         return state.loading;
     }

@@ -69,6 +69,10 @@ export class SelectModalComponent implements OnInit {
         else if (this.type == 'bus') {
           return this.store.dispatch(new GetBusCity(searchString));
         }
+        else {
+          return this.store.dispatch(new GetFlightCity(searchString));
+        }
+
       }
       else if (this.title == 'nationality') {
         return this.store.dispatch(new GetNationality(searchString));

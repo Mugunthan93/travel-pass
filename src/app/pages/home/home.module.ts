@@ -10,7 +10,6 @@ import { HomePage } from './home.page';
 import { AboutHotelComponent } from 'src/app/components/hotel/about-hotel/about-hotel.component';
 import { MenuBarComponent } from 'src/app/components/menu-bar/menu-bar.component';
 import { PipeModule } from 'src/app/modules/pipe.module';
-import { SelectModalComponent } from 'src/app/components/shared/select-modal/select-modal.component';
 
 @NgModule({
   imports: [
@@ -24,11 +23,9 @@ import { SelectModalComponent } from 'src/app/components/shared/select-modal/sel
     HomePage,
     AboutHotelComponent,
     MenuBarComponent,
-    SelectModalComponent
   ],
   entryComponents: [
-    AboutHotelComponent,
-    SelectModalComponent
+    AboutHotelComponent
   ]
 })
   
