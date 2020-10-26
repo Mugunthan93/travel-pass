@@ -4,6 +4,7 @@ import { Store } from '@ngxs/store';
 import { BookingState } from 'src/app/stores/booking.state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: "app-cancellation",
@@ -17,7 +18,10 @@ export class CancellationComponent implements OnInit {
   ticket$: Observable<any>;
   ticket: any;
 
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store,
+    public modalCtrl : ModalController
+  ) { }
 
   ngOnInit() {
     this.ticket$ = this.store.select(BookingState.getCancelTicket);
@@ -68,5 +72,7 @@ export class CancellationComponent implements OnInit {
 
   submitCancellation() {}
 
-  dismiss() {}
+  dismiss() {
+    this.modalCtrl.dismiss(null, null, "cancellation-ticket");
+  }
 }

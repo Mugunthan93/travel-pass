@@ -37,13 +37,20 @@ ion-content{
                 border: 2px solid #{$suva-grey};
 
                 >::ng-deep span {
-                    >ion-row {
-                        display: flex;
-                        flex-direction: column;
-
+                    >ion-item{
+                        width: -webkit-fill-available;
                         >ion-row {
-                            width: 150px;
-                            justify-content: space-between;
+                            display: flex;
+                            flex-direction: column;
+    
+                            >ion-row {
+                                width: 150px;
+                                justify-content: space-between;
+                            }
+                        }
+    
+                        >ion-checkbox{
+                            margin: auto;
                         }
                     }
                 }

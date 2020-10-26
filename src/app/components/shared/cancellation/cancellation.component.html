@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Cancellation Request - {{ type$ | async }}
+      Cancellation Request - {{ type$ | async | titlecase }}
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">
@@ -27,20 +27,22 @@
     </ion-radio-group>
   </ion-item>
 
-  <mat-accordion class="flight" multi="true"
-    *ngFor="let flight of (ticket$ | async).passenger_details.flight_details;let i = index">
-    <mat-expansion-panel *ngFor="let seg of flight.Segments;let i = index" expanded="true">
+  <mat-accordion class="flight" multi="true" *ngFor="let flight of (ticket$ | async).passenger_details.flight_details;let i = index">
+    <mat-expansion-panel *ngFor="let seg of flight.Segments;let i = index" expanded="true" disabled="true">
       <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">
-        <ion-row>
-          <ion-label class="large bold">
-            {{ tripType(i) | async }}
-          </ion-label>
-          <ion-row>
-            <ion-label>{{seg[0].Origin.Airport.CityName}}</ion-label>
-            <ion-icon src="../../../../../../assets/icons/flight.svg"></ion-icon>
-            <ion-label>{{seg[seg.length - 1].Destination.Airport.CityName}}</ion-label>
+        <ion-item>
+          <ion-row slot="start">
+            <ion-label class="large bold">
+              {{ tripType(i) | async }}
+            </ion-label>
+            <ion-row>
+              <ion-label>{{seg[0].Origin.Airport.CityName}}</ion-label>
+              <ion-icon src="../../../../../../assets/icons/flight.svg"></ion-icon>
+              <ion-label>{{seg[seg.length - 1].Destination.Airport.CityName}}</ion-label>
+            </ion-row>
           </ion-row>
-        </ion-row>
+          <ion-checkbox slot="end" class="default" checked="true"></ion-checkbox>
+        </ion-item>
       </mat-expansion-panel-header>
       <div *ngFor="let s of seg;let i = index">
         <ion-item>
@@ -50,9 +52,6 @@
               <ion-label class="bold">{{s.Airline.AirlineName}}</ion-label>
               <ion-label>{{s.Airline.AirlineCode}} - {{s.Airline.FlightNumber}}</ion-label>
             </ion-row>
-          </ion-row>
-          <ion-row slot="end">
-            <ion-checkbox class="default" checked="true"></ion-checkbox>
           </ion-row>
         </ion-item>
         <ion-row>
@@ -152,7 +151,7 @@
     <ion-toolbar>
       <ion-buttons slot="end">
         <ion-button type="submit">
-          <ion-label class="medium bold">Apply Reschedule</ion-label>
+          <ion-label class="medium bold">Apply Cancellation</ion-label>
         </ion-button>
       </ion-buttons>
     </ion-toolbar>
