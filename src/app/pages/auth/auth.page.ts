@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Store } from '@ngxs/store';
+import { ofActionCompleted, Store } from '@ngxs/store';
 import { Login } from 'src/app/stores/auth.state';
 import { ModalController } from '@ionic/angular';
 import { ForgotPasswordComponent } from 'src/app/components/flight/forgot-password/forgot-password.component';
+import { Navigate } from '@ngxs/router-plugin';
 
 @Component({
   selector: 'app-auth',

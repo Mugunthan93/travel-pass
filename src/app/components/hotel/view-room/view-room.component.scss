@@ -19,12 +19,14 @@ ion-content {
     
             >ion-card-content{
                 background: #dadada;
-                >ion-title{
-                    padding-left: 0px !important;
-                }
-                >ion-row{
-                    justify-content: space-between;
-                    padding-top: 8px;
+                >div{
+                    >ion-title{
+                        padding-left: 0px !important;
+                    }
+                    >ion-row{
+                        justify-content: space-between;
+                        padding-top: 8px;
+                    }
                 }
     
                 >ion-row.selectroom {

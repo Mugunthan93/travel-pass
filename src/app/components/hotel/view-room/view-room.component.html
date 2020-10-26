@@ -25,7 +25,7 @@
 
 <ion-content>
 
-  <ion-virtual-scroll [items]="(roomDetail$ | async) | room : (selectedCategory$ | async)" approxItemHeight="232px">
+  <!-- <ion-virtual-scroll [items]="(roomDetail$ | async) | room : (selectedCategory$ | async)" approxItemHeight="232px">
     <ion-card  *virtualItem="let room;let i = index">
       <ion-card-header>
         <ion-img [src]="getHotelImage(room.Images)"></ion-img>
@@ -51,9 +51,9 @@
   
         <ion-row class="selectroom">
   
-          <!-- <ion-button (click)="bookHotel(room)">
+          <ion-button (click)="bookHotel(room)">
             <ion-label class="bold">PROCEED</ion-label>
-          </ion-button> -->
+          </ion-button>
   
           <ion-button (click)="removeRoom(room)">
             <ion-icon name="remove-outline"></ion-icon>
@@ -62,6 +62,49 @@
           <ion-button (click)="addRoom(room)">
             <ion-icon name="add-outline"></ion-icon>
           </ion-button>
+        </ion-row>
+  
+      </ion-card-content>
+    </ion-card>
+  </ion-virtual-scroll> -->
+
+  <ion-virtual-scroll [items]="fixedCombo" approxItemHeight="roomHeight()">
+    <ion-card  *virtualItem="let room;let i = index">
+      <ion-card-header>
+        <ion-img [src]="getHotelImage(room[0].Images)"></ion-img>
+      </ion-card-header>
+      <ion-card-content>
+        <div *ngFor="let rm of room; let i = index">
+          <ion-title>{{ rm.RoomTypeName ? rm.RoomTypeName : rm.RoomDescription }}</ion-title>
+    
+          <ion-row *ngIf="rm.BedTypes">
+            <ion-label class="small">Bed Type</ion-label>
+            <ion-label class="small">{{ rm.BedTypes[0].BedTypeDescription }}</ion-label>
+          </ion-row>
+    
+          <ion-label class="bold">Room Tariffs</ion-label>
+    
+          <ion-row>
+            <ion-label class="small">{{ rm.RoomDescription ? rm.RoomDescription : rm.RoomTypeName }}</ion-label>
+            <ion-row style="flex-direction: column;display:flex;">
+              <ion-label class="bold">{{ rm.DayRates[0].Amount | currency : 'INR' }}</ion-label>
+              <ion-label class="small">Per Day</ion-label>
+            </ion-row>
+          </ion-row>
+        </div>
+        <ion-row class="selectroom">
+  
+          <ion-button (click)="bookHotel(room)">
+            <ion-label class="bold">Quick Book</ion-label>
+          </ion-button>
+  
+          <!-- <ion-button (click)="removeRoom(room)">
+            <ion-icon name="remove-outline"></ion-icon>
+          </ion-button>
+          <ion-label class="bold">{{ selectedRoom(room) | async }}</ion-label>
+          <ion-button (click)="addRoom(room)">
+            <ion-icon name="add-outline"></ion-icon>
+          </ion-button> -->
         </ion-row>
   
       </ion-card-content>

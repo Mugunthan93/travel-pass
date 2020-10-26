@@ -27,6 +27,8 @@ export interface hotelresult {
     listlimit : number
     token: string
     loading: number
+    opencombination : hotelDetail[][];
+    fixedcombination : hotelDetail [][];
 }
 
 export interface selectedHotel {
@@ -96,7 +98,14 @@ export interface dayRates {
 }
 
 export interface roomCombination {
-    RoomIndex : number[];
+        CategoryId: string
+        InfoSource: string
+        IsPolicyPerStay: boolean
+        RoomCombination: roomindex[]
+}
+
+export interface roomindex {
+    RoomIndex : number[]
 }
 
 export interface getHotelInfo {
@@ -363,7 +372,9 @@ export class ResetRoom{
         listlimit : 10,
         token: null,
         roomCategory: ['all'],
-        loading:0
+        loading:0,
+        opencombination : [],
+        fixedcombination : []
     }
 })
 
@@ -456,6 +467,16 @@ export class HotelResultState{
     static getHotelCode(states: hotelresult) : string {
         return states.selectedHotel.HotelDetail.HotelCode
     }
+
+    @Selector()
+    static getOpenCombination(states : hotelresult) {
+        return states.opencombination;
+    }
+
+    @Selector()
+    static getFixedCombination(states : hotelresult) {
+        return states.fixedcombination;
+    }
     
     @Action(ResetRoom)
     resetRoom(states: StateContext<hotelresult>) {
@@ -485,7 +506,7 @@ export class HotelResultState{
             );
     }
 
-    @Action(HotelResponse)
+    @Action(HotelResponse,{cancelUncompleted : true})
     getHotelResponse(states: StateContext<hotelresult>, action: HotelResponse) {
         let priceSortedResult: (staticresponselist & hotelresultlist)[] = _.sortBy(action.response.HotelResults, (o) => {
             return o.Price.PublishedPrice;
@@ -580,7 +601,7 @@ export class HotelResultState{
         });
     }
 
-    @Action(ViewHotel)
+    @Action(ViewHotel,{cancelUncompleted : true})
     viewHotel(states: StateContext<hotelresult>, action: ViewHotel) {
 
         const loading$ = from(this.loadingCtrl.create({
@@ -611,14 +632,18 @@ export class HotelResultState{
 
         states.dispatch(new GetToken());
         const token: string = states.getState().token;
+
+        let hotelcategory = action.hotel.SupplierHotelCodes[0].CategoryId;
+
         const viewPayload: viewPayload = {
             EndUserIp: "192.168.0.115",
             TokenId: token,
             TraceId: states.getState().traceId,
             ResultIndex: action.hotel.ResultIndex,
             HotelCode: action.hotel.HotelCode,
-            CategoryId: action.hotel.SupplierHotelCodes[0].CategoryId
+            CategoryId: hotelcategory
         }
+
         const viewhotel$ = this.hotelService.viewHotel(viewPayload)
             .pipe(
                 map(
@@ -663,9 +688,11 @@ export class HotelResultState{
                                 })
                             }
                         );
+
                         roomDetail = _.filter(roomDetail, (n) => {
-                            return !_.isUndefined(n.DayRates);
+                            return !_.isUndefined(n.DayRates) && n.CategoryId == hotelcategory;
                         });
+
                         roomDetail = _.uniqBy(roomDetail, 'RoomIndex');
                         let selected: selectedHotel = Object.assign({}, {
                             HotelDetail: action.hotel,
@@ -678,67 +705,6 @@ export class HotelResultState{
                         return selected;
                     }
                 ),
-                // flatMap(
-                //     (hotelObj: selectedHotel) => {
-                //         let hotel = Object.assign({}, hotelObj);
-                //         return from(hotel.HotelDetail.Images)
-                //             .pipe(
-                //                 mergeMap(
-                //                     (img: string) => {
-                //                         let url: string = img;
-                //                         let splitedEl: string[] = img.split('/');
-
-                //                         let folderName: string = hotel.HotelDetail.HotelCode;
-                //                         let folderPath: string = 'TravellersPass/Image/Hotel';
-
-                //                         let fileName: string = splitedEl[splitedEl.length - 1];
-                //                         let filePath: string = null;
-                //                         if (fileName.includes('.jpg')) {
-                //                             filePath = folderPath + '/' + folderName + '/' + fileName;
-                //                         }
-                //                         else {
-                //                             filePath = folderPath + '/' + folderName + '/' + fileName + '.jpg';
-                //                         }
-                //                         return this.fileService.checkFile(filePath, fileName)
-                //                             .pipe(
-                //                                 map(
-                //                                     (fileExist) => {
-                //                                         return this.file.externalRootDirectory + filePath;
-                //                                     }
-                //                                 ),
-                //                                 catchError(
-                //                                     (error: FileError) => {
-                //                                         return this.fileService.downloadFile(url, filePath)
-                //                                             .pipe(
-                //                                                 map(
-                //                                                     (files: FileEntry) => {
-                //                                                         let str: string = files.fullPath;
-                //                                                         return this.file.externalRootDirectory + str;
-                //                                                     }
-                //                                                 ),
-                //                                                 catchError(
-                //                                                     (err: FileTransferError) => {
-                //                                                         return of("");
-                //                                                     }
-                //                                                 )
-                //                                             )
-                //                                     }
-                //                                 )
-                //                             )
-                //                     }
-                //                 ),
-                //                 toArray(),
-                //                 map(
-                //                     (str: string[]) => {
-                //                         let hoteldata = Object.assign({}, hotel.HotelDetail);
-                //                         hoteldata.Images = Object.assign([], str);
-                //                         hotel.HotelDetail = Object.assign({}, hoteldata);
-                //                         return hotel;
-                //                     }
-                //                 )
-                //             );
-                //     }
-                // ),
                 flatMap(
                     (hotelObj) => {
                         let hotel = Object.assign({}, hotelObj);
@@ -770,8 +736,15 @@ export class HotelResultState{
 
                         hotel.HotelRoomsDetails = Object.assign([], imgRoomDetail);
                         console.log(hotel);
+
+                        let open = this.combination(hotel,'OpenCombination',hotelcategory);
+                        let fixed = this.combination(hotel,'FixedCombination',hotelcategory);
+                        console.log(open,fixed);
+
                         states.patchState({
-                            selectedHotel: hotel
+                            selectedHotel: hotel,
+                            opencombination : open,
+                            fixedcombination : fixed
                         });
                         return concat(from(this.loadingCtrl.dismiss(null, null, 'retrive-hotel')),action.modal);
                     }
@@ -1146,5 +1119,19 @@ export class HotelResultState{
                 }
             )
         );
+    }
+
+    combination(hotel : selectedHotel,type : string,category : string) {
+        let open = hotel.RoomCombinationsArray
+            .filter(o => o.CategoryId == category && o.InfoSource == type);
+            
+        if(open.length > 0) {
+            let openIndex = open.flatMap(o => o.RoomCombination.map(el => el.RoomIndex.map(e => hotel.HotelRoomsDetails.find(rm => rm.RoomIndex == e))));
+            return openIndex;
+        }
+        else {
+            return [];
+        }
+        
     }
 }

@@ -30,6 +30,9 @@ export class ViewRoomComponent implements OnInit {
   totalRoom: number;
   selectionAlert$: Observable<void>;
 
+  openCombo : hotelDetail[][];
+  fixedCombo : hotelDetail[][];
+
   constructor(
     private store: Store,
     public modalCtrl : ModalController,
@@ -52,6 +55,11 @@ export class ViewRoomComponent implements OnInit {
 
     this.selectedRoom$ = this.store.select(HotelResultState.getSelectedRoom);
     this.totalRoom = this.store.selectSnapshot(HotelSearchState.getTotalRooms);
+
+    this.openCombo = this.store.selectSnapshot(HotelResultState.getOpenCombination);
+    this.fixedCombo = this.store.selectSnapshot(HotelResultState.getFixedCombination);
+
+
   }
 
   getHotelImage(img : string) {
@@ -59,7 +67,8 @@ export class ViewRoomComponent implements OnInit {
     // return this.webView.convertFileSrc(img);
   }
 
-  bookHotel() {
+  bookHotel(room : hotelDetail[]) {
+    room.forEach(rm => this.store.dispatch(new AddRoom(rm)));
     this.store.dispatch(new BlockRoom());
   }
 
@@ -114,6 +123,11 @@ export class ViewRoomComponent implements OnInit {
           }
         )
       )
+  }
+
+  roomHeight() {
+    let length = (this.fixedCombo.length * 40) + 100;
+    return length + 'px';
   }
 
   back() {

@@ -53,6 +53,17 @@
     </ion-row> -->
   </ion-row>
 
+  <ion-row class="booking">
+    <ion-segment mode="ios" (ionChange)="bookingChange($event)" [value]="bookingType$ | async" class="search">
+        <ion-segment-button value="online" class="search">
+            <ion-text class="medium bold">Online</ion-text>
+        </ion-segment-button>
+        <ion-segment-button value="offline" class="search">
+            <ion-text class="medium bold">Offline</ion-text>
+        </ion-segment-button>
+    </ion-segment>
+  </ion-row>
+
   <ion-tabs>
     <ion-tab-bar slot="top">
       <ion-tab-button tab="new">

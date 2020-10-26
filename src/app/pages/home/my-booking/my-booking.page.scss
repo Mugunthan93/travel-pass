@@ -19,8 +19,12 @@ ion-content{
             }
         }
     }
+    ion-row.booking {
+        height: 35px;
+        margin: 20px 40px;
+    }
     >ion-tabs{
-        top: 150px !important;
+        top: 200px !important;
 
         >ion-tab-bar {
             justify-content: space-between;

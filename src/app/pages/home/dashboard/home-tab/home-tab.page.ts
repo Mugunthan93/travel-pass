@@ -9,6 +9,8 @@ import { FilterState } from 'src/app/stores/result/filter.state';
 import { SortState } from 'src/app/stores/result/sort.state';
 import { SharedState } from 'src/app/stores/shared.state';
 import { PassengerState } from 'src/app/stores/passenger.state';
+import { ApprovalState } from 'src/app/stores/approval.state';
+import { BookingState } from 'src/app/stores/booking.state';
 
 @Component({
   selector: 'app-home-tab',
@@ -32,7 +34,10 @@ export class HomeTabPage implements OnInit {
         SharedState,
         FilterState,
         PassengerState,
-        SortState
+        SortState,
+
+        BookingState,
+        ApprovalState
       )
     );
     this.store.dispatch(new UpcomingTrips());

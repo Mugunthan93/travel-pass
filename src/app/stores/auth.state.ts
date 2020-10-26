@@ -1,4 +1,4 @@
-import { State, Action, StateContext, Store } from '@ngxs/store';
+import { State, Action, StateContext, Store, Selector } from '@ngxs/store';
 import { AuthService } from '../services/auth/auth.service';
 import { Navigate } from '@ngxs/router-plugin';
 import { LoadingController, AlertController, MenuController } from '@ionic/angular';
@@ -8,9 +8,8 @@ import { user } from '../models/user';
 import { StateClear, StateReset, StateResetAll } from 'ngxs-reset-plugin';
 import { DashboardState, UpcomingTrips } from './dashboard.state';
 import { EligibilityState, GetEligibility } from './eligibility.state';
-import { company } from '../models/company';
-import { concat, from } from 'rxjs';
-import { flatMap, map } from 'rxjs/operators';
+import { concat, forkJoin, from, of } from 'rxjs';
+import { catchError, finalize, flatMap, map } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { ApprovalState } from './approval.state';
 import { BookState } from './book.state';
@@ -24,6 +23,7 @@ import { SharedState } from './shared.state';
 
 export interface auth {
     forgotToken : string
+    userLogin : boolean
 }
 
 export class Login {
@@ -67,7 +67,8 @@ export class SetNewPassword {
 @State<auth>({
     name : 'Auth',
     defaults: {
-        forgotToken : null
+        forgotToken : null,
+        userLogin : false
     }
 })
 export class AuthState {
@@ -81,59 +82,79 @@ export class AuthState {
     ) {
     }
 
-    @Action(Login)
-    async Login(states: StateContext<auth>, action: Login) {
+    @Selector()
+    static isLoggedIn(state : auth) : boolean {
+        return state.userLogin;
+    }
 
-        const loading = await this.loadingCtrl.create({
-            spinner: "crescent"
-        });
-        const failedAlert = await this.alertCtrl.create({
+    @Action(Login)
+    Login(states: StateContext<auth>, action: Login) {
+
+        const loading$ = from(this.loadingCtrl.create({
+            spinner: "crescent",
+            message: "Login User...",
+            id : 'login'
+        })).pipe(flatMap(el => from(el.present())));
+
+        const failedAlert$ = from(this.alertCtrl.create({
             header: 'Signup Failed',
+            message: "UnAuthorized Users",
             buttons: [{
                 text: 'Ok',
                 role: 'ok',
                 cssClass: 'danger',
                 handler: (res) => {
-                    failedAlert.dismiss({
-                        data: false,
-                        role: 'failed'
-                    });
+                    return true;
                 }
             }]
-        });
+        })).pipe(flatMap(el => from(el.present())));
 
-        loading.message = "Login User...";
-        await loading.present();
+        let login$ = from(this.authService.login(action.username, action.password));
 
-        let data: user = null;
-        let company: company = null;
+        return forkJoin([loading$,login$])
+            .pipe(
+                flatMap(
+                    (response) => {
+                        let login = response[1];
 
-        try {
-            const userLoginResponse = await this.authService.login(action.username, action.password);
-            console.log(userLoginResponse);
-            const JSONdata = userLoginResponse.data;
-            console.log(JSON.parse(JSONdata));
-            sessionStorage.setItem('session', JSONdata);
-            const userResponse : user = JSON.parse(userLoginResponse.data);
-            data = userResponse;
+                        let data: user = null;
 
-            this.store.dispatch(new GetUser(data));
-            this.store.dispatch(new GetCompany(data.customer_id));
-            states.dispatch(new GetEligibility(data.customer_id));
-            this.store.dispatch(new UpcomingTrips());
-            loading.dismiss();
-            this.store.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']));
-            console.log("login end");
-        }
-        catch (error) {
-            console.log(error);
-            if (error.error == "{message :'UnAuthorized User'}") {
-                failedAlert.message = "UnAuthorized Users";
-                this.store.dispatch(new Logout());
-                loading.dismiss();
-                failedAlert.present(); 
-            }
-        }
+                        const JSONdata = login.data;
+                        console.log(JSON.parse(JSONdata));
+                        sessionStorage.setItem('session', JSONdata);
+                        const userResponse : user = JSON.parse(login.data);
+                        data = userResponse;
+
+                        return concat(
+                            states.dispatch([
+                                new GetUser(data),
+                                new GetCompany(data.customer_id),
+                                new GetEligibility(data.customer_id),
+                                new UpcomingTrips()
+                            ]),
+                            from(this.loadingCtrl.dismiss(null,null,'login')),
+                            states.dispatch(new Navigate(['/','home','dashboard','home-tab'])),
+                            of(                       
+                            states.patchState({
+                                userLogin : true
+                            }))
+                        )
+                    }
+                ),
+                catchError(
+                    (error) => {
+                        console.log(error);
+                        if (error.error == "{message :'UnAuthorized User'}") 
+                        {
+                            return concat(
+                                    from(this.loadingCtrl.dismiss(null,null,'login')),
+                                    failedAlert$,
+                                    states.dispatch(new Logout())
+                                )
+                        }
+                    }
+                )
+            );
     }
 
     @Action(Logout)
