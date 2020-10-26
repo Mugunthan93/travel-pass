@@ -18,6 +18,8 @@ import { CancellationComponent } from '../components/shared/cancellation/cancell
 import { city } from './shared.state';
 import { GetToken, HotelResultState } from './result/hotel.state';
 import { ApprovalService } from '../services/approval/approval.service';
+import { flightDetail } from './result/flight.state';
+import { flightResult } from '../models/search/flight';
 
 export interface booking {
     type: string
@@ -28,6 +30,73 @@ export interface booking {
     cancel: any
     mode : string
 }
+
+export interface cancel_request {
+  Origin: string;
+  OriginCode: string;
+  DestinationCode: string;
+  FlightCabinClass: string;
+  PreferredDepartureTime: string;
+  PreferredArrivalTime: string;
+  Destination: string;
+}
+
+export interface cancelled_details {
+  data: cancelled_details_data[];
+  org_cancel_details: org_cancel_details;
+  vendor_onwardInvoiceNum: string;
+  vendor_returnInvoiceNum: string;
+}
+
+export interface cancelled_details_data {
+  B2B2BStatus: boolean;
+  TicketCRInfo: ticketCRIInfo[];
+  ResponseStatus: number;
+  TraceId: string;
+}
+
+export interface ticketCRIInfo {
+  ChangeRequestId: number;
+  TicketId: number;
+  Status: number;
+  Remarks: string;
+  ChangeRequestStatus: number;
+}
+
+export interface request_param {
+  BookingId: number[];
+  RequestType: number;
+  CancellationType: number;
+  Remarks: string;
+  TicketId: number[];
+}
+
+export interface org_cancel_details {
+  sector: flightResult[];
+  request_param: request_param;
+  FullCancellation: number;
+}
+
+export interface customer_cancellation_details {
+  PNR: string;
+  cancellation_penalty_fee: number;
+  K3: number;
+  K3Return: number;
+  Service_charge: number;
+  sgst: number;
+  cgst: number;
+  igst: number;
+  Total_Cancellation_Charges: number;
+}
+
+export interface vendor_cancellation_details {
+  PLB: number;
+  total_offered_price: number;
+  VendorInvoiceNum: string;
+  VendorInvoiceDate: string;
+}
+
+////////////////////////////////////////////////
 
 export class MyBooking {
     static readonly type = "[booking] MyBooking";
@@ -68,8 +137,8 @@ export class GetcancelTicket {
   constructor(public ticket: any) {}
 }
 
-export class cancelTicket {
-    static readonly type = "[booking] cancelTicket";
+export class CancelTicket {
+    static readonly type = "[booking] CancelTicket";
     constructor(public ticket : any) {
 
     }
@@ -105,7 +174,7 @@ export class BookingState {
     private file: File,
     private transfer: FileTransfer,
     private fileOpener: FileOpener,
-    private approvalService : ApprovalService
+    private approvalService: ApprovalService
   ) {}
 
   @Selector()
@@ -319,7 +388,6 @@ export class BookingState {
 
   @Action(RescheduleTicket)
   rescheduleTicket(states: StateContext<booking>, action: RescheduleTicket) {
-
     const successAlert$ = from(
       this.alertCtrl.create({
         header: "Approve Success",
@@ -337,7 +405,7 @@ export class BookingState {
         ],
       })
     ).pipe(flatMap((el) => from(el.present())));
-    
+
     let failedAlert$ = from(
       this.alertCtrl.create({
         header: "Approve Failed",
@@ -390,7 +458,7 @@ export class BookingState {
       "return_pnr",
       "travel_date",
       "traveller_id",
-      "updatedAt"
+      "updatedAt",
     ]);
 
     let type = states.getState().type;
@@ -425,7 +493,6 @@ export class BookingState {
         }
       })
     );
-
   }
 
   @Action(GetRescheduleTicket)
@@ -463,9 +530,15 @@ export class BookingState {
     return modal$;
   }
 
-  @Action(cancelTicket)
-  cancelTicket(states: StateContext<booking>, action: cancelTicket) {
-
+  @Action(CancelTicket)
+  cancelTicket(states: StateContext<booking>, action: CancelTicket) {
+      let ticket = states.getState().cancel;
+      // let vendor_cancellation_details: vendor_cancellation_details = [{
+      //     PLB: ticket.passenger_details.uapi_params.selected_plb_Value.PLB_earned,
+      //     total_offered_price: ticket.passenger_details.flight_details[0].Fare.OfferedFare,
+      //     VendorInvoiceNum: '',
+      //     VendorInvoiceDate: ''
+      // }];
   }
 
   getBooking(mode : string,type : string, booking : string) {

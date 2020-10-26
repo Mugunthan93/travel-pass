@@ -9,11 +9,6 @@ import { itineraryPayload } from 'src/app/components/flight/email-itinerary/emai
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { ModalController, AlertController } from '@ionic/angular';
 import { sortButton } from './sort.state';
-import { CompanyState } from '../company.state';
-import { FlightSearchState } from '../search/flight.state';
-import { MultiCitySearchState } from '../search/flight/multi-city.state';
-import { OneWaySearchState } from '../search/flight/oneway.state';
-import { RoundTripSearchState } from '../search/flight/round-trip.state';
 
 export interface flight {
     emailtrip: emailtrip,
