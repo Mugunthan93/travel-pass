@@ -22,7 +22,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-tabs>
+  <ion-tabs (ionTabsDidChange)="tabChange($event)">
     <ion-tab-bar slot="bottom" class="ion-justify-content-around">
       <ion-tab-button tab="home-tab">
         <ion-icon name="briefcase"></ion-icon>

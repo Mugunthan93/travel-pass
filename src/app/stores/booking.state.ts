@@ -222,7 +222,7 @@ export class BookingState {
                     }
                 )
             )
-    }
+  }
 
   @Action(ChangeBookingMode)
   changeMode(states: StateContext<booking>, action: ChangeBookingMode) {

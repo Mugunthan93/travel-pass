@@ -61,6 +61,7 @@ import { TrainRoundTripBookState } from '../stores/book/train/round-trip.state';
 import { BusFilterState } from '../stores/result/filter/bus.filter.state';
 import { BookConfirmationComponent } from '../components/shared/book-confirmation/book-confirmation.component';
 import { IonicModule } from '@ionic/angular';
+import { ThemeState } from '../stores/theme.stata';
 
 @NgModule({
   imports: [
@@ -133,7 +134,9 @@ import { IonicModule } from '@ionic/angular';
       FlightPassengerState,
       HotelPassengerState,
       BusPassengerState,
-      TrainPassengerState
+      TrainPassengerState,
+
+      ThemeState
       
     ], { developmentMode: !environment.production }
     ),
@@ -154,7 +157,9 @@ import { IonicModule } from '@ionic/angular';
         SortState,
         SharedState,
         PassengerState,
-        EligibilityState
+        EligibilityState,
+
+        ThemeState
       ]
     }),
     NgxsFormPluginModule.forRoot(),

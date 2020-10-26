@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
 import { Navigate } from '@ngxs/router-plugin';
+import { SetTheme } from 'src/app/stores/theme.stata';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,6 +23,11 @@ export class DashboardPage implements OnInit {
 
   async openMenu() {
     this.menuCtrl.open('first');
+  }
+
+  tabChange(evt : any) {
+    console.log(evt);
+    this.store.dispatch(new SetTheme(evt.tab));
   }
 
   

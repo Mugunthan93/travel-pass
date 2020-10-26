@@ -3,6 +3,10 @@ import { Platform, AlertController } from '@ionic/angular';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { AndroidFullScreen } from '@ionic-native/android-full-screen/ngx';
 import { File } from '@ionic-native/file/ngx';
+import { concat, forkJoin, from, Observable, of } from 'rxjs';
+import { catchError, flatMap } from 'rxjs/operators';
+import { Store } from '@ngxs/store';
+import { ThemeState } from './stores/theme.stata';
 
 
 @Component({
@@ -12,7 +16,10 @@ import { File } from '@ionic-native/file/ngx';
 })
 export class AppComponent implements OnInit, OnDestroy{
 
+  theme$ : Observable<string>;
+
   constructor(
+    private store : Store,
     public platform: Platform,
     private androidPermissions: AndroidPermissions,
     private androidFullScreen: AndroidFullScreen,
@@ -22,24 +29,24 @@ export class AppComponent implements OnInit, OnDestroy{
   }
 
   async ngOnInit() {
-    console.log(this.platform);
+
+    this.theme$ = this.store.select(ThemeState.getTheme);
     await this.platform.ready();
     await this.androidFullScreen.immersiveMode();
 
-    try {
-      await this.file.checkDir(this.file.externalRootDirectory, 'TravellersPass');
-      await this.file.checkDir(this.file.externalRootDirectory + 'TravellersPass', 'Ticket');
-      await this.file.checkDir(this.file.externalRootDirectory + 'TravellersPass', 'Image');
-      await this.file.checkDir(this.file.externalRootDirectory + 'TravellersPass/Image', 'Hotel');
-    }
-    catch (error) {
-      if (error.code == 1) {
-        await this.file.createDir(this.file.externalRootDirectory, 'TravellersPass', true);
-        await this.file.createDir(this.file.externalRootDirectory + 'TravellersPass', 'Ticket', true);
-        await this.file.createDir(this.file.externalRootDirectory + 'TravellersPass', 'Image', true);
-        await this.file.createDir(this.file.externalRootDirectory + 'TravellersPass/Image', 'Hotel', true);
-      }
-    }
+    // let checkDir$ = concat([
+    //   from(this.file.checkDir(this.file.externalRootDirectory, 'TravellersPass')),
+    //   from(this.file.checkDir(this.file.externalRootDirectory + 'TravellersPass', 'Ticket')),
+    //   from(this.file.checkDir(this.file.externalRootDirectory + 'TravellersPass', 'Image')),
+    //   from(this.file.checkDir(this.file.externalRootDirectory + 'TravellersPass/Image', 'Hotel'))
+    // ]).pipe(flatMap(el => el));
+
+    // let creatrDir$ = concat([
+    //   from(this.file.createDir(this.file.externalRootDirectory, 'TravellersPass', true)),
+    //   from(this.file.createDir(this.file.externalRootDirectory + 'TravellersPass', 'Ticket', true)),
+    //   from(this.file.createDir(this.file.externalRootDirectory + 'TravellersPass', 'Image', true)),
+    //   from(this.file.createDir(this.file.externalRootDirectory + 'TravellersPass/Image', 'Hotel', true))
+    // ]).pipe(flatMap(el => of(true)));
 
 
   }
@@ -68,6 +75,10 @@ export class AppComponent implements OnInit, OnDestroy{
     catch (error) {
       console.log(error);
     }
+  }
+
+  getTheme() : Observable<string> {
+    return this.theme$;
   }
 
   ngOnDestroy() {
