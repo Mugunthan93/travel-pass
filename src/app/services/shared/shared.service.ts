@@ -54,6 +54,10 @@ export class SharedService {
     return from(this.http.get('/eligibility/' + companyId, {}));
   }
 
+  getEligibilityByParams(companyId : number, type : string, grade : string ) : Observable<HTTPResponse> {
+    return from(this.http.get('/eligibility/getByParams/' + companyId + '/' + type + '/'  + grade,{}))
+  }
+
   getTrainStation(station: string): Observable<HTTPResponse> {
     const param: { [key: string]: string | string[] } = {
       "station_name": station

@@ -3,6 +3,7 @@ import { MenuController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
 import { Navigate } from '@ngxs/router-plugin';
 import { SetTheme } from 'src/app/stores/theme.stata';
+import { GetTripList } from 'src/app/stores/expense.state';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,6 +29,9 @@ export class DashboardPage implements OnInit {
   tabChange(evt : any) {
     console.log(evt);
     this.store.dispatch(new SetTheme(evt.tab));
+    if(evt.tab == 'expense-tab') {
+      this.store.dispatch(new GetTripList());
+    }
   }
 
   

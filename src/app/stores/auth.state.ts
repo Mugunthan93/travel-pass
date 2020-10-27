@@ -20,6 +20,8 @@ import { FilterState } from './result/filter.state';
 import { SortState } from './result/sort.state';
 import { SearchState } from './search.state';
 import { SharedState } from './shared.state';
+import { ExpenseState } from './expense.state';
+import { ThemeState } from './theme.stata';
 
 export interface auth {
     forgotToken : string
@@ -184,7 +186,10 @@ export class AuthState {
                                     SortState,
                                     SharedState,
                                     PassengerState,
-                                    EligibilityState
+                                    EligibilityState,
+                                    ThemeState,
+
+                                    ExpenseState
                                 )),
                                 from(this.menuCtrl.toggle('first')),
                                 states.dispatch(new Navigate(['/', 'auth']))

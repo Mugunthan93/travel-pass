@@ -62,6 +62,7 @@ import { BusFilterState } from '../stores/result/filter/bus.filter.state';
 import { BookConfirmationComponent } from '../components/shared/book-confirmation/book-confirmation.component';
 import { IonicModule } from '@ionic/angular';
 import { ThemeState } from '../stores/theme.stata';
+import { ExpenseState } from '../stores/expense.state';
 
 @NgModule({
   imports: [
@@ -136,7 +137,8 @@ import { ThemeState } from '../stores/theme.stata';
       BusPassengerState,
       TrainPassengerState,
 
-      ThemeState
+      ThemeState,
+      ExpenseState
       
     ], { developmentMode: !environment.production }
     ),
@@ -159,7 +161,8 @@ import { ThemeState } from '../stores/theme.stata';
         PassengerState,
         EligibilityState,
 
-        ThemeState
+        ThemeState,
+        ExpenseState
       ]
     }),
     NgxsFormPluginModule.forRoot(),

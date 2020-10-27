@@ -1,1 +1,22 @@
 
+
+<ion-content>
+
+    <ion-item class="date">
+        <ion-row  slot="start">
+            <ion-label class="large bold">Start Date</ion-label>
+            <ion-input type="date" #start (ionChange)="startChange($event)"></ion-input>
+        </ion-row>
+        <ion-row slot="end">
+            <ion-label class="large bold">End Date</ion-label>
+            <ion-input type="date" #end (ionChange)="endChange($event)"></ion-input>
+        </ion-row>
+    </ion-item>
+
+    <ion-virtual-scroll [items]="trips$ | async" approxItemHeight="60px">
+        <ion-item *virtualItem="let trip" (click)="getExpense(trip)">
+            <ion-label class="large bold">{{ trip.trip_name | titlecase }}</ion-label>
+        </ion-item>
+    </ion-virtual-scroll>
+
+</ion-content>

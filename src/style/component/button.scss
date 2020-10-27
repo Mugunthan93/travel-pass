@@ -125,111 +125,234 @@ $button-box-shadow:none;
 // $fab-transition:;
 // $fab-box-shadow:;
 
-ion-button {
-
-    --background: #{$button-background};
-    --background-activated: map.get($button-background-type, "activated");
-    --background-activated-opacity: map.get($button-background-type, "activated-opacity");
-    --background-focused: map.get($button-background-type, "focused");
-    --background-focused-opacity: map.get($button-background-type, "focused-opacity");
-    --background-hover: map.get($button-background-type, "hover");
-    --background-hover-opacity: map.get($button-background-type, "hover-opacity");
-
-    --border-color: map.get($button-border,"color");
-    --border-style: map.get($button-border,"style");
-    --border-width: map.get($button-border, "width"); 
-    --border-radius: map.get($button-border, "radius");
-
-    --box-shadow:#{$button-box-shadow};
-    --color:#{$button-color};
-
-    --color-activated: map.get($button-color-type, "activated");
-    --color-focused: map.get($button-color-type, "focused");
-    --color-hover: map.get($button-color-type, "hover");
-
-    --opacity:#{$button-opacity};
-
-    --padding-bottom: map.get($button-padding, "bottom");
-    --padding-end: map.get($button-padding, "end");
-    --padding-start: map.get($button-padding, "start");
-    --padding-top: map.get($button-padding, "top");
+:root {
+    ion-app {
+        &.home-tab{
+            $button-background:$geraldine;
     
-    --ripple-color: #{$button-ripple-color};
-    --transition:#{$button-transition};
-
-    /////////////////////////////////
-
-    >ion-label, >ion-text{
-        color:#{$white};
-    }
-
-    &.swap {
-
-        --opacity: 1;
-        --background: transparent;
-
-       >ion-icon {
-           color:#{$geraldine};
-       }
-
-    }
-
-    &.add {
-
-        >ion-icon {
-            color:#{$white};
+            ion-button {
+    
+                --background: #{$button-background};
+                --background-activated: map.get($button-background-type, "activated");
+                --background-activated-opacity: map.get($button-background-type, "activated-opacity");
+                --background-focused: map.get($button-background-type, "focused");
+                --background-focused-opacity: map.get($button-background-type, "focused-opacity");
+                --background-hover: map.get($button-background-type, "hover");
+                --background-hover-opacity: map.get($button-background-type, "hover-opacity");
+            
+                --border-color: map.get($button-border,"color");
+                --border-style: map.get($button-border,"style");
+                --border-width: map.get($button-border, "width"); 
+                --border-radius: map.get($button-border, "radius");
+            
+                --box-shadow:#{$button-box-shadow};
+                --color:#{$button-color};
+            
+                --color-activated: map.get($button-color-type, "activated");
+                --color-focused: map.get($button-color-type, "focused");
+                --color-hover: map.get($button-color-type, "hover");
+            
+                --opacity:#{$button-opacity};
+            
+                --padding-bottom: map.get($button-padding, "bottom");
+                --padding-end: map.get($button-padding, "end");
+                --padding-start: map.get($button-padding, "start");
+                --padding-top: map.get($button-padding, "top");
+                
+                --ripple-color: #{$button-ripple-color};
+                --transition:#{$button-transition};
+            
+                /////////////////////////////////
+            
+                >ion-label, >ion-text{
+                    color:#{$white};
+                }
+            
+                &.swap {
+            
+                    --opacity: 1;
+                    --background: transparent;
+            
+                   >ion-icon {
+                       color:#{$geraldine};
+                   }
+            
+                }
+            
+                &.add {
+            
+                    >ion-icon {
+                        color:#{$white};
+                    }
+            
+                }
+            
+            
+            }
+            
+            ion-back-button {
+    
+                $button-background:$limerick;
+            
+                --background: #{$back-button-background};
+                --background-focused: map.get($back-button-background-type, "focused");
+                --background-focused-opacity: map.get($back-button-background-type, "focused-opacity");
+                --background-hover: map.get($back-button-background-type, "hover");
+                --background-hover-opacity: map.get($back-button-background-type, "hover-opacity");
+            
+                --border-radius: #{$back-button-border-radius};
+                --color: #{$back-button-color};
+                --color-focused: map.get($back-button-color-type, "focused");
+                --color-hover: map.get($back-button-color-type, "hover");
+                --icon-font-size: #{$back-button-icon-font-size};
+                --icon-font-weight: #{$back-button-icon-font-weight};
+            
+                --opacity:#{$back-button-opacity};
+            
+                --padding-bottom: map.get($back-button-padding, "bottom");
+                --padding-end: map.get($back-button-padding, "end");
+                --padding-start: map.get($back-button-padding, "start");
+                --padding-top: map.get($back-button-padding, "top");
+            
+                --ripple-color: #{$back-button-ripple-color};
+                --transition:#{$back-button-transition};
+            
+                --min-height:#{$back-button-min-height};
+                --min-width:#{$back-button-min-width};
+            
+                --margin-bottom: map.get($back-button-margin, "bottom");
+                --margin-end: map.get($back-button-margin, "end");
+                --margin-start: map.get($back-button-margin, "start");
+                --margin-top: map.get($back-button-margin, "top");
+            
+                --icon-padding-bottom: map.get($back-button-icon-padding, "bottom");
+                --icon-padding-end: map.get($back-button-icon-padding, "end");
+                --icon-padding-start: map.get($back-button-icon-padding, "start");
+                --icon-padding-top: map.get($back-button-icon-padding, "top");
+            
+                --icon-margin-bottom: map.get($back-button-icon-margin, "bottom");
+                --icon-margin-end: map.get($back-button-icon-margin, "end");
+                --icon-margin-start: map.get($back-button-icon-margin, "start");
+                --icon-margin-top: map.get($back-button-icon-margin, "top");
+            
+            
+            
+            }
+    
         }
-
+        &.expense-tab {
+    
+            $button-background:$limerick;
+            
+            ion-button {
+    
+                --background: #{$button-background};
+                --background-activated: map.get($button-background-type, "activated");
+                --background-activated-opacity: map.get($button-background-type, "activated-opacity");
+                --background-focused: map.get($button-background-type, "focused");
+                --background-focused-opacity: map.get($button-background-type, "focused-opacity");
+                --background-hover: map.get($button-background-type, "hover");
+                --background-hover-opacity: map.get($button-background-type, "hover-opacity");
+            
+                --border-color: map.get($button-border,"color");
+                --border-style: map.get($button-border,"style");
+                --border-width: map.get($button-border, "width"); 
+                --border-radius: map.get($button-border, "radius");
+            
+                --box-shadow:#{$button-box-shadow};
+                --color:#{$button-color};
+            
+                --color-activated: map.get($button-color-type, "activated");
+                --color-focused: map.get($button-color-type, "focused");
+                --color-hover: map.get($button-color-type, "hover");
+            
+                --opacity:#{$button-opacity};
+            
+                --padding-bottom: map.get($button-padding, "bottom");
+                --padding-end: map.get($button-padding, "end");
+                --padding-start: map.get($button-padding, "start");
+                --padding-top: map.get($button-padding, "top");
+                
+                --ripple-color: #{$button-ripple-color};
+                --transition:#{$button-transition};
+            
+                /////////////////////////////////
+            
+                >ion-label, >ion-text{
+                    color:#{$white};
+                }
+            
+                &.swap {
+            
+                    --opacity: 1;
+                    --background: transparent;
+            
+                   >ion-icon {
+                       color:#{$geraldine};
+                   }
+            
+                }
+            
+                &.add {
+            
+                    >ion-icon {
+                        color:#{$white};
+                    }
+            
+                }
+            
+            
+            }
+            
+            ion-back-button {
+            
+                --background: #{$back-button-background};
+                --background-focused: map.get($back-button-background-type, "focused");
+                --background-focused-opacity: map.get($back-button-background-type, "focused-opacity");
+                --background-hover: map.get($back-button-background-type, "hover");
+                --background-hover-opacity: map.get($back-button-background-type, "hover-opacity");
+            
+                --border-radius: #{$back-button-border-radius};
+                --color: #{$back-button-color};
+                --color-focused: map.get($back-button-color-type, "focused");
+                --color-hover: map.get($back-button-color-type, "hover");
+                --icon-font-size: #{$back-button-icon-font-size};
+                --icon-font-weight: #{$back-button-icon-font-weight};
+            
+                --opacity:#{$back-button-opacity};
+            
+                --padding-bottom: map.get($back-button-padding, "bottom");
+                --padding-end: map.get($back-button-padding, "end");
+                --padding-start: map.get($back-button-padding, "start");
+                --padding-top: map.get($back-button-padding, "top");
+            
+                --ripple-color: #{$back-button-ripple-color};
+                --transition:#{$back-button-transition};
+            
+                --min-height:#{$back-button-min-height};
+                --min-width:#{$back-button-min-width};
+            
+                --margin-bottom: map.get($back-button-margin, "bottom");
+                --margin-end: map.get($back-button-margin, "end");
+                --margin-start: map.get($back-button-margin, "start");
+                --margin-top: map.get($back-button-margin, "top");
+            
+                --icon-padding-bottom: map.get($back-button-icon-padding, "bottom");
+                --icon-padding-end: map.get($back-button-icon-padding, "end");
+                --icon-padding-start: map.get($back-button-icon-padding, "start");
+                --icon-padding-top: map.get($back-button-icon-padding, "top");
+            
+                --icon-margin-bottom: map.get($back-button-icon-margin, "bottom");
+                --icon-margin-end: map.get($back-button-icon-margin, "end");
+                --icon-margin-start: map.get($back-button-icon-margin, "start");
+                --icon-margin-top: map.get($back-button-icon-margin, "top");
+            
+            
+            
+            }
+        }
     }
-
-
 }
 
-ion-back-button {
-
-    --background: #{$back-button-background};
-    --background-focused: map.get($back-button-background-type, "focused");
-    --background-focused-opacity: map.get($back-button-background-type, "focused-opacity");
-    --background-hover: map.get($back-button-background-type, "hover");
-    --background-hover-opacity: map.get($back-button-background-type, "hover-opacity");
-
-    --border-radius: #{$back-button-border-radius};
-    --color: #{$back-button-color};
-    --color-focused: map.get($back-button-color-type, "focused");
-    --color-hover: map.get($back-button-color-type, "hover");
-    --icon-font-size: #{$back-button-icon-font-size};
-    --icon-font-weight: #{$back-button-icon-font-weight};
-
-    --opacity:#{$back-button-opacity};
-
-    --padding-bottom: map.get($back-button-padding, "bottom");
-    --padding-end: map.get($back-button-padding, "end");
-    --padding-start: map.get($back-button-padding, "start");
-    --padding-top: map.get($back-button-padding, "top");
-
-    --ripple-color: #{$back-button-ripple-color};
-    --transition:#{$back-button-transition};
-
-    --min-height:#{$back-button-min-height};
-    --min-width:#{$back-button-min-width};
-
-    --margin-bottom: map.get($back-button-margin, "bottom");
-    --margin-end: map.get($back-button-margin, "end");
-    --margin-start: map.get($back-button-margin, "start");
-    --margin-top: map.get($back-button-margin, "top");
-
-    --icon-padding-bottom: map.get($back-button-icon-padding, "bottom");
-    --icon-padding-end: map.get($back-button-icon-padding, "end");
-    --icon-padding-start: map.get($back-button-icon-padding, "start");
-    --icon-padding-top: map.get($back-button-icon-padding, "top");
-
-    --icon-margin-bottom: map.get($back-button-icon-margin, "bottom");
-    --icon-margin-end: map.get($back-button-icon-margin, "end");
-    --icon-margin-start: map.get($back-button-icon-margin, "start");
-    --icon-margin-top: map.get($back-button-icon-margin, "top");
-
-
-
-}
 
 
