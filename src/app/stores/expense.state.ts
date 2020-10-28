@@ -1,8 +1,8 @@
 import { Navigate } from '@ngxs/router-plugin';
-import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { Action, NgxsOnChanges, NgxsSimpleChange, Selector, State, StateContext, Store } from '@ngxs/store';
 import * as moment from 'moment';
-import { of } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
+import { combineLatest, of } from 'rxjs';
+import { flatMap, map, withLatestFrom } from 'rxjs/operators';
 import { ExpenseService } from '../services/expense/expense.service';
 import { UserState } from './user.state';
 
@@ -32,14 +32,21 @@ export interface triplist {
 
 export class ChangeStartDate {
     static readonly type = "[expense] ChangeStartDate";
+    constructor(public date : moment.Moment) {
+
+    }
 }
 
 export class ChangeEndDate {
     static readonly type = "[expense] ChangeEndDate";
+    constructor(public date : moment.Moment) {
+
+    }
 }
 
 export class GetTripList {
     static readonly type = "[expense] GetTripList";
+
 }
 
 export class GetExpenseList {
@@ -55,18 +62,27 @@ export class GetExpenseList {
     defaults: {
         trips : [],
         expenses : [],
-        startdate: moment({}).subtract(1, "months"),
-        enddate :  moment({})
+        enddate: moment({}).subtract(1, "months"),
+        startdate :  moment({})
     }
 })
 
-export class ExpenseState {
+export class ExpenseState implements NgxsOnChanges {
 
     constructor(
         private store : Store,
         private expenseService : ExpenseService
     ) {
 
+    }
+    ngxsOnChanges(change: NgxsSimpleChange<any>): void {
+        console.log(change);
+        if(
+            !(change.currentValue.startdate as moment.Moment).isSame(change.previousValue.startdate) ||
+            !(change.currentValue.enddate as moment.Moment).isSame(change.previousValue.enddate)
+        ) {
+            this.store.dispatch(new GetTripList());
+        }
     }
 
     @Selector()
@@ -91,25 +107,34 @@ export class ExpenseState {
             trips : []
         });
 
-        let startDate = states.getState().startdate;
-        let endDate = states.getState().enddate;
-        let userId : number = this.store.selectSnapshot(UserState.getUserId);
+        let startDate$ = of(states.getState().startdate);
+        let endDate$ = of(states.getState().enddate);
 
-        let tripList$ = this.expenseService.getTripList(userId,startDate,endDate);
-
-        return tripList$
+        return  this.store.select(UserState.getUserId)
             .pipe(
+                withLatestFrom(startDate$,endDate$),
                 flatMap(
-                    (response) => {
-                        let data : triplist[] = JSON.parse(response.data);
-                        console.log(data);
-                        states.patchState({
-                            trips : data
-                        });
-                        return of(response);
+                    (dates) => {
+                        let tripList$ = this.expenseService.getTripList(dates[0],dates[1],dates[2]);
+                
+                        return tripList$
+                            .pipe(
+                                flatMap(
+                                    (response) => {
+                                        console.log(response);
+                                        let data : triplist[] = JSON.parse(response.data);
+                                        console.log(data);
+                                        states.patchState({
+                                            trips : data
+                                        });
+                                        return of(response);
+                                    }
+                                )
+                            );
                     }
                 )
             );
+
 
     }
 
@@ -139,6 +164,20 @@ export class ExpenseState {
             )
         );
         
+    }
+    
+    @Action(ChangeStartDate)
+    changeStart(states : StateContext<expense>,action : ChangeStartDate) {
+        states.patchState({
+            startdate : action.date
+        });
+    }
+
+    @Action(ChangeEndDate)
+    changeEnd(states : StateContext<expense>,action : ChangeEndDate) {
+        states.patchState({
+            enddate : action.date
+        });
     }
 
 

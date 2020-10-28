@@ -15,8 +15,9 @@ export class ExpenseService {
 
 
   getTripList(userId : number,startDate : moment.Moment,endDate : moment.Moment) : Observable<HTTPResponse> {
-    return from(this.http.get('/trip/getAllTripsByUser/GetbyUser/' + endDate.format('YYYY-MM-DD%2000:00:00.000+00:00') + 
-'/' + startDate.format('YYYY-MM-DD%2000:00:00.000+00:00') + '/' + userId.toString(), {}));
+    let start = startDate.format('YYYY-MM-DD%2000:00:00.000+00:00');
+    let end = endDate.format('YYYY-MM-DD%2000:00:00.000+00:00')
+    return from(this.http.get('/trip/getAllTripsByUser/GetbyUser/' + end + '/' + start + '/' + userId.toString(), {}));
   }
 
   getExpenseList(tripId : number) : Observable<HTTPResponse> {
@@ -24,7 +25,9 @@ export class ExpenseService {
   }
 
   airlineTrips(userId : number,startDate : moment.Moment,endDate : moment.Moment) : Observable<HTTPResponse> {
-    return from(this.http.get('/airlineRequest/expense/getbyTravelDate/booked/' + userId.toString() + '/' + endDate.format('YYYY-MM-DD%2000:00:00.000+00:00') + '/' + startDate.format('YYYY-MM-DD%2000:00:00.000+00:00') + '/0/1000',{}));
+    let start = startDate.format('YYYY-MM-DD%2000:00:00.000+00:00');
+    let end = endDate.format('YYYY-MM-DD%2000:00:00.000+00:00');
+    return from(this.http.get('/airlineRequest/expense/getbyTravelDate/booked/' + userId.toString() + '/' + end + '/' + start + '/0/1000',{}));
   }
 
   getProjectList(companyId : number): Observable<HTTPResponse> {

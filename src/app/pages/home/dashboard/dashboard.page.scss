@@ -1,0 +1,19 @@
+
+
+ion-header {
+    ion-item.date{
+        background: white;
+        --padding-start: 10px;
+        --padding-end: 10px;
+        --padding-top: 12px;
+        --padding-bottom: 12px;
+        >ion-item{
+            margin: 0px;
+            ion-label{
+                margin: 8px;
+                max-width: max-content;
+            }
+        }
+    }
+
+}

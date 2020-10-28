@@ -52,6 +52,18 @@
 @import "vendors/ng-material/grid-list.scss";
 
 
-ion-header{
-    background: #{$geraldine};
+:root {
+    ion-app {
+        &.home-tab {
+            ion-header{
+                background: #{$geraldine};
+            }
+        }
+
+        &.expense-tab {
+            ion-header{
+                background: #{$limerick};
+            } 
+        }
+    }
 }
