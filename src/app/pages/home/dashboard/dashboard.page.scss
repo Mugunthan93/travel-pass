@@ -1,14 +1,14 @@
 
 
 ion-header {
-    ion-item.date{
+    ion-item.tripDetail{
         background: white;
         --padding-start: 10px;
         --padding-end: 10px;
         --padding-top: 12px;
         --padding-bottom: 12px;
         >ion-item{
-            margin: 0px;
+            margin: auto;
             ion-label{
                 margin: 8px;
                 max-width: max-content;

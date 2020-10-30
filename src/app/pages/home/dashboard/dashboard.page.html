@@ -19,15 +19,20 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-item class="date" *ngIf="currenttab == 'expense-tab'">
-    <ion-item slot="start" (click)="changeDate('end')">
+  <ion-item *ngIf="currenttab == 'expense-tab'" class="tripDetail">
+    <ion-item (click)="changeDate('end')">
         <ion-label class="large bold">From :</ion-label>
         <ion-label class="large bold">{{ endDate() | async }}</ion-label>
     </ion-item>
-    <ion-item slot="end" (click)="changeDate('start')">
+    <ion-item (click)="changeDate('start')">
         <ion-label class="large bold">To :</ion-label>
         <ion-label class="large bold">{{ startDate() | async }}</ion-label>
     </ion-item>
+    <ion-item>
+      <ion-button (click)="addTrips()">
+          <ion-label>Add Trips</ion-label>
+      </ion-button>
+  </ion-item>
   </ion-item>
 </ion-header>
 

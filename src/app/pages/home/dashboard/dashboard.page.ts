@@ -3,11 +3,12 @@ import { MenuController, ModalController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
 import { Navigate } from '@ngxs/router-plugin';
 import { SetTheme } from 'src/app/stores/theme.stata';
-import { ChangeEndDate, ChangeStartDate, ExpenseState, GetTripList } from 'src/app/stores/expense.state';
+import { ChangeEndDate, ChangeStartDate, ExpenseState, GetProjectList, GetTripList } from 'src/app/stores/expense.state';
 import * as moment from 'moment';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { TripComponent } from 'src/app/components/expense/trip/trip.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -111,6 +112,14 @@ export class DashboardPage implements OnInit {
     if(evt.tab == 'expense-tab') {
       this.store.dispatch(new GetTripList());
     }
+  }
+
+  async addTrips() {
+    const modal = await this.modalCtrl.create({
+      component: TripComponent,
+      id: 'trip'
+    });
+    this.store.dispatch(new GetProjectList(modal));
   }
 
   

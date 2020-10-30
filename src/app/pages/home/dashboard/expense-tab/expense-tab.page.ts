@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { ExpenseState, GetExpenseList, triplist } from 'src/app/stores/expense.state';
 import { ModalController } from '@ionic/angular';
+import { Store } from '@ngxs/store';
 
 @Component({
   selector: 'app-expense-tab',
@@ -14,8 +14,8 @@ export class ExpenseTabPage implements OnInit {
   trips$ : Observable<triplist[]>;
 
   constructor(
-    public modalCtrl : ModalController,
-    private store : Store
+    private store : Store,
+    public modalCtrl : ModalController
   ) { }
 
   ngOnInit() {

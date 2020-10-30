@@ -1,8 +1,9 @@
+import { ModalController } from '@ionic/angular';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, NgxsOnChanges, NgxsSimpleChange, Selector, State, StateContext, Store } from '@ngxs/store';
 import * as moment from 'moment';
-import { combineLatest, of } from 'rxjs';
-import { flatMap, map, withLatestFrom } from 'rxjs/operators';
+import { combineLatest, concat, from, of } from 'rxjs';
+import { flatMap, map, mergeMap, toArray, withLatestFrom } from 'rxjs/operators';
 import { ExpenseService } from '../services/expense/expense.service';
 import { UserState } from './user.state';
 
@@ -11,6 +12,7 @@ export interface expense {
     expenses : any[],
     startdate : moment.Moment
     enddate: moment.Moment
+    projectList: []
 }
 
 export interface triplist {
@@ -29,6 +31,47 @@ export interface triplist {
     trip_name: string
     updatedAt: string
 }
+
+export interface projectList {
+    company_id: number;
+    createdAt: any;
+    id: number;
+    project_name: string;
+    updatedAt: any;
+  }
+  
+  export interface trippayload {
+      e_flag: number
+      endCity: string
+      endDate: string
+      manager_approval: number
+      manager_id: number
+      project_id: number
+      startCity: string
+      startDate: string
+      status: string
+      travelled_by: number
+      trip_name: number
+  }
+  
+  export interface flightexpensepayload {
+    accounts_approval: any;
+    approved_accounts: any;
+    approved_manager: any;
+    attachementpath: { bills: [] };
+    cost: number
+    eligible_amount: number
+    end_city: string
+    end_date: string
+    manager_approval: any
+    no_of_days: number
+    paid_by: string
+    start_city: string
+    start_date: string
+    status: string
+    trip_id: number
+    type: string
+  }
 
 export class ChangeStartDate {
     static readonly type = "[expense] ChangeStartDate";
@@ -56,6 +99,18 @@ export class GetExpenseList {
     }
 }
 
+export class GetProjectList {
+    static readonly type = "[Dashboard] GetProjectList";
+    constructor(public modal: HTMLIonModalElement) {}
+}
+
+export class AddNewTrip {
+    static readonly type = '[Dashboard] AddNewTrip';
+    constructor(public trip : trippayload) {
+
+    }
+}
+
 
 @State<expense>({
     name: 'expense',
@@ -63,7 +118,8 @@ export class GetExpenseList {
         trips : [],
         expenses : [],
         enddate: moment({}).subtract(1, "months"),
-        startdate :  moment({})
+        startdate :  moment({}),
+        projectList : []
     }
 })
 
@@ -71,19 +127,29 @@ export class ExpenseState implements NgxsOnChanges {
 
     constructor(
         private store : Store,
-        private expenseService : ExpenseService
+        private expenseService : ExpenseService,
+        public modalCtrl : ModalController
     ) {
 
     }
     ngxsOnChanges(change: NgxsSimpleChange<any>): void {
         console.log(change);
-        if(
-            !(change.currentValue.startdate as moment.Moment).isSame(change.previousValue.startdate) ||
-            !(change.currentValue.enddate as moment.Moment).isSame(change.previousValue.enddate)
-        ) {
-            this.store.dispatch(new GetTripList());
+        if(change.previousValue) {
+            if(
+                !(change.currentValue.startdate as moment.Moment).isSame(change.previousValue.startdate) ||
+                !(change.currentValue.enddate as moment.Moment).isSame(change.previousValue.enddate)
+            ) {
+                this.store.dispatch(new GetTripList());
+            }
         }
+
     }
+
+    
+  @Selector()
+  static getProjectList(state: expense): projectList[] {
+    return state.projectList;
+  }
 
     @Selector()
     static getTripList(state : expense) : triplist[] {
@@ -178,6 +244,104 @@ export class ExpenseState implements NgxsOnChanges {
         states.patchState({
             enddate : action.date
         });
+    }
+
+    @Action(GetProjectList)
+    getProjectList(states: StateContext<any>, action: GetProjectList) {
+      let companyId$ = this.store.select(UserState.getcompanyId);
+  
+      return companyId$.pipe(
+        flatMap((id) => {
+          let project$ = this.expenseService.getProjectList(id);
+          return project$;
+        }),
+        flatMap((response) => {
+          console.log(response);
+          let list: projectList[] = JSON.parse(response.data).data;
+          states.patchState({
+            projectList: list,
+          });
+  
+          return from(action.modal.present());
+        })
+      );
+    }
+  
+    @Action(AddNewTrip)
+    addNewTrip(states: StateContext<any>, action: AddNewTrip) {
+      let payload: trippayload = Object.assign({}, action.trip);
+      
+      let createTrip$ = this.expenseService.createTrip(payload);
+      let tripId: number = null;
+  
+      return createTrip$
+        .pipe(
+          flatMap(
+            (response) => {
+              console.log(response);
+
+              let userId : number = this.store.selectSnapshot(UserState.getUserId);
+
+              if (response.status == 200) {
+                let start = moment(payload.startDate);
+                let end = moment(payload.endDate);
+                tripId = JSON.parse(response.data).id;
+                let flightTrips$ = this.expenseService.airlineTrips(userId,start, end);
+                return flightTrips$;
+              }
+            }
+          ),
+          flatMap(
+            (response) => {
+              console.log(response);
+              if (response.status == 200) {
+                let flightArray = JSON.parse(response.data).data;
+                return from(flightArray)
+              }
+            }
+          ),
+          mergeMap(
+            (flightsTrip: any) => {
+              console.log(flightsTrip);
+              let payload: flightexpensepayload = {
+                accounts_approval: null,
+                approved_accounts: null,
+                approved_manager: null,
+                attachementpath: {bills: []},
+                cost: flightsTrip.passenger_details.fare_response.published_fare,
+                eligible_amount: 0,
+                end_city: flightsTrip.trip_requests.Segments[0].DestinationName,
+                end_date: flightsTrip.trip_requests.Segments[0].PreferredArrivalTime,
+                manager_approval: null,
+                no_of_days: moment(flightsTrip.trip_requests.Segments[0].PreferredArrivalTime).diff(flightsTrip.trip_requests.Segments[0].PreferredDepartureTime,'days'),
+                paid_by: "paid_company",
+                start_city: flightsTrip.trip_requests.Segments[0].OriginName,
+                start_date: flightsTrip.trip_requests.Segments[0].PreferredDepartureTime,
+                status: "new",
+                trip_id: tripId,
+                type: "flight"
+              }
+  
+              let expense$ = this.expenseService.createExpense(payload);
+              return expense$;
+            }
+          ),
+          toArray(),
+          flatMap(
+            (response) => {
+              console.log(response);
+              payload.e_flag = 1;
+              let editTrip$ = this.expenseService.editTrip(tripId, payload);
+              return editTrip$;
+            }
+          ),
+          flatMap(
+            (response) => {
+              console.log(response);
+              return concat(states.dispatch(new GetTripList()),from(this.modalCtrl.dismiss(null,null,'trip')));
+            }
+          )
+        );
     }
 
 

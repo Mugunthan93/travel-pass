@@ -154,7 +154,7 @@ import { ExpenseState } from '../stores/expense.state';
 
         BookingState,
         ApprovalState,
-        
+
         FilterState,
         SortState,
         SharedState,
@@ -169,19 +169,14 @@ import { ExpenseState } from '../stores/expense.state';
     NgxsRouterPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot({
       disabled: false,
-      collapsed: true
+      collapsed: true,
     }),
     NgxsReduxDevtoolsPluginModule.forRoot({
-      name: 'Auth',
-      disabled: true
-    })
+      name: "Auth",
+      disabled: true,
+    }),
   ],
-  declarations : [
-    BookConfirmationComponent
-  ],
-  entryComponents : [
-    BookConfirmationComponent
-  ]
+  declarations: [BookConfirmationComponent],
+  entryComponents: [BookConfirmationComponent]
 })
-  
-export class StateModule { }
+export class StateModule {}

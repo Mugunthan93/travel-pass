@@ -8,6 +8,7 @@ import { ExpenseTabPageRoutingModule } from './expense-tab-routing.module';
 
 import { ExpenseTabPage } from './expense-tab.page';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
+import { TripComponent } from 'src/app/components/expense/trip/trip.component';
 
 @NgModule({
   imports: [
