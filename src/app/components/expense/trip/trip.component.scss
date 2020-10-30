@@ -1,0 +1,15 @@
+@import "../../../../style/component/item.scss";
+
+ion-content {
+    ion-list{
+        ion-item {
+            @include profile;
+        }
+        ion-row{
+            >ion-label{
+                margin: auto;
+                margin-right: 10px;
+            }
+        }
+    }
+}

@@ -62,83 +62,84 @@ import { BusFilterState } from '../stores/result/filter/bus.filter.state';
 import { BookConfirmationComponent } from '../components/shared/book-confirmation/book-confirmation.component';
 import { IonicModule } from '@ionic/angular';
 import { ThemeState } from '../stores/theme.stata';
+import { TripComponent } from '../components/expense/trip/trip.component';
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
-    NgxsModule.forRoot([
+    NgxsModule.forRoot(
+      [
+        AuthState,
+        UserState,
+        CompanyState,
+        DashboardState,
+        SearchState,
+        ResultState,
+        BookState,
 
-      AuthState,
-      UserState,
-      CompanyState,
-      DashboardState,
-      SearchState,
-      ResultState,
-      BookState,
+        //lvl 2
+        FlightSearchState,
+        FlightResultState,
+        FLightBookState,
 
-      //lvl 2
-      FlightSearchState,
-      FlightResultState,
-      FLightBookState,
+        OneWaySearchState,
+        RoundTripSearchState,
+        MultiCitySearchState,
 
-      OneWaySearchState,
-      RoundTripSearchState,
-      MultiCitySearchState,
-      
-      OneWayResultState,
-      DomesticResultState,
-      InternationalResultState,
-      MultiCityResultState,
-      
-      OneWayBookState,
-      DomesticBookState,
-      InternationalBookState,
-      MultiCityBookState,
+        OneWayResultState,
+        DomesticResultState,
+        InternationalResultState,
+        MultiCityResultState,
 
-      HotelSearchState,
-      HotelResultState,
-      HotelBookState,
+        OneWayBookState,
+        DomesticBookState,
+        InternationalBookState,
+        MultiCityBookState,
 
-      BusSearchState,
-      BusResultState,
-      BusBookState,
+        HotelSearchState,
+        HotelResultState,
+        HotelBookState,
 
-      TrainSearchState,
+        BusSearchState,
+        BusResultState,
+        BusBookState,
 
-      TrainOneWaySearchState,
-      TrainRoundTripSearchState,
-      TrainMultiCitySearchState,
+        TrainSearchState,
 
-      TrainBookState,
+        TrainOneWaySearchState,
+        TrainRoundTripSearchState,
+        TrainMultiCitySearchState,
 
-      TrainOneWayBookState,
-      TrainRoundTripBookState,
-      TrainMultiCityBookState,
+        TrainBookState,
 
-      BookingState,
-      ApprovalState,
-      
-      FilterState,
-      FlightFilterState,
-      DepartureFilterState,
-      ReturnFilterState,
-      HotelFilterState,
-      BusFilterState,
+        TrainOneWayBookState,
+        TrainRoundTripBookState,
+        TrainMultiCityBookState,
 
-      SortState,
-      SharedState,
-      EligibilityState,
+        BookingState,
+        ApprovalState,
 
-      PassengerState,
-      FlightPassengerState,
-      HotelPassengerState,
-      BusPassengerState,
-      TrainPassengerState,
+        FilterState,
+        FlightFilterState,
+        DepartureFilterState,
+        ReturnFilterState,
+        HotelFilterState,
+        BusFilterState,
 
-      ThemeState
-      
-    ], { developmentMode: !environment.production }
+        SortState,
+        SharedState,
+        EligibilityState,
+
+        PassengerState,
+        FlightPassengerState,
+        HotelPassengerState,
+        BusPassengerState,
+        TrainPassengerState,
+
+        ThemeState,
+      ],
+      { developmentMode: !environment.production }
     ),
     NgxsResetPluginModule.forRoot(),
     NgxsStoragePluginModule.forRoot({
@@ -152,33 +153,28 @@ import { ThemeState } from '../stores/theme.stata';
 
         BookingState,
         ApprovalState,
-        
+
         FilterState,
         SortState,
         SharedState,
         PassengerState,
         EligibilityState,
 
-        ThemeState
-      ]
+        ThemeState,
+      ],
     }),
     NgxsFormPluginModule.forRoot(),
     NgxsRouterPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot({
       disabled: false,
-      collapsed: true
+      collapsed: true,
     }),
     NgxsReduxDevtoolsPluginModule.forRoot({
-      name: 'Auth',
-      disabled: true
-    })
+      name: "Auth",
+      disabled: true,
+    }),
   ],
-  declarations : [
-    BookConfirmationComponent
-  ],
-  entryComponents : [
-    BookConfirmationComponent
-  ]
+  declarations: [BookConfirmationComponent],
+  entryComponents: [BookConfirmationComponent]
 })
-  
-export class StateModule { }
+export class StateModule {}

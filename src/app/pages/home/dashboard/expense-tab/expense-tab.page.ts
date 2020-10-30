@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { TripComponent } from 'src/app/components/expense/trip/trip.component';
+import { Store } from '@ngxs/store';
+import { GetProjectList } from 'src/app/stores/dashboard.state';
 
 @Component({
   selector: 'app-expense-tab',
@@ -7,9 +11,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ExpenseTabPage implements OnInit {
 
-  constructor() { }
+  constructor(
+    private store : Store,
+    public modalCtrl : ModalController
+  ) { }
 
   ngOnInit() {
+  }
+
+  async addTrips() {
+    const modal = await this.modalCtrl.create({
+      component: TripComponent,
+      id: 'trip'
+    });
+    this.store.dispatch(new GetProjectList(modal));
   }
 
 }

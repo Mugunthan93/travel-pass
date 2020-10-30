@@ -198,6 +198,9 @@ ion-item.pointItem {
 
     ion-input.form-control{
         height:32px !important;
+        min-width: -webkit-fill-available;
+        margin: auto;
+        display: flex;
     }
     ion-button {
         width: 50px;
@@ -207,6 +210,11 @@ ion-item.pointItem {
     }
     >ion-datetime{
         width:50%;
+    }
+    >ion-select{
+        max-width: -webkit-fill-available;
+        margin: auto;
+        display: flex;
     }
     >ion-radio-group{
         width: 50%;
