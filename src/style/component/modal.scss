@@ -48,15 +48,36 @@ ion-modal{
 
 }
 
+:root {
 
-.modal-wrapper,
-.picker-wrapper {
-    ion-title{
+    ion-app {
 
-        &.back-modal{
-            padding-left:0px !important;
+        &.home-tab {
+            .modal-wrapper,
+            .picker-wrapper {
+                ion-title{
+
+                    &.back-modal{
+                        padding-left:0px !important;
+                    }
+                    
+                    padding-left:43px !important;
+                }
+            }
         }
-        
-        padding-left:43px !important;
+
+        &.expense-tab{
+            .modal-wrapper,
+            .picker-wrapper {
+                ion-title{
+
+                    &.back-modal{
+                        padding-left:0px !important;
+                    }
+                    
+                    padding-left:43px !important;
+                }
+            }
+        }
     }
 }

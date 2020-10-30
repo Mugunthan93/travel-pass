@@ -1,9 +1,32 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>expense-list</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="back()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Expense List</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+
+  <ion-virtual-scroll [items]="expenses$ | async" approxItemHeight="60px">
+      <ion-item *virtualItem="let expense">
+        <ion-checkbox class="default" slot="start"></ion-checkbox>
+        <ion-row class="expense-col-1">
+          <ion-label class="large bold">{{ expense.type | uppercase }}</ion-label>
+          <ion-label class="large bold">{{ expense.start_city | titlecase }} - {{ expense.end_city | titlecase }}</ion-label>
+        </ion-row>
+        <ion-row class="expense-col-2">
+          <ion-label class="large bold">Cost :{{ expense.cost | currency : 'INR' }}</ion-label>
+          <ion-label class="large bold">Eligibility :{{ expense.eligible_amount | currency : 'INR' }}</ion-label>
+        </ion-row>
+        <ion-row class="expense-col-3">
+          <ion-label class="large bold">Paid By {{paidBy(expense) | titlecase}}</ion-label>
+          <ion-label class="large bold">{{ expense.status | uppercase }}</ion-label>
+        </ion-row>
+      </ion-item>
+  </ion-virtual-scroll>
 
 </ion-content>

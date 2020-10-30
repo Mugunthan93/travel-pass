@@ -39,15 +39,40 @@ $checkbox-transition:auto;
     --transition:#{$checkbox-transition};
 }
 
-ion-checkbox{
+:root {
 
-    &.email {
-        --background-checked: #{$geraldine} !important;
-        --border-color-checked: #{$geraldine} !important;
+    ion-app {
+
+        &.home-tab {
+            ion-checkbox{
+
+                &.email {
+                    --background-checked: #{$geraldine} !important;
+                    --border-color-checked: #{$geraldine} !important;
+                }
+            
+                &.default {
+                    --background-checked: #{$geraldine} !important;
+                    --border-color-checked: #{$geraldine} !important;
+                }
+            }
+        }
+
+        &.expense-tab {
+            ion-checkbox{
+
+                &.email {
+                    --background-checked: #{$limerick} !important;
+                    --border-color-checked: #{$limerick} !important;
+                }
+            
+                &.default {
+                    --background-checked: #{$limerick} !important;
+                    --border-color-checked: #{$limerick} !important;
+                }
+            }
+        }
     }
 
-    &.default {
-        --background-checked: #{$geraldine} !important;
-        --border-color-checked: #{$geraldine} !important;
-    }
+
 }

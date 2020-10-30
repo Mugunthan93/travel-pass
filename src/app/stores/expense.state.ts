@@ -63,6 +63,30 @@ export interface projectList {
     eligible_amount: number
     end_city: string
     end_date: string
+    manager_approval : any
+    no_of_days: number
+    paid_by: string
+    start_city: string
+    start_date: string
+    status: string
+    trip_id: number
+    type: string
+}
+
+export interface expenselist {
+    accounts_approval: any
+    approved_accounts: any
+    approved_manager: any
+    attachementpath: {
+        bills: any[]
+    }
+    cost: number
+    createdAt: string
+    eligible_amount: number
+    end_city: string
+    end_date: string
+    id: number
+    local_travel_value: any
     manager_approval: any
     no_of_days: number
     paid_by: string
@@ -71,7 +95,9 @@ export interface projectList {
     status: string
     trip_id: number
     type: string
-  }
+    travel_type: any
+    updatedAt: string
+}
 
 export class ChangeStartDate {
     static readonly type = "[expense] ChangeStartDate";
@@ -157,6 +183,11 @@ export class ExpenseState implements NgxsOnChanges {
     }
 
     @Selector()
+    static getExpenseList(state : expense) : expenselist[] {
+        return state.expenses;
+    }
+
+    @Selector()
     static getStartDate(state : expense) : moment.Moment {
         return state.startdate;
     }
@@ -218,7 +249,7 @@ export class ExpenseState implements NgxsOnChanges {
                 (response) => {
                     console.log(response);
                     if(response.status == 200) {
-                        let data : any[] = JSON.parse(response.data);
+                        let data : expenselist[] = JSON.parse(response.data);
                         console.log(data);
                         states.patchState({
                             expenses : data

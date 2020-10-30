@@ -1,3 +1,4 @@
+import { RouterState } from '@angular/router';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 
 
@@ -32,6 +33,7 @@ export class ThemeState {
 
     @Action(SetTheme)
     setTheme(states : StateContext<theme>, action : SetTheme) {
+
         states.patchState({
             name : action.name
         });

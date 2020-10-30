@@ -59,7 +59,7 @@ $toolbar-padding:(
                 &.result-footer{
             
                     height: 70px;
-                    --background:#{$suva-grey};
+                    --background:#{$suva-grey} !important;
             
                     label {
                         color: #{$white};

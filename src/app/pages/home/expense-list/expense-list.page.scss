@@ -1,0 +1,36 @@
+@import "../../../../style/base/color.scss";
+
+ion-content {
+
+    ion-virtual-scroll {
+        ion-item{
+            margin:12px;
+            border: 2px solid #{$limerick};
+            padding: 10px;
+            border-radius: 6px;
+            >ion-checkbox {
+                margin-right: 10px;
+            }
+            >ion-row {
+                &.expense-col-2 {
+                    justify-content: center;
+                }
+                &.expense-col-3 {
+                    justify-content: flex-end;
+                    >ion-label.pending {
+                        color: #{$malibu} !important;
+                    }
+    
+                    >ion-label.open {
+                        color: #89f789 !important;
+                    }
+    
+                    >ion-label.rej {
+                        color: #{$geraldine} !important;
+                    }
+                }
+            }
+        }
+    }
+
+}
