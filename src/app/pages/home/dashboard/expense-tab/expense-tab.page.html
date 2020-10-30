@@ -1,11 +1,32 @@
 
 
-<ion-content>
+<ion-content *ngIf="!(loading$ | async)">
 
     <ion-virtual-scroll [items]="trips$ | async" approxItemHeight="60px">
-        <ion-item *virtualItem="let trip" (click)="getExpense(trip)">
+
+        <ion-card *virtualItem="let trip">
+            <ion-card-header>
+                <ion-label class="bold">{{ trip.startDate | date : 'LLL yyyy' | uppercase}}</ion-label>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-item>
+                    <ion-title slot="start" class="bold larger">{{ trip.trip_name | titlecase }}</ion-title>
+                    <ion-title slot="end" class="bold larger">
+                        {{ totalCost(trip) | async | currency : 'INR' }}
+                    </ion-title>
+                </ion-item>
+                <ion-row>
+                    <ion-label class="bold">Reimbursable Amount</ion-label>
+                    <ion-label class="bold">
+                        {{ reImbursableAmount(trip) | async | currency : 'INR' }}
+                    </ion-label>
+                </ion-row>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- <ion-item *virtualItem="let trip" (click)="getExpense(trip)">
             <ion-label class="large bold">{{ trip.trip_name | titlecase }}</ion-label>
-        </ion-item>
+        </ion-item> -->
     </ion-virtual-scroll>
 
 </ion-content>

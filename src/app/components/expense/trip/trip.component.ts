@@ -59,14 +59,14 @@ export class TripComponent implements OnInit {
         e_flag: 0,
         endCity: "",
         endDate: moment(this.tripForm.value.end_date).format(
-          "YYYY-MM-DDTHH:mm:ss"
+          "YYYY-MM-DD 00:00:01.000+00:00"
         ),
         manager_approval: 0,
         manager_id: (this.tripForm.value.select_manager as user).id,
         project_id: (this.tripForm.value.project_name as projectList).id,
         startCity: "",
         startDate: moment(this.tripForm.value.start_date).format(
-          "YYYY-MM-DDTHH:mm:ss"
+          "YYYY-MM-DD 00:00:01.000+00:00"
         ),
         status: "new",
         travelled_by: this.userId,

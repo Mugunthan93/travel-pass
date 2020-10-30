@@ -3,9 +3,11 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Action, NgxsOnChanges, NgxsSimpleChange, Selector, State, StateContext, Store } from '@ngxs/store';
 import * as moment from 'moment';
 import { combineLatest, concat, from, of } from 'rxjs';
-import { flatMap, map, mergeMap, toArray, withLatestFrom } from 'rxjs/operators';
+import { finalize, flatMap, map, mergeMap, toArray, withLatestFrom } from 'rxjs/operators';
 import { ExpenseService } from '../services/expense/expense.service';
 import { UserState } from './user.state';
+import * as _ from 'lodash';
+import { tripList } from '../components/trip-list/trip-list.component';
 
 export interface expense {
     trips : triplist[],
@@ -13,6 +15,7 @@ export interface expense {
     startdate : moment.Moment
     enddate: moment.Moment
     projectList: []
+    loading : boolean
 }
 
 export interface triplist {
@@ -145,7 +148,8 @@ export class AddNewTrip {
         expenses : [],
         enddate: moment({}).subtract(1, "months"),
         startdate :  moment({}),
-        projectList : []
+        projectList : [],
+        loading : false
     }
 })
 
@@ -159,16 +163,6 @@ export class ExpenseState implements NgxsOnChanges {
 
     }
     ngxsOnChanges(change: NgxsSimpleChange<any>): void {
-        console.log(change);
-        if(change.previousValue) {
-            if(
-                !(change.currentValue.startdate as moment.Moment).isSame(change.previousValue.startdate) ||
-                !(change.currentValue.enddate as moment.Moment).isSame(change.previousValue.enddate)
-            ) {
-                this.store.dispatch(new GetTripList());
-            }
-        }
-
     }
 
     
@@ -197,70 +191,76 @@ export class ExpenseState implements NgxsOnChanges {
         return state.enddate;
     }
 
+    @Selector()
+    static getLoading(state : expense) : boolean {
+      return state.loading;
+    }
+
     @Action(GetTripList)
     getTripList(states : StateContext<expense>) {
 
         states.patchState({
-            trips : []
+            trips : [],
+            loading : true
         });
 
         let startDate$ = of(states.getState().startdate);
         let endDate$ = of(states.getState().enddate);
 
-        return  this.store.select(UserState.getUserId)
+        return this.store.select(UserState.getUserId)
             .pipe(
                 withLatestFrom(startDate$,endDate$),
                 flatMap(
                     (dates) => {
                         let tripList$ = this.expenseService.getTripList(dates[0],dates[1],dates[2]);
-                
-                        return tripList$
-                            .pipe(
-                                flatMap(
-                                    (response) => {
-                                        console.log(response);
-                                        let data : triplist[] = JSON.parse(response.data);
-                                        console.log(data);
-                                        states.patchState({
-                                            trips : data
-                                        });
-                                        return of(response);
-                                    }
-                                )
-                            );
+                        return tripList$;
                     }
+                ),
+                flatMap(
+                  (response) => {
+                      console.log(response);
+                      let data : triplist[] = JSON.parse(response.data);
+                      states.patchState({
+                        trips : data
+                      });
+                      return from(data)
+                        .pipe(
+                          mergeMap(
+                            (trip : triplist) => {
+                              return this.expenseService.getExpenseList(trip.id);
+                            }
+                          ),
+                          toArray()
+                        );
+                  }
+                ),
+                flatMap(
+                  (response) => {
+                      console.log(response);
+
+                      response.forEach(
+                        (res) => {
+                          if(res.status == 200) {
+                              let data : expenselist[] = JSON.parse(res.data);
+                              let currentexpense : expenselist[] = Object.assign(states.getState().expenses);
+                              let finalexpenses : expenselist[] = _.uniqBy(currentexpense.concat(data),'id');
+                              states.patchState({
+                                  expenses : finalexpenses
+                              });
+                          }
+                        }
+                      );
+
+                      states.patchState({
+                        loading : false
+                      });
+
+                      return of(true);
+                  }
                 )
             );
 
 
-    }
-
-    @Action(GetExpenseList)
-    getExpenseList(states : StateContext<expense>,action : GetExpenseList) {
-
-        states.patchState({
-            expenses : []
-        });
-
-        let expenselist$ = this.expenseService.getExpenseList(action.trip.id);
-        return expenselist$
-        .pipe(
-            flatMap(
-                (response) => {
-                    console.log(response);
-                    if(response.status == 200) {
-                        let data : expenselist[] = JSON.parse(response.data);
-                        console.log(data);
-                        states.patchState({
-                            expenses : data
-                        });
-                        states.dispatch(new Navigate(['/','home','expense-list']));
-                    }
-                    return of(response);
-                }
-            )
-        );
-        
     }
     
     @Action(ChangeStartDate)
@@ -310,7 +310,7 @@ export class ExpenseState implements NgxsOnChanges {
           flatMap(
             (response) => {
               console.log(response);
-
+              console.log(JSON.parse(response.data));
               let userId : number = this.store.selectSnapshot(UserState.getUserId);
 
               if (response.status == 200) {

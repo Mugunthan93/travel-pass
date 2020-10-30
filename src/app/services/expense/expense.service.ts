@@ -29,7 +29,7 @@ export class ExpenseService {
   airlineTrips(userId : number,startDate : moment.Moment,endDate : moment.Moment) : Observable<HTTPResponse> {
     let start = startDate.format('YYYY-MM-DD%2000:00:00.000+00:00');
     let end = endDate.format('YYYY-MM-DD%2000:00:00.000+00:00');
-    return from(this.http.get('/airlineRequest/expense/getbyTravelDate/booked/' + userId.toString() + '/' + end + '/' + start + '/0/1000',{}));
+    return from(this.http.get('/airlineRequest/expense/getbyTravelDate/booked/' + userId.toString() + '/' + start + '/' + end + '/0/1000',{}));
   }
 
   getProjectList(companyId : number): Observable<HTTPResponse> {
