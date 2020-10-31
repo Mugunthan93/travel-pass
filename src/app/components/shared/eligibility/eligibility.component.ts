@@ -31,30 +31,30 @@ export class EligibilityComponent implements OnInit {
     this.grade = this.store.select(UserState.getGrade);
 
     this.mode = this.store.select(SearchState.getSearchMode);
-    this.domesticLimit = combineLatest(this.mode, this.store.select(EligibilityState.getDomestic))
+    this.domesticLimit = combineLatest([this.mode, this.store.select(EligibilityState.getDomestic)])
       .pipe(
         map(
           (el) => {
             switch (el[0])
             {
-              case 'flight': return (el[1].flight == 'false' || el[1].flight == 'true') ? '0' : el[1].flight;
-              case 'hotel': return (el[1].hotel == 'false' || el[1].hotel == 'true') ? '0' : el[1].hotel;
-              case 'bus': return (el[1].bus == 'false' || el[1].bus == 'true') ? '0' : el[1].bus;
-              case 'train': return (el[1].train == 'false' || el[1].train == 'true') ? '0' : el[1].train;
+              case 'flight': return el[1].flight.toString();
+              case 'hotel': return el[1].hotel.toString();
+              case 'bus': return el[1].bus.toString();
+              case 'train': return el[1].train.toString();
               default: return;
             }
           }
         )
     );
-    this.internationalLimit = combineLatest(this.mode, this.store.select(EligibilityState.getInternational))
+    this.internationalLimit = combineLatest([this.mode, this.store.select(EligibilityState.getInternational)])
       .pipe(
         map(
           (el) => {
             switch (el[0]) {
-              case 'flight': return (el[1].flight == 'false' || el[1].flight == 'true') ? '0' : el[1].flight;
-              case 'hotel': return (el[1].hotel == 'false' || el[1].hotel == 'true') ? '0' : el[1].hotel;
-              case 'bus': return (el[1].bus == 'false' || el[1].bus == 'true') ? '0' : el[1].bus;
-              case 'train': return (el[1].train == 'false' || el[1].train == 'true') ? '0' : el[1].train;
+              case 'flight': return el[1].flight.toString();
+              case 'hotel': return el[1].hotel.toString();
+              case 'bus': return el[1].bus.toString();
+              case 'train': return el[1].train.toString();
               default: return;
             }
           }

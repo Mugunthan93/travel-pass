@@ -3,6 +3,7 @@ import { SharedService } from '../services/shared/shared.service';
 import { map } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { UserState } from './user.state';
+import * as _ from 'lodash';
 
 
 export interface eligibility {
@@ -21,13 +22,13 @@ export interface gradeArray {
 }
 
 export interface gradeValue {
-    bus: string
-    cab: string
-    flight: string
-    food: string
-    hotel: string
-    localtravel: string
-    train: string
+    bus: number
+    cab: number
+    flight: number
+    food: number
+    hotel: number
+    localtravel: number
+    train: number
 }
 
 export class GetEligibility {
@@ -70,36 +71,35 @@ export class EligibilityState {
             .pipe(
                 map(
                     (response : HTTPResponse) => {
-                        let gradearray: gradeArray[] = JSON.parse(response.data).data;
+                        let gradearray: any[] = JSON.parse(response.data).data;
                         let usergrade: string = this.store.selectSnapshot(UserState.getGrade);
                         let filteredArray = gradearray.filter(el => el.grade == usergrade);
                         filteredArray.forEach(
                             (el) => {
-                                console.log(el);
                                 if (el.trip_type == "International")
                                 {
                                     states.patchState({
                                         international: {
-                                            bus: el.value.bus.toString(),
-                                            cab: el.value.cab.toString(),
-                                            flight: el.value.flight.toString(),
-                                            food: el.value.food.toString(),
-                                            hotel: el.value.hotel.toString(),
-                                            localtravel: el.value.localtravel.toString(),
-                                            train: el.value.train.toString()
+                                            bus:  _.isNumber(el.value.bus) ? el.value.bus : parseInt(el.value.bus),
+                                            cab: _.isNumber(el.value.cab) ? el.value.cab : parseInt(el.value.cab),
+                                            flight: _.isNumber(el.value.flight) ? el.value.flight : parseInt(el.value.flight),
+                                            food: _.isNumber(el.value.food) ? el.value.food : parseInt(el.value.food),
+                                            hotel: _.isNumber(el.value.hotel) ? el.value.hotel : parseInt(el.value.hotel),
+                                            localtravel: _.isNumber(el.value.localtravel) ? el.value.localtravel : parseInt(el.value.localtravel),
+                                            train: _.isNumber(el.value.train) ? el.value.train : parseInt(el.value.train)
                                         }
                                     });
                                 }
                                 else if (el.trip_type == "Domestic") {
                                     states.patchState({
                                         domestic: {
-                                            bus: el.value.bus.toString(),
-                                            cab: el.value.cab.toString(),
-                                            flight: el.value.flight.toString(),
-                                            food: el.value.food.toString(),
-                                            hotel: el.value.hotel.toString(),
-                                            localtravel: el.value.localtravel.toString(),
-                                            train: el.value.train.toString()
+                                            bus:  _.isNumber(el.value.bus) ? el.value.bus : parseInt(el.value.bus),
+                                            cab: _.isNumber(el.value.cab) ? el.value.cab : parseInt(el.value.cab),
+                                            flight: _.isNumber(el.value.flight) ? el.value.flight : parseInt(el.value.flight),
+                                            food: _.isNumber(el.value.food) ? el.value.food : parseInt(el.value.food),
+                                            hotel: _.isNumber(el.value.hotel) ? el.value.hotel : parseInt(el.value.hotel),
+                                            localtravel: _.isNumber(el.value.localtravel) ? el.value.localtravel : parseInt(el.value.localtravel),
+                                            train: _.isNumber(el.value.train) ? el.value.train : parseInt(el.value.train)
                                         }
                                     });
                                 }
