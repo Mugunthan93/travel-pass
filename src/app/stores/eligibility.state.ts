@@ -75,6 +75,7 @@ export class EligibilityState {
                         let filteredArray = gradearray.filter(el => el.grade == usergrade);
                         filteredArray.forEach(
                             (el) => {
+                                console.log(el);
                                 if (el.trip_type == "International")
                                 {
                                     states.patchState({

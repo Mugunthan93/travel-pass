@@ -6,6 +6,32 @@ $skeleton-background:#{$geraldine};
 $skeleton-background-rgb:#{$geraldine-rgb};
 $skeleton-border-radius:5px;
 
+:root {
+
+    ion-app {
+
+        &.home-tab {  
+            ion-skeleton-text{
+                --background : #{$skeleton-background} !important;
+                --background-rgb : #{$skeleton-background-rgb} !important;
+                --border-radius : #{$skeleton-border-radius} !important;
+            }
+        }
+
+        &.expense-tab { 
+            ion-skeleton-text{
+                --background : #{$limerick} !important;
+                --background-rgb : #{$limerick-rgb} !important;
+                --border-radius : #{$skeleton-border-radius} !important;
+            }
+        }
+
+    }
+
+
+}
+
+
 
 ion-skeleton-text{
     --background : #{$skeleton-background};

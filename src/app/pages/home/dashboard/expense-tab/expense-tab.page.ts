@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { expenselist, ExpenseState, GetExpenseList, triplist } from 'src/app/stores/expense.state';
 import { ModalController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
@@ -13,9 +13,10 @@ import * as _ from 'lodash';
 })
 export class ExpenseTabPage implements OnInit {
 
-  trips$ : Observable<triplist[]>;
+  trips$ : Observable<triplist[] | number[]>;
   expenses$ : Observable<expenselist[]>;
   loading$ : Observable<boolean>;
+  progress$ : Observable<number>;
 
   constructor(
     private store : Store,
@@ -26,30 +27,99 @@ export class ExpenseTabPage implements OnInit {
     this.trips$ = this.store.select(ExpenseState.getTripList);
     this.expenses$ = this.store.select(ExpenseState.getExpenseList);
     this.loading$ = this.store.select(ExpenseState.getLoading);
+
+    this.progress$ = combineLatest([this.totalpaid(),this.totalCost()])
+      .pipe(
+        map(
+          (exp) => {
+            if(exp[1] == 0) {
+              return 1;
+            }
+            else {
+              console.log(exp);
+              let paid = exp[0];
+              let cost = exp[1];
+              return paid/cost;
+            }
+          }
+        )
+      );
+      
   }
 
-  totalCost(trip : triplist) : Observable<number> {
+  tripTotalCost(trip : triplist) : Observable<number> {
     return this.expenses$
       .pipe(
         map(exp => exp.filter(ex => ex.trip_id == trip.id)),
-        reduce((acc,curr,ind) => {
-          console.log(acc,curr,ind);
-          // return _.isUndefined(curr[ind].cost) ? acc + 0 : acc + curr[ind].cost
-          return 0;
-        },0)
+        map(
+          (filtered) => {
+            let reduced = filtered.reduce((acc,curr) => {
+              return acc + curr.cost;
+            },0);
+            return reduced;
+          }
+        )
       );
   }
 
-  reImbursableAmount(trip : triplist) : Observable<number> {
+  tripReImbursableCost(trip : triplist) : Observable<number> {
     return this.expenses$
       .pipe(
         map(exp => exp.filter(ex => ((ex.trip_id == trip.id) && (ex.paid_by !== 'paid_company')))),
-        reduce((acc,curr,ind) => {
-          console.log(acc,curr,ind);
-          // return _.isUndefined(curr[ind].cost) ? acc + 0 : acc + curr[ind].cost
-          return 0;
-        },0)
+        map(
+          (filtered) => {
+            let reduced = filtered.reduce((acc,curr) => {
+              return acc + curr.cost;
+            },0);
+            return reduced;
+          }
+        )
       );
+  }
+
+  totalCost() {
+    return this.expenses$
+    .pipe(
+      map(exp => _.uniqBy(exp,'id')),
+      map(
+        (filtered) => {
+          let reduced = filtered.reduce((acc,curr) => {
+            return acc + curr.cost;
+          },0);
+          return reduced;
+        }
+      )
+    )
+  }
+
+  totalpaid() {
+    return this.expenses$
+    .pipe(
+      map(exp => _.uniqBy(exp,'id').filter(el => el.paid_by == 'paid_company')),
+      map(
+        (filtered) => {
+          let reduced = filtered.reduce((acc,curr) => {
+            return acc + curr.cost;
+          },0);
+          return reduced;
+        }
+      )
+    );
+  }
+
+  totalBalance() {
+    return this.expenses$
+    .pipe(
+      map(exp => _.uniqBy(exp,'id').filter(el => el.paid_by !== 'paid_company')),
+      map(
+        (filtered) => {
+          let reduced = filtered.reduce((acc,curr) => {
+            return acc + curr.cost;
+          },0);
+          return reduced;
+        }
+      )
+    );
   }
 
   getExpense(trip : triplist) {

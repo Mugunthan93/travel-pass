@@ -1,32 +1,53 @@
 
+<ion-header>
+    <ion-row class="totalExpense">
+        <ion-row class="total">
+            <ion-label>TOTAL EXPENSES</ion-label>
+            <ion-title class="larger" *ngIf="!(loading$ | async)">{{ totalCost() | async | currency : 'INR' }}</ion-title>
+            <ion-skeleton-text animated style="width: 20%" *ngIf="(loading$ | async)"></ion-skeleton-text>
+    
+        </ion-row>
+        <ion-progress-bar type="indeterminate" *ngIf="(loading$ | async)"></ion-progress-bar>
+        <ion-progress-bar [value]="progress$ | async" *ngIf="!(loading$ | async)"></ion-progress-bar>
+        <ion-row class="paid-bal">
+            <ion-row>
+                <ion-label class="bold large" *ngIf="!(loading$ | async)">{{ totalpaid() | async | currency : 'INR' }}</ion-label>
+                <ion-skeleton-text animated *ngIf="(loading$ | async)"></ion-skeleton-text>
+                <ion-label class="title">PAID</ion-label>
+            </ion-row>
+            <ion-row>
+                <ion-label class="bold large" *ngIf="!(loading$ | async)">{{ totalBalance() | async | currency : 'INR' }}</ion-label>
+                <ion-skeleton-text animated *ngIf="(loading$ | async)"></ion-skeleton-text>
+                <ion-label class="title">BALANCE</ion-label>
+            </ion-row>
+        </ion-row>
+    </ion-row>
+</ion-header>
 
-<ion-content *ngIf="!(loading$ | async)">
 
+<ion-content>
     <ion-virtual-scroll [items]="trips$ | async" approxItemHeight="60px">
-
         <ion-card *virtualItem="let trip">
             <ion-card-header>
-                <ion-label class="bold">{{ trip.startDate | date : 'LLL yyyy' | uppercase}}</ion-label>
+                <ion-item>
+                    <ion-skeleton-text animated *ngIf="(loading$ | async)"></ion-skeleton-text>
+                    <ion-label  class="large bold" *ngIf="!(loading$ | async)">{{ trip.startDate | date : 'LLL yyyy' | uppercase}}</ion-label>
+                </ion-item>
             </ion-card-header>
             <ion-card-content>
-                <ion-item>
-                    <ion-title slot="start" class="bold larger">{{ trip.trip_name | titlecase }}</ion-title>
-                    <ion-title slot="end" class="bold larger">
-                        {{ totalCost(trip) | async | currency : 'INR' }}
-                    </ion-title>
+                <ion-item class="total">
+                    <ion-skeleton-text slot="start" animated *ngIf="(loading$ | async)"></ion-skeleton-text>
+                    <ion-skeleton-text slot="end" animated *ngIf="(loading$ | async)"></ion-skeleton-text>
+                    <ion-title slot="start" class="large bold" *ngIf="!(loading$ | async)">{{ trip.trip_name | titlecase }}</ion-title>
+                    <ion-title slot="end" class="large bold" *ngIf="!(loading$ | async)">{{ tripTotalCost(trip) | async | currency : 'INR' }}</ion-title>
                 </ion-item>
-                <ion-row>
-                    <ion-label class="bold">Reimbursable Amount</ion-label>
-                    <ion-label class="bold">
-                        {{ reImbursableAmount(trip) | async | currency : 'INR' }}
-                    </ion-label>
-                </ion-row>
+                <ion-item class="reimburse">
+                    <ion-skeleton-text slot="start" animated *ngIf="(loading$ | async)"></ion-skeleton-text>
+                    <ion-skeleton-text slot="end" animated *ngIf="(loading$ | async)"></ion-skeleton-text>
+                    <ion-label slot="start" class="large bold" *ngIf="!(loading$ | async)">Reimbursable Amount</ion-label>
+                    <ion-label slot="end"  class="large bold" *ngIf="!(loading$ | async)">{{ tripReImbursableCost(trip) | async | currency : 'INR' }}</ion-label>
+                </ion-item>
             </ion-card-content>
         </ion-card>
-
-        <!-- <ion-item *virtualItem="let trip" (click)="getExpense(trip)">
-            <ion-label class="large bold">{{ trip.trip_name | titlecase }}</ion-label>
-        </ion-item> -->
     </ion-virtual-scroll>
-
 </ion-content>

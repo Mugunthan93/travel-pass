@@ -172,8 +172,8 @@ export class ExpenseState implements NgxsOnChanges {
   }
 
     @Selector()
-    static getTripList(state : expense) : triplist[] {
-        return state.trips;
+    static getTripList(state : expense) : triplist[] | number[] {
+        return state.trips.length == 0 ? [1,2,3,4,5,6,7,8,9,0] : state.trips;
     }
 
     @Selector()
@@ -196,7 +196,7 @@ export class ExpenseState implements NgxsOnChanges {
       return state.loading;
     }
 
-    @Action(GetTripList)
+    @Action(GetTripList, { cancelUncompleted : true })
     getTripList(states : StateContext<expense>) {
 
         states.patchState({
@@ -243,7 +243,7 @@ export class ExpenseState implements NgxsOnChanges {
                           if(res.status == 200) {
                               let data : expenselist[] = JSON.parse(res.data);
                               let currentexpense : expenselist[] = Object.assign(states.getState().expenses);
-                              let finalexpenses : expenselist[] = _.uniqBy(currentexpense.concat(data),'id');
+                              let finalexpenses : expenselist[] = currentexpense.concat(data);
                               states.patchState({
                                   expenses : finalexpenses
                               });
