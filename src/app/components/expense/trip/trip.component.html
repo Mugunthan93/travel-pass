@@ -12,53 +12,62 @@
 <ion-content>
   <form [formGroup]="tripForm" (ngSubmit)="addTrip()">
     <ion-list>
+
       <ion-item>
-        <ion-label slot="start">Trip Name</ion-label>
-        <ion-input slot="end" type="text" formControlName="trip_name" class="form-control"></ion-input>
+        <ion-label position="floating">Trip Name</ion-label>
+        <ion-input type="text" formControlName="trip_name" enterkeyhint="next"></ion-input>
       </ion-item>
+
       <ion-item>
-        <ion-label slot="start">Project Name</ion-label>
-        <ion-select slot="end" formControlName="project_name" class="form-control" placeholder="Select Project Name"
+        <ion-select formControlName="project_name" placeholder="Select Project"
         #project_name
         cancelText="Cancel"
         okText="Confirm"
-        [interfaceOptions]="customAlertOptions"
+        [interfaceOptions]="customAlertOptions('Project List')"
         (ionChange)="changeProjectName($event)">
           <ion-select-option *ngFor="let projName of (projectName$ | async)" [value]="projName">
             {{ projName.project_name }}</ion-select-option>
       </ion-select>
       </ion-item>
+
       <ion-item>
-        <ion-label slot="start">Claim Type</ion-label>
-        <ion-select slot="end" formControlName="claim_type" class="form-control" placeholder="Select Claim Type"
+        <ion-select formControlName="claim_type" placeholder="Select Claim Type"
         #claim_type
         cancelText="Cancel"
         okText="Confirm"
-        [interfaceOptions]="customAlertOptions"
+        [interfaceOptions]="customAlertOptions('Claim Type')"
         (ionChange)="changeClaimType($event)">
           <ion-select-option value="At Actuals">At Actuals</ion-select-option>
           <ion-select-option value="Per Diem">Per Diem</ion-select-option>
         </ion-select>
       </ion-item>
+
       <ion-item>
-        <ion-label slot="start">Start Date</ion-label>
-        <ion-input slot="end" type="date" formControlName="start_date" class="form-control"></ion-input>
+        <ion-label position="floating">Start Date</ion-label>
+        <ion-input type="date" formControlName="start_date" enterkeyhint="next"></ion-input>
       </ion-item>
+      <ion-row *ngIf="tripForm.controls['start_date'].hasError('hasDate')">
+        <ion-label color="danger">You already had a trip in this date,Try other dates</ion-label>
+      </ion-row>
+
       <ion-item>
-        <ion-label slot="start">End Date</ion-label>
-        <ion-input slot="end" type="date" formControlName="end_date" class="form-control">
+        <ion-label position="floating">End Date</ion-label>
+        <ion-input type="date" formControlName="end_date" enterkeyhint="next">
         </ion-input>
       </ion-item>
       <ion-row *ngIf="tripForm.controls['end_date'].hasError('mismatch')">
         <ion-label color="danger">End Date won't come before Start Date</ion-label>
       </ion-row>
+      <ion-row *ngIf="tripForm.controls['end_date'].hasError('hasDate')">
+        <ion-label color="danger">You already had a trip in this date,Try other dates</ion-label>
+      </ion-row>
+
       <ion-item>
-        <ion-label slot="start">Select Manager</ion-label>
-        <ion-select slot="end" formControlName="select_manager" class="form-control" placeholder="Select Manager"
+        <ion-select formControlName="select_manager" placeholder="Select Manager"
         #select_manager
         cancelText="Cancel"
         okText="Confirm"
-        [interfaceOptions]="customAlertOptions"
+        [interfaceOptions]="customAlertOptions('Managers List')"
         (ionChange)="changeManager($event)">
           <ion-select-option *ngFor="let manger of (manager$ | async)" [value]="manger">{{ manger.name }}
           </ion-select-option>

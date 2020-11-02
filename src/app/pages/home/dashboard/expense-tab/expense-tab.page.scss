@@ -32,6 +32,13 @@ ion-header {
             }
         }
     }
+    >ion-row.addtrip {
+        padding: 10px;
+        justify-content: flex-end;
+        ion-label {
+            margin: 10px;
+        }
+    }
 }
 
 ion-content{

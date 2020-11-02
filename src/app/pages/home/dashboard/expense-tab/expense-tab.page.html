@@ -11,16 +11,21 @@
         <ion-progress-bar [value]="progress$ | async" *ngIf="!(loading$ | async)"></ion-progress-bar>
         <ion-row class="paid-bal">
             <ion-row>
-                <ion-label class="bold large" *ngIf="!(loading$ | async)">{{ totalpaid() | async | currency : 'INR' }}</ion-label>
+                <ion-label class="bold large" *ngIf="!(loading$ | async)">{{ totalSpent() | async | currency : 'INR' }}</ion-label>
                 <ion-skeleton-text animated *ngIf="(loading$ | async)"></ion-skeleton-text>
                 <ion-label class="title">PAID</ion-label>
             </ion-row>
             <ion-row>
-                <ion-label class="bold large" *ngIf="!(loading$ | async)">{{ totalBalance() | async | currency : 'INR' }}</ion-label>
+                <ion-label class="bold large" *ngIf="!(loading$ | async)">{{ totalSaving() | async | currency : 'INR' }}</ion-label>
                 <ion-skeleton-text animated *ngIf="(loading$ | async)"></ion-skeleton-text>
                 <ion-label class="title">BALANCE</ion-label>
             </ion-row>
         </ion-row>
+    </ion-row>
+    <ion-row class="addtrip">
+        <ion-button (click)="addTrip()">
+            <ion-label>Add Trip</ion-label>
+        </ion-button>
     </ion-row>
 </ion-header>
 

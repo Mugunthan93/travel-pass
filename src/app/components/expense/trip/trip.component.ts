@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import { ModalController } from '@ionic/angular';
 import { UserState } from 'src/app/stores/user.state';
 import { projectList, trippayload, AddNewTrip, ExpenseState } from 'src/app/stores/expense.state';
+import { UniqTripValidators } from 'src/app/validator/uniq_trip_date.Validators';
 
 @Component({
   selector: "app-trip",
@@ -18,10 +19,10 @@ import { projectList, trippayload, AddNewTrip, ExpenseState } from 'src/app/stor
 })
 export class TripComponent implements OnInit {
   tripForm: FormGroup;
-  customAlertOptions: AlertOptions;
   projectName$: Observable<projectList[]>;
   manager$: Observable<user[]>;
   userId: number;
+  tripDate$: Observable<any[]>;
 
   constructor(
     private store: Store,
@@ -29,28 +30,36 @@ export class TripComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+
     this.userId = this.store.selectSnapshot(UserState.getUserId);
+    this.tripDate$ = this.store.select(ExpenseState.getTripDates);
+
     this.tripForm = new FormGroup({
       trip_name: new FormControl(null, [Validators.required]),
       project_name: new FormControl(null, [Validators.required]),
-      claim_type: new FormControl(null, [Validators.required]),
-      start_date: new FormControl(null, [Validators.required]),
-      end_date: new FormControl(null, [
-        Validators.required
-      ]),
+      claim_type: new FormControl(null, [Validators.required],),
+      start_date: new FormControl(null, [Validators.required],[UniqTripValidators(this.tripDate$)]),
+      end_date: new FormControl(null, [Validators.required]),
       select_manager: new FormControl(null, [Validators.required]),
     });
-
-    this.customAlertOptions = {
-      cssClass: "cabinClass",
-    };
 
     this.projectName$ = this.store.select(ExpenseState.getProjectList);
     this.manager$ = this.store.select(CompanyState.getManagerList);
 
     this.tripForm
       .get("end_date")
-      .setValidators(DateMatchValidator("start_date", "end_date"));
+      .setValidators([DateMatchValidator("start_date", "end_date")]);
+
+    this.tripForm
+      .get("end_date")
+      .setAsyncValidators(UniqTripValidators(this.tripDate$));
+  }
+
+  customAlertOptions(header : string) {
+    return {
+      cssClass: "cabinClass",
+      header : header
+    }
   }
 
   addTrip() {

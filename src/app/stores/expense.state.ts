@@ -196,6 +196,24 @@ export class ExpenseState implements NgxsOnChanges {
       return state.loading;
     }
 
+    @Selector()
+    static getTripDates(state : expense) : any[] {
+      let total_trip = state.trips.reduce(
+        (acc,curr) => {
+           let currentrip = {
+            startDate : curr.startDate,
+            endDate : curr.endDate
+          };
+          acc.push(currentrip);
+          console.log(acc);
+          return acc;
+        },[]
+      );
+
+      console.log(total_trip);
+      return total_trip;
+    }
+
     @Action(GetTripList, { cancelUncompleted : true })
     getTripList(states : StateContext<expense>) {
 

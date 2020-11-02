@@ -114,14 +114,6 @@ export class DashboardPage implements OnInit {
     }
   }
 
-  async addTrips() {
-    const modal = await this.modalCtrl.create({
-      component: TripComponent,
-      id: 'trip'
-    });
-    this.store.dispatch(new GetProjectList(modal));
-  }
-
   
   notification() {
     

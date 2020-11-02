@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
-import { expenselist, ExpenseState, GetExpenseList, triplist } from 'src/app/stores/expense.state';
+import { expenselist, ExpenseState, GetExpenseList, GetProjectList, triplist } from 'src/app/stores/expense.state';
 import { ModalController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
-import { map, reduce } from 'rxjs/operators';
+import { map, withLatestFrom } from 'rxjs/operators';
 import * as _ from 'lodash';
+import { EligibilityState, gradeValue } from 'src/app/stores/eligibility.state';
+import { TripComponent } from 'src/app/components/expense/trip/trip.component';
 
 @Component({
   selector: 'app-expense-tab',
@@ -17,6 +19,8 @@ export class ExpenseTabPage implements OnInit {
   expenses$ : Observable<expenselist[]>;
   loading$ : Observable<boolean>;
   progress$ : Observable<number>;
+  domesticEligibility$ : Observable<gradeValue>;
+  intEligibility$ : Observable<gradeValue>;
 
   constructor(
     private store : Store,
@@ -28,18 +32,23 @@ export class ExpenseTabPage implements OnInit {
     this.expenses$ = this.store.select(ExpenseState.getExpenseList);
     this.loading$ = this.store.select(ExpenseState.getLoading);
 
-    this.progress$ = combineLatest([this.totalpaid(),this.totalCost()])
+    this.domesticEligibility$ = this.store.select(EligibilityState.getDomestic);
+    this.intEligibility$ = this.store.select(EligibilityState.getInternational);
+
+    this.progress$ = combineLatest([this.totalSpent(),this.totalSaving()])
       .pipe(
         map(
           (exp) => {
-            if(exp[1] == 0) {
+            let spent = exp[0];
+            let save = exp[1];
+            if(spent == 0) {
+              return 0;
+            }
+            else if(save == 0) {
               return 1;
             }
             else {
-              console.log(exp);
-              let paid = exp[0];
-              let cost = exp[1];
-              return paid/cost;
+              return spent/(spent + save);
             }
           }
         )
@@ -77,7 +86,7 @@ export class ExpenseTabPage implements OnInit {
       );
   }
 
-  totalCost() {
+  totalCost() : Observable<number> {
     return this.expenses$
     .pipe(
       map(exp => _.uniqBy(exp,'id')),
@@ -92,34 +101,88 @@ export class ExpenseTabPage implements OnInit {
     )
   }
 
-  totalpaid() {
+  totalSpent() : Observable<number> {
     return this.expenses$
     .pipe(
-      map(exp => _.uniqBy(exp,'id').filter(el => el.paid_by == 'paid_company')),
+      map(exp => _.uniqBy(exp,'id')),
+      withLatestFrom(this.domesticEligibility$,this.intEligibility$),
       map(
         (filtered) => {
-          let reduced = filtered.reduce((acc,curr) => {
-            return acc + curr.cost;
-          },0);
-          return reduced;
+
+          let domesticCost = filtered[1];
+          let intCost = filtered[2];
+
+          let paid = filtered[0].reduce(
+            (acc,curr) => {
+
+              let currentTotal = null;
+
+              if(curr.travel_type == 'domestic' && domesticCost[curr.type] < curr.cost) {
+                let spent = curr.cost - domesticCost[curr.type];
+                currentTotal = acc + spent;
+              }
+              else if(curr.travel_type == 'international' && intCost[curr.type] < curr.cost) {
+                let spent = curr.cost - intCost[curr.type];
+                currentTotal = acc + spent;
+              }
+              else {
+                currentTotal = acc + 0;
+              }
+              return currentTotal;
+
+            },0
+          );
+
+          return paid;
+
+          // let reduced = filtered[0].reduce((acc,curr) => {
+          //   return acc + curr.cost;
+          // },0);
+          // return reduced;
         }
       )
     );
   }
 
-  totalBalance() {
+  totalSaving() {
     return this.expenses$
     .pipe(
-      map(exp => _.uniqBy(exp,'id').filter(el => el.paid_by !== 'paid_company')),
+      map(exp => _.uniqBy(exp,'id')),
+      withLatestFrom(this.domesticEligibility$,this.intEligibility$),
       map(
         (filtered) => {
-          let reduced = filtered.reduce((acc,curr) => {
-            return acc + curr.cost;
-          },0);
-          return reduced;
+          let domesticCost = filtered[1];
+          let intCost = filtered[2];
+          let paid = filtered[0].reduce(
+            (acc,curr) => {
+              let currentTotal = null;
+
+              if(curr.travel_type == 'domestic' && domesticCost[curr.type] > curr.cost) {
+                let spent = domesticCost[curr.type] - curr.cost;
+                currentTotal = acc + spent;
+              }
+              else if(curr.travel_type == 'international' && intCost[curr.type] > curr.cost) {
+                let spent = intCost[curr.type] - curr.cost;
+                currentTotal = acc + spent;
+              }
+              else {
+                currentTotal = acc + 0;
+              }
+              return currentTotal;
+            },0
+          );
+          return paid;
         }
       )
     );
+  }
+
+  async addTrip() {
+    const modal = await this.modalCtrl.create({
+      component: TripComponent,
+      id: 'trip'
+    });
+    this.store.dispatch(new GetProjectList(modal));
   }
 
   getExpense(trip : triplist) {
