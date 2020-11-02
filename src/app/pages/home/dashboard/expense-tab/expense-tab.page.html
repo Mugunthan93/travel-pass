@@ -32,7 +32,7 @@
 
 <ion-content>
     <ion-virtual-scroll [items]="trips$ | async" approxItemHeight="60px">
-        <ion-card *virtualItem="let trip">
+        <ion-card *virtualItem="let trip" (click)="getExpense(trip)">
             <ion-card-header>
                 <ion-item>
                     <ion-skeleton-text animated *ngIf="(loading$ | async)"></ion-skeleton-text>

@@ -7,11 +7,26 @@
     </ion-buttons>
     <ion-title>Expense List</ion-title>
   </ion-toolbar>
+
+  <ion-row class="totalExpense">
+    <ion-label class="title">{{ (currentTrip$ | async).trip_name }}</ion-label>
+    <ion-label class="bold large"> {{ (currentTrip$ | async).startDate | date : 'd MMM' }} - {{ (currentTrip$ | async).endDate | date : 'd MMM' }} </ion-label>
+    <ion-label>Total Expenses</ion-label>
+    <ion-label class="total">{{ totalCost() | async | currency : 'INR' }}</ion-label>
+</ion-row>
 </ion-header>
 
 <ion-content>
 
-  <ion-virtual-scroll [items]="expenses$ | async" approxItemHeight="60px">
+  <ion-virtual-scroll [items]="expenses$ | async">
+    <ion-card *virtualItem="let expense">
+      <ion-card-header>
+        <!-- <ion-label>{{  }}</ion-label> -->
+      </ion-card-header>
+    </ion-card>
+  </ion-virtual-scroll>
+
+  <!-- <ion-virtual-scroll [items]="expenses$ | async" approxItemHeight="60px">
       <ion-item *virtualItem="let expense">
         <ion-checkbox class="default" slot="start"></ion-checkbox>
         <ion-row class="expense-col-1">
@@ -27,6 +42,6 @@
           <ion-label class="large bold">{{ expense.status | uppercase }}</ion-label>
         </ion-row>
       </ion-item>
-  </ion-virtual-scroll>
+  </ion-virtual-scroll> -->
 
 </ion-content>

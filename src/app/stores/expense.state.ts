@@ -16,6 +16,7 @@ export interface expense {
     enddate: moment.Moment
     projectList: []
     loading : boolean
+    currentTrip : triplist
 }
 
 export interface triplist {
@@ -149,7 +150,8 @@ export class AddNewTrip {
         enddate: moment({}).subtract(1, "months"),
         startdate :  moment({}),
         projectList : [],
-        loading : false
+        loading : false,
+        currentTrip : null
     }
 })
 
@@ -212,6 +214,11 @@ export class ExpenseState implements NgxsOnChanges {
 
       console.log(total_trip);
       return total_trip;
+    }
+
+    @Selector()
+    static getCurrentTrip (state : expense) : triplist {
+      return state.currentTrip;
     }
 
     @Action(GetTripList, { cancelUncompleted : true })
@@ -278,6 +285,17 @@ export class ExpenseState implements NgxsOnChanges {
                 )
             );
 
+
+    }
+
+    @Action(GetExpenseList)
+    getExpenseList(states : StateContext<expense>,action : GetExpenseList) {
+      
+      states.patchState({
+        currentTrip : action.trip
+      });
+
+      states.dispatch(new Navigate(['/','home','expense-list']));
 
     }
     
