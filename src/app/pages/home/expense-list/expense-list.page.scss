@@ -45,30 +45,57 @@ ion-header {
 ion-content {
 
     ion-virtual-scroll {
-        ion-item{
-            margin:12px;
-            border: 2px solid #{$limerick};
-            padding: 10px;
-            border-radius: 6px;
-            >ion-checkbox {
-                margin-right: 10px;
-            }
-            >ion-row {
-                &.expense-col-2 {
-                    justify-content: center;
+        height: -webkit-fill-available !important;
+        ion-card{
+            margin: 20px;
+            background: white;
+            >ion-card-header {
+                display: flex;
+                justify-content: space-between;
+                >ion-label{
+                    align-self: center;
                 }
-                &.expense-col-3 {
-                    justify-content: flex-end;
-                    >ion-label.pending {
-                        color: #{$malibu} !important;
+                >ion-row{
+                    >ion-label{
+                        align-self: center;
+                        padding:8px;
                     }
-    
-                    >ion-label.open {
-                        color: #89f789 !important;
+                    >ion-button{
+                        >ion-icon {
+                            color: white;
+                            margin: 4px;
+                            border-radius: 3px;
+                        }
                     }
-    
-                    >ion-label.rej {
-                        color: #{$geraldine} !important;
+                }
+            }
+            >ion-card-content {
+                >ion-list {
+                    display: flex;
+                    flex-direction: column;
+                    padding: 5px 0px;
+                    >ion-label.exp-date {
+                        background: #{$gray55};
+                        color: #{$white};
+                        padding: 4px;
+                        border-radius: 3px;
+                    }
+                    >ion-item {
+                        --min-height: 32px;
+                        --padding-top: 2px;
+                        --padding-bottom: 2px;
+                        --padding-start: 8px;
+                        >ion-label[slot="start"] {
+
+                        }
+                        >ion-row[slot="end"] {
+                            >ion-label {
+                                padding: 0px 10px;
+                            }
+                            >ion-icon {
+                                padding: 0px 5px;
+                            }
+                        }
                     }
                 }
             }

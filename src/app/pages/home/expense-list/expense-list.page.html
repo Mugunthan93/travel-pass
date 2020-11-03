@@ -18,11 +18,34 @@
 
 <ion-content>
 
-  <ion-virtual-scroll [items]="expenses$ | async">
+  <ion-virtual-scroll [items]="expensesList$ | async" approxItemHeight="-webkit-fill-available">
     <ion-card *virtualItem="let expense">
       <ion-card-header>
-        <!-- <ion-label>{{  }}</ion-label> -->
+        <ion-label class="bold large">{{ expense.type | titlecase }}</ion-label>
+        <ion-row>
+          <ion-label class="bold large">{{ expense.total | currency : 'INR' }}</ion-label>
+          <ion-button>
+            <ion-icon name="close-sharp"></ion-icon>
+          </ion-button>
+        </ion-row>
       </ion-card-header>
+
+      <ion-card-content>
+        <ion-list *ngFor="let exp of expense.value" lines="full">
+          <ion-label class="exp-date">
+            {{ exp.date | date : 'dd LLL EEEE' }}
+          </ion-label>
+
+          <ion-item *ngFor="let e of exp.value">
+            <ion-label slot="start" class="bold large">{{ (e.local_travel_value !== null ? e.local_travel_value : '') | titlecase }}</ion-label>
+            <ion-row slot="end">
+              <ion-label class="bold large">{{ e.cost | currency : 'INR' }}</ion-label>
+              <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+            </ion-row>
+          </ion-item>
+
+        </ion-list>
+      </ion-card-content>
     </ion-card>
   </ion-virtual-scroll>
 

@@ -226,6 +226,7 @@ export class ExpenseState implements NgxsOnChanges {
 
         states.patchState({
             trips : [],
+            expenses : [],
             loading : true
         });
 

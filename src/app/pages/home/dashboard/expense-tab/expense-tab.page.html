@@ -13,12 +13,12 @@
             <ion-row>
                 <ion-label class="bold large" *ngIf="!(loading$ | async)">{{ totalSpent() | async | currency : 'INR' }}</ion-label>
                 <ion-skeleton-text animated *ngIf="(loading$ | async)"></ion-skeleton-text>
-                <ion-label class="title">PAID</ion-label>
+                <ion-label class="title">SPENT</ion-label>
             </ion-row>
             <ion-row>
                 <ion-label class="bold large" *ngIf="!(loading$ | async)">{{ totalSaving() | async | currency : 'INR' }}</ion-label>
                 <ion-skeleton-text animated *ngIf="(loading$ | async)"></ion-skeleton-text>
-                <ion-label class="title">BALANCE</ion-label>
+                <ion-label class="title">SAVED</ion-label>
             </ion-row>
         </ion-row>
     </ion-row>

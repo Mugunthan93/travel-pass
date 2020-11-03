@@ -74,7 +74,7 @@ export class ExpenseTabPage implements OnInit {
   tripReImbursableCost(trip : triplist) : Observable<number> {
     return this.expenses$
       .pipe(
-        map(exp => exp.filter(ex => ((ex.trip_id == trip.id) && (ex.paid_by !== 'paid_company')))),
+        map(exp => exp.filter(ex => ((ex.trip_id == trip.id) && (ex.paid_by == 'paid_self')))),
         map(
           (filtered) => {
             let reduced = filtered.reduce((acc,curr) => {
@@ -105,6 +105,7 @@ export class ExpenseTabPage implements OnInit {
     return this.expenses$
     .pipe(
       map(exp => _.uniqBy(exp,'id')),
+      map(exp => exp.filter(ex => ex.paid_by == 'paid_company')),
       withLatestFrom(this.domesticEligibility$,this.intEligibility$),
       map(
         (filtered) => {
@@ -117,11 +118,11 @@ export class ExpenseTabPage implements OnInit {
 
               let currentTotal = null;
 
-              if(curr.travel_type == 'domestic' && domesticCost[curr.type] < curr.cost) {
+              if(curr.travel_type == 'domestic' && (domesticCost[curr.type] < curr.cost)) {
                 let spent = curr.cost - domesticCost[curr.type];
                 currentTotal = acc + spent;
               }
-              else if(curr.travel_type == 'international' && intCost[curr.type] < curr.cost) {
+              else if(curr.travel_type == 'international' && (intCost[curr.type] < curr.cost)) {
                 let spent = curr.cost - intCost[curr.type];
                 currentTotal = acc + spent;
               }
@@ -148,6 +149,7 @@ export class ExpenseTabPage implements OnInit {
     return this.expenses$
     .pipe(
       map(exp => _.uniqBy(exp,'id')),
+      map(exp => exp.filter(ex => ex.paid_by == 'paid_company')),
       withLatestFrom(this.domesticEligibility$,this.intEligibility$),
       map(
         (filtered) => {
@@ -157,11 +159,11 @@ export class ExpenseTabPage implements OnInit {
             (acc,curr) => {
               let currentTotal = null;
 
-              if(curr.travel_type == 'domestic' && domesticCost[curr.type] > curr.cost) {
+              if(curr.travel_type == 'domestic' && (domesticCost[curr.type] > curr.cost)) {
                 let spent = domesticCost[curr.type] - curr.cost;
                 currentTotal = acc + spent;
               }
-              else if(curr.travel_type == 'international' && intCost[curr.type] > curr.cost) {
+              else if(curr.travel_type == 'international' && (intCost[curr.type] > curr.cost)) {
                 let spent = intCost[curr.type] - curr.cost;
                 currentTotal = acc + spent;
               }

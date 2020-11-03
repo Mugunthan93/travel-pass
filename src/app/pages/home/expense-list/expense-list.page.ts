@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { combineLatest, from, Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { expenselist, ExpenseState, triplist } from 'src/app/stores/expense.state';
 import * as _ from 'lodash';
-import { flatMap, groupBy, map, mergeMap, reduce, toArray } from 'rxjs/operators';
+import * as moment from 'moment';
+import { map, withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'app-expense-list',
@@ -13,7 +14,8 @@ import { flatMap, groupBy, map, mergeMap, reduce, toArray } from 'rxjs/operators
 })
 export class ExpenseListPage implements OnInit {
 
-  expenses$ : Observable<any[]>;
+  expenses$ : Observable<expenselist[]>;
+  expensesList$ : Observable<any[]>;
   currentTrip$ : Observable<triplist>;
 
   constructor(
@@ -22,17 +24,38 @@ export class ExpenseListPage implements OnInit {
 
   ngOnInit() {
     this.currentTrip$ = this.store.select(ExpenseState.getCurrentTrip);
-    this.expenses$ = this.store.select(ExpenseState.getExpenseList)
+    this.expenses$ = this.store.select(ExpenseState.getExpenseList);
+    this.expensesList$ = this.expenses$
       .pipe(
-        flatMap(exp => from(exp)),
-        groupBy(exp => exp.type),
-        mergeMap(group$ =>
-          group$.pipe(reduce((acc, cur) => [...acc, cur], [`${group$.key}`]))
-        ),
+        withLatestFrom(this.currentTrip$),
         map(
           (exp) => {
-            console.log(exp);
-            return exp;
+            let expense = exp[0];
+            let currentTrip = exp[1];
+            let grpedExpense = _.chain(expense)
+              .filter(exparr => exparr.trip_id == currentTrip.id)
+              .groupBy('type')
+              .map((val,key) => {
+                return {
+                  type : key,
+                  total : _.reduce(val,(acc,curr) => {
+                    return acc + curr.cost;
+                  },0),
+                  value : _.chain(val)
+                  .sortBy(o => moment(o.start_date))
+                  .groupBy('start_date')
+                  .map((val,key) => {
+                    return {
+                      date : key,
+                      value : val
+                    }
+                  })
+                  .value()
+                }
+              })
+              .value();
+            console.log(grpedExpense);
+            return grpedExpense;
           }
         )
       );
@@ -50,9 +73,11 @@ export class ExpenseListPage implements OnInit {
         map(exp => exp[0].filter(ex => ex.trip_id == exp[1].id)),
         map(
           (filtered) => {
+            console.log(filtered);
             let reduced = filtered.reduce((acc,curr) => {
               return acc + curr.cost;
             },0);
+            console.log(reduced);
             return reduced;
           }
         )
