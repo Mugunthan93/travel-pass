@@ -72,18 +72,38 @@ export class ExpenseTabPage implements OnInit {
   }
 
   tripReImbursableCost(trip : triplist) : Observable<number> {
-    return this.expenses$
-      .pipe(
-        map(exp => exp.filter(ex => ((ex.trip_id == trip.id) && (ex.paid_by == 'paid_self')))),
-        map(
-          (filtered) => {
-            let reduced = filtered.reduce((acc,curr) => {
-              return acc + curr.cost;
-            },0);
-            return reduced;
+    return this.expenses$.pipe(
+      map((exp) =>
+        exp.filter((ex) => ex.trip_id == trip.id && ex.paid_by == "paid_self")
+      ),
+      withLatestFrom(this.domesticEligibility$, this.intEligibility$),
+      map((filtered) => {
+        let domesticCost = filtered[1];
+        let intCost = filtered[2];
+
+        let reduced = filtered[0].reduce((acc, curr) => {
+          let currentTotal = null;
+
+          if (
+            curr.travel_type == "domestic" &&
+            domesticCost[curr.type] < curr.cost
+          ) {
+            let spent = curr.cost - domesticCost[curr.type];
+            currentTotal = acc + spent;
+          } else if (
+            curr.travel_type == "international" &&
+            intCost[curr.type] < curr.cost
+          ) {
+            let spent = curr.cost - intCost[curr.type];
+            currentTotal = acc + spent;
+          } else {
+            currentTotal = acc + 0;
           }
-        )
-      );
+          return currentTotal;
+        }, 0);
+        return reduced;
+      })
+    );
   }
 
   totalCost() : Observable<number> {
@@ -102,46 +122,38 @@ export class ExpenseTabPage implements OnInit {
   }
 
   totalSpent() : Observable<number> {
-    return this.expenses$
-    .pipe(
-      map(exp => _.uniqBy(exp,'id')),
-      map(exp => exp.filter(ex => ex.paid_by == 'paid_company')),
-      withLatestFrom(this.domesticEligibility$,this.intEligibility$),
-      map(
-        (filtered) => {
+    return this.expenses$.pipe(
+      map((exp) => _.uniqBy(exp, "id")),
+      map((exp) => exp.filter((ex) => ex.paid_by == "paid_self")),
+      withLatestFrom(this.domesticEligibility$, this.intEligibility$),
+      map((filtered) => {
+        let domesticCost = filtered[1];
+        let intCost = filtered[2];
 
-          let domesticCost = filtered[1];
-          let intCost = filtered[2];
+        let paid = filtered[0].reduce((acc, curr) => {
+          let currentTotal = null;
 
-          let paid = filtered[0].reduce(
-            (acc,curr) => {
+          if (curr.travel_type == "domestic" && domesticCost[curr.type] < curr.cost) {
+            let spent = curr.cost - domesticCost[curr.type];
+            currentTotal = acc + spent;
+          }
+          else if (curr.travel_type == "international" && intCost[curr.type] < curr.cost) {
+            let spent = curr.cost - intCost[curr.type];
+            currentTotal = acc + spent;
+          }
+          else {
+            currentTotal = acc + 0;
+          }
+          return currentTotal;
+        }, 0);
 
-              let currentTotal = null;
+        return paid;
 
-              if(curr.travel_type == 'domestic' && (domesticCost[curr.type] < curr.cost)) {
-                let spent = curr.cost - domesticCost[curr.type];
-                currentTotal = acc + spent;
-              }
-              else if(curr.travel_type == 'international' && (intCost[curr.type] < curr.cost)) {
-                let spent = curr.cost - intCost[curr.type];
-                currentTotal = acc + spent;
-              }
-              else {
-                currentTotal = acc + 0;
-              }
-              return currentTotal;
-
-            },0
-          );
-
-          return paid;
-
-          // let reduced = filtered[0].reduce((acc,curr) => {
-          //   return acc + curr.cost;
-          // },0);
-          // return reduced;
-        }
-      )
+        // let reduced = filtered[0].reduce((acc,curr) => {
+        //   return acc + curr.cost;
+        // },0);
+        // return reduced;
+      })
     );
   }
 

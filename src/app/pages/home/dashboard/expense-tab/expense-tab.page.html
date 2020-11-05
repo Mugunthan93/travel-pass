@@ -31,7 +31,7 @@
 
 
 <ion-content>
-    <ion-virtual-scroll [items]="trips$ | async" approxItemHeight="60px">
+    <ion-virtual-scroll [items]="trips$ | async" approxItemHeight="120px">
         <ion-card *virtualItem="let trip" (click)="getExpense(trip)">
             <ion-card-header>
                 <ion-item>

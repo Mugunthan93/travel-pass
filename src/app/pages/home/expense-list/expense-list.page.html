@@ -13,7 +13,12 @@
     <ion-label class="bold large"> {{ (currentTrip$ | async).startDate | date : 'd MMM' }} - {{ (currentTrip$ | async).endDate | date : 'd MMM' }} </ion-label>
     <ion-label>Total Expenses</ion-label>
     <ion-label class="total">{{ totalCost() | async | currency : 'INR' }}</ion-label>
-</ion-row>
+    <ion-buttons>
+      <ion-button (click)="addExpense()">
+        <ion-label>Add Expense</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-row>
 </ion-header>
 
 <ion-content>

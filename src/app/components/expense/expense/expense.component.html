@@ -1,0 +1,90 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add Expense</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-sharp"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="expenseForm" (ngSubmit)="addExpense()">
+    <ion-list>
+
+      <ion-item>
+        <ion-select formControlName="travel_type" placeholder="Select Travel Type" cancelText="Cancel"
+          okText="Confirm" [interfaceOptions]="customAlertOptions('Travel Type')"
+          (ionChange)="changeTravelType($event)">
+          <ion-select-option *ngFor="let type of travelType" [value]="type">{{ type }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-select formControlName="type" placeholder="Select Type"
+          cancelText="Cancel" okText="Confirm" [interfaceOptions]="customAlertOptions('Type')"
+          (ionChange)="changeType($event)">
+          <ion-select-option *ngFor="let ty of type" [value]="ty">{{ ty }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Start City</ion-label>
+        <ion-input type="text" formControlName="start_city" enterkeyhint="next"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">End City</ion-label>
+        <ion-input type="text" formControlName="end_city" enterkeyhint="next"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Start Date</ion-label>
+        <ion-input type="text" formControlName="start_date" enterkeyhint="next"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">End Date</ion-label>
+        <ion-input type="text" formControlName="end_date" enterkeyhint="next"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Days</ion-label>
+        <ion-input type="text" formControlName="no_of_days" enterkeyhint="next"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Amount</ion-label>
+        <ion-input type="text" formControlName="cost" enterkeyhint="next"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Paid By</ion-label>
+        <ion-radio-group formControlName="paid_by">
+          <ion-item>
+            <ion-label>Self</ion-label>
+            <ion-radio slot="start" value="paid_self"></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label>Company</ion-label>
+            <ion-radio slot="start" value="paid_company"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+      </ion-item>
+
+    </ion-list>
+  </form>
+</ion-content>
+
+<ion-footer>
+  <form [formGroup]="expenseForm" (ngSubmit)="addExpense()">
+    <ion-toolbar>
+      <ion-buttons slot="end">
+        <ion-button type="submit">
+          <ion-label class="large bold">Add Expense</ion-label>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </form>
+</ion-footer>

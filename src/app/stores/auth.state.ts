@@ -9,7 +9,7 @@ import { StateClear, StateReset, StateResetAll } from 'ngxs-reset-plugin';
 import { DashboardState, UpcomingTrips } from './dashboard.state';
 import { EligibilityState, GetEligibility } from './eligibility.state';
 import { concat, forkJoin, from, of } from 'rxjs';
-import { catchError, finalize, flatMap, map } from 'rxjs/operators';
+import { catchError, finalize, flatMap, map, first } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { ApprovalState } from './approval.state';
 import { BookState } from './book.state';
@@ -155,7 +155,8 @@ export class AuthState {
                                 )
                         }
                     }
-                )
+                ),
+                first()
             );
     }
 
@@ -197,6 +198,7 @@ export class AuthState {
                         }
                     }
                 ),
+                first()
             );
         
     }
@@ -255,7 +257,7 @@ export class AuthState {
     }
 
     @Action(SetToken)
-    async setToken(states: StateContext<auth>, action: SetToken) {
+    setToken(states: StateContext<auth>, action: SetToken) {
         states.patchState({
             forgotToken: action.token
         });

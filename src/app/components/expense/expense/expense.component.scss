@@ -1,0 +1,39 @@
+
+
+ion-content {
+
+    ion-list {
+        margin: 10px;
+
+        >ion-item {
+            border-width: 0px 0px 2px 0px;
+            border-style: solid;
+            --min-height: 50px;
+            margin-bottom: 10px;
+        }
+
+        ion-select {
+            min-width: -webkit-fill-available;
+        }
+
+        ion-radio-group {
+            width: 50%;
+            display: flex;
+            height: 36px;
+            align-items: center;
+
+            >ion-item {
+                width: 50%;
+
+                >ion-label {
+                    text-align: center;
+                }
+
+                >ion-radio {
+                    margin: auto;
+                }
+            }
+        }
+    }
+
+}

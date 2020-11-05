@@ -8,9 +8,35 @@ $radio-color-checked:$geraldine;
 $radio-border-radius:20px;
 $radio-inner-border-radius:20px;
 
-ion-radio{
-    --border-radius:#{$radio-border-radius};
-    --color:#{$radio-color};
-    --color-checked:#{$radio-color-checked};
-    --inner-border-radius:#{$radio-inner-border-radius};
+:root {
+
+    ion-app {
+
+        &.home-tab {
+
+            ion-radio {
+                --border-radius:#{$radio-border-radius};
+                --color:#{$radio-color};
+                --color-checked:#{$radio-color-checked};
+                --inner-border-radius:#{$radio-inner-border-radius};
+            }
+
+        }
+
+        &.expense-tab {
+
+            $radio-color:$limerick;
+            $radio-color-checked:$limerick;
+
+            ion-radio {
+                --border-radius:#{$radio-border-radius};
+                --color:#{$radio-color};
+                --color-checked:#{$radio-color-checked};
+                --inner-border-radius:#{$radio-inner-border-radius};
+            }
+
+        }
+
+    }
+
 }

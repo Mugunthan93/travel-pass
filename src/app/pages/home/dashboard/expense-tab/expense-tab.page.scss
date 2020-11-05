@@ -43,7 +43,7 @@ ion-header {
 
 ion-content{
     >ion-virtual-scroll{
-
+        height : 120px !important;
         ion-card{
             background: white;
             ion-card-header{
