@@ -75,11 +75,9 @@ export class ExpenseListPage implements OnInit {
     return combineLatest([this.expenses$, this.currentTrip$]).pipe(
       map((exp) => exp[0].filter((ex) => ex.trip_id == exp[1].id)),
       map((filtered) => {
-        console.log(filtered);
         let reduced = filtered.reduce((acc, curr) => {
           return acc + curr.cost;
         }, 0);
-        console.log(reduced);
         return reduced;
       })
     );
