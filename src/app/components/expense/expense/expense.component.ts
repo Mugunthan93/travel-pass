@@ -3,6 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { map, withLatestFrom } from 'rxjs/operators';
+import * as _ from 'lodash';
 import { ExpenseValidator } from 'src/app/validator/expense.validators';
 
 @Component({
@@ -27,59 +28,65 @@ export class ExpenseComponent implements OnInit {
   localSub : string[] = [];
   otherSub : string[] = [];
 
-  form1 : FormGroup;
-  form2 : FormGroup;
-  form3 : FormGroup;
+  constructor(
+    public modalCtrl: ModalController
+    ) {
 
-  typeChange$ : Observable<string>;
-
-  constructor(public modalCtrl: ModalController) {}
+  }
 
   ngOnInit() {
-
-    this.form1 = new FormGroup({
-      start_date: new FormControl(null),
-      end_date: new FormControl(null),
-      start_city: new FormControl(null),
-      end_city: new FormControl(null),
-      no_of_days: new FormControl(null)
-    });
-
-    this.form2 = new FormGroup({
-      start_date: new FormControl(null),
-      end_date: new FormControl(null),
-      start_city: new FormControl(null),
-      no_of_days: new FormControl(null)
-    });
-
-    this.form3 = new FormGroup({
-      start_date: new FormControl(null),
-      start_city: new FormControl(null),
-      end_city: new FormControl(null),
-      local_travel_value : new FormControl(null),
-    });
 
     this.expenseForm = new FormGroup({
       travel_type: new FormControl("domestic", [Validators.required]),
       type: new FormControl("flight", [Validators.required]),
-      flight : this.form1,
-      hotel : this.form2,
-      bus: this.form1,
-      train: this.form1,
-      food : this.form2,
-      localtravel : this.form3,
-      othertravel: this.form3,
+      flight : new FormGroup({
+        start_date: new FormControl(null),
+        end_date: new FormControl(null),
+        start_city: new FormControl(null),
+        end_city: new FormControl(null),
+        no_of_days: new FormControl(null)
+      }),
+      hotel : new FormGroup({
+        start_date: new FormControl(null),
+        end_date: new FormControl(null),
+        start_city: new FormControl(null),
+        no_of_days: new FormControl(null)
+      }),
+      bus: new FormGroup({
+        start_date: new FormControl(null),
+        end_date: new FormControl(null),
+        start_city: new FormControl(null),
+        end_city: new FormControl(null),
+        no_of_days: new FormControl(null)
+      }),
+      train: new FormGroup({
+        start_date: new FormControl(null),
+        end_date: new FormControl(null),
+        start_city: new FormControl(null),
+        end_city: new FormControl(null),
+        no_of_days: new FormControl(null)
+      }),
+      food : new FormGroup({
+        start_date: new FormControl(null),
+        end_date: new FormControl(null),
+        start_city: new FormControl(null),
+        no_of_days: new FormControl(null)
+      }),
+      localtravel : new FormGroup({
+        start_date: new FormControl(null),
+        start_city: new FormControl(null),
+        end_city: new FormControl(null),
+        local_travel_value : new FormControl(null),
+      }),
+      othertravel: new FormGroup({
+        start_date: new FormControl(null),
+        start_city: new FormControl(null),
+        end_city: new FormControl(null),
+        local_travel_value : new FormControl(null),
+      }),
       cost: new FormControl(null, [Validators.required]),
-      paid_by: new FormControl(null, [Validators.required]),
+      paid_by: new FormControl(null, [Validators.required])
     });
-
-    this.typeChange$ = this.expenseForm.get('type').valueChanges;
-
-    this.type.forEach(
-      (ty) => {
-        this.expenseForm.get(ty).setAsyncValidators(ExpenseValidator(ty));
-      }
-    );
 
   }
 
@@ -96,6 +103,32 @@ export class ExpenseComponent implements OnInit {
 
   changeType(evt: CustomEvent) {
     this.expenseForm.controls["type"].patchValue(evt.detail.value);
+    this.type.forEach(
+      (type) => {
+        if(evt.detail.value === type) {
+          this.expenseForm.get(evt.detail.value).setValidators([ExpenseValidator()]);
+          Object.keys((this.expenseForm.controls[evt.detail.value] as FormGroup).controls).forEach(
+            (key) => {
+              this.expenseForm.get([evt.detail.value,key]).setValidators([Validators.required]);
+              this.expenseForm.get([evt.detail.value,key]).updateValueAndValidity();
+              console.log(evt.detail.value,key,this.expenseForm.get([evt.detail.value,key]).errors);
+            });
+          this.expenseForm.get(evt.detail.value).updateValueAndValidity();
+        }
+        else {
+          this.expenseForm.get(evt.detail.value).clearValidators();
+          Object.keys((this.expenseForm.controls[evt.detail.value] as FormGroup).controls).forEach(
+            (key) => {
+              this.expenseForm.get([evt.detail.value,key]).clearValidators();
+              this.expenseForm.get([evt.detail.value,key]).updateValueAndValidity();
+              console.log(evt.detail.value,key,this.expenseForm.get([evt.detail.value,key]).errors);
+            });
+          this.expenseForm.get(evt.detail.value).updateValueAndValidity();
+        }
+        console.log(type,evt.detail.value,this.expenseForm.get(evt.detail.value).errors);
+      }
+      );
+      console.log(this.expenseForm);
   }
 
   hideItem(name : string) {
