@@ -25,8 +25,18 @@ export class ExpenseComponent implements OnInit {
     "othertravel",
   ];
   paid: string[] = ["paid_self", "paid_company"];
+
+  endcity : string[] = ["flight","bus","train","localtravel","othertravel"];
+  enddate : string[] = ["flight","bus","train","hotel","food"];
+  days : string[] = ["flight","bus","train","hotel","food"];
+  localother : string[] =["localtravel","othertravel"];
+
   localSub : string[] = [];
   otherSub : string[] = [];
+
+  // flight,bus,train => start_date,end_date,start_city,end_city,no_of_days
+  // hotel,food => start_date,end_date,start_city,no_of_days
+  // local,other =>  start_date,start_city,end_city,local_travel_value
 
   constructor(
     public modalCtrl: ModalController
@@ -38,55 +48,31 @@ export class ExpenseComponent implements OnInit {
 
     this.expenseForm = new FormGroup({
       travel_type: new FormControl("domestic", [Validators.required]),
-      type: new FormControl("flight", [Validators.required]),
-      flight : new FormGroup({
-        start_date: new FormControl(null),
-        end_date: new FormControl(null),
-        start_city: new FormControl(null),
-        end_city: new FormControl(null),
-        no_of_days: new FormControl(null)
-      }),
-      hotel : new FormGroup({
-        start_date: new FormControl(null),
-        end_date: new FormControl(null),
-        start_city: new FormControl(null),
-        no_of_days: new FormControl(null)
-      }),
-      bus: new FormGroup({
-        start_date: new FormControl(null),
-        end_date: new FormControl(null),
-        start_city: new FormControl(null),
-        end_city: new FormControl(null),
-        no_of_days: new FormControl(null)
-      }),
-      train: new FormGroup({
-        start_date: new FormControl(null),
-        end_date: new FormControl(null),
-        start_city: new FormControl(null),
-        end_city: new FormControl(null),
-        no_of_days: new FormControl(null)
-      }),
-      food : new FormGroup({
-        start_date: new FormControl(null),
-        end_date: new FormControl(null),
-        start_city: new FormControl(null),
-        no_of_days: new FormControl(null)
-      }),
-      localtravel : new FormGroup({
-        start_date: new FormControl(null),
-        start_city: new FormControl(null),
-        end_city: new FormControl(null),
-        local_travel_value : new FormControl(null),
-      }),
-      othertravel: new FormGroup({
-        start_date: new FormControl(null),
-        start_city: new FormControl(null),
-        end_city: new FormControl(null),
-        local_travel_value : new FormControl(null),
-      }),
+      type: new FormControl(null, [Validators.required]),
+
+      start_date: new FormControl(null,[Validators.required]),
+      start_city: new FormControl(null,[Validators.required]),
+
+      //flight,bus,train,hotel,food
+      end_date: new FormControl(null),
+
+      //flight,bus,train,local,other
+      end_city: new FormControl(null),
+
+      //flight,bus,train,hotel,food
+      no_of_days: new FormControl(null),
+
+      //local,other
+      local_travel_value : new FormControl(null),
+
       cost: new FormControl(null, [Validators.required]),
       paid_by: new FormControl(null, [Validators.required])
     });
+
+    this.expenseForm.get('end_date').setAsyncValidators(ExpenseValidator(this.enddate));
+    this.expenseForm.get('end_city').setAsyncValidators(ExpenseValidator(this.endcity));
+    this.expenseForm.get('no_of_days').setAsyncValidators(ExpenseValidator(this.days));
+    this.expenseForm.get('local_travel_value').setAsyncValidators(ExpenseValidator(this.localother));
 
   }
 
@@ -103,78 +89,16 @@ export class ExpenseComponent implements OnInit {
 
   changeType(evt: CustomEvent) {
     this.expenseForm.controls["type"].patchValue(evt.detail.value);
-    this.type.forEach(
-      (type) => {
-        if(evt.detail.value === type) {
-          this.expenseForm.get(evt.detail.value).setValidators([ExpenseValidator()]);
-          Object.keys((this.expenseForm.controls[evt.detail.value] as FormGroup).controls).forEach(
-            (key) => {
-              this.expenseForm.get([evt.detail.value,key]).setValidators([Validators.required]);
-              this.expenseForm.get([evt.detail.value,key]).updateValueAndValidity();
-              console.log(evt.detail.value,key,this.expenseForm.get([evt.detail.value,key]).errors);
-            });
-          this.expenseForm.get(evt.detail.value).updateValueAndValidity();
-        }
-        else {
-          this.expenseForm.get(evt.detail.value).clearValidators();
-          Object.keys((this.expenseForm.controls[evt.detail.value] as FormGroup).controls).forEach(
-            (key) => {
-              this.expenseForm.get([evt.detail.value,key]).clearValidators();
-              this.expenseForm.get([evt.detail.value,key]).updateValueAndValidity();
-              console.log(evt.detail.value,key,this.expenseForm.get([evt.detail.value,key]).errors);
-            });
-          this.expenseForm.get(evt.detail.value).updateValueAndValidity();
-        }
-        console.log(type,evt.detail.value,this.expenseForm.get(evt.detail.value).errors);
-      }
-      );
-      console.log(this.expenseForm);
+    console.log(this.expenseForm);
   }
 
   hideItem(name : string) {
-    return of(name)
-      .pipe(
-        withLatestFrom(this.expenseForm.get('type').valueChanges as Observable<string>),
-        map(
-          (str) => {
-            console.log(str);
-            let controlname : string = str[0];
-            let type : string = str[1];
-
-            if (type == "flight" || type == "bus" || type == "train") {
-              switch (controlname) {
-                  case "end_city":
-                  case "end_date":
-                  case "no_of_days": return false;
-                  default : return true;
-              }
-            }
-            else if (type == "hotel" || type == "food") {
-              switch (controlname) {
-                  case "end_date":
-                  case "no_of_days": return false;
-                  default : return true;
-              }
-            }
-            else if (type == "localtravel" || type == "othertravel") {
-                switch (controlname) {
-                  case "end_city":
-                  case "local_travel_value":return false;
-                  default : return true;
-              }
-            }
-            else {
-              return true;
-            }
-          }
-        ),
-        map(
-          (bool)=> {
-            console.log(bool);
-            return bool;
-          }
-        )
-      );
+    switch(name) {
+      case "end_city" : return !this.endcity.some(el => el === this.expenseForm.get("type").value);
+      case "end_date" : return !this.enddate.some(el => el === this.expenseForm.get("type").value);
+      case "no_of_days" : return !this.days.some(el => el === this.expenseForm.get("type").value);
+      case "local_travel_value" : return !this.localother.some(el => el === this.expenseForm.get("type").value);
+    }
   }
 
   addExpense() {

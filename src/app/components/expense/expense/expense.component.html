@@ -29,174 +29,38 @@
         </ion-select>
       </ion-item>
 
-      <div formGroupName="flight" *ngIf="this.expenseForm.value.type == 'flight'">
-        <ion-item>
-          <ion-label position="floating">Start City</ion-label>
-          <ion-input type="text" formControlName="start_city" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">End City</ion-label>
-          <ion-input type="text" formControlName="end_city" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">Start Date</ion-label>
-          <ion-input type="text" formControlName="start_date" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">End Date</ion-label>
-          <ion-input type="text" formControlName="end_date" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">Days</ion-label>
-          <ion-input type="text" formControlName="no_of_days" enterkeyhint="next"></ion-input>
-        </ion-item>
-      </div>
-      <div formGroupName="hotel" *ngIf="this.expenseForm.value.type == 'hotel'">
-        <ion-item>
-          <ion-label position="floating">City</ion-label>
-          <ion-input type="text" formControlName="start_city" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">Start Date</ion-label>
-          <ion-input type="text" formControlName="start_date" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">End Date</ion-label>
-          <ion-input type="text" formControlName="end_date" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">Days</ion-label>
-          <ion-input type="text" formControlName="no_of_days" enterkeyhint="next"></ion-input>
-        </ion-item>
-      </div>
-      <div formGroupName="bus" *ngIf="this.expenseForm.value.type == 'bus'">
-        <ion-item>
-          <ion-label position="floating">Start City</ion-label>
-          <ion-input type="text" formControlName="start_city" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">End City</ion-label>
-          <ion-input type="text" formControlName="end_city" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">Start Date</ion-label>
-          <ion-input type="text" formControlName="start_date" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">End Date</ion-label>
-          <ion-input type="text" formControlName="end_date" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">Days</ion-label>
-          <ion-input type="text" formControlName="no_of_days" enterkeyhint="next"></ion-input>
-        </ion-item>
-      </div>
-      <div formGroupName="train" *ngIf="this.expenseForm.value.type == 'train'">
-        <ion-item>
-          <ion-label position="floating">Start City</ion-label>
-          <ion-input type="text" formControlName="start_city" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">End City</ion-label>
-          <ion-input type="text" formControlName="end_city" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">Start Date</ion-label>
-          <ion-input type="text" formControlName="start_date" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">End Date</ion-label>
-          <ion-input type="text" formControlName="end_date" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">Days</ion-label>
-          <ion-input type="text" formControlName="no_of_days" enterkeyhint="next"></ion-input>
-        </ion-item>
-      </div>
-      <div formGroupName="food" *ngIf="this.expenseForm.value.type == 'food'">
-        <ion-item>
-          <ion-label position="floating">City</ion-label>
-          <ion-input type="text" formControlName="start_city" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">Start Date</ion-label>
-          <ion-input type="text" formControlName="start_date" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">End Date</ion-label>
-          <ion-input type="text" formControlName="end_date" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">Days</ion-label>
-          <ion-input type="text" formControlName="no_of_days" enterkeyhint="next"></ion-input>
-        </ion-item>
-      </div>
-      <div formGroupName="localtravel" *ngIf="this.expenseForm.value.type == 'localtravel'">
-        <ion-item>
-          <ion-select formControlName="local_travel_value" placeholder="Select Sub Type"
-            cancelText="Cancel" okText="Confirm" [interfaceOptions]="customAlertOptions('Local Sub Type')"
-            (ionChange)="changeType($event)">
-            <ion-select-option *ngFor="let ty of localSub" [value]="ty">{{ ty }}</ion-select-option>
-          </ion-select>
-        </ion-item>
+      <ion-item>
+        <ion-label position="floating">Start City</ion-label>
+        <ion-input type="text" formControlName="start_city" enterkeyhint="next"></ion-input>
+      </ion-item>
 
-        <ion-item>
-          <ion-label position="floating">Start City</ion-label>
-          <ion-input type="text" formControlName="start_city" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">End City</ion-label>
-          <ion-input type="text" formControlName="end_city" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">Date</ion-label>
-          <ion-input type="text" formControlName="start_date" enterkeyhint="next"></ion-input>
-        </ion-item>
-      </div>
-      <div formGroupName="othertravel" *ngIf="this.expenseForm.value.type == 'othertravel'">
-        <ion-item>
-          <ion-select formControlName="local_travel_value" placeholder="Select Sub Type"
-            cancelText="Cancel" okText="Confirm" [interfaceOptions]="customAlertOptions('Other Sub Type')"
-            (ionChange)="changeType($event)">
-            <ion-select-option *ngFor="let ty of otherSub" [value]="ty">{{ ty }}</ion-select-option>
-          </ion-select>
-        </ion-item>
+      <ion-item [hidden]="hideItem('end_city')">
+        <ion-label position="floating">End City</ion-label>
+        <ion-input type="text" formControlName="end_city" enterkeyhint="next"></ion-input>
+      </ion-item>
 
-        <ion-item>
-          <ion-label position="floating">Start City</ion-label>
-          <ion-input type="text" formControlName="start_city" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">End City</ion-label>
-          <ion-input type="text" formControlName="end_city" enterkeyhint="next"></ion-input>
-        </ion-item>
-  
-        <ion-item>
-          <ion-label position="floating">Date</ion-label>
-          <ion-input type="text" formControlName="start_date" enterkeyhint="next"></ion-input>
-        </ion-item>
-      </div>
+      <ion-item>
+        <ion-label position="floating">Start Date</ion-label>
+        <ion-input type="text" formControlName="start_date" enterkeyhint="next"></ion-input>
+      </ion-item>
+
+      <ion-item [hidden]="hideItem('end_date')">
+        <ion-label position="floating">End Date</ion-label>
+        <ion-input type="text" formControlName="end_date" enterkeyhint="next"></ion-input>
+      </ion-item>
+
+      <ion-item  [hidden]="hideItem('no_of_days')">
+        <ion-label position="floating">Days</ion-label>
+        <ion-input type="text" formControlName="no_of_days" enterkeyhint="next"></ion-input>
+      </ion-item>
+
+      <ion-item  [hidden]="hideItem('local_travel_value')">
+        <ion-select formControlName="local_travel_value" placeholder="Select Sub Type"
+          cancelText="Cancel" okText="Confirm" [interfaceOptions]="customAlertOptions('Local Sub Type')"
+          (ionChange)="changeType($event)">
+          <ion-select-option *ngFor="let ty of localSub" [value]="ty">{{ ty }}</ion-select-option>
+        </ion-select>
+      </ion-item>
 
       <ion-item>
         <ion-label position="floating">Amount</ion-label>
