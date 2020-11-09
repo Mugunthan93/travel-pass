@@ -34,3 +34,29 @@ export function UniqTripValidators(tripDates$ : Observable<any[]>): AsyncValidat
             );
     }
 }
+
+export function TripRangeValidators(tripDates : any): ValidatorFn
+{
+    return (control: FormControl): ValidationErrors | null => {
+
+        if(control.value == null) {
+            return {
+                required : true
+            }
+        }
+        else {
+            let selectedDate = control.value;
+            let datePresence = moment(selectedDate).isBetween(tripDates.startDate,tripDates.endDate);
+            console.log(control,datePresence);
+            if(datePresence) {
+                return null;
+            }
+            else {
+                return {
+                    'outOfRange' : true
+                }
+            }
+        }
+
+    }
+}

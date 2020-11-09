@@ -222,6 +222,14 @@ export class ExpenseState implements NgxsOnChanges {
   }
 
   @Selector()
+  static getExpenseDates(state : expense): any {
+    return {
+      startDate: state.currentTrip.startDate,
+      endDate: state.currentTrip.endDate
+    }
+  }
+
+  @Selector()
   static getCurrentTrip(state: expense): triplist {
     return state.currentTrip;
   }

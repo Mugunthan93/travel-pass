@@ -53,6 +53,9 @@
       <ion-row *ngIf="expenseForm.controls['start_date'].hasError('required') && formSubmit">
         <ion-label color="danger">Start Date Required</ion-label>
       </ion-row>
+      <ion-row *ngIf="expenseForm.controls['start_date'].hasError('outOfRange') && formSubmit">
+        <ion-label color="danger">Selected Date is out of range from current trip date</ion-label>
+      </ion-row>
 
       <ion-item [hidden]="hideItem('end_date')">
         <ion-label position="floating">End Date</ion-label>
@@ -60,6 +63,9 @@
       </ion-item>
       <ion-row *ngIf="expenseForm.controls['end_date'].hasError('required') && formSubmit">
         <ion-label color="danger">End Date Required</ion-label>
+      </ion-row>
+      <ion-row *ngIf="expenseForm.controls['end_date'].hasError('outOfRange') && formSubmit">
+        <ion-label color="danger">Selected Date is out of range from current trip date</ion-label>
       </ion-row>
       <ion-row *ngIf="expenseForm.controls['end_date'].hasError('mismatch')">
         <ion-label color="danger">End Date won't come before Start Date</ion-label>

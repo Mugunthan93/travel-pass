@@ -8,6 +8,9 @@ import { buscity, city, hotelcity } from 'src/app/stores/shared.state';
 import { SelectModalComponent } from '../../shared/select-modal/select-modal.component';
 import { SearchMode } from 'src/app/stores/search.state';
 import { DateMatchValidator } from 'src/app/validator/date_match.validators';
+import { ExpenseState } from 'src/app/stores/expense.state';
+import { Observable } from 'rxjs';
+import { TripRangeValidators } from 'src/app/validator/uniq_trip_date.Validators';
 
 @Component({
   selector: "app-expense",
@@ -36,6 +39,7 @@ export class ExpenseComponent implements OnInit {
   localSub : string[];
 
   formSubmit : boolean;
+  currentTrip: any;
 
   // flight,bus,train => start_date,end_date,start_city,end_city,no_of_days
   // hotel,food => start_date,end_date,start_city,no_of_days
@@ -49,11 +53,13 @@ export class ExpenseComponent implements OnInit {
 
   ngOnInit() {
 
+    this.currentTrip = this.store.selectSnapshot(ExpenseState.getExpenseDates);
+
     this.expenseForm = new FormGroup({
       travel_type: new FormControl("domestic", [Validators.required]),
       type: new FormControl('flight', [Validators.required]),
 
-      start_date: new FormControl(null,[Validators.required]),
+      start_date: new FormControl(null,[TripRangeValidators(this.currentTrip)]),
       start_city: new FormControl(null,[Validators.required]),
 
       //flight,bus,train,hotel,food
@@ -71,6 +77,8 @@ export class ExpenseComponent implements OnInit {
       cost: new FormControl(null, [Validators.required]),
       paid_by: new FormControl(null, [Validators.required])
     });
+
+    this.expenseForm.get('start_date').setValidators(DateMatchValidator('start_date','end_date'));
 
     this.store.dispatch(new SearchMode('flight'));
     this.changeValidation('flight');
@@ -122,13 +130,13 @@ export class ExpenseComponent implements OnInit {
   changeValidation(value: string) {
 
     if(value == 'flight' || value == 'bus' || value == 'train')  {
-      this.expenseForm.controls['end_date'].setValidators([Validators.required,DateMatchValidator('start_date','end_date')]);
+      this.expenseForm.controls['end_date'].setValidators([TripRangeValidators(this.currentTrip),DateMatchValidator('start_date','end_date')]);
       this.expenseForm.controls['end_city'].setValidators(Validators.required);
       this.expenseForm.controls['no_of_days'].setValidators(Validators.required);
       this.expenseForm.controls['local_travel_value'].clearValidators();
     }
     else if(value == 'hotel' || value == 'food') {
-      this.expenseForm.controls['end_date'].setValidators([Validators.required,DateMatchValidator('start_date','end_date')]);
+      this.expenseForm.controls['end_date'].setValidators([TripRangeValidators(this.currentTrip),DateMatchValidator('start_date','end_date')]);
       this.expenseForm.controls['no_of_days'].setValidators(Validators.required);
       this.expenseForm.controls['end_city'].clearValidators();
       this.expenseForm.controls['local_travel_value'].clearValidators();
