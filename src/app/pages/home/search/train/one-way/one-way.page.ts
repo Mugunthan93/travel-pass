@@ -10,11 +10,7 @@ import { Store } from '@ngxs/store';
 import { map } from 'rxjs/operators';
 import { TrainOneWayForm } from 'src/app/stores/search/train/oneway.state';
 import { trainstation, city } from 'src/app/stores/shared.state';
-import { PassengerListComponent } from 'src/app/components/shared/passenger-list/passenger-list.component';
-import { AddTrainPassenger, trainpassenger } from 'src/app/stores/passenger/train.passenger.state';
 import { user } from 'src/app/models/user';
-import { UserState } from 'src/app/stores/user.state';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-one-way',

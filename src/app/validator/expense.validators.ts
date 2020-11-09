@@ -6,6 +6,9 @@ export function ExpenseValidator(strArr : string[]) : AsyncValidatorFn {
 
   return (control: FormControl) : Observable<ValidationErrors | null> => {
 
+    let change = (control.root.get("type") as FormControl).valueChanges;
+    console.log(change);
+
     if (!((control.root.get("type") as FormControl).valueChanges)) {
       return of(null);
     } else {
