@@ -114,7 +114,7 @@ export class BusSearchState {
                 text: 'Ok',
                 role: 'ok',
                 cssClass: 'danger',
-                handler: (res) => {
+                handler: () => {
                     return true;
                 }
             }]
@@ -147,7 +147,7 @@ export class BusSearchState {
                                 }
                             ),
                             map(
-                                (value) => {
+                                () => {
                                     states.dispatch(new ResultMode('bus'));
                                     states.dispatch(new Navigate(['/', 'home', 'result', 'bus']));
                                 }

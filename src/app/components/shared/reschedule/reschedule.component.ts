@@ -58,7 +58,7 @@ export class RescheduleComponent implements OnInit {
       this.trips.push(this.segmentTrip(el,ind));
     });
 
-    this.rescheduleForm.valueChanges.subscribe((el) =>
+    this.rescheduleForm.valueChanges.subscribe(() =>
       console.log(this.rescheduleForm)
     );
   }
@@ -222,7 +222,8 @@ export class RescheduleComponent implements OnInit {
   travelType(): Observable<string> {
     return this.ticket$.pipe(
       map((tkt: any) => {
-        return tkt.trip_requests.Segments.reduce((acc, curr) => {
+        return tkt.trip_requests.Segments.reduce((...el) => {
+          let curr = el[1];
           let code = [curr.OriginCountryCode, curr.DestinationCountryCode];
           return code;
         }, []);

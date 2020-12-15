@@ -105,7 +105,7 @@ export class AuthState {
                 text: 'Ok',
                 role: 'ok',
                 cssClass: 'danger',
-                handler: (res) => {
+                handler: () => {
                     return true;
                 }
             }]
@@ -161,7 +161,7 @@ export class AuthState {
     }
 
     @Action(Logout)
-    Logout(states: StateContext<auth>, action: Logout) {
+    Logout(states: StateContext<auth>) {
 
         return from(this.authService.logout())
             .pipe(
@@ -204,7 +204,8 @@ export class AuthState {
     }
 
     @Action(SendConfirmationEmail)
-    async sendConfirmation(states: StateContext<auth>, action: SendConfirmationEmail) {
+    async sendConfirmation(...el) {
+        let action: SendConfirmationEmail = el[1];
 
         const loading = await this.loadingCtrl.create({
             spinner: "crescent"
@@ -216,7 +217,7 @@ export class AuthState {
                 text: 'Ok',
                 role: 'ok',
                 cssClass: 'danger',
-                handler: (res) => {
+                handler: () => {
                     failedAlert.dismiss({
                         data: false,
                         role: 'failed'
@@ -231,7 +232,7 @@ export class AuthState {
                 text: 'Ok',
                 role: 'ok',
                 cssClass: 'danger',
-                handler: (res) => {
+                handler: () => {
                     successAlert.dismiss({
                         data: true,
                         role: 'success'

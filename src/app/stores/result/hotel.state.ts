@@ -525,7 +525,7 @@ export class HotelResultState{
                         return from(result)
                             .pipe(
                                 mergeMap(
-                                    (hotelObj, ind) => {
+                                    (hotelObj) => {
                                         let result = Object.assign({}, hotelObj);
                                         let currentCity: string = this.store.selectSnapshot(HotelSearchState.getCityId);
                                         let staticPay: staticpayload = {
@@ -646,17 +646,6 @@ export class HotelResultState{
 
         const viewhotel$ = this.hotelService.viewHotel(viewPayload)
             .pipe(
-                map(
-                    (response: HTTPResponse) => {
-                        let hotelResponse: selectedHotel = JSON.parse(response.data).response;
-                        if (hotelResponse.Error.ErrorCode == 2) {
-                            return noroom$;
-                        }
-                        else {
-                            return response;
-                        }
-                    }
-                ),
                 skipWhile(
                     (response : HTTPResponse) => {
                         let hotelResponse: selectedHotel = JSON.parse(response.data).response;
@@ -675,10 +664,21 @@ export class HotelResultState{
                     }
                 ),
                 map(
-                    (response: HTTPResponse) => {
+                    (response: Observable<void> | HTTPResponse) => {
+                        let hotelResponse: selectedHotel = JSON.parse((response as HTTPResponse).data).response;
+                        if (hotelResponse.Error.ErrorCode == 2) {
+                            return noroom$;
+                        }
+                        else {
+                            return response;
+                        }
+                    }
+                ),
+                map(
+                    (response: Observable<void> | HTTPResponse) => {
 
                         console.log(response);
-                        let hotelResponse: selectedHotel = JSON.parse(response.data).response;
+                        let hotelResponse: selectedHotel = JSON.parse((response as HTTPResponse).data).response;
                         let roomDetail = hotelResponse.HotelRoomsDetails.map(
                             (detail) => {
                                 return _.omitBy(detail, (val) => {
@@ -891,17 +891,7 @@ export class HotelResultState{
                         console.log(JSON.stringify(blockpayload));
                 
                         let blockroom$ = from(this.hotelService.blockHotel(blockpayload))
-                            .pipe(
-                                map(
-                                    (response: HTTPResponse) => {
-                                        console.log(response);
-                                        let blockedRoom: any = JSON.parse(response.data).response;
-                                        if (blockedRoom.Error.ErrorCode == 2) {
-                                            return concat(from(loadingEl.dismiss()),this.errorAlert(blockedRoom.Error.ErrorCode));
-                                        }
-                                        return response;
-                                    }
-                                ),
+                        .pipe(
                                 skipWhile(
                                     (response : HTTPResponse) => {
                                         console.log(response);
@@ -916,8 +906,17 @@ export class HotelResultState{
                                 ),
                                 map(
                                     (response: HTTPResponse) => {
-                                        console.log(response.data);
-                                        let blockedRoom: any = JSON.parse(response.data).response;
+                                        console.log(response);
+                                        let blockedRoom: any = JSON.parse((response as HTTPResponse).data).response;
+                                        if (blockedRoom.Error.ErrorCode == 2) {
+                                            return concat(from(loadingEl.dismiss()),this.errorAlert(blockedRoom.Error.ErrorCode));
+                                        }
+                                        return response;
+                                    }
+                                ),
+                                map(
+                                    (response: HTTPResponse) => {
+                                        let blockedRoom: any = JSON.parse((response as HTTPResponse).data).response;
                                         console.log(blockedRoom);
                                         return concat(
                                             states.dispatch(new AddBlockRoom(blockedRoom)),
@@ -1066,13 +1065,13 @@ export class HotelResultState{
             return this.fileService.checkFile(filePath, fileName)
                 .pipe(
                     map(
-                        (fileExist) => {
+                        () => {
                             filteredImg[0] = this.file.externalRootDirectory + filePath;
                             return filteredImg;
                         }
                     ),
                     catchError(
-                        (error: FileError) => {
+                        () => {
                             return this.fileService.downloadFile(url, filePath)
                                 .pipe(
                                     map(
@@ -1083,7 +1082,7 @@ export class HotelResultState{
                                         }
                                     ),
                                     catchError(
-                                        (err: FileTransferError) => {
+                                        () => {
                                             filteredImg[0] = "";
                                             return filteredImg;
                                         }

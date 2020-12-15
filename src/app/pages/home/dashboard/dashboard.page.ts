@@ -8,7 +8,6 @@ import * as moment from 'moment';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TripComponent } from 'src/app/components/expense/trip/trip.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -110,7 +109,9 @@ export class DashboardPage implements OnInit {
     this.currenttab = evt.tab;
     this.store.dispatch(new SetTheme(evt.tab));
     if(evt.tab == 'expense-tab') {
-      this.store.dispatch(new GetTripList());
+      this.store.dispatch([
+        new GetTripList()
+      ]);
     }
   }
 

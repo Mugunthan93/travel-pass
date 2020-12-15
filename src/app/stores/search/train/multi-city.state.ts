@@ -50,34 +50,35 @@ export class TrainMultiCitySearchState {
             formData: action.form
         });
 
-        let multcitySegment : segments[] = [];
-
-        multcitySegment.forEach(
-            (el,ind,arr) => {
-                el = {
-                    OriginName: action.form[ind].from_location,//location
-                    OriginCountry: "", //""
-                    OriginCountryCode: "", //""
-                    OriginStation: action.form[ind].from_name+"("+action.form[ind].from_code+")", //station_name(station_code)
-        
-                    DestinationName: action.form[ind].to_location,//location
-                    DestinationCountry: "",//""
-                    DestinationCountryCode: "",//""
-                    DestinationStation: action.form[ind].to_name + "(" + action.form[ind].to_code + ")",//station_name(station_code)
-        
-                    Class: action.form[ind].class,//class
-        
-                    PreferredArrivalTime: "",//""
-                    PreferredDepartureTime: moment(action.form[ind].date).format('YYYY-MM-DDTHH:mm:ss'),//date
-        
-                    trainName: null,//trainname
-                    trainNumber: "",//""
-        
-                    Origin: action.form[ind].from_code, //"staion_code",
-                    Destination: action.form[ind].to_code //"staion code",
+        let multcitySegment : segments[] = []
+            .fill({})
+            .map(
+                (...el) => {
+                    let ind = el[1];
+                    return {
+                        OriginName: action.form[ind].from_location,//location
+                        OriginCountry: "", //""
+                        OriginCountryCode: "", //""
+                        OriginStation: action.form[ind].from_name+"("+action.form[ind].from_code+")", //station_name(station_code)
+            
+                        DestinationName: action.form[ind].to_location,//location
+                        DestinationCountry: "",//""
+                        DestinationCountryCode: "",//""
+                        DestinationStation: action.form[ind].to_name + "(" + action.form[ind].to_code + ")",//station_name(station_code)
+            
+                        Class: action.form[ind].class,//class
+            
+                        PreferredArrivalTime: "",//""
+                        PreferredDepartureTime: moment(action.form[ind].date).format('YYYY-MM-DDTHH:mm:ss'),//date
+            
+                        trainName: null,//trainname
+                        trainNumber: "",//""
+            
+                        Origin: action.form[ind].from_code, //"staion_code",
+                        Destination: action.form[ind].to_code //"staion code",
+                    }
                 }
-            }
-        );
+            );
 
         states.dispatch(new BookTrainMultiCityTrip(multcitySegment));
 

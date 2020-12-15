@@ -299,7 +299,7 @@ export class HotelPassengerState {
     }
 
     @Action(DismissHotelPassenger)
-    dismissHotelPassenger(states: StateContext<hotelpassengerstate>) {
+    dismissHotelPassenger( ) {
         return from(this.modalCtrl.dismiss(null, null,'passenger-info'));
     }
 

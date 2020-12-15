@@ -5,7 +5,7 @@ import { tap } from 'rxjs/operators';
 
 
 export function RoomValidator(rooms$ : Observable<roomguest[]>): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors> | null => {
+    return (): Observable<ValidationErrors> | null => {
         return rooms$.pipe(
             tap(
                 (rooms : roomguest[]) => {

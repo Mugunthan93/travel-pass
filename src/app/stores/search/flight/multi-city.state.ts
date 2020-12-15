@@ -130,7 +130,7 @@ export class MultiCitySearchState extends BaseFlightSearch {
                 text: 'Ok',
                 role: 'ok',
                 cssClass: 'danger',
-                handler: (res) => {
+                handler: () => {
                     failedAlert.dismiss({
                         data: false,
                         role: 'failed'

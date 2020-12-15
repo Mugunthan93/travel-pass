@@ -79,8 +79,8 @@ export class ResultListComponent implements OnInit {
 
     this.changeType();
     this.flightList.forEach(
-      (el, ind, arr) => {
-        this.state[ind] = "default";
+      (...el) => {
+        this.state[el[1]] = "default";
       }
     );
     

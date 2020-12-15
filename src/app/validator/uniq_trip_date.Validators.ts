@@ -1,13 +1,13 @@
-import { AsyncValidatorFn, FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 
 
 
-export function UniqTripValidators(tripDates$ : Observable<any[]>): AsyncValidatorFn
+export function UniqTripValidators(tripDates$ : Observable<any[]>)
 {
-    return (control: FormControl): Observable<ValidationErrors> | null => {
+    return (control: AbstractControl): Observable<ValidationErrors> | null => {
         return tripDates$
             .pipe(
                 map(
@@ -15,7 +15,7 @@ export function UniqTripValidators(tripDates$ : Observable<any[]>): AsyncValidat
                             console.log(control);
                             let selectedDate = control.value;
                             let datePresence = tripDates.some(
-                                (date,ind,arr) => {
+                                (date) => {
                                     return moment(selectedDate).isBetween(date.startDate,date.endDate);
                                 }
                             );
@@ -26,7 +26,7 @@ export function UniqTripValidators(tripDates$ : Observable<any[]>): AsyncValidat
                                 }
                             }
                             else {
-                                return null;
+                                return null; 
                             }
                         }
                 ),
@@ -35,9 +35,9 @@ export function UniqTripValidators(tripDates$ : Observable<any[]>): AsyncValidat
     }
 }
 
-export function TripRangeValidators(tripDates : any): ValidatorFn
+export function TripRangeValidators(tripDates : any)
 {
-    return (control: FormControl): ValidationErrors | null => {
+    return (control: AbstractControl): ValidationErrors | null => {
 
         if(control.value == null) {
             return {

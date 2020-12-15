@@ -233,7 +233,7 @@ export class BusPassengerState {
     }
 
     @Action(DismissBusPassenger)
-    dismissBusPassenger(states: StateContext<buspassengerstate>, action: DismissBusPassenger) {
+    dismissBusPassenger(states: StateContext<buspassengerstate>) {
 
         let least$ = from(this.alertCtrl.create({
             header: 'Passenger Required',

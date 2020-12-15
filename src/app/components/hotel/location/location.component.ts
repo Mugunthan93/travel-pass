@@ -35,7 +35,7 @@ export class LocationComponent implements OnInit {
 
   ngOnInit() {}
 
-  chipSelection(property: any, index: number) {
+  chipSelection(property: any) {
     console.log(property);
     property.selection = !property.selection;
   }

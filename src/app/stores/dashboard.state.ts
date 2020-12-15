@@ -82,13 +82,13 @@ export class DashboardState {
   }
 
   @Action(GetDashboard)
-  getDashboard(states: StateContext<any>, action: SearchFlight) {
+  getDashboard() {
     this.menuCtrl.close("first");
     this.store.dispatch(new Navigate(["/", "home", "dashboard", "home-tab"]));
   }
 
   @Action(SearchFlight)
-  searchFlight(states: StateContext<any>, action: SearchFlight) {
+  searchFlight() {
     this.store.dispatch(new SearchMode("flight"));
     this.store.dispatch(new SearchType("one-way"));
     this.store.dispatch(new JourneyType("one-way"));
@@ -120,7 +120,7 @@ export class DashboardState {
   }
 
   @Action(UpcomingTrips)
-  async upcomingTrips(states: StateContext<any>, action: UpcomingTrips) {
+  async upcomingTrips(states: StateContext<any>) {
     try {
       const upcomingTripsResponse = await this.sharedService.upcomingTrips();
       let response = JSON.parse(upcomingTripsResponse.data);
@@ -151,7 +151,7 @@ export class DashboardState {
 
   tripResponse(data: any[]) {
     let trip: upcomingTrips[] = [];
-    data.forEach((element, index, array) => {
+    data.forEach((element, index) => {
       let lastTrip =
         element.passenger_details.flight_details[0].Segments.length - 1;
       let lastFlight =

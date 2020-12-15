@@ -7,8 +7,8 @@ export class LimitPipe implements PipeTransform {
 
   transform(value: any[], limit: number): any {
     return value.filter(
-      (el,ind,arr) => {
-        return ind < limit
+      (...el) => {
+        return el[1] < limit
       }
     );
   }

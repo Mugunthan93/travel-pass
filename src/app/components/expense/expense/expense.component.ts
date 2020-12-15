@@ -2,15 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import * as _ from 'lodash';
-import { ExpenseValidator } from 'src/app/validator/expense.validators';
 import { Store } from '@ngxs/store';
 import { buscity, city, hotelcity } from 'src/app/stores/shared.state';
 import { SelectModalComponent } from '../../shared/select-modal/select-modal.component';
 import { SearchMode } from 'src/app/stores/search.state';
 import { DateMatchValidator } from 'src/app/validator/date_match.validators';
 import { ExpenseState } from 'src/app/stores/expense.state';
-import { Observable } from 'rxjs';
 import { TripRangeValidators } from 'src/app/validator/uniq_trip_date.Validators';
+import * as moment from 'moment';
 
 @Component({
   selector: "app-expense",

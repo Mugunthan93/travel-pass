@@ -108,19 +108,19 @@ export class EmailItineraryComponent implements OnInit {
     let itinerarytList : string = "";
 
     data.forEach(
-      (element: itinerarytrip, index: number, array: itinerarytrip[]) => {
+      (element: itinerarytrip, index: number) => {
 
         let currentItineraray : number = index + 1;
         
         let itinerary: string = "<tr><td align = 'center' valign = 'top'><!--CONTENT TABLE // --><table border='0' cellpadding='0' cellspacing='0' width ='100%'><tr style='background:#dee4f6;padding:6px;'><td width='48%' colspan='2'><b style='margin-left: 5px;font-size:12px;'> Itinerary " + currentItineraray + " </b><b style='margin-left:5px;font-size:12px;'>" + element.class + "(<span style='color:#f58832;'> " + element.refundable + " </span>)</b></td><td width='48%' style='text-align:right'>Fare:Rs. " + element.fare + "</td></tr></table></td></tr>";
 
         element.flights.forEach(
-          (el: itineraryFlight, ind: number, arr: itineraryFlight[]) => {
+          (el: itineraryFlight) => {
 
             let flight: string = "<tr><td><table border='0' cellpadding='0' cellspacing='0' width='100%'><tr style='background:#dee4f6;border:1px solid #d9deee;font-size:12px;'><td colspan='2'><b>" + el.origin.name + "(" + el.origin.code + ") to " + el.destination.name + " (" + el.destination.code + ")</b></td><td style='text-align:right'><b>" + el.passenger_detail + "</b></td></tr><br/></table></td></tr>";
 
             el.connecting_flight.forEach(
-              (e: itineraryconnectingflight, i: number, a: itineraryconnectingflight[]) => {
+              (e: itineraryconnectingflight) => {
 
                 let connecting_flight = "<tr><td align='center' valign='top'><!-- CONTENT TABLE // --><table border='0' cellpadding='0' cellspacing='0' width='100%'><tr style='border-top:1px solid #d9deee;font-size: 11px; padding-left:20px; padding-right:0;'><td width='25%' style='font-weight:bold;'><img src='https://www.travellerspass.com/assets/AirlineLogo/" + e.airlineCode + ".gif' width='20' height='20' class='CToWUd'>&nbsp" + e.airlineName + "</td><td width='40%'><b>Depart:</b> " + e.origin.name + " (" + e.origin.code + ")</td><td width='35%' style='text-align:right'><b>Arrive:</b>" + e.destination.name + " (" + e.destination.code + ")</td></tr><tr style='font-size: 11px;'><td style='padding-bottom:10px'><b>" + e.airlineNumber + "</b></td><td style='padding-bottom:10px'><b>Time:</b>" + e.origin.date + "</td><td style = 'text-align:right;padding-bottom:10px' > <b>Time:</b>" + e.destination.date + "</td > </tr><tr style='font-size: 11px;'><td colspan='3' style='text-align:right'><b>Journey Time: </b>" + e.duration + "</td></tr></table> <!-- // CONTENT TABLE --></td></tr>";
 

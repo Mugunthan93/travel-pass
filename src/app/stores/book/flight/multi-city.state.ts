@@ -86,7 +86,7 @@ export class MultiCityBookState {
                 text: 'Ok',
                 role: 'ok',
                 cssClass: 'danger',
-                handler: (res) => {
+                handler: () => {
                     failedAlert.dismiss({
                         data: false,
                         role: 'failed'
@@ -181,7 +181,7 @@ export class MultiCityBookState {
                 text: 'Ok',
                 role: 'ok',
                 cssClass: 'danger',
-                handler: (res) => {
+                handler: () => {
                     failedAlert.dismiss({
                         data: false,
                         role: 'failed'
@@ -196,7 +196,7 @@ export class MultiCityBookState {
                 text: 'Ok',
                 role: 'ok',
                 cssClass: 'danger',
-                handler: (res) => {
+                handler: () => {
                     this.store.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']));
                     successAlert.dismiss({
                         data: false,
@@ -407,7 +407,7 @@ export class MultiCityBookState {
         };
 
         data.Segments.forEach(
-            (element: flightData[], index: number, arr: flightData[][]) => {
+            (element: flightData[], index: number) => {
                 console.log(element);
                 book.trip[index] = {
                     origin: element[0].Origin.Airport.CityName,
@@ -416,7 +416,7 @@ export class MultiCityBookState {
                 }
 
                 element.forEach(
-                    (el: flightData, ind: number, arr: flightData[]) => {
+                    (el: flightData, ind: number) => {
 
                         book.trip[index].connecting_flight[ind] = {
                             airline: {

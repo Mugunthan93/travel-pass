@@ -121,7 +121,7 @@ export class DomesticBookState {
                 text: 'Ok',
                 role: 'ok',
                 cssClass: 'danger',
-                handler: (res) => {
+                handler: () => {
                     failedAlert.dismiss({
                         data: false,
                         role: 'failed'
@@ -259,7 +259,7 @@ export class DomesticBookState {
                 text: 'Ok',
                 role: 'ok',
                 cssClass: 'danger',
-                handler: (res) => {
+                handler: () => {
                     failedAlert.dismiss({
                         data: false,
                         role: 'failed'
@@ -274,7 +274,7 @@ export class DomesticBookState {
                 text: 'Ok',
                 role: 'ok',
                 cssClass: 'danger',
-                handler: (res) => {
+                handler: () => {
                     this.store.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']));
                     successAlert.dismiss({
                         data: false,
@@ -526,7 +526,7 @@ export class DomesticBookState {
         };
 
         data.Segments.forEach(
-            (element: flightData[], index: number, arr: flightData[][]) => {
+            (element: flightData[], index: number) => {
                 book.trip[index] = {
                     origin: element[0].Origin.Airport.CityName,
                     destination: element[element.length - 1].Destination.Airport.CityName,
@@ -534,7 +534,7 @@ export class DomesticBookState {
                 }
 
                 element.forEach(
-                    (el: flightData, ind: number, arr: flightData[]) => {
+                    (el: flightData, ind: number) => {
 
                         book.trip[index].connecting_flight[ind] = {
                             airline: {

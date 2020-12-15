@@ -149,7 +149,7 @@ export class BookState {
     }
 
     @Action(SendRequest)
-    sendRequest(states: StateContext<book>, action: SendRequest) {
+    sendRequest(states: StateContext<book>) {
         let mode = states.getState().mode;
         let type = states.getState().type;
 
@@ -191,7 +191,7 @@ export class BookState {
     }
 
     @Action(GetSendRequest)
-    getSendRequest(states: StateContext<book>) {
+    getSendRequest() {
         let passegerSelect$ = from(this.alertCtrl.create({
             header : 'Select Passenger',
             message : 'Select Your passenger to send request',

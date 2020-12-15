@@ -293,7 +293,7 @@ export class HotelSearchState {
     }
 
     @Action(AddRoom)
-    addRoom(states: StateContext<hotelsearch>, action: AddRoom) {
+    addRoom(states: StateContext<hotelsearch>) {
         
         let currentRooms: roomguest[] = Object.assign([], states.getState().rooms);
         let roomAlert$ = from(this.alertCtrl.create({
@@ -338,7 +338,8 @@ export class HotelSearchState {
         
         let currentRooms: roomguest[] = Object.assign([], states.getState().rooms);
         let filteredRooms = currentRooms.filter(
-            (el: roomguest, ind: number, arr: roomguest[]) => {
+            (...el) => {
+                let ind = el[1];
                 return !(ind == action.roomId)
             }
         );
@@ -373,7 +374,7 @@ export class HotelSearchState {
 
         if (currentRooms[action.roomId].NoOfAdults < 8) {
             let filteredRooms: roomguest[] = currentRooms.map(
-                (el: roomguest, ind: number, arr: roomguest[]) => {
+                (el: roomguest, ind: number) => {
                     let newEl = Object.assign({}, el);
                     if (ind == action.roomId) {
                         newEl.NoOfAdults += 1;
@@ -395,7 +396,7 @@ export class HotelSearchState {
     removeAdult(states: StateContext<hotelsearch>, action: AddAdult) {
         let currentRooms: roomguest[] = states.getState().rooms;
         let filteredRooms: roomguest[] = currentRooms.map(
-            (el: roomguest, ind: number, arr: roomguest[]) => {
+            (el: roomguest, ind: number) => {
                 let newEl = Object.assign({}, el);
                 if (ind == action.roomId) {
                     if (newEl.NoOfAdults >= 1) {
@@ -435,7 +436,7 @@ export class HotelSearchState {
 
         if (currentRooms[action.roomId].NoOfChild < 2) {
             let filteredRooms: roomguest[] = currentRooms.map(
-                (el: roomguest, ind: number, arr: roomguest[]) => {
+                (el: roomguest, ind: number) => {
                     let newEl = Object.assign({}, el);
                     if (ind == action.roomId) {
                         newEl.NoOfChild += 1;
@@ -459,7 +460,7 @@ export class HotelSearchState {
     removeChild(states: StateContext<hotelsearch>, action: RemoveChild) {
         let currentRooms: roomguest[] = states.getState().rooms;
         let filteredRooms: roomguest[] = currentRooms.map(
-            (el: roomguest, ind: number, arr: roomguest[]) => {
+            (el: roomguest, ind: number) => {
                 let newEl = Object.assign({}, el);
                 if (ind == action.roomId) {
                     if (newEl.NoOfChild >= 1) {
@@ -480,7 +481,7 @@ export class HotelSearchState {
     setAge(states: StateContext<hotelsearch>, action: SetAge) {
         let currentRooms: roomguest[] = states.getState().rooms;
         let filteredRooms: roomguest[] = currentRooms.map(
-            (el: roomguest, ind: number, arr: roomguest[]) => {
+            (el: roomguest, ind: number) => {
                 let newEl = Object.assign({}, el);
                 if (ind == action.roomIndex) {
                     newEl.ChildAge = Object.assign([], el.ChildAge);
@@ -567,7 +568,7 @@ export class HotelSearchState {
                 text: 'Ok',
                 role: 'ok',
                 cssClass: 'danger',
-                handler: (res) => {
+                handler: () => {
                     return true;
                 }
             }]
@@ -659,7 +660,7 @@ export class HotelSearchState {
                     }
                 ),
                 map(
-                    (value: boolean) => {
+                    () => {
                         states.dispatch(new ResultMode('hotel'));
                         states.dispatch(new Navigate(['/', 'home', 'result', 'hotel']));
                     }

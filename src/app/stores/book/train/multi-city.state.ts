@@ -97,7 +97,7 @@ export class TrainMultiCityBookState {
         let segments: segments[] = Object.assign([], states.getState().segmentArray);
 
         segments.forEach(
-            (el,ind,arr) => {
+            (el,ind) => {
                 el.trainName = Object.assign({},action.names[ind]);
             }
         );

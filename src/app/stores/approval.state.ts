@@ -103,7 +103,7 @@ export class ApprovalState {
         return forkJoin(menuclose$)
         .pipe(
             flatMap(
-                (response) => {
+                () => {
                     return forkJoin(approveReq$);
                 }
             ),

@@ -238,7 +238,7 @@ export class SortState {
             if (action.type == 'departure') {
                 let currentsort: sortButton[] = states.getState().departure;
                 let sortedarray: sortButton[] = [];
-                currentsort.forEach((el, ind, arr) => {
+                currentsort.forEach((el, ind) => {
                     if (_.isEqual(action.button, el) && action.button.state == 'default') {
                         sortedarray[ind] = {
                             label: action.button.label,
@@ -267,7 +267,7 @@ export class SortState {
             else if (action.type == 'return') {
                 let currentsort: sortButton[] = states.getState().return;
                 let sortedarray: sortButton[] = [];
-                currentsort.forEach((el, ind, arr) => {
+                currentsort.forEach((el, ind) => {
                     if (_.isEqual(action.button, el) && action.button.state == 'default') {
                         sortedarray[ind] = {
                             label: action.button.label,
@@ -296,7 +296,7 @@ export class SortState {
             else {
                 let currentsort: sortButton[] = states.getState().flight;
                 let sortedarray: sortButton[] = [];
-                currentsort.forEach((el, ind, arr) => {
+                currentsort.forEach((el, ind) => {
                     if (_.isEqual(action.button, el) && action.button.state == 'default') {
                         sortedarray[ind] = {
                             label: action.button.label,
@@ -328,7 +328,7 @@ export class SortState {
 
             let currentsort: sortButton[] = states.getState().hotel;
             let sortedarray: sortButton[] = [];
-            currentsort.forEach((el, ind, arr) => {
+            currentsort.forEach((el, ind) => {
                 if (_.isEqual(action.button, el) && action.button.state == 'default') {
                     sortedarray[ind] = {
                         label: action.button.label,
@@ -357,7 +357,7 @@ export class SortState {
         else if (action.mode == 'bus') {
             let currentsort: sortButton[] = states.getState().bus;
             let sortedarray: sortButton[] = [];
-            currentsort.forEach((el, ind, arr) => {
+            currentsort.forEach((el, ind) => {
                 if (_.isEqual(action.button, el) && action.button.state == 'default') {
                     sortedarray[ind] = {
                         label: action.button.label,

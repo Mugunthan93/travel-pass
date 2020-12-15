@@ -15,7 +15,7 @@ export class BaseFlightResult {
         let resultObj: resultObj[] = new Array(response.length);
 
         response.forEach(
-            (element: flightResult, index, array) => {
+            (element: flightResult, index) => {
                 resultObj[index] = this.resultObj(element, traceId);
             }
         );
@@ -41,7 +41,7 @@ export class BaseFlightResult {
         };
 
         result.Segments.forEach(
-            (el, ind, arr) => {
+            (el, ind) => {
 
                 baggage[ind] = [];
 
@@ -60,7 +60,7 @@ export class BaseFlightResult {
                 }
 
                 el.forEach(
-                    (e, i, a) => {
+                    (e, i) => {
 
                         email.flights[ind].connecting_flight[i] = {
                             airlineCode: e.Airline.AirlineCode,
@@ -179,7 +179,7 @@ export class BaseFlightResult {
     getDuration(data: flightData[]): number {
         let time: number = 0;
         data.forEach(
-            (e, i, a) => {
+            (e) => {
                 time += (e.GroundTime + e.Duration);
             }
         );

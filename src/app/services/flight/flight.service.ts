@@ -64,7 +64,7 @@ export class FlightService {
     return await this.http.post("/airlineRequest?email_notify=true", request);
   }
 
-  async downloadTicket(pnr : string, filePath : string): Promise<HTTPResponse> {
+  async downloadTicket(pnr : string): Promise<HTTPResponse> {
     return await this.http.post("/airlines/airlineTicketing" + pnr + ".pdf", {});
   }
 

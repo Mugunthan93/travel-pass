@@ -307,7 +307,7 @@ export class HotelBookState {
 
         let passengers: passengers[] = Object.assign([], [...selectedadult, ...selectedchildren]);
 
-        passengers.sort((a,b) => {
+        passengers.sort((a) => {
             if (a.LeadPassenger == true) {
                 return -1;
             }

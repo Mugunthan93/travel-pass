@@ -43,8 +43,9 @@ ion-header {
 
 ion-content{
     >ion-virtual-scroll{
-        height : 120px !important;
+        height: -webkit-fill-available !important;
         ion-card{
+            height : 120px !important;
             background: white;
             ion-card-header{
                 padding-bottom: 4px;
@@ -78,6 +79,13 @@ ion-content{
         //         border-radius: 6px;
         //     }
         // }
+    }
+
+    >ion-label {
+        position: absolute;
+        top: 45%;
+        left: 35%;
+        font-size: 20px;
     }
 
     ion-skeleton-text{

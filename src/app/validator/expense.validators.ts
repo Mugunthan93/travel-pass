@@ -1,10 +1,10 @@
-import { AsyncValidatorFn, FormControl, ValidationErrors } from "@angular/forms";
+import { AbstractControl, AsyncValidatorFn, FormControl, ValidationErrors } from "@angular/forms";
 import { Observable, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, first, switchMap } from 'rxjs/operators';
 
-export function ExpenseValidator(strArr : string[]) : AsyncValidatorFn {
+export function ExpenseValidator(strArr : string[]) {
 
-  return (control: FormControl) : Observable<ValidationErrors | null> => {
+  return (control: AbstractControl) : Observable<ValidationErrors | null> => {
 
     let change = (control.root.get("type") as FormControl).valueChanges;
     console.log(change);

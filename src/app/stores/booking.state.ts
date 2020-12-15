@@ -237,7 +237,7 @@ export class BookingState {
                     }
                 ),
                 flatMap(
-                    (booking) => {
+                    () => {
                         let mode = states.getState().mode
 
                         let newBooking$ = this.bookingService.myBooking(action.type,'new',mode);
@@ -348,7 +348,8 @@ export class BookingState {
   }
 
   @Action(ViewFile)
-  viewFile(states: StateContext<booking>, action: ViewFile) {
+  viewFile(...el) {
+    let action: ViewFile = el[1];
     const failedAlert$ = from(
       this.alertCtrl.create({
         header: "File Error",
@@ -531,7 +532,7 @@ export class BookingState {
   }
 
   @Action(CancelTicket)
-  cancelTicket(states: StateContext<booking>, action: CancelTicket) {
+  cancelTicket(states: StateContext<booking>) {
       let ticket = states.getState().cancel;
       // let vendor_cancellation_details: vendor_cancellation_details = [{
       //     PLB: ticket.passenger_details.uapi_params.selected_plb_Value.PLB_earned,

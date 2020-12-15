@@ -25,7 +25,7 @@ import { flightpassenger, AddPassenger, EditPassenger, FlightPassengerState } fr
 export class PassengerDetailComponent implements OnInit,OnChanges {
 
   @Input() form: string;
-  @Input() pax: flightpassenger;
+  @Input()  pax: flightpassenger;
 
   company: company;
 
@@ -103,7 +103,7 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
     }
 
     this.type = this.store.selectSnapshot(BookState.getBookType);
-    this.Passenger.valueChanges.subscribe(el => console.log(this.Passenger));
+    this.Passenger.valueChanges.subscribe(() => console.log(this.Passenger));
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -206,7 +206,7 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
         },
         Gender: this.flightBookState.getGender(this.Passenger.value.Title),
         PaxType: 1,
-        IsLeadPax: this.leadPax(this.form,this.pax),
+        IsLeadPax: this.leadPax(this.form),
         Fare: this.store.selectSnapshot(FLightBookState.getFare)
       }
       if (this.form == 'add') {
@@ -218,7 +218,7 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
     }
   }
 
-  leadPax(formType : string,pax : flightpassenger) : boolean {
+  leadPax(formType : string) : boolean {
     if (formType == 'edit') {
       if (this.store.selectSnapshot(FlightPassengerState.getLeadPassenger).IsLeadPax == this.pax.IsLeadPax) {
         return this.pax.IsLeadPax;

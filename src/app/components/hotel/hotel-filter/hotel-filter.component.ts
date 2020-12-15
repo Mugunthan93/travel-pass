@@ -57,7 +57,7 @@ export class HotelFilterComponent implements OnInit {
     this.inputs$ = this.store.select(HotelFilterState.getFilter)
   }
   
-  chipSelection(property: any, index: number) {
+  chipSelection(property: any) {
     console.log(property);
     property.selection = !property.selection;
   }

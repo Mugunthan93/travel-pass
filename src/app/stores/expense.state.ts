@@ -2,25 +2,22 @@ import { ModalController } from '@ionic/angular';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, NgxsOnChanges, NgxsSimpleChange, Selector, State, StateContext, Store } from '@ngxs/store';
 import * as moment from 'moment';
-import { combineLatest, concat, from, of } from 'rxjs';
-import { finalize, flatMap, map, mergeMap, toArray, withLatestFrom, first } from 'rxjs/operators';
+import { concat, forkJoin, from, of } from 'rxjs';
+import { flatMap, mergeMap, toArray, withLatestFrom, first } from 'rxjs/operators';
 import { ExpenseService } from '../services/expense/expense.service';
 import { UserState } from './user.state';
 import * as _ from 'lodash';
-import { tripList } from '../components/trip-list/trip-list.component';
 
 export interface expense {
     trips : triplist[],
+    approvalTrip : triplist[],
     expenses : any[],
+    approveExpenses : any[];
     startdate : moment.Moment
     enddate: moment.Moment
     projectList: []
     loading : boolean
     currentTrip : triplist
-}
-
-export interface expensepayload  {
-
 }
 
 export interface triplist {
@@ -62,7 +59,7 @@ export interface projectList {
       trip_name: number
   }
   
-  export interface flightexpensepayload {
+  export interface expensepayload {
     accounts_approval: any;
     approved_accounts: any;
     approved_manager: any;
@@ -134,19 +131,19 @@ export class GetExpenseList {
 }
 
 export class GetProjectList {
-    static readonly type = "[Dashboard] GetProjectList";
+    static readonly type = "[expense] GetProjectList";
     constructor(public modal: HTMLIonModalElement) {}
 }
 
 export class AddNewTrip {
-    static readonly type = '[Dashboard] AddNewTrip';
+    static readonly type = '[expense] AddNewTrip';
     constructor(public trip : trippayload) {
 
     }
 }
 
 export class AddExpense {
-  static readonly type = "[Dashboard] AddExpense";
+  static readonly type = "[expense] AddExpense";
   constructor(public expense: expensepayload) {
 
   }
@@ -157,7 +154,9 @@ export class AddExpense {
   name: "expense",
   defaults: {
     trips: [],
+    approvalTrip : [],
     expenses: [],
+    approveExpenses : [],
     enddate: moment({}).subtract(1, "months"),
     startdate: moment({}),
     projectList: [],
@@ -165,13 +164,14 @@ export class AddExpense {
     currentTrip: null,
   },
 })
-export class ExpenseState implements NgxsOnChanges {
+
+export class ExpenseState {
+
   constructor(
     private store: Store,
     private expenseService: ExpenseService,
     public modalCtrl: ModalController
   ) {}
-  ngxsOnChanges(change: NgxsSimpleChange<any>): void {}
 
   @Selector()
   static getProjectList(state: expense): projectList[] {
@@ -180,7 +180,7 @@ export class ExpenseState implements NgxsOnChanges {
 
   @Selector()
   static getTripList(state: expense): triplist[] | number[] {
-    return state.trips.length == 0
+    return (state.trips.length == 0 && state.loading)
       ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
       : state.trips;
   }
@@ -242,36 +242,59 @@ export class ExpenseState implements NgxsOnChanges {
       loading: true,
     });
 
-    let startDate$ = of(states.getState().startdate);
-    let endDate$ = of(states.getState().enddate);
+    let startDate$ = of(moment({}));
+    let endDate$ = of(moment({}).subtract(1,'month'));
 
     return this.store.select(UserState.getUserId).pipe(
       withLatestFrom(startDate$, endDate$),
       flatMap((dates) => {
+
         let tripList$ = this.expenseService.getTripList(
           dates[0],
           dates[1],
           dates[2]
         );
-        return tripList$;
+
+        let approvalList$ = this.expenseService.getApprovalList(
+          dates[0],
+          dates[1],
+          dates[2]
+        );
+
+        return forkJoin([tripList$,approvalList$]);
       }),
       flatMap((response) => {
+
         console.log(response);
-        let data: triplist[] = JSON.parse(response.data);
+
+        let trip: triplist[] = JSON.parse(response[0].data);
+        let approve : triplist[] = JSON.parse(response[1].data);
         states.patchState({
-          trips: data,
+          trips: trip,
+          approvalTrip : approve
         });
-        return from(data).pipe(
+
+        let tripExpense$ =  from(trip).pipe(
           mergeMap((trip: triplist) => {
             return this.expenseService.getExpenseList(trip.id);
           }),
           toArray()
         );
+
+        let approveExpense$ = from(approve).pipe(
+          mergeMap((trip: triplist) => {
+            return this.expenseService.getExpenseList(trip.id);
+          }),
+          toArray()
+        );
+
+        return forkJoin([tripExpense$, approveExpense$]);
+
       }),
       flatMap((response) => {
         console.log(response);
 
-        response.forEach((res) => {
+        response[0].forEach((res) => {
           if (res.status == 200) {
             let data: expenselist[] = JSON.parse(res.data);
             let currentexpense: expenselist[] = Object.assign(
@@ -280,6 +303,19 @@ export class ExpenseState implements NgxsOnChanges {
             let finalexpenses: expenselist[] = currentexpense.concat(data);
             states.patchState({
               expenses: finalexpenses,
+            });
+          }
+        });
+
+        response[1].forEach((res) => {
+          if (res.status == 200) {
+            let data: expenselist[] = JSON.parse(res.data);
+            let currentexpense: expenselist[] = Object.assign(
+              states.getState().expenses
+            );
+            let finalexpenses: expenselist[] = currentexpense.concat(data);
+            states.patchState({
+              approveExpenses: finalexpenses,
             });
           }
         });
@@ -372,7 +408,7 @@ export class ExpenseState implements NgxsOnChanges {
       }),
       mergeMap((flightsTrip: any) => {
         console.log(flightsTrip);
-        let payload: flightexpensepayload = {
+        let payload: expensepayload = {
           accounts_approval: null,
           approved_accounts: null,
           approved_manager: null,
@@ -418,7 +454,7 @@ export class ExpenseState implements NgxsOnChanges {
   }
 
   @Action(AddExpense)
-  addExpense(states: StateContext<any>, action: AddExpense) {
+  addExpense() {
     
   }
 }

@@ -23,6 +23,11 @@
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
+    "strictInjectionParameters": true,
+    "noImplicityAny": true,
+    "cognitive-complexity": [true,10],
+    "no-big-function":[true,100],
+    "strictFunctionTypes": true,
+    "noUnusedParameters": true
   }
 }

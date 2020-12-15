@@ -84,13 +84,13 @@ export class OneWayResultState extends BaseFlightResult {
         let result : resultObj[] =  this.responseData(action.response.Results[0], action.response.TraceId);
         console.log(this.getmarkup());
         result.forEach(
-            (el,ind,arr) => {
+            (el) => {
                 if(this.getmarkup() !== 0) {
                     el.fare = el.fare + ((el.fare / 100) * this.getmarkup());
                     el.email.fare = el.email.fare + ((el.email.fare / 100) * this.getmarkup());
     
                     el.trips.forEach(
-                        (e,i,a) => {
+                        (e) => {
                             e.tripinfo.fare = e.tripinfo.fare + ((e.tripinfo.fare / 100) * this.getmarkup());
                         }
                     );

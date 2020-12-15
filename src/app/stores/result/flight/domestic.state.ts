@@ -2,7 +2,7 @@ import { State, Store, StateContext, Action, Selector } from '@ngxs/store';
 import { resultObj, AddEmailTrips } from '../flight.state';
 import { flightSearchResult } from 'src/app/models/search/flight';
 import * as moment from 'moment';
-import { Observable } from 'rxjs';
+import { concat, Observable } from 'rxjs';
 import { Navigate } from '@ngxs/router-plugin';
 import { BaseFlightResult } from './flight-result';
 import { DepartureFilterState, departureFilter, GetDepartureAirlines } from '../filter/departure.filter.state';
@@ -148,13 +148,13 @@ export class DomesticResultState extends BaseFlightResult {
         let result2 : resultObj[] =  this.responseData(action.response.Results[1], action.response.TraceId);
         console.log(this.getmarkup());
         result1.forEach(
-            (el,ind,arr) => {
+            (el) => {
                 if(this.getmarkup() !== 0) {
                     el.fare = el.fare + ((el.fare / 100) * this.getmarkup());
                     el.email.fare = el.email.fare + ((el.email.fare / 100) * this.getmarkup());
     
                     el.trips.forEach(
-                        (e,i,a) => {
+                        (e) => {
                             e.tripinfo.fare = e.tripinfo.fare + ((e.tripinfo.fare / 100) * this.getmarkup());
                         }
                     );
@@ -162,13 +162,13 @@ export class DomesticResultState extends BaseFlightResult {
             }
         );
         result2.forEach(
-            (el,ind,arr) => {
+            (el) => {
                 if(this.getmarkup() !== 0) {
                     el.fare = el.fare + ((el.fare / 100) * this.getmarkup());
                     el.email.fare = el.email.fare + ((el.email.fare / 100) * this.getmarkup());
     
                     el.trips.forEach(
-                        (e,i,a) => {
+                        (e) => {
                             e.tripinfo.fare = e.tripinfo.fare + ((e.tripinfo.fare / 100) * this.getmarkup());
                         }
                     );
@@ -189,23 +189,30 @@ export class DomesticResultState extends BaseFlightResult {
             }
         });
 
-        this.store.dispatch(new AddEmailTrips(this.emailTrips(action.response.Results[0])));
-        let newObs = new Observable(
-            (Subscriber) => {
-                Subscriber.next(this.store.dispatch(new GetDepartureAirlines(states.getState().departure.value,'departure')))
-                Subscriber.next(this.store.dispatch(new GetReturnAirlines(states.getState().return.value, 'return')))
-                Subscriber.complete();
-            }
+        return concat(
+            this.store.dispatch(new AddEmailTrips(this.emailTrips(action.response.Results[0]))),
+            this.store.dispatch(new GetDepartureAirlines(states.getState().departure.value,'departure')),
+            this.store.dispatch(new GetReturnAirlines(states.getState().return.value, 'return')),
+            this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'round-trip', 'domestic']))
         );
 
-        newObs.subscribe({
-            next: (res: Observable<any>) => {
-                res.subscribe(res => console.log(res));
-            },
-            complete: () => {
-                this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'round-trip', 'domestic']));
-            }
-        })
+        // this.store.dispatch(new AddEmailTrips(this.emailTrips(action.response.Results[0])));
+        // let newObs = new Observable(
+        //     (Subscriber) => {
+        //         Subscriber.next(this.store.dispatch(new GetDepartureAirlines(states.getState().departure.value,'departure')))
+        //         Subscriber.next(this.store.dispatch(new GetReturnAirlines(states.getState().return.value, 'return')))
+        //         Subscriber.complete();
+        //     }
+        // );
+
+        // newObs.subscribe({
+        //     next: (res: Observable<any>) => {
+        //         res.subscribe(res => console.log(res));
+        //     },
+        //     complete: () => {
+        //         this.store.dispatch(new Navigate(['/', 'home', 'result', 'flight', 'round-trip', 'domestic']));
+        //     }
+        // })
 
             // this.store.dispatch(new GetAirlines(states.getState().departure.value));
             // this.store.dispatch(new GetAirlines(states.getState().return.value));
