@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { ApprovalState, GetApproveRequest } from 'src/app/stores/approval.state';
+import { ApproveRequestComponent } from 'src/app/components/shared/approve-request/approve-request.component';
 
 @Component({
   selector: 'app-request-list',
@@ -25,7 +26,7 @@ export class RequestListPage implements OnInit {
   }
 
   getApprove(id : number) {
-    this.store.dispatch(new GetApproveRequest(id));
+    this.store.dispatch(new GetApproveRequest(id,ApproveRequestComponent));
   }
 
   tripType(book : any) {

@@ -8,8 +8,6 @@ import { concat, forkJoin, from, iif, of } from 'rxjs';
 import { map, flatMap, catchError } from 'rxjs/operators';
 import { ApprovalService } from '../services/approval/approval.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
-import { ApproveRequestComponent } from '../components/shared/approve-request/approve-request.component';
-import * as moment from 'moment';
 
 
 export interface Approval {
@@ -28,7 +26,7 @@ export class ApprovalRequest {
 
 export class GetApproveRequest {
     static readonly type = "[approval] GetApproveRequest";
-    constructor(public id: number) {
+    constructor(public id: number, public modalcomp : any) {
 
     }
 }
@@ -143,7 +141,7 @@ export class ApprovalState {
     @Action(GetApproveRequest)
     getApproveRequest(states: StateContext<Approval>, action: GetApproveRequest) {
         const modal$ = from(this.modalCtrl.create({
-            component : ApproveRequestComponent,
+            component : action.modalcomp,
             id : 'get-approve-item'
         })).pipe(flatMap(el => from(el.present())));
 
