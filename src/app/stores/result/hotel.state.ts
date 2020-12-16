@@ -1,11 +1,10 @@
 import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
 import { HotelService } from 'src/app/services/hotel/hotel.service';
-import { File, FileError, FileEntry, DirectoryEntry } from '@ionic-native/file/ngx';
-import { FileTransferError } from '@ionic-native/file-transfer/ngx';
+import { File, FileEntry } from '@ionic-native/file/ngx';
 import { LoadingController, ModalController, AlertController } from '@ionic/angular';
-import { Observable, from, throwError, of, EMPTY, iif, forkJoin, concat } from 'rxjs';
-import { mergeMap, take, toArray, tap, catchError, skipWhile, takeWhile, flatMap, map, switchMap, exhaustMap, retryWhen, delayWhen, finalize, concatMap, ignoreElements, skip, find, groupBy, reduce, distinct, distinctUntilChanged, first, bufferCount, filter, throttleTime, takeUntil } from 'rxjs/operators';
-import { SearchHotel, HotelSearchState, staticresponselist, hotelresultlist, staticpayload, paragraph, subsection, hotelsearchpayload, hotelForm } from '../search/hotel.state';
+import { Observable, from, of, forkJoin, concat } from 'rxjs';
+import { mergeMap, take, toArray, catchError, skipWhile, flatMap, map, concatMap } from 'rxjs/operators';
+import { SearchHotel, HotelSearchState, staticresponselist, hotelresultlist, staticpayload, paragraph, subsection, hotelForm } from '../search/hotel.state';
 import { SharedService } from 'src/app/services/shared/shared.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import * as _ from 'lodash';

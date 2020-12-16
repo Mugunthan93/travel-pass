@@ -49,6 +49,6 @@ export class BusPage implements OnInit {
   }
 
   sendRequest() {
-    this.store.dispatch(new GetSendRequest());
+    this.store.dispatch(new GetSendRequest(BookConfirmationComponent));
   }
 }

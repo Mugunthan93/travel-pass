@@ -6,8 +6,9 @@ import { expenselist, ExpenseState, triplist } from 'src/app/stores/expense.stat
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { map, withLatestFrom } from 'rxjs/operators';
-import { ModalController } from '@ionic/angular';
+import { ModalController, PopoverController } from '@ionic/angular';
 import { ExpenseComponent } from 'src/app/components/expense/expense/expense.component';
+import { ExpenseEditComponent } from 'src/app/components/expense/expense-edit/expense-edit.component';
 
 @Component({
   selector: "app-expense-list",
@@ -21,7 +22,8 @@ export class ExpenseListPage implements OnInit {
 
   constructor(
     private store: Store,
-    public modalCtrl : ModalController
+    public modalCtrl : ModalController,
+    public popoverCtrl : PopoverController
   ) { }
 
   ngOnInit() {
@@ -49,8 +51,9 @@ export class ExpenseListPage implements OnInit {
                 .sortBy((o) => moment(o.start_date))
                 .groupBy("start_date")
                 .map((val, key) => {
+                  let date = key == 'null' ? val[0].createdAt : key;
                   return {
-                    date: key,
+                    date: date,
                     value: val,
                   };
                 })
@@ -62,6 +65,21 @@ export class ExpenseListPage implements OnInit {
         return grpedExpense;
       })
     );
+  }
+
+  async getExpense(ev : CustomEvent, exp : expenselist) {
+    const popover = await this.popoverCtrl.create({
+      component : ExpenseEditComponent,
+      componentProps : {
+        expense : exp,
+        exptype : 'add'
+      },
+      event: ev,
+      cssClass : 'get-expense',
+      animated : false,
+      id: 'get-expense'
+    });
+    return await popover.present();
   }
 
   paidBy(exp: expenselist) {
@@ -86,6 +104,10 @@ export class ExpenseListPage implements OnInit {
   async addExpense() {
     const modal = await this.modalCtrl.create({
       component: ExpenseComponent,
+      componentProps : {
+        expense : null,
+        type : 'add'
+      },
       id: "expense",
     });
     return await modal.present();

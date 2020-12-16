@@ -31,6 +31,18 @@
 
 
 <ion-content>
+
+    <ion-row class="booking" *ngIf="isManager$ | async">
+        <ion-segment mode="ios" (ionChange)="tripChange($event)" [value]="tripType$ | async" class="search">
+            <ion-segment-button value="mytrips" class="search">
+                <ion-text class="medium bold">My Trips</ion-text>
+            </ion-segment-button>
+            <ion-segment-button value="approvaltrips" class="search">
+                <ion-text class="medium bold">Approval Trips</ion-text>
+            </ion-segment-button>
+        </ion-segment>
+      </ion-row>
+
     <ion-virtual-scroll *ngIf="(loading$ | async) && (trips$ | async).length == 0" approxItemHeight="120px">
         <ion-card>
             <ion-card-header>

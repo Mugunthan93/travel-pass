@@ -18,6 +18,7 @@ export interface expense {
     projectList: []
     loading : boolean
     currentTrip : triplist
+    tripType : string
 }
 
 export interface triplist {
@@ -149,6 +150,13 @@ export class AddExpense {
   }
 }
 
+export class ChangeTripType {
+  static readonly type = "[expense] ChangeTripType";
+  constructor(public type: string) {
+
+  }
+}
+
 
 @State<expense>({
   name: "expense",
@@ -162,6 +170,7 @@ export class AddExpense {
     projectList: [],
     loading: false,
     currentTrip: null,
+    tripType : 'mytrips'
   },
 })
 
@@ -180,9 +189,16 @@ export class ExpenseState {
 
   @Selector()
   static getTripList(state: expense): triplist[] | number[] {
-    return (state.trips.length == 0 && state.loading)
+    if(state.tripType == 'mytrips') {
+      return (state.trips.length == 0 && state.loading)
       ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
       : state.trips;
+    }
+    else if(state.tripType == 'approvaltrips') {
+      return (state.approvalTrip.length == 0 && state.loading)
+      ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+      : state.approvalTrip;
+    }
   }
 
   @Selector()
@@ -234,11 +250,25 @@ export class ExpenseState {
     return state.currentTrip;
   }
 
+  @Selector()
+  static getTripType(state: expense): string {
+    return state.tripType;
+  }
+
+  @Action(ChangeTripType)
+  changeTripType(states: StateContext<expense>, action : ChangeTripType) {
+    states.patchState({
+      tripType : action.type
+    });
+  }
+
   @Action(GetTripList, { cancelUncompleted: true })
   getTripList(states: StateContext<expense>) {
     states.patchState({
       trips: [],
+      approvalTrip : [],
       expenses: [],
+      approveExpenses : [],
       loading: true,
     });
 

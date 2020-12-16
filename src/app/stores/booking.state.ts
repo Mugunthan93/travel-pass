@@ -1,11 +1,7 @@
 import { State, Action, StateContext, Store, Selector } from "@ngxs/store";
 import { Navigate } from '@ngxs/router-plugin';
 import { MenuController, LoadingController, AlertController, ModalController } from '@ionic/angular';
-import { FlightService } from '../services/flight/flight.service';
-import { UserState } from './user.state';
-import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
-import { iif, concat } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { concat } from 'rxjs';
 import { BookingService } from '../services/booking/booking.service';
 import { forkJoin, from, of } from 'rxjs';
 import { catchError, flatMap, map } from 'rxjs/operators';
@@ -13,13 +9,11 @@ import { HTTPResponse } from '@ionic-native/http/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { File } from '@ionic-native/file/ngx';
 import * as _ from 'lodash';
-import { RescheduleComponent, req_segment } from '../components/shared/reschedule/reschedule.component';
-import { CancellationComponent } from '../components/shared/cancellation/cancellation.component';
-import { city } from './shared.state';
+import { req_segment } from '../components/shared/reschedule/reschedule.component';
 import { GetToken, HotelResultState } from './result/hotel.state';
 import { ApprovalService } from '../services/approval/approval.service';
-import { flightDetail } from './result/flight.state';
 import { flightResult } from '../models/search/flight';
+import { FileTransfer } from "@ionic-native/file-transfer/ngx";
 
 export interface booking {
     type: string
@@ -121,7 +115,7 @@ export class DownloadTicket {
 
 export class GetRescheduleTicket {
   static readonly type = "[booking] GetRescheduleTicket";
-  constructor(public ticket: any) {}
+  constructor(public ticket: any, public modal : any) {}
 }
 
 
@@ -134,7 +128,7 @@ export class RescheduleTicket {
 
 export class GetcancelTicket {
   static readonly type = "[booking] GetcancelTicket";
-  constructor(public ticket: any) {}
+  constructor(public ticket: any,public modal : any) {}
 }
 
 export class CancelTicket {
@@ -497,13 +491,10 @@ export class BookingState {
   }
 
   @Action(GetRescheduleTicket)
-  getrescheduleTicket(
-    states: StateContext<booking>,
-    action: GetRescheduleTicket
-  ) {
+  getrescheduleTicket(states: StateContext<booking>,action: GetRescheduleTicket) {
     const modal$ = from(
       this.modalCtrl.create({
-        component: RescheduleComponent,
+        component: action.modal,
         id: "reschedule-ticket",
       })
     ).pipe(flatMap((el) => from(el.present())));
@@ -519,7 +510,7 @@ export class BookingState {
   getcancelTicket(states: StateContext<booking>, action: GetcancelTicket) {
     const modal$ = from(
       this.modalCtrl.create({
-        component: CancellationComponent,
+        component: action.modal,
         id: "cancellation-ticket",
       })
     ).pipe(flatMap((el) => from(el.present())));

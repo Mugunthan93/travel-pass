@@ -1,11 +1,9 @@
-import { State, Store, Action, StateContext, Selector, StateStream } from '@ngxs/store';
+import { State, Store, Action, StateContext, Selector } from '@ngxs/store';
 import { flightResult, flightSearchPayload, segmentsPayload, resultFare } from 'src/app/models/search/flight';
 import { OneWayBookState } from './flight/oneway.state';
 import { OneWaySearchState } from '../search/flight/oneway.state';
 import { RoundTripSearchState } from '../search/flight/round-trip.state';
 import { MultiCitySearchState } from '../search/flight/multi-city.state';
-import { UserState } from '../user.state';
-import { CompanyState } from '../company.state';
 import { ModalController } from '@ionic/angular';
 import { DomesticBookState } from './flight/domestic.state';
 import { MultiCityBookState } from './flight/multi-city.state';

@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
-import { expenselist, ExpenseState, GetExpenseList, GetProjectList, triplist } from 'src/app/stores/expense.state';
+import { ChangeTripType, expenselist, ExpenseState, GetExpenseList, GetProjectList, triplist } from 'src/app/stores/expense.state';
 import { ModalController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
 import { map, withLatestFrom } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { EligibilityState, gradeValue } from 'src/app/stores/eligibility.state';
 import { TripComponent } from 'src/app/components/expense/trip/trip.component';
+import { UserState } from 'src/app/stores/user.state';
 
 @Component({
   selector: 'app-expense-tab',
@@ -21,6 +22,8 @@ export class ExpenseTabPage implements OnInit {
   progress$ : Observable<number>;
   domesticEligibility$ : Observable<gradeValue>;
   intEligibility$ : Observable<gradeValue>;
+  tripType$ : Observable<string>;
+  isManager$ : Observable<boolean>;
 
   constructor(
     private store : Store,
@@ -35,6 +38,7 @@ export class ExpenseTabPage implements OnInit {
     this.domesticEligibility$ = this.store.select(EligibilityState.getDomestic);
     this.intEligibility$ = this.store.select(EligibilityState.getInternational);
 
+    this.tripType$ = this.store.select(ExpenseState.getTripType);
     this.progress$ = combineLatest([this.totalSpent(),this.totalSaving()])
       .pipe(
         map(
@@ -53,7 +57,13 @@ export class ExpenseTabPage implements OnInit {
           }
         )
       );
+    
+    this.isManager$ = this.store.select(UserState.isManager);
       
+  }
+
+  tripChange(evt : CustomEvent) {
+    this.store.dispatch(new ChangeTripType(evt.detail.value));
   }
 
   tripTotalCost(trip : triplist) : Observable<number> {

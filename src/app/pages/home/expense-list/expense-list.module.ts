@@ -8,6 +8,7 @@ import { ExpenseListPageRoutingModule } from './expense-list-routing.module';
 
 import { ExpenseListPage } from './expense-list.page';
 import { ExpenseComponent } from 'src/app/components/expense/expense/expense.component';
+import { ExpenseEditComponent } from 'src/app/components/expense/expense-edit/expense-edit.component';
 
 @NgModule({
   imports: [
@@ -19,10 +20,12 @@ import { ExpenseComponent } from 'src/app/components/expense/expense/expense.com
   ],
   declarations: [
     ExpenseListPage,
-    ExpenseComponent
+    ExpenseComponent,
+    ExpenseEditComponent
   ],
   entryComponents: [
-    ExpenseComponent
+    ExpenseComponent,
+    ExpenseEditComponent
   ]
 })
 export class ExpenseListPageModule {}

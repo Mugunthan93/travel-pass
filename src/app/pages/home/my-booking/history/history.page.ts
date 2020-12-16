@@ -6,6 +6,8 @@ import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { AlertController } from '@ionic/angular';
 import { map, withLatestFrom } from 'rxjs/operators';
+import { CancellationComponent } from 'src/app/components/shared/cancellation/cancellation.component';
+import { RescheduleComponent } from 'src/app/components/shared/reschedule/reschedule.component';
 
 @Component({
   selector: "app-history",
@@ -123,10 +125,10 @@ export class HistoryPage implements OnInit {
   }
 
   rescheduleTicket(ticket : any) {
-    this.store.dispatch(new GetRescheduleTicket(ticket));
+    this.store.dispatch(new GetRescheduleTicket(ticket,RescheduleComponent));
   }
 
   cancelTicket(ticket: any) {
-    this.store.dispatch(new GetcancelTicket(ticket));
+    this.store.dispatch(new GetcancelTicket(ticket,CancellationComponent));
   }
 }

@@ -16,7 +16,6 @@ import { TrainMultiCityRequest } from './book/train/multi-city.state';
 import { from } from 'rxjs/internal/observable/from';
 import { flatMap } from 'rxjs/operators';
 import { PassengerState } from './passenger.state';
-import { BookConfirmationComponent } from '../components/shared/book-confirmation/book-confirmation.component';
 
 export interface book {
     mode: string,
@@ -67,6 +66,9 @@ export class SendRequest {
 
 export class GetSendRequest {
     static readonly type = "[book] GetSendRequest";
+    constructor(public modal : any) {
+
+    }
 }
 
 export class BookBack {
@@ -191,7 +193,10 @@ export class BookState {
     }
 
     @Action(GetSendRequest)
-    getSendRequest() {
+    getSendRequest(...params) {
+
+        let action : GetSendRequest = params[1];
+
         let passegerSelect$ = from(this.alertCtrl.create({
             header : 'Select Passenger',
             message : 'Select Your passenger to send request',
@@ -204,7 +209,7 @@ export class BookState {
          })).pipe(flatMap(el => from(el.present())));
  
          const modal$ = from(this.modalCtrl.create({
-             component: BookConfirmationComponent,
+             component: action.modal,
              id: "book-confirm",
            })).pipe(flatMap(el => from(el.present())));
  

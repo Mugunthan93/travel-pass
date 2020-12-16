@@ -52,7 +52,8 @@ ion-header {
 ion-content {
 
     ion-virtual-scroll {
-        height: -webkit-fill-available !important;
+        min-height: -webkit-fill-available;
+        margin-bottom: 20px;
         ion-card{
             margin: 20px;
             background: white;
