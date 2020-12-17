@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import * as _ from 'lodash';
 import { Store } from '@ngxs/store';
 import { buscity, city, hotelcity } from 'src/app/stores/shared.state';
 import { SelectModalComponent } from '../../shared/select-modal/select-modal.component';
 import { SearchMode } from 'src/app/stores/search.state';
 import { DateMatchValidator } from 'src/app/validator/date_match.validators';
-import { ExpenseState } from 'src/app/stores/expense.state';
+import { AddBill, AddExpense, EditExpense, expenselist, ExpenseState } from 'src/app/stores/expense.state';
 import { TripRangeValidators } from 'src/app/validator/uniq_trip_date.Validators';
 import * as moment from 'moment';
 
@@ -17,10 +17,13 @@ import * as moment from 'moment';
   styleUrls: ["./expense.component.scss"],
 })
 export class ExpenseComponent implements OnInit {
+
+  @Input() exptype : string;
+  @Input() expense : expenselist;
   
   expenseForm: FormGroup;
   travelType: string[] = ["domestic", "international"];
-  type: string[] = [
+  formtype: string[] = [
     "flight",
     "hotel",
     "bus",
@@ -53,6 +56,8 @@ export class ExpenseComponent implements OnInit {
   ngOnInit() {
 
     this.currentTrip = this.store.selectSnapshot(ExpenseState.getExpenseDates);
+    this.store.dispatch(new SearchMode('flight'));
+    this.formSubmit = false;
 
     this.expenseForm = new FormGroup({
       travel_type: new FormControl("domestic", [Validators.required]),
@@ -74,16 +79,25 @@ export class ExpenseComponent implements OnInit {
       local_travel_value : new FormControl(null),
 
       cost: new FormControl(null, [Validators.required]),
-      paid_by: new FormControl(null, [Validators.required])
+      paid_by: new FormControl(null, [Validators.required]),
+      bills : new FormArray([])
+
     });
 
+  }
+
+  addBill() {
+    this.store.dispatch(new AddBill());
+  }
+
+  ionViewDidEnter() {
+
+    if(this.exptype == 'edit'){
+      this.expenseForm.patchValue(this.expense);
+    }
+
     this.expenseForm.get('start_date').setValidators(DateMatchValidator('start_date','end_date'));
-
-    this.store.dispatch(new SearchMode('flight'));
     this.changeValidation('flight');
-
-    this.formSubmit = false;
-
   }
 
   customAlertOptions(header: string) {
@@ -167,6 +181,7 @@ export class ExpenseComponent implements OnInit {
   async getCity(field : string) {
 
     let type : string = this.expenseForm.get('type').value;
+    console.log(field,type);
     if(type == 'flight' || type == 'hotel' || type == 'bus') {
 
       const modal = await this.modalCtrl.create({
@@ -184,18 +199,22 @@ export class ExpenseComponent implements OnInit {
 
           console.log(type,selectedCity);
 
-          if(type == 'flight') {
-            let flightcity : city = selectedCity.data;
-            this.expenseForm.controls[field].patchValue(flightcity.city_name);
+          if(selectedCity.data !== null) {
+
+            if(type == 'flight') {
+              let flightcity : city = selectedCity.data;
+              this.expenseForm.controls[field].patchValue(flightcity.city_name);
+            }
+            else if(type == 'hotel') {
+              let hotlcity : hotelcity = selectedCity.data;
+              this.expenseForm.controls[field].patchValue(hotlcity.destination);
+            }
+            else if(type == 'bus') {
+              let hotlcity : buscity = selectedCity.data;
+              this.expenseForm.controls[field].patchValue(hotlcity.station_name);
+            }
           }
-          else if(type == 'hotel') {
-            let hotlcity : hotelcity = selectedCity.data;
-            this.expenseForm.controls[field].patchValue(hotlcity.destination);
-          }
-          else if(type == 'bus') {
-            let hotlcity : buscity = selectedCity.data;
-            this.expenseForm.controls[field].patchValue(hotlcity.station_name);
-          }
+
 
         }
       );
@@ -211,6 +230,15 @@ export class ExpenseComponent implements OnInit {
   addExpense() {
     this.formSubmit = true;
     console.log(this.expenseForm);
+
+    if(this.exptype == 'add') {
+      this.store.dispatch(new AddExpense(this.expenseForm.value));
+    }
+    else if(this.exptype == 'edit') {
+      let currentExpense = Object.assign(this.expense,this.expenseForm.value);
+      this.store.dispatch(new EditExpense(currentExpense));
+    }
+
   }
 
   dismiss() {

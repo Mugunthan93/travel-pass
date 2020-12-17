@@ -67,19 +67,38 @@ export class ExpenseListPage implements OnInit {
     );
   }
 
-  async getExpense(ev : CustomEvent, exp : expenselist) {
-    const popover = await this.popoverCtrl.create({
-      component : ExpenseEditComponent,
+  async addExpense() {
+    const modal = await this.modalCtrl.create({
+      component: ExpenseComponent,
       componentProps : {
-        expense : exp,
+        expense : null,
         exptype : 'add'
       },
-      event: ev,
-      cssClass : 'get-expense',
-      animated : false,
-      id: 'get-expense'
+      id: "expense",
     });
-    return await popover.present();
+    return await modal.present();
+  }
+
+  async getExpense(ev : CustomEvent, exp : expenselist) {
+
+    if(exp.paid_by == 'paid_company') {
+      return;
+    }
+    else {
+      const popover = await this.popoverCtrl.create({
+        component : ExpenseEditComponent,
+        componentProps : {
+          expense : exp,
+          exptype : 'add'
+        },
+        event: ev,
+        cssClass : 'get-expense',
+        animated : false,
+        id: 'get-expense'
+      });
+      return await popover.present();
+    }
+
   }
 
   paidBy(exp: expenselist) {
@@ -99,18 +118,6 @@ export class ExpenseListPage implements OnInit {
         return reduced;
       })
     );
-  }
-
-  async addExpense() {
-    const modal = await this.modalCtrl.create({
-      component: ExpenseComponent,
-      componentProps : {
-        expense : null,
-        type : 'add'
-      },
-      id: "expense",
-    });
-    return await modal.present();
   }
 
   back() {

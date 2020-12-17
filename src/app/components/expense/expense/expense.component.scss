@@ -43,6 +43,14 @@ ion-content {
                 }
             }
         }
+
+        ion-item-divider {
+            --padding-start: 12px;
+            ion-button {
+                --padding-end:12px;
+                --padding-start: 12px;
+            }
+        }
     }
 
 }

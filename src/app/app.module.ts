@@ -27,10 +27,10 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
-import { LimitPipe } from './pipes/limit/limit.pipe';
 import { RescheduleComponent } from './components/shared/reschedule/reschedule.component';
 import { CancellationComponent } from './components/shared/cancellation/cancellation.component';
 import { SelectModalComponent } from './components/shared/select-modal/select-modal.component';
+import { FileChooser } from '@ionic-native/file-chooser/ngx';
 
 @NgModule({
   declarations: [
@@ -65,6 +65,7 @@ import { SelectModalComponent } from './components/shared/select-modal/select-mo
     FilePath,
     File,
     FileTransfer,
+    FileChooser,
     FileOpener,
     ScreenOrientation,
     StatusBar,

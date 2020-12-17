@@ -28,6 +28,7 @@
     "@ionic-native/core": "^5.22.0-beta-1",
     "@ionic-native/deeplinks": "^5.27.0",
     "@ionic-native/file": "^5.27.0",
+    "@ionic-native/file-chooser": "^5.30.0",
     "@ionic-native/file-opener": "^5.27.0",
     "@ionic-native/file-path": "^5.27.0",
     "@ionic-native/file-transfer": "^5.27.0",
@@ -155,7 +156,8 @@
         "DEEPLINK_4_HOST": " ",
         "DEEPLINK_5_SCHEME": " ",
         "DEEPLINK_5_HOST": " "
-      }
+      },
+      "cordova-plugin-filechooser": {}
     },
     "platforms": [
       "ios",

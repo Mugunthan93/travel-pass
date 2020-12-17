@@ -45,7 +45,7 @@
             <ion-label slot="start" class="bold large">{{ (e.local_travel_value !== null ? e.local_travel_value : '') | titlecase }}</ion-label>
             <ion-row slot="end" (click)="getExpense($event,e)">
               <ion-label class="bold large">{{ e.cost | currency : 'INR' }}</ion-label>
-              <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+              <ion-icon name="ellipsis-vertical-outline" *ngIf="e.paid_by == 'paid_self'"></ion-icon>
             </ion-row>
           </ion-item>
 

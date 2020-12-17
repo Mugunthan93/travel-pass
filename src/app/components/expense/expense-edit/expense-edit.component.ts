@@ -26,9 +26,13 @@ export class ExpenseEditComponent implements OnInit {
         expense : this.expense,
         exptype : 'edit'
       },
-      id: "expense-edit",
+      id: "expense",
     });
-    await this.popoverCtrl.dismiss(null,null,'get-expense');
+
+    if(this.popoverCtrl) {
+      await this.popoverCtrl.dismiss(null,null,'get-expense');
+    }
+
     return await modal.present();
   }
 

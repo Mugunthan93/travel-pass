@@ -3,7 +3,7 @@ import { HTTPResponse } from '@ionic-native/http/ngx';
 import { from, Observable } from 'rxjs';
 import { NativeHttpService } from '../http/native-http/native-http.service';
 import * as moment from 'moment';
-import { expensepayload, trippayload } from 'src/app/stores/expense.state';
+import { expenselist, expensepayload, trippayload } from 'src/app/stores/expense.state';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -60,7 +60,7 @@ export class ExpenseService {
     return from(this.http.post("/tripexpense/", expPayload));
   }
 
-  updateExpense(expPayload: expensepayload): Observable<HTTPResponse> {
+  updateExpense(expPayload: expenselist): Observable<HTTPResponse> {
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setData('json');
     return from(this.http.put("/tripexpense/", expPayload));

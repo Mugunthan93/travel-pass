@@ -1,12 +1,15 @@
 import { ModalController } from '@ionic/angular';
 import { Navigate } from '@ngxs/router-plugin';
-import { Action, NgxsOnChanges, NgxsSimpleChange, Selector, State, StateContext, Store } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import * as moment from 'moment';
 import { concat, forkJoin, from, of } from 'rxjs';
-import { flatMap, mergeMap, toArray, withLatestFrom, first } from 'rxjs/operators';
+import { flatMap, mergeMap, toArray, withLatestFrom, first, map } from 'rxjs/operators';
 import { ExpenseService } from '../services/expense/expense.service';
 import { UserState } from './user.state';
 import * as _ from 'lodash';
+import { HTTPResponse } from '@ionic-native/http/ngx';
+import { FileChooser } from '@ionic-native/file-chooser/ngx';
+
 
 export interface expense {
     trips : triplist[],
@@ -64,7 +67,7 @@ export interface projectList {
     accounts_approval: any;
     approved_accounts: any;
     approved_manager: any;
-    attachementpath: { bills: [] };
+    attachementpath: bills;
     cost: number
     eligible_amount: number
     end_city: string
@@ -79,13 +82,23 @@ export interface projectList {
     type: string
 }
 
+export interface bill {
+  name: string
+  size: number
+  type: string
+  uploaded: boolean
+}
+
+export interface bills {
+  bills : bill[]
+}
+
+
 export interface expenselist {
     accounts_approval: any
     approved_accounts: any
     approved_manager: any
-    attachementpath: {
-        bills: any[]
-    }
+    attachementpath: bills
     cost: number
     createdAt: string
     eligible_amount: number
@@ -150,9 +163,23 @@ export class AddExpense {
   }
 }
 
+export class EditExpense {
+  static readonly type = "[expense] EditExpense";
+  constructor(public expense: expenselist) {
+
+  }
+}
+
 export class ChangeTripType {
   static readonly type = "[expense] ChangeTripType";
   constructor(public type: string) {
+
+  }
+}
+
+export class AddBill {
+  static readonly type = "[expense AddBill]";
+  constructor() {
 
   }
 }
@@ -179,7 +206,8 @@ export class ExpenseState {
   constructor(
     private store: Store,
     private expenseService: ExpenseService,
-    public modalCtrl: ModalController
+    public modalCtrl: ModalController,
+    private fileChooser : FileChooser
   ) {}
 
   @Selector()
@@ -484,7 +512,49 @@ export class ExpenseState {
   }
 
   @Action(AddExpense)
-  addExpense() {
-    
+  addExpense(...el) {
+    // states: StateContext<any>, action: AddExpense
+    let action = el[1];
+    return this.expenseService.createExpense(action.expense)
+      .pipe(
+        map(
+          (response : HTTPResponse) => {
+            if(response.status == 200) {
+              return from(this.modalCtrl.dismiss(null,null,'expense'));
+            }
+          }
+        )
+      );
+  }
+
+  @Action(EditExpense)
+  editExpense(...el) {
+    // states: StateContext<any>, action: AddExpense
+    let action = el[1];
+    return this.expenseService.updateExpense(action.expense)
+    .pipe(
+      map(
+        (response : HTTPResponse) => {
+          if(response.status == 200) {
+            return from(this.modalCtrl.dismiss(null,null,'expense'));
+          }
+        }
+      )
+    );
+  }
+
+  @Action(AddBill)
+  addBill(...el) {
+    // states: StateContext<any>, action: AddExpense
+    let action = el[1];
+    console.log(this.fileChooser);
+    return from(this.fileChooser.open())
+      .pipe(
+        map(
+          (uri) => {
+            console.log(uri);
+          }
+        )
+      )
   }
 }
