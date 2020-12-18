@@ -111,7 +111,6 @@
         </ion-radio-group>
       </ion-item>
       <ion-row *ngIf="expenseForm.controls['paid_by'].hasError('required') && formSubmit">
-        
         <ion-label color="danger">Paid By Required</ion-label>
       </ion-row>
 
@@ -122,7 +121,10 @@
         </ion-button>
       </ion-item-divider>
 
-      <ion-item></ion-item>
+      <ion-item *ngFor="let bill of expenseForm.controls['bills'].value; let i = index">
+        <ion-label class="large bold">{{ bill.name }}</ion-label>
+        <ion-icon name="close-sharp" (click)="deleteBill(i)"></ion-icon>
+      </ion-item>
 
     </ion-list>
   </form>

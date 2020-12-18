@@ -3,7 +3,7 @@
     <name>TravellersPass</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework.com" href="http://ionicframework.com/">Ionic Framework Team</author>
-    <content original-src="index.html" src="http://0.0.0.0:8100" />
+    <content original-src="index.html" src="http://0.0.0.0:5038" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -113,4 +113,5 @@
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <plugin name="cordova-plugin-googlemaps" spec="^2.7.0" />
     <allow-navigation href="http://0.0.0.0:8100" sessionid="b7398b0e" />
+    <allow-navigation href="http://0.0.0.0:5038" sessionid="f9ce7d0e" />
 </widget>

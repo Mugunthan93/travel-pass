@@ -3,8 +3,7 @@ import { Platform, AlertController } from '@ionic/angular';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { AndroidFullScreen } from '@ionic-native/android-full-screen/ngx';
 import { File } from '@ionic-native/file/ngx';
-import { concat, forkJoin, from, Observable, of } from 'rxjs';
-import { catchError, flatMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { ThemeState } from './stores/theme.stata';
 

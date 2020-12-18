@@ -57,6 +57,7 @@ export class ExpenseListPage implements OnInit {
                     value: val,
                   };
                 })
+                .sortBy((o) => moment(o.date))
                 .value(),
             };
           })

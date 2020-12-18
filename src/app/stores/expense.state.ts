@@ -177,14 +177,6 @@ export class ChangeTripType {
   }
 }
 
-export class AddBill {
-  static readonly type = "[expense AddBill]";
-  constructor() {
-
-  }
-}
-
-
 @State<expense>({
   name: "expense",
   defaults: {
@@ -519,6 +511,7 @@ export class ExpenseState {
       .pipe(
         map(
           (response : HTTPResponse) => {
+            console.log(response);
             if(response.status == 200) {
               return from(this.modalCtrl.dismiss(null,null,'expense'));
             }
@@ -541,20 +534,5 @@ export class ExpenseState {
         }
       )
     );
-  }
-
-  @Action(AddBill)
-  addBill(...el) {
-    // states: StateContext<any>, action: AddExpense
-    let action = el[1];
-    console.log(this.fileChooser);
-    return from(this.fileChooser.open())
-      .pipe(
-        map(
-          (uri) => {
-            console.log(uri);
-          }
-        )
-      )
   }
 }
