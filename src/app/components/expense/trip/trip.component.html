@@ -44,8 +44,12 @@
 
       <ion-item>
         <ion-label position="floating">Start Date</ion-label>
-        <ion-input type="date" formControlName="start_date" enterkeyhint="next"></ion-input>
+        <ion-input type="date" formControlName="start_date" enterkeyhint="next">
+        </ion-input>
       </ion-item>
+      <ion-row *ngIf="tripForm.controls['start_date'].hasError('mismatch')">
+        <ion-label color="danger">End Date won't come before Start Date</ion-label>
+      </ion-row>
       <ion-row *ngIf="tripForm.controls['start_date'].hasError('hasDate')">
         <ion-label color="danger">You already had a trip in this date,Try other dates</ion-label>
       </ion-row>

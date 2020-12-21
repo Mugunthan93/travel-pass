@@ -38,13 +38,23 @@ export class TripComponent implements OnInit {
       trip_name: new FormControl(null, [Validators.required]),
       project_name: new FormControl(null, [Validators.required]),
       claim_type: new FormControl(null, [Validators.required],),
-      start_date: new FormControl(null, [Validators.required],[UniqTripValidators(this.tripDate$)]),
+      start_date: new FormControl(null, [Validators.required]),
       end_date: new FormControl(null, [Validators.required]),
       select_manager: new FormControl(null, [Validators.required]),
+    },{
+      updateOn : 'change'
     });
 
     this.projectName$ = this.store.select(ExpenseState.getProjectList);
     this.manager$ = this.store.select(CompanyState.getManagerList);
+
+    this.tripForm
+    .get("start_date")
+    .setValidators([DateMatchValidator("start_date", "end_date")]);
+
+    this.tripForm
+      .get("start_date")
+      .setAsyncValidators([UniqTripValidators(this.tripDate$)]);
 
     this.tripForm
       .get("end_date")
@@ -63,19 +73,20 @@ export class TripComponent implements OnInit {
   }
 
   addTrip() {
+    console.log(this.tripForm);
     if (this.tripForm.valid) {
       let payload: trippayload = {
         e_flag: 0,
         endCity: "",
         endDate: moment(this.tripForm.value.end_date).format(
-          "YYYY-MM-DD 00:00:01.000+00:00"
+          "YYYY-MM-DDT18:30:00.000Z"
         ),
         manager_approval: 0,
         manager_id: (this.tripForm.value.select_manager as user).id,
         project_id: (this.tripForm.value.project_name as projectList).id,
         startCity: "",
         startDate: moment(this.tripForm.value.start_date).format(
-          "YYYY-MM-DD 00:00:01.000+00:00"
+          "YYYY-MM-DDT18:30:00.000Z"
         ),
         status: "new",
         travelled_by: this.userId,

@@ -1,6 +1,6 @@
 import { ModalController } from '@ionic/angular';
 import { Navigate } from '@ngxs/router-plugin';
-import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { Action, NgxsOnChanges, NgxsSimpleChange, Selector, State, StateContext, Store } from '@ngxs/store';
 import * as moment from 'moment';
 import { concat, forkJoin, from, of } from 'rxjs';
 import { flatMap, mergeMap, toArray, withLatestFrom, first, map } from 'rxjs/operators';
@@ -9,6 +9,7 @@ import { UserState } from './user.state';
 import * as _ from 'lodash';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
+import { EligibilityState } from './eligibility.state';
 
 
 export interface expense {
@@ -22,6 +23,8 @@ export interface expense {
     loading : boolean
     currentTrip : triplist
     tripType : string
+    expenseSelect: boolean
+    sendExp: expenselist[]
 }
 
 export interface triplist {
@@ -78,6 +81,7 @@ export interface projectList {
     start_city: string
     start_date: string
     status: string
+    travel_type: string
     trip_id: number
     type: string
 }
@@ -177,6 +181,24 @@ export class ChangeTripType {
   }
 }
 
+export class SelectState {
+  static readonly type = "[expense] SelectState";
+  constructor(public state: boolean) {
+
+  }
+}
+
+export class DeleteExpense {
+  static readonly type = "[expense] DeleteExpense";
+  constructor(public exp: expenselist[]) {
+
+  }
+}
+
+export class SendExpense {
+  static readonly type = "[expense] SendExpense";
+}
+
 @State<expense>({
   name: "expense",
   defaults: {
@@ -184,16 +206,18 @@ export class ChangeTripType {
     approvalTrip : [],
     expenses: [],
     approveExpenses : [],
-    enddate: moment({}).subtract(1, "months"),
+    enddate: moment({}).subtract(1, "month"),
     startdate: moment({}),
     projectList: [],
     loading: false,
     currentTrip: null,
-    tripType : 'mytrips'
+    tripType : 'mytrips',
+    expenseSelect : false,
+    sendExp : []
   },
 })
 
-export class ExpenseState {
+export class ExpenseState implements NgxsOnChanges {
 
   constructor(
     private store: Store,
@@ -201,6 +225,10 @@ export class ExpenseState {
     public modalCtrl: ModalController,
     private fileChooser : FileChooser
   ) {}
+
+  ngxsOnChanges(change: NgxsSimpleChange<any>): void {
+    console.log(change);
+  }
 
   @Selector()
   static getProjectList(state: expense): projectList[] {
@@ -273,6 +301,18 @@ export class ExpenseState {
   @Selector()
   static getTripType(state: expense): string {
     return state.tripType;
+  }
+
+  @Selector()
+  static getSelectState(state: expense) : boolean {
+    return state.expenseSelect;
+  }
+
+  @Action(SelectState)
+  selectState(states: StateContext<expense>, action : SelectState) {
+    states.patchState({
+      expenseSelect : action.state
+    });
   }
 
   @Action(ChangeTripType)
@@ -357,18 +397,21 @@ export class ExpenseState {
           }
         });
 
-        response[1].forEach((res) => {
-          if (res.status == 200) {
-            let data: expenselist[] = JSON.parse(res.data);
-            let currentexpense: expenselist[] = Object.assign(
-              states.getState().expenses
-            );
-            let finalexpenses: expenselist[] = currentexpense.concat(data);
-            states.patchState({
-              approveExpenses: finalexpenses,
-            });
-          }
-        });
+        if(response[1].length >= 1) {
+          response[1].forEach((res) => {
+            if (res.status == 200) {
+              let data: expenselist[] = JSON.parse(res.data);
+              let currentexpense: expenselist[] = Object.assign(
+                states.getState().expenses
+              );
+              let finalexpenses: expenselist[] = currentexpense.concat(data);
+              states.patchState({
+                approveExpenses: finalexpenses,
+              });
+            }
+          });
+        } 
+
 
         states.patchState({
           loading: false,
@@ -468,6 +511,7 @@ export class ExpenseState {
           end_city: flightsTrip.trip_requests.Segments[0].DestinationName,
           end_date: flightsTrip.trip_requests.Segments[0].PreferredArrivalTime,
           manager_approval: null,
+          travel_type: this.getTravelType(flightsTrip),
           no_of_days: moment(
             flightsTrip.trip_requests.Segments[0].PreferredArrivalTime
           ).diff(
@@ -504,15 +548,24 @@ export class ExpenseState {
   }
 
   @Action(AddExpense)
-  addExpense(...el) {
-    // states: StateContext<any>, action: AddExpense
-    let action = el[1];
-    return this.expenseService.createExpense(action.expense)
+  addExpense(states: StateContext<expense>, action: AddExpense) {
+    let expense : expensepayload = Object.assign({},action.expense);
+    expense.start_date = moment(expense.start_date).format("YYYY-MM-DDT06:30:00.000Z");
+    expense.end_date = moment(expense.end_date).format("YYYY-MM-DDT06:30:00.000Z");
+    expense.trip_id = states.getState().currentTrip.id;
+    expense.status = "new";
+    expense.eligible_amount = this.eligibleAmount(expense.travel_type,expense.type);
+
+
+    return this.expenseService.createExpense(expense)
       .pipe(
         map(
           (response : HTTPResponse) => {
             console.log(response);
+            let exp = JSON.parse(response.data);
+            console.log(exp);
             if(response.status == 200) {
+              states.dispatch(new GetTripList());
               return from(this.modalCtrl.dismiss(null,null,'expense'));
             }
           }
@@ -521,18 +574,49 @@ export class ExpenseState {
   }
 
   @Action(EditExpense)
-  editExpense(...el) {
-    // states: StateContext<any>, action: AddExpense
-    let action = el[1];
-    return this.expenseService.updateExpense(action.expense)
+  editExpense(states: StateContext<any>, action: EditExpense) {
+    return this.expenseService.updateExpense([action.expense])
     .pipe(
       map(
         (response : HTTPResponse) => {
+          console.log(response);
+          let exp = JSON.parse(response.data);
+          console.log(exp);
           if(response.status == 200) {
+            states.dispatch(new GetTripList());
             return from(this.modalCtrl.dismiss(null,null,'expense'));
           }
         }
       )
     );
   }
+
+  @Action(DeleteExpense)
+  deleteExpense(states: StateContext<expense>, action: DeleteExpense) {
+    return this.expenseService.updateExpense(action.exp)
+      .pipe(
+        map(
+          (response) => {
+            console.log(response);
+            if(response.status == 200) {
+              return states.dispatch(new GetTripList());
+            }
+          }
+        )
+      );
+  }
+
+
+  eligibleAmount(traveltype : string, type : string) {
+    switch(traveltype) {
+      case "domestic" : return this.store.selectSnapshot(EligibilityState.getDomestic)[type];
+      case "international" : return this.store.selectSnapshot(EligibilityState.getInternational)[type];
+    }
+  }
+
+  getTravelType(flightDetail : any) : string{
+    return (flightDetail.trip_requests.Segments as Array<any>)
+      .every(el => el.DestinationCountryCode == el.OriginCountryCode) ? 'domestic' : 'international';
+  }
+
 }

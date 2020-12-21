@@ -60,7 +60,7 @@ export class ExpenseService {
     return from(this.http.post("/tripexpense/create", expPayload));
   }
 
-  updateExpense(expPayload: expenselist): Observable<HTTPResponse> {
+  updateExpense(expPayload: expenselist[]): Observable<HTTPResponse> {
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setData('json');
     return from(this.http.put("/tripexpense/", expPayload));

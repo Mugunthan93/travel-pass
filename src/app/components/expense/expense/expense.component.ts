@@ -72,11 +72,16 @@ export class ExpenseComponent implements OnInit {
       travel_type: this.fb.control("domestic", [Validators.required]),
       type: this.fb.control('flight', [Validators.required]),
 
-      start_date: this.fb.control(null,[TripRangeValidators(this.currentTrip)]),
+      start_date: this.fb.control(null,{
+        validators : [TripRangeValidators(this.currentTrip)],
+        updateOn : 'change'
+      }),
       start_city: this.fb.control(null,[Validators.required]),
 
       //flight,bus,train,hotel,food
-      end_date: this.fb.control(null),
+      end_date: this.fb.control(null,{
+        updateOn : 'change'
+      }),
 
       //flight,bus,train,local,other
       end_city: this.fb.control(null),
@@ -89,16 +94,20 @@ export class ExpenseComponent implements OnInit {
 
       cost: this.fb.control(null, [Validators.required]),
       paid_by: this.fb.control(null, [Validators.required]),
-      bills : new FormArray([])
+      attachementpath : this.fb.group({
+        bills : new FormArray([])
+      })
 
-    },{
-      updateOn : 'change'
     });
 
-    this.bills = this.expenseForm.get('bills') as FormArray;
+    this.bills = this.expenseForm.get('attachementpath.bills') as FormArray;
 
     // this.expenseForm.get('start_date').setValidators(DateMatchValidator('start_date','end_date'));
     this.changeValidation('flight');
+  }
+
+  billArray() {
+    return this.expenseForm.get('attachementpath.bills').value;
   }
 
   async addBill() {
@@ -215,13 +224,18 @@ export class ExpenseComponent implements OnInit {
 
     let type : string = this.expenseForm.get('type').value;
     console.log(field,type);
-    if(type == 'flight' || type == 'hotel' || type == 'bus') {
+    if(type == 'flight' || type == 'hotel' || type == 'bus' || type == 'train') {
+
+      let currentTitle = (type == 'train') ? 'Station' : 'city'; 
+      let props = {
+        title: currentTitle,
+        category: this.expenseForm.get('travel_type').value
+      }
+      console.log(props);
 
       const modal = await this.modalCtrl.create({
         component: SelectModalComponent,
-        componentProps: {
-          title: 'city'
-        },
+        componentProps: props,
       });
   
       modal.onDidDismiss().then(
@@ -242,7 +256,7 @@ export class ExpenseComponent implements OnInit {
               let hotlcity : hotelcity = selectedCity.data;
               this.expenseForm.controls[field].patchValue(hotlcity.destination);
             }
-            else if(type == 'bus') {
+            else if(type == 'bus' || type == 'train') {
               let hotlcity : buscity = selectedCity.data;
               this.expenseForm.controls[field].patchValue(hotlcity.station_name);
             }

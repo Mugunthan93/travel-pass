@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { combineLatest, Observable } from 'rxjs';
-import { expenselist, ExpenseState, triplist } from 'src/app/stores/expense.state';
+import { DeleteExpense, expenselist, ExpenseState, SelectState, SendExpense, triplist } from 'src/app/stores/expense.state';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { map, withLatestFrom } from 'rxjs/operators';
@@ -16,9 +16,12 @@ import { ExpenseEditComponent } from 'src/app/components/expense/expense-edit/ex
   styleUrls: ["./expense-list.page.scss"],
 })
 export class ExpenseListPage implements OnInit {
+
   expenses$: Observable<expenselist[]>;
   expensesList$: Observable<any[]>;
   currentTrip$: Observable<triplist>;
+
+  enableExp$ : Observable<boolean>;
 
   constructor(
     private store: Store,
@@ -27,8 +30,10 @@ export class ExpenseListPage implements OnInit {
   ) { }
 
   ngOnInit() {
+
     this.currentTrip$ = this.store.select(ExpenseState.getCurrentTrip);
     this.expenses$ = this.store.select(ExpenseState.getExpenseList);
+
     this.expensesList$ = this.expenses$.pipe(
       withLatestFrom(this.currentTrip$),
       map((exp) => {
@@ -66,6 +71,7 @@ export class ExpenseListPage implements OnInit {
         return grpedExpense;
       })
     );
+    this.enableExp$ = this.store.select(ExpenseState.getSelectState);
   }
 
   async addExpense() {
@@ -119,6 +125,22 @@ export class ExpenseListPage implements OnInit {
         return reduced;
       })
     );
+  }
+
+  changeState(state : boolean) {
+    this.store.dispatch(new SelectState(state));
+  }
+
+  selectExpense(evt : CustomEvent) {
+    console.log(evt);
+  }
+
+  sendExpense() {
+    this.store.dispatch(new SendExpense());
+  }
+
+  deleteExpense(exp : expenselist[]) {
+    this.store.dispatch(new DeleteExpense(exp));
   }
 
   back() {

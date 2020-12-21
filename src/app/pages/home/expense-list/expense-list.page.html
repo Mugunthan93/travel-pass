@@ -14,8 +14,17 @@
     <ion-label>Total Expenses</ion-label>
     <ion-label class="total">{{ totalCost() | async | currency : 'INR' }}</ion-label>
     <ion-buttons>
+      <ion-button (click)="changeState(true)" *ngIf="(enableExp$ | async) == false">
+        <ion-label>Select</ion-label>
+      </ion-button>
+      <ion-button (click)="sendExpense(false)" *ngIf="(enableExp$ | async) == true">
+        <ion-label>send</ion-label>
+      </ion-button>
+      <ion-button (click)="changeState(false)" *ngIf="(enableExp$ | async) == true">
+        <ion-label>Cancel</ion-label>
+      </ion-button>
       <ion-button (click)="addExpense()">
-        <ion-label>Add Expense</ion-label>
+        <ion-label>Add</ion-label>
       </ion-button>
     </ion-buttons>
   </ion-row>
@@ -29,7 +38,7 @@
         <ion-label class="bold large">{{ expense.type | titlecase }}</ion-label>
         <ion-row>
           <ion-label class="bold large">{{ expense.total | currency : 'INR' }}</ion-label>
-          <ion-button>
+          <ion-button (click) ="deleteExpense(expense.value)">
             <ion-icon name="close-sharp"></ion-icon>
           </ion-button>
         </ion-row>
@@ -41,8 +50,11 @@
             {{ exp.date | date : 'dd LLL EEEE' }}
           </ion-label>
 
-          <ion-item *ngFor="let e of exp.value">
-            <ion-label slot="start" class="bold large">{{ (e.local_travel_value !== null ? e.local_travel_value : '') | titlecase }}</ion-label>
+          <ion-item *ngFor="let e of exp.value;let i = index">
+            <ion-row slot="start">
+              <ion-checkbox *ngIf="(enableExp$ | async)" class="default" id="i" [value]="e" (ionChange)="selectExpense($event)"></ion-checkbox>
+              <ion-label class="bold large">{{ (e.local_travel_value !== null ? e.local_travel_value : '') | titlecase }}</ion-label>
+            </ion-row>
             <ion-row slot="end" (click)="getExpense($event,e)">
               <ion-label class="bold large">{{ e.cost | currency : 'INR' }}</ion-label>
               <ion-icon name="ellipsis-vertical-outline" *ngIf="e.paid_by == 'paid_self'"></ion-icon>

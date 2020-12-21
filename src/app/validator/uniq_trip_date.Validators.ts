@@ -12,21 +12,26 @@ export function UniqTripValidators(tripDates$ : Observable<any[]>)
             .pipe(
                 map(
                     (tripDates) => {
-                            console.log(control);
+                            // console.log(tripDates);
                             let selectedDate = control.value;
+
+                            if(control.value == null) {
+                                return null;
+                            }
+
                             let datePresence = tripDates.some(
                                 (date) => {
-                                    return moment(selectedDate).isBetween(date.startDate,date.endDate);
+                                    console.log(date);
+                                    let afterStart = moment(selectedDate).isSameOrAfter(date.startDate,'date');
+                                    let beforeEnd = moment(selectedDate).isSameOrBefore(date.endDate,'date');
+                                    return afterStart && beforeEnd;
                                 }
                             );
-                            console.log(control,datePresence);
+                            // console.log(control,datePresence);
                             if(datePresence) {
                                 return {
                                     'hasDate' : true
                                 }
-                            }
-                            else {
-                                return null; 
                             }
                         }
                 ),
@@ -38,24 +43,24 @@ export function UniqTripValidators(tripDates$ : Observable<any[]>)
 export function TripRangeValidators(tripDates : any)
 {
     return (control: AbstractControl): ValidationErrors | null => {
-        if(control.value == null) {
-            return {
-                required : true
-            }
-        }
-        else {
-            let selectedDate = moment(moment(control.value).format("YYYY-MM-DD 00:00:01.000+00:00")).add(1,'second');
-            let datePresence = moment(selectedDate).isBetween(tripDates.startDate,tripDates.endDate);
-            console.log(control.value,tripDates.startDate,tripDates.endDate,datePresence);
-            if(datePresence) {
-                return null;
+
+        // console.log(tripDates);
+        let selectedDate = control.value;
+
+        if(control.value !== null) {
+            let range = moment(selectedDate).isBetween(tripDates.startDate, tripDates.endDate, 'date', '[]');
+            console.log(range);
+            if(!range) {
+                return {
+                    "outOfRange" : true
+                };
             }
             else {
-                return {
-                    'outOfRange' : true
-                }
+                return null;
             }
         }
+        return null;
+
 
     }
 }

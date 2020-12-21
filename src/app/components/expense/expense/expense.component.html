@@ -49,21 +49,24 @@
         <ion-label position="floating">Start Date</ion-label>
         <ion-input type="date" formControlName="start_date" enterkeyhint="next"></ion-input>
       </ion-item>
-      <ion-row *ngIf="expenseForm.controls['start_date'].hasError('required') && formSubmit">
+      <ion-row *ngIf="expenseForm.controls['start_date'].hasError('required') || formSubmit">
         <ion-label color="danger">Start Date Required</ion-label>
       </ion-row>
-      <ion-row *ngIf="expenseForm.controls['start_date'].hasError('outOfRange') && formSubmit">
+      <ion-row *ngIf="expenseForm.controls['start_date'].hasError('outOfRange') || formSubmit">
         <ion-label color="danger">Selected Date is out of range from current trip date</ion-label>
+      </ion-row>
+      <ion-row *ngIf="expenseForm.controls['start_date'].hasError('mismatch')">
+        <ion-label color="danger">Start Date won't come after End Date</ion-label>
       </ion-row>
 
       <ion-item [hidden]="hideItem('end_date')">
         <ion-label position="floating">End Date</ion-label>
         <ion-input type="date" formControlName="end_date" enterkeyhint="next"></ion-input>
       </ion-item>
-      <ion-row *ngIf="expenseForm.controls['end_date'].hasError('required') && formSubmit">
+      <ion-row *ngIf="expenseForm.controls['end_date'].hasError('required') || formSubmit">
         <ion-label color="danger">End Date Required</ion-label>
       </ion-row>
-      <ion-row *ngIf="expenseForm.controls['end_date'].hasError('outOfRange') && formSubmit">
+      <ion-row *ngIf="expenseForm.controls['end_date'].hasError('outOfRange') || formSubmit">
         <ion-label color="danger">Selected Date is out of range from current trip date</ion-label>
       </ion-row>
       <ion-row *ngIf="expenseForm.controls['end_date'].hasError('mismatch')">
@@ -121,7 +124,7 @@
         </ion-button>
       </ion-item-divider>
 
-      <ion-item *ngFor="let bill of expenseForm.controls['bills'].value; let i = index">
+      <ion-item *ngFor="let bill of billArray(); let i = index">
         <ion-label class="large bold">{{ bill.name }}</ion-label>
         <ion-icon name="close-sharp" (click)="deleteBill(i)"></ion-icon>
       </ion-item>
