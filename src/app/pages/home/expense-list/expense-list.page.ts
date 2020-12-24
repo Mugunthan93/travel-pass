@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { combineLatest, Observable } from 'rxjs';
-import { DeleteExpense, expenselist, ExpenseState, SelectState, SendExpense, triplist } from 'src/app/stores/expense.state';
+import { DeleteExpense, DeselectExpense, expenselist, ExpenseState, SelectExpense, SelectState, SendExpense, triplist } from 'src/app/stores/expense.state';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { map, withLatestFrom } from 'rxjs/operators';
@@ -22,6 +22,9 @@ export class ExpenseListPage implements OnInit {
   currentTrip$: Observable<triplist>;
 
   enableExp$ : Observable<boolean>;
+  selectdisable$ : Observable<boolean>;
+  tripType$ : Observable<string>;
+  sendExp$: Observable<expenselist[]>;
 
   constructor(
     private store: Store,
@@ -33,6 +36,8 @@ export class ExpenseListPage implements OnInit {
 
     this.currentTrip$ = this.store.select(ExpenseState.getCurrentTrip);
     this.expenses$ = this.store.select(ExpenseState.getExpenseList);
+    this.selectdisable$ = this.store.select(ExpenseState.SelectDisable);
+    this.tripType$ = this.store.select(ExpenseState.getTripType);
 
     this.expensesList$ = this.expenses$.pipe(
       withLatestFrom(this.currentTrip$),
@@ -72,6 +77,7 @@ export class ExpenseListPage implements OnInit {
       })
     );
     this.enableExp$ = this.store.select(ExpenseState.getSelectState);
+    this.sendExp$ = this.store.select(ExpenseState.getSendExp);
   }
 
   async addExpense() {
@@ -132,15 +138,48 @@ export class ExpenseListPage implements OnInit {
   }
 
   selectExpense(evt : CustomEvent) {
-    console.log(evt);
+    if(evt.detail.checked) {
+      this.store.dispatch(new SelectExpense(evt.detail.value));
+    }
+    else {
+      this.store.dispatch(new DeselectExpense(evt.detail.value));
+    }
   }
 
-  sendExpense() {
-    this.store.dispatch(new SendExpense());
+  sendExpense(status : string) {
+    this.store.dispatch(new SendExpense(status));
   }
 
-  deleteExpense(exp : expenselist[]) {
-    this.store.dispatch(new DeleteExpense(exp));
+  deleteExpense(exp : any[]) {
+    let explist : expenselist[] = exp.reduce(
+      (acc,curr) => {
+        console.log(acc,curr);
+        return [...curr.value];
+      },[]
+    );
+    console.log(explist);
+    let number : number[] = explist.map(el => el.id);
+    this.store.dispatch(new DeleteExpense(number));
+  }
+
+  status(exp : expenselist) : string {
+    switch(exp.status) {
+      case 'new' : return 'new';
+      case 'manager_approved' : return 'approved';
+      case 'manager_rejected': return 'rejected';
+      case 'review' : return 'review';
+    }
+  }
+
+  checked(e : expenselist) : Observable<boolean> {
+    return this.sendExp$
+      .pipe(
+        map(
+          (exp : expenselist[]) => {
+            return exp.some(el => _.isEqual(el,e));
+          }
+        )
+      );
   }
 
   back() {

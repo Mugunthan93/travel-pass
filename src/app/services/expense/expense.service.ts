@@ -5,6 +5,8 @@ import { NativeHttpService } from '../http/native-http/native-http.service';
 import * as moment from 'moment';
 import { expenselist, expensepayload, trippayload } from 'src/app/stores/expense.state';
 import { environment } from 'src/environments/environment';
+import * as _ from 'lodash';
+import { FileTransfer, FileTransferObject, FileUploadResult } from '@ionic-native/file-transfer/ngx';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,8 @@ import { environment } from 'src/environments/environment';
 export class ExpenseService {
 
   constructor(
-    private http : NativeHttpService
+    private http : NativeHttpService,
+    private fileTransfer: FileTransfer
   ) { }
 
 
@@ -66,34 +69,53 @@ export class ExpenseService {
     return from(this.http.put("/tripexpense/", expPayload));
   }
 
-  sendApproval(expPayload: expensepayload): Observable<HTTPResponse> {
+  deleteExpense(expId: number) : Observable<HTTPResponse> {
+    return from(this.http.delete("/tripexpense/"+expId.toString(),{}));
+  }
+
+  sendApproval(expPayload: expenselist[]): Observable<HTTPResponse> {
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setData('json');
 
-    let sendExp = expPayload;
-    sendExp.status = 'review';
+    let sendExp : expenselist[] = Object.assign([],_.map(expPayload,(o) => {
+      let exp : expenselist = Object.assign({},o);
+      exp.status = 'review';
+      return exp;
+    }));
 
     return from(this.http.put("/tripexpense/", sendExp));
   }
 
-  approveExpense(expPayload: expensepayload): Observable<HTTPResponse> {
+  approveExpense(expPayload: expenselist[]): Observable<HTTPResponse> {
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setData('json');
 
-    let approveExp = expPayload;
-    approveExp.status = 'manager_approved';
+    let approveExp : expenselist[] = Object.assign([],_.map(expPayload,(o) => {
+      let exp : expenselist = Object.assign({},o);
+      exp.status = 'manager_approved';
+      return exp;
+    }));
 
     return from(this.http.put("/tripexpense/", approveExp));
   }
 
-  rejectExpense(expPayload: expensepayload): Observable<HTTPResponse> {
+  rejectExpense(expPayload: expenselist[]): Observable<HTTPResponse> {
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setData('json');
 
-    let rejectExp = expPayload;
-    rejectExp.status = 'manager_rejected';
+    let rejExp : expenselist[] = Object.assign([],_.map(expPayload,(o) => {
+      let exp : expenselist = Object.assign({},o);
+      exp.status = 'manager_rejected';
+      return exp;
+    }));
 
-    return from(this.http.put("/tripexpense/", expPayload));
+    return from(this.http.put("/tripexpense/", rejExp));
+  }
+
+  uploadBill(path : string) : Observable<FileUploadResult> {
+    const transferObject : FileTransferObject = this.fileTransfer.create();
+    let url : string = "/tripexpense/expense/uploadBill";
+    return from(transferObject.upload(path,url));
   }
 
 

@@ -113,4 +113,7 @@
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <plugin name="cordova-plugin-googlemaps" spec="^2.7.0" />
     <allow-navigation href="http://0.0.0.0:*" sessionid="*" />
+    <allow-navigation href="http://0.0.0.0:8101" sessionid="6024c560" />
+    <allow-navigation href="http://192.168.1.7:8100" sessionid="75ed7d06" />
+    <allow-navigation href="http://192.168.1.11:8100" sessionid="4d6c5720" />
 </widget>

@@ -7,7 +7,7 @@ import { buscity, city, hotelcity } from 'src/app/stores/shared.state';
 import { SelectModalComponent } from '../../shared/select-modal/select-modal.component';
 import { SearchMode } from 'src/app/stores/search.state';
 import { DateMatchValidator } from 'src/app/validator/date_match.validators';
-import { AddExpense, EditExpense, expenselist, ExpenseState } from 'src/app/stores/expense.state';
+import { AddExpense, EditExpense, expenselist, ExpenseState, UploadBill } from 'src/app/stores/expense.state';
 import { TripRangeValidators } from 'src/app/validator/uniq_trip_date.Validators';
 import * as moment from 'moment';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
@@ -111,12 +111,13 @@ export class ExpenseComponent implements OnInit {
   }
 
   async addBill() {
-    console.log(this.fileChooser);
-    let url = await this.fileChooser.open();
-    let URL = await this.filePath.resolveNativePath(url);
-    let UrlSegment = URL.split('/');
-    let name = UrlSegment[UrlSegment.length - 1];
-    this.bills.push(this.createBill(url,name));
+    // console.log(this.fileChooser);
+    // let url = await this.fileChooser.open();
+    // let URL = await this.filePath.resolveNativePath(url);
+    // let UrlSegment = URL.split('/');
+    // let name = UrlSegment[UrlSegment.length - 1];
+    // this.bills.push(this.createBill(url,name));
+    this.store.dispatch(new UploadBill());
   }
 
   createBill(url : string, name : string) {

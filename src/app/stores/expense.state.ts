@@ -2,14 +2,18 @@ import { ModalController } from '@ionic/angular';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, NgxsOnChanges, NgxsSimpleChange, Selector, State, StateContext, Store } from '@ngxs/store';
 import * as moment from 'moment';
-import { concat, forkJoin, from, of } from 'rxjs';
-import { flatMap, mergeMap, toArray, withLatestFrom, first, map } from 'rxjs/operators';
+import { concat, forkJoin, from, merge, Observable, of, throwError } from 'rxjs';
+import { flatMap, mergeMap, toArray, withLatestFrom, first, map, concatMap, catchError } from 'rxjs/operators';
 import { ExpenseService } from '../services/expense/expense.service';
 import { UserState } from './user.state';
 import * as _ from 'lodash';
 import { HTTPResponse } from '@ionic-native/http/ngx';
-import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { EligibilityState } from './eligibility.state';
+import { FileChooser } from '@ionic-native/file-chooser/ngx';
+import { FilePath } from '@ionic-native/file-path/ngx';
+import { FileTransfer, FileTransferError, FileTransferObject, FileUploadResult } from '@ionic-native/file-transfer/ngx';
+import { File } from '@ionic-native/file/ngx';
+import { environment } from 'src/environments/environment';
 
 
 export interface expense {
@@ -25,6 +29,7 @@ export interface expense {
     tripType : string
     expenseSelect: boolean
     sendExp: expenselist[]
+    bill: bill[]
 }
 
 export interface triplist {
@@ -160,6 +165,10 @@ export class AddNewTrip {
     }
 }
 
+export class UploadBill {
+  static readonly type = '[expense] UploadBill';
+}
+
 export class AddExpense {
   static readonly type = "[expense] AddExpense";
   constructor(public expense: expensepayload) {
@@ -190,13 +199,30 @@ export class SelectState {
 
 export class DeleteExpense {
   static readonly type = "[expense] DeleteExpense";
-  constructor(public exp: expenselist[]) {
+  constructor(public exp: number[]) {
 
   }
 }
 
 export class SendExpense {
   static readonly type = "[expense] SendExpense";
+  constructor(public status: string) {
+
+  }
+}
+
+export class SelectExpense {
+  static readonly type = "[expense] SelectExpense";
+  constructor(public exp: expenselist) {
+
+  }
+}
+
+export class DeselectExpense {
+  static readonly type = "[expense] DeselectExpense";
+  constructor(public exp: expenselist) {
+
+  }
 }
 
 @State<expense>({
@@ -213,7 +239,8 @@ export class SendExpense {
     currentTrip: null,
     tripType : 'mytrips',
     expenseSelect : false,
-    sendExp : []
+    sendExp : [],
+    bill : []
   },
 })
 
@@ -223,7 +250,10 @@ export class ExpenseState implements NgxsOnChanges {
     private store: Store,
     private expenseService: ExpenseService,
     public modalCtrl: ModalController,
-    private fileChooser : FileChooser
+    private fileChooser : FileChooser,
+    private filePath : FilePath,
+    private fileTransfer : FileTransfer,
+    private file : File
   ) {}
 
   ngxsOnChanges(change: NgxsSimpleChange<any>): void {
@@ -251,7 +281,12 @@ export class ExpenseState implements NgxsOnChanges {
 
   @Selector()
   static getExpenseList(state: expense): expenselist[] {
-    return state.expenses;
+    if(state.tripType == 'mytrips') {
+      return state.expenses;
+    }
+    else if(state.tripType == 'approvaltrips') {
+      return state.approveExpenses;
+    }
   }
 
   @Selector()
@@ -306,6 +341,21 @@ export class ExpenseState implements NgxsOnChanges {
   @Selector()
   static getSelectState(state: expense) : boolean {
     return state.expenseSelect;
+  }
+
+  @Selector()
+  static SelectDisable(state: expense) : boolean {
+    return state.sendExp.length == 0 ? true : false;
+  }
+
+  @Selector()
+  static getSendExp(state: expense) : expenselist[] {
+    return state.sendExp;
+  }
+
+  @Selector()
+  static getBill(state: expense): bill[] {
+    return state.bill;
   }
 
   @Action(SelectState)
@@ -556,7 +606,6 @@ export class ExpenseState implements NgxsOnChanges {
     expense.status = "new";
     expense.eligible_amount = this.eligibleAmount(expense.travel_type,expense.type);
 
-
     return this.expenseService.createExpense(expense)
       .pipe(
         map(
@@ -593,19 +642,149 @@ export class ExpenseState implements NgxsOnChanges {
 
   @Action(DeleteExpense)
   deleteExpense(states: StateContext<expense>, action: DeleteExpense) {
-    return this.expenseService.updateExpense(action.exp)
+    return from(action.exp)
       .pipe(
+        concatMap(
+          (expId : number) => {
+            return this.expenseService.deleteExpense(expId)
+              .pipe(
+                map(
+                  (response) => {
+                    return response;
+                  }
+                )
+              );
+          }
+        ),
+        toArray(),
         map(
-          (response) => {
+          (response :HTTPResponse[]) => {
             console.log(response);
-            if(response.status == 200) {
-              return states.dispatch(new GetTripList());
-            }
+            states.dispatch(new GetTripList());
           }
         )
       );
   }
 
+  @Action(SelectExpense)
+  selectExpense (states: StateContext<expense>, action: SelectExpense) {
+    let Selected : expenselist[] = Object.assign([],states.getState().sendExp);
+    let current : expenselist = Object.assign({},action.exp);
+    Selected.push(current);
+    states.patchState({
+      sendExp : Selected
+    });
+  }
+
+  @Action(DeselectExpense)
+  deselectExpense (states: StateContext<expense>, action: DeselectExpense) {
+    let Selected : expenselist[] = Object.assign([],states.getState().sendExp);
+    let current : expenselist = Object.assign({},action.exp);
+    states.patchState({
+      sendExp : _.remove(Selected,(o) => !_.isEqual(current,o))
+    });
+  }
+
+  @Action(UploadBill)
+  uploadBill(states: StateContext<expense>, action: UploadBill) {
+
+    let resolvePath : string = null;
+
+    return from(this.fileChooser.open())
+      .pipe(
+        flatMap(
+          (url : string) => {
+            return from(this.filePath.resolveNativePath(url));
+          }
+        ),
+        flatMap(
+          (resolvePath : string) => {
+            let transferObj : FileTransferObject = this.fileTransfer.create();
+            resolvePath = resolvePath;
+
+            let UrlSegment = resolvePath.split('/');
+            let name = UrlSegment[UrlSegment.length - 1];
+
+            let options : FileUploadOptions = {
+              fileKey: "file",
+              fileName: name,
+              chunkedMode: false,
+              mimeType: "multipart/form-data",
+              params : {'bill': name}
+            };
+
+            let upload$ : Observable<FileUploadResult> = from(transferObj.upload(resolvePath,environment.baseURL+"/tripexpense/expense/uploadBill",options));
+            return upload$
+              .pipe(
+                catchError(
+                  (error) => {
+                    console.log(error);
+                    return throwError(error);
+                  }
+                ),
+                map(
+                  (result) => {
+                    console.log(result);
+                    return result;
+                  }
+                )
+              )
+          }
+        ),
+        flatMap(
+          (result) => {
+            console.log(result,states,action);
+            if(result.responseCode == 200) {
+                let fileDetail$ : Observable<any> = from(this.file.resolveLocalFilesystemUrl(resolvePath));
+                return fileDetail$;
+              }
+            }
+          )
+      );
+
+    // console.log(this.fileChooser);
+    // let url = await this.fileChooser.open();
+    // let URL = await this.filePath.resolveNativePath(url);
+    // let UrlSegment = URL.split('/');
+    // let name = UrlSegment[UrlSegment.length - 1];
+    // this.bills.push(this.createBill(url,name));
+
+  }
+
+  @Action(SendExpense)
+  sendExpense(states: StateContext<expense>, action: SendExpense) {
+
+    if(states.getState().sendExp.length >= 1) {
+      return of(action.status)
+        .pipe(
+          flatMap(
+            (status) => {
+              if(status == 'send') {
+                return this.expenseService.sendApproval(states.getState().sendExp);
+              }
+              else if(status == 'approve') {
+                return this.expenseService.approveExpense(states.getState().sendExp);
+              }
+              else if(status == 'reject') {
+                return this.expenseService.rejectExpense(states.getState().sendExp);
+              }
+            }
+          ),
+          map(
+            (response) => {
+              if(response.status == 200) {
+                states.dispatch(new GetTripList());
+              }
+            }
+          )
+        );
+    }
+    else {
+      return;
+    }
+
+
+  }
 
   eligibleAmount(traveltype : string, type : string) {
     switch(traveltype) {

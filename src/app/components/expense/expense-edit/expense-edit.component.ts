@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
-import { expenselist } from 'src/app/stores/expense.state';
+import { Store } from '@ngxs/store';
+import { DeleteExpense, expenselist } from 'src/app/stores/expense.state';
 import { ExpenseComponent } from '../expense/expense.component';
 
 @Component({
@@ -13,6 +14,7 @@ export class ExpenseEditComponent implements OnInit {
   @Input() expense : expenselist;
 
   constructor(
+    private store : Store,
     public popoverCtrl : PopoverController,
     public modalCtrl : ModalController
   ) { }
@@ -34,6 +36,12 @@ export class ExpenseEditComponent implements OnInit {
     }
 
     return await modal.present();
+  }
+
+  deleteExpense(exp : expenselist[]) {
+    let num : number[] = exp.map(e => e.id);
+    this.store.dispatch(new DeleteExpense(num));
+    this.modalCtrl.dismiss(null,null,'expense');
   }
 
 }

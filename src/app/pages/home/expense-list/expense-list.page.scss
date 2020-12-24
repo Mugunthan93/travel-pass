@@ -43,8 +43,12 @@ ion-header {
             width: -webkit-fill-available;
             justify-content:space-between;
 
-            ion-button:last-child {
+            ion-button.add {
                 margin-left: auto;
+            }
+
+            ion-button.select {
+                margin-right: auto;
             }
 
             ion-label {
@@ -100,7 +104,16 @@ ion-content {
                         --padding-top: 2px;
                         --padding-bottom: 2px;
                         --padding-start: 8px;
+
+                        >ion-row:first-child {
+                            width: -webkit-fill-available;
+                            justify-content: space-between;
+                        }
+
                         >ion-row[slot="end"] {
+                            margin: 0px;
+                            width: 32%;
+                            flex-flow: row;
                             >ion-label {
                                 padding: 0px 10px;
                             }
@@ -112,6 +125,15 @@ ion-content {
                 }
             }
         }
+    }
+
+    ion-badge {
+        margin: auto 0px;
+        --padding-start: 4px;
+        --padding-end: 4px;
+        --padding-top: 4px;
+        --padding-bottom: 4px;
+        max-height: 20px;
     }
 
 }
