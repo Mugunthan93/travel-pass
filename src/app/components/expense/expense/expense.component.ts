@@ -7,13 +7,14 @@ import { buscity, city, hotelcity } from 'src/app/stores/shared.state';
 import { SelectModalComponent } from '../../shared/select-modal/select-modal.component';
 import { SearchMode } from 'src/app/stores/search.state';
 import { DateMatchValidator } from 'src/app/validator/date_match.validators';
-import { AddExpense, EditExpense, expenselist, ExpenseState, UploadBill } from 'src/app/stores/expense.state';
+import { AddExpense, bill, EditExpense, expenselist, ExpenseState } from 'src/app/stores/expense.state';
 import { TripRangeValidators } from 'src/app/validator/uniq_trip_date.Validators';
 import * as moment from 'moment';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
-import { from } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { FilePath } from '@ionic-native/file-path/ngx';
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+import { environment } from 'src/environments/environment';
+import { File } from '@ionic-native/file/ngx';
 
 @Component({
   selector: "app-expense",
@@ -58,52 +59,106 @@ export class ExpenseComponent implements OnInit {
     public fb : FormBuilder,
     private store : Store,
     private fileChooser : FileChooser,
-    private filePath : FilePath
+    private filePath : FilePath,
+    private fileTransfer : FileTransfer,
+    private file : File
     ) {
   }
 
   ngOnInit() {
 
     this.currentTrip = this.store.selectSnapshot(ExpenseState.getExpenseDates);
-    this.store.dispatch(new SearchMode('flight'));
     this.formSubmit = false;
 
-    this.expenseForm = this.fb.group({
-      travel_type: this.fb.control("domestic", [Validators.required]),
-      type: this.fb.control('flight', [Validators.required]),
+    if(this.exptype == 'add') {
+      this.store.dispatch(new SearchMode('flight'));
 
-      start_date: this.fb.control(null,{
-        validators : [TripRangeValidators(this.currentTrip)],
-        updateOn : 'change'
-      }),
-      start_city: this.fb.control(null,[Validators.required]),
+      this.expenseForm = this.fb.group({
+        travel_type: this.fb.control("domestic", [Validators.required]),
+        type: this.fb.control('flight', [Validators.required]),
 
-      //flight,bus,train,hotel,food
-      end_date: this.fb.control(null,{
-        updateOn : 'change'
-      }),
+        start_date: this.fb.control(null,{
+          validators : [TripRangeValidators(this.currentTrip)],
+          updateOn : 'change'
+        }),
+        start_city: this.fb.control(null,[Validators.required]),
 
-      //flight,bus,train,local,other
-      end_city: this.fb.control(null),
+        //flight,bus,train,hotel,food
+        end_date: this.fb.control(null,{
+          updateOn : 'change'
+        }),
 
-      //flight,bus,train,hotel,food
-      no_of_days: this.fb.control(null),
+        //flight,bus,train,local,other
+        end_city: this.fb.control(null),
 
-      //local,other
-      local_travel_value : this.fb.control(null),
+        //flight,bus,train,hotel,food
+        no_of_days: this.fb.control(null),
 
-      cost: this.fb.control(null, [Validators.required]),
-      paid_by: this.fb.control(null, [Validators.required]),
-      attachementpath : this.fb.group({
-        bills : new FormArray([])
-      })
+        //local,other
+        local_travel_value : this.fb.control(null),
 
-    });
+        cost: this.fb.control(null, [Validators.required]),
+        paid_by: this.fb.control(null, [Validators.required]),
+        attachementpath : this.fb.group({
+          bills : new FormArray([])
+        })
+
+      });
+
+      this.changeValidation('flight');
+
+    }
+    else if(this.exptype == 'edit'){
+
+      this.store.dispatch(new SearchMode(this.expense.type));
+
+      this.expenseForm = this.fb.group({
+        travel_type: this.fb.control(this.expense.travel_type, [Validators.required]),
+        type: this.fb.control(this.expense.type, [Validators.required]),
+
+        start_date: this.fb.control(moment(this.expense.start_date).format('YYYY-MM-DD'),{
+          validators : [TripRangeValidators(this.currentTrip)],
+          // updateOn : 'submit'
+        }),
+        start_city: this.fb.control(this.expense.start_city,[Validators.required]),
+
+        //flight,bus,train,hotel,food
+        end_date: this.fb.control(moment(this.expense.end_date).format('YYYY-MM-DD'),{
+          // updateOn : 'submit'
+        }),
+
+        //flight,bus,train,local,other
+        end_city: this.fb.control(this.expense.end_city),
+
+        //flight,bus,train,hotel,food
+        no_of_days: this.fb.control(this.expense.no_of_days),
+
+        //local,other
+        local_travel_value : this.fb.control(this.expense.local_travel_value),
+
+        cost: this.fb.control(this.expense.cost, [Validators.required]),
+        paid_by: this.fb.control(this.expense.paid_by, [Validators.required]),
+        attachementpath : this.fb.group({
+          bills : new FormArray([])
+        })
+
+      });
+
+      this.changeValidation(this.expense.type);
+
+    }
 
     this.bills = this.expenseForm.get('attachementpath.bills') as FormArray;
 
-    // this.expenseForm.get('start_date').setValidators(DateMatchValidator('start_date','end_date'));
-    this.changeValidation('flight');
+    if(this.exptype == 'edit') {
+      this.expense.attachementpath.bills.forEach(
+        (bill : bill) => {
+          this.bills.push(this.createBill(bill));
+        }
+      );
+    }
+
+
   }
 
   billArray() {
@@ -111,19 +166,51 @@ export class ExpenseComponent implements OnInit {
   }
 
   async addBill() {
-    // console.log(this.fileChooser);
-    // let url = await this.fileChooser.open();
-    // let URL = await this.filePath.resolveNativePath(url);
-    // let UrlSegment = URL.split('/');
-    // let name = UrlSegment[UrlSegment.length - 1];
-    // this.bills.push(this.createBill(url,name));
-    this.store.dispatch(new UploadBill());
+
+    let resolvepath : string = null;
+    let name : string = null;
+    let mime : string = null;
+
+    let file = await this.fileChooser.open();
+    resolvepath = await this.filePath.resolveNativePath(file);
+    let transferObj : FileTransferObject = this.fileTransfer.create();
+
+    let UrlSegment = resolvepath.split('/');
+    name = UrlSegment[UrlSegment.length - 1];
+
+    let options : any = {
+      fileKey: "file",
+      fileName: name,
+      chunkedMode: false,
+      mimeType: "multipart/form-data",
+      params : {'bill': name}
+    };
+
+    let uploadResponse : FileUploadResult = await transferObj.upload(resolvepath,environment.baseURL+"/tripexpense/expense/uploadBill",options)
+    if(uploadResponse.responseCode == 200) {
+      let fileStatus : Entry =  await this.file.resolveLocalFilesystemUrl(resolvepath);
+      (fileStatus as FileEntry).file(
+        (data) => {
+          mime = data.type;
+          let uploadedBill :  bill = Object.assign({},{
+            name: name,
+            size: uploadResponse.bytesSent,
+            type: mime,
+            uploaded: true
+          });
+
+          this.bills.push(this.createBill(uploadedBill));
+        }
+      );
+    }
   }
 
-  createBill(url : string, name : string) {
+  createBill(upload : bill) {
     return this.fb.group({
-      url:this.fb.control(url),
-      name: this.fb.control(name)
+      name: new FormControl(upload.name),
+      size: new FormControl(upload.size),
+      type: new FormControl(upload.type),
+      uploaded: new FormControl(upload.uploaded)
     });
   }
 
@@ -132,9 +219,7 @@ export class ExpenseComponent implements OnInit {
   }
 
   ionViewDidEnter() {
-    if(this.exptype == 'edit'){
-      this.expenseForm.patchValue(this.expense);
-    }
+ 
   }
 
   customAlertOptions(header: string) {
@@ -157,23 +242,7 @@ export class ExpenseComponent implements OnInit {
     if(evt.detail.value == 'flight' || evt.detail.value == 'hotel' || evt.detail.value == 'bus') {
       this.store.dispatch(new SearchMode(evt.detail.value));
     }
-
     this.changeValidation(evt.detail.value);
-
-    this.expenseForm.patchValue({
-      travel_type: this.expenseForm.get('travel_type').value,
-      type: this.expenseForm.get('type').value,
-
-      start_date: null,
-      start_city: null,
-      end_date: null,
-      end_city: null,
-      no_of_days: null,
-      local_travel_value : null,
-
-      cost: this.expenseForm.get('cost').value,
-      paid_by: this.expenseForm.get('paid_by').value
-    });
     console.log(this.expenseForm);
   }
 
@@ -278,14 +347,16 @@ export class ExpenseComponent implements OnInit {
   addExpense() {
     this.formSubmit = true;
     console.log(this.expenseForm);
-
-    this.expenseForm.get('start_date').updateValueAndValidity();
     if(this.expenseForm.valid) {
+
+      
       if(this.exptype == 'add') {
         this.store.dispatch(new AddExpense(this.expenseForm.value));
       }
       else if(this.exptype == 'edit') {
-        let currentExpense = Object.assign(this.expense,this.expenseForm.value);
+        console.log(this.exptype); 
+        let prevExp : expenselist = Object.assign({},this.expense);
+        let currentExpense = Object.assign(prevExp,this.expenseForm.value);
         this.store.dispatch(new EditExpense(currentExpense));
       }
     }

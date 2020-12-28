@@ -2,8 +2,8 @@ import { ModalController } from '@ionic/angular';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, NgxsOnChanges, NgxsSimpleChange, Selector, State, StateContext, Store } from '@ngxs/store';
 import * as moment from 'moment';
-import { concat, forkJoin, from, merge, Observable, of, throwError } from 'rxjs';
-import { flatMap, mergeMap, toArray, withLatestFrom, first, map, concatMap, catchError } from 'rxjs/operators';
+import { concat, forkJoin, from, of } from 'rxjs';
+import { flatMap, mergeMap, toArray, withLatestFrom, first, map, concatMap } from 'rxjs/operators';
 import { ExpenseService } from '../services/expense/expense.service';
 import { UserState } from './user.state';
 import * as _ from 'lodash';
@@ -11,7 +11,7 @@ import { HTTPResponse } from '@ionic-native/http/ngx';
 import { EligibilityState } from './eligibility.state';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
-import { FileTransfer, FileTransferError, FileTransferObject, FileUploadResult } from '@ionic-native/file-transfer/ngx';
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { environment } from 'src/environments/environment';
 
@@ -165,10 +165,6 @@ export class AddNewTrip {
     }
 }
 
-export class UploadBill {
-  static readonly type = '[expense] UploadBill';
-}
-
 export class AddExpense {
   static readonly type = "[expense] AddExpense";
   constructor(public expense: expensepayload) {
@@ -285,7 +281,7 @@ export class ExpenseState implements NgxsOnChanges {
       return state.expenses;
     }
     else if(state.tripType == 'approvaltrips') {
-      return state.approveExpenses;
+      return state.approveExpenses.filter((exp : expenselist) => exp.status !== 'new');
     }
   }
 
@@ -350,6 +346,7 @@ export class ExpenseState implements NgxsOnChanges {
 
   @Selector()
   static getSendExp(state: expense) : expenselist[] {
+
     return state.sendExp;
   }
 
@@ -683,72 +680,6 @@ export class ExpenseState implements NgxsOnChanges {
     states.patchState({
       sendExp : _.remove(Selected,(o) => !_.isEqual(current,o))
     });
-  }
-
-  @Action(UploadBill)
-  uploadBill(states: StateContext<expense>, action: UploadBill) {
-
-    let resolvePath : string = null;
-
-    return from(this.fileChooser.open())
-      .pipe(
-        flatMap(
-          (url : string) => {
-            return from(this.filePath.resolveNativePath(url));
-          }
-        ),
-        flatMap(
-          (resolvePath : string) => {
-            let transferObj : FileTransferObject = this.fileTransfer.create();
-            resolvePath = resolvePath;
-
-            let UrlSegment = resolvePath.split('/');
-            let name = UrlSegment[UrlSegment.length - 1];
-
-            let options : FileUploadOptions = {
-              fileKey: "file",
-              fileName: name,
-              chunkedMode: false,
-              mimeType: "multipart/form-data",
-              params : {'bill': name}
-            };
-
-            let upload$ : Observable<FileUploadResult> = from(transferObj.upload(resolvePath,environment.baseURL+"/tripexpense/expense/uploadBill",options));
-            return upload$
-              .pipe(
-                catchError(
-                  (error) => {
-                    console.log(error);
-                    return throwError(error);
-                  }
-                ),
-                map(
-                  (result) => {
-                    console.log(result);
-                    return result;
-                  }
-                )
-              )
-          }
-        ),
-        flatMap(
-          (result) => {
-            console.log(result,states,action);
-            if(result.responseCode == 200) {
-                let fileDetail$ : Observable<any> = from(this.file.resolveLocalFilesystemUrl(resolvePath));
-                return fileDetail$;
-              }
-            }
-          )
-      );
-
-    // console.log(this.fileChooser);
-    // let url = await this.fileChooser.open();
-    // let URL = await this.filePath.resolveNativePath(url);
-    // let UrlSegment = URL.split('/');
-    // let name = UrlSegment[UrlSegment.length - 1];
-    // this.bills.push(this.createBill(url,name));
-
   }
 
   @Action(SendExpense)

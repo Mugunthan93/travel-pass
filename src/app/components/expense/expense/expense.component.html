@@ -21,6 +21,7 @@
           <ion-select-option *ngFor="let type of travelType" [value]="type">{{ type }}</ion-select-option>
         </ion-select>
       </ion-item>
+
       <ion-item>
         <ion-select formControlName="type" placeholder="Select Type"
           cancelText="Cancel" okText="Confirm" [interfaceOptions]="customAlertOptions('Type')"
@@ -28,6 +29,21 @@
           <ion-select-option *ngFor="let ty of formtype" [value]="ty">{{ ty }}</ion-select-option>
         </ion-select>
       </ion-item>
+
+      <ion-item [hidden]="!hideItem('local_travel_value')">
+        <ion-label position="floating">{{ expenseForm.controls['type'].value | titlecase }} Name</ion-label>
+        <ion-input type="text" formControlName="local_travel_value" enterkeyhint="next"></ion-input>
+      </ion-item>
+      <ion-item  [hidden]="hideItem('local_travel_value')">
+        <ion-select formControlName="local_travel_value" placeholder="Select Sub Type"
+          cancelText="Cancel" okText="Confirm" [interfaceOptions]="customAlertOptions('Local Sub Type')"
+          (ionChange)="changeSubType($event)">
+          <ion-select-option *ngFor="let ty of localSub" [value]="ty">{{ ty }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-row *ngIf="expenseForm.controls['local_travel_value'].hasError('required') && formSubmit">
+        <ion-label color="danger">Sub Type Required</ion-label>
+      </ion-row>
 
       <ion-item button (click)="getCity('start_city')">
         <ion-label position="floating">Start City</ion-label>
@@ -49,10 +65,10 @@
         <ion-label position="floating">Start Date</ion-label>
         <ion-input type="date" formControlName="start_date" enterkeyhint="next"></ion-input>
       </ion-item>
-      <ion-row *ngIf="expenseForm.controls['start_date'].hasError('required') || formSubmit">
+      <ion-row *ngIf="expenseForm.controls['start_date'].hasError('required') && formSubmit">
         <ion-label color="danger">Start Date Required</ion-label>
       </ion-row>
-      <ion-row *ngIf="expenseForm.controls['start_date'].hasError('outOfRange') || formSubmit">
+      <ion-row *ngIf="expenseForm.controls['start_date'].hasError('outOfRange') && formSubmit">
         <ion-label color="danger">Selected Date is out of range from current trip date</ion-label>
       </ion-row>
       <ion-row *ngIf="expenseForm.controls['start_date'].hasError('mismatch')">
@@ -63,10 +79,10 @@
         <ion-label position="floating">End Date</ion-label>
         <ion-input type="date" formControlName="end_date" enterkeyhint="next"></ion-input>
       </ion-item>
-      <ion-row *ngIf="expenseForm.controls['end_date'].hasError('required') || formSubmit">
+      <ion-row *ngIf="expenseForm.controls['end_date'].hasError('required') && formSubmit">
         <ion-label color="danger">End Date Required</ion-label>
       </ion-row>
-      <ion-row *ngIf="expenseForm.controls['end_date'].hasError('outOfRange') || formSubmit">
+      <ion-row *ngIf="expenseForm.controls['end_date'].hasError('outOfRange') && formSubmit">
         <ion-label color="danger">Selected Date is out of range from current trip date</ion-label>
       </ion-row>
       <ion-row *ngIf="expenseForm.controls['end_date'].hasError('mismatch')">
@@ -79,17 +95,6 @@
       </ion-item>
       <ion-row *ngIf="expenseForm.controls['no_of_days'].hasError('required') && formSubmit">
         <ion-label color="danger">Days Required</ion-label>
-      </ion-row>
-
-      <ion-item  [hidden]="hideItem('local_travel_value')">
-        <ion-select formControlName="local_travel_value" placeholder="Select Sub Type"
-          cancelText="Cancel" okText="Confirm" [interfaceOptions]="customAlertOptions('Local Sub Type')"
-          (ionChange)="changeSubType($event)">
-          <ion-select-option *ngFor="let ty of localSub" [value]="ty">{{ ty }}</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-row *ngIf="expenseForm.controls['local_travel_value'].hasError('required') && formSubmit">
-        <ion-label color="danger">Sub Type Required</ion-label>
       </ion-row>
 
       <ion-item>

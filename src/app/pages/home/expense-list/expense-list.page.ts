@@ -94,7 +94,7 @@ export class ExpenseListPage implements OnInit {
 
   async getExpense(ev : CustomEvent, exp : expenselist) {
 
-    if(exp.paid_by == 'paid_company') {
+    if(exp.paid_by == 'paid_company' || exp.status !== 'new') {
       return;
     }
     else {
@@ -102,7 +102,7 @@ export class ExpenseListPage implements OnInit {
         component : ExpenseEditComponent,
         componentProps : {
           expense : exp,
-          exptype : 'add'
+          exptype : 'edit'
         },
         event: ev,
         cssClass : 'get-expense',
@@ -169,6 +169,21 @@ export class ExpenseListPage implements OnInit {
       case 'manager_rejected': return 'rejected';
       case 'review' : return 'review';
     }
+  }
+
+  showOptions(exp : expenselist) : Observable<boolean> {
+
+    return combineLatest([this.enableExp$,this.tripType$])
+      .pipe(
+        map(
+          (options) => {
+            console.log(options,exp);
+            let enable = options[0];
+            let tripType = options[1];
+            return !(enable) && (exp.paid_by == 'paid_self' && exp.status == 'new') && (tripType == 'mytrips')
+          }
+        )
+        );
   }
 
   checked(e : expenselist) : Observable<boolean> {
