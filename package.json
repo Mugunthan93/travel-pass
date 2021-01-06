@@ -6,7 +6,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ionic cordova run android -l --external --no-native-run",
-    "build": "ng build",
+    "build": "ionic cordova run android",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

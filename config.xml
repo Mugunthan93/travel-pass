@@ -112,5 +112,5 @@
     <plugin name="cordova-plugin-ionic-webview" spec="^4.0.0" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <plugin name="cordova-plugin-googlemaps" spec="^2.7.0" />
-    <allow-navigation href="http://192.168.1.6:8100" sessionid="2f85bc36" />
+    <allow-navigation href="http://192.168.1.6:8100" sessionid="26566cb6" />
 </widget>

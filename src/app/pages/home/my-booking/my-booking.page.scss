@@ -19,6 +19,23 @@ ion-content{
             }
         }
     }
+
+    ion-row.toggle {
+        margin: 8px;
+        justify-content: space-between;
+        ion-col{
+            display: flex;
+            max-width: fit-content;
+            ion-label {
+                align-self: center;
+                font-size: 19px;
+            }
+            ion-select {
+                padding:12px;
+            }
+        }
+    }
+
     ion-row.booking {
         height: 35px;
         margin: 20px 40px;

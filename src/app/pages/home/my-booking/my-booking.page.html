@@ -53,7 +53,21 @@
     </ion-row> -->
   </ion-row>
 
-  <ion-row class="booking">
+  <ion-row class="toggle">
+    <ion-col>
+      <ion-toggle checked="(bookingType$ | async) == 'online' ? true : false" (ionChange)="bookingChange($event)"></ion-toggle>
+      <ion-label class="bold">{{ bookingType$ | async | titlecase }}</ion-label>
+    </ion-col>
+    <ion-col>
+      <ion-label class="bold">Status :</ion-label>
+      <ion-select okText="Okay" cancelText="Dismiss" [interfaceOptions]="statusAlertOptions"
+      (ionChange)="statusChange($event)" [selectedText]="status$ | async | titlecase">
+      <ion-select-option [value]="purpose" *ngFor="let purpose of statusArray">{{purpose | titlecase}}</ion-select-option>
+    </ion-select>
+    </ion-col>
+  </ion-row>
+
+  <!-- <ion-row class="booking">
     <ion-segment mode="ios" (ionChange)="bookingChange($event)" [value]="bookingType$ | async" class="search">
         <ion-segment-button value="online" class="search">
             <ion-text class="medium bold">Online</ion-text>
@@ -62,9 +76,9 @@
             <ion-text class="medium bold">Offline</ion-text>
         </ion-segment-button>
     </ion-segment>
-  </ion-row>
+  </ion-row> -->
 
-  <ion-tabs>
+  <ion-tabs (ionTabsDidChange)="tabChange($event)">
     <ion-tab-bar slot="top">
       <ion-tab-button tab="new">
         <ion-label class="large bold">New</ion-label>

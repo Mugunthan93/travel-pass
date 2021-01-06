@@ -15,20 +15,32 @@ import { RescheduleComponent } from 'src/app/components/shared/reschedule/resche
   styleUrls: ["./history.page.scss"],
 })
 export class HistoryPage implements OnInit {
+
   historyBookings: Observable<any[]>;
   type$: Observable<string>;
   loading$: Observable<boolean>;
+  status$ : Observable<string>;
 
   constructor(
     private store: Store,
     private file: File,
-    private fileOpener: FileOpener,
     public alertCtrl: AlertController
   ) {}
 
   ngOnInit() {
-    console.log(this.file);
-    this.historyBookings = this.store.select(BookingState.getHistoryBooking);
+    this.status$ = this.store.select(BookingState.getStatus);
+    this.historyBookings = this.store.select(BookingState.getHistoryBooking)
+      .pipe(
+        withLatestFrom(this.status$),
+        map(
+          (booking) => {
+            let arr = booking[0];
+            let status = booking[1]; 
+            return arr.filter(el => el.status == status);
+          }
+        )
+      );
+
     this.type$ = this.store.select(BookingState.getType);
     this.loading$ = this.store.select(BookingState.getLoading);
   }

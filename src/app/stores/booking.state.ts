@@ -23,6 +23,7 @@ export interface booking {
     loading: boolean
     cancel: any
     mode : string
+    status : string
 }
 
 export interface cancel_request {
@@ -145,6 +146,12 @@ export class ViewFile {
     }
 }
 
+export class SetStatus {
+  static readonly type = "[booking] SetStatus";
+  constructor(public status : string) {
+  }
+}
+
 @State<booking>({
   name: "booking",
   defaults: {
@@ -155,6 +162,7 @@ export class ViewFile {
     mode : 'online',
     reschedule: null,
     cancel: null,
+    status : 'open'
   },
 })
 export class BookingState {
@@ -173,12 +181,20 @@ export class BookingState {
 
   @Selector()
   static getNewBooking(state: booking): any[] {
-    return state.new;
+    return state.new.filter(
+      (arr) => {
+        return arr.status == state.status
+      }
+    );
   }
-
+  
   @Selector()
   static getHistoryBooking(state: booking): any[] {
-    return state.history;
+    return state.history.filter(
+      (arr) => {
+        return arr.status == state.status
+      }
+    );
   }
 
   @Selector()
@@ -189,6 +205,11 @@ export class BookingState {
   @Selector()
   static getLoading(state: booking): boolean {
     return state.loading;
+  }
+
+  @Selector()
+  static getStatus(state: booking) : string {
+    return state.status;
   }
 
   @Selector()
@@ -205,6 +226,13 @@ export class BookingState {
   static getBookingMode(state : booking) : string {
       return state.mode;
   }
+
+  @Action(SetStatus)
+  setStatus(states: StateContext<booking>, action: SetStatus) {
+    states.patchState({
+      status : action.status
+    });
+  } 
 
   @Action(MyBooking)
   myBooking(states: StateContext<booking>, action: MyBooking) {
@@ -245,16 +273,16 @@ export class BookingState {
                         let rescheduled$ = this.bookingService.myBooking(action.type,'rescheduled',mode);
 
                         let newbooking$ = forkJoin([
-                            openBooking$,
                             newBooking$,
+                            openBooking$,
                             pendingBooking$,
+                            cancellationpending$,
+                            reschedulepending$,
                         ]);
 
                         let historybooking$ = forkJoin([
                             bookedBooking$,
-                            cancellationpending$,
                             cancelled$,
-                            reschedulepending$,
                             rescheduled$
                         ]);
 
@@ -538,11 +566,11 @@ export class BookingState {
       let newBooking$ = this.bookingService.myBooking(type,'new',mode);
       let openBooking$ = this.bookingService.myBooking(type,'open',mode);
       let pendingBooking$ = this.bookingService.myBooking(type,'pending',mode);
+      let cancellationpending$ = this.bookingService.myBooking(type,'cancellation%20request',mode);
+      let reschedulepending$ = this.bookingService.myBooking(type,'reschedule_request',mode);
 
       let bookedBooking$ = this.bookingService.myBooking(type,'booked',mode);
-      let cancellationpending$ = this.bookingService.myBooking(type,'cancellation%20request',mode);
       let cancelled$ = this.bookingService.myBooking(type,'cancelled',mode);
-      let reschedulepending$ = this.bookingService.myBooking(type,'reschedule_request',mode);
       let rescheduled$ = this.bookingService.myBooking(type,'rescheduled',mode);
 
       switch(mode){

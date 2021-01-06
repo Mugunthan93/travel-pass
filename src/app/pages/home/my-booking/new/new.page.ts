@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { BookingState } from 'src/app/stores/booking.state';
 import { combineLatest, observable, Observable, of } from 'rxjs';
-import { debounceTime, map, withLatestFrom } from 'rxjs/operators';
+import { debounceTime, filter, map, withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'app-new',
@@ -14,13 +14,27 @@ export class NewPage implements OnInit {
   newBookings$: Observable<any[]>;
   type$ : Observable<string>;
   loading$: Observable<boolean>;
+  status$ : Observable<string>;
 
   constructor(
     private store : Store
   ) { }
 
   ngOnInit() {
-    this.newBookings$ = this.store.select(BookingState.getNewBooking);
+
+    this.status$ = this.store.select(BookingState.getStatus);
+    this.newBookings$ = this.store.select(BookingState.getNewBooking)
+      .pipe(
+        withLatestFrom(this.status$),
+        map(
+          (booking) => {
+            console.log(booking);
+            let arr = booking[0];
+            let status = booking[1]; 
+            return arr.filter(el => el.status == status);
+          }
+        )
+      );
     this.type$ = this.store.select(BookingState.getType);
     this.loading$ = this.store.select(BookingState.getLoading);
 
