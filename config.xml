@@ -3,7 +3,8 @@
     <name>TravellersPass</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework.com" href="http://ionicframework.com/">Ionic Framework Team</author>
-    <content src="index.html" />
+    <allow-navigation href="*" />
+    <content original-src="index.html" src="http://192.168.1.6:8100" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -11,7 +12,6 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
-    <allow-navigation href="*" />
     <preference name="ScrollEnabled" value="false" />
     <preference name="android-minSdkVersion" value="19" />
     <preference name="BackupWebStorage" value="none" />
@@ -112,11 +112,5 @@
     <plugin name="cordova-plugin-ionic-webview" spec="^4.0.0" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <plugin name="cordova-plugin-googlemaps" spec="^2.7.0" />
-    <allow-navigation href="http://0.0.0.0:*" sessionid="*" />
-    <allow-navigation href="http://0.0.0.0:8101" sessionid="6024c560" />
-    <allow-navigation href="http://192.168.1.7:8100" sessionid="75ed7d06" />
-    <allow-navigation href="http://192.168.1.11:8100" sessionid="4d6c5720" />
-    <allow-navigation href="http://192.168.1.5:8100" sessionid="b18d097a" />
-    <allow-navigation href="http://192.168.1.9:8100" sessionid="79bb095c" />
-    <allow-navigation href="http://192.168.1.3:8100" sessionid="62df4259" />
+    <allow-navigation href="http://192.168.1.6:8100" sessionid="2f85bc36" />
 </widget>

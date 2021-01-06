@@ -5,7 +5,7 @@
   "homepage": "https://ionicframework.com/",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ionic cordova run android -l --external --no-native-run",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -81,6 +81,7 @@
     "popper.js": "^1.16.1",
     "rxjs": "~6.5.1",
     "swiper": "^5.3.6",
+    "terser": "3.14.1",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"
   },

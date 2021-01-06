@@ -245,11 +245,7 @@ export class ExpenseState implements NgxsOnChanges {
   constructor(
     private store: Store,
     private expenseService: ExpenseService,
-    public modalCtrl: ModalController,
-    private fileChooser : FileChooser,
-    private filePath : FilePath,
-    private fileTransfer : FileTransfer,
-    private file : File
+    public modalCtrl: ModalController
   ) {}
 
   ngxsOnChanges(change: NgxsSimpleChange<any>): void {

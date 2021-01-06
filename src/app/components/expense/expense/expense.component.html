@@ -34,6 +34,7 @@
         <ion-label position="floating">{{ expenseForm.controls['type'].value | titlecase }} Name</ion-label>
         <ion-input type="text" formControlName="local_travel_value" enterkeyhint="next"></ion-input>
       </ion-item>
+      
       <ion-item  [hidden]="hideItem('local_travel_value')">
         <ion-select formControlName="local_travel_value" placeholder="Select Sub Type"
           cancelText="Cancel" okText="Confirm" [interfaceOptions]="customAlertOptions('Local Sub Type')"

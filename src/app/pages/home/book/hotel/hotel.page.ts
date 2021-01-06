@@ -190,14 +190,14 @@ export class HotelPage implements OnInit {
   }
 
   GST(): GST {
-    if (this.store.selectSnapshot(CompanyState.getStateName) == 'Tamil Nadu') {
+    if (this.store.selectSnapshot(CompanyState.getStateName) == 'TN') {
       return {
         cgst: (this.serviceCharges() * 9) / 100,
         sgst: (this.serviceCharges() * 9) / 100,
         igst: 0
       }
     }
-    else if (this.store.selectSnapshot(CompanyState.getStateName) !== 'Tamil Nadu') {
+    else if (this.store.selectSnapshot(CompanyState.getStateName) !== 'TN') {
       return {
         cgst: 0,
         sgst: 0,

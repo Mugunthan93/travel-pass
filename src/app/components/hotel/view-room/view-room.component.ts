@@ -59,7 +59,6 @@ export class ViewRoomComponent implements OnInit {
     this.openCombo = this.store.selectSnapshot(HotelResultState.getOpenCombination);
     this.fixedCombo = this.store.selectSnapshot(HotelResultState.getFixedCombination);
 
-
   }
 
   getHotelImage(img : string) {
@@ -69,6 +68,9 @@ export class ViewRoomComponent implements OnInit {
 
   bookHotel(room : hotelDetail[]) {
     room.forEach(rm => this.store.dispatch(new AddRoom(rm)));
+  }
+  
+  confirmHotel() {
     this.store.dispatch(new BlockRoom());
   }
 

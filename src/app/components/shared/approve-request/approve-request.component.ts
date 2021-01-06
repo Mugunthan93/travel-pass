@@ -24,6 +24,7 @@ export class ApproveRequestComponent implements OnInit {
   ngOnInit() {
     this.Detail$ = this.store.select(ApprovalState.getSelectedRequest);
     this.type = this.store.selectSnapshot(ApprovalState.getType);
+    console.log(this.store.selectSnapshot(ApprovalState.getSelectedRequest));
   }
   
   approveRequest() {
@@ -51,6 +52,7 @@ export class ApproveRequestComponent implements OnInit {
               case 'flight' : return detail.passenger_details.passenger;
               case 'hotel' : return detail.guest_details.passengers;
               case 'bus' : return detail.passenger_details.blockSeatPaxDetails;
+              case 'train' : return detail.passenger_details.passenger;
             }
           }
         )
@@ -60,7 +62,8 @@ export class ApproveRequestComponent implements OnInit {
   passengerTitle(passenger : any,i : number) {
     switch(this.type) {
       case 'flight' : passenger.IsLeadPax ? 'Lead Passenger' : 'Passenger ' + i;
-      case 'hotel' : passenger.LeadPassenger ? 'Lead Passenger' : 'Passenger ' + i
+      case 'hotel' : passenger.LeadPassenger ? 'Lead Passenger' : 'Passenger ' + i;
+      case 'train' : passenger.primary ? 'Lead Passenger' : 'Passenger ' + i;
     }
   }
 

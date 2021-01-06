@@ -105,6 +105,7 @@ ion-content {
 
             ion-input {
                 width: 50%;
+                min-width: 50% !important;
             }
 
             ion-select {

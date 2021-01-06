@@ -48,8 +48,10 @@ export function TripRangeValidators(tripDates : any)
         let selectedDate = control.value;
 
         if(control.value !== null) {
-            let range = moment(selectedDate).isBetween(tripDates.startDate, tripDates.endDate, 'date', '[]');
-            console.log(range);
+            let start = moment(tripDates.startDate).format('YYYY-MM-DD');
+            let end = moment(tripDates.endDate).format('YYYY-MM-DD');
+            let range = moment(selectedDate).isBetween(start,end, 'date', '[]');
+            // console.log(range,selectedDate,start,end);
             if(!range) {
                 return {
                     "outOfRange" : true

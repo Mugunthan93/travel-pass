@@ -50,7 +50,7 @@
                   >
                 </ion-input>
             </ion-item>
-            <ion-item (click)="selectCity(trip,'to')">
+            <ion-item (click)="selectCity(trip,i,'to')">
               <ion-label slot="start" class="bold large">To</ion-label>
               <ion-input 
                 [value]="this.rescheduleForm.value.trips[i].to.DestinationName"

@@ -18,6 +18,10 @@
         <ion-input type="text" formControlName="trip_name" enterkeyhint="next"></ion-input>
       </ion-item>
 
+      <ion-row *ngIf="tripForm.controls['trip_name'].hasError('required') && formSubmit">
+        <ion-label color="danger">Trip Name Required</ion-label>
+      </ion-row>
+
       <ion-item>
         <ion-select formControlName="project_name" placeholder="Select Project"
         #project_name
@@ -27,8 +31,12 @@
         (ionChange)="changeProjectName($event)">
           <ion-select-option *ngFor="let projName of (projectName$ | async)" [value]="projName">
             {{ projName.project_name }}</ion-select-option>
-      </ion-select>
+        </ion-select>
       </ion-item>
+
+      <ion-row *ngIf="tripForm.controls['project_name'].hasError('required') && formSubmit">
+        <ion-label color="danger">Trip Name Required</ion-label>
+      </ion-row>
 
       <ion-item>
         <ion-select formControlName="claim_type" placeholder="Select Claim Type"
@@ -42,15 +50,25 @@
         </ion-select>
       </ion-item>
 
+      <ion-row *ngIf="tripForm.controls['claim_type'].hasError('required') && formSubmit">
+        <ion-label color="danger">Claim Required</ion-label>
+      </ion-row>
+
       <ion-item>
         <ion-label position="floating">Start Date</ion-label>
         <ion-input type="date" formControlName="start_date" enterkeyhint="next">
         </ion-input>
       </ion-item>
-      <ion-row *ngIf="tripForm.controls['start_date'].hasError('mismatch')">
+
+      <ion-row *ngIf="tripForm.controls['start_date'].hasError('required') && formSubmit">
+        <ion-label color="danger">start date Required</ion-label>
+      </ion-row>
+
+      <ion-row *ngIf="tripForm.controls['start_date'].hasError('mismatch') && formSubmit">
         <ion-label color="danger">End Date won't come before Start Date</ion-label>
       </ion-row>
-      <ion-row *ngIf="tripForm.controls['start_date'].hasError('hasDate')">
+
+      <ion-row *ngIf="tripForm.controls['start_date'].hasError('hasDate') && formSubmit">
         <ion-label color="danger">You already had a trip in this date,Try other dates</ion-label>
       </ion-row>
 
@@ -59,10 +77,16 @@
         <ion-input type="date" formControlName="end_date" enterkeyhint="next">
         </ion-input>
       </ion-item>
-      <ion-row *ngIf="tripForm.controls['end_date'].hasError('mismatch')">
+
+      
+      <ion-row *ngIf="tripForm.controls['end_date'].hasError('required') && formSubmit">
+        <ion-label color="danger">end date Required</ion-label>
+      </ion-row>
+
+      <ion-row *ngIf="tripForm.controls['end_date'].hasError('mismatch') && formSubmit">
         <ion-label color="danger">End Date won't come before Start Date</ion-label>
       </ion-row>
-      <ion-row *ngIf="tripForm.controls['end_date'].hasError('hasDate')">
+      <ion-row *ngIf="tripForm.controls['end_date'].hasError('hasDate') && formSubmit">
         <ion-label color="danger">You already had a trip in this date,Try other dates</ion-label>
       </ion-row>
 
@@ -77,6 +101,10 @@
           </ion-select-option>
         </ion-select>
       </ion-item>
+
+      <ion-row *ngIf="tripForm.controls['select_manager'].hasError('required') && formSubmit">
+        <ion-label color="danger">Select the manager</ion-label>
+      </ion-row>
     </ion-list>
   </form>
 </ion-content>

@@ -1,4 +1,4 @@
-import { State, Action, StateContext, Store, Selector } from "@ngxs/store";
+import { State, Action, StateContext, Store, Selector, NgxsOnInit } from "@ngxs/store";
 import { Navigate } from '@ngxs/router-plugin';
 import { MenuController, ModalController, AlertController, LoadingController } from '@ionic/angular';
 import { FlightService } from '../services/flight/flight.service';
@@ -12,7 +12,7 @@ import { HTTPResponse } from '@ionic-native/http/ngx';
 
 export interface Approval {
     type: string
-    list: any,
+    list: any
     selectedRequest: any
     loading : boolean
 }
@@ -49,7 +49,7 @@ export class HandleRequest {
         loading : true
     }
 })
-export class ApprovalState {
+export class ApprovalState implements NgxsOnInit {
 
     constructor(
         private store: Store,
@@ -61,6 +61,9 @@ export class ApprovalState {
         private approvalService : ApprovalService
     ) {
 
+    }
+    ngxsOnInit(states: StateContext<Approval>) {
+        console.log(states.getState().selectedRequest);
     }
 
     @Selector()
@@ -92,17 +95,18 @@ export class ApprovalState {
             type : action.type,
             loading : true
         });
+
         states.dispatch([new Navigate(['/', 'home', 'approval-request', action.type, 'request-list'])]); 
 
         let menuclose$ = from(this.menuCtrl.isOpen('first')).pipe(flatMap(el => iif(() => el,from(this.menuCtrl.close('first')),of(true))));
         const userId: number = this.store.selectSnapshot(UserState.getUserId);        
         let approveReq$ = this.approvalService.getApprovalList(action.type, userId);
         
-        return forkJoin(menuclose$)
+        return forkJoin([menuclose$])
         .pipe(
             flatMap(
                 () => {
-                    return forkJoin(approveReq$);
+                    return forkJoin([approveReq$]);
                 }
             ),
             map(
@@ -238,6 +242,7 @@ export class ApprovalState {
             case 'flight' : return data.data[0];
             case 'hotel' : return data[0];
             case 'bus' : return data[0];
+            case 'train' : return data[0];
         }
     }
 
@@ -246,6 +251,7 @@ export class ApprovalState {
             case 'flight' : return req.id;
             case 'hotel' : return req.id;
             case 'bus' : return req.req_id;
+            case 'train' : req.id;
         }
     }
 

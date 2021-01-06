@@ -186,10 +186,10 @@ export class ExpenseComponent implements OnInit {
       params : {'bill': name}
     };
 
-    let uploadResponse : FileUploadResult = await transferObj.upload(resolvepath,environment.baseURL+"/tripexpense/expense/uploadBill",options)
+    let uploadResponse = await transferObj.upload(resolvepath,environment.baseURL+"/tripexpense/expense/uploadBill",options)
     if(uploadResponse.responseCode == 200) {
-      let fileStatus : Entry =  await this.file.resolveLocalFilesystemUrl(resolvepath);
-      (fileStatus as FileEntry).file(
+      let fileStatus =  await this.file.resolveLocalFilesystemUrl(resolvepath);
+      (fileStatus as any).file(
         (data) => {
           mime = data.type;
           let uploadedBill :  bill = Object.assign({},{

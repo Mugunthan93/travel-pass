@@ -121,7 +121,7 @@
         <ion-label class="bold">{{ totalCost() | async | currency : 'INR' }}</ion-label>
       </ion-row>
     </ion-item>
-    <ion-buttons slot="end" (click)="bookHotel()">
+    <ion-buttons slot="end" (click)="confirmHotel()" *ngIf="openCombo.length >= 1">
       <ion-button>
         <ion-label>CONTINUE</ion-label>
       </ion-button>

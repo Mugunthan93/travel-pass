@@ -18,11 +18,13 @@ import { UniqTripValidators } from 'src/app/validator/uniq_trip_date.Validators'
   styleUrls: ["./trip.component.scss"],
 })
 export class TripComponent implements OnInit {
+
   tripForm: FormGroup;
   projectName$: Observable<projectList[]>;
   manager$: Observable<user[]>;
   userId: number;
   tripDate$: Observable<any[]>;
+  formSubmit : boolean = false;
 
   constructor(
     private store: Store,
@@ -50,7 +52,7 @@ export class TripComponent implements OnInit {
 
     this.tripForm
     .get("start_date")
-    .setValidators([DateMatchValidator("start_date", "end_date")]);
+    .setValidators([Validators.required,DateMatchValidator("start_date", "end_date")]);
 
     this.tripForm
       .get("start_date")
@@ -58,7 +60,7 @@ export class TripComponent implements OnInit {
 
     this.tripForm
       .get("end_date")
-      .setValidators([DateMatchValidator("start_date", "end_date")]);
+      .setValidators([Validators.required,DateMatchValidator("start_date", "end_date")]);
 
     this.tripForm
       .get("end_date")
@@ -74,6 +76,7 @@ export class TripComponent implements OnInit {
 
   addTrip() {
     console.log(this.tripForm);
+    this.formSubmit = true;
     if (this.tripForm.valid) {
       let payload: trippayload = {
         e_flag: 0,
