@@ -4,10 +4,8 @@
       <ion-text *ngIf="(flightList | sort : (sortBy$ | async).property : (sortBy$ | async).state ).length == 0">No
         result found
       </ion-text>
-      <ion-virtual-scroll 
-        [items]="flightList | sort : (sortBy$ | async).property : (sortBy$ | async).state"
-        approxItemHeight="60px">
-        <mat-expansion-panel [hideToggle]="true" #panel *virtualItem="let item;let i = index">
+      <mat-accordion multi="false">
+        <mat-expansion-panel *ngFor="let item of flightList | sort : (sortBy$ | async).property : (sortBy$ | async).state;let i = index" [hideToggle]="true" #panel approxItemHeight="60px">
           <mat-expansion-panel-header 
             [collapsedHeight]="'fit-content'" 
             [expandedHeight]="'fit-content'" 
@@ -81,7 +79,7 @@
             </ion-row>
           </ion-row>
         </mat-expansion-panel>
-      </ion-virtual-scroll>
+      </mat-accordion>
     </ion-col>
   </ion-row>
 </ion-content>

@@ -13,12 +13,12 @@
 
 <ion-content>
 
-  <ion-item *ngIf="!(isAdmin$ | async)">
+  <ion-item *ngIf="!(isAdmin$ | async) && (appovalStatus$ | async)">
     <ion-label class="large bold" slot="start">Approver</ion-label>
     <ion-label class="large" slot="end">{{approverName$ | async}}</ion-label>
   </ion-item>
 
-  <ion-item>
+  <ion-item *ngIf="(appovalStatus$ | async)">
     <ion-label class="large bold">Mail CC</ion-label>
     <ion-select okText="Okay" cancelText="Dismiss" multiple="true" [interfaceOptions]="ccAlertOptions"
       (ionChange)="mail($event)">

@@ -13,7 +13,10 @@ ion-content{
                 text-align: center;
                 margin-top: 20px;
             }
-            ion-virtual-scroll{
+            >mat-accordion {
+                @include flex-col-grid;
+                height:100%;
+                flex-grow:1;
                 >mat-expansion-panel {
     
                     >mat-expansion-panel-header {
@@ -195,10 +198,7 @@ ion-content{
                     }
                 }
             }
-            // >mat-accordion {
-            //     @include flex-col-grid;
-            //     height:100%;
-            //     flex-grow:1;
+            // ion-virtual-scroll{
             // }
         }
     }

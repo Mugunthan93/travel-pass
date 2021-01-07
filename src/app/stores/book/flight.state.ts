@@ -64,7 +64,7 @@ export interface sendRequest {
     transaction_id: any
     user_id: number
     traveller_id: number
-    managers:managers
+    managers: string[] | managers
     trip_type: string
     comments: string
     vendor_id: number
@@ -82,7 +82,7 @@ export interface rt_sendRequest {
     transaction_id: any
     user_id: number
     traveller_id: number
-    managers: managers
+    managers: string[]
     trip_type: string
     comments: string
     vendor_id: number
@@ -100,7 +100,7 @@ export interface int_sendRequest {
     transaction_id: any
     user_id: number
     traveller_id: number
-    managers: managers
+    managers: string[]
     trip_type: string
     comments: string
     vendor_id: number
@@ -110,6 +110,7 @@ export interface int_sendRequest {
 export interface passenger_details {
     kioskRequest: kioskRequest
     passenger:flightpassenger[]
+    fareQuoteResults : flightResult[],
     flight_details: flightResult[]
     country_flag:string
     user_eligibility: user_eligibility
@@ -121,6 +122,7 @@ export interface passenger_details {
 export interface rt_passenger_details {
     kioskRequest: rt_kioskRequest
     passenger: flightpassenger[]
+    fareQuoteResults : flightResult[]
     flight_details: flightResult[]
     country_flag: string
     user_eligibility: user_eligibility
@@ -132,6 +134,7 @@ export interface rt_passenger_details {
 export interface int_passenger_details {
     kioskRequest: rt_kioskRequest
     passenger: flightpassenger[]
+    fareQuoteResults : flightResult[]
     flight_details: flightResult[]
     country_flag: string
     user_eligibility: user_eligibility

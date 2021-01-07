@@ -85,6 +85,11 @@ export class OneWayBookState{
         return states.flight;
     }
 
+    @Selector()
+    static getFareQuote(states: onewayBook) {
+        return states.fareQuote;
+    }
+
     @Action(GetFareQuoteSSR)
     async getFareQuoteSSR(states: StateContext<onewayBook>) {
 
@@ -210,10 +215,10 @@ export class OneWayBookState{
                     states.dispatch(new Navigate(['/','home','dashboard','home-tab']));
                     successAlert.dismiss({
                         data: false,
-                        role: 'failed'
+                        role: 'success'
                     });
                     states.dispatch(new StateReset(SearchState,ResultState,BookState));
-                    this.modalCtrl.dismiss(null, null, 'send-request');
+                    this.modalCtrl.dismiss(null, null, 'book-confirm');
                 }
             }]
         });
@@ -267,10 +272,15 @@ export class OneWayBookState{
         let userId: number = this.store.selectSnapshot(UserState.getUserId);
         let vendorId: number = environment.vendorID;
 
+        let approveStatus = this.store.selectSnapshot(CompanyState.getApprovalStatus);
+        let manager = approveStatus ? this.store.selectSnapshot(UserState.getApprover) : this.bookingPerson();
+        let mailcc = approveStatus ? action.mailCC : null;
+
         sendReq = {
             passenger_details: {
                 kioskRequest: kioskRequest,
                 passenger: this.store.selectSnapshot(FlightPassengerState.getSelectedPassengers),
+                fareQuoteResults : [states.getState().fareQuote],
                 flight_details: [states.getState().fareQuote],
                 country_flag: this.store.selectSnapshot(OneWaySearchState.getTripType) == 'domestic' ? "0" : "1",
                 user_eligibility: {
@@ -348,8 +358,8 @@ export class OneWayBookState{
                     }]]
                 }
             },
-            managers : this.store.selectSnapshot(UserState.getApprover),
-            approval_mail_cc: action.mailCC,
+            managers :manager,
+            approval_mail_cc: mailcc,
             purpose: action.purpose,
             comments: '[\"' + action.comment + '\"]',
             booking_mode : "online",
@@ -369,6 +379,7 @@ export class OneWayBookState{
         try {
             const sendReqResponse = await this.flightService.sendRequest(sendReq);
             console.log(sendReqResponse);
+            console.log(JSON.parse(sendReqResponse.data));
             if (sendReqResponse.status == 200) {
                 successAlert.present();
             }
@@ -502,5 +513,11 @@ export class OneWayBookState{
                 return 0;
             }
         }
+    }
+
+    bookingPerson() {
+        let users = this.store.selectSnapshot(CompanyState.getEmployees);
+        let admins = users.filter(user => user.role == 'admin' && user.is_rightsto_book !== null && user.is_rightsto_book);
+        return [admins[0].email];
     }
 }

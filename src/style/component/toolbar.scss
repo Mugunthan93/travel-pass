@@ -107,8 +107,10 @@ $toolbar-padding:(
                         height: 70px;
                         justify-content: space-around;
             
-                        label {
-                            margin: 25px;
+                        ion-button {
+                            >ion-label {
+                                margin: 12px !important;
+                            }
                         }
             
                         >ion-row {

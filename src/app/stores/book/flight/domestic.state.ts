@@ -281,7 +281,7 @@ export class DomesticBookState {
                         role: 'failed'
                     });
                     this.store.dispatch(new StateReset(SearchState, ResultState, BookState));
-                    this.modalCtrl.dismiss(null, null, 'send-request');
+                    this.modalCtrl.dismiss(null, null, 'book-confirm');
                 }
             }]
         });
@@ -378,6 +378,7 @@ export class DomesticBookState {
                 kioskRequest: kioskRequest,
                 passenger: this.store.selectSnapshot(FlightPassengerState.getSelectedPassengers),
                 flight_details: [states.getState().departure.fareQuote, states.getState().return.fareQuote],
+                fareQuoteResults: [states.getState().departure.fareQuote, states.getState().return.fareQuote],
                 country_flag: this.store.selectSnapshot(RoundTripSearchState.getTripType) == 'domestic' ? "0" : "1",
                 user_eligibility: {
                     approverid: "airline",
@@ -460,11 +461,10 @@ export class DomesticBookState {
                     }]]
                 }
             },
-            managers: this.store.selectSnapshot(UserState.getApprover),
+            managers: [this.store.selectSnapshot(UserState.getApprover).email],
             approval_mail_cc: action.mailCC,
             purpose: action.purpose,
             comments: '[\"' + action.comment + '\"]',
-
             booking_mode: "online",
             status: "pending",
             trip_type: "business",
@@ -476,6 +476,8 @@ export class DomesticBookState {
             vendor_id: vendorId,
             trip_requests: this.store.selectSnapshot(RoundTripSearchState.getTripRequest)
         }
+
+        console.log(JSON.stringify(sendReq));
 
         try {
             const sendReqResponse = await this.flightService.rtSendRequest(sendReq);

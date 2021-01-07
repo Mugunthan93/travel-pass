@@ -125,6 +125,8 @@ export class DashboardState {
       const upcomingTripsResponse = await this.sharedService.upcomingTrips();
       let response = JSON.parse(upcomingTripsResponse.data);
 
+      console.log(response);
+
       let partition = _.partition(response.data, (el) => {
         return moment({}).isBefore(el.travel_date);
       });

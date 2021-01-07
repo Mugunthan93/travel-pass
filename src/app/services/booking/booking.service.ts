@@ -37,7 +37,7 @@ export class BookingService {
       case 'flight' : return '/airlineRequest/getairlinebyuserid/';
       case 'hotel' : return '/hotelRequest/gethotelbyuserid/';
       case 'bus' : return '/busRequest/getbusByUser/';
-      case 'train': return '/trainRequest/gettrainbyuserid/';
+      case 'train' : return '/trainRequest/gettrainbyuserid/';
     }
   }
 

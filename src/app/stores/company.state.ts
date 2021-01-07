@@ -111,6 +111,11 @@ export class CompanyState {
         return states;
     }
 
+    @Selector()
+    static getApprovalStatus(states : company) : boolean {
+        return states.need_approval;
+    }
+
     @Action(GetCompany)
     async getCompany(states: StateContext<company>, action: GetCompany) {
         try {

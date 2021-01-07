@@ -20,6 +20,7 @@ export class BookConfirmationComponent implements OnInit {
   approverName$: Observable<string>;
   isAdmin$: Observable<boolean>;
   requestType: string;
+  appovalStatus$ : Observable<boolean>;
 
   ccAlertOptions: AlertOptions;
   purposeAlertOptions: AlertOptions;
@@ -39,6 +40,7 @@ export class BookConfirmationComponent implements OnInit {
     this.managers$ = this.store.select(CompanyState.getManagerList);
     this.requestType = this.store.selectSnapshot(ResultState.getResultType);
     this.isAdmin$ = this.store.select(UserState.isAdmin);
+    this.appovalStatus$ = this.store.select(CompanyState.getApprovalStatus); 
 
     this.ccAlertOptions = {
       cssClass: 'cc'
