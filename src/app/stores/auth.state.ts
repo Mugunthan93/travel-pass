@@ -6,10 +6,10 @@ import { GetUser, UserState } from './user.state';
 import { CompanyState, GetCompany } from './company.state';
 import { user } from '../models/user';
 import { StateClear, StateReset, StateResetAll } from 'ngxs-reset-plugin';
-import { DashboardState, UpcomingTrips } from './dashboard.state';
+import { AllUpcomingTrips, DashboardState, UpcomingTrips } from './dashboard.state';
 import { EligibilityState, GetEligibility } from './eligibility.state';
 import { concat, forkJoin, from, of } from 'rxjs';
-import { catchError, finalize, flatMap, map, first } from 'rxjs/operators';
+import { catchError, finalize, flatMap, map, first, tap } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { ApprovalState } from './approval.state';
 import { BookState } from './book.state';
@@ -115,7 +115,7 @@ export class AuthState {
 
         return forkJoin([loading$,login$])
             .pipe(
-                flatMap(
+                map(
                     (response) => {
                         let login = response[1];
 
@@ -126,23 +126,18 @@ export class AuthState {
                         sessionStorage.setItem('session', JSONdata);
                         const userResponse : user = JSON.parse(login.data);
                         data = userResponse;
-
-                        return concat(
-                            states.dispatch([
-                                new GetUser(data),
-                                new GetCompany(data.customer_id),
-                                new GetEligibility(data.customer_id),
-                                new UpcomingTrips()
-                            ]),
-                            from(this.loadingCtrl.dismiss(null,null,'login')),
-                            states.dispatch(new Navigate(['/','home','dashboard','home-tab'])),
-                            of(                       
-                            states.patchState({
-                                userLogin : true
-                            }))
-                        )
+                        return data;
                     }
                 ),
+                tap((data) => states.dispatch([
+                    new GetUser(data),
+                    new GetCompany(data.customer_id),
+                    new GetEligibility(data.customer_id),
+                    new AllUpcomingTrips()
+                ])),
+                tap(() => from(this.loadingCtrl.dismiss(null,null,'login'))),
+                flatMap(() => states.dispatch(new Navigate(['/','home','dashboard','home-tab']))),
+                tap(() => states.patchState({userLogin : true})),
                 catchError(
                     (error) => {
                         console.log(error);

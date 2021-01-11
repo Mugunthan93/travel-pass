@@ -3,7 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { MealBaggageComponent } from '../meal-baggage/meal-baggage.component';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
-import { FLightBookState } from 'src/app/stores/book/flight.state';
+import { baggage, FLightBookState, meal } from 'src/app/stores/book/flight.state';
 import * as moment from 'moment';
 import { BookState } from 'src/app/stores/book.state';
 import { company } from 'src/app/models/company';
@@ -16,6 +16,7 @@ import { MultiCitySearchState } from 'src/app/stores/search/flight/multi-city.st
 import { SearchState } from 'src/app/stores/search.state';
 import { SelectModalComponent } from '../../shared/select-modal/select-modal.component';
 import { flightpassenger, AddPassenger, EditPassenger, FlightPassengerState } from 'src/app/stores/passenger/flight.passenger.states';
+import { FlightSearchState } from 'src/app/stores/search/flight.state';
 
 @Component({
   selector: 'app-passenger-detail',
@@ -32,6 +33,17 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
   formSubmit: boolean = false;
   Passenger: FormGroup;
   type: string;
+
+  onwardbaggage : baggage[];
+  returnbaggage : baggage[];
+
+  onwardmeal : meal[];
+  returnmeal : meal[];
+
+  baggagePlaceholder : string;
+  mealplaceholder : string;
+
+  isRoundTrip : boolean;
 
   selectedCity: city;
   customAlertOptions: AlertOptions;
@@ -59,6 +71,17 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
 
     this.company = this.store.selectSnapshot(CompanyState.getCompany);
 
+    this.onwardbaggage = this.store.selectSnapshot(FLightBookState.getOnwardBaggages);
+    this.returnbaggage = this.store.selectSnapshot(FLightBookState.getReturnBaggages);
+
+    this.onwardmeal = this.store.selectSnapshot(FLightBookState.getOnwardMeals);
+    this.returnmeal = this.store.selectSnapshot(FLightBookState.getReturnMeals);
+
+    this.isRoundTrip = this.store.selectSnapshot(FlightSearchState.getJourneyType) == 2;
+
+    this.baggagePlaceholder = this.isRoundTrip ? 'Select Baggage' : 'Select Onward Baggage';
+    this.mealplaceholder = this.isRoundTrip ? 'Select Meal' : 'Select Return Meal';
+
     if (this.form == 'add') {
       this.Passenger = new FormGroup({
         "Title": new FormControl(null,[Validators.required]),
@@ -77,7 +100,11 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
         "CompanyEmail": new FormControl(this.company.company_email, [Validators.required, Validators.pattern(this.regex.email)]),
         "GSTNumber": new FormControl(this.company.gst_details.gstNo, [Validators.required, Validators.pattern(this.regex.gst)]),
         "CompanyAddress": new FormControl(this.company.company_address_line1, [Validators.required]),
-        "CompanyNumber": new FormControl(this.company.phone_number, [Validators.required, Validators.pattern(this.regex.phone_number)])
+        "CompanyNumber": new FormControl(this.company.phone_number, [Validators.required, Validators.pattern(this.regex.phone_number)]),
+        "onwardbaggage" : new FormControl([]),
+        "returnbaggage" : new FormControl([]),
+        "onwardmeal" : new FormControl([]),
+        "returnmeal" : new FormControl([]),
       });
     }
     else if (this.form == 'edit'){
@@ -98,7 +125,11 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
         "CompanyEmail": new FormControl(this.pax.GSTCompanyEmail, [Validators.required, Validators.pattern(this.regex.email)]),
         "GSTNumber": new FormControl(this.pax.GSTNumber, [Validators.required, Validators.pattern(this.regex.gst)]),
         "CompanyAddress": new FormControl(this.pax.GSTCompanyAddress, [Validators.required]),
-        "CompanyNumber": new FormControl(this.pax.GSTCompanyContactNumber, [Validators.required, Validators.pattern(this.regex.phone_number)])
+        "CompanyNumber": new FormControl(this.pax.GSTCompanyContactNumber, [Validators.required, Validators.pattern(this.regex.phone_number)]),
+        "onwardbaggage" : new FormControl(this.pax.onwardExtraServices.Baggage),
+        "returnbaggage" : new FormControl(this.pax.returnExtraServices.Baggage),
+        "onwardmeal" : new FormControl(this.pax.returnExtraServices.Meal),
+        "returnmeal" : new FormControl(this.pax.returnExtraServices.Meal)
       });
     }
 
@@ -193,16 +224,16 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
         CountryCode: this.selectedCity.country_code,
         CountryName:this.selectedCity.country_name,
         onwardExtraServices: {
-          Meal: [],
+          Meal: this.Passenger.value.onwardmeal,
           MealTotal: 0,
           BagTotal: 0,
-          Baggage: []
+          Baggage: this.Passenger.value.onwardbaggage
         },
         returnExtraServices: {
-          Meal: [],
+          Meal: this.Passenger.value.returnmeal,
           MealTotal: 0,
           BagTotal: 0,
-          Baggage: []
+          Baggage: this.Passenger.value.onwardbaggage
         },
         Gender: this.flightBookState.getGender(this.Passenger.value.Title),
         PaxType: 1,
@@ -210,6 +241,26 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
         Fare: this.store.selectSnapshot(FLightBookState.getFare)
       }
       if (this.form == 'add') {
+
+        let passenger : flightpassenger = Object.assign({},this.Passenger.value);
+        passenger.onwardExtraServices = {
+          Meal: this.Passenger.value.onwardmeal,
+          MealTotal: 0,
+          BagTotal: 0,
+          Baggage: this.Passenger.value.onwardbaggage
+        }
+        passenger.returnExtraServices = {
+          Meal: this.Passenger.value.returnmeal,
+          MealTotal: 0,
+          BagTotal: 0,
+          Baggage: this.Passenger.value.onwardbaggage
+        }
+
+        delete passenger['onwardbaggage'];
+        delete passenger['returnbaggage'];
+        delete passenger['onwardmeal'];
+        delete passenger['returnmeal'];
+
         this.store.dispatch(new AddPassenger(passenger));
       }
       else {

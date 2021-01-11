@@ -9,7 +9,8 @@ import { CompanyState } from '../company.state';
 import { ModalController, AlertController } from '@ionic/angular';
 import { SearchState } from '../search.state';
 import { from } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { flatMap, map } from 'rxjs/operators';
+import { MealBaggage } from "../book/flight/oneway.state";
 
 
 export interface flightpassengerstate {
@@ -144,6 +145,10 @@ export class FlightPassengerState {
         let currentPass : flightpassenger[] = Object.assign([], states.getState().passengerList);
         currentPass.push(action.pass);
 
+        let baggage : number = action.pass.onwardExtraServices.Baggage[0] ? action.pass.onwardExtraServices.Baggage[0].Price : 0;
+        let meal : number = action.pass.onwardExtraServices.Meal[0] ? action.pass.onwardExtraServices.Meal[0].Price : 0;
+        states.dispatch(new MealBaggage(meal,baggage));
+
         states.patchState({
             passengerList: currentPass
         });
@@ -277,21 +282,17 @@ export class FlightPassengerState {
                 }
             }]
         })).pipe(
-            map(
+            flatMap(
                 (missingEl) => {
                     return from(missingEl.present());  
                 }
             )
         );
 
-        if (passportValidation == 'international') {
-            if (_.isNull(passenger[0].PassportNo) || _.isNull(passenger[0].PassportExpiry)) {
-                return missing$;
-            }
+        if (passportValidation == 'international' &&( _.isNull(passenger[0].PassportNo) || _.isNull(passenger[0].PassportExpiry))) {
+            return missing$;
         }
-        else {
-            this.modalCtrl.dismiss(null, null, 'passenger-info');
-        }
+        this.modalCtrl.dismiss(null, null, 'passenger-info');
     }
 
 }

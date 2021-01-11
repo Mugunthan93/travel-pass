@@ -6,6 +6,8 @@ import { HTTPResponse } from '@ionic-native/http/ngx';
 import { Store } from '@ngxs/store';
 import { UserState } from 'src/app/stores/user.state';
 import { tap } from 'rxjs/operators';
+import { request_param } from 'src/app/stores/booking.state';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -23,13 +25,23 @@ export class BookingService {
     let typeUrl2 : string = this.typeUrl2(type);
     const userId: number = this.store.selectSnapshot(UserState.getUserId);  
     let id : number = userId;
-    const startDate = moment({}).add(1,'days').format('YYYY-MM-DD%2023:59:59.000+00:00');
-    const endDate = moment({}).subtract(1, "months").format('YYYY-MM-DD%2000:00:01.000+00:00'); 
-    const book = this.bookUrl(type,bookmode);
+    const startDate = moment({}).format('YYYY-MM-DD%2023:59:59.000+00:00');
+    const endDate = moment({}).subtract(1,'year').format('YYYY-MM-DD%2000:00:01.000+00:00'); 
+    const book : { [key: string]: string | string[] } | string = this.bookUrl(type,bookmode);
 
     let url : string = typeUrl + id.toString() + '/' + booktype + '/'  + endDate + "/" + startDate + typeUrl2;
     console.log(url);
-    return from(this.http.get(url, book));
+
+    if(type == 'flight' || type == 'train') {
+      let params : { [key: string]: string | string[] } = { 
+        "booking_mode": bookmode 
+      }
+
+      return from(this.http.get(url, params));
+    }
+    else  {
+      return from(this.http.get(url, {}));
+    }
   }
 
   typeUrl1(type : string) {
@@ -50,7 +62,10 @@ export class BookingService {
     }
   }
 
-  bookUrl(type : string, mode : string) {
+  bookUrl(type : string, mode : string) : { [key: string]: string | string[] } {
+
+    let params = null;
+
     switch(type) {
       case 'flight' : return { "booking_mode": mode };
       case 'hotel' : return {};
@@ -59,14 +74,19 @@ export class BookingService {
     }
   }
 
-  // getId(type : string) {
-  //   const companyId: number = this.store.selectSnapshot(UserState.getcompanyId);        
-  //   const userId: number = this.store.selectSnapshot(UserState.getUserId);  
-  //   switch(type) {
-  //     case 'flight' : return companyId;
-  //     case 'hotel' : return userId;
-  //     case 'bus' : return userId;
-  //     case 'train': return userId;
-  //   }
-  // }
+  bookUrl2(type : string, mode : string) : string {
+    switch(type) {
+      case 'flight' : return "?booking_mode="+mode;
+      case 'hotel' : return "";
+      case 'bus' : return "";
+      case 'train': return "?booking_mode="+mode;
+    }
+  }
+
+  sendChangeRequet(param : request_param) {
+    this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
+    this.http.setData('json');
+    return from(this.http.post('/airlines/sendChangeRequest',param));
+  }
+  
 }

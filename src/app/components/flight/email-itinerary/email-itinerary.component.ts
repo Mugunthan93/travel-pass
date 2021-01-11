@@ -9,9 +9,9 @@ import { FormControl, Validators } from '@angular/forms';
 import { StateReset } from 'ngxs-reset-plugin';
 
 export interface itineraryPayload{
-  toemail: string,
-  ccemail: string,
   bccemail: string,
+  toemail?: string,
+  ccemail?: string,
   subject: string,
   mailcontent: string
 }

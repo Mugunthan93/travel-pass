@@ -124,7 +124,7 @@ export class HistoryPage implements OnInit {
     );
   }
 
-  viewFile(pnr: string) {
+  viewFile(pnr: string[]) {
     this.store.dispatch(new ViewFile(pnr));
   }
 
@@ -132,7 +132,7 @@ export class HistoryPage implements OnInit {
     return JSON.parse(booking.passenger_details.PNR);
   }
 
-  downloadTicket(pnr: string) {
+  downloadTicket(pnr: string[]) {
     this.store.dispatch(new DownloadTicket(pnr));
   }
 
@@ -140,7 +140,7 @@ export class HistoryPage implements OnInit {
     this.store.dispatch(new GetRescheduleTicket(ticket,RescheduleComponent));
   }
 
-  cancelTicket(ticket: any) {
-    this.store.dispatch(new GetcancelTicket(ticket,CancellationComponent));
+  cancelTicket() {
+    // this.store.dispatch(new GetcancelTicket(ticket,type,CancellationComponent));
   }
 }

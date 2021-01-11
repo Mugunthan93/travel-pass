@@ -18,6 +18,12 @@ ion-content{
             >ion-datetime{
                 padding: 0px;
             }
+
+            ion-select {
+                --padding-top: 8px;
+                --padding-bottom: 8px;
+                width: -webkit-fill-available;
+            }
         }
         >ion-button{
             margin-top:10px;
@@ -25,6 +31,7 @@ ion-content{
             padding-left:15px;
             padding-right:15px;
         }
+
     }
 
 }

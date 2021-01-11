@@ -68,7 +68,7 @@
     <ion-item lines="full">
       <ion-input type="text" placeholder="Address" formControlName="Address" [ngClass]="errorClass('Address')"></ion-input>
     </ion-item>
-    <ion-item lines="full" (click)="selectCity('City')" (ionFocus)="selectCity('City')">
+    <ion-item lines="full" (ionFocus)="selectCity('City')">
       <ion-input placeholder="Select City" formControlName="City" [ngClass]="errorClass('City')"></ion-input>
     </ion-item>
     <ion-item lines="full">
@@ -119,6 +119,38 @@
     </ion-item>
     <ion-item lines="full">
       <ion-input type="number" placeholder="Company Number" formControlName="CompanyNumber" [ngClass]="errorClass('CompanyNumber')" required pattern></ion-input>
+    </ion-item>
+
+    <ion-item lines="full" *ngIf="onwardbaggage.length >= 1 || returnbaggage.length >= 1">
+      <ion-label class="large bold">Baggage Details</ion-label>
+    </ion-item>
+
+    <ion-item *ngIf="onwardbaggage.length >= 1">
+      <ion-select [placeholder]="baggagePlaceholder" [interfaceOptions]="customAlertOptions" formControlName="onwardbaggage">
+        <ion-select-option *ngFor="let onbag of onwardbaggage" value="onbag">{{ onbag.Weight +' Kg / Rs: '+ onbag.Price }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="returnbaggage.length >= 1">
+      <ion-select placeholder="Select Return Baggage" [interfaceOptions]="customAlertOptions" formControlName="returnbaggage">
+        <ion-select-option *ngFor="let rebag of onwardbaggage" value="rebag">{{ rebag.Weight +' Kg / Rs: '+ rebag.Price }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item lines="full" *ngIf="onwardmeal.length >= 1 || returnmeal.length >= 1">
+      <ion-label class="large bold">Meals Details</ion-label>
+    </ion-item>
+
+    <ion-item *ngIf="onwardmeal.length >= 1">
+      <ion-select [placeholder]="mealplaceholder" [interfaceOptions]="customAlertOptions" formControlName="onwardmeal">
+        <ion-select-option *ngFor="let onmeal of onwardmeal" value="onbag">{{ onmeal.Quantity +' Unit / Rs: '+ onmeal.Price }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="returnmeal.length >= 1">
+      <ion-select placeholder="Select Return Meal" [interfaceOptions]="customAlertOptions" formControlName="returnmeal">
+        <ion-select-option *ngFor="let remeal of returnmeal" value="rebag">{{ remeal.Quantity +' Unit / Rs: '+ remeal.Price }}</ion-select-option>
+      </ion-select>
     </ion-item>
 
     

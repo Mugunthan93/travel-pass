@@ -13,21 +13,21 @@
 
 <ion-content>
 
-  <ion-item>
+  <ion-item *ngIf="(type$ | async) == 'flight' || (type$ | async) == 'hotel'">
     <ion-label slot="start">Cancellation Type</ion-label>
-    <ion-radio-group slot="end">
+    <ion-radio-group slot="end" [value]="cancelType" (ionChange)="changeCancelType($event)">
       <ion-item>
         <ion-label>Full</ion-label>
-        <ion-radio slot="start" value="Male"></ion-radio>
+        <ion-radio slot="start" value="full"></ion-radio>
       </ion-item>
       <ion-item>
         <ion-label>Partial</ion-label>
-        <ion-radio slot="start" value="Female"></ion-radio>
+        <ion-radio slot="start" value="partial"></ion-radio>
       </ion-item>
     </ion-radio-group>
   </ion-item>
 
-  <mat-accordion class="flight" multi="true" *ngFor="let flight of (ticket$ | async).passenger_details.flight_details;let i = index">
+  <mat-accordion [attr.show]="type == 'flight'" class="flight" multi="true" *ngFor="let flight of (ticket$ | async).passenger_details.flight_details;let i = index">
     <mat-expansion-panel *ngFor="let seg of flight.Segments;let i = index" expanded="true" disabled="true">
       <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">
         <ion-item>
@@ -76,6 +76,15 @@
       </div>
     </mat-expansion-panel>
   </mat-accordion>
+
+  <ion-item>
+    <ion-label slot="start" class="bold large">Cancel Remarks</ion-label>
+    <ion-input [formControl]="cancellationForm" slot="end" class="form-control" [ngClass]="{
+      'is-valid': cancellationForm.valid,
+      'is-invalid': cancellationForm.invalid
+    }">
+    </ion-input>
+  </ion-item>
 
   <ion-card>
     <ion-card-header>
@@ -149,7 +158,7 @@
 <ion-footer>
   <!-- <form [formGroup]="cancellationForm" (ngSubmit)="submitCancellation()"> -->
     <ion-toolbar>
-      <ion-buttons slot="end">
+      <ion-buttons slot="end" (click)="cancelTicket()">
         <ion-button type="submit">
           <ion-label class="medium bold">Apply Cancellation</ion-label>
         </ion-button>

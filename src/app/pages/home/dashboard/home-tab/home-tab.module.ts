@@ -8,13 +8,15 @@ import { HomeTabPageRoutingModule } from './home-tab-routing.module';
 
 import { HomeTabPage } from './home-tab.page';
 import { TripListComponent } from 'src/app/components/trip-list/trip-list.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HomeTabPageRoutingModule
+    HomeTabPageRoutingModule,
+    MatExpansionModule
   ],
   declarations: [
     HomeTabPage,

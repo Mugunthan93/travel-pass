@@ -20,6 +20,10 @@ ion-content{
                 margin: auto;
             }
         }
+
+        >ion-input {
+            min-width: -webkit-fill-available;
+        }
     }
 
     >mat-accordion.flight {

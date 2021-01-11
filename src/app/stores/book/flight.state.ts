@@ -184,7 +184,7 @@ export interface value {
 }
 
 export interface services {
-    Meal: []
+    Meal: meal[]
     Baggage:baggage[]
     MealTotal: number
     BagTotal: number
@@ -202,7 +202,7 @@ export interface baggage {
     Currency: string
     Price: number
     WayType: number
-    option_label: string
+    option_label?: string
 }
 
 export interface meal{
@@ -525,12 +525,12 @@ export class SetNonVeg {
         comment: null,
         fare: null,
         meal: {
-            onward: null,
-            return : null
+            onward: [],
+            return : []
         },
         baggage: {
-            onward: null,
-            return: null
+            onward: [],
+            return: []
         },
         selectedService: 'meal',
         veg: true,
@@ -637,8 +637,8 @@ export class FLightBookState {
     @Action(SetMeal)
     setMeal(states: StateContext<flight>, action: SetMeal) {
 
-        let onward: meal[] = null;
-        let ret: meal[] = null;
+        let onward: meal[] = [];
+        let ret: meal[] = [];
 
         if (action.onward != null || action.onward != undefined) {
             if (action.onward.some((el : meal[]) => Array.isArray(el))) {
@@ -672,8 +672,8 @@ export class FLightBookState {
     @Action(SetBaggage)
     setBaggage(states: StateContext<flight>, action: SetBaggage) {
 
-        let onward: baggage[] = null;
-        let ret: baggage[] = null;
+        let onward: baggage[] = [];
+        let ret: baggage[] = [];
 
         if (action.onward != null || action.onward != undefined) {
             if (action.onward.some((el: baggage[]) => Array.isArray(el))) {

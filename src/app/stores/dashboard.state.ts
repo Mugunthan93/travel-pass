@@ -6,20 +6,25 @@ import { MenuController, ModalController } from '@ionic/angular';
 import { SharedService } from '../services/shared/shared.service';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { CompanyState } from './company.state';
-import { UserState } from './user.state';
-import { map, flatMap, mergeMap, toArray } from 'rxjs/operators';
-import { of, from } from 'rxjs';
-import { TripComponent } from '../components/expense/trip/trip.component';
+import { map, mergeMap, toArray } from 'rxjs/operators';
+import { of, from, forkJoin } from 'rxjs';
+import { BookingService } from "../services/booking/booking.service";
+import { HTTPResponse } from "@ionic-native/http/ngx";
 
 export interface dashboard {
-  upcomingTrips: upcomingTrips[]
+  upcomingTrips: upcomingTrips[],
+  upcomingTripObject : any[],
+  loading : boolean
 }
 
 export interface upcomingTrips {
-    from: string,
-    to: string,
-    travelStartDate: string
+    type : string
+    from: string
+    to: string
+    date : string
+    ticket : string[]
+    journey : number
+    id : number
 }
 
 export class GetDashboard{
@@ -61,24 +66,45 @@ export class UpcomingTrips {
     }
 }
 
+export class AllUpcomingTrips {
+  static readonly type = '[Dashboard] AllUpcomingTrips';
+  constructor() {
+
+  }
+}
+
 
 @State<dashboard>({
   name: "Dashboard",
   defaults: {
-    upcomingTrips: []
+    upcomingTrips: [],
+    upcomingTripObject : [],
+    loading : false
   },
 })
 export class DashboardState {
+
   constructor(
     private store: Store,
     public menuCtrl: MenuController,
     private sharedService: SharedService,
-    public modalCtrl : ModalController
+    public modalCtrl : ModalController,
+    public bookingService : BookingService
   ) {}
 
   @Selector()
-  static getUpcomingTrips(state: dashboard) {
+  static getUpcomingTrips(state: dashboard) : upcomingTrips[] {
     return state.upcomingTrips;
+  }
+
+  @Selector()
+  static getUpcomingTripsObject(state: dashboard) : any[] {
+    return state.upcomingTripObject;
+  }
+
+  @Selector()
+  static getLoading(state: dashboard) : boolean {
+    return state.loading;
   }
 
   @Action(GetDashboard)
@@ -151,28 +177,145 @@ export class DashboardState {
     }
   }
 
-  tripResponse(data: any[]) {
-    let trip: upcomingTrips[] = [];
-    data.forEach((element, index) => {
-      let lastTrip =
-        element.passenger_details.flight_details[0].Segments.length - 1;
-      let lastFlight =
-        element.passenger_details.flight_details[0].Segments[lastTrip].length -
-        1;
+  tripResponse(data: any[]) : upcomingTrips[] {
+    return data.map(
+      (trip) => {
+        if(trip.hasOwnProperty('trip_requests')) {
+          let lastTrip = trip.passenger_details.flight_details[0].Segments.length - 1;
+          let lastFlight = trip.passenger_details.flight_details[0].Segments[lastTrip].length - 1;
+          let lastdetail = trip.passenger_details.flight_details.length - 1;
+          
+          let lastsegment =  trip.passenger_details.flight_details[lastdetail].Segments[lastTrip][lastFlight-1];
+          let rescheduledTrip = _.isNull(lastsegment) ?  trip.passenger_details.flight_details[lastdetail].Segments[lastTrip][lastFlight-1].Destination.Airport.CityCode : trip.passenger_details.flight_details[0].Segments[0][0].Destination.Airport.CityCode
 
-      trip[index] = {
-        from:
-          element.passenger_details.flight_details[0].Segments[0][0].Origin
-            .Airport.CityCode,
-        to:
-          element.passenger_details.flight_details[0].Segments[lastTrip][
-            lastFlight
-          ].Destination.Airport.CityCode,
-        travelStartDate:
-          element.passenger_details.flight_details[0].Segments[0][0].Origin
-            .DepTime,
-      };
-    });
-    return trip;
+          return {
+            type : 'flight',
+            from: trip.passenger_details.flight_details[0].Segments[0][0].Origin.Airport.CityCode,
+            to: rescheduledTrip,
+            date: trip.passenger_details.flight_details[0].Segments[0][0].Origin.DepTime,
+            ticket : JSON.parse(trip.passenger_details.PNR),
+            journey : trip.trip_requests.JourneyType,
+            id : trip.id
+          }
+        }
+        else if(trip.hasOwnProperty('hotel_requests')) {
+          return {
+            type : 'hotel',
+            from: moment(trip.guest_details.basiscInfo.CheckInDate).utc().format("YYYY-MM-DDTHH:mm:ss.SSSSZ"),
+            to: moment(trip.guest_details.basiscInfo.CheckOutDate).utc().format("YYYY-MM-DDTHH:mm:ss.SSSSZ"),
+            date: _.upperCase(trip.guest_details.basiscInfo.HotelName) + '-' + _.upperCase(trip.guest_details.basiscInfo.HotelAddress),
+            ticket : [],
+            journey : null,
+            id : trip.id
+          }
+        }
+        else if(trip.hasOwnProperty('bus_requests')) {
+          console.log(trip.passenger_details);
+          return {
+            type : 'bus',
+            from: trip.passenger_details.bookedDetails.sourceCity,
+            to: trip.passenger_details.bookedDetails.destinationCity,
+            date: moment(trip.passenger_details.bookedDetails.bookingDate).utc().format("YYYY-MM-DDTHH:mm:ss.SSSSZ"),
+            ticket : [trip.passenger_details.bookedDetails.opPNR],
+            journey : 1,
+            id : trip.id
+          }
+        }
+        else if(trip.hasOwnProperty('train_requests')) {
+          console.log(trip);
+          let lastTrip =  trip.passenger_details.trainDetails.length - 1;
+          return {
+            type : 'train',
+            from: trip.passenger_details.trainDetails[0].OriginName,
+            to: trip.passenger_details.trainDetails[lastTrip].DestinationName,
+            date: moment(trip.passenger_details.trainDetails[0].depDate).utc().format("YYYY-MM-DDTHH:mm:ss.SSSSZ"),
+            ticket : trip.passenger_details.trainDetails.map((el) => {
+              return el.bookedResponse ? el.bookedResponse.PNR : [];
+            }),
+            journey : trip.train_requests.JourneyType,
+            id : trip.id
+          }
+        }
+      }
+    );
   }
+
+  @Action(AllUpcomingTrips)
+  allUpcomingTrips(states : StateContext<dashboard>) {
+
+    states.patchState({
+      upcomingTripObject : [],
+      upcomingTrips : [],
+      loading : true
+    });
+
+
+    let type$ = from(['flight','hotel','bus','train']);
+    let mode$ = from(['online','offline']);
+
+    return mode$
+      .pipe(
+        mergeMap(
+          (mode) => {
+            return type$
+              .pipe(
+                mergeMap(
+                  (type) => {
+                    let bookedTrips$ = this.bookingService.myBooking(type,'booked',mode);
+                    let rescheduledTrips$ = this.bookingService.myBooking(type,'rescheduled',mode);
+
+                    return forkJoin([bookedTrips$,rescheduledTrips$])
+                      .pipe(
+                        map(
+                          (response) => {
+                            let data = _.flatMap(this.bookingData(response))
+                            let upcoming = data.filter(el => {
+                              if(_.isUndefined(el.travel_date) || _.isNull(el.travel_date)) {
+                                return false;
+                              }
+                              else {
+                                console.log(el.travel_date,moment({}).isBefore(moment(el.travel_date)));
+                                return moment({}).isBefore(moment(el.travel_date),'day');
+                              }
+                            });
+                            console.log(upcoming);
+                            return upcoming;
+                          }
+                        )
+                      );
+                  }
+                ),
+                toArray()
+              )
+          }
+        ),
+        toArray(),
+        map(
+          (response) => {
+            let allupcomingTrips = _.flattenDeep(response);
+            let upcoming = _.chain(this.tripResponse(allupcomingTrips))
+              .filter(el => !(el.date == 'Invalid date' || _.isUndefined(el.from) || _.isUndefined(el.to) || el.ticket.length == 0))
+              .sortBy(el => moment(el.date).isValid ? el.date : el.from)
+              .value();
+            console.log(allupcomingTrips,upcoming);
+            states.patchState({
+              upcomingTrips : upcoming,
+              upcomingTripObject : allupcomingTrips,
+              loading : false
+            });
+          }
+        )
+      );
+
+  }
+
+  bookingData(data : HTTPResponse[]) {
+    return data.map(
+        (el) => {
+            return _.isUndefined(JSON.parse(el.data).data) ? [] : JSON.parse(el.data).data;
+        }
+    );
+}
+
+
 }

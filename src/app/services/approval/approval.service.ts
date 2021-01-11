@@ -20,7 +20,6 @@ export class ApprovalService {
     }
     return from(this.http.get( typeUrl + userId, encrytkey));
   }
-
   
   //get ticket by manager from approval request list 
   getReqTicket(ticketId: string,type : string): Observable<HTTPResponse> {

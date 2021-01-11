@@ -4,7 +4,7 @@
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework.com" href="http://ionicframework.com/">Ionic Framework Team</author>
     <allow-navigation href="*" />
-    <content original-src="index.html" src="http://192.168.1.14:8100" />
+    <content original-src="index.html" src="http://192.168.1.8:8100" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -26,6 +26,7 @@
     <preference name="KeyboardDisplayRequiresUserAction" value="false" />
     <preference name="GOOGLE_MAPS_ANDROID_API_KEY" value="AIzaSyDVaJa4N9N1qM8OglHSt5BKsqPn8LikZJk" />
     <preference name="AndroidLaunchMode" value="singleTask" />
+    <preference name="loadUrlTimeoutValue" value="700000" />
     <platform name="android">
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application" xmlns:android="http://schemas.android.com/apk/res/android">
             <application android:networkSecurityConfig="@xml/network_security_config" />
@@ -114,5 +115,8 @@
     <plugin name="cordova-plugin-googlemaps" spec="^2.7.0" />
     <allow-navigation href="http://192.168.1.6:8100" sessionid="26566cb6" />
     <allow-navigation href="http://192.168.1.13:8100" sessionid="776e2d61" />
-    <allow-navigation href="http://192.168.1.14:8100" sessionid="6a77043d" />
+    <allow-navigation href="http://192.168.1.10:8100" sessionid="d46d5f19" />
+    <allow-navigation href="http://192.168.1.12:8100" sessionid="183687bd" />
+    <allow-navigation href="http://192.168.1.11:8100" sessionid="a30d033a" />
+    <allow-navigation href="http://192.168.1.8:8100" sessionid="3260ec30" />
 </widget>

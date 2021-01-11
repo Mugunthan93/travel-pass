@@ -32,6 +32,7 @@ export class AppComponent implements OnInit, OnDestroy{
     this.theme$ = this.store.select(ThemeState.getTheme);
     await this.platform.ready();
     await this.androidFullScreen.immersiveMode();
+    await this.writeAccess();
 
     // let checkDir$ = concat([
     //   from(this.file.checkDir(this.file.externalRootDirectory, 'TravellersPass')),
@@ -67,6 +68,7 @@ export class AppComponent implements OnInit, OnDestroy{
     try {
       const writeExtStorage = this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE;
       const permission = await this.androidPermissions.hasPermission(writeExtStorage);
+      console.log(permission);
       if (!permission) {
         await this.androidPermissions.requestPermission(writeExtStorage);
       }

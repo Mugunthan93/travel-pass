@@ -1,10 +1,10 @@
-import { State, Action, StateContext, Store, Selector } from "@ngxs/store";
+import { State, Action, StateContext, Store, Selector, ofActionSuccessful } from "@ngxs/store";
 import { Navigate } from '@ngxs/router-plugin';
 import { MenuController, LoadingController, AlertController, ModalController } from '@ionic/angular';
 import { concat } from 'rxjs';
 import { BookingService } from '../services/booking/booking.service';
 import { forkJoin, from, of } from 'rxjs';
-import { catchError, flatMap, map } from 'rxjs/operators';
+import { catchError, concatMap, flatMap, map, tap } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { File } from '@ionic-native/file/ngx';
@@ -14,6 +14,10 @@ import { GetToken, HotelResultState } from './result/hotel.state';
 import { ApprovalService } from '../services/approval/approval.service';
 import { flightResult } from '../models/search/flight';
 import { FileTransfer } from "@ionic-native/file-transfer/ngx";
+import { environment } from "src/environments/environment";
+import { AllUpcomingTrips, DashboardState } from "./dashboard.state";
+import { FlightService } from "../services/flight/flight.service";
+import { AndroidPermissions } from "@ionic-native/android-permissions/ngx";
 
 export interface booking {
     type: string
@@ -22,6 +26,7 @@ export interface booking {
     reschedule: any
     loading: boolean
     cancel: any
+    cancelType : 'full' | 'partial'
     mode : string
     status : string
 }
@@ -59,11 +64,12 @@ export interface ticketCRIInfo {
 }
 
 export interface request_param {
-  BookingId: number[];
+  BookingId: number;
   RequestType: number;
   CancellationType: number;
   Remarks: string;
-  TicketId: number[];
+  EndUserIp: string
+  TokenId: string
 }
 
 export interface org_cancel_details {
@@ -109,14 +115,14 @@ export class ChangeBookingMode {
 
 export class DownloadTicket {
     static readonly type = "[booking] DownloadTicket";
-    constructor(public booked : string) {
+    constructor(public booked : string[]) {
 
     }
 }
 
 export class GetRescheduleTicket {
   static readonly type = "[booking] GetRescheduleTicket";
-  constructor(public ticket: any, public modal : any) {}
+  constructor(public id : number, public modal : any) {}
 }
 
 
@@ -129,19 +135,19 @@ export class RescheduleTicket {
 
 export class GetcancelTicket {
   static readonly type = "[booking] GetcancelTicket";
-  constructor(public ticket: any,public modal : any) {}
+  constructor(public id: number,public type : string, public modal : any) {}
 }
 
 export class CancelTicket {
     static readonly type = "[booking] CancelTicket";
-    constructor(public ticket : any) {
+    constructor(public remarks : string) {
 
     }
 }
 
 export class ViewFile {
     static readonly type = "[booking] ViewFile";
-    constructor(public pnr : string) {
+    constructor(public pnr : string[]) {
 
     }
 }
@@ -149,6 +155,12 @@ export class ViewFile {
 export class SetStatus {
   static readonly type = "[booking] SetStatus";
   constructor(public status : string) {
+  }
+}
+
+export class SetCancelType {
+  static readonly type = "[booking] SetCancelType";
+  constructor(public status : 'full' | 'partial') {
   }
 }
 
@@ -162,6 +174,7 @@ export class SetStatus {
     mode : 'online',
     reschedule: null,
     cancel: null,
+    cancelType : 'full',
     status : 'open'
   },
 })
@@ -174,9 +187,10 @@ export class BookingState {
     public alertCtrl: AlertController,
     private bookingService: BookingService,
     private file: File,
-    private transfer: FileTransfer,
     private fileOpener: FileOpener,
-    private approvalService: ApprovalService
+    private approvalService: ApprovalService,
+    public flightService : FlightService,
+    public androidPermissions : AndroidPermissions
   ) {}
 
   @Selector()
@@ -223,14 +237,27 @@ export class BookingState {
   }
 
   @Selector()
+  static getCancelType(state: booking) : 'full' | 'partial' {
+    return state.cancelType;
+  }
+
+  @Selector()
   static getBookingMode(state : booking) : string {
       return state.mode;
   }
 
+  
   @Action(SetStatus)
   setStatus(states: StateContext<booking>, action: SetStatus) {
     states.patchState({
       status : action.status
+    });
+  }
+
+  @Action(SetCancelType)
+  setCancelType(states: StateContext<booking>, action: SetCancelType) {
+    states.patchState({
+      cancelType : action.status
     });
   } 
 
@@ -308,8 +335,6 @@ export class BookingState {
                         });
 
                         return of(true);
-                            
-
                     }
                 )
             )
@@ -370,43 +395,103 @@ export class BookingState {
   }
 
   @Action(ViewFile)
-  viewFile(...el) {
-    let action: ViewFile = el[1];
-    const failedAlert$ = from(
+  viewFile(states : StateContext<booking>, action : ViewFile) {
+    const failedAlert$ = (pnr) => from(
       this.alertCtrl.create({
         header: "File Error",
         subHeader: "File Not Found",
+        id : 'view-alert',
         buttons: [
           {
             text: "Retry",
             handler: () => {
-              this.store.dispatch(new DownloadTicket(action.pnr));
+              return this.store.dispatch(new DownloadTicket(pnr))
+                .pipe(
+                  tap(() => states.dispatch(new ViewFile(pnr)))
+                )
             },
           },
+          {
+            text: "cancel",
+            handler: () => {
+              this.alertCtrl.dismiss(null,null,'view-alert');
+            }
+          }
         ],
       })
     ).pipe(
-      map((alert) => {
+      flatMap((alert) => {
         return from(alert.present());
       })
     );
-    let fileopener$ = from(
-      this.fileOpener.open(
-        this.file.externalRootDirectory +
-          "/TravellersPass/Ticket/" +
-          action.pnr +
-          ".pdf",
-        "application/pdf"
-      )
-    );
+    let filepath = (pnr) => this.file.externalRootDirectory +"/TravellersPass/Ticket/" + pnr +".pdf";
+    let fileopener$ = (pnr) => from(this.fileOpener.open(filepath(pnr),"application/pdf"));
 
-    return fileopener$.pipe(
-      catchError((error) => {
-        if (error.status == 9) {
-          return failedAlert$;
-        }
+    return from(action.pnr)
+      .pipe(
+        concatMap((pnr) => {
+          return fileopener$(pnr)
+            .pipe(
+              catchError((error) => {
+                console.log(error);
+                if (error.status == 9) {
+                  return failedAlert$(pnr);
+                }
+              })
+            );
+        })
+      );
+  }
+
+  @Action(DownloadTicket)
+  downoadTicket(states : StateContext<booking>, action : DownloadTicket) {
+
+    const failedAlert$ = (msg,sub) => from(
+      this.alertCtrl.create({
+        header: msg,
+        subHeader: sub,
+        id : 'view-alert',
+        buttons: [
+          {
+            text: "cancel",
+            handler: () => {
+              this.alertCtrl.dismiss(null,null,'view-alert');
+            }
+          }
+        ],
+      })
+    ).pipe(
+      flatMap((alert) => {
+        return from(alert.present());
       })
     );
+
+    console.log(states);
+    let req$ = this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE);
+    let checkPerm$ = this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE);
+    
+    let transferObject = new FileTransfer().create();
+    let url = environment.baseURL + '/ticket/' + action.booked + '.pdf';
+    let path = this.file.externalRootDirectory +"TravellersPass/Ticket/" + action.booked +".pdf";
+    let transfer$ = from(transferObject.download(url,path));
+    return from(checkPerm$)
+      .pipe(
+        flatMap((has) => {
+          if(has.hasPermission) {
+            return transfer$;
+          }
+          else {
+            return from(req$).pipe(tap(() => req$))
+          }
+        }),
+        catchError(
+          (error) => {
+            console.log(error);
+            return failedAlert$("Download Failed","Problem downloading the ticket");
+          }
+        )
+      );
+
   }
 
   @Action(RescheduleTicket)
@@ -414,15 +499,12 @@ export class BookingState {
     const successAlert$ = from(
       this.alertCtrl.create({
         header: "Approve Success",
-        subHeader: "Request has been approved successfully",
+        subHeader: "Reschedule Request has been send successfully",
         buttons: [
           {
             text: "OK",
             handler: () => {
-              return concat(
-                from(this.modalCtrl.dismiss("reschedule-ticket")),
-                states.dispatch(new MyBooking(states.getState().type))
-              );
+              return concat(states.dispatch(new AllUpcomingTrips()),this.modalCtrl.dismiss(null,null,'reschedule-ticket'));
             },
           },
         ],
@@ -432,12 +514,12 @@ export class BookingState {
     let failedAlert$ = from(
       this.alertCtrl.create({
         header: "Approve Failed",
-        subHeader: "Failed to Approve the Request",
+        subHeader: "Failed to Reschedule the Request",
         buttons: [
           {
             text: "Cancel",
             handler: () => {
-              states.dispatch(new MyBooking(states.getState().type));
+              return concat(this.modalCtrl.dismiss(null,null,'reschedule-ticket'));
             },
           },
         ],
@@ -527,8 +609,11 @@ export class BookingState {
       })
     ).pipe(flatMap((el) => from(el.present())));
 
+    let trip = this.store.selectSnapshot(DashboardState.getUpcomingTripsObject)
+      .find(el => el.id == action.id);
+
     states.patchState({
-      reschedule: action.ticket,
+      reschedule: trip
     });
 
     return modal$;
@@ -543,16 +628,135 @@ export class BookingState {
       })
     ).pipe(flatMap((el) => from(el.present())));
 
+    let trip = this.store.selectSnapshot(DashboardState.getUpcomingTripsObject)
+    .find(el => el.id == action.id);
+
     states.patchState({
-      cancel: action.ticket
+      cancel: trip,
+      type : action.type
     });
 
     return modal$;
   }
 
   @Action(CancelTicket)
-  cancelTicket(states: StateContext<booking>) {
-      let ticket = states.getState().cancel;
+  cancelTicket(states: StateContext<booking>, action : CancelTicket) {
+
+    const successAlert$ = from(
+      this.alertCtrl.create({
+        header: "Approve Success",
+        subHeader: "Cancel Request has been send successfully",
+        buttons: [
+          {
+            text: "OK",
+            handler: () => {
+              return concat(states.dispatch(new AllUpcomingTrips()),this.modalCtrl.dismiss(null,null,'cancellation-ticket'));
+            },
+          },
+        ],
+      })
+    ).pipe(flatMap((el) => from(el.present())));
+
+    let failedAlert$ = from(
+      this.alertCtrl.create({
+        header: "Approve Failed",
+        subHeader: "Failed to Cancel the Request",
+        buttons: [
+          {
+            text: "Cancel",
+            handler: () => {
+              return concat(this.modalCtrl.dismiss(null,null,'reschedule-ticket'));
+            },
+          },
+        ],
+      })
+    );
+
+    states.dispatch(new GetToken());
+    let token = this.store.selectSnapshot(HotelResultState.getToken);
+    let cancel = Object.assign({}, states.getState().cancel);
+    let bookingId = JSON.parse(cancel.passenger_details.BookingId)[0];
+    let remarks = action.remarks;
+    let type = states.getState().type;
+
+    let param : request_param = {
+      BookingId: bookingId,
+      RequestType: 1,
+      CancellationType: 0,
+      Remarks: remarks,
+      EndUserIp: "192.168.0.115",
+      TokenId: token
+    };
+
+    cancel.status = "cancelled";
+    cancel.cancellation_remarks = action.remarks;
+    cancel.req_id = cancel.id;
+
+    cancel = _.omit(cancel, [
+      "approval_mail_cc",
+      "cancellation_charges",
+      "createdAt",
+      "credit_req",
+      "extra_service",
+      "id",
+      "onward_pnr",
+      "parent_id",
+      "return_pnr",
+      "travel_date",
+      "traveller_id",
+      "updatedAt",
+    ]);
+
+    let email = {
+      bccemail: "operations@tripmidas.com",
+      mailcontent: "https://demo.travellerspass.com Alert message:-Airline - Online Full Cancel: Credit Note not generated by Supplier end,error log from Company ID:211/Request ID:3421",
+      subject: "Urgent !  Online Full Cancel: Credit Note Failed:",
+      toemail: "rajkumar@tripmidas.com,mari@tripmidas.com,techteam@tripmidas.com"
+    }
+
+    let req$ = this.bookingService.sendChangeRequet(param);
+    let cancel$ = this.approvalService.approvalReq(
+      type,
+      cancel.req_id,
+      cancel
+    );
+    let email$ = this.flightService.emailItinerary(email);
+    if(states.getState().cancelType == 'full') {
+      return req$
+        .pipe(
+          tap((response) => console.log(response)),
+          flatMap((response) => {
+            let changeresponse = JSON.parse(response.data);
+            console.log(changeresponse);
+            return cancel$;
+          }),
+          tap((response) => console.log(response)),
+          flatMap(() => email$),
+          tap((response) => console.log(response)),
+          flatMap(() => successAlert$),
+          catchError((error: HTTPResponse) => {
+            console.log(error);
+            let errObj = null;
+            if (error.error) {
+              errObj = JSON.parse(error.error);
+            }
+            if (errObj.status_code == 500) {
+              return failedAlert$.pipe(
+                flatMap((el) => {
+                  el.message = errObj.message;
+                  return from(el.present());
+                })
+              );
+            }
+          })
+        );
+    }
+    else if(states.getState().cancelType == 'partial') {
+
+    }
+
+
+
       // let vendor_cancellation_details: vendor_cancellation_details = [{
       //     PLB: ticket.passenger_details.uapi_params.selected_plb_Value.PLB_earned,
       //     total_offered_price: ticket.passenger_details.flight_details[0].Fare.OfferedFare,

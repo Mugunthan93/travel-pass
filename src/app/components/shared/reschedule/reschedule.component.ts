@@ -214,6 +214,8 @@ export class RescheduleComponent implements OnInit {
             return "Round - Trip";
           case 3:
             return "Multi - City";
+          default:
+            return '';
         }
       })
     );

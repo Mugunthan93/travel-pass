@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
-import { BookingState } from 'src/app/stores/booking.state';
+import { BookingState, CancelTicket, SetCancelType } from 'src/app/stores/booking.state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ModalController } from '@ionic/angular';
@@ -12,11 +12,13 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ["./cancellation.component.scss"],
 })
 export class CancellationComponent implements OnInit {
-  cancellationForm: FormGroup;
+
+  cancellationForm: FormControl;
   type$: Observable<string>;
   type: string;
   ticket$: Observable<any>;
   ticket: any;
+  cancelType : 'full' | 'partial';
 
   constructor(
     private store: Store,
@@ -28,6 +30,9 @@ export class CancellationComponent implements OnInit {
     this.ticket = this.store.selectSnapshot(BookingState.getCancelTicket);
     this.type$ = this.store.select(BookingState.getType);
     this.type = this.store.selectSnapshot(BookingState.getType);
+    this.cancelType = this.store.selectSnapshot(BookingState.getCancelType);
+
+    this.cancellationForm = new FormControl(null,[Validators.required]);
   }
 
   tripType(index: number): Observable<string> {
@@ -70,7 +75,17 @@ export class CancellationComponent implements OnInit {
     }
   }
 
-  submitCancellation() {}
+  changeCancelType(evt : CustomEvent) {
+    console.log(evt);
+    this.store.dispatch(new SetCancelType(evt.detail.value));
+  }
+
+  cancelTicket() {
+    if(this.cancellationForm.valid) {
+      let remarks = this.cancellationForm.value;
+      this.store.dispatch(new CancelTicket(remarks));
+    }
+  }
 
   dismiss() {
     this.modalCtrl.dismiss(null, null, "cancellation-ticket");

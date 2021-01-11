@@ -17,6 +17,8 @@ import { LoadingController, AlertController, ModalController } from '@ionic/angu
 import { StateReset } from 'ngxs-reset-plugin';
 import { ResultState } from '../../result.state';
 import { FlightPassengerState, SetFirstPassengers } from '../../passenger/flight.passenger.states';
+import { from, of } from "rxjs";
+import { catchError, concatMap, delay, flatMap, tap } from "rxjs/operators";
 
 
 export interface onewayBook {
@@ -46,6 +48,13 @@ export class GetFareQuoteSSR {
 export class FlightOneWaySendRequest {
     static readonly type = "[OneWay] FlightOneWaySendRequest";
     constructor(public comment: string, public mailCC: string[], public purpose: string) {
+
+    }
+}
+
+export class MealBaggage {
+    static readonly type = "[OneWay] MealBaggage";
+    constructor(public meal: number, public baggage: number) {
 
     }
 }
@@ -91,95 +100,122 @@ export class OneWayBookState{
     }
 
     @Action(GetFareQuoteSSR)
-    async getFareQuoteSSR(states: StateContext<onewayBook>) {
+    getFareQuoteSSR(states: StateContext<onewayBook>) {
 
-        const loading = await this.loadingCtrl.create({
-            spinner: "crescent"
-        });
-        const failedAlert = await this.alertCtrl.create({
+        let loading$ = from(this.loadingCtrl.create({
+            spinner: "crescent",
+            message : "Checking Flight Availability",
+            id : 'book-load'
+        })).pipe(
+            flatMap(
+                (loadingEl) => {
+                    return from(loadingEl.present());
+                }
+            )
+        );
+        const failedAlert$ = (msg : string) => from(this.alertCtrl.create({
             header: 'Book Failed',
+            id : 'ssrfailed',
+            message : msg,
             buttons: [{
                 text: 'Ok',
                 role: 'ok',
                 cssClass: 'danger',
                 handler: () => {
-                    failedAlert.dismiss({
-                        data: false,
-                        role: 'failed'
-                    });
+                    this.alertCtrl.dismiss(null,null,'ssrfailed');
                 }
             }]
-        });
-
-        loading.message = "Checking Flight Availability";
-        loading.present();
+        })).pipe(
+            flatMap(
+                (loadingEl) => {
+                    return from(loadingEl.present());
+                }
+            )
+        );
 
         let companyId = this.store.selectSnapshot(UserState.getcompanyId);
-        states.dispatch(new GetCompany(companyId));
+        let selectedFlight = this.store.selectSnapshot(OneWayResultState.getSelectedFlight).fareRule;
 
-        try {
-            const fairQuoteResponse = await this.flightService.fairQuote(this.store.selectSnapshot(OneWayResultState.getSelectedFlight).fareRule);
-            console.log(fairQuoteResponse);
-            if (fairQuoteResponse.status == 200) {
-                let response = JSON.parse(fairQuoteResponse.data).response;
-                if (response.Results) {
-                    states.patchState({
-                        fareQuote: response.Results,
-                        isPriceChanged: response.IsPriceChanged,
-                        flight: this.onewaybookData(response.Results)
-                    });
-                }
-                else if (response.Error.ErrorCode == 6) {
-                    console.log(response.Error.ErrorMessage);
-                    loading.dismiss();
-                    this.store.dispatch(new OneWaySearch());
-                    return;
-                }
-            }
-        }
-        catch (error) {
-            console.log(error);
-            if (error.status == -4) {
-                loading.dismiss();
-                failedAlert.message = "Timeout, Try Again";
-                return;
-            }
-        }
+        let fairQuote$ = from(this.flightService.fairQuote(selectedFlight));
+        let ssr$ = from(this.flightService.SSR(selectedFlight));
 
-        try {
-            const SSRResponse = await this.flightService.SSR(this.store.selectSnapshot(OneWayResultState.getSelectedFlight).fareRule);
-            if (SSRResponse.status == 200) {
-                let response : SSR = JSON.parse(SSRResponse.data).response;
-                states.patchState({
-                    ssr : response
-                });
-                if (response.MealDynamic) {
-                    this.store.dispatch(new SetMeal(response.MealDynamic, null));
-                }
-                else if (response.Meal) {
-                    this.store.dispatch(new SetMeal(response.Meal, null));
-                }
-
-                if (response.Baggage) {
-                    this.store.dispatch(new SetBaggage(response.Baggage, null));
-                }
-            }
-        }
-        catch (error) {
-            console.log(error);
-            if (error.status == -4) {
-                loading.dismiss();
-                failedAlert.message = "Timeout, Try Again";
-                return;
-            }
-        }
-
-        states.dispatch(new SetFare(states.getState().fareQuote.Fare));
-        states.dispatch(new SetFirstPassengers());
-        states.dispatch(new BookMode('flight'));
-        states.dispatch(new BookType('one-way'));
-        states.dispatch(new Navigate(['/', 'home', 'book', 'flight', 'one-way']));
-        loading.dismiss();
+        return loading$
+            .pipe(
+                tap(() => states.dispatch(new GetCompany(companyId))),
+                concatMap(() => fairQuote$),
+                flatMap(
+                    (fairQuoteResponse) => {
+                        console.log(fairQuoteResponse);
+                        if (fairQuoteResponse.status == 200) {
+                            let response = JSON.parse(fairQuoteResponse.data).response;
+                            if (response.Results) {
+                                states.patchState({
+                                    fareQuote: response.Results,
+                                    isPriceChanged: response.IsPriceChanged,
+                                    flight: this.onewaybookData(response.Results)
+                                });
+                            }
+                            else if (response.Error.ErrorCode == 6) {
+                                console.log(response.Error.ErrorMessage);
+                                this.loadingCtrl.dismiss(null,null,'book-load');
+                                this.store.dispatch(new OneWaySearch());
+                                return;
+                            }
+                            else if (response.Error.ErrorCode == 2) {
+                                console.log(response.Error.ErrorMessage);
+                                this.loadingCtrl.dismiss(null,null,'book-load');
+                                return failedAlert$(response.Error.ErrorMessage);
+                            }
+                        }
+                        return of(fairQuoteResponse);
+                    }
+                ),
+                delay(10),
+                flatMap(() => ssr$),
+                flatMap(
+                    (ssrReponse) => {
+                        console.log(ssrReponse);
+                        if (ssrReponse.status == 200) {
+                            let response : SSR = JSON.parse(ssrReponse.data).response;
+                            states.patchState({
+                                ssr : response
+                            });
+                            if (response.MealDynamic) {
+                                this.store.dispatch(new SetMeal(response.MealDynamic, null));
+                            }
+                            else if (response.Meal) {
+                                this.store.dispatch(new SetMeal(response.Meal, null));
+                            }
+            
+                            if (response.Baggage) {
+                                this.store.dispatch(new SetBaggage(response.Baggage, null));
+                            }
+                        }
+                        return of(ssrReponse);
+                    }
+                ),
+                catchError(
+                    (error) => {
+                        console.log(error);
+                        if (error.status == -4) {
+                            this.loadingCtrl.dismiss(null,null,'book-load');
+                            return failedAlert$;
+                        }
+                        return of(error);
+                    }
+                ),
+                tap(
+                    () => 
+                        states.dispatch([
+                            new SetFare(states.getState().fareQuote.Fare),
+                            new SetFirstPassengers(),
+                            new BookMode('flight'),
+                            new BookType('one-way'),
+                            new Navigate(['/', 'home', 'book', 'flight', 'one-way'])
+                        ])
+                ),
+                tap(() => this.loadingCtrl.dismiss(null,null,'book-load'))
+            )
     }
 
     @Action(FlightOneWaySendRequest)
@@ -356,7 +392,7 @@ export class OneWayBookState{
                         total_amount: states.getState().fareQuote.Fare.PublishedFare,
                         yqtax: states.getState().fareQuote.Fare.TaxBreakup[1].value
                     }]]
-                }
+                } 
             },
             managers :manager,
             approval_mail_cc: mailcc,
@@ -392,6 +428,17 @@ export class OneWayBookState{
         loading.dismiss();
     }
 
+    @Action(MealBaggage)
+    setMealBaggage(states: StateContext<onewayBook>, action: MealBaggage) {
+        let currentstate = Object.assign({},states.getState().flight);
+        currentstate.summary.total.extraBaggage = action.baggage;
+        currentstate.summary.total.extraMeals = action.meal;
+
+        states.patchState({
+            flight : currentstate
+        });
+    }
+
     onewaybookData(data: flightResult): bookObj {
 
         let book: bookObj = {
@@ -408,8 +455,8 @@ export class OneWayBookState{
                     flight: (data.Fare.PublishedFare - data.Fare.TaxBreakup[0].value) + this.markupCharges(data.Fare.PublishedFare),
                     k3: data.Fare.TaxBreakup[0].value,
                     other: data.Fare.OtherCharges,
-                    extraMeals: null,
-                    extraBaggage: null,
+                    extraMeals: 0,
+                    extraBaggage: 0,
                     total: (
                         data.Fare.PublishedFare + 
                         this.markupCharges(data.Fare.PublishedFare) +
