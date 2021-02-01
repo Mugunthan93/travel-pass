@@ -5,7 +5,7 @@ import { ApprovalRequest } from 'src/app/stores/approval.state';
 import { Logout } from 'src/app/stores/auth.state';
 import { UserState } from 'src/app/stores/user.state';
 import { Observable } from 'rxjs';
-import { MenuController, AlertController } from '@ionic/angular';
+import { MenuController, AlertController, ModalController } from '@ionic/angular';
 import { GetDashboard } from 'src/app/stores/dashboard.state';
 import { Navigate } from '@ngxs/router-plugin';
 
@@ -23,7 +23,8 @@ export class MenuBarComponent implements OnInit {
   constructor(
     private store: Store,
     public menuCtrl: MenuController,
-    public alertCtrl: AlertController
+    public alertCtrl: AlertController,
+    public modalCtrl : ModalController
   ) { }
 
   ngOnInit() {
@@ -31,16 +32,14 @@ export class MenuBarComponent implements OnInit {
     this.isManager = this.store.select(UserState.isManager);
   }
 
-  dashboard() {
+  async dashboard() {
     this.store.dispatch(new GetDashboard());
+    return await this.menuCtrl.close('first');
   }
 
-  myBookings() {
-    this.store.dispatch(new MyBooking('flight'));
-  }
-
-  approvalRequest() {
-    this.store.dispatch(new ApprovalRequest('flight'));
+  async approvalRequest() {
+    this.store.dispatch(new Navigate(['/','home','approval-request']));
+    return await this.menuCtrl.close('first');
   }
 
   async onLogout() {
@@ -68,7 +67,7 @@ export class MenuBarComponent implements OnInit {
         }
       ]
     });
-
+    await this.menuCtrl.toggle('first');
     return await missing.present();
   }
 

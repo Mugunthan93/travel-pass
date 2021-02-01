@@ -1,39 +1,43 @@
 
 <ion-header id="sidebar">
   <ion-toolbar>
-    <ion-buttons  slot="start">
-      <ion-button (click)="openMenu()">
+    <ion-buttons slot="start" (click)="openMenu()">
+      <!-- <ion-button>
         <ion-icon name="menu"></ion-icon>
-      </ion-button>
+      </ion-button> -->
+      <ion-menu-button autohide="false"></ion-menu-button>
     </ion-buttons>
     <ion-title class="large">
       Travellers Pass
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="notification()">
+      <!-- <ion-button (click)="notification()">
         <ion-icon slot="icon-only" name="notifications-outline" size="large"></ion-icon>
-      </ion-button>
+      </ion-button> -->
       <ion-button (click)="profile()">
         <ion-icon slot="icon-only" src="../../../../../assets/ionicons/md-people-circle-outline.svg" size="large">
         </ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <!-- <ion-item *ngIf="currenttab == 'expense-tab'" class="tripDetail">
-    <ion-item (click)="changeDate('end')">
-        <ion-label class="large bold">From :</ion-label>
-        <ion-label class="large bold">{{ endDate() | async }}</ion-label>
-    </ion-item>
-    <ion-item (click)="changeDate('start')">
-        <ion-label class="large bold">To :</ion-label>
-        <ion-label class="large bold">{{ startDate() | async }}</ion-label>
-    </ion-item>
-    <ion-item>
-      <ion-button (click)="addTrips()">
-          <ion-label>Add Trips</ion-label>
-      </ion-button>
-  </ion-item>
-  </ion-item> -->
+  <ion-segment  *ngIf="currenttab == 'trip-tab'" [value]="tripStatus$ | async" (ionChange)="changeStatus($event)">
+    <ion-segment-button layout="icon-end" value="active">
+        <ion-badge *ngIf="(activePending$ | async) !== 0">{{ activePending$ | async }}</ion-badge>
+        <ion-label>
+            Active
+        </ion-label>
+    </ion-segment-button>
+    <ion-segment-button layout="icon-end" value="confirmed">
+        <ion-label>
+            Confirmed
+        </ion-label>
+    </ion-segment-button>
+    <ion-segment-button layout="icon-end" value="completed">
+        <ion-label>
+            Completed
+        </ion-label>
+    </ion-segment-button>
+  </ion-segment>
 </ion-header>
 
 <ion-content>

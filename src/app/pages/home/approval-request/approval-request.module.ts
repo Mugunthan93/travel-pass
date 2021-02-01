@@ -7,12 +7,14 @@ import { IonicModule } from '@ionic/angular';
 import { ApprovalRequestPageRoutingModule } from './approval-request-routing.module';
 
 import { ApprovalRequestPage } from './approval-request.page';
+import { PipeModule } from 'src/app/modules/pipe.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
+    PipeModule,
     ApprovalRequestPageRoutingModule
   ],
   declarations: [

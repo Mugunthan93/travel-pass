@@ -264,6 +264,7 @@ export class FlightPassengerState {
 
         let passportValidation = null;
         let passenger = states.getState().selected;
+        let pass = this.store.selectSnapshot(OneWaySearchState.getAdult);
 
         switch (this.store.selectSnapshot(SearchState.getSearchType)) {
             case 'one-way': passportValidation = this.store.selectSnapshot(OneWaySearchState.getTripType); break;

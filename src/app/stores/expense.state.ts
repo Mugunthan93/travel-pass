@@ -9,11 +9,7 @@ import { UserState } from './user.state';
 import * as _ from 'lodash';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { EligibilityState } from './eligibility.state';
-import { FileChooser } from '@ionic-native/file-chooser/ngx';
-import { FilePath } from '@ionic-native/file-path/ngx';
-import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
-import { File } from '@ionic-native/file/ngx';
-import { environment } from 'src/environments/environment';
+import { append, insertItem, patch, removeItem } from '@ngxs/store/operators';
 
 
 export interface expense {
@@ -47,6 +43,7 @@ export interface triplist {
     travelled_by: number
     trip_name: string
     updatedAt: string
+    advance_amount : number
 }
 
 export interface projectList {
@@ -69,6 +66,7 @@ export interface projectList {
       status: string
       travelled_by: number
       trip_name: number
+      advance_amount : number
   }
   
   export interface expensepayload {
@@ -353,27 +351,20 @@ export class ExpenseState implements NgxsOnChanges {
 
   @Action(SelectState)
   selectState(states: StateContext<expense>, action : SelectState) {
-    states.patchState({
+    states.setState(patch({
       expenseSelect : action.state
-    });
+    }));
   }
 
   @Action(ChangeTripType)
   changeTripType(states: StateContext<expense>, action : ChangeTripType) {
-    states.patchState({
+    states.setState(patch({
       tripType : action.type
-    });
+    }));
   }
 
   @Action(GetTripList, { cancelUncompleted: true })
   getTripList(states: StateContext<expense>) {
-    states.patchState({
-      trips: [],
-      approvalTrip : [],
-      expenses: [],
-      approveExpenses : [],
-      loading: true,
-    });
 
     let startDate$ = of(moment({}));
     let endDate$ = of(moment({}).subtract(1,'month'));
@@ -402,10 +393,10 @@ export class ExpenseState implements NgxsOnChanges {
 
         let trip: triplist[] = JSON.parse(response[0].data);
         let approve : triplist[] = JSON.parse(response[1].data);
-        states.patchState({
+        states.setState(patch({
           trips: trip,
           approvalTrip : approve
-        });
+        }));
 
         let tripExpense$ =  from(trip).pipe(
           mergeMap((trip: triplist) => {
@@ -427,37 +418,27 @@ export class ExpenseState implements NgxsOnChanges {
       flatMap((response) => {
         console.log(response);
 
-        response[0].forEach((res) => {
-          if (res.status == 200) {
-            let data: expenselist[] = JSON.parse(res.data);
-            let currentexpense: expenselist[] = Object.assign(
-              states.getState().expenses
-            );
-            let finalexpenses: expenselist[] = currentexpense.concat(data);
-            states.patchState({
-              expenses: finalexpenses,
-            });
-          }
-        });
+        let exp = _.chain(response[0])
+        .map(el => JSON.parse(el.data))
+        .tap((el) => console.log(el))
+        .toArray()
+        .flatMapDeep()
+        .value();
+        
+        let appexp = _.chain(response[1])
+        .map(el => JSON.parse(el.data))
+        .tap((el) => console.log(el))
+        .toArray()
+        .flatMapDeep()
+        .value()
 
-        if(response[1].length >= 1) {
-          response[1].forEach((res) => {
-            if (res.status == 200) {
-              let data: expenselist[] = JSON.parse(res.data);
-              let currentexpense: expenselist[] = Object.assign(
-                states.getState().expenses
-              );
-              let finalexpenses: expenselist[] = currentexpense.concat(data);
-              states.patchState({
-                approveExpenses: finalexpenses,
-              });
-            }
-          });
-        } 
-
+        states.setState(patch({
+          expenses: append(exp),
+          approveExpenses : append(appexp)
+        }));
 
         states.patchState({
-          loading: false,
+          loading : false
         });
 
         return of(true);
@@ -468,25 +449,25 @@ export class ExpenseState implements NgxsOnChanges {
 
   @Action(GetExpenseList)
   getExpenseList(states: StateContext<expense>, action: GetExpenseList) {
-    states.patchState({
+    states.setState(patch({
       currentTrip: action.trip,
-    });
+    }));
 
     states.dispatch(new Navigate(["/", "home", "expense-list"]));
   }
 
   @Action(ChangeStartDate)
   changeStart(states: StateContext<expense>, action: ChangeStartDate) {
-    states.patchState({
+    states.setState(patch({
       startdate: action.date,
-    });
+    }));
   }
 
   @Action(ChangeEndDate)
   changeEnd(states: StateContext<expense>, action: ChangeEndDate) {
-    states.patchState({
+    states.setState(patch({
       enddate: action.date,
-    });
+    }));
   }
 
   @Action(GetProjectList)
@@ -501,9 +482,9 @@ export class ExpenseState implements NgxsOnChanges {
       flatMap((response) => {
         console.log(response);
         let list: projectList[] = JSON.parse(response.data).data;
-        states.patchState({
+        states.setState(patch({
           projectList: list,
-        });
+        }));
 
         return from(action.modal.present());
       })
@@ -661,21 +642,16 @@ export class ExpenseState implements NgxsOnChanges {
 
   @Action(SelectExpense)
   selectExpense (states: StateContext<expense>, action: SelectExpense) {
-    let Selected : expenselist[] = Object.assign([],states.getState().sendExp);
-    let current : expenselist = Object.assign({},action.exp);
-    Selected.push(current);
-    states.patchState({
-      sendExp : Selected
-    });
+    states.setState(patch({
+      sendExp : insertItem(action.exp)
+    }));
   }
 
   @Action(DeselectExpense)
   deselectExpense (states: StateContext<expense>, action: DeselectExpense) {
-    let Selected : expenselist[] = Object.assign([],states.getState().sendExp);
-    let current : expenselist = Object.assign({},action.exp);
-    states.patchState({
-      sendExp : _.remove(Selected,(o) => !_.isEqual(current,o))
-    });
+    states.setState(patch({
+      sendExp : removeItem((el : expenselist) => el.id == action.exp.id)
+    }));
   }
 
   @Action(SendExpense)

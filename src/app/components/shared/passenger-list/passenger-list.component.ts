@@ -94,9 +94,6 @@ export class PassengerListComponent implements OnInit {
     this.selectedBusPassengers$ = this.store.select(BusPassengerState.getSelectPassenger);
     this.selectedBusPass$ = this.store.select(BusPassengerState.getSelectedPassCount);
     this.countBusPass$ = this.store.select(BusPassengerState.getPassCount);
-
-    this.store.dispatch(new CheckPassenger());
-
   }
 
   //flight passenger function

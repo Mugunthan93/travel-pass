@@ -24,7 +24,6 @@ export class ApproveRequestComponent implements OnInit {
   ngOnInit() {
     this.Detail$ = this.store.select(ApprovalState.getSelectedRequest);
     this.type = this.store.selectSnapshot(ApprovalState.getType);
-    console.log(this.store.selectSnapshot(ApprovalState.getSelectedRequest));
   }
   
   approveRequest() {

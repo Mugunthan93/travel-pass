@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { matExpansionAnimations } from '@angular/material/expansion';
 import { ModalController, IonInfiniteScroll } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
-import { hotellist, HotelResultState, ViewHotel, AddHotels } from 'src/app/stores/result/hotel.state';
+import { hotellist, HotelResultState, ViewHotel, AddHotels, inventory } from 'src/app/stores/result/hotel.state';
 import { Observable, from } from 'rxjs';
 import { Store } from '@ngxs/store';
 import * as _ from 'lodash';
@@ -25,6 +25,7 @@ export class HotelPage implements OnInit {
   skeletonHotel: number[] = [1,2,3,4,5,6,7,8];
 
   hotelList$: Observable<(staticresponselist & hotelresultlist)[]>;
+  inventoryList$ : Observable<inventory[]>;
   limit$: Observable<number>;
   isLoading: boolean = false;
   loading: string = "Loading Hotels";
@@ -46,6 +47,7 @@ export class HotelPage implements OnInit {
   
   ngOnInit() {
     this.length = this.store.selectSnapshot(HotelResultState.getHotelLength);
+    this.inventoryList$ = this.store.select(HotelResultState.getInventoryList);
 
     this.hotelList$ = this.store.select(HotelResultState.getHotelList);
     this.limit$ = this.store.select(HotelResultState.getLimit);
@@ -56,8 +58,13 @@ export class HotelPage implements OnInit {
   }
 
   address(hotel: (staticresponselist & hotelresultlist)) {
-    let address = hotel.Address.AddressLine.filter(el => !_.isObject(el));
-    return address.map(el => _.startCase(el));
+    if(hotel.Address) {
+      let address = hotel.Address.AddressLine.filter(el => !_.isObject(el));
+      return address.map(el => _.startCase(el));
+    }
+    else {
+      return [];
+    }
   }
 
   viewHotel(hotel: hotellist) {
@@ -117,8 +124,13 @@ export class HotelPage implements OnInit {
   }
 
   loadImg(hotel: (staticresponselist & hotelresultlist)): string {
-    return hotel.Images[0];
-    // return this.webview.convertFileSrc(hotel.Images[0]);
+    if(hotel.Images) {
+      return hotel.Images[0];
+      // return this.webview.convertFileSrc(hotel.Images[0]);
+    }
+    else {
+      "../../../../../assets/img/hotel/no-image-icon-hotel.png";
+    }
   }
   
 }

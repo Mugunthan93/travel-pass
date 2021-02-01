@@ -1,4 +1,4 @@
-<ion-menu content-id="sidebar" side="start" menu-id="first">
+<ion-menu contentId="sidebar" side="start" menuId="first">
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
@@ -18,12 +18,6 @@
         <ion-icon slot="start" src="../../../assets/menu/dashboard.svg"></ion-icon>
         <ion-label class="medium">
           Dashboard
-        </ion-label>
-      </ion-item>
-      <ion-item class="menu-item" (click)="myBookings()">
-        <ion-icon slot="start" src="../../../assets/menu/booking.svg"></ion-icon>
-        <ion-label class="medium">
-          My Bookings
         </ion-label>
       </ion-item>
       <ion-item class="menu-item" (click)="approvalRequest()" *ngIf="isManager | async">

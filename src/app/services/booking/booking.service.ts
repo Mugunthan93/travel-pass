@@ -5,7 +5,6 @@ import * as moment from 'moment';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { Store } from '@ngxs/store';
 import { UserState } from 'src/app/stores/user.state';
-import { tap } from 'rxjs/operators';
 import { request_param } from 'src/app/stores/booking.state';
 import { environment } from 'src/environments/environment';
 
@@ -26,11 +25,14 @@ export class BookingService {
     const userId: number = this.store.selectSnapshot(UserState.getUserId);  
     let id : number = userId;
     const startDate = moment({}).format('YYYY-MM-DD%2023:59:59.000+00:00');
-    const endDate = moment({}).subtract(1,'year').format('YYYY-MM-DD%2000:00:01.000+00:00'); 
+    const endDate = moment({}).subtract(1,'month').format('YYYY-MM-DD%2000:00:01.000+00:00'); 
     const book : { [key: string]: string | string[] } | string = this.bookUrl(type,bookmode);
 
     let url : string = typeUrl + id.toString() + '/' + booktype + '/'  + endDate + "/" + startDate + typeUrl2;
     console.log(url);
+    this.http.setReqTimeout(300);
+    this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
+    this.http.setData('json');
 
     if(type == 'flight' || type == 'train') {
       let params : { [key: string]: string | string[] } = { 

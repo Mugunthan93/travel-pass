@@ -25,10 +25,6 @@ const routes: Routes = [
         loadChildren: () => import('./book/book.module').then(m => m.BookPageModule)
       },
       {
-        path: 'my-booking',
-        loadChildren: () => import('./my-booking/my-booking.module').then(m => m.MyBookingPageModule)
-      },
-      {
         path: 'approval-request',
         loadChildren: () => import('./approval-request/approval-request.module').then(m => m.ApprovalRequestPageModule)
       },
@@ -47,7 +43,8 @@ const routes: Routes = [
   {
     path: 'profile',
     loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule)
-  },  {
+  },
+  {
     path: 'expense-list',
     loadChildren: () => import('./expense-list/expense-list.module').then( m => m.ExpenseListPageModule)
   }

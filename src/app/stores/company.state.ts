@@ -26,6 +26,11 @@ export class CompanyState {
     }
 
     @Selector()
+    static getId(state: company): number {
+        return state.id;
+    }
+
+    @Selector()
     static getEmployees(state: company): user[] {
         return state.Users;
     }

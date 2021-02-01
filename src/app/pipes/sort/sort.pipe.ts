@@ -11,12 +11,12 @@ export class SortPipe implements PipeTransform {
 
     let arr = Object.assign([],list);
 
-    if (!Array.isArray(arr)) {
+    if (!Array.isArray(arr) || property == undefined) {
       return;
     }
 
     //string sorting
-    if (property == 'HotelName') {
+    if (property == 'HotelName' || property == 'hotel_name') {
 
       let sortedArray =  _.sortBy(arr, (o) => {
         return o[property];
@@ -36,14 +36,14 @@ export class SortPipe implements PipeTransform {
       arr.sort((a: any, b: any) => {
   
         //number sorting
-        if (property == 'id' || property == 'fare' || property == 'Duration' || property == 'StarRating') {
+        if (property == 'id' || property == 'fare' || property == 'Duration' || property == 'StarRating' || property == 'star_rating') {
           return this.numberSorting(a, b, property, order);
         }
-        else if (property == 'PublishedPrice') {
+        else if (property == 'PublishedPrice' || property == 'price') {
           return this.numberSorting(a.Price, b.Price, property, order);
         }
         //date sorting
-        else if (property == 'departure' || property == 'arrival' || property == 'createdAt') {
+        else if (property == 'departure' || property == 'arrival' || property == 'createdAt' || property == 'traveldate') {
           return this.dateSorting(a, b, property, order);
         }
       });
@@ -52,56 +52,63 @@ export class SortPipe implements PipeTransform {
 
     }
 
-  }
+  } 
 
 
   numberSorting(a: any, b: any, property: string, order: string) {
-    if (order == 'asc' || order == 'default') {
-      if (parseInt(b[property]) < parseInt(a[property])) {
-        return -1;
+    console.log(a,b,property,order);
+    if(a !== undefined &&  b !== undefined) {
+      if (order == 'asc' || order == 'default') {
+        if (parseInt(b[property]) < parseInt(a[property])) {
+          return -1;
+        }
+        else if (parseInt(b[property]) > parseInt(a[property])) {
+          return 1;
+        }
+        else {
+          return 0;
+        }
       }
-      else if (parseInt(b[property]) > parseInt(a[property])) {
-        return 1;
-      }
-      else {
-        return 0;
+      else if (order == 'des' || order == 'rotated') {
+        if (parseInt(b[property]) > parseInt(a[property])) {
+          return -1;
+        }
+        else if (parseInt(b[property]) < parseInt(a[property])) {
+          return 1;
+        }
+        else {
+          return 0;
+        }
       }
     }
-    else if (order == 'des' || order == 'rotated') {
-      if (parseInt(b[property]) > parseInt(a[property])) {
-        return -1;
-      }
-      else if (parseInt(b[property]) < parseInt(a[property])) {
-        return 1;
-      }
-      else {
-        return 0;
-      }
+    else {
+      return 0;
     }
   }
 
   dateSorting(a: any, b: any, property: string, order: string) {
     if (order == 'asc' || order == 'default') {
-      if (moment(b[property]).isBefore(a[property])) {
+      if (moment(b[property]).isSameOrBefore(a[property],'date')) {
         return -1;
       }
-      else if (moment(b[property]).isAfter(a[property])) {
+      else if (moment(b[property]).isSameOrAfter(a[property],'date')) {
         return 1;
       }
-      else if (moment(b[property]).isSame(a[property])) {
+      else if (moment(b[property]).isSame(a[property],'date')) {
         return 0;
       }
     }
     else if (order == 'des' || order == 'rotated') {
-      if (moment(b[property]).isAfter(a[property])) {
+      if (moment(b[property]).isSameOrAfter(a[property],'date')) {
         return -1;
       }
-      else if (moment(b[property]).isBefore(a[property])) {
+      else if (moment(b[property]).isSameOrBefore(a[property],'date')) {
         return 1;
       }
-      else if (moment(b[property]).isSame(a[property])) {
+      else if (moment(b[property]).isSame(a[property],'date')) {
         return 0;
       }
     }
   }
+
 }

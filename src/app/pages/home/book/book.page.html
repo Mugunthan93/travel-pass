@@ -11,6 +11,24 @@
     </ion-title>
   </ion-toolbar>
 </ion-header>
+
 <ion-content>
   <ion-router-outlet></ion-router-outlet>
 </ion-content>
+
+<ion-footer>
+
+  <ion-toolbar>
+    <ion-buttons [slot]="(this.isAdmin$ | async) ? 'start' : 'end'">
+      <ion-button (click)="confirmRequest('request')">
+        <ion-label class="medium bold">Send Request</ion-label>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end" *ngIf="(this.isAdmin$ | async)">
+      <ion-button (click)="confirmRequest('book')">
+        <ion-label class="medium bold">Book Now</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+</ion-footer>

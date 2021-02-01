@@ -63,6 +63,7 @@ import { BookConfirmationComponent } from '../components/shared/book-confirmatio
 import { IonicModule } from '@ionic/angular';
 import { ThemeState } from '../stores/theme.stata';
 import { ExpenseState } from '../stores/expense.state';
+import { AgencyState } from '../stores/agency.state';
 
 @NgModule({
   imports: [
@@ -73,6 +74,7 @@ import { ExpenseState } from '../stores/expense.state';
       AuthState,
       UserState,
       CompanyState,
+      AgencyState,
       DashboardState,
       SearchState,
       ResultState,
@@ -147,6 +149,7 @@ import { ExpenseState } from '../stores/expense.state';
       key: [
         UserState,
         CompanyState,
+        AgencyState,
 
         SearchState,
         ResultState,

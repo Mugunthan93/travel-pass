@@ -1,4 +1,21 @@
+@import "../../../../style/base/color.scss";
 
+ion-segment-button {
+
+    background: white;
+    --indicator-color : #{$geraldine};
+    --color-checked: #{$black};
+    --color: #{$gray55};
+
+    ion-label {
+        font-weight: bolder;
+    }
+}
+
+ion-badge {
+    padding: 4px;
+    margin: 0px 8px;
+}
 
 ion-header {
     ion-item.tripDetail{

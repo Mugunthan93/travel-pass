@@ -14,11 +14,13 @@ export class ApprovalService {
   ) { }
 
   getApprovalList(type : string, userId : number): Observable<HTTPResponse> {
+    this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
+    this.http.setData('json');
     let typeUrl : string = this.typeUrl(type);
-    const encrytkey = {
-      "encrytkey": "wMMtGeHb0WCq9oppu3n6Apvco0Bt6zaT0sJVwsSXlxM="
-    }
-    return from(this.http.get( typeUrl + userId, encrytkey));
+    // const encrytkey = {
+    //   "encrytkey": "wMMtGeHb0WCq9oppu3n6Apvco0Bt6zaT0sJVwsSXlxM="
+    // }
+    return from(this.http.get( typeUrl + userId, {}));
   }
   
   //get ticket by manager from approval request list 
@@ -26,6 +28,8 @@ export class ApprovalService {
     const encrytkey = {
       "encrytkey": "wMMtGeHb0WCq9oppu3n6Apvco0Bt6zaT0sJVwsSXlxM="
     }
+    this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
+    this.http.setData('json');
     let approveUrl : string = this.approveUrl(type);
     return from(this.http.get(approveUrl + ticketId, encrytkey));
   }

@@ -146,6 +146,11 @@ export class ExpenseListPage implements OnInit {
     }
   }
 
+  disableExpense(e : expenselist) : boolean {
+    let status = ['new','review','manager_rejected'];
+    return !status.includes(e.status); 
+  }
+
   sendExpense(status : string) {
     this.store.dispatch(new SendExpense(status));
   }
@@ -177,7 +182,6 @@ export class ExpenseListPage implements OnInit {
       .pipe(
         map(
           (options) => {
-            console.log(options,exp);
             let enable = options[0];
             let tripType = options[1];
             return !(enable) && (exp.paid_by == 'paid_self' && exp.status == 'new') && (tripType == 'mytrips')
@@ -198,8 +202,9 @@ export class ExpenseListPage implements OnInit {
   }
 
   back() {
-    this.store.dispatch(
+    this.store.dispatch([
+      new SelectState(false),
       new Navigate(["/", "home", "dashboard", "expense-tab"])
-    );
+    ]);
   }
 }

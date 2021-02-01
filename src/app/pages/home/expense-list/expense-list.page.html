@@ -50,58 +50,44 @@
 
 <ion-content>
 
-  <ion-virtual-scroll [items]="expensesList$ | async" approxItemHeight="-webkit-fill-available">
-    <ion-card *virtualItem="let expense">
-      <ion-card-header>
-        <ion-label class="bold large">{{ expense.type | titlecase }}</ion-label>
-        <ion-row>
-          <ion-label class="bold large">{{ expense.total | currency : 'INR' }}</ion-label>
-          <ion-button (click) ="deleteExpense(expense.value)" *ngIf="(tripType$ | async) == 'mytrips'">
-            <ion-icon name="close-sharp"></ion-icon>
-          </ion-button>
-        </ion-row>
-      </ion-card-header>
+  <ion-row class="m-4 ion-justify-content-end">
+    <ion-label class="bold large" >
+      Advance Amount : {{ ((this.currentTrip$ | async).advance_amount !== null ? (this.currentTrip$ | async).advance_amount : 0) | currency : 'INR'  }}
+    </ion-label>
+  </ion-row>
 
-      <ion-card-content>
-        <ion-list *ngFor="let exp of expense.value" lines="full">
-          <ion-label class="exp-date">
-            {{ exp.date | date : 'dd LLL EEEE' }}
-          </ion-label>
+  <ion-card *ngFor="let expense of (expensesList$ | async)">
+    <ion-card-header>
+      <ion-label class="bold large">{{ expense.type | titlecase }}</ion-label>
+      <ion-row>
+        <ion-label class="bold large">{{ expense.total | currency : 'INR' }}</ion-label>
+        <ion-button (click) ="deleteExpense(expense.value)" *ngIf="(tripType$ | async) == 'mytrips'">
+          <ion-icon name="close-sharp"></ion-icon>
+        </ion-button>
+      </ion-row>
+    </ion-card-header>
 
-          <ion-item *ngFor="let e of exp.value;let i = index">
-            <ion-row>
-              <ion-checkbox *ngIf="(enableExp$ | async)" class="default" id="i" [value]="e" [checked]="checked(e) | async"
-              (ionChange)="selectExpense($event)"></ion-checkbox>
-              <ion-label class="bold large">{{ (e.local_travel_value !== null ? e.local_travel_value : '') | titlecase }}</ion-label>
-              <ion-badge color="primary">{{ status(e) }}</ion-badge>
-            </ion-row>
-            <ion-row slot="end" (click)="getExpense($event,e)">
-              <ion-label class="bold large">{{ e.cost | currency : 'INR' }}</ion-label>
-              <ion-icon name="ellipsis-vertical-outline" *ngIf="showOptions(e) | async"></ion-icon>
-            </ion-row>
-          </ion-item>
+    <ion-card-content>
+      <ion-list *ngFor="let exp of expense.value" lines="full">
+        <ion-label class="exp-date">
+          {{ exp.date | date : 'dd LLL EEEE' }}
+        </ion-label>
 
-        </ion-list>
-      </ion-card-content>
-    </ion-card>
-  </ion-virtual-scroll>
+        <ion-item *ngFor="let e of exp.value;let i = index">
+          <ion-row>
+            <ion-checkbox *ngIf="(enableExp$ | async)" class="default" id="i" [value]="e" [checked]="checked(e) | async"
+            (ionChange)="selectExpense($event)" [disabled]="disableExpense(e)"></ion-checkbox>
+            <ion-label class="bold large">{{ (e.local_travel_value !== null ? e.local_travel_value : '') | titlecase }}</ion-label>
+            <ion-badge color="primary">{{ status(e) }}</ion-badge>
+          </ion-row>
+          <ion-row slot="end" (click)="getExpense($event,e)">
+            <ion-label class="bold large">{{ e.cost | currency : 'INR' }}</ion-label>
+            <ion-icon name="ellipsis-vertical-outline" *ngIf="showOptions(e) | async"></ion-icon>
+          </ion-row>
+        </ion-item>
 
-  <!-- <ion-virtual-scroll [items]="expenses$ | async" approxItemHeight="60px">
-      <ion-item *virtualItem="let expense">
-        <ion-checkbox class="default" slot="start"></ion-checkbox>
-        <ion-row class="expense-col-1">
-          <ion-label class="large bold">{{ expense.type | uppercase }}</ion-label>
-          <ion-label class="large bold">{{ expense.start_city | titlecase }} - {{ expense.end_city | titlecase }}</ion-label>
-        </ion-row>
-        <ion-row class="expense-col-2">
-          <ion-label class="large bold">Cost :{{ expense.cost | currency : 'INR' }}</ion-label>
-          <ion-label class="large bold">Eligibility :{{ expense.eligible_amount | currency : 'INR' }}</ion-label>
-        </ion-row>
-        <ion-row class="expense-col-3">
-          <ion-label class="large bold">Paid By {{paidBy(expense) | titlecase}}</ion-label>
-          <ion-label class="large bold">{{ expense.status | uppercase }}</ion-label>
-        </ion-row>
-      </ion-item>
-  </ion-virtual-scroll> -->
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 
 </ion-content>

@@ -60,73 +60,68 @@ ion-header {
 
 ion-content {
 
-    ion-virtual-scroll {
-        min-height: -webkit-fill-available;
-        margin-bottom: 20px;
-        ion-card{
-            margin: 20px;
-            background: white;
-            >ion-card-header {
-                display: flex;
-                justify-content: space-between;
+    ion-card{
+        margin: 20px;
+        background: white;
+        >ion-card-header {
+            display: flex;
+            justify-content: space-between;
+            >ion-label{
+                align-self: center;
+            }
+            >ion-row{
                 >ion-label{
                     align-self: center;
+                    padding:8px;
                 }
-                >ion-row{
-                    >ion-label{
-                        align-self: center;
-                        padding:8px;
-                    }
-                    >ion-button{
-                        height: -webkit-fill-available;
-                        --border-radius: 4px;
-                        >ion-icon {
-                            color: white;
-                            margin: 0px 4px;
-                            border-radius: 3px;
-                        }
+                >ion-button{
+                    height: -webkit-fill-available;
+                    --border-radius: 4px;
+                    >ion-icon {
+                        color: white;
+                        margin: 0px 4px;
+                        border-radius: 3px;
                     }
                 }
             }
-            >ion-card-content {
-                >ion-list {
-                    display: flex;
-                    flex-direction: column;
-                    padding: 5px 0px;
-                    >ion-label.exp-date {
-                        background: #{$gray55};
-                        color: #{$white};
-                        padding: 4px;
-                        border-radius: 3px;
+        }
+        >ion-card-content {
+            >ion-list {
+                display: flex;
+                flex-direction: column;
+                padding: 5px 0px;
+                >ion-label.exp-date {
+                    background: #{$gray55};
+                    color: #{$white};
+                    padding: 4px;
+                    border-radius: 3px;
+                }
+                >ion-item {
+                    --min-height: 56px;
+                    --padding-top: 2px;
+                    --padding-bottom: 2px;
+                    --padding-start: 8px;
+
+                    >ion-row:first-child {
+                        width: -webkit-fill-available;
+                        justify-content: space-between;
                     }
-                    >ion-item {
-                        --min-height: 56px;
-                        --padding-top: 2px;
-                        --padding-bottom: 2px;
-                        --padding-start: 8px;
 
-                        >ion-row:first-child {
-                            width: -webkit-fill-available;
-                            justify-content: space-between;
+                    >ion-row[slot="end"] {
+                        margin: 0px;
+                        width: 32%;
+                        flex-flow: row;
+                        >ion-label {
+                            padding: 0px 10px;
                         }
-
-                        >ion-row[slot="end"] {
-                            margin: 0px;
-                            width: 32%;
-                            flex-flow: row;
-                            >ion-label {
-                                padding: 0px 10px;
-                            }
-                            >ion-icon {
-                                padding: 0px 5px;
-                            }
+                        >ion-icon {
+                            padding: 0px 5px;
                         }
                     }
                 }
             }
         }
     }
-
     ion-badge {
         margin: auto 0px;
         --padding-start: 4px;

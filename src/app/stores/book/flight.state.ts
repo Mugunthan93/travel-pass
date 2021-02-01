@@ -32,6 +32,53 @@ export interface flight{
 
 //////////////////////////////////////////////
 
+export interface bookpayload {
+    Passengers: [
+      {
+        AddressLine1: string,
+        City: string,
+        CountryName: string,
+        CountryCode: string,
+        Email: string,
+        PaxType: number,
+        IsLeadPax: boolean,
+        FirstName: string,
+        LastName: string,
+        ContactNo: string,
+        DateOfBirth: string,
+        Title: string,
+        Gender: number,
+        Fare: {
+          TransactionFee: number,
+          AdditionalTxnFeePub: number,
+          AdditionalTxnFeeOfrd: number,
+          PassengerCount: number,
+          PassengerType: number,
+          BaseFare: number,
+          YQTax: number,
+          Tax: number
+        }
+      }
+    ],
+    TraceId: string,
+    JourneyType: boolean,
+    IsLCC: boolean,
+    ResultIndex: string
+}
+
+export interface ticketpayload {
+    user_id: number,
+    airline_request_id: number,
+    pnr: string,
+    booking_id: string,
+    booking_status: string,
+    published_fare: number,
+    offered_fare: number,
+    collected_fare: number,
+    ticket_status: string,
+    email_notify: boolean
+  }
+
 export interface bookmeal {
     onward: meal[]
     return: meal[]
@@ -56,9 +103,9 @@ export interface fareObj{
 export interface sendRequest {
     passenger_details: passenger_details
     trip_requests: flightSearchPayload
-    approval_mail_cc: string[]
+    approval_mail_cc?: string[]
     status: string
-    purpose: string
+    purpose?: string
     booking_mode: string
     customer_id: number
     transaction_id: any
@@ -74,9 +121,9 @@ export interface sendRequest {
 export interface rt_sendRequest {
     passenger_details: rt_passenger_details
     trip_requests: flightSearchPayload
-    approval_mail_cc: string[]
+    approval_mail_cc?: string[]
     status: string
-    purpose: string
+    purpose?: string
     booking_mode: string
     customer_id: number
     transaction_id: any
@@ -110,7 +157,7 @@ export interface int_sendRequest {
 export interface passenger_details {
     kioskRequest: kioskRequest
     passenger:flightpassenger[]
-    fareQuoteResults : flightResult[],
+    fareQuoteResults? : flightResult[],
     flight_details: flightResult[]
     country_flag:string
     user_eligibility: user_eligibility
@@ -155,6 +202,9 @@ export interface kioskRequest {
     infantsType: number
     countryFlag: number
     tour?: string
+    travelType?: number
+    travelType2?: number
+    client : null
 }
 
 export interface rt_kioskRequest {
@@ -169,6 +219,10 @@ export interface rt_kioskRequest {
     infantsType: number
     countryFlag: number
     tour?: string
+    travelType?: number
+    travelType2?: number
+    client : any
+
 }
 
 export interface value {
@@ -181,6 +235,7 @@ export interface value {
     currency: string
     nationalty: string
     option_label: string
+    client?: null
 }
 
 export interface services {
@@ -303,11 +358,15 @@ export interface charges_details {
     igst_return: number
     onward_markup: number
     return_markup: number
+    taxable_fare : number
 }
 
 export interface vendor {
     service_charges: number
     GST : number
+    CGST : number
+    SGST : number
+    IGST : number
 }
 
 export interface details {

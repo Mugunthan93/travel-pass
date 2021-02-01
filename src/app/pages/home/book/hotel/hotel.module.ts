@@ -24,9 +24,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
   declarations: [
     HotelPage,
     // BookConfirmationComponent
-  ],
-  entryComponents: [
-    // BookConfirmationComponent
   ]
 })
 export class HotelPageModule {}

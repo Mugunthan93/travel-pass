@@ -80,11 +80,13 @@ export class ResultState {
         let resultMode: string = states.getState().mode;
         let resultType: string = states.getState().type;
 
-        if (resultType == 'animated-round-trip') {
-            resultType = 'round-trip';
-        }
         if (resultMode == 'flight') {
-            states.dispatch(new Navigate(['/', 'home', 'search', resultMode, resultType]));
+            if (resultType == 'animated-round-trip') {
+                states.dispatch(new Navigate(['/', 'home', 'search', resultMode, 'round-trip']));
+            }
+            else {
+                states.dispatch(new Navigate(['/', 'home', 'search', resultMode, resultType]));
+            }
         }
         else {
             states.dispatch(new Navigate(['/', 'home', 'search', resultMode]));

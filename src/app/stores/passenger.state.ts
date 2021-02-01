@@ -1,4 +1,4 @@
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, NgxsOnChanges, NgxsSimpleChange, Selector, State, StateContext } from '@ngxs/store';
 import { FlightPassengerState } from './passenger/flight.passenger.states';
 import { HotelPassengerState } from './passenger/hotel.passenger.state';
 import { BusPassengerState } from './passenger/bus.passenger.state';
@@ -24,10 +24,14 @@ export class CheckPassenger {
         TrainPassengerState
     ]
 })
-export class PassengerState {
+export class PassengerState implements NgxsOnChanges {
 
     constructor() {
         
+    }
+
+    ngxsOnChanges(change: NgxsSimpleChange<any>): void {
+        console.log(change);
     }
 
     @Selector()

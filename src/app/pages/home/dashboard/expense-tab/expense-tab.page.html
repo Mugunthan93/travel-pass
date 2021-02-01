@@ -43,44 +43,42 @@
         </ion-segment>
       </ion-row>
 
-    <ion-virtual-scroll *ngIf="(loading$ | async) && (trips$ | async).length == 0" approxItemHeight="120px">
-        <ion-card>
-            <ion-card-header>
-                <ion-item>
-                    <ion-skeleton-text animated></ion-skeleton-text>
-                </ion-item>
-            </ion-card-header>
-            <ion-card-content>
-                <ion-item class="total">
-                    <ion-skeleton-text slot="start" animated></ion-skeleton-text>
-                    <ion-skeleton-text slot="end" animated></ion-skeleton-text>
-                </ion-item>
-                <ion-item class="reimburse">
-                    <ion-skeleton-text slot="start" animated></ion-skeleton-text>
-                    <ion-skeleton-text slot="end" animated></ion-skeleton-text>
-                </ion-item>
-            </ion-card-content>
-        </ion-card>
-    </ion-virtual-scroll>
-    <ion-virtual-scroll [items]="trips$ | async" approxItemHeight="120px" *ngIf="!(loading$ | async)">
-        <ion-card *virtualItem="let trip" (click)="getExpense(trip)" >
-            <ion-card-header>
-                <ion-item>
-                    <ion-label  class="large bold">{{ trip.startDate | date : 'LLL yyyy' | uppercase}}</ion-label>
-                </ion-item>
-            </ion-card-header>
-            <ion-card-content>
-                <ion-item class="total">
-                    <ion-title slot="start" class="large bold">{{ trip.trip_name | titlecase }}</ion-title>
-                    <ion-title slot="end" class="large bold">{{ tripTotalCost(trip) | async | currency : 'INR' }}</ion-title>
-                </ion-item>
-                <ion-item class="reimburse">
-                    <ion-label slot="start" class="large bold">Reimbursable Amount</ion-label>
-                    <ion-label slot="end"  class="large bold">{{ tripReImbursableCost(trip) | async | currency : 'INR' }}</ion-label>
-                </ion-item>
-            </ion-card-content>
-        </ion-card>
-    </ion-virtual-scroll>
+    <ion-card *ngIf="(loading$ | async) && (trips$ | async).length == 0">
+        <ion-card-header>
+            <ion-item>
+                <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-item>
+        </ion-card-header>
+        <ion-card-content>
+            <ion-item class="total">
+                <ion-skeleton-text slot="start" animated></ion-skeleton-text>
+                <ion-skeleton-text slot="end" animated></ion-skeleton-text>
+            </ion-item>
+            <ion-item class="reimburse">
+                <ion-skeleton-text slot="start" animated></ion-skeleton-text>
+                <ion-skeleton-text slot="end" animated></ion-skeleton-text>
+            </ion-item>
+        </ion-card-content>
+    </ion-card>
+    
+    <ion-card *ngFor="let trip of (trips$ | async)" (click)="getExpense(trip)" >
+        <ion-card-header>
+            <ion-item>
+                <ion-label  class="large bold">{{ trip.startDate | date : 'LLL yyyy' | uppercase}}</ion-label>
+            </ion-item>
+        </ion-card-header>
+        <ion-card-content>
+            <ion-item class="total">
+                <ion-title slot="start" class="large bold">{{ trip.trip_name | titlecase }}</ion-title>
+                <ion-title slot="end" class="large bold">{{ tripTotalCost(trip) | async | currency : 'INR' }}</ion-title>
+            </ion-item>
+            <ion-item class="reimburse">
+                <ion-label slot="start" class="large bold">Reimbursable Amount</ion-label>
+                <ion-label slot="end"  class="large bold">{{ tripReImbursableCost(trip) | async | currency : 'INR' }}</ion-label>
+            </ion-item>
+        </ion-card-content>
+    </ion-card>
+
     <ion-label class="large bold" *ngIf="(!(loading$ | async)) && (trips$ | async).length == 0">
         There is no trips
     </ion-label>

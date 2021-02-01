@@ -16,6 +16,13 @@ export class HotelService {
     private http: NativeHttpService
   ) {
   }
+
+  getPrivateInventory(companyId : string) {
+    this.http.setReqTimeout(300);
+    this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
+    this.http.setData('json');
+    return from(this.http.get( "/hotelinventory/" + companyId,{}));
+  }
   
   searchHotel(payload: hotelsearchpayload): Observable<HTTPResponse> {
     this.http.setReqTimeout(300);

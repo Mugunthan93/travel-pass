@@ -15,6 +15,8 @@ import { FilePath } from '@ionic-native/file-path/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { environment } from 'src/environments/environment';
 import { File } from '@ionic-native/file/ngx';
+import { ExpenseCostValidator } from 'src/app/validator/expense_cost.validators';
+import { EligibilityState, gradeValue } from 'src/app/stores/eligibility.state';
 
 @Component({
   selector: "app-expense",
@@ -49,6 +51,8 @@ export class ExpenseComponent implements OnInit {
 
   formSubmit : boolean;
   currentTrip: any;
+  getDomesticEligibility: gradeValue;
+  getIntEligibility: gradeValue;
 
   // flight,bus,train => start_date,end_date,start_city,end_city,no_of_days
   // hotel,food => start_date,end_date,start_city,no_of_days
@@ -68,6 +72,8 @@ export class ExpenseComponent implements OnInit {
   ngOnInit() {
 
     this.currentTrip = this.store.selectSnapshot(ExpenseState.getExpenseDates);
+    this.getDomesticEligibility = this.store.selectSnapshot(EligibilityState.getDomestic);
+    this.getIntEligibility = this.store.selectSnapshot(EligibilityState.getInternational);
     this.formSubmit = false;
 
     if(this.exptype == 'add') {
@@ -97,7 +103,7 @@ export class ExpenseComponent implements OnInit {
         //local,other
         local_travel_value : this.fb.control(null),
 
-        cost: this.fb.control(null, [Validators.required]),
+        cost: this.fb.control(null, [Validators.required,ExpenseCostValidator.bind(this,this.getDomesticEligibility,this.getIntEligibility)]),
         paid_by: this.fb.control(null, [Validators.required]),
         attachementpath : this.fb.group({
           bills : new FormArray([])
@@ -136,7 +142,7 @@ export class ExpenseComponent implements OnInit {
         //local,other
         local_travel_value : this.fb.control(this.expense.local_travel_value),
 
-        cost: this.fb.control(this.expense.cost, [Validators.required]),
+        cost: this.fb.control(this.expense.cost, [Validators.required,ExpenseCostValidator.bind(this,this.getDomesticEligibility,this.getIntEligibility)]),
         paid_by: this.fb.control(this.expense.paid_by, [Validators.required]),
         attachementpath : this.fb.group({
           bills : new FormArray([])

@@ -33,9 +33,9 @@
           <ion-row *ngIf="trip.type !== 'hotel'">
             <ion-row>
               <ion-label class="medium bold">{{ trip.from }}</ion-label>
-              <ion-icon  *ngIf="trip.journey == 1" src="../../../assets/icons/straight.svg"></ion-icon>
+              <ion-icon  *ngIf="trip.journey == 1" name="arrow-forward-sharp"></ion-icon>
               <ion-icon  *ngIf="trip.journey == 2" src="../../../assets/icons/straight.svg"></ion-icon>
-              <ion-icon *ngIf="trip.journey == 3" src="../../../assets/icons/straight.svg"></ion-icon>
+              <ion-icon *ngIf="trip.journey == 3" src="../../../assets/icons/around.svg"></ion-icon>
               <ion-label class="medium bold">{{ trip.to }}</ion-label>
             </ion-row>
             <ion-row>

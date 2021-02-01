@@ -10,6 +10,8 @@ import { HTTPResponse } from '@ionic-native/http/ngx';
 import { hotelprice, supplierhotelcodes, hotelresponse, HotelResponse } from '../result/hotel.state';
 import { ResultMode } from '../result.state';
 import { Navigate } from '@ngxs/router-plugin';
+import { CompanyState } from '../company.state';
+import { append, patch, removeItem, updateItem } from '@ngxs/store/operators';
 
 export interface hotelsearch{
     formData : hotelForm
@@ -194,7 +196,7 @@ export class SearchHotel {
             ChildAge: [],
             NoOfAdults: 1,
             NoOfChild: 0
-        }]
+        }],
     }
 })
 export class HotelSearchState {
@@ -294,8 +296,7 @@ export class HotelSearchState {
 
     @Action(AddRoom)
     addRoom(states: StateContext<hotelsearch>) {
-        
-        let currentRooms: roomguest[] = Object.assign([], states.getState().rooms);
+
         let roomAlert$ = from(this.alertCtrl.create({
             header: 'Room Exceed',
             message: 'Cannot add more than 6 room',
@@ -315,17 +316,14 @@ export class HotelSearchState {
             )
         );
 
-        if (currentRooms.length < 6) {
-            let room: roomguest = {
-                ChildAge: [],
-                NoOfAdults: 0,
-                NoOfChild: 0
-            }
-            currentRooms.push(room);
-    
-            states.patchState({
-                rooms: currentRooms
-            });
+        if (states.getState().rooms.length < 6) {
+            states.setState(patch({
+                rooms : append([{
+                    ChildAge: [],
+                    NoOfAdults: 0,
+                    NoOfChild: 0
+                }])
+            }));
         }
         else {
             return roomAlert$;
@@ -335,24 +333,14 @@ export class HotelSearchState {
 
     @Action(DeleteRoom)
     deleteRoom(states: StateContext<hotelsearch>, action: DeleteRoom) {
-        
-        let currentRooms: roomguest[] = Object.assign([], states.getState().rooms);
-        let filteredRooms = currentRooms.filter(
-            (...el) => {
-                let ind = el[1];
-                return !(ind == action.roomId)
-            }
-        );
-        console.log(filteredRooms);
-        states.patchState({
-            rooms: filteredRooms
-        });
+        states.setState(patch({
+            rooms: removeItem(action.roomId)
+        }));
     }
 
     @Action(AddAdult)
     addAdult(states: StateContext<hotelsearch>, action: AddAdult) {
 
-        let currentRooms: roomguest[] = states.getState().rooms;
         let adultAlert$ = from(this.alertCtrl.create({
             header: 'Adult Exceed',
             message: 'Cannot add more than 8 Adult for each room',
@@ -372,19 +360,15 @@ export class HotelSearchState {
             )
         );
 
-        if (currentRooms[action.roomId].NoOfAdults < 8) {
-            let filteredRooms: roomguest[] = currentRooms.map(
-                (el: roomguest, ind: number) => {
-                    let newEl = Object.assign({}, el);
-                    if (ind == action.roomId) {
-                        newEl.NoOfAdults += 1;
-                    }
-                    return newEl;
-                }
-            );
-            states.patchState({
-                rooms: filteredRooms
-            });
+        if (states.getState().rooms[action.roomId].NoOfAdults < 8) {
+
+            let adult = states.getState().rooms[action.roomId].NoOfAdults + 1 
+            states.setState(patch({
+                rooms : updateItem(action.roomId,patch({
+                    NoOfAdults : adult
+                }))
+            }))
+
         }
         else {
             return adultAlert$;
@@ -394,27 +378,19 @@ export class HotelSearchState {
 
     @Action(RemoveAdult)
     removeAdult(states: StateContext<hotelsearch>, action: AddAdult) {
-        let currentRooms: roomguest[] = states.getState().rooms;
-        let filteredRooms: roomguest[] = currentRooms.map(
-            (el: roomguest, ind: number) => {
-                let newEl = Object.assign({}, el);
-                if (ind == action.roomId) {
-                    if (newEl.NoOfAdults >= 1) {
-                        newEl.NoOfAdults -= 1;
-                    }
-                }
-                return newEl;
-            }
-        );
-        states.patchState({
-            rooms: filteredRooms
-        });
+        if (states.getState().rooms[action.roomId].NoOfChild >= 1) {
+            let adult = states.getState().rooms[action.roomId].NoOfAdults - 1 
+            states.setState(patch({
+                rooms : updateItem(action.roomId,patch({
+                    NoOfAdults : adult
+                }))
+            }))
+        }
     }
 
     @Action(AddChild)
     addChild(states: StateContext<hotelsearch>, action: AddChild) {
 
-        let currentRooms: roomguest[] = states.getState().rooms;
         let childAlert$ = from(this.alertCtrl.create({
             header: 'Adult Exceed',
             message: 'Cannot add more than 2 children for each room',
@@ -434,21 +410,14 @@ export class HotelSearchState {
             )
         );
 
-        if (currentRooms[action.roomId].NoOfChild < 2) {
-            let filteredRooms: roomguest[] = currentRooms.map(
-                (el: roomguest, ind: number) => {
-                    let newEl = Object.assign({}, el);
-                    if (ind == action.roomId) {
-                        newEl.NoOfChild += 1;
-                        newEl.ChildAge = Object.assign([], el.ChildAge);
-                        newEl.ChildAge.push(null);
-                    }
-                    return newEl;
-                }
-            );
-            states.patchState({
-                rooms: filteredRooms
-            });
+        if (states.getState().rooms[action.roomId].NoOfChild < 2) {
+            let child = states.getState().rooms[action.roomId].NoOfChild + 1 
+            states.setState(patch({
+                rooms : updateItem(action.roomId,patch({
+                    NoOfChild : child,
+                    ChildAge : append([null])
+                }))
+            }))
         }
         else {
             return childAlert$;
@@ -458,41 +427,30 @@ export class HotelSearchState {
 
     @Action(RemoveChild)
     removeChild(states: StateContext<hotelsearch>, action: RemoveChild) {
-        let currentRooms: roomguest[] = states.getState().rooms;
-        let filteredRooms: roomguest[] = currentRooms.map(
-            (el: roomguest, ind: number) => {
-                let newEl = Object.assign({}, el);
-                if (ind == action.roomId) {
-                    if (newEl.NoOfChild >= 1) {
-                        newEl.NoOfChild -= 1;
-                        newEl.ChildAge = Object.assign([], el.ChildAge);
-                        newEl.ChildAge.pop();
-                    }
-                }
-                return newEl;
-            }
-        );
-        states.patchState({
-            rooms: filteredRooms
-        });
+        
+        if (states.getState().rooms[action.roomId].NoOfChild >= 1) {
+            let childage = states.getState().rooms[action.roomId].NoOfChild - 1 
+            let age = states.getState().rooms[action.roomId].ChildAge;
+            states.setState(patch({
+                rooms : updateItem(action.roomId,patch({
+                    NoOfChild : childage,
+                    ChildAge : removeItem(age.length - 1)
+                }))
+            }))
+        }
     }
 
     @Action(SetAge)
     setAge(states: StateContext<hotelsearch>, action: SetAge) {
-        let currentRooms: roomguest[] = states.getState().rooms;
-        let filteredRooms: roomguest[] = currentRooms.map(
-            (el: roomguest, ind: number) => {
-                let newEl = Object.assign({}, el);
-                if (ind == action.roomIndex) {
-                    newEl.ChildAge = Object.assign([], el.ChildAge);
-                    newEl.ChildAge[action.ageIndex] = action.value;
-                }
-                return newEl;
-            }
-        );
-        states.patchState({
-            rooms: filteredRooms
-        });
+        states.setState(patch({
+            rooms : patch({
+                [action.roomIndex] : patch({
+                    ChildAge : patch({
+                        [action.ageIndex] : action.value
+                    })
+                })
+            })
+        }));
     }
 
     @Action(DismissRoom)
@@ -517,7 +475,7 @@ export class HotelSearchState {
         else {
             return failedAlert$
                 .pipe(
-                    map(
+                    flatMap(
                         (alertEl) => {
                             if (states.getState().rooms.length <= 0) {
                                 alertEl.message = 'Add Atlease One Room';
@@ -626,6 +584,12 @@ export class HotelSearchState {
 
         return loadingPresent$
             .pipe(
+                tap(
+                    () => {
+                        states.dispatch(new ResultMode('hotel'));
+                        states.dispatch(new Navigate(['/', 'home', 'result', 'hotel']));
+                    }
+                ),
                 flatMap(
                     () => {
                         return forkJoin([hotelResponse$, dumpResponse$])
@@ -659,7 +623,7 @@ export class HotelSearchState {
                         return loadingDismiss$
                     }
                 ),
-                map(
+                tap(
                     () => {
                         states.dispatch(new ResultMode('hotel'));
                         states.dispatch(new Navigate(['/', 'home', 'result', 'hotel']));
@@ -678,7 +642,7 @@ export class HotelSearchState {
                                     //no result error
                                     if (error.status == 400) {
                                         const errorString = JSON.parse(error.error);
-                                        failedAlert.message = errorString.message.response.Error.ErrorMessage;
+                                        failedAlert.message = 'No Hotels are found,Try some other Date';
                                     }
                                     //502 => proxy error
                                     if (error.status == 502) {

@@ -6,6 +6,7 @@ import { sortButton, SortState, SortChange, SortBy } from 'src/app/stores/result
 import * as _ from 'lodash';
 import { ResultState } from 'src/app/stores/result.state';
 import { map, flatMap } from 'rxjs/operators';
+import { SearchState } from 'src/app/stores/search.state';
 
 @Component({
   selector: "app-result-sorting",
@@ -27,6 +28,7 @@ export class ResultSortingComponent implements OnInit, OnChanges {
   buttons$: Observable<sortButton[]>;
   currentButton$: Observable<sortButton>;
   currentButton: sortButton = { label: null, state: null, property: null };
+  searchMode: string;
 
   constructor(private store: Store) {}
 
@@ -62,7 +64,11 @@ export class ResultSortingComponent implements OnInit, OnChanges {
       this.currentButton$ = this.store.select(SortState.getBusSortBy);
     }
 
-    this.currentButton$.subscribe((el) => (this.currentButton = el));
+    this.currentButton$.subscribe((el) => {
+      if(this.currentButton) {
+        this.currentButton = el
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {

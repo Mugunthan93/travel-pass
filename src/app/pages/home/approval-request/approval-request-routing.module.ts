@@ -5,14 +5,8 @@ import { ApprovalRequestPage } from './approval-request.page';
 
 const routes: Routes = [
   {
-    path: ':approveType',
-    component: ApprovalRequestPage,
-    children: [
-      {
-        path: 'request-list',
-        loadChildren: () => import('./request-list/request-list.module').then( m => m.RequestListPageModule)
-      }
-    ]
+    path: '',
+    component: ApprovalRequestPage
   },
 ];
 

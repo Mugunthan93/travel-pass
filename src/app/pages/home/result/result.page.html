@@ -1,5 +1,7 @@
 <ion-header>
+
   <ion-toolbar>
+
     <ion-buttons slot="start">
       <ion-button (click)="back()">
         <ion-icon name="arrow-back"></ion-icon>
@@ -48,26 +50,30 @@
         <ion-icon name="filter"></ion-icon>
       </ion-button>
     </ion-buttons>
+
   </ion-toolbar>
-    <ion-segment 
-      (ionChange)="changeResult($event)" 
-      [value]="flightType$ | async"
-      class="round-trip-book" 
-      *ngIf="(resultType$ | async) == 'animated-round-trip'">
-      <ion-segment-button value="departure">
-        <ion-label class="bold">
-          Departure
-        </ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="return">
-        <ion-label class="bold">
-          Return
-        </ion-label>
-      </ion-segment-button>
-    </ion-segment>
-    <app-result-sorting [type]="flightType$ | async"></app-result-sorting>
-    <ion-progress-bar *ngIf="((resultMode$ | async) !== 'flight') && ((loading$ | async) < 0.999)" [value]="loading$ | async">
-    </ion-progress-bar>
+
+  <ion-segment 
+    (ionChange)="changeResult($event)" 
+    [value]="flightType$ | async"
+    class="round-trip-book" 
+    *ngIf="(resultType$ | async) == 'animated-round-trip'">
+    <ion-segment-button value="departure">
+      <ion-label class="bold">
+        Departure
+      </ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="return">
+      <ion-label class="bold">
+        Return
+      </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <app-result-sorting [type]="flightType$ | async"></app-result-sorting>
+  <ion-progress-bar *ngIf="((resultMode$ | async) !== 'flight') && ((loading$ | async) < 0.999)" [value]="loading$ | async">
+  </ion-progress-bar>
+  
 </ion-header>
 <ion-content>
   <ion-router-outlet></ion-router-outlet>

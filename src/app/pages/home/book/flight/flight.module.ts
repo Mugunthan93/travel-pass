@@ -17,8 +17,6 @@ import { FlightPage } from './flight.page';
   ],
   declarations: [
     FlightPage
-  ],
-  entryComponents: [
   ]
 })
 export class FlightPageModule {}

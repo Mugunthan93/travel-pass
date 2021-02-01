@@ -22,7 +22,9 @@ $toolbar-padding:(
 :root {
 
     ion-app {
+
         &.home-tab{
+
             $toolbar-background:$geraldine  !important;
 
             ion-toolbar {

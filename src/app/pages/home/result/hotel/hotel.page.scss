@@ -3,7 +3,16 @@
 
 ion-content{
 
-    >ion-virtual-scroll{
+    mat-expansion-panel {
+
+        ::ng-deep .mat-expansion-panel-body {
+
+            padding : 0px;
+
+        }
+    }
+
+    ion-virtual-scroll{
         >ion-card{
             width: -webkit-fill-available;
             --background: #{$white};

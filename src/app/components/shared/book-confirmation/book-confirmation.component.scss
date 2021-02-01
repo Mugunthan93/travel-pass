@@ -1,10 +1,10 @@
 ion-content {
     >ion-item {
-        --min-height: 60px;
-        --padding-top: 8px;
-        --padding-bottom: 8px;
-        --padding-start: 16px;
-        --padding-end: 16px;
+        --min-height: 60px !important;
+        --padding-top: 8px !important;
+        --padding-bottom: 8px !important;
+        --padding-start: 16px !important;
+        --padding-end: 16px !important;
 
         ion-label[slot="end"] {
             text-align: end;

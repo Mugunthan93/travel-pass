@@ -10,6 +10,7 @@ import { SelectModalComponent } from 'src/app/components/shared/select-modal/sel
 import { AlertOptions } from '@ionic/core';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
 import { map } from 'rxjs/operators';
+import { GetPrivateInventory } from 'src/app/stores/result/hotel.state';
 
 @Component({
   selector: 'app-hotel',
@@ -36,6 +37,7 @@ export class HotelPage implements OnInit {
 
   ngOnInit() {
 
+    this.store.dispatch(new GetPrivateInventory());
     this.rooms$ = this.store.select(HotelSearchState.getRooms);
 
     this.hotelSearch = new FormGroup({

@@ -1,6 +1,9 @@
 @import "../../../../style/util/mixins.scss";
 @import "../../../../style/base/color.scss";
 
+ion-toolbar#approve-req{
+    --background: #{$Bouquet} !important;
+}
 
 ion-content{
 
@@ -74,10 +77,12 @@ ion-content{
     
                                 &:first-child {
                                     align-items: flex-start;
+                                    text-align: start;
                                 }
     
                                 &:last-child {
                                     align-items: flex-end;
+                                    text-align: end;
                                 }
                             }
                         }
@@ -159,14 +164,38 @@ ion-content{
                 }
             }
         }
+
+        >mat-accordion.train {
+            >mat-expansion-panel{
+                >mat-expansion-panel-header{
+                    >::ng-deep span{
+                        flex-direction: column;
+                        >ion-title{
+                            padding-left:0px !important;
+                        }
+                    }
+                }
+                ::ng-deep .mat-expansion-panel-body{
+                    >ion-row{
+                        >ion-col{
+                            max-width: fit-content;
+                        }
+                        >ion-col{
+                            display: flex;
+                            flex-direction: column;
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
     ion-card{
         ion-card-content{
             ion-item{
-                ion-label{
-                    min-width: max-content;
+                ion-row {
+                    min-width: -webkit-fill-available;
                 }
             }
         }

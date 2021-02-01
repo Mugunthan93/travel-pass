@@ -192,8 +192,14 @@ export interface metrixBoard{
 }
 
 export interface metrixSector {
-    Destination: string
-    Origin: string
+    Destination?: string
+    Origin?: string
+    Book_request?: any
+    api?: string
+    book_response?: any
+    fareQuote_onward?:  any
+    fareQuote_return?: string
+    request_id?: number
 }
 
 export interface metricBoardResponse {

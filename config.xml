@@ -4,7 +4,7 @@
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework.com" href="http://ionicframework.com/">Ionic Framework Team</author>
     <allow-navigation href="*" />
-    <content original-src="index.html" src="http://192.168.1.8:8100" />
+    <content original-src="index.html" src="http://192.168.1.11:8100" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -113,10 +113,5 @@
     <plugin name="cordova-plugin-ionic-webview" spec="^4.0.0" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <plugin name="cordova-plugin-googlemaps" spec="^2.7.0" />
-    <allow-navigation href="http://192.168.1.6:8100" sessionid="26566cb6" />
-    <allow-navigation href="http://192.168.1.13:8100" sessionid="776e2d61" />
-    <allow-navigation href="http://192.168.1.10:8100" sessionid="d46d5f19" />
-    <allow-navigation href="http://192.168.1.12:8100" sessionid="183687bd" />
-    <allow-navigation href="http://192.168.1.11:8100" sessionid="a30d033a" />
-    <allow-navigation href="http://192.168.1.8:8100" sessionid="3260ec30" />
+    <allow-navigation href="http://192.168.1.11:8100" sessionid="5fa7858a" />
 </widget>

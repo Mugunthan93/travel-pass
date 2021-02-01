@@ -1,10 +1,10 @@
-import { State, Action, StateContext, Store, Selector, ofActionSuccessful } from "@ngxs/store";
+import { State, Action, StateContext, Store, Selector } from "@ngxs/store";
 import { Navigate } from '@ngxs/router-plugin';
 import { MenuController, LoadingController, AlertController, ModalController } from '@ionic/angular';
-import { concat } from 'rxjs';
+import { concat, throwError } from 'rxjs';
 import { BookingService } from '../services/booking/booking.service';
 import { forkJoin, from, of } from 'rxjs';
-import { catchError, concatMap, flatMap, map, tap } from 'rxjs/operators';
+import { catchError, concatMap, flatMap, map, mergeMap, tap, toArray } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { File } from '@ionic-native/file/ngx';
@@ -15,9 +15,11 @@ import { ApprovalService } from '../services/approval/approval.service';
 import { flightResult } from '../models/search/flight';
 import { FileTransfer } from "@ionic-native/file-transfer/ngx";
 import { environment } from "src/environments/environment";
-import { AllUpcomingTrips, DashboardState } from "./dashboard.state";
+import { AllUpcomingTrips, DashboardState, upcomingTrips } from "./dashboard.state";
 import { FlightService } from "../services/flight/flight.service";
 import { AndroidPermissions } from "@ionic-native/android-permissions/ngx";
+import * as moment from "moment";
+import { append, patch } from '@ngxs/store/operators';
 
 export interface booking {
     type: string
@@ -29,6 +31,8 @@ export interface booking {
     cancelType : 'full' | 'partial'
     mode : string
     status : string
+    allbookings : any[]
+    tripstatus : string
 }
 
 export interface cancel_request {
@@ -106,6 +110,10 @@ export class MyBooking {
     }
 }
 
+export class MyAllBooking {
+  static readonly type = "[booking] MyAllBooking";
+}
+
 export class ChangeBookingMode {
     static readonly type = "[booking] ChangeBookingMode";
     constructor(public mode : string) {
@@ -147,7 +155,7 @@ export class CancelTicket {
 
 export class ViewFile {
     static readonly type = "[booking] ViewFile";
-    constructor(public pnr : string[]) {
+    constructor(public pnr : string) {
 
     }
 }
@@ -164,6 +172,12 @@ export class SetCancelType {
   }
 }
 
+export class SetTripStatus {
+  static readonly type = "[booking] SetTripStatus";
+  constructor(public status : string) {
+  }
+}
+
 @State<booking>({
   name: "booking",
   defaults: {
@@ -175,10 +189,17 @@ export class SetCancelType {
     reschedule: null,
     cancel: null,
     cancelType : 'full',
-    status : 'open'
+    status : 'open',
+    allbookings : [],
+    tripstatus : 'active'
   },
 })
 export class BookingState {
+  
+  static activeStatus : string[] = ['new','open','pending'];
+  static confirmedStatus : string[] = ['booked','rescheduled','cancelled'];
+  static completedStatus : string[] = ['booked','rescheduled'];
+
   constructor(
     private store: Store,
     public menuCtrl: MenuController,
@@ -246,6 +267,34 @@ export class BookingState {
       return state.mode;
   }
 
+  @Selector()
+  static getActiveBooking(state : booking) : number {
+    return state.allbookings.reduce(
+      (acc) => {
+        if(acc.status === 'pending') {
+          return acc + 1;
+        }
+        return acc;
+      },0
+    );
+  }
+
+  @Selector()
+  static getAllBookings(state : booking) : any[] {
+    switch(state.tripstatus)
+    {
+      case 'active' : return state.allbookings.filter(el => this.activeStatus.includes(el.status) && moment(el.traveldate).isSameOrAfter({},'date'));
+      case 'confirmed' : return state.allbookings.filter(el => this.confirmedStatus.includes(el.status) && moment(el.traveldate).isSameOrAfter({},'date'));
+      case 'completed' : return state.allbookings.filter(el => this.completedStatus.includes(el.status) && moment(el.traveldate).isBefore({},'date'));
+      default : return state.allbookings;
+    }
+  }
+
+  @Selector()
+  static getTripStatus(state : booking) : string {
+    return state.tripstatus;
+  }
+
   
   @Action(SetStatus)
   setStatus(states: StateContext<booking>, action: SetStatus) {
@@ -259,7 +308,21 @@ export class BookingState {
     states.patchState({
       cancelType : action.status
     });
-  } 
+  }
+
+  @Action(SetTripStatus)
+  setStripStatus(states: StateContext<booking>, action: SetTripStatus) {
+
+    states.patchState({
+      allbookings : [],
+      loading : true
+    });
+
+    states.dispatch(new MyAllBooking());
+    states.patchState({
+      tripstatus : action.status
+    });
+  }
 
   @Action(MyBooking)
   myBooking(states: StateContext<booking>, action: MyBooking) {
@@ -318,14 +381,11 @@ export class BookingState {
                 ),
                 flatMap(
                     (response) => {
-                        console.log(response);
                         let newResponse = response[0];
                         let historyResponse = response[1];
 
                         let newArray = _.flatMap(this.bookingData(newResponse));
                         let historyArray = _.flatMap(this.bookingData(historyResponse));
-
-                        console.log(newArray,historyArray);
 
                         states.patchState({
                             new: newArray,
@@ -338,6 +398,65 @@ export class BookingState {
                     }
                 )
             )
+  }
+
+  @Action(MyAllBooking,{ cancelUncompleted : true })
+  myAllBooking(states: StateContext<booking>, action: MyAllBooking) {
+
+    states.patchState({
+      allbookings : []
+    });
+    console.log(action);
+
+
+    let type$ = from(['flight','hotel','bus','train']);
+    let currentStatus = (status: string) => {
+      switch(status) {
+        case 'active' : return ['new','open','pending'];
+        case 'confirmed' : return ['booked','cancelled','rescheduled'];
+        case 'completed' : return ['booked','rescheduled'];
+      }
+    }
+    return type$
+      .pipe(
+        mergeMap(
+          (type) => {
+            let status$ = from(currentStatus(states.getState().tripstatus));
+            return status$
+              .pipe(
+                mergeMap(
+                  (status) => {
+                    let reqType = 'online';
+                    if(type == 'train') {
+                      reqType = 'offline';
+                    }
+                    return this.bookingService.myBooking(type,status,reqType)
+                      .pipe(
+                        map(
+                          (response : HTTPResponse) => {
+                            let book : any[] = _.isUndefined(JSON.parse(response.data).data) ? [] : JSON.parse(response.data).data;
+                            let trip = this.tripResponse(book,states.getState().tripstatus);
+                            states.setState(patch({
+                              allbookings : append(trip)
+                            }));
+                          }
+                        )
+                      );
+                  }
+                ),
+                catchError(
+                  (error) => {
+                    if(error.status == -4) {
+                      return throwError(error);
+                    }
+                    return of(error);
+                  }
+                )
+              )
+            }
+        )
+      )
+
   }
 
   @Action(ChangeBookingMode)
@@ -359,7 +478,6 @@ export class BookingState {
           .pipe(
               flatMap(
                   (response) => {
-                      console.log(response);
                       if(response.some(el => el == null)) {
                           states.patchState({
                               new: [],
@@ -371,14 +489,11 @@ export class BookingState {
                           return of(true);
                       }
                       else {
-                          console.log(response);
                           let newResponse = response[0];
                           let historyResponse = response[1];
   
                           let newArray = _.flatMap(this.bookingData(newResponse));
                           let historyArray = _.flatMap(this.bookingData(historyResponse));
-  
-                          console.log(newArray,historyArray);
   
                           states.patchState({
                               new: newArray,
@@ -427,13 +542,13 @@ export class BookingState {
     let filepath = (pnr) => this.file.externalRootDirectory +"/TravellersPass/Ticket/" + pnr +".pdf";
     let fileopener$ = (pnr) => from(this.fileOpener.open(filepath(pnr),"application/pdf"));
 
-    return from(action.pnr)
+    let PNR : string[] = JSON.parse(action.pnr);
+    return from(PNR)
       .pipe(
         concatMap((pnr) => {
           return fileopener$(pnr)
             .pipe(
               catchError((error) => {
-                console.log(error);
                 if (error.status == 9) {
                   return failedAlert$(pnr);
                 }
@@ -445,6 +560,8 @@ export class BookingState {
 
   @Action(DownloadTicket)
   downoadTicket(states : StateContext<booking>, action : DownloadTicket) {
+
+    console.log(states);
 
     const failedAlert$ = (msg,sub) => from(
       this.alertCtrl.create({
@@ -466,7 +583,6 @@ export class BookingState {
       })
     );
 
-    console.log(states);
     let req$ = this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE);
     let checkPerm$ = this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE);
     
@@ -568,8 +684,6 @@ export class BookingState {
 
     let type = states.getState().type;
 
-    console.log(JSON.stringify(reschedule));
-
     let reqest$ = this.approvalService.approvalReq(
       type,
       reschedule.req_id,
@@ -583,7 +697,6 @@ export class BookingState {
         }
       }),
       catchError((error: HTTPResponse) => {
-        console.log(error);
         let errObj = null;
         if (error.error) {
           errObj = JSON.parse(error.error);
@@ -724,18 +837,13 @@ export class BookingState {
     if(states.getState().cancelType == 'full') {
       return req$
         .pipe(
-          tap((response) => console.log(response)),
           flatMap((response) => {
             let changeresponse = JSON.parse(response.data);
-            console.log(changeresponse);
             return cancel$;
           }),
-          tap((response) => console.log(response)),
           flatMap(() => email$),
-          tap((response) => console.log(response)),
           flatMap(() => successAlert$),
           catchError((error: HTTPResponse) => {
-            console.log(error);
             let errObj = null;
             if (error.error) {
               errObj = JSON.parse(error.error);
@@ -820,10 +928,220 @@ export class BookingState {
   bookingData(data : HTTPResponse[]) {
       return data.map(
           (el) => {
-              console.log(JSON.parse(el.data));
               return _.isUndefined(JSON.parse(el.data).data) ? [] : JSON.parse(el.data).data;
           }
       );
   }
+
+  tripResponse(data: any[],status : string) : any[] {
+    switch(status) {
+      case 'active' : {
+        return data.map((trip) => {
+        if(trip.hasOwnProperty('trip_requests')) {
+          console.log(trip);
+          let lastdetail = trip.passenger_details.flight_details.length - 1;
+          let lastTrip = trip.passenger_details.flight_details[lastdetail].Segments.length - 1;
+          let lastFlight = trip.passenger_details.flight_details[lastdetail].Segments[lastTrip].length - 1;
+          let sourceplace : string = trip.passenger_details.flight_details[0].Segments[0][0].Origin.Airport.CityName;
+          let sourcedate : string = trip.passenger_details.flight_details[0].Segments[0][0].Origin.DepTime;
+          
+          let desplace : string = trip.passenger_details.flight_details[lastdetail].Segments[lastTrip][lastFlight].Destination.Airport.CityName;
+          let desdate : string = trip.passenger_details.flight_details[lastdetail].Segments[lastTrip][lastFlight].Destination.ArrTime;
+
+          return {
+            id : trip.id,
+            source: sourceplace,
+            destination: desplace,
+            startdate : sourcedate,
+            enddate : desdate,
+            type : 'flight',
+            traveldate : sourcedate,
+            journey : trip.trip_requests.JourneyType,
+            status : trip.status
+          }
+
+        }
+        else if(trip.hasOwnProperty('hotel_requests')) {
+          return {
+            id : trip.id,
+            source : trip.guest_details.basiscInfo.HotelName,
+            destination : trip.guest_details.basiscInfo.CityName,
+            startdate : trip.guest_details.basiscInfo.CheckInDate,
+            enddate : trip.guest_details.basiscInfo.CheckOutDate,
+            type : 'hotel',
+            traveldate : trip.guest_details.basiscInfo.CheckInDate,
+            status : trip.status
+          }
+
+        }
+        else if(trip.hasOwnProperty('bus_requests')) {
+          return {
+            id : trip.id,
+            source : trip.passenger_details.selectedbus[0].operatorName,
+            destination : trip.passenger_details.selectedbus[0].busType,
+            startdate : trip.passenger_details.selectedbus[0].departureTime,
+            enddate :trip.passenger_details.selectedbus[0].arrivalTime,
+            type : 'bus',
+            traveldate : trip.bus_requests[0].doj,
+            status : trip.status
+          }
+        }
+        else if(trip.hasOwnProperty('train_requests')) {
+            console.log(trip);
+            let lastTrip =  trip.train_requests.Segments.length - 1;
+            return {
+              type : 'train',
+              source: trip.train_requests.Segments[0].OriginName,
+              destination: trip.train_requests.Segments[lastTrip].DestinationName,
+              startdate: moment(trip.train_requests.Segments[0].depDate).utc().format("YYYY-MM-DDTHH:mm:ss"),
+              enddate : moment(trip.train_requests.Segments[lastTrip].depDate).utc().format("YYYY-MM-DDTHH:mm:ss"),
+              id : trip.id,
+              traveldate : moment(trip.train_requests.Segments[0].depDate).utc().format("YYYY-MM-DDTHH:mm:ss"),
+              journey : trip.train_requests.JourneyType,
+              status : trip.status
+            }
+        }
+      })
+    };
+    case 'confirmed' : {
+        return data.map((trip) => {
+        if(trip.hasOwnProperty('trip_requests')) {
+          console.log(trip);
+          let lastdetail = trip.passenger_details.flight_details.length - 1;
+          let lastTrip = trip.passenger_details.flight_details[lastdetail].Segments.length - 1;
+          let lastFlight = trip.passenger_details.flight_details[lastdetail].Segments[lastTrip].length - 1;
+          let sourceplace : string = trip.passenger_details.flight_details[0].Segments[0][0].Origin.Airport.CityName;
+          let sourcedate : string = trip.passenger_details.flight_details[0].Segments[0][0].Origin.DepTime;
+          
+          let desplace : string = trip.passenger_details.flight_details[lastdetail].Segments[lastTrip][lastFlight].Destination.Airport.CityName;
+          let desdate : string = trip.passenger_details.flight_details[lastdetail].Segments[lastTrip][lastFlight].Destination.ArrTime;
+
+          return {
+            id : trip.id,
+            source: sourceplace,
+            destination: desplace,
+            startdate : sourcedate,
+            enddate : desdate,
+            type : 'flight',
+            traveldate : sourcedate,
+            journey : trip.trip_requests.JourneyType,
+            status : trip.status
+          }
+
+        }
+        else if(trip.hasOwnProperty('hotel_requests')) {
+          return {
+            id : trip.id,
+            source : trip.guest_details.basiscInfo.HotelName,
+            destination : trip.guest_details.basiscInfo.CityName,
+            startdate : trip.guest_details.basiscInfo.CheckInDate,
+            enddate : trip.guest_details.basiscInfo.CheckOutDate,
+            type : 'hotel',
+            traveldate : trip.guest_details.basiscInfo.CheckInDate,
+            status : trip.status
+          }
+
+        }
+        else if(trip.hasOwnProperty('bus_requests')) {
+          return {
+            id : trip.id,
+            source : trip.passenger_details.selectedbus[0].operatorName,
+            destination : trip.passenger_details.selectedbus[0].busType,
+            startdate : trip.passenger_details.selectedbus[0].departureTime,
+            enddate :trip.passenger_details.selectedbus[0].arrivalTime,
+            type : 'bus',
+            traveldate : trip.bus_requests[0].doj,
+            status : trip.status
+          }
+        }
+        else if(trip.hasOwnProperty('train_requests')) {
+            console.log(trip);
+            let lastTrip =  trip.train_requests.Segments.length - 1;
+            return {
+              type : 'train',
+              source: trip.train_requests.Segments[0].OriginName,
+              destination: trip.train_requests.Segments[lastTrip].DestinationName,
+              startdate: moment(trip.train_requests.Segments[0].depDate).utc().format("YYYY-MM-DDTHH:mm:ss"),
+              enddate : moment(trip.train_requests.Segments[lastTrip].depDate).utc().format("YYYY-MM-DDTHH:mm:ss"),
+              id : trip.id,
+              traveldate : moment(trip.train_requests.Segments[0].depDate).utc().format("YYYY-MM-DDTHH:mm:ss"),
+              journey : trip.train_requests.JourneyType,
+              status : trip.status
+            }
+        }
+      });
+    };
+    case 'completed' : {
+      return data.map((trip) => {
+      if(trip.hasOwnProperty('trip_requests')) {
+        console.log(trip);
+        let lastdetail = trip.passenger_details.flight_details.length - 1;
+        let lastTrip = trip.passenger_details.flight_details[lastdetail].Segments.length - 1;
+        let lastFlight = trip.passenger_details.flight_details[lastdetail].Segments[lastTrip].length - 1;
+        let sourceplace : string = trip.passenger_details.flight_details[0].Segments[0][0].Origin.Airport.CityName;
+        let sourcedate : string = trip.passenger_details.flight_details[0].Segments[0][0].Origin.DepTime;
+        
+        let desplace : string = trip.passenger_details.flight_details[lastdetail].Segments[lastTrip][lastFlight].Destination.Airport.CityName;
+        let desdate : string = trip.passenger_details.flight_details[lastdetail].Segments[lastTrip][lastFlight].Destination.ArrTime;
+
+        return {
+          id : trip.id,
+          source: sourceplace,
+          destination: desplace,
+          startdate : sourcedate,
+          enddate : desdate,
+          type : 'flight',
+          traveldate : sourcedate,
+          journey : trip.trip_requests.JourneyType,
+          status : trip.status
+        }
+
+      }
+      else if(trip.hasOwnProperty('hotel_requests')) {
+        return {
+          id : trip.id,
+          source : trip.guest_details.basiscInfo.HotelName,
+          destination : trip.guest_details.basiscInfo.CityName,
+          startdate : trip.guest_details.basiscInfo.CheckInDate,
+          enddate : trip.guest_details.basiscInfo.CheckOutDate,
+          type : 'hotel',
+          traveldate : trip.guest_details.basiscInfo.CheckInDate,
+          status : trip.status
+        }
+
+      }
+      else if(trip.hasOwnProperty('bus_requests')) {
+        return {
+          id : trip.id,
+          source : trip.passenger_details.selectedbus[0].operatorName,
+          destination : trip.passenger_details.selectedbus[0].busType,
+          startdate : trip.passenger_details.selectedbus[0].departureTime,
+          enddate :trip.passenger_details.selectedbus[0].arrivalTime,
+          type : 'bus',
+          traveldate : trip.bus_requests[0].doj,
+          status : trip.status
+        }
+      }
+      else if(trip.hasOwnProperty('train_requests')) {
+          console.log(trip);
+          let lastTrip =  trip.train_requests.Segments.length - 1;
+          return {
+            type : 'train',
+            source: trip.train_requests.Segments[0].OriginName,
+            destination: trip.train_requests.Segments[lastTrip].DestinationName,
+            startdate: moment(trip.train_requests.Segments[0].depDate).utc().format("YYYY-MM-DDTHH:mm:ss"),
+            enddate : moment(trip.train_requests.Segments[lastTrip].depDate).utc().format("YYYY-MM-DDTHH:mm:ss"),
+            id : trip.id,
+            traveldate : moment(trip.train_requests.Segments[0].depDate).utc().format("YYYY-MM-DDTHH:mm:ss"),
+            journey : trip.train_requests.JourneyType,
+            status : trip.status
+          }
+      }
+    });
+    };
+    }
+  }
+
+
 
 }

@@ -33,7 +33,6 @@ export class SearchType {
     children: [
         FlightSearchState,
         HotelSearchState,
-        BusSearchState,
         TrainSearchState
     ]
 })

@@ -15,6 +15,8 @@ import { BookMode } from '../book.state';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SecurityContext } from '@angular/core';
 import { GetPlaces, HotelFilterState, hotelFilter } from './filter/hotel.filter.state';
+import { CompanyState } from '../company.state';
+import { insertItem, patch, removeItem } from '@ngxs/store/operators';
 
 export interface hotelresult {
     hotelresponseList: (staticresponselist & hotelresultlist)[]
@@ -28,6 +30,7 @@ export interface hotelresult {
     loading: number
     opencombination : hotelDetail[][];
     fixedcombination : hotelDetail [][];
+    privateInventory : inventory[]
 }
 
 export interface selectedHotel {
@@ -297,6 +300,31 @@ export interface blockRoomPayload {
     TraceId: string
 }
 
+export interface inventory {
+    id: number,
+    hotel_name: string,
+    email: string,
+    contact_person: string,
+    contact_person_email: string,
+    star_rating: number,
+    city: number,
+    cab: boolean,
+    cp: boolean,
+    map: boolean,
+    ap: boolean,
+    ep: boolean,
+    hotel_code: string,
+    cancellation_fee: number,
+    contact_number: string,
+    contact_person_contact_number: string,
+    room_type: string,
+    room_id: string,
+    price: number,
+    customer_id: number,
+    createdAt: string,
+    updatedAt: string  
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 export class HotelResponse {
@@ -360,6 +388,10 @@ export class ResetRoom{
     static readonly type = "[hotel_result] ResetRoom";
 }
 
+export class GetPrivateInventory {
+    static readonly type = "[hotel_search] GetPrivateInventory";
+}
+
 @State<hotelresult>({
     name: 'hotel_result',
     defaults: {
@@ -373,7 +405,8 @@ export class ResetRoom{
         roomCategory: ['all'],
         loading:0,
         opencombination : [],
-        fixedcombination : []
+        fixedcombination : [],
+        privateInventory : []
     }
 })
 
@@ -476,6 +509,11 @@ export class HotelResultState{
     static getFixedCombination(states : hotelresult) {
         return states.fixedcombination;
     }
+
+    @Selector()
+    static getInventoryList(states : hotelresult) {
+        return states.privateInventory;
+    }
     
     @Action(ResetRoom)
     resetRoom(states: StateContext<hotelresult>) {
@@ -499,7 +537,25 @@ export class HotelResultState{
                 catchError(
                     (err) => {
                         console.log(err);
-                        return err;
+                        return of(err);
+                    }
+                )
+            );
+    }
+
+    @Action(GetPrivateInventory)
+    getPrivateInventory(states: StateContext<hotelresult>) {
+
+        let companyId : string = this.store.selectSnapshot(CompanyState.getId).toString();
+        return this.hotelService.getPrivateInventory(companyId)
+            .pipe(
+                map(
+                    (response) => {
+                        console.log(response);
+                        let data : inventory[] = JSON.parse(response.data);
+                        states.setState(patch({
+                            privateInventory : data
+                        }));
                     }
                 )
             );
@@ -552,16 +608,6 @@ export class HotelResultState{
                                                         result.Images = filteredImg;
                                                         console.log(result);
                                                         return result;
-                                                        // return this.checkImg(filteredImg, result)
-                                                        //     .pipe(
-                                                        //         map(
-                                                        //             (str : string[]) => {
-                                                        //                 result.Images = str;
-                                                        //                 console.log(result);
-                                                        //                 return result;
-                                                        //             }
-                                                        //         )
-                                                        //     );
                                                     }
                                                 )
                                             );
@@ -771,23 +817,16 @@ export class HotelResultState{
 
     @Action(AddRoom)
     addRoom(states: StateContext<hotelresult>, action: AddRoom) {
-        let rooms = Object.assign([], states.getState().selectedRoom);
-        rooms.push(action.room);    
-
-        states.patchState({
-            selectedRoom : rooms
-        });
+        states.setState(patch({
+            selectedRoom : insertItem(action.room)
+        }));
     }
 
     @Action(RemoveRoom)
     removeRoom(states: StateContext<hotelresult>, action: RemoveRoom) {
-        if (states.getState().selectedRoom.length >= 1) {
-            let rooms = Object.assign([], states.getState().selectedRoom);
-            let filtered = rooms.filter(el => el.RoomIndex !== action.room.RoomIndex);
-            states.patchState({
-                selectedRoom: filtered
-            });
-        }
+        states.setState(patch({
+            selectedRoom: removeItem((el : hotelDetail) => el.RoomIndex == action.room.RoomIndex)
+        }));
     }
 
     @Action(BlockRoom)

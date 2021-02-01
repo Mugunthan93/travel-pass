@@ -25,6 +25,7 @@ export interface upcomingTrips {
     ticket : string[]
     journey : number
     id : number
+    travel_date? : string
 }
 
 export class GetDashboard{
@@ -86,7 +87,6 @@ export class DashboardState {
 
   constructor(
     private store: Store,
-    public menuCtrl: MenuController,
     private sharedService: SharedService,
     public modalCtrl : ModalController,
     public bookingService : BookingService
@@ -109,7 +109,6 @@ export class DashboardState {
 
   @Action(GetDashboard)
   getDashboard() {
-    this.menuCtrl.close("first");
     this.store.dispatch(new Navigate(["/", "home", "dashboard", "home-tab"]));
   }
 
@@ -186,24 +185,25 @@ export class DashboardState {
           let lastdetail = trip.passenger_details.flight_details.length - 1;
           
           let lastsegment =  trip.passenger_details.flight_details[lastdetail].Segments[lastTrip][lastFlight-1];
-          let rescheduledTrip = _.isNull(lastsegment) ?  trip.passenger_details.flight_details[lastdetail].Segments[lastTrip][lastFlight-1].Destination.Airport.CityCode : trip.passenger_details.flight_details[0].Segments[0][0].Destination.Airport.CityCode
+          let rescheduledTrip = _.isNull(lastsegment) ?  trip.passenger_details.flight_details[lastdetail].Segments[lastTrip][lastFlight-1].Destination.Airport.CityCode : trip.passenger_details.flight_details[0].Segments[0][0].Destination.Airport.CityCode;
 
           return {
             type : 'flight',
             from: trip.passenger_details.flight_details[0].Segments[0][0].Origin.Airport.CityCode,
             to: rescheduledTrip,
             date: trip.passenger_details.flight_details[0].Segments[0][0].Origin.DepTime,
-            ticket : JSON.parse(trip.passenger_details.PNR),
+            ticket : trip.passenger_details.PNR,
             journey : trip.trip_requests.JourneyType,
             id : trip.id
           }
         }
         else if(trip.hasOwnProperty('hotel_requests')) {
+          let req = typeof trip.guest_details == 'string' ? JSON.parse(trip.guest_details) : trip.guest_details;
           return {
             type : 'hotel',
-            from: moment(trip.guest_details.basiscInfo.CheckInDate).utc().format("YYYY-MM-DDTHH:mm:ss.SSSSZ"),
-            to: moment(trip.guest_details.basiscInfo.CheckOutDate).utc().format("YYYY-MM-DDTHH:mm:ss.SSSSZ"),
-            date: _.upperCase(trip.guest_details.basiscInfo.HotelName) + '-' + _.upperCase(trip.guest_details.basiscInfo.HotelAddress),
+            from: moment(req.basiscInfo.CheckInDate).utc().format("YYYY-MM-DDTHH:mm:ss.SSSSZ"),
+            to: moment(req.basiscInfo.CheckOutDate).utc().format("YYYY-MM-DDTHH:mm:ss.SSSSZ"),
+            date: _.upperCase(req.basiscInfo.HotelName) + '-' + _.upperCase(req.basiscInfo.HotelAddress),
             ticket : [],
             journey : null,
             id : trip.id

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
@@ -7,7 +7,7 @@ import { UserState } from 'src/app/stores/user.state';
 import { CompanyState } from 'src/app/stores/company.state';
 import { ResultState } from 'src/app/stores/result.state';
 import { AlertOptions } from '@ionic/core';
-import { MailCC, Purpose, Comments, SendRequest } from 'src/app/stores/book.state';
+import { MailCC, Purpose, Comments, SendRequest, BookTicket } from 'src/app/stores/book.state';
 
 @Component({
   selector: 'app-book-confirmation',
@@ -15,6 +15,8 @@ import { MailCC, Purpose, Comments, SendRequest } from 'src/app/stores/book.stat
   styleUrls: ['./book-confirmation.component.scss'],
 })
 export class BookConfirmationComponent implements OnInit {
+
+  @Input() type : string;
 
   managers$: Observable<user[]>;
   approverName$: Observable<string>;
@@ -89,8 +91,8 @@ export class BookConfirmationComponent implements OnInit {
   }
 
   
-  dismiss() {
-    this.modalCtrl.dismiss(null, null,'book-confirm');
+  async dismiss() {
+    return await this.modalCtrl.dismiss(null, null,'book-confirm');
   }
 
 }

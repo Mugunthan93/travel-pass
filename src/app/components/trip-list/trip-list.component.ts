@@ -5,7 +5,7 @@ import { DashboardState, upcomingTrips } from 'src/app/stores/dashboard.state';
 import { DownloadTicket, GetcancelTicket, GetRescheduleTicket, ViewFile } from 'src/app/stores/booking.state';
 import { RescheduleComponent } from '../shared/reschedule/reschedule.component';
 import { File, FileError } from '@ionic-native/file/ngx';
-import { catchError, first, flatMap, map } from 'rxjs/operators';
+import { flatMap } from 'rxjs/operators';
 import { CancellationComponent } from '../shared/cancellation/cancellation.component';
 
 export interface tripList {
@@ -43,7 +43,7 @@ export class TripListComponent implements OnInit {
     this.store.dispatch(new GetRescheduleTicket(id,RescheduleComponent));
   }
 
-  download(pnr : string[]) {
+  download(pnr : string) {
     this.store.dispatch(new ViewFile(pnr));
   }
 

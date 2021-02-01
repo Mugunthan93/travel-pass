@@ -1,7 +1,7 @@
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { buscity } from '../shared.state';
 import * as moment from 'moment';
-import { forkJoin, from, of, throwError } from 'rxjs';
+import { forkJoin, from } from 'rxjs';
 import { BusService } from 'src/app/services/bus/bus.service';
 import { map, catchError, tap, flatMap } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';

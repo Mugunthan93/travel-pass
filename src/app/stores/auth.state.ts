@@ -9,7 +9,7 @@ import { StateClear, StateReset, StateResetAll } from 'ngxs-reset-plugin';
 import { AllUpcomingTrips, DashboardState, UpcomingTrips } from './dashboard.state';
 import { EligibilityState, GetEligibility } from './eligibility.state';
 import { concat, forkJoin, from, of } from 'rxjs';
-import { catchError, finalize, flatMap, map, first, tap } from 'rxjs/operators';
+import { catchError, finalize, flatMap, map, first, tap, concatMap } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { ApprovalState } from './approval.state';
 import { BookState } from './book.state';
@@ -22,6 +22,7 @@ import { SearchState } from './search.state';
 import { SharedState } from './shared.state';
 import { ExpenseState } from './expense.state';
 import { ThemeState } from './theme.stata';
+import { AgencyState, SetAgency } from './agency.state';
 
 export interface auth {
     forgotToken : string
@@ -79,7 +80,6 @@ export class AuthState {
         private loadingCtrl: LoadingController,
         private alertCtrl: AlertController,
         private authService: AuthService,
-        public menuCtrl:MenuController,
         private store: Store
     ) {
     }
@@ -112,7 +112,6 @@ export class AuthState {
         })).pipe(flatMap(el => from(el.present())));
 
         let login$ = from(this.authService.login(action.username, action.password));
-
         return forkJoin([loading$,login$])
             .pipe(
                 map(
@@ -129,12 +128,18 @@ export class AuthState {
                         return data;
                     }
                 ),
-                tap((data) => states.dispatch([
+                concatMap((data) => states.dispatch([
                     new GetUser(data),
                     new GetCompany(data.customer_id),
                     new GetEligibility(data.customer_id),
                     new AllUpcomingTrips()
                 ])),
+                concatMap(
+                    () => {
+                        let agencyid = this.store.selectSnapshot(CompanyState.getCompany).agency_id;
+                        return states.dispatch(new SetAgency(agencyid));
+                    }
+                ),
                 tap(() => from(this.loadingCtrl.dismiss(null,null,'login'))),
                 flatMap(() => states.dispatch(new Navigate(['/','home','dashboard','home-tab']))),
                 tap(() => states.patchState({userLogin : true})),
@@ -168,6 +173,7 @@ export class AuthState {
                                 states.dispatch(new StateReset(
                                     AuthState,
                                     UserState,
+                                    AgencyState,
                                     CompanyState,
                                     DashboardState,
                             
@@ -187,7 +193,6 @@ export class AuthState {
 
                                     ExpenseState
                                 )),
-                                from(this.menuCtrl.toggle('first')),
                                 states.dispatch(new Navigate(['/', 'auth']))
                             );
                         }

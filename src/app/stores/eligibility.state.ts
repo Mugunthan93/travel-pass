@@ -29,6 +29,7 @@ export interface gradeValue {
     hotel: number
     localtravel: number
     train: number
+    othertravel? : number
 }
 
 export class GetEligibility {
@@ -86,7 +87,8 @@ export class EligibilityState {
                                             food: _.isNumber(el.value.food) ? el.value.food : parseInt(el.value.food),
                                             hotel: _.isNumber(el.value.hotel) ? el.value.hotel : parseInt(el.value.hotel),
                                             localtravel: _.isNumber(el.value.localtravel) ? el.value.localtravel : parseInt(el.value.localtravel),
-                                            train: _.isNumber(el.value.train) ? el.value.train : parseInt(el.value.train)
+                                            train: _.isNumber(el.value.train) ? el.value.train : parseInt(el.value.train),
+                                            othertravel: el.value.othertravel ? (_.isNumber(el.value.train) ? el.value.train : parseInt(el.value.train)) : 0
                                         }
                                     });
                                 }
@@ -99,7 +101,8 @@ export class EligibilityState {
                                             food: _.isNumber(el.value.food) ? el.value.food : parseInt(el.value.food),
                                             hotel: _.isNumber(el.value.hotel) ? el.value.hotel : parseInt(el.value.hotel),
                                             localtravel: _.isNumber(el.value.localtravel) ? el.value.localtravel : parseInt(el.value.localtravel),
-                                            train: _.isNumber(el.value.train) ? el.value.train : parseInt(el.value.train)
+                                            train: _.isNumber(el.value.train) ? el.value.train : parseInt(el.value.train),
+                                            othertravel: el.value.othertravel ? (_.isNumber(el.value.train) ? el.value.train : parseInt(el.value.train)) : 0
                                         }
                                     });
                                 }

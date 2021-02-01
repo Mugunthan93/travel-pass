@@ -328,7 +328,8 @@ export class DomesticBookState {
             infantsType: 0,
             countryFlag: this.store.selectSnapshot(RoundTripSearchState.getTripType) == 'domestic' ? 0 :
                 this.store.selectSnapshot(RoundTripSearchState.getTripType) == 'international' ? 1 : 0,
-            tour: "1"
+            tour: "1",
+            client : null
         }
 
         let companyId: number = this.store.selectSnapshot(UserState.getcompanyId);
@@ -414,9 +415,13 @@ export class DomesticBookState {
                         return_markup: 0,
                         markup_charges: 0,
                         other_taxes: 0,
+                        taxable_fare : 0,
                         vendor: {
-                            service_charges: 0,
-                            GST: 0
+                            service_charges: this.serviceCharges(),
+                            GST: this.GST().cgst + this.GST().sgst,
+                            CGST : 0,
+                            SGST : 0,
+                            IGST : this.GST().cgst + this.GST().sgst
                         }
                     },
                     onwardfare: [[{

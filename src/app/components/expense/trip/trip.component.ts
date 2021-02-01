@@ -40,9 +40,10 @@ export class TripComponent implements OnInit {
       trip_name: new FormControl(null, [Validators.required]),
       project_name: new FormControl(null, [Validators.required]),
       claim_type: new FormControl(null, [Validators.required],),
+      advance_amount: new FormControl(null),
       start_date: new FormControl(null, [Validators.required]),
       end_date: new FormControl(null, [Validators.required]),
-      select_manager: new FormControl(null, [Validators.required]),
+      select_manager: new FormControl(null, [Validators.required])
     },{
       updateOn : 'change'
     });
@@ -82,18 +83,19 @@ export class TripComponent implements OnInit {
         e_flag: 0,
         endCity: "",
         endDate: moment(this.tripForm.value.end_date).format(
-          "YYYY-MM-DDT18:30:00.000Z"
+          "YYYY-MM-DDTHH:mm:ss.000Z"
         ),
         manager_approval: 0,
         manager_id: (this.tripForm.value.select_manager as user).id,
         project_id: (this.tripForm.value.project_name as projectList).id,
         startCity: "",
         startDate: moment(this.tripForm.value.start_date).format(
-          "YYYY-MM-DDT18:30:00.000Z"
+          "YYYY-MM-DDTHH:mm:ss.000Z"
         ),
         status: "new",
         travelled_by: this.userId,
         trip_name: this.tripForm.value.trip_name,
+        advance_amount : this.tripForm.value.advance_amount !== null ? this.tripForm.value.advance_amount : 0
       };
 
       this.store.dispatch(new AddNewTrip(payload));

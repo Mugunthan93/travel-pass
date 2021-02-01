@@ -58,9 +58,9 @@ export class SortBy {
             { label: 'price', state: 'default', property: 'fare' }
         ],
         hotel: [
-            { label: 'hotel', state: 'default', property: 'HotelName' },
-            { label: 'star', state: 'default', property: 'StarRating' },
-            { label: 'price', state: 'default', property: 'PublishedPrice' }
+            { label: 'hotel', state: 'default', property: 'HotelName' || 'hotel_name' },
+            { label: 'star', state: 'default', property: 'StarRating' || 'star_rating' },
+            { label: 'price', state: 'default', property: 'PublishedPrice' || 'price'}
         ],
         bus: [
             { label: 'departure', state: 'default', property: 'departureTime' },

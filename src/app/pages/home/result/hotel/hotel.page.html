@@ -1,5 +1,50 @@
 <ion-content>
 
+    <mat-expansion-panel collapsedHeight="60px" expandedHeight="60px" >
+      <mat-expansion-panel-header>
+        <ion-item>
+          <ion-label>Inventory List</ion-label>
+        </ion-item>
+      </mat-expansion-panel-header>
+      <ion-virtual-scroll *ngIf="(inventoryList$ | async).length > 0" [items]="inventoryList$ | async | sort : (sortBy$ | async).property : (sortBy$ | async).state" approxItemHeight="232px">
+        <ion-card *virtualItem="let hotel;let i = index" (click)="viewHotel(hotel)">
+          <ion-card-header>
+            <ion-row>
+              <ion-icon size="large" [name]="star == 'full' ? 'star' : star == 'half' ? 'star-half' : 'star'"
+                *ngFor="let star of starRating(hotel.star_rating)"></ion-icon>
+            </ion-row>
+            <ion-row>
+              <ion-row>
+                <ion-title class="medium">{{hotel.hotel_name | titlecase}}</ion-title>
+                <ion-label *ngFor="let add of address(hotel)">{{ add }}</ion-label>
+  
+              </ion-row>
+              <ion-row>
+                <ion-label class="bold">{{hotel.price | currency : 'INR'}}</ion-label>
+                <!-- <ion-text>{{'For ' + hotel.nights + ' Nights'}}</ion-text> -->
+              </ion-row>
+            </ion-row>
+          </ion-card-header>
+  
+  
+  
+          <ion-card-content>
+            <ion-item>
+              <ion-row class="img">
+                <ion-img src="../../../../../assets/img/hotel/no-image-icon-hotel.png" (ionError)="changeImg($event)"></ion-img>
+                <!-- <ion-icon size="large" name="heart-outline"></ion-icon>
+                <ion-icon slot="start" name="heart-sharp" *ngIf="false"></ion-icon> -->
+              </ion-row>
+              <ion-row class="headline" [innerHTML]="hotel.Description | slice : 0 : 100">
+              </ion-row>
+            </ion-item>
+          </ion-card-content>
+  
+        </ion-card>
+      </ion-virtual-scroll>
+    </mat-expansion-panel>
+
+
     <ion-row *ngIf="(hotelList$ | async).length == 0 && ((loading$ | async) < 0.999)">
       <ion-card *ngFor="let hotel of skeletonHotel" style="height: 200px;">
         <ion-card-header style="height: 100px;">
@@ -77,39 +122,5 @@
 
       </ion-card>
     </ion-virtual-scroll>
-
-    <!-- <ion-row *ngIf="(hotelList$ | async).length > 0">
-      <ion-card *ngFor="let hotel of (hotelList$ | async | sort : (sortBy$ | async).property : (sortBy$ | async).state);let i = index" (click)="viewHotel(hotel)">
-        <ion-card-header>
-          <ion-row>
-            <ion-icon size="large" [name]="star == 'full' ? 'star' : star == 'half' ? 'star-half' : 'star'"
-              *ngFor="let star of starRating(hotel.StarRating)"></ion-icon>
-          </ion-row>
-          <ion-row>
-            <ion-row>
-              <ion-title class="medium">{{hotel.HotelName | titlecase}}</ion-title>
-              <ion-label *ngFor="let add of address(hotel)">{{ add }}</ion-label>
-
-            </ion-row>
-            <ion-row>
-              <ion-label class="bold">{{hotel.Price.PublishedPrice | currency : 'INR'}}</ion-label>
-            </ion-row>
-          </ion-row>
-        </ion-card-header>
-    
-    
-    
-        <ion-card-content>
-          <ion-item>
-            <ion-row class="img">
-              <ion-img [src]="loadImg(hotel)" (ionError)="changeImg($event)"></ion-img>
-            </ion-row>
-            <ion-row class="headline" [innerHTML]="hotel.Description | slice : 0 : 100">
-            </ion-row>
-          </ion-item>
-        </ion-card-content>
-    
-      </ion-card>
-    </ion-row> -->
 
 </ion-content>
