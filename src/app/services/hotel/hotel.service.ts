@@ -4,7 +4,7 @@ import { HTTPResponse } from '@ionic-native/http/ngx';
 import { hotelsearchpayload, staticpayload } from 'src/app/stores/search/hotel.state';
 import { environment } from 'src/environments/environment';
 import { getHotelInfo, viewPayload, blockRoomPayload } from 'src/app/stores/result/hotel.state';
-import { hotelRequest } from 'src/app/stores/book/hotel.state';
+import { hotelRequest, offlineinvReq } from 'src/app/stores/book/hotel.state';
 import { Observable, from } from 'rxjs';
 
 @Injectable({
@@ -64,6 +64,12 @@ export class HotelService {
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setData('json');
     return from(this.http.post('/hotels/getStaticData/',staticpay))
+  }
+
+  sendofflineInventory(offlineinv : offlineinvReq) : Observable<HTTPResponse> {
+    this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
+    this.http.setData('json');
+    return from(this.http.post('/hotelRequest?email_notify=true', offlineinv));
   }
 
 }

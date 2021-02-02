@@ -52,9 +52,14 @@
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="sendRequest()">
+      <ion-button (click)="sendRequest()" *ngIf="type == 'request'">
         <ion-label class="medium bold">
-          Send
+          Send Request
+        </ion-label>
+      </ion-button>
+      <ion-button (click)="offlineRequest()" *ngIf="type == 'offline'">
+        <ion-label class="medium bold">
+          Offline Request
         </ion-label>
       </ion-button>
     </ion-buttons>

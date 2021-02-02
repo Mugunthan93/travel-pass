@@ -7,10 +7,14 @@ import { CompanyState } from '../company.state';
 import * as moment from 'moment';
 import { of, from, forkJoin } from 'rxjs';
 import { HotelService } from 'src/app/services/hotel/hotel.service';
-import { catchError, flatMap } from 'rxjs/operators';
+import { catchError, flatMap, map } from 'rxjs/operators';
 import { LoadingController, AlertController, ModalController } from '@ionic/angular';
 import { Navigate } from '@ngxs/router-plugin';
-import { AddAdultPassenger, AddChildPassenger, HotelPassengerState } from '../passenger/hotel.passenger.state';
+import { AddAdultPassenger, AddChildPassenger, hotelpassenger, HotelPassengerState } from '../passenger/hotel.passenger.state';
+import { StateReset } from 'ngxs-reset-plugin';
+import { SearchState } from '../search.state';
+import { BookState } from '../book.state';
+import { ResultState } from '../result.state';
 
 
 export interface hotelbook {
@@ -142,6 +146,65 @@ export interface service_charge {
     total_amount: number
     markup_charges: number
     agency_markup: number
+}
+
+export interface offlineinvReq {
+    guest_details:{
+        passengers: hotelpassenger[]
+        roomDetails:[
+            {
+                Price:any,
+                Amenity:string[],
+                BedTypes:string,
+                NoOfChild:number,
+                RoomIndex:string,
+                NoOfAdults:number,
+                HotelPassenger:hotelpassenger[]
+            }
+        ],
+        basiscInfo:
+            {
+                CityId:string,
+                tokenId:any,
+                CityName:string,
+                HotelCode:string,
+                HotelName:string,
+                NoOfChild:number,
+                NoOfAdults:number,
+                NoOfNights:string,
+                CheckInDate:string,
+                HotelPolicy:string,
+                CheckOutDate:string,
+                HotelAddress:string,
+                TotalBaseFare:number,
+                StarRating:number
+        },
+        servicecharge_details:
+            {
+                service_charges:number,
+                sgst_Charges:number,
+                cgst_Charges:number,
+                igst_Charges:number,
+                total_amount:number,
+                markup_charges:number,
+                agency_markup:number
+        },
+        userEligibility:
+            {
+                company_type:string
+        }
+    },
+    hotel_requests:hotelsearchpayload,
+    transaction_id:string,
+    user_id:number,
+    customer_id: number,
+    booking_mode:string,
+    approval_mail_cc:string[],
+    status:string,
+    managers:any,
+    trip_type:string,
+    comments:string,
+    purpose:string
 }
 
 /////////////////////////////////////////////////////////
@@ -402,75 +465,127 @@ export class HotelBookState {
     @Action(HotelOfflineRequest)
     offlineRequest(states: StateContext<hotelbook>, action: HotelOfflineRequest) {
 
-        console.log(states,action);
+        const loading = from(this.loadingCtrl.create({
+            spinner: "crescent"
+        }));
+        
+        const failedAlert = from(this.alertCtrl.create({
+            header: 'Send Request Failed',
+            id : 'failed-offline',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                cssClass: 'danger',
+                handler: () => {
+                    this.alertCtrl.dismiss(null,null,'failed-offline');
+                }
+            }]
+        }));
 
-        // let approveStatus = this.store.selectSnapshot(CompanyState.getApprovalStatus);
-        // let manager = approveStatus ? this.store.selectSnapshot(UserState.getApprover) : this.bookingPerson();
-        // let mailcc = approveStatus ? action.mailCC : null;
-        // let hoteldetail = this.store.selectSnapshot(HotelResultState.getSelectedInventoryHotels)
-        // let rmdetail = this.store.selectSnapshot(HotelResultState.getSelectedInventoryRooms);
-        // let amenities = rmdetail.reduce((...el) => [...el[1].room_type],[])
+        const successAlert = from(this.alertCtrl.create({
+            header: 'Send Request Success',
+            subHeader: 'Request status will be updated in My Bookings',
+            id : 'sucess-offline',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                cssClass: 'danger',
+                handler: () => {
+                    states.dispatch(new Navigate(['/','home','dashboard','home-tab']));
+                    this.alertCtrl.dismiss(null,null,'sucess-offline');
+                    this.modalCtrl.dismiss(null, null, 'book-confirm');
+                }
+            }]
+        })).pipe(flatMap((el) => from(el.present())));
 
+        let approveStatus = this.store.selectSnapshot(CompanyState.getApprovalStatus);
+        let manager = approveStatus ? this.store.selectSnapshot(UserState.getApprover) : this.bookingPerson();
+        let mailcc = approveStatus ? action.mailCC : null;
+        let hoteldetail = this.store.selectSnapshot(HotelResultState.getSelectedInventoryHotels)
+        let rmdetail = this.store.selectSnapshot(HotelResultState.getSelectedInventoryRooms);
+        let amenities = rmdetail.reduce((...el) => [...el[1].room_type],[]);
+        let search = this.store.selectSnapshot(HotelSearchState.getPayload);
 
-        // let req = {
-        //     guest_details:
-        //         {
-        //             passengers: this.store.select(HotelPassengerState.GetSelectAdult),
-        //             roomDetails:[
-        //                 {
-        //                     Price:{},
-        //                     Amenity:amenities,
-        //                     BedTypes:"",
-        //                     NoOfChild:this.store.selectSnapshot(HotelSearchState.getTotalChildren),
-        //                     RoomIndex:"",
-        //                     NoOfAdults:this.store.selectSnapshot(HotelSearchState.getTotalChildren),
-        //                     HotelPassenger:this.store.select(HotelPassengerState.GetSelectAdult)
-        //                 }
-        //             ],
-        //             basiscInfo:
-        //                 {
-        //                     CityId:"",
-        //                     tokenId:null,
-        //                     CityName:"chennai",
-        //                     HotelCode:"h7",
-        //                     HotelName:"hotel1",
-        //                     NoOfChild:0,
-        //                     NoOfAdults:1,
-        //                     NoOfNights:1,
-        //                     CheckInDate:"2021-03-12",
-        //                     HotelPolicy:"",
-        //                     CheckOutDate:"2021-03-13",
-        //                     HotelAddress:"",
-        //                     TotalBaseFare:1250,
-        //                     StarRating:4
-        //                 },
-        //             servicecharge_details:
-        //                 {
-        //                     service_charges:0,
-        //                     sgst_Charges:0,
-        //                     cgst_Charges:0,
-        //                     igst_Charges:0,
-        //                     total_amount:1250,
-        //                     markup_charges:0,
-        //                     agency_markup:0
-        //                 },
-        //             userEligibility:
-        //                 {
-        //                     company_type:"corporate"
-        //                 }
-        //             },
-        //         hotel_requests:this.store.selectSnapshot(HotelSearchState.getPayload),
-        //         transaction_id:"null",
-        //         user_id:this.store.selectSnapshot(UserState.getUserId),
-        //         customer_id:this.store.selectSnapshot(UserState.getcompanyId),
-        //         booking_mode:"offline",
-        //         approval_mail_cc:mailcc,
-        //         status:"new",
-        //         managers:manager,
-        //         trip_type:"business",
-        //         comments:'[\"' + action.comment + '\"]',
-        //         purpose:action.purpose
-        //     }
+        let req : offlineinvReq = {
+            guest_details:{
+                passengers: this.store.selectSnapshot(HotelPassengerState.GetSelectAdult),
+                roomDetails:[
+                    {
+                        Price:{},
+                        Amenity:amenities,
+                        BedTypes:"",
+                        NoOfChild:this.store.selectSnapshot(HotelSearchState.getTotalChildren),
+                        RoomIndex:"",
+                        NoOfAdults:this.store.selectSnapshot(HotelSearchState.getTotalAdult),
+                        HotelPassenger:this.store.selectSnapshot(HotelPassengerState.GetSelectAdult)
+                    }
+                ],
+                basiscInfo:
+                    {
+                        CityId:search.CityId,
+                        tokenId:null,
+                        CityName:search.CityId,
+                        HotelCode:hoteldetail.hotel_code,
+                        HotelName:hoteldetail.hotel_name,
+                        NoOfChild:this.store.selectSnapshot(HotelSearchState.getTotalChildren),
+                        NoOfAdults:this.store.selectSnapshot(HotelSearchState.getTotalAdult),
+                        NoOfNights:search.NoOfNights,
+                        CheckInDate:search.CheckInDate,
+                        HotelPolicy:"",
+                        CheckOutDate:moment(search.CheckInDate).add(search.NoOfNights,'days').format(),
+                        HotelAddress:"",
+                        TotalBaseFare:hoteldetail.price,
+                        StarRating:hoteldetail.star_rating
+                },
+                servicecharge_details:
+                    {
+                        service_charges:0,
+                        sgst_Charges:0,
+                        cgst_Charges:0,
+                        igst_Charges:0,
+                        total_amount:hoteldetail.price,
+                        markup_charges:0,
+                        agency_markup:0
+                },
+                userEligibility:
+                    {
+                        company_type:"corporate"
+                }
+            },
+            hotel_requests:this.store.selectSnapshot(HotelSearchState.getPayload),
+            transaction_id:"null",
+            user_id:this.store.selectSnapshot(UserState.getUserId),
+            customer_id:this.store.selectSnapshot(UserState.getcompanyId),
+            booking_mode:"offline",
+            approval_mail_cc:mailcc,
+            status:"new",
+            managers:manager,
+            trip_type:"business",
+            comments:'[\"' + action.comment + '\"]',
+            purpose:action.purpose
+        }
+
+        return this.hotelService.sendofflineInventory(req)
+            .pipe(
+                flatMap(
+                    (response) => {
+                        console.log(response);
+                        console.log(JSON.parse(response.data));
+                        if (response.status == 200) {
+                            return successAlert;
+                        }
+                    }
+                ),
+                catchError(
+                    (error) => {
+                        console.log(error);
+                        let err = JSON.parse(error.error);
+                        console.log(err);
+                        return failedAlert;
+
+                    }
+                )
+            );
 
     }
 

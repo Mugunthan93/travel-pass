@@ -101,7 +101,7 @@ export class DeSelectChildPassenger {
 
 export class DismissHotelPassenger {
     static readonly type = "[hotel_passenger] DismissHotelPassenger";
-    constructor(public reqadult? : number, public reqchildren? : number) {
+    constructor() {
 
     }
 
@@ -308,7 +308,11 @@ export class HotelPassengerState {
         let adult = states.getState().selectedAdult.length;
         let child = states.getState().selectedChildren.length;
 
-        if(action.reqadult == adult && action.reqchildren == child) {
+        let selectedAdult = this.store.selectSnapshot(HotelPassengerState.GetSelectedAdult);
+        let selectedChildren = this.store.selectSnapshot(HotelPassengerState.GetSelectedChildren);
+
+        console.log();
+        if(selectedAdult == adult && selectedChildren == child) {
             this.store.dispatch(new CheckPassenger());
         }
 

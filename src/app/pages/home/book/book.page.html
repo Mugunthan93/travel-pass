@@ -23,7 +23,7 @@
       <ion-button *ngIf="!((invrooms$ | async).length > 0)" (click)="confirmRequest('request')">
         <ion-label class="medium bold">Send Request</ion-label>
       </ion-button>
-      <ion-button *ngIf="(invrooms$ | async).length > 0" (click)="confirmRequest('request')">
+      <ion-button *ngIf="(invrooms$ | async).length > 0" (click)="confirmRequest('offline')">
         <ion-label class="medium bold">Offline Request</ion-label>
       </ion-button>
     </ion-buttons>

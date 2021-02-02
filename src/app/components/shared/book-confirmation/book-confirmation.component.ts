@@ -7,7 +7,7 @@ import { UserState } from 'src/app/stores/user.state';
 import { CompanyState } from 'src/app/stores/company.state';
 import { ResultState } from 'src/app/stores/result.state';
 import { AlertOptions } from '@ionic/core';
-import { MailCC, Purpose, Comments, SendRequest, BookTicket } from 'src/app/stores/book.state';
+import { MailCC, Purpose, Comments, SendRequest, BookTicket, OfflineRequest } from 'src/app/stores/book.state';
 
 @Component({
   selector: 'app-book-confirmation',
@@ -17,6 +17,7 @@ import { MailCC, Purpose, Comments, SendRequest, BookTicket } from 'src/app/stor
 export class BookConfirmationComponent implements OnInit {
 
   @Input() type : string;
+
 
   managers$: Observable<user[]>;
   approverName$: Observable<string>;
@@ -88,6 +89,27 @@ export class BookConfirmationComponent implements OnInit {
     }
 
 
+  }
+
+  async offlineRequest() {
+    let missing = await this.alertCtrl.create({
+      header: 'Purpose Missing',
+      subHeader: 'Select the purpose',
+      id: 'passenger-check',
+      buttons: [{
+        text: "Ok",
+        handler: async () => {
+          await missing.dismiss();
+        }
+      }]
+    });
+
+    if (this.currentPurpose !== null) {
+      this.store.dispatch(new OfflineRequest());
+    }
+    else {
+      return await missing.present();
+    }
   }
 
   

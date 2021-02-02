@@ -14,7 +14,7 @@ import { MultiCitySendRequest } from './book/flight/multi-city.state';
 import { TrainRoundTripRequest } from './book/train/round-trip.state';
 import { TrainMultiCityRequest } from './book/train/multi-city.state';
 import { from } from 'rxjs/internal/observable/from';
-import { flatMap } from 'rxjs/operators';
+import { flatMap, tap } from 'rxjs/operators';
 import { PassengerState } from './passenger.state';
 import { of } from 'rxjs';
 import { SearchState } from './search.state';
@@ -207,56 +207,17 @@ export class BookState {
     }
 
     @Action(GetSendRequest)
-    getSendRequest(states : StateContext<book>, action : GetSendRequest) {
+    async getSendRequest(states : StateContext<book>, action : GetSendRequest) {
 
-        let passegerSelect$ = from(this.alertCtrl.create({
-            header : 'Select Passenger',
-            message : 'Select Your passenger to send request',
-            id : 'pass-check',
-            buttons : [{
-                text : 'OK',
-                handler : async () => {
-                    return this.alertCtrl.dismiss(null,null,'pass-check');
-                }
-            }]
-         })).pipe(flatMap(el => from(el.present())));
- 
-         const modal$ = from(this.modalCtrl.create({
-             component: action.modal,
-             id: "book-confirm",
-           })).pipe(flatMap(el => from(el.present())));
+        let modal$ = await this.modalCtrl.create({
+            component: action.modal,
+            id: "book-confirm",
+            componentProps : {
+                type : action.type
+            }
+        })
 
-        let pass = null;
-        switch (this.store.selectSnapshot(SearchState.getSearchType)) {
-            case 'one-way': pass = this.store.selectSnapshot(OneWaySearchState.getAdult); break;
-            case 'round-trip': pass = this.store.selectSnapshot(RoundTripSearchState.getAdult); break;
-            case 'multi-city': pass = this.store.selectSnapshot(MultiCitySearchState.getAdult); break;
-        }
-        let passenger = this.store.selectSnapshot(FlightPassengerState.getSelected);
-         return of(pass == passenger)
-             .pipe(
-                 flatMap(
-                     (check) => {
-
-                        if(check) {
-                            if(action.type == 'request') {
-                                console.log(states);
-                                return this.store.dispatch(new SendRequest());
-                            }
-                            if(action.type == 'book') {
-                                console.log(states);
-                                return this.store.dispatch(new BookTicket());
-                            }
-                            if(action.type == 'offline') {
-                                console.log(states);
-                                return this.store.dispatch(new OfflineRequest());
-                            }
-                            return modal$;
-                        }
-                        return passegerSelect$;
-                     }
-                 )
-             );
+        return await modal$.present();
     }
 
     @Action(BookBack)
