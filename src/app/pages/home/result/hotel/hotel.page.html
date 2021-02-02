@@ -8,7 +8,7 @@
         </ion-item>
       </mat-expansion-panel-header>
       <ion-virtual-scroll *ngIf="(inventoryList$ | async).length > 0" [items]="inventoryList$ | async | sort : (sortBy$ | async).property : (sortBy$ | async).state" approxItemHeight="232px">
-        <ion-card *virtualItem="let hotel;let i = index" (click)="viewHotel(hotel)">
+        <ion-card *virtualItem="let hotel;let i = index" (click)="viewInvRoom(hotel)">
           <ion-card-header>
             <ion-row>
               <ion-icon size="large" [name]="star == 'full' ? 'star' : star == 'half' ? 'star-half' : 'star'"

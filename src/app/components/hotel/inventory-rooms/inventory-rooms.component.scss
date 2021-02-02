@@ -1,0 +1,12 @@
+ion-content {
+
+    ion-list {
+
+        ion-item {
+
+            ion-label[slot="end"] {
+                text-align: -webkit-right;
+            }
+        }
+    }
+}

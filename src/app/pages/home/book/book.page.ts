@@ -4,6 +4,7 @@ import { BookState, BookBack, GetSendRequest } from 'src/app/stores/book.state';
 import { Observable } from 'rxjs';
 import { BookConfirmationComponent } from 'src/app/components/shared/book-confirmation/book-confirmation.component';
 import { UserState } from 'src/app/stores/user.state';
+import { HotelResultState, inventory } from 'src/app/stores/result/hotel.state';
 
 @Component({
   selector: 'app-book',
@@ -18,6 +19,7 @@ export class BookPage implements OnInit {
   bookMode: string;
   bookType: string;
   isAdmin$: Observable<boolean>;
+  invrooms$: Observable<inventory[]>;
 
   constructor(
     private store: Store
@@ -33,6 +35,7 @@ export class BookPage implements OnInit {
     this.bookType = this.store.selectSnapshot(BookState.getBookType);
 
     this.isAdmin$ = this.store.select(UserState.isAdmin);
+    this.invrooms$ = this.store.select(HotelResultState.getSelectedInventoryRooms);
   }
 
   back() {

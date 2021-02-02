@@ -1,8 +1,10 @@
 import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
 import { ModalController, PopoverController } from '@ionic/angular';
-import { from } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import * as _ from 'lodash';
 import { user } from 'src/app/models/user';
+import { HotelSearchState } from '../search/hotel.state';
+import { CheckPassenger } from '../passenger.state';
 
 export interface hotelpassengerstate{
     adult: hotelpassenger[]
@@ -99,6 +101,9 @@ export class DeSelectChildPassenger {
 
 export class DismissHotelPassenger {
     static readonly type = "[hotel_passenger] DismissHotelPassenger";
+    constructor(public reqadult? : number, public reqchildren? : number) {
+
+    }
 
 }
 
@@ -299,7 +304,14 @@ export class HotelPassengerState {
     }
 
     @Action(DismissHotelPassenger)
-    dismissHotelPassenger( ) {
+    dismissHotelPassenger(states: StateContext<hotelpassengerstate>, action: DismissHotelPassenger) {
+        let adult = states.getState().selectedAdult.length;
+        let child = states.getState().selectedChildren.length;
+
+        if(action.reqadult == adult && action.reqchildren == child) {
+            this.store.dispatch(new CheckPassenger());
+        }
+
         return from(this.modalCtrl.dismiss(null, null,'passenger-info'));
     }
 

@@ -10,7 +10,7 @@ import { Store } from '@ngxs/store';
 import { HotelBookState, blockedRoom, RoomDetails } from 'src/app/stores/book/hotel.state';
 import { Observable } from 'rxjs';
 import { HotelSearchState, hotelForm, roomguest } from 'src/app/stores/search/hotel.state';
-import { hotelDetail } from 'src/app/stores/result/hotel.state';
+import { hotelDetail, HotelResultState, inventory } from 'src/app/stores/result/hotel.state';
 import { map } from 'rxjs/operators';
 import { user } from 'src/app/models/user';
 import { UserState } from 'src/app/stores/user.state';
@@ -45,6 +45,7 @@ export class HotelPage implements OnInit {
   rooms$: Observable<roomguest[]>;
 
   pan: string = null;
+  invrooms$: Observable<inventory[]>;
 
   constructor(
     private store : Store,
@@ -62,6 +63,7 @@ export class HotelPage implements OnInit {
     this.passenger$ = this.store.select(UserState.user);
 
     this.rooms$ = this.store.select(HotelSearchState.getRooms);
+    this.invrooms$ = this.store.select(HotelResultState.getSelectedInventoryRooms);
 
 
   }
@@ -94,6 +96,16 @@ export class HotelPage implements OnInit {
           }
         )
       )
+  }
+
+  totalInvCost(): Observable<number> {
+    return this.invrooms$.pipe(
+      map((rooms : inventory[]) => {
+        return rooms.reduce((acc,curr) => {
+          return acc + curr.price;
+        },0);
+      })
+    );
   }
 
 

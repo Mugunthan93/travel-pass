@@ -36,7 +36,7 @@ export class HotelPage implements OnInit {
   ) { }
 
   ngOnInit() {
-
+    
     this.store.dispatch(new GetPrivateInventory());
     this.rooms$ = this.store.select(HotelSearchState.getRooms);
 
@@ -77,6 +77,10 @@ export class HotelPage implements OnInit {
     );
 
     return await modal.present();
+  }
+
+  ionViewDidLoad() {
+    this.store.dispatch(new GetPrivateInventory());
   }
 
   async selectRoom() {

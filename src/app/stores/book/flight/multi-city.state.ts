@@ -18,6 +18,7 @@ import { LoadingController, AlertController, ModalController } from '@ionic/angu
 import { StateReset } from 'ngxs-reset-plugin';
 import { ResultState } from '../../result.state';
 import { FlightPassengerState, SetFirstPassengers } from '../../passenger/flight.passenger.states';
+import { Injectable } from "@angular/core";
 
 
 export interface multicityBook {
@@ -53,6 +54,7 @@ export class MultiCitySendRequest {
     }
 })
 
+@Injectable()
 export class MultiCityBookState {
 
     constructor(

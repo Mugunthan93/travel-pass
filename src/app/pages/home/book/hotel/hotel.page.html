@@ -2,7 +2,7 @@
 
   <ion-row>
     
-    <mat-accordion>
+    <mat-accordion *ngIf="(blockedRoom$ | async) !== null">
       <mat-expansion-panel>
         <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">
           <ion-title class="bold">{{ (blockedRoom$ | async).HotelName }}</ion-title>
@@ -21,7 +21,7 @@
       </mat-expansion-panel>
     </mat-accordion>
   
-    <ion-item (click)="hotelRules()">
+    <ion-item (click)="hotelRules()" *ngIf="(blockedRoom$ | async) !== null">
       <ion-label class="bold">Hotel Rules</ion-label>
       <ion-icon src="../../../../../assets/ionicons/chevron-forward-outline.svg" slot="end"></ion-icon>
     </ion-item>
@@ -31,14 +31,14 @@
       <ion-label>{{totalGuest() | async}}</ion-label>
     </ion-row>
   
-    <ion-item (click)="policies()">
+    <ion-item (click)="policies()" *ngIf="(blockedRoom$ | async) !== null">
       <ion-label class="bold">Policies you should know</ion-label>
       <ion-icon src="../../../../../assets/ionicons/chevron-forward-outline.svg" slot="end"></ion-icon>
     </ion-item>
     
   </ion-row>
 
-  <ion-list class="fare">
+  <ion-list class="fare"  *ngIf="(blockedRoom$ | async) !== null">
     <ion-list-header>
       <ion-title class="bold">TOTAL SUMMARY</ion-title>
     </ion-list-header>
@@ -84,249 +84,26 @@
     
   </ion-list>
 
+  <ion-list class="fare"  *ngIf="(blockedRoom$ | async) == null">
+    <ion-list-header>
+      <ion-title class="bold">TOTAL SUMMARY</ion-title>
+    </ion-list-header>
+
+    <ion-item *ngFor="let room of (invrooms$ | async)">
+      <ion-label slot="start">{{ room.room_type }}</ion-label>
+      <ion-label slot="end">{{ room.price | currency : 'INR'}}</ion-label>
+    </ion-item>
+
+    <mat-divider></mat-divider>
+
+    <ion-item>
+      <ion-label slot="start">TOTAL</ion-label>
+      <ion-label slot="end">{{ (totalInvCost() | async ) | currency : 'INR'}}</ion-label>
+    </ion-item>
+
+    <mat-divider></mat-divider>
+    
+  </ion-list>
+
 
 </ion-content>
-
-<ion-footer>
-  <ion-toolbar>
-    <ion-item>
-      <ion-row class="room-cost">
-        <!-- <ion-label class="large bold white">Total:</ion-label> -->
-        <!-- <ion-label class="bold white">{{ totalCost() | async | currency : 'INR' }}</ion-label> -->
-      </ion-row>
-    </ion-item>
-    <ion-buttons slot="end">
-      <ion-button (click)="sendRequest()">
-        <ion-label>Send Request</ion-label>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-footer>
-
-    <!-- <ion-title class="bold">Primary Guest Details</ion-title> -->
-
-    <!-- <ion-row class="selectpassenger">
-      <ion-label>I am Looking for </ion-label>
-      <ion-row>
-        <ion-radio></ion-radio>
-        <ion-text>My self</ion-text>
-      </ion-row>
-      <ion-row>
-        <ion-radio></ion-radio>
-        <ion-text>Someone else</ion-text>
-      </ion-row>
-    </ion-row> -->
-
-    <!-- <ion-row class="pass-detail-1">
-      <ion-select value="Mr" okText="Okay" cancelText="Dismiss">
-        <ion-select-option value="Mr">Mr</ion-select-option>
-        <ion-select-option value="Ms">Ms</ion-select-option>
-        <ion-select-option value="Mrs">Mrs</ion-select-option>
-      </ion-select>
-      <ion-input placeholder="First Name" [value]="(passenger$ | async).name" readonly></ion-input>
-      <ion-input placeholder="Last Name" [value]="(passenger$ | async).lastname" readonly></ion-input>
-    </ion-row> -->
-
-    <!-- <ion-row class="pass-detail-2">
-      <ion-input placeholder="Pan Number" (ionChange)="panChange($event)"></ion-input>
-      <ion-input placeholder="Email" [value]="(passenger$ | async).email" readonly></ion-input>
-    </ion-row> -->
-
-<!-- <ion-footer>
-  <ion-toolbar>
-    <ion-row>
-      <ion-label>{{'2357' | currency : 'INR'}}</ion-label>
-    </ion-row>
-    <ion-row>
-      <ion-text>Total Prize for 1 Night with Taxes</ion-text>
-    </ion-row>
-    <ion-buttons slot="end">
-      <ion-button expand="block" (click)="fare()">
-        <ion-text>Continue</ion-text>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-footer> -->
-
-<!-- <ion-grid>
-  <ion-row>
-    <ion-col>
-      <ion-row>
-        <ion-text>GUEST PROFILE</ion-text>
-      </ion-row>
-      <ion-row>
-        <ul>
-          <li>
-            <ion-text>Unmarried Couples are not allowed</ion-text>
-          </li>
-        </ul>
-      </ion-row>
-      <ion-row>
-        <ion-label (click)="hotelRules()">READ MORE</ion-label>
-      </ion-row>
-      <ion-row>
-      </ion-row>
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col>
-      <ion-label>Primary Guest Details</ion-label>
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col>
-      <ion-row>
-        <ion-col>
-        </ion-col>
-        <ion-col>
-          <ion-row>
-            <ion-col>
-
-            </ion-col>
-            <ion-col>
-
-            </ion-col>
-          </ion-row>
-        </ion-col>
-      </ion-row>
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col>
-      <ion-row>
-        <ion-col size="3">
-
-        </ion-col>
-        <ion-col size="4">
-        </ion-col>
-        <ion-col size="5">
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-        </ion-col>
-        <ion-col>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="3">
-          <ion-select value="+91" okText="Okay" cancelText="Dismiss">
-            <ion-select-option value="+91">+91</ion-select-option>
-            <ion-select-option value="+91435">+91435</ion-select-option>
-            <ion-select-option value="+65">+65</ion-select-option>
-          </ion-select>
-        </ion-col>
-        <ion-col size="9">
-          <ion-input placeholder="Phone Number"></ion-input>
-        </ion-col>
-      </ion-row>
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col>
-      <mat-divider></mat-divider>
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col>
-      <ion-row>
-        <ion-col>
-          <ion-item>
-            <ion-checkbox slot="start"></ion-checkbox>
-            <ion-text>Add Other Guest Details (optionals)</ion-text>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-      <ion-row class="ion-justify-content-around">
-        <ion-col size="4">
-          <ion-row>
-            <ion-button expand="block" (click)="addGuest()">
-              <ion-icon slot="start" name="Add"></ion-icon>
-              <ion-text>ADULT</ion-text>
-            </ion-button>
-          </ion-row>
-        </ion-col>
-        <ion-col size="4">
-          <ion-row>
-            <ion-button expand="block" (click)="addGuest()">
-              <ion-icon slot="start" name="Add"></ion-icon>
-              <ion-text>CHILD</ion-text>
-            </ion-button>
-          </ion-row>
-        </ion-col>
-      </ion-row>
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col>
-      <mat-divider></mat-divider>
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col>
-      <ion-row>
-        <ion-col>
-          <ion-item>
-            <ion-checkbox slot="start"></ion-checkbox>
-            <ion-text>I have a GST Number(optionals)</ion-text>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-input placeholder="Registration Number"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-input placeholder="Registered Company Name"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-input placeholder="Registered Company Address"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-label (click)="terms_condition()">Terms and Condition</ion-label>
-        </ion-col>
-      </ion-row>
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col>
-      <mat-divider></mat-divider>
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col>
-
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col>
-      <mat-divider></mat-divider>
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col>
-      <ion-label>This is Non-Refundable Price</ion-label>
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col>
-      <mat-divider></mat-divider>
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col>
-
-    </ion-col>
-  </ion-row>
-</ion-grid> -->
-
-<!-- <ion-item button (click)="specialRequest()" *ngIf="false">
-  <ion-label>MAKE SPECIAL REQUEST</ion-label>
-  <ion-icon src="../../../../../assets/ionicons/chevron-forward-outline.svg" slot="end"></ion-icon>
-</ion-item> -->

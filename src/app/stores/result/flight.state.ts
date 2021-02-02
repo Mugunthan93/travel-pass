@@ -187,13 +187,7 @@ export class ChangeFlightType {
     emailtrip: null,
     emailItinerary: [],
     flightType: null,
-  },
-  children: [
-    OneWayResultState,
-    DomesticResultState,
-    InternationalResultState,
-    MultiCityResultState,
-  ],
+  }
 })
 export class FlightResultState {
   constructor(

@@ -11,6 +11,7 @@ import { InternationalBookState } from './flight/international.state';
 import * as _ from 'lodash';
 import { SearchState } from '../search.state';
 import { flightpassenger } from '../passenger/flight.passenger.states';
+import { Injectable } from '@angular/core';
 
 
 export interface flight{
@@ -603,6 +604,8 @@ export class SetNonVeg {
     ]
 })
 
+
+@Injectable()
 export class FLightBookState {
 
     constructor(

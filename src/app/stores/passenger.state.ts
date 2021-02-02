@@ -16,13 +16,7 @@ export class CheckPassenger {
     name: 'passenger',
     defaults: {
         check : false
-    },
-    children: [
-        FlightPassengerState,
-        HotelPassengerState,
-        BusPassengerState,
-        TrainPassengerState
-    ]
+    }
 })
 export class PassengerState implements NgxsOnChanges {
 

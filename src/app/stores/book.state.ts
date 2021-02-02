@@ -1,6 +1,6 @@
-import { State, Selector, Action, Store, StateContext } from '@ngxs/store';
+import { State, Selector, Action, Store, StateContext, NgxsAfterBootstrap, NgxsOnInit } from '@ngxs/store';
 import { FLightBookState } from './book/flight.state';
-import { HotelBookState, HotelRequest } from './book/hotel.state';
+import { HotelBookState, HotelOfflineRequest, HotelRequest } from './book/hotel.state';
 import { BusBookState, BusRequest } from './book/bus.state';
 import { StateReset } from 'ngxs-reset-plugin';
 import { Navigate } from '@ngxs/router-plugin';
@@ -85,6 +85,10 @@ export class BookTicket {
     static readonly type = "[book] BookTicket"
 }
 
+export class OfflineRequest {
+    static readonly type = "[book] OfflineRequest";
+}
+
 @State<book>({
     name: 'Book',
     defaults: {
@@ -95,9 +99,9 @@ export class BookTicket {
         comment: null
     },
     children: [
+        BusBookState,
         FLightBookState,
         HotelBookState,
-        BusBookState,
         TrainBookState
     ]
 })
@@ -235,9 +239,17 @@ export class BookState {
                      (check) => {
 
                         if(check) {
+                            if(action.type == 'request') {
+                                console.log(states);
+                                return this.store.dispatch(new SendRequest());
+                            }
                             if(action.type == 'book') {
                                 console.log(states);
                                 return this.store.dispatch(new BookTicket());
+                            }
+                            if(action.type == 'offline') {
+                                console.log(states);
+                                return this.store.dispatch(new OfflineRequest());
                             }
                             return modal$;
                         }
@@ -277,10 +289,6 @@ export class BookState {
         let mode = states.getState().mode;
         let type = states.getState().type;
 
-        let comment = states.getState().comment;
-        let mailCC = states.getState().mail;
-        let purpose = states.getState().purpose;
-
         if (mode == 'flight') {
             if (type == 'one-way') {
                 states.dispatch(new BookOneWayTicket());
@@ -297,6 +305,48 @@ export class BookState {
         }
         else if (mode == 'hotel') {
             // states.dispatch(new HotelRequest(comment, mailCC, purpose))
+        }
+        else if (mode == 'bus') {
+            // states.dispatch(new BusRequest(comment, mailCC, purpose));
+        }
+        else if (mode == 'train') {
+            if (type == 'one-way') {
+                // states.dispatch(new TrainOneWayRequest(comment,mailCC,purpose));
+            }
+            else if (type == 'round-trip') {
+                // states.dispatch(new TrainRoundTripRequest(comment,mailCC,purpose));
+            }
+            else if (type == 'multi-city') {
+            //    states.dispatch(new TrainMultiCityRequest(comment,mailCC,purpose));
+            }
+        } 
+    }
+
+    @Action(OfflineRequest)
+    OfflineRequest(states: StateContext<book>) {
+        let mode = states.getState().mode;
+        let type = states.getState().type;
+
+        let comment = states.getState().comment;
+        let mailCC = states.getState().mail;
+        let purpose = states.getState().purpose;
+
+        if (mode == 'flight') {
+            if (type == 'one-way') {
+                // states.dispatch(new BookOneWayTicket());
+            }
+            else if (type == 'round-trip') {
+                // states.dispatch(new InternationalSendRequest(comment, mailCC, purpose));
+            }
+            else if (type == 'animated-round-trip') {
+                // states.dispatch(new DomesticSendRequest(comment, mailCC, purpose));
+            }
+            else if (type == 'multi-city') {
+                // states.dispatch(new MultiCitySendRequest(comment, mailCC, purpose));
+            }
+        }
+        else if (mode == 'hotel') {
+            states.dispatch(new HotelOfflineRequest(comment, mailCC, purpose));
         }
         else if (mode == 'bus') {
             // states.dispatch(new BusRequest(comment, mailCC, purpose));

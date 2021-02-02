@@ -9,14 +9,17 @@ import { SharedService } from 'src/app/services/shared/shared.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import * as _ from 'lodash';
 import { FileService } from 'src/app/services/file/file.service';
-import { AddBlockRoom } from '../book/hotel.state';
+import { AddBlockRoom, passengers } from '../book/hotel.state';
 import { Navigate } from '@ngxs/router-plugin';
 import { BookMode } from '../book.state';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SecurityContext } from '@angular/core';
 import { GetPlaces, HotelFilterState, hotelFilter } from './filter/hotel.filter.state';
 import { CompanyState } from '../company.state';
-import { insertItem, patch, removeItem } from '@ngxs/store/operators';
+import { append, insertItem, patch, removeItem } from '@ngxs/store/operators';
+import { InventoryRoomsComponent } from 'src/app/components/hotel/inventory-rooms/inventory-rooms.component';
+import { UserState } from '../user.state';
+import { AddAdultPassenger, AddChildPassenger } from '../passenger/hotel.passenger.state';
 
 export interface hotelresult {
     hotelresponseList: (staticresponselist & hotelresultlist)[]
@@ -31,6 +34,9 @@ export interface hotelresult {
     opencombination : hotelDetail[][];
     fixedcombination : hotelDetail [][];
     privateInventory : inventory[]
+    inventoryrooms : inventory[]
+    selectedinventoryhotel : inventory
+    selectedinventoryrooms : inventory[]
 }
 
 export interface selectedHotel {
@@ -396,7 +402,32 @@ export class ResetRoom{
 }
 
 export class GetPrivateInventory {
-    static readonly type = "[hotel_search] GetPrivateInventory";
+    static readonly type = "[hotel_result] GetPrivateInventory";
+}
+
+export class SelectInventoryHotel {
+    static readonly type = "[hotel_result] SelectInventoryHotel";
+    constructor(public invhotel: inventory) {
+
+    }
+}
+
+export class AddInventoryRooms {
+    static readonly type = "[hotel_result] SetInventoryRooms";
+    constructor(public invrooms: inventory) {
+
+    }
+}
+
+export class RemoveInventoryRooms {
+    static readonly type = "[hotel_result] RemoveInventoryRooms";
+    constructor(public invrooms: inventory) {
+
+    }
+}
+
+export class SendInventory {
+    static readonly type = "[hotel_result] SendInventory";
 }
 
 @State<hotelresult>({
@@ -413,7 +444,10 @@ export class GetPrivateInventory {
         loading:0,
         opencombination : [],
         fixedcombination : [],
-        privateInventory : []
+        privateInventory : [],
+        inventoryrooms : [],
+        selectedinventoryhotel : null,
+        selectedinventoryrooms : []
     }
 })
 
@@ -521,6 +555,21 @@ export class HotelResultState{
     static getInventoryList(states : hotelresult) {
         return states.privateInventory;
     }
+
+    @Selector()
+    static getSelectedInventoryHotels(states : hotelresult) {
+        return states.selectedinventoryhotel;
+    }
+
+    @Selector()
+    static getInventoryRooms(states : hotelresult) {
+        return states.inventoryrooms.filter(el => el.hotel_name == states.selectedinventoryhotel.hotel_name);
+    }
+
+    @Selector()
+    static getSelectedInventoryRooms(states : hotelresult) {
+        return states.selectedinventoryrooms;
+    }
     
     @Action(ResetRoom)
     resetRoom(states: StateContext<hotelresult>) {
@@ -534,6 +583,77 @@ export class HotelResultState{
         states.patchState({
             loading : action.num
         });
+    }
+
+    @Action(AddInventoryRooms)
+    addInventoryRooms(states: StateContext<hotelresult>, action: AddInventoryRooms) {
+        states.setState(patch({
+            selectedinventoryrooms : append([action.invrooms])
+        }));
+    }
+
+    @Action(RemoveInventoryRooms)
+    removeInventoryRooms(states: StateContext<hotelresult>, action: RemoveInventoryRooms) {
+        states.setState(patch({
+            selectedinventoryrooms : removeItem<inventory>(el => _.isEqual(el,action.invrooms))
+        }));
+    }
+
+    @Action(SelectInventoryHotel)
+    selectInventoryHotel(states: StateContext<hotelresult>, action: SelectInventoryHotel) {
+        states.patchState({
+            selectedinventoryhotel : action.invhotel
+        });
+
+        let modal$ = from(this.modalCtrl.create({
+            component : InventoryRoomsComponent
+        })).pipe(flatMap((el) => from(el.present())));
+
+        return modal$;
+    }
+
+    @Action(SendInventory)
+    sendInventory(states: StateContext<hotelresult>, action: SendInventory) {
+
+        console.log(action);
+
+        let lead: passengers = {
+            PaxType: 1,
+            LeadPassenger: true,
+            count: 0,
+            FirstName: this.store.selectSnapshot(UserState.getFirstName),
+            LastName: this.store.selectSnapshot(UserState.getFirstName),
+            Email: this.store.selectSnapshot(UserState.getEmail),
+            PAN: null
+        }
+
+        states.dispatch(new AddAdultPassenger(lead));
+        let rooms = this.store.selectSnapshot(HotelSearchState.getRooms);
+
+        rooms.forEach(
+            (room) => {
+                room.ChildAge.forEach(
+                    (age) => {
+                        let child: passengers = {
+                            PaxType: 2,
+                            LeadPassenger: false,
+                            count: 1,
+                            Age: age,
+                            FirstName: null,
+                            LastName: null
+                        }
+                        states.dispatch(new AddChildPassenger(child));
+                    }
+                );
+            }
+        );
+
+        states.dispatch([
+            new BookMode('hotel'),
+            new Navigate(['/', 'home', 'book', 'hotel'])
+        ])
+
+        return from(this.modalCtrl.dismiss());
     }
 
     @Action(GetToken)
@@ -567,8 +687,10 @@ export class HotelResultState{
                     (response) => {
                         console.log(response);
                         let data : inventory[] = JSON.parse(response.data);
+                        let hotels : any[] = _.uniqBy(data,el => el.hotel_name);
                         states.setState(patch({
-                            privateInventory : data
+                            privateInventory : hotels,
+                            inventoryrooms : data
                         }));
                     }
                 )
@@ -868,6 +990,7 @@ export class HotelResultState{
                 }
             )
         );
+
         let selectionAlert$ = from(this.alertCtrl.create({
             header: 'Rooms Selection',
             subHeader: 'Select the Room',

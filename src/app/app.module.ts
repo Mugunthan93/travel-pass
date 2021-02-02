@@ -31,6 +31,7 @@ import { RescheduleComponent } from './components/shared/reschedule/reschedule.c
 import { CancellationComponent } from './components/shared/cancellation/cancellation.component';
 import { SelectModalComponent } from './components/shared/select-modal/select-modal.component';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
+import { InventoryRoomsComponent } from './components/hotel/inventory-rooms/inventory-rooms.component';
 
 @NgModule({
   declarations: [
@@ -38,13 +39,15 @@ import { FileChooser } from '@ionic-native/file-chooser/ngx';
     ApproveRequestComponent,
     RescheduleComponent,
     CancellationComponent,
-    SelectModalComponent
+    SelectModalComponent,
+    InventoryRoomsComponent
   ],
   entryComponents: [
     ApproveRequestComponent,
     RescheduleComponent,
     CancellationComponent,
-    SelectModalComponent
+    SelectModalComponent,
+    InventoryRoomsComponent
   ],
   imports: [
     BrowserModule,

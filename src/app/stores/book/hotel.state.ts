@@ -160,6 +160,13 @@ export class HotelRequest {
     }
 }
 
+export class HotelOfflineRequest {
+    static readonly type = "[hotel_book] HotelOfflineRequest";
+    constructor(public comment: string, public mailCC: string[],public purpose : string) {
+
+    }
+}
+
 @State<hotelbook>({
     name: 'hotel_book',
     defaults: {
@@ -392,10 +399,92 @@ export class HotelBookState {
             );
     }
 
+    @Action(HotelOfflineRequest)
+    offlineRequest(states: StateContext<hotelbook>, action: HotelOfflineRequest) {
+
+        console.log(states,action);
+
+        // let approveStatus = this.store.selectSnapshot(CompanyState.getApprovalStatus);
+        // let manager = approveStatus ? this.store.selectSnapshot(UserState.getApprover) : this.bookingPerson();
+        // let mailcc = approveStatus ? action.mailCC : null;
+        // let hoteldetail = this.store.selectSnapshot(HotelResultState.getSelectedInventoryHotels)
+        // let rmdetail = this.store.selectSnapshot(HotelResultState.getSelectedInventoryRooms);
+        // let amenities = rmdetail.reduce((...el) => [...el[1].room_type],[])
+
+
+        // let req = {
+        //     guest_details:
+        //         {
+        //             passengers: this.store.select(HotelPassengerState.GetSelectAdult),
+        //             roomDetails:[
+        //                 {
+        //                     Price:{},
+        //                     Amenity:amenities,
+        //                     BedTypes:"",
+        //                     NoOfChild:this.store.selectSnapshot(HotelSearchState.getTotalChildren),
+        //                     RoomIndex:"",
+        //                     NoOfAdults:this.store.selectSnapshot(HotelSearchState.getTotalChildren),
+        //                     HotelPassenger:this.store.select(HotelPassengerState.GetSelectAdult)
+        //                 }
+        //             ],
+        //             basiscInfo:
+        //                 {
+        //                     CityId:"",
+        //                     tokenId:null,
+        //                     CityName:"chennai",
+        //                     HotelCode:"h7",
+        //                     HotelName:"hotel1",
+        //                     NoOfChild:0,
+        //                     NoOfAdults:1,
+        //                     NoOfNights:1,
+        //                     CheckInDate:"2021-03-12",
+        //                     HotelPolicy:"",
+        //                     CheckOutDate:"2021-03-13",
+        //                     HotelAddress:"",
+        //                     TotalBaseFare:1250,
+        //                     StarRating:4
+        //                 },
+        //             servicecharge_details:
+        //                 {
+        //                     service_charges:0,
+        //                     sgst_Charges:0,
+        //                     cgst_Charges:0,
+        //                     igst_Charges:0,
+        //                     total_amount:1250,
+        //                     markup_charges:0,
+        //                     agency_markup:0
+        //                 },
+        //             userEligibility:
+        //                 {
+        //                     company_type:"corporate"
+        //                 }
+        //             },
+        //         hotel_requests:this.store.selectSnapshot(HotelSearchState.getPayload),
+        //         transaction_id:"null",
+        //         user_id:this.store.selectSnapshot(UserState.getUserId),
+        //         customer_id:this.store.selectSnapshot(UserState.getcompanyId),
+        //         booking_mode:"offline",
+        //         approval_mail_cc:mailcc,
+        //         status:"new",
+        //         managers:manager,
+        //         trip_type:"business",
+        //         comments:'[\"' + action.comment + '\"]',
+        //         purpose:action.purpose
+        //     }
+
+    }
+
     serviceCharges(): number {
         let serviceCharge: number = 0;
         serviceCharge = this.store.selectSnapshot(CompanyState.getHotelServiceCharge) * this.store.selectSnapshot(HotelSearchState.getGuest);
         return serviceCharge;
     }
+
+    bookingPerson() {
+        let users = this.store.selectSnapshot(CompanyState.getEmployees);
+        let admins = users.filter(user => user.role == 'admin' && user.is_rightsto_book !== null && user.is_rightsto_book);
+        return [admins[0].email];
+    }
+
 
 }

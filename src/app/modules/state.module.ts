@@ -80,6 +80,22 @@ import { AgencyState } from '../stores/agency.state';
       ResultState,
       BookState,
 
+      BookingState,
+      ApprovalState,
+
+      ThemeState,
+      ExpenseState,
+
+      SortState,
+      SharedState,
+      EligibilityState,
+
+      PassengerState,
+      FlightPassengerState,
+      HotelPassengerState,
+      BusPassengerState,
+      TrainPassengerState,
+
       //lvl 2
       FlightSearchState,
       FlightResultState,
@@ -118,29 +134,13 @@ import { AgencyState } from '../stores/agency.state';
       TrainOneWayBookState,
       TrainRoundTripBookState,
       TrainMultiCityBookState,
-
-      BookingState,
-      ApprovalState,
       
       FilterState,
       FlightFilterState,
       DepartureFilterState,
       ReturnFilterState,
       HotelFilterState,
-      BusFilterState,
-
-      SortState,
-      SharedState,
-      EligibilityState,
-
-      PassengerState,
-      FlightPassengerState,
-      HotelPassengerState,
-      BusPassengerState,
-      TrainPassengerState,
-
-      ThemeState,
-      ExpenseState
+      BusFilterState
       
     ], { developmentMode: !environment.production }
     ),

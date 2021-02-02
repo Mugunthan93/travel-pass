@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { matExpansionAnimations } from '@angular/material/expansion';
 import { ModalController, IonInfiniteScroll } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
-import { hotellist, HotelResultState, ViewHotel, AddHotels, inventory } from 'src/app/stores/result/hotel.state';
+import { hotellist, HotelResultState, ViewHotel, AddHotels, inventory, SelectInventoryHotel } from 'src/app/stores/result/hotel.state';
 import { Observable, from } from 'rxjs';
 import { Store } from '@ngxs/store';
 import * as _ from 'lodash';
@@ -132,6 +132,10 @@ export class HotelPage implements OnInit {
     else {
       "../../../../../assets/img/hotel/no-image-icon-hotel.png";
     }
+  }
+
+  viewInvRoom(inv : inventory) {
+    this.store.dispatch(new SelectInventoryHotel(inv));
   }
   
 }

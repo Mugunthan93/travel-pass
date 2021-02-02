@@ -1,7 +1,4 @@
 import { State, Selector, Action, StateContext, Store } from '@ngxs/store';
-import { FlightResultState } from './result/flight.state';
-import { HotelResultState } from './result/hotel.state';
-import { BusResultState } from './result/bus.state';
 import { StateReset } from 'ngxs-reset-plugin';
 import { Navigate } from '@ngxs/router-plugin';
 
@@ -34,12 +31,7 @@ export class ResultBack {
     defaults: {
         mode: null,
         type:null
-    },
-    children: [
-        FlightResultState,
-        HotelResultState,
-        BusResultState
-    ]
+    }
 })
 export class ResultState {
 

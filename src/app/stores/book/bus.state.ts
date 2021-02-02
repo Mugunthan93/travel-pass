@@ -1,11 +1,9 @@
 import { State, Store, Action, StateContext, Selector } from '@ngxs/store';
-import { managers, user_eligibility } from './flight.state';
 import { busResponse, droppingPoint, boardingPoint, BusResultState, seat } from '../result/bus.state';
 import { BusSearchState } from '../search/bus.state';
 import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 import { Navigate } from '@ngxs/router-plugin';
 import { CompanyState } from '../company.state';
-import { GST } from './flight/oneway.state';
 import { UserState } from '../user.state';
 import * as moment from 'moment';
 import { BookMode } from '../book.state';
@@ -13,6 +11,7 @@ import { concat, forkJoin, from, of } from 'rxjs';
 import { catchError, flatMap, map } from 'rxjs/operators';
 import { BusService } from 'src/app/services/bus/bus.service';
 import { AddBusPassenger, buspassenger, BusPassengerState } from '../passenger/bus.passenger.state';
+import { Injectable } from '@angular/core';
 
 
 export interface busbook {
@@ -46,6 +45,18 @@ export interface busrequests {
     boardingPoint: boardingPoint[]
 }
 
+export interface GST {
+  cgst: number,
+  sgst: number,
+  igst: number
+}
+
+export interface user_eligibility {
+  approverid?:string,
+  msg: any
+  company_type: string
+}
+
 ////////////////////////////////////////////////////////////////
 
 export class GetBookDetail {
@@ -70,6 +81,8 @@ export class BusRequest {
     bus_requests: [],
   },
 })
+
+@Injectable()
 export class BusBookState {
   constructor(
     private store: Store,

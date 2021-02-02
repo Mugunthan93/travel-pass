@@ -364,6 +364,10 @@ export class PassengerListComponent implements OnInit {
 
   ///dismiss
   dismissInfo() {
+
+    // let selectedAdult = this.store.selectSnapshot(HotelPassengerState.GetSelectedAdult);
+    // let selectedChildren = this.store.selectSnapshot(HotelPassengerState.GetSelectedChildren);
+
     if (this.bookMode == 'flight') {
       this.store.dispatch(new DismissFlightPassenger());
     }
