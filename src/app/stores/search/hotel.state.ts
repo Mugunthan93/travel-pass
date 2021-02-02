@@ -7,7 +7,7 @@ import { HotelService } from 'src/app/services/hotel/hotel.service';
 import { from, forkJoin, of, Observable } from 'rxjs';
 import { map, catchError, tap, flatMap, concat } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
-import { hotelprice, supplierhotelcodes, hotelresponse, HotelResponse } from '../result/hotel.state';
+import { hotelprice, supplierhotelcodes, hotelresponse, HotelResponse, SetLoading } from '../result/hotel.state';
 import { ResultMode } from '../result.state';
 import { Navigate } from '@ngxs/router-plugin';
 import { CompanyState } from '../company.state';
@@ -378,7 +378,7 @@ export class HotelSearchState {
 
     @Action(RemoveAdult)
     removeAdult(states: StateContext<hotelsearch>, action: AddAdult) {
-        if (states.getState().rooms[action.roomId].NoOfChild >= 1) {
+        if (states.getState().rooms[action.roomId].NoOfAdults >= 1) {
             let adult = states.getState().rooms[action.roomId].NoOfAdults - 1 
             states.setState(patch({
                 rooms : updateItem(action.roomId,patch({
@@ -443,13 +443,9 @@ export class HotelSearchState {
     @Action(SetAge)
     setAge(states: StateContext<hotelsearch>, action: SetAge) {
         states.setState(patch({
-            rooms : patch({
-                [action.roomIndex] : patch({
-                    ChildAge : patch({
-                        [action.ageIndex] : action.value
-                    })
-                })
-            })
+            rooms : updateItem(action.roomIndex,patch({
+                ChildAge : updateItem(action.ageIndex, action.value)
+            }))
         }));
     }
 
@@ -632,6 +628,7 @@ export class HotelSearchState {
                 catchError(
                     (error) => {
                         console.log(error);
+                        this.store.dispatch(new SetLoading(1));
                         return forkJoin(loadingDismiss$,failedAlert$).pipe(
                             map(
                                 (alert) => {

@@ -384,6 +384,13 @@ export class GetImage {
     }
 }
 
+export class SetLoading {
+    static readonly type = "[hotel_result] SetLoading";
+    constructor(public num: number) {
+
+    }
+}
+
 export class ResetRoom{
     static readonly type = "[hotel_result] ResetRoom";
 }
@@ -476,7 +483,7 @@ export class HotelResultState{
 
     @Selector()
     static totalResult(states: hotelresult): number {
-        return states.hotelresponseList.length;
+        return states.hotelresponseList.length + states.privateInventory.length;
     }
 
     @Selector()
@@ -519,6 +526,13 @@ export class HotelResultState{
     resetRoom(states: StateContext<hotelresult>) {
         states.patchState({
             selectedRoom : []
+        });
+    }
+
+    @Action(SetLoading)
+    setLoading(states: StateContext<hotelresult>, action: SetLoading) {
+        states.patchState({
+            loading : action.num
         });
     }
 

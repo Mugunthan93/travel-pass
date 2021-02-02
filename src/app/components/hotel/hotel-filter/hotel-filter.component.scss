@@ -21,8 +21,9 @@ ion-content {
         }
 
         >ion-range {
-            margin: auto 4px;
             padding: 0px;
+            min-height: 20px !important;
+            max-height: 20px !important;
         }
 
         >ion-item {

@@ -33,14 +33,14 @@ export class HotelPage implements OnInit {
   loading$: Observable<number>;
 
   length: number;
+  invsortBy$: Observable<sortButton>;
 
   constructor(
     public modalCtrl: ModalController,
     public router: Router,
     public activatedRoute: ActivatedRoute,
     private store: Store,
-    private webview: WebView,
-    private domSantizier : DomSanitizer
+    private webview: WebView
   ) {
 
   }
@@ -52,6 +52,7 @@ export class HotelPage implements OnInit {
     this.hotelList$ = this.store.select(HotelResultState.getHotelList);
     this.limit$ = this.store.select(HotelResultState.getLimit);
     this.sortBy$ = this.store.select(SortState.getHotelSortBy);
+    this.invsortBy$ = this.store.select(SortState.getHotelSortBy);
 
     this.loading$ = this.store.select(HotelResultState.getLoading);
 
