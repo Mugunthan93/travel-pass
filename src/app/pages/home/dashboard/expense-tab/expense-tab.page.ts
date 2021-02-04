@@ -25,6 +25,10 @@ export class ExpenseTabPage implements OnInit {
   tripType$ : Observable<string>;
   isManager$ : Observable<boolean>;
 
+  totalAdvance$ : Observable<number>;
+  totalExpense$ : Observable<number>;
+
+
   constructor(
     private store : Store,
     public modalCtrl : ModalController
@@ -34,6 +38,9 @@ export class ExpenseTabPage implements OnInit {
     this.trips$ = this.store.select(ExpenseState.getTripList);
     this.expenses$ = this.store.select(ExpenseState.getExpenseList);
     this.loading$ = this.store.select(ExpenseState.getLoading);
+
+    this.totalAdvance$ = this.store.select(ExpenseState.getTotalAdvance);
+    this.totalExpense$ = this.store.select(ExpenseState.getTotalExpense);
 
     this.domesticEligibility$ = this.store.select(EligibilityState.getDomestic);
     this.intEligibility$ = this.store.select(EligibilityState.getInternational);

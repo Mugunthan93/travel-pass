@@ -305,6 +305,8 @@ export class HotelPassengerState {
 
     @Action(DismissHotelPassenger)
     dismissHotelPassenger(states: StateContext<hotelpassengerstate>, action: DismissHotelPassenger) {
+
+        console.log(states,action);
         let adult = states.getState().selectedAdult.length;
         let child = states.getState().selectedChildren.length;
 

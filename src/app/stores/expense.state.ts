@@ -15,7 +15,7 @@ import { append, insertItem, patch, removeItem } from '@ngxs/store/operators';
 export interface expense {
     trips : triplist[],
     approvalTrip : triplist[],
-    expenses : any[],
+    expenses : expenses[],
     approveExpenses : any[];
     startdate : moment.Moment
     enddate: moment.Moment
@@ -44,6 +44,32 @@ export interface triplist {
     trip_name: string
     updatedAt: string
     advance_amount : number
+}
+
+export interface expenses {
+  accounts_approval: any
+  approved_accounts: any
+  approved_manager: any
+  attachementpath: {
+    bills: any[]
+  }
+  cost: number
+  createdAt: string
+  eligible_amount: number
+  end_city: string
+  end_date: string
+  id: number
+  local_travel_value: any
+  manager_approval: any
+  no_of_days: number
+  paid_by: string
+  start_city: string
+  start_date: string
+  status: string
+  travel_type: string
+  trip_id: number
+  type: string
+  updatedAt: string
 }
 
 export interface projectList {
@@ -238,7 +264,7 @@ export class DeselectExpense {
   },
 })
 
-export class ExpenseState implements NgxsOnChanges {
+export class ExpenseState {
 
   constructor(
     private store: Store,
@@ -246,8 +272,64 @@ export class ExpenseState implements NgxsOnChanges {
     public modalCtrl: ModalController
   ) {}
 
-  ngxsOnChanges(change: NgxsSimpleChange<any>): void {
-    console.log(change);
+  @Selector()
+  static getTotalAdvance(state: expense) : number {
+
+    if(state.tripType == 'mytrips') {
+      return state.trips.reduce(
+        (acc,curr) => {
+          if(curr.advance_amount !== null) {
+            return acc + curr.advance_amount;
+          }
+          else {
+            return acc;
+          }
+        },0
+      );
+    }
+    else if(state.tripType == 'approvaltrips') {
+      return state.approvalTrip.reduce(
+        (acc,curr) => {
+          if(curr.advance_amount !== null) {
+            return acc + curr.advance_amount;
+          }
+          else {
+            return acc;
+          }
+        },0
+      );
+    }
+
+  }
+
+  @Selector()
+  static getTotalExpense(state: expense) : number {
+
+    if(state.tripType == 'mytrips') {
+      return state.expenses.reduce(
+        (acc,curr) => {
+          if(curr.paid_by == 'paid_self') {
+            return acc + curr.cost;
+          }
+          else {
+            return acc;
+          }
+        },0
+      );
+    }
+    else if(state.tripType == 'approvaltrips') {
+      return state.approveExpenses.filter((exp : expenselist) => exp.status !== 'new').reduce(
+        (acc,curr) => {
+          if(curr.paid_by == 'paid_self') {
+            return acc + curr.cost;
+          }
+          else {
+            return acc;
+          }
+        },0
+      );
+    }
+
   }
 
   @Selector()
@@ -433,8 +515,8 @@ export class ExpenseState implements NgxsOnChanges {
         .value()
 
         states.setState(patch({
-          expenses: append(exp),
-          approveExpenses : append(appexp)
+          expenses: exp,
+          approveExpenses : appexp
         }));
 
         states.patchState({

@@ -23,6 +23,7 @@
         </ion-row>
     </ion-row>
     <ion-row class="addtrip">
+        <ion-label class="bold large"> Total Advance : {{ totalAdvance$ | async | currency : 'INR' }}</ion-label>
         <ion-button (click)="addTrip()">
             <ion-label>Add Trip</ion-label>
         </ion-button>
@@ -31,6 +32,11 @@
 
 
 <ion-content>
+
+    <ion-row class="ion-justify-content-space-between">
+        <ion-col class="bold large"> Total Expense : {{ (totalExpense$ | async) | currency : 'INR' }}</ion-col>
+        <ion-col class="bold large"> Balance adavance : {{ ((totalAdvance$ | async) - (totalExpense$ | async)) | currency : 'INR' }}</ion-col>
+    </ion-row>
 
     <ion-row class="booking" *ngIf="isManager$ | async">
         <ion-segment mode="ios" (ionChange)="tripChange($event)" [value]="tripType$ | async" class="search">

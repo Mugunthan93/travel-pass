@@ -209,6 +209,8 @@ export class BookState {
     @Action(GetSendRequest)
     async getSendRequest(states : StateContext<book>, action : GetSendRequest) {
 
+        console.log(states);
+
         let modal$ = await this.modalCtrl.create({
             component: action.modal,
             id: "book-confirm",
