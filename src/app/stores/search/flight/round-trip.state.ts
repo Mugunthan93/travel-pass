@@ -88,6 +88,11 @@ export class RoundTripSearchState extends BaseFlightSearch {
         return states.tripType;
     }
 
+    @Selector()
+    static getTripClass(states: roundtripSearch): string {
+        return states.formData.class.toLowerCase();
+    }
+
 
     @Selector()
     static getTravelDate(states: roundtripSearch): string {

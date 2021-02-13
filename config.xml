@@ -4,7 +4,7 @@
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework.com" href="http://ionicframework.com/">Ionic Framework Team</author>
     <allow-navigation href="*" />
-    <content original-src="index.html" src="http://192.168.1.4:8100" />
+    <content original-src="index.html" src="http://192.168.1.7:8100" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -115,4 +115,8 @@
     <plugin name="cordova-plugin-googlemaps" spec="^2.7.0" />
     <allow-navigation href="http://192.168.1.11:8100" sessionid="5fa7858a" />
     <allow-navigation href="http://192.168.1.4:8100" sessionid="e12f6fca" />
+    <allow-navigation href="http://192.168.1.8:8100" sessionid="9c478734" />
+    <allow-navigation href="http://192.168.1.7:8100" sessionid="30489972" />
+    <allow-navigation href="http://192.168.1.6:8101" sessionid="f7b8a431" />
+    <allow-navigation href="http://192.168.1.6:8100" sessionid="cc174718" />
 </widget>

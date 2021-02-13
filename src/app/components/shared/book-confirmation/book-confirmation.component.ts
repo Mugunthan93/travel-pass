@@ -112,6 +112,27 @@ export class BookConfirmationComponent implements OnInit {
     }
   }
 
+  async bookRequest() {
+    let missing = await this.alertCtrl.create({
+      header: 'Purpose Missing',
+      subHeader: 'Select the purpose',
+      id: 'passenger-check',
+      buttons: [{
+        text: "Ok",
+        handler: async () => {
+          await missing.dismiss();
+        }
+      }]
+    });
+
+    if (this.currentPurpose !== null) {
+      this.store.dispatch(new BookTicket());
+    }
+    else {
+      return await missing.present();
+    }
+  }
+
   
   async dismiss() {
     return await this.modalCtrl.dismiss(null, null,'book-confirm');

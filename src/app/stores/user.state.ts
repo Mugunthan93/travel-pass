@@ -168,7 +168,7 @@ export class UserState {
 
     @Selector()
     static isAdmin(state: user): boolean {
-        return state.approver == null;
+        return state.role == "admin";
     }
 
     @Selector()

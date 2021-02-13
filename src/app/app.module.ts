@@ -32,6 +32,7 @@ import { CancellationComponent } from './components/shared/cancellation/cancella
 import { SelectModalComponent } from './components/shared/select-modal/select-modal.component';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { InventoryRoomsComponent } from './components/hotel/inventory-rooms/inventory-rooms.component';
+import { DatePicker } from '@ionic-native/date-picker/ngx';
 
 @NgModule({
   declarations: [
@@ -80,6 +81,7 @@ import { InventoryRoomsComponent } from './components/hotel/inventory-rooms/inve
     Keyboard,
     Deeplinks,
     WebView,
+    DatePicker,
     {
       provide: NativeHttpService,
       useFactory: (platform: Platform, http: HTTP) => {

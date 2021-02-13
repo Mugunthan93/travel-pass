@@ -1,4 +1,4 @@
-import { State, Selector, Action, Store, StateContext, NgxsAfterBootstrap, NgxsOnInit } from '@ngxs/store';
+import { State, Selector, Action, Store, StateContext } from '@ngxs/store';
 import { FLightBookState } from './book/flight.state';
 import { HotelBookState, HotelOfflineRequest, HotelRequest } from './book/hotel.state';
 import { BusBookState, BusRequest } from './book/bus.state';
@@ -7,21 +7,20 @@ import { Navigate } from '@ngxs/router-plugin';
 import { TrainBookState } from './book/train.state';
 import { TrainOneWayRequest } from './book/train/one-way.state';
 import { LoadingController, AlertController, ModalController } from '@ionic/angular';
-import { BookOneWayTicket, FlightOneWaySendRequest } from './book/flight/oneway.state';
-import { InternationalSendRequest } from './book/flight/international.state';
-import { DomesticSendRequest } from './book/flight/domestic.state';
-import { MultiCitySendRequest } from './book/flight/multi-city.state';
+import { BookOneWayTicket, FlightOneWaySendRequest, OneWayBookState } from './book/flight/oneway.state';
+import { InternationalBookState, InternationalSendRequest } from './book/flight/international.state';
+import { DomesticBookState, DomesticSendRequest } from './book/flight/domestic.state';
+import { MultiCityBookState, MultiCitySendRequest } from './book/flight/multi-city.state';
 import { TrainRoundTripRequest } from './book/train/round-trip.state';
 import { TrainMultiCityRequest } from './book/train/multi-city.state';
 import { from } from 'rxjs/internal/observable/from';
-import { flatMap, tap } from 'rxjs/operators';
-import { PassengerState } from './passenger.state';
-import { of } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
+import { empty } from 'rxjs';
 import { SearchState } from './search.state';
-import { MultiCitySearchState } from './search/flight/multi-city.state';
-import { OneWaySearchState } from './search/flight/oneway.state';
-import { RoundTripSearchState } from './search/flight/round-trip.state';
-import { FlightPassengerState } from './passenger/flight.passenger.states';
+import { ResultState } from './result.state';
+import { AgencyState, SetAgency } from './agency.state';
+import { SetVendor, VendorState } from './vendor.state';
+import { CompanyState } from './company.state';
 
 export interface book {
     mode: string,
@@ -207,19 +206,9 @@ export class BookState {
     }
 
     @Action(GetSendRequest)
-    async getSendRequest(states : StateContext<book>, action : GetSendRequest) {
+    getSendRequest(states : StateContext<book>, action : GetSendRequest) {
 
-        console.log(states);
-
-        let modal$ = await this.modalCtrl.create({
-            component: action.modal,
-            id: "book-confirm",
-            componentProps : {
-                type : action.type
-            }
-        })
-
-        return await modal$.present();
+        
     }
 
     @Action(BookBack)
@@ -252,37 +241,77 @@ export class BookState {
         let mode = states.getState().mode;
         let type = states.getState().type;
 
-        if (mode == 'flight') {
-            if (type == 'one-way') {
-                states.dispatch(new BookOneWayTicket());
+        let failedAlert$ = from(this.alertCtrl.create({
+            header: 'Booking Failed',
+            message : "We couldn't process your request due to some technical issue. Please contact Your Agent / Sales representative for details",
+            id : 'limit-check',
+            buttons: [
+            {
+                text: 'Ok',
+                role: 'ok',
+                cssClass: 'danger',
+                handler: () => {
+                    this.alertCtrl.dismiss(null,null,'limit-check');
+                }
+            },
+            {
+                text: 'Back Home',
+                role: 'home',
+                cssClass: 'danger',
+                handler: () => {
+                    this.alertCtrl.dismiss(null, null, 'limit-check');
+                    this.modalCtrl.dismiss(null, null, 'success-book');
+                    states.dispatch(new Navigate(['/','home','dashboard','home-tab']));
+                    states.dispatch(new StateReset(SearchState,ResultState,BookState));
+                }
             }
-            else if (type == 'round-trip') {
-                // states.dispatch(new InternationalSendRequest(comment, mailCC, purpose));
-            }
-            else if (type == 'animated-round-trip') {
-                // states.dispatch(new DomesticSendRequest(comment, mailCC, purpose));
-            }
-            else if (type == 'multi-city') {
-                // states.dispatch(new MultiCitySendRequest(comment, mailCC, purpose));
-            }
-        }
-        else if (mode == 'hotel') {
-            // states.dispatch(new HotelRequest(comment, mailCC, purpose))
-        }
-        else if (mode == 'bus') {
-            // states.dispatch(new BusRequest(comment, mailCC, purpose));
-        }
-        else if (mode == 'train') {
-            if (type == 'one-way') {
-                // states.dispatch(new TrainOneWayRequest(comment,mailCC,purpose));
-            }
-            else if (type == 'round-trip') {
-                // states.dispatch(new TrainRoundTripRequest(comment,mailCC,purpose));
-            }
-            else if (type == 'multi-city') {
-            //    states.dispatch(new TrainMultiCityRequest(comment,mailCC,purpose));
-            }
-        } 
+        ]
+        })).pipe(flatMap((el) => from(el.present())));
+
+        let agencyid = this.store.selectSnapshot(CompanyState.getCompany).agency_id;
+        let fare = this.totalFare(mode,type);
+
+        return states.dispatch([new SetAgency(agencyid),new SetVendor(agencyid.toString(),'vendor')])
+            .pipe(
+                flatMap(
+                    () => {
+                        let corpLimit = this.store.selectSnapshot(AgencyState.getCreditLimit); 
+                        if (mode == 'flight') {
+                            let airlineLimit = this.store.selectSnapshot(VendorState.getAirlineVendor).cash_limits.amount;
+                            console.log(fare,corpLimit, airlineLimit);
+                            if(true
+                                // (corpLimit > fare) && (airlineLimit > fare)
+                                ) {
+                                if (type == 'one-way') {
+                                    return states.dispatch(new BookOneWayTicket());
+                                }
+                                else if (type == 'round-trip') {
+                                    // states.dispatch(new InternationalSendRequest(comment, mailCC, purpose));
+                                }
+                                else if (type == 'animated-round-trip') {
+                                    // states.dispatch(new DomesticSendRequest(comment, mailCC, purpose));
+                                }
+                                else if (type == 'multi-city') {
+                                    // states.dispatch(new MultiCitySendRequest(comment, mailCC, purpose));
+                                }
+                            }
+                            else {
+                                return failedAlert$;
+                            }
+                        }
+                        else if(mode == 'hotel'){
+                            let hotelLimit = this.store.selectSnapshot(VendorState.getHotelVendor).cash_limits.amount;
+                            if((corpLimit > fare) && (hotelLimit > fare)) {
+                                // states.dispatch(new HotelRequest(comment, mailCC, purpose))
+                            }
+                            else {
+                                return failedAlert$;
+                            }
+                        }
+                        return empty();
+                    }
+                )
+            );
     }
 
     @Action(OfflineRequest)
@@ -325,5 +354,22 @@ export class BookState {
             //    states.dispatch(new TrainMultiCityRequest(comment,mailCC,purpose));
             }
         } 
+    }
+
+    totalFare(mode : string,type : string) : number {
+        if (mode == 'flight') {
+            if (type == 'one-way') {
+                return this.store.selectSnapshot(OneWayBookState.getTotalFare);
+            }
+            else if (type == 'round-trip') {
+                return this.store.selectSnapshot(InternationalBookState.getTotalFare);
+            }
+            else if (type == 'animated-round-trip') {
+                return this.store.selectSnapshot(DomesticBookState.getTotalFare);
+            }
+            else if (type == 'multi-city') {
+                return this.store.selectSnapshot(MultiCityBookState.getTotalFare);
+            }
+        }
     }
 }

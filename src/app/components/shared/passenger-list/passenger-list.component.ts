@@ -96,6 +96,41 @@ export class PassengerListComponent implements OnInit {
     this.countBusPass$ = this.store.select(BusPassengerState.getPassCount);
   }
 
+  ionViewWillEnter() {
+
+    this.bookMode$ = this.store.select(BookState.getBookMode);
+    this.bookMode = this.store.selectSnapshot(BookState.getBookMode);
+
+    this.employees = this.store.selectSnapshot(CompanyState.getEmployees);
+
+    this.passengers$ = this.store.select(FlightPassengerState.getPassengers);
+    this.selectedPassengers$ = this.store.select(FlightPassengerState.getSelectedPassengers);
+    this.selected$ = this.store.select(FlightPassengerState.getSelected);
+    this.count$ = this.store.select(FlightPassengerState.getCount);
+
+    this.hotelAdult$ = this.store.select(HotelPassengerState.GetAdult);
+    this.selectAdult$ = this.store.select(HotelPassengerState.GetSelectAdult);
+    this.totalAdult$ = this.store.select(HotelPassengerState.GetTotalAdult);
+    this.selectedAdult$ = this.store.select(HotelPassengerState.GetSelectedAdult);
+
+
+    this.hotelChildren$ = this.store.select(HotelPassengerState.GetChild);
+    this.selectChildren$ = this.store.select(HotelPassengerState.GetSelectChildren);
+    this.totalChildren$ = this.store.select(HotelPassengerState.GetTotalChildren);
+    this.selectedChildren$ = this.store.select(HotelPassengerState.GetSelectedChildren);
+
+    this.trainPassengers$ = this.store.select(TrainPassengerState.getPassenger);
+    this.selectedTrainPassengers$ = this.store.select(TrainPassengerState.getSelectPassenger);
+    this.selectedPass$ = this.store.select(TrainPassengerState.getSelectedPassCount);
+    this.countPass$ = this.store.select(TrainPassengerState.getPassCount);
+
+    this.busPassengers$ = this.store.select(BusPassengerState.getPassenger);
+    this.selectedBusPassengers$ = this.store.select(BusPassengerState.getSelectPassenger);
+    this.selectedBusPass$ = this.store.select(BusPassengerState.getSelectedPassCount);
+    this.countBusPass$ = this.store.select(BusPassengerState.getPassCount);
+
+  }
+
   //flight passenger function
 
   async getDetail() {

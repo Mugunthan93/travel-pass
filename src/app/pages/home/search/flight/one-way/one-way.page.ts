@@ -45,7 +45,7 @@ export class OneWayPage implements OnInit {
       traveller: this.fb.control({
         adult: 1,child: 0,infant: 0
       }, [Validators.required]),
-      class: this.fb.control('all', [Validators.required])
+      class: this.fb.control('economy', [Validators.required])
     });
 
     this.newDate = new Date();

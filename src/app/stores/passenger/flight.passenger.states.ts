@@ -10,7 +10,8 @@ import { ModalController, AlertController } from '@ionic/angular';
 import { SearchState } from '../search.state';
 import { from } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
-import { MealBaggage } from "../book/flight/oneway.state";
+import { ChooseBaggage } from "../book/flight/oneway.state";
+import { append, patch, removeItem, updateItem } from "@ngxs/store/operators";
 
 
 export interface flightpassengerstate {
@@ -30,11 +31,11 @@ export interface flightpassenger extends addPassenger {
     PaxType: number,
     IsLeadPax: boolean,
     Gender: number,
-    GSTCompanyEmail: string,
-    GSTCompanyAddress: string,
-    GSTCompanyContactNumber: string,
-    GSTCompanyName: string,
-    GSTNumber: string,
+    GSTCompanyEmail?: string,
+    GSTCompanyAddress?: string,
+    GSTCompanyContactNumber?: string,
+    GSTCompanyName?: string,
+    GSTNumber?: string,
     Fare: fareObj
 }
 
@@ -142,16 +143,15 @@ export class FlightPassengerState {
     @Action(AddPassenger)
     addPassenger(states: StateContext<flightpassengerstate>, action: AddPassenger) {
 
-        let currentPass : flightpassenger[] = Object.assign([], states.getState().passengerList);
-        currentPass.push(action.pass);
+        let passenger : any = {};
+        if(!action.pass.IsLeadPax) {
+            passenger = _.omit(Object.assign({},action.pass),['GSTCompanyEmail','GSTCompanyAddress','GSTCompanyContactNumber','GSTCompanyName','GSTNumber']);
+        }
+        passenger.Gender = action.pass.Title == 'Ms' ? 2 : 1;
 
-        let baggage : number = action.pass.onwardExtraServices.Baggage[0] ? action.pass.onwardExtraServices.Baggage[0].Price : 0;
-        let meal : number = action.pass.onwardExtraServices.Meal[0] ? action.pass.onwardExtraServices.Meal[0].Price : 0;
-        states.dispatch(new MealBaggage(meal,baggage));
-
-        states.patchState({
-            passengerList: currentPass
-        });
+        states.setState(patch({
+            passengerList : append([passenger])
+        }));
 
         this.modalCtrl.dismiss(null, null, 'passenger-details');
     }
@@ -159,30 +159,26 @@ export class FlightPassengerState {
     @Action(EditPassenger)
     editPassenger(states: StateContext<flightpassengerstate>, action: EditPassenger) {
 
-        let passengers: flightpassenger[] = Object.assign([], states.getState().passengerList);
-        let filterPass: flightpassenger[] = _.remove(passengers, (o) => {
-            return o.PassportNo !== action.pax.PassportNo
-        });
-        filterPass.push(action.pass);
+        let passenger : any = {};
+        passenger.Fare = this.store.selectSnapshot(FLightBookState.getFare);
+        if(!action.pass.IsLeadPax) {
+            passenger = _.omit(Object.assign({},action.pass),['GSTCompanyEmail','GSTCompanyAddress','GSTCompanyContactNumber','GSTCompanyName','GSTNumber']);
+        }
 
-        states.patchState({
-            passengerList: filterPass
-        });
+        states.setState(patch({
+            passengerList : updateItem((el : flightpassenger) => 
+            el.FirstName == passenger.FirstName && el.LastName == passenger.LastName && el.Email == passenger.Email,passenger 
+            )
+        }));
 
         this.modalCtrl.dismiss(null, null, 'passenger-details');
     }
 
     @Action(DeletePassenger)
     deletePassenger(states: StateContext<flightpassengerstate>, action: DeletePassenger) {
-
-        let passengers: flightpassenger[] = Object.assign([], states.getState().passengerList);
-        let filterPass: flightpassenger[] = _.remove(passengers, (o) => {
-            return o.PassportNo !== action.pax.PassportNo
-        });
-
-        states.patchState({
-            passengerList: filterPass
-        });
+        states.setState(patch({
+            passengerList : removeItem((el : flightpassenger) => el.FirstName == action.pax.FirstName && el.LastName == action.pax.LastName && el.Email == action.pax.Email)
+        }));
     }
 
     @Action(SetFirstPassengers)
@@ -221,8 +217,8 @@ export class FlightPassengerState {
             FirstName: this.store.selectSnapshot(UserState.getFirstName),
             LastName: this.store.selectSnapshot(UserState.getLastName) == null ? '' : this.store.selectSnapshot(UserState.getLastName),
             ContactNo: this.store.selectSnapshot(UserState.getContact),
-            DateOfBirth: this.store.selectSnapshot(UserState.getDOB),
-            PassportNo: this.store.selectSnapshot(UserState.getPassportNo),
+            DateOfBirth: this.store.selectSnapshot(UserState.getDOB) + "T00:00:00.000Z",
+            PassportNo: this.store.selectSnapshot(UserState.getPassportNo)  + "T00:00:00.000Z",
             PassportExpiry: this.store.selectSnapshot(UserState.getPassportExpiry),
             Title: this.store.selectSnapshot(UserState.getTitle) == 'Female' ? 'Ms' : 'Mr',
             Gender: this.store.selectSnapshot(UserState.getTitle) == 'Female' ? 2 : 1,
@@ -234,29 +230,27 @@ export class FlightPassengerState {
             Fare: this.store.selectSnapshot(FLightBookState.getFare)
         }
 
-        states.patchState({
-            passengerList: passengers,
-            passengerCount: passengerCount
-        });
+        states.setState(patch({
+            passengerList : append(passengers),
+            passengerCount : passengerCount
+        }));
+
+        this.modalCtrl.dismiss(null, null, 'passenger-details');
 
     }
 
     @Action(SelectPassenger)
     selectPassenger(states: StateContext<flightpassengerstate>, action: SelectPassenger) {
-        let passArray: flightpassenger[] = Object.assign([], states.getState().selected);
-        passArray.push(action.pass);
-        states.patchState({
-            selected: passArray
-        });
+        states.setState(patch({
+            selected : append([action.pass])
+        }));
     }
 
     @Action(DeselectPassenger)
     deselectPassenger(states: StateContext<flightpassengerstate>, action: DeselectPassenger) {
-        let passArray = Object.assign([], states.getState().selected);
-        const currentArray = passArray.filter(el => el !== action.pass);
-        states.patchState({
-            selected: currentArray
-        });
+        states.setState(patch({
+            selected : removeItem((el : flightpassenger) => el.FirstName == action.pass.FirstName && el.LastName == action.pass.LastName && el.Email == action.pass.Email)
+        }));
     }
 
     @Action(DismissFlightPassenger)

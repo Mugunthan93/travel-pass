@@ -64,6 +64,7 @@ import { IonicModule } from '@ionic/angular';
 import { ThemeState } from '../stores/theme.stata';
 import { ExpenseState } from '../stores/expense.state';
 import { AgencyState } from '../stores/agency.state';
+import { VendorState } from '../stores/vendor.state';
 
 @NgModule({
   imports: [
@@ -75,6 +76,7 @@ import { AgencyState } from '../stores/agency.state';
       UserState,
       CompanyState,
       AgencyState,
+      VendorState,
       DashboardState,
       SearchState,
       ResultState,
@@ -150,6 +152,7 @@ import { AgencyState } from '../stores/agency.state';
         UserState,
         CompanyState,
         AgencyState,
+        VendorState,
 
         SearchState,
         ResultState,

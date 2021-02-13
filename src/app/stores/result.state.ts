@@ -1,6 +1,7 @@
 import { State, Selector, Action, StateContext, Store } from '@ngxs/store';
 import { StateReset } from 'ngxs-reset-plugin';
 import { Navigate } from '@ngxs/router-plugin';
+import { SetServiceCharge } from './book/flight.state';
 
 export interface result{
     mode: string,

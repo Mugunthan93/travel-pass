@@ -74,6 +74,11 @@ export class InternationalBookState {
         return states.flight;
     }
 
+    @Selector()
+    static getTotalFare(states: internationalBook) : number {
+        return states.flight.summary.total.reduce((acc,curr) => acc + curr.total,0);
+    }
+
     @Action(GetFareQuoteSSR)
     async getFareQuoteSSR(states: StateContext<internationalBook>) {
 

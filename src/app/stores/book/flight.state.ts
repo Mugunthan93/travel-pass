@@ -12,6 +12,11 @@ import * as _ from 'lodash';
 import { SearchState } from '../search.state';
 import { flightpassenger } from '../passenger/flight.passenger.states';
 import { Injectable } from '@angular/core';
+import { FlightService } from 'src/app/services/flight/flight.service';
+import { patch } from '@ngxs/store/operators';
+import { map } from 'rxjs/operators';
+import { AgencyState } from '../agency.state';
+import { CompanyState } from '../company.state';
 
 
 export interface flight{
@@ -29,42 +34,91 @@ export interface flight{
     selectedService: string
     veg: boolean
     nonveg: boolean
+
+    plb : plb[]
+    gst : GST
+    serviceCharge : number
+    taxable : number
 }
 
 //////////////////////////////////////////////
 
+export interface servicebySegment { 
+    Origin: string; 
+    Destination: string; 
+    service: baggage[] | meal[]; 
+}
+
+export interface taxes {
+    INTax: number
+    K3: number
+    OtherTaxes: number
+    PSF: number
+    TransactionFee: number
+    UDF: number
+    YQTax: number
+    YR: number
+}
+
+export interface plb {
+    airline_code: string
+    airline_name: string
+    class: string
+    consolidator: string
+    createdAt: string
+    customer_id: number
+    formula: string
+    iata_code: number
+    id: number
+    percent: number
+    plbnotvalid: string
+    remarks: any
+    service_charge: number
+    trip_type: string
+    updatedAt: string
+    user_id: number
+    validity_date: any
+    way: string
+}
+
+export interface GST {
+    cgst: number,
+    sgst: number,
+    igst: number
+}
+
 export interface bookpayload {
-    Passengers: [
-      {
-        AddressLine1: string,
-        City: string,
-        CountryName: string,
-        CountryCode: string,
-        Email: string,
-        PaxType: number,
-        IsLeadPax: boolean,
-        FirstName: string,
-        LastName: string,
-        ContactNo: string,
-        DateOfBirth: string,
-        Title: string,
-        Gender: number,
-        Fare: {
-          TransactionFee: number,
-          AdditionalTxnFeePub: number,
-          AdditionalTxnFeeOfrd: number,
-          PassengerCount: number,
-          PassengerType: number,
-          BaseFare: number,
-          YQTax: number,
-          Tax: number
-        }
-      }
-    ],
+    Passengers: bookpassenger[],
     TraceId: string,
     JourneyType: boolean,
     IsLCC: boolean,
     ResultIndex: string
+}
+
+export interface bookpassenger {
+    AddressLine1: string,
+    City: string,
+    CountryName: string,
+    CountryCode: string,
+    Email: string,
+    PaxType: number,
+    IsLeadPax: boolean,
+    FirstName: string,
+    LastName: string,
+    ContactNo: string,
+    DateOfBirth: string,
+    Title: string,
+    Gender: number,
+    Fare: {
+      TransactionFee: number,
+      AdditionalTxnFeePub: number,
+      AdditionalTxnFeeOfrd: number,
+      PassengerCount: number,
+      PassengerType: number,
+      BaseFare: number,
+      YQTax: number,
+      Tax: number
+    }
 }
 
 export interface ticketpayload {
@@ -81,13 +135,13 @@ export interface ticketpayload {
   }
 
 export interface bookmeal {
-    onward: meal[]
-    return: meal[]
+    onward: servicebySegment[]
+    return: servicebySegment[]
 }
 
 export interface bookbaggage {
-    onward: baggage[]
-    return: baggage[]
+    onward: servicebySegment[]
+    return: servicebySegment[]
 }
 
 export interface fareObj{
@@ -99,6 +153,7 @@ export interface fareObj{
     Tax: number
     TransactionFee: number
     YQTax: number
+    ///AdMarkup : number
 }
 
 export interface sendRequest {
@@ -420,15 +475,19 @@ export interface connectingDetail {
 
 export interface summary{
     fare?: faresummary
-    total?:totalsummary
+    total?:totalsummary[]
 }
 
 export interface faresummary {
     base: number
     taxes:number
+    ot : number
 }
 
 export interface totalsummary {
+    id : number
+    source : string
+    destination : string
     serviceCharge: number
     SGST: number
     CGST: number
@@ -440,10 +499,6 @@ export interface totalsummary {
     extraBaggage: number
     total: number
     currency: string
-}
-
-export interface totalsummary {
-
 }
 
 /////////////////////////////////////////////////////////
@@ -517,13 +572,13 @@ export class SetFare {
 
 export class SetMeal {
     static readonly type = "[flight_book] SetMeal";
-    constructor(public onward: meal[][] & meal[], public ret?: meal[][] & meal[]) {
+    constructor(public onward:  servicebySegment[], public ret?:  servicebySegment[]) {
     }
 }
 
 export class SetBaggage {
     static readonly type = "[flight_book] SetBaggage";
-    constructor(public onward: baggage[][] & baggage[], public ret?: baggage[][] & baggage[]) {
+    constructor(public onward: servicebySegment[], public ret?:  servicebySegment[]) {
     }
 }
 
@@ -575,6 +630,28 @@ export class SetNonVeg {
     }
 }
 
+export class GetPLB {
+    static readonly type = "[OneWay] GetPLB";
+    constructor(public fareQuote : any,public triptype : string) {
+
+    }
+}
+
+export class SetServiceCharge {
+    static readonly type = "[OneWay] SetServiceCharge";
+}
+
+export class SetGST {
+    static readonly type = "[OneWay] SetGST";
+    constructor(public fareQuote : any,public triptype : string) {
+
+    }
+}
+
+export class SetTaxable {
+    static readonly type = "[OneWay] SetTaxable";
+}
+
 @State<flight>({
     name: 'flight_book',
     defaults: {
@@ -583,6 +660,7 @@ export class SetNonVeg {
         mail: [],
         purpose: null,
         comment: null,
+
         fare: null,
         meal: {
             onward: [],
@@ -594,7 +672,12 @@ export class SetNonVeg {
         },
         selectedService: 'meal',
         veg: true,
-        nonveg: true
+        nonveg: true,
+
+        plb : [],
+        gst : null,
+        serviceCharge : 0,
+        taxable : 0
     },
     children: [
         OneWayBookState,
@@ -610,7 +693,8 @@ export class FLightBookState {
 
     constructor(
         public store: Store,
-        public modalCtrl : ModalController
+        public modalCtrl : ModalController,
+        public flightService : FlightService
     ) {
 
     }
@@ -641,22 +725,22 @@ export class FLightBookState {
     }
 
     @Selector()
-    static getOnwardMeals(states: flight): meal[] {
+    static getOnwardMeals(states: flight): servicebySegment[] {
         return states.meal.onward;
     }
 
     @Selector()
-    static getReturnMeals(states: flight): meal[] {
+    static getReturnMeals(states: flight): servicebySegment[] {
         return states.meal.return;
     }
 
     @Selector()
-    static getOnwardBaggages(states: flight): baggage[] {
+    static getOnwardBaggages(states: flight): servicebySegment[] {
         return states.baggage.onward;
     }
 
     @Selector()
-    static getReturnBaggages(states: flight): baggage[] {
+    static getReturnBaggages(states: flight): servicebySegment[] {
         return states.baggage.return;
     }
 
@@ -674,6 +758,47 @@ export class FLightBookState {
     static getNonVeg(states: flight): boolean {
         return states.nonveg;
     }
+
+    @Selector()
+    static getPLB(states: flight): plb[] {
+        return states.plb;
+    }
+
+    @Selector()
+    static getGST(states: flight): GST {
+        return states.gst;
+    }
+
+    @Selector()
+    static getServiceCharge(states: flight): number {
+        return states.serviceCharge
+    }
+
+    @Selector()
+    static getTaxable(states: flight): number {
+        return states.taxable;
+    }
+
+    @Action(GetPLB)
+    getPLB(states: StateContext<flight>, action: GetPLB) {
+
+        let code = action.fareQuote.AirlineCode;
+        let cls = this.getCabinClass();
+
+        return this.flightService.getPLB(code,cls,action.triptype)
+            .pipe(
+                map(
+                    (response) => {
+                        let plb : plb[] = JSON.parse(response.data);
+                        states.setState(patch({
+                            plb : plb
+                        }));
+                    }
+                )
+            );
+
+    }
+    
 
     @Action(SetVeg)
     setVeg(states: StateContext<flight>, action: SetVeg) {
@@ -702,31 +827,10 @@ export class FLightBookState {
         let onward: meal[] = [];
         let ret: meal[] = [];
 
-        if (action.onward != null || action.onward != undefined) {
-            if (action.onward.some((el : meal[]) => Array.isArray(el))) {
-                onward = _.flattenDeep(action.onward);
-            }
-            else {
-                onward = action.onward;
-            }
-            onward = onward.filter(el => el.hasOwnProperty('Price') && el.hasOwnProperty('Quantity') && el.Price !== 0 && el.Quantity !== 0);
-        }
-
-        if (action.ret != null || action.ret != undefined) {
-            if (action.ret.some((el: meal[]) => Array.isArray(el))) {
-                ret = _.flattenDeep(action.ret);
-            }
-            else {
-                ret = action.ret;
-            }
-            ret = ret.filter(el => el.hasOwnProperty('Price') && el.hasOwnProperty('Quantity') && el.Price !== 0 && el.Quantity !== 0);
-        }
-
-
         states.patchState({
             meal: {
-                onward: onward,
-                return: ret
+                onward: action.onward,
+                return: action.ret
             }
         });
     }
@@ -737,30 +841,10 @@ export class FLightBookState {
         let onward: baggage[] = [];
         let ret: baggage[] = [];
 
-        if (action.onward != null || action.onward != undefined) {
-            if (action.onward.some((el: baggage[]) => Array.isArray(el))) {
-                onward = _.flattenDeep(action.onward);
-            }
-            else {
-                onward = action.onward;
-            }
-            onward = onward.filter(el => el.hasOwnProperty('Price') && el.hasOwnProperty('Weight') && el.Price !== 0 && el.Weight !== 0);
-        }
-
-        if (action.ret != null || action.ret != undefined) {
-            if (action.ret.some((el: baggage[]) => Array.isArray(el))) {
-                ret = _.flattenDeep(action.ret);
-            }
-            else {
-                ret = action.ret;
-            }
-            ret = ret.filter(el => el.hasOwnProperty('Price') && el.hasOwnProperty('Weight') &&  el.Price !== 0 && el.Weight !== 0);
-        }
-
         states.patchState({
             baggage: {
-                onward: onward,
-                return: ret
+                onward: action.onward,
+                return: action.ret
             }
         });
     }
@@ -829,6 +913,32 @@ export class FLightBookState {
         });
     }
 
+    @Action(SetServiceCharge)
+    setServiceCharge(states: StateContext<flight>) {
+        states.setState(patch({
+            serviceCharge : this.serviceCharges()
+        }));
+    }
+
+    @Action(SetGST)
+    setGST(states: StateContext<flight>, action: SetGST) {
+        states.setState(patch({
+            gst : this.GST(states)
+        }));
+    }
+
+    @Action(SetTaxable)
+    setTaxable(states: StateContext<flight>, action: SetTaxable) {
+
+        let plb = states.getState().plb[0];
+        let basefare = states.getState().fare.BaseFare; 
+        let yq = states.getState().fare.YQTax; 
+
+        states.setState(patch({
+            taxable : this.getTaxable(plb,basefare,yq)
+        }));
+    }
+
     getGender(title : string) : number {
         if (title == 'Mstr' || title == 'Mr')
         {
@@ -847,6 +957,88 @@ export class FLightBookState {
             case 'multi-city': passengerCount = this.store.selectSnapshot(MultiCitySearchState.getAdult); break;
         }
         return passengerCount;
+    }
+
+    GST(states : StateContext<flight>) {
+        let gstApplied = this.store.selectSnapshot(AgencyState.getGstApplied);
+        let service = states.getState().serviceCharge;
+        let taxable = states.getState().taxable;
+        
+        if(gstApplied == 'Service Charge') {
+            if (this.store.selectSnapshot(CompanyState.getStateName) == 'TN') {
+                return {
+                    cgst: (service * 9) / 100,
+                    sgst: (service * 9) / 100,
+                    igst: 0
+                }
+            }
+            else if (this.store.selectSnapshot(CompanyState.getStateName) !== 'TN') {
+                return {
+                    cgst: 0,
+                    sgst: 0,
+                    igst: (service * 18) / 100
+                }
+            }
+        }
+        else if(gstApplied == 'Ticket Price'){
+            if (this.store.selectSnapshot(CompanyState.getStateName) == 'TN') {
+                return {
+                    cgst: (taxable * 9) / 100,
+                    sgst: (taxable * 9) / 100,
+                    igst: 0
+                }
+            }
+            else if (this.store.selectSnapshot(CompanyState.getStateName) !== 'TN') {
+                return {
+                    cgst: 0,
+                    sgst: 0,
+                    igst: (taxable * 18) / 100
+                }
+            }
+        }
+    }
+
+    getCabinClass() {
+        let type = this.store.selectSnapshot(SearchState.getSearchType);
+        switch(type) {
+            case "one-way" : return this.store.selectSnapshot(OneWaySearchState.getTripClass);
+            case "round-trip" : return this.store.selectSnapshot(RoundTripSearchState.getTripClass);
+            case "muti-city" : return this.store.selectSnapshot(MultiCitySearchState.getTripClass);
+        }
+    }
+
+    getTaxable(plb : plb,basefare : number, yq : number) : number {
+        if(plb) {
+            let includefare = _.includes(plb.formula,'B&YQ') ? basefare + yq : basefare;
+            return includefare ? _.ceil(.05 * basefare, 2) : 0;
+        }
+        else {
+            return 0;
+        }
+    }
+
+    serviceCharges(): number {
+
+        let serviceCharge: number = 0;
+
+        let type = this.store.selectSnapshot(SearchState.getSearchType);
+        let adult = (type) => {
+            switch(type) {
+            case "one-way" : return this.store.selectSnapshot(OneWaySearchState.getAdult);
+            case "round-trip" : return this.store.selectSnapshot(RoundTripSearchState.getAdult);
+            case "multi-city" : return this.store.selectSnapshot(MultiCitySearchState.getAdult);
+            }
+        }
+
+        if (this.store.selectSnapshot(OneWaySearchState.getTripType) == 'domestic') {
+            console.log(this.store.selectSnapshot(CompanyState.getDomesticServiceCharge),adult(type));
+            serviceCharge = this.store.selectSnapshot(CompanyState.getDomesticServiceCharge) * adult(type);
+        }
+        else if (this.store.selectSnapshot(OneWaySearchState.getTripType) == 'international') {
+            console.log(this.store.selectSnapshot(CompanyState.getInternationalServiceCharge),adult(type));
+            serviceCharge = this.store.selectSnapshot(CompanyState.getInternationalServiceCharge) * adult(type);
+        }
+        return serviceCharge;
     }
 
 }

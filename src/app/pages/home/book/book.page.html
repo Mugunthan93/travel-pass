@@ -12,6 +12,7 @@
   </ion-toolbar>
 </ion-header>
 
+
 <ion-content>
   <ion-router-outlet></ion-router-outlet>
 </ion-content>
@@ -19,8 +20,8 @@
 <ion-footer>
 
   <ion-toolbar>
-    <ion-buttons [slot]="(this.isAdmin$ | async) ? 'start' : 'end'">
-      <ion-button *ngIf="!((invrooms$ | async).length > 0)" (click)="confirmRequest('request')">
+    <ion-buttons slot="start">
+      <ion-button *ngIf="!(this.isAdmin$ | async) && !((invrooms$ | async).length > 0)" (click)="confirmRequest('request')">
         <ion-label class="medium bold">Send Request</ion-label>
       </ion-button>
       <ion-button *ngIf="(invrooms$ | async).length > 0" (click)="confirmRequest('offline')">

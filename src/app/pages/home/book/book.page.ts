@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { BookConfirmationComponent } from 'src/app/components/shared/book-confirmation/book-confirmation.component';
 import { UserState } from 'src/app/stores/user.state';
 import { HotelResultState, inventory } from 'src/app/stores/result/hotel.state';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-book',
@@ -22,7 +23,8 @@ export class BookPage implements OnInit {
   invrooms$: Observable<inventory[]>;
 
   constructor(
-    private store: Store
+    private store: Store,
+    public modalCtrl : ModalController
   ) {
    }
 
@@ -43,7 +45,15 @@ export class BookPage implements OnInit {
   }
 
   async confirmRequest(str : string) {
-    this.store.dispatch(new GetSendRequest(BookConfirmationComponent,str));
+    let modal = await this.modalCtrl.create({
+      component: BookConfirmationComponent,
+      id: "book-confirm",
+      componentProps : {
+          type : str
+      }
+    });
+
+    return await modal.present();
   }
 
 }

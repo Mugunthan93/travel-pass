@@ -52,6 +52,11 @@
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
+      <ion-button (click)="bookRequest()" *ngIf="type == 'book'">
+        <ion-label class="medium bold">
+          Book Ticket
+        </ion-label>
+      </ion-button>
       <ion-button (click)="sendRequest()" *ngIf="type == 'request'">
         <ion-label class="medium bold">
           Send Request

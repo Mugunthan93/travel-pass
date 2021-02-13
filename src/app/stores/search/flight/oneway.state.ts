@@ -78,6 +78,11 @@ export class OneWaySearchState extends BaseFlightSearch{
         return states.tripType;
     }
 
+    @Selector()
+    static getTripClass(states: onewaySearch): string {
+        return states.formData.class.toLowerCase();
+    }
+
 
     @Selector()
     static getTravelDate(states: onewaySearch): string {
@@ -190,8 +195,9 @@ export class OneWaySearchState extends BaseFlightSearch{
         const searchData = states.getState();
         console.log(searchData);
         try {
+            console.log(JSON.stringify(searchData.payload));
             const flightResponse = await this.flightService.searchFlight(searchData.payload);
-            console.log(flightResponse);
+            console.log(JSON.stringify(flightResponse));
             const data: flightSearchResponse = JSON.parse(flightResponse.data);
 
             
@@ -206,6 +212,7 @@ export class OneWaySearchState extends BaseFlightSearch{
         }
         catch (error) {
             console.log(error);
+            console.log(JSON.stringify(error));
             if (error.status == -4) {
                 failedAlert.message = "Search Timeout, Try Again";
             }

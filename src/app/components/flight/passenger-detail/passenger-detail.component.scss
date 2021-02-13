@@ -17,12 +17,40 @@ ion-content{
             --padding-start: 16px;
             >ion-datetime{
                 padding: 0px;
+                color: darkgrey;
+            }
+
+            >ion-select::part(placeholder) {
+                color: darkgrey;
+            }
+
+            ion-datetime::part(placeholder) {
+                color: darkgrey;
+            }
+
+            ion-row.item-row {
+                display: flex;
+                flex-direction: column;
+                width: -webkit-fill-available;
+                ion-input {
+                    --padding-start: 0px;
+                    --padding-bottom: 0px;
+                }
+                ion-label {
+                    min-width: fit-content;
+                    padding-bottom: 10px;
+                    color: darkgrey;
+                    font-size: small;
+                }
+            }
+
+            >ion-input {
+                color: darkgrey;
             }
 
             ion-select {
                 --padding-top: 8px;
                 --padding-bottom: 8px;
-                width: -webkit-fill-available;
             }
         }
         >ion-button{

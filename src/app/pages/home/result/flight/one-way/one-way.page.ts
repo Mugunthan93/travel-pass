@@ -30,6 +30,11 @@ export class OneWayPage implements OnInit {
 
   }
 
+  ionViewWillEnter() {
+    this.flightList$ = this.store.select(OneWayResultState.getOneWay);
+    this.selectedFlight$ = this.store.select(OneWayResultState.getSelectedFlight);
+  }
+
   book() {
     this.store.dispatch(new GetFareQuoteSSR());
   }

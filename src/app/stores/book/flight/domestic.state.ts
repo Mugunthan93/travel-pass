@@ -1,7 +1,7 @@
 import { Selector, Action, State, Store, StateContext } from '@ngxs/store';
 import { flightResult, flightData } from 'src/app/models/search/flight';
 import { SSR } from '../../result/flight.state';
-import { bookObj, value, FLightBookState, rt_uapi_params, rt_sendRequest, rt_kioskRequest, SetFare, SetMeal, SetBaggage } from '../flight.state';
+import { bookObj, value, FLightBookState, rt_uapi_params, rt_sendRequest, rt_kioskRequest, SetFare, SetMeal, SetBaggage, taxes, plb, totalsummary } from '../flight.state';
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { DomesticResultState } from '../../result/flight/domestic.state';
 import { RoundTripSearch, RoundTripSearchState } from '../../search/flight/round-trip.state';
@@ -18,6 +18,8 @@ import { LoadingController, AlertController, ModalController } from '@ionic/angu
 import { StateReset } from 'ngxs-reset-plugin';
 import { ResultState } from '../../result.state';
 import { FlightPassengerState, SetFirstPassengers } from '../../passenger/flight.passenger.states';
+import { AgencyState } from '../../agency.state';
+import * as _ from 'lodash';
 
 export interface domesticBook {
     departure: {  
@@ -102,6 +104,11 @@ export class DomesticBookState {
         return states.return.flight;
     }
 
+    @Selector()
+    static getTotalFare(states: domesticBook) : number {
+        return states.departure.flight.summary.total.reduce((acc,curr) => acc + curr.total,0) + states.return.flight.summary.total.reduce((acc,curr) => acc + curr.total,0);
+    }
+
     @Action(GetFareQuoteSSR)
     async getFareQuoteSSR(states: StateContext<domesticBook>) {
 
@@ -146,23 +153,38 @@ export class DomesticBookState {
                 console.log(depResponse, reResponse);
                 if (depResponse.Results && reResponse.Results) {
 
+                    let taxkey = _.keyBy(depResponse.Results.Fare.TaxBreakup,(o) => {
+                        console.log(o);
+                        return o.key;
+                    })
+
+                    console.log(taxkey);
+                    let taxval = _.mapValues(taxkey,(o) => o.value);
+                    console.log(taxval);
+
                     depFQ = depResponse.Results;
                     depPriceChange = depResponse.IsPriceChanged;
                     reFQ = reResponse.Results;
                     rePriceChange = reResponse.IsPriceChanged;
+
+                    let gstapplied = this.store.selectSnapshot(AgencyState.getGstApplied);
+                    let plb = this.store.selectSnapshot(FLightBookState.getPLB)[0];
+                    let basefare = depResponse.Results.Fare.BaseFare;
+                    let yq = (taxval as taxes).YQTax;
+                    let paxcount = this.store.selectSnapshot(RoundTripSearchState.getAdult)
 
                     states.patchState({
                         departure: {
                             fareQuote: depFQ,
                             isPriceChanged: depPriceChange,
                             ssr: depSSR,
-                            flight: this.domesticbookData(depFQ)
+                            flight: this.domesticbookData(depFQ, gstapplied,plb,basefare,yq,paxcount)
                         },
                         return: {
                             fareQuote: reFQ,
                             isPriceChanged: rePriceChange,
                             ssr: reSSR,
-                            flight: this.domesticbookData(reFQ)
+                            flight: this.domesticbookData(reFQ, gstapplied,plb,basefare,yq,paxcount)
                         }
                     });
 
@@ -338,7 +360,7 @@ export class DomesticBookState {
         let vendorId: number = environment.vendorID;
         let uapi_params: rt_uapi_params = {
             selected_plb_Value: {
-                K3: states.getState().departure.flight.summary.total.k3,
+                K3: states.getState().departure.fareQuote.Fare.TaxBreakup.find(el => el.key == 'k3').value,
                 PLB_earned: states.getState().departure.fareQuote.Fare.PLBEarned,
                 queuenumber: 0,
                 PCC: 0,
@@ -347,7 +369,7 @@ export class DomesticBookState {
 
             },
             selected_Return_plb_Value: {
-                K3: states.getState().return.flight.summary.total.k3,
+                K3: states.getState().return.fareQuote.Fare.TaxBreakup.find(el => el.key == 'k3').value,
                 PLB_earned: states.getState().return.fareQuote.Fare.PLBEarned,
                 queuenumber: 0,
                 PCC: 0,
@@ -356,22 +378,30 @@ export class DomesticBookState {
             }
         }
 
+        let gstapplied = this.store.selectSnapshot(AgencyState.getGstApplied);
+        let plb = this.store.selectSnapshot(FLightBookState.getPLB)[0];
+
+        let depbasefare = states.getState().departure.fareQuote.Fare.BaseFare;
+        let depyq = states.getState().departure.fareQuote.Fare.TaxBreakup[1].value;
+        let rebasefare = states.getState().return.fareQuote.Fare.BaseFare;
+        let reyq = states.getState().return.fareQuote.Fare.TaxBreakup[1].value;
+
         let published_fare = (
             states.getState().departure.fareQuote.Fare.PublishedFare +
             this.markupCharges(states.getState().departure.fareQuote.Fare.PublishedFare) +
             states.getState().departure.fareQuote.Fare.OtherCharges +
             this.serviceCharges() +
-            this.GST().sgst +
-            this.GST().cgst +
-            this.GST().igst
+            this.GST(gstapplied,plb,depbasefare,depyq).sgst +
+            this.GST(gstapplied,plb,depbasefare,depyq).cgst +
+            this.GST(gstapplied,plb,depbasefare,depyq).igst
             ) + (
             states.getState().return.fareQuote.Fare.PublishedFare +
             this.markupCharges(states.getState().return.fareQuote.Fare.PublishedFare) +
             states.getState().return.fareQuote.Fare.OtherCharges +
             this.serviceCharges() +
-            this.GST().sgst +
-            this.GST().cgst +
-            this.GST().igst
+            this.GST(gstapplied,plb,rebasefare,reyq).sgst +
+            this.GST(gstapplied,plb,rebasefare,reyq).cgst +
+            this.GST(gstapplied,plb,rebasefare,reyq).igst
             );
 
         sendReq = {
@@ -400,9 +430,9 @@ export class DomesticBookState {
                     charges_details: {
                         GST_total: 0,
                         agency_markup: 0,
-                        cgst_Charges: this.GST().cgst,
-                        sgst_Charges: this.GST().sgst,
-                        igst_Charges: this.GST().igst,
+                        cgst_Charges: this.GST(gstapplied,plb,depbasefare,depyq).cgst + this.GST(gstapplied,plb,rebasefare,reyq).cgst,
+                        sgst_Charges: this.GST(gstapplied,plb,depbasefare,depyq).sgst + this.GST(gstapplied,plb,rebasefare,reyq).sgst,
+                        igst_Charges: this.GST(gstapplied,plb,depbasefare,depyq).igst + this.GST(gstapplied,plb,rebasefare,reyq).igst,
                         service_charges: this.serviceCharges(),
                         total_amount: published_fare,
                         cgst_onward: 0,
@@ -418,10 +448,10 @@ export class DomesticBookState {
                         taxable_fare : 0,
                         vendor: {
                             service_charges: this.serviceCharges(),
-                            GST: this.GST().cgst + this.GST().sgst,
+                            GST: this.GST(gstapplied,plb,depbasefare,depyq).cgst + this.GST(gstapplied,plb,rebasefare,reyq).cgst + this.GST(gstapplied,plb,depbasefare,depyq).sgst + this.GST(gstapplied,plb,rebasefare,reyq).sgst,
                             CGST : 0,
                             SGST : 0,
-                            IGST : this.GST().cgst + this.GST().sgst
+                            IGST : this.GST(gstapplied,plb,depbasefare,depyq).igst + this.GST(gstapplied,plb,rebasefare,reyq).igst
                         }
                     },
                     onwardfare: [[{
@@ -499,34 +529,16 @@ export class DomesticBookState {
         loading.dismiss();
     }
 
-    domesticbookData(data: flightResult): bookObj {
+    domesticbookData(data: flightResult,gstapplied : string,pl : plb,basefare : number,yq : number, paxcount : number): bookObj {
 
         let book: bookObj = {
             summary: {
                 fare: {
                     base: data.Fare.BaseFare,
-                    taxes: data.Fare.Tax
+                    taxes: data.Fare.Tax,
+                    ot: (data.Fare.OtherCharges / paxcount)
                 },
-                total: {
-                    serviceCharge: this.serviceCharges(),
-                    SGST: this.GST().sgst,
-                    CGST: this.GST().cgst,
-                    IGST: this.GST().igst,
-                    flight: (data.Fare.PublishedFare - data.Fare.TaxBreakup[0].value) + this.markupCharges(data.Fare.PublishedFare),
-                    k3: data.Fare.TaxBreakup[0].value,
-                    other: data.Fare.OtherCharges,
-                    extraMeals: null,
-                    extraBaggage: null,
-                    total: (
-                        data.Fare.PublishedFare + 
-                        this.markupCharges(data.Fare.PublishedFare) +
-                        data.Fare.OtherCharges +
-                        this.serviceCharges() +
-                        this.GST().sgst +
-                        this.GST().cgst +
-                        this.GST().igst),
-                    currency: data.FareBreakdown[0].Currency
-                }
+                total: this.totalSummary(data,data.Segments,gstapplied,pl,basefare,yq)
 
             },
             trip: []
@@ -583,7 +595,41 @@ export class DomesticBookState {
         return serviceCharge;
     }
 
-    GST(): GST {
+    GST( gstApplied : string,pl : plb, basefare : number, yq : number): GST {
+
+        if(gstApplied == 'Service Charge') {
+            if (this.store.selectSnapshot(CompanyState.getStateName) == 'TN') {
+                return {
+                    cgst: (this.serviceCharges() * 9) / 100,
+                    sgst: (this.serviceCharges() * 9) / 100,
+                    igst: 0
+                }
+            }
+            else if (this.store.selectSnapshot(CompanyState.getStateName) !== 'TN') {
+                return {
+                    cgst: 0,
+                    sgst: 0,
+                    igst: (this.serviceCharges() * 18) / 100
+                }
+            }
+        }
+        else if(gstApplied == 'Ticket Price'){
+            if (this.store.selectSnapshot(CompanyState.getStateName) == 'TN') {
+                return {
+                    cgst: (this.getTaxable(pl,basefare,yq) * 9) / 100,
+                    sgst: (this.getTaxable(pl,basefare,yq) * 9) / 100,
+                    igst: 0
+                }
+            }
+            else if (this.store.selectSnapshot(CompanyState.getStateName) !== 'TN') {
+                return {
+                    cgst: 0,
+                    sgst: 0,
+                    igst: (this.getTaxable(pl,basefare,yq) * 18) / 100
+                }
+            }
+        }
+
         if (this.store.selectSnapshot(CompanyState.getStateName) == 'TN') {
             return {
                 cgst: (this.serviceCharges() * 9) / 100,
@@ -597,6 +643,16 @@ export class DomesticBookState {
                 sgst: 0,
                 igst: (this.serviceCharges() * 18) / 100
             }
+        }
+    }
+
+    getTaxable(plb: any, basefare: number, yq: number) {
+        if(plb) {
+            let includefare = _.includes(plb.formula,'B&YQ') ? basefare + yq : basefare;
+            return includefare ? _.ceil(.05 * basefare, 2) : 0;
+        }
+        else {
+            return 0;
         }
     }
 
@@ -620,5 +676,35 @@ export class DomesticBookState {
                 return 0;
             }
         }
+    }
+
+    totalSummary(data : flightResult, segment : flightData[][], gstapplied : string,plb : plb, basefare : number, yq : number) : totalsummary[] {
+        return segment.map(
+            (el : flightData[], index : number, arr : flightData[][]) => {
+                return {
+                    id : index,
+                    source : el[0].Origin.Airport.AirportCode,
+                    destination : _.last(el).Destination.Airport.AirportCode,
+                    serviceCharge: this.serviceCharges(),
+                    SGST: this.GST(gstapplied,plb,basefare,yq).sgst,
+                    CGST: this.GST(gstapplied,plb,basefare,yq).cgst,
+                    IGST: this.GST(gstapplied,plb,basefare,yq).igst,
+                    flight: (data.Fare.PublishedFare - data.Fare.TaxBreakup[0].value) + this.markupCharges(data.Fare.PublishedFare),
+                    k3: data.Fare.TaxBreakup[0].value,
+                    other: data.Fare.OtherCharges,
+                    extraMeals: 0,
+                    extraBaggage: 0,
+                    total: (
+                        data.Fare.PublishedFare + 
+                        this.markupCharges(data.Fare.PublishedFare) +
+                        data.Fare.OtherCharges +
+                        this.serviceCharges() +
+                        this.GST(gstapplied,plb,basefare,yq).sgst +
+                        this.GST(gstapplied,plb,basefare,yq).cgst +
+                        this.GST(gstapplied,plb,basefare,yq).igst),
+                    currency: data.FareBreakdown[0].Currency
+                }
+            }
+        );
     }
 }

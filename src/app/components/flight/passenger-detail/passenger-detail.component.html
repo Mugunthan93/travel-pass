@@ -31,11 +31,12 @@
   </ion-card>
 
   <form [formGroup]="Passenger" (ngSubmit)="addPassenger()">
+
     <ion-item lines="full">
       <ion-label class="large bold">Passenger Details</ion-label>
     </ion-item>
     <ion-item lines="full">
-      <ion-select placeholder="Title" slot="start" [interfaceOptions]="customAlertOptions" formControlName="Title"
+      <ion-select class="w-20" placeholder="Title" slot="start" [interfaceOptions]="customAlertOptions" formControlName="Title"
         required
         [ngClass]="errorClass('Title')">
         <ion-select-option value="Mr">Mr</ion-select-option>
@@ -60,11 +61,13 @@
     <ion-item lines="full">
       <ion-input type="email" placeholder="Email" formControlName="Email" [ngClass]="errorClass('Email')" required pattern></ion-input>
     </ion-item>
-    <ion-item lines="full">
-      <ion-datetime type="date" displayFormat="DD-MMM-YYYY" (ionFocus)="focusDate($event)"
+
+    <ion-item lines="full" class="py-2">
+      <ion-datetime type="text" (ionChange)="focusDate($event,'DateOfBirth')"
       placeholder="Select Date Of Birth" formControlName="DateOfBirth" [ngClass]="errorClass('DateOfBirth')" required>
       </ion-datetime>
     </ion-item>
+
     <ion-item lines="full">
       <ion-input type="text" placeholder="Address" formControlName="Address" [ngClass]="errorClass('Address')"></ion-input>
     </ion-item>
@@ -85,26 +88,29 @@
     <ion-item lines="full">
       <ion-input type="text" slot="start" placeholder="Nationality" formControlName="nationality"></ion-input>
     </ion-item>
-    <ion-item lines="full" *ngIf="passportValidation() == 'domestic'">
+    <ion-item lines="full" *ngIf="passportValidation() == 'domestic'" class="py-2">
       <ion-datetime displayFormat="DD-MMM-YYYY" type="date"
         placeholder="Select Passport Expiry Date" max="2050" formControlName="PassportExpiry"
         [ngClass]="errorClass('PassportExpiry')">
       </ion-datetime>
     </ion-item>
-    <ion-item lines="full" *ngIf="passportValidation() == 'international'">
+    <ion-item lines="full" *ngIf="passportValidation() == 'international'"  class="py-2">
       <ion-datetime displayFormat="DD-MMM-YYYY" type="date" placeholder="Select Passport Expiry Date" max="2050"
         formControlName="PassportExpiry" required [ngClass]="errorClass('PassportExpiry')">
       </ion-datetime>
     </ion-item>
     <ion-item lines="full">
-      <ion-input placeholder="Frequent Traveller Number" formControlName="ftnumber"></ion-input>
+      <ion-row class="item-row">
+        <ion-input placeholder="Frequent Traveller Number" formControlName="ftnumber"></ion-input>
+        <ion-label>Frequent Flyer Number is subject to airline acceptance</ion-label>
+      </ion-row>
     </ion-item>
+
     <ion-item lines="full">
-      <ion-text>Frequent Flyer Number is subject to airline acceptance</ion-text>
+      <ion-label class="large bold">GST Details</ion-label>
     </ion-item>
-    <ion-item lines="full">
-      <ion-label>GST Details</ion-label>
-    </ion-item>
+ 
+
     <ion-item lines="full">
       <ion-input type="text" placeholder="Company Name" formControlName="CompanyName" [ngClass]="errorClass('CompanyName')" required></ion-input>
     </ion-item>
@@ -124,41 +130,63 @@
     <ion-item lines="full" *ngIf="onwardbaggage.length >= 1 || returnbaggage.length >= 1">
       <ion-label class="large bold">Baggage Details</ion-label>
     </ion-item>
+    
+    <div *ngIf="onwardbaggage.length >= 1">
+      <ion-item class="p-3" *ngFor="let bag of onwardbaggage">
+        <ion-row class="w-50">
+          <ion-label class="mx-1">{{ bag.Origin }}</ion-label>
+          <ion-icon  class="mx-1"src="../../../../assets/icons/flight.svg"></ion-icon>
+          <ion-label  class="mx-1">{{ bag.Destination }}</ion-label>
+        </ion-row>
+        <ion-select class="w-50 ml-auto" [placeholder]="baggagePlaceholder" [interfaceOptions]="customAlertOptions" formControlName="onwardbaggage">
+          <ion-select-option *ngFor="let onbag of bag.service" [value]="onbag">{{ onbag.Code == "No Baggage" ? "No Baggage" : onbag.Weight +' Kg / Rs: '+ onbag.Price }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </div>
 
-    <ion-item *ngIf="onwardbaggage.length >= 1">
-      <ion-select [placeholder]="baggagePlaceholder" [interfaceOptions]="customAlertOptions" formControlName="onwardbaggage">
-        <ion-select-option *ngFor="let onbag of onwardbaggage" value="onbag">{{ onbag.Weight +' Kg / Rs: '+ onbag.Price }}</ion-select-option>
-      </ion-select>
-    </ion-item>
-
-    <ion-item *ngIf="returnbaggage.length >= 1">
-      <ion-select placeholder="Select Return Baggage" [interfaceOptions]="customAlertOptions" formControlName="returnbaggage">
-        <ion-select-option *ngFor="let rebag of onwardbaggage" value="rebag">{{ rebag.Weight +' Kg / Rs: '+ rebag.Price }}</ion-select-option>
-      </ion-select>
-    </ion-item>
+    <div *ngIf="returnbaggage.length >= 1">
+      <ion-item class="p-3" *ngFor="let bag of returnbaggage">
+        <ion-row class="w-50">
+          <ion-label class="mx-1">{{ bag.Origin }}</ion-label>
+          <ion-icon  class="mx-1" src="../../../../assets/icons/flight.svg"></ion-icon>
+          <ion-label class="mx-1">{{ bag.Destination }}</ion-label>
+        </ion-row>
+        <ion-select class="w-50 ml-auto" placeholder="Select Return Baggage" [interfaceOptions]="customAlertOptions" formControlName="returnbaggage">
+          <ion-select-option *ngFor="let rebag of bag.service" [value]="rebag">{{ rebag.Code == "No Baggage" ? "No Baggage" : rebag.Weight +' Kg / Rs: '+ rebag.Price }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </div>
 
     <ion-item lines="full" *ngIf="onwardmeal.length >= 1 || returnmeal.length >= 1">
       <ion-label class="large bold">Meals Details</ion-label>
     </ion-item>
 
-    <ion-item *ngIf="onwardmeal.length >= 1">
-      <ion-select [placeholder]="mealplaceholder" [interfaceOptions]="customAlertOptions" formControlName="onwardmeal">
-        <ion-select-option *ngFor="let onmeal of onwardmeal" value="onbag">{{ onmeal.Quantity +' Unit / Rs: '+ onmeal.Price }}</ion-select-option>
-      </ion-select>
-    </ion-item>
+    <div *ngIf="onwardmeal.length >= 1">
+      <ion-item class="p-3" *ngFor="let bag of onwardmeal">
+        <ion-row class="w-50">
+          <ion-label class="mx-1">{{ bag.Origin }}</ion-label>
+          <ion-icon class="mx-1" src="../../../../assets/icons/flight.svg"></ion-icon>
+          <ion-label class="mx-1">{{ bag.Destination }}</ion-label>
+        </ion-row>
+        <ion-select class="w-50 ml-auto" [placeholder]="mealplaceholder" [interfaceOptions]="MealsAlertOptions" formControlName="onwardbaggage">
+          <ion-select-option *ngFor="let onbag of bag.service" [value]="onbag">{{ onbag.AirlineDescription == "" ? onbag.Code : onbag.AirlineDescription +' / Rs: '+ onbag.Price }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </div>
 
-    <ion-item *ngIf="returnmeal.length >= 1">
-      <ion-select placeholder="Select Return Meal" [interfaceOptions]="customAlertOptions" formControlName="returnmeal">
-        <ion-select-option *ngFor="let remeal of returnmeal" value="rebag">{{ remeal.Quantity +' Unit / Rs: '+ remeal.Price }}</ion-select-option>
-      </ion-select>
-    </ion-item>
+    <div *ngIf="returnmeal.length >= 1">
+      <ion-item class="p-3" *ngFor="let bag of returnmeal">
+        <ion-row class="w-50">
+          <ion-label class="mx-1">{{ bag.Origin }}</ion-label>
+          <ion-icon class="mx-1" src="../../../../assets/icons/flight.svg"></ion-icon>
+          <ion-label class="mx-1">{{ bag.Destination }}</ion-label>
+        </ion-row>
+        <ion-select class="w-50 ml-auto"  placeholder="Select Return Meal" [interfaceOptions]="MealsAlertOptions" formControlName="returnbaggage">
+          <ion-select-option *ngFor="let rebag of bag.service" [value]="rebag">{{ rebag.AirlineDescription == "" ? rebag.Code : rebag.AirlineDescription +' / Rs: '+ rebag.Price }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </div>
 
-    
-
-    <ion-button expand="block" fill="solid" *ngIf="false">
-      <ion-icon name="add"></ion-icon>
-      <ion-text (click)="addMeal()">Meal & Baggage</ion-text>
-    </ion-button>
     <ion-button type="submit" expand="block" fill="solid" *ngIf="form == 'add'">
       <ion-label clas="medium bold">Add Passenger</ion-label>
     </ion-button>

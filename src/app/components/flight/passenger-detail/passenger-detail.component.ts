@@ -3,7 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { MealBaggageComponent } from '../meal-baggage/meal-baggage.component';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
-import { baggage, FLightBookState, meal } from 'src/app/stores/book/flight.state';
+import { baggage, FLightBookState, meal, servicebySegment } from 'src/app/stores/book/flight.state';
 import * as moment from 'moment';
 import { BookState } from 'src/app/stores/book.state';
 import { company } from 'src/app/models/company';
@@ -17,6 +17,7 @@ import { SearchState } from 'src/app/stores/search.state';
 import { SelectModalComponent } from '../../shared/select-modal/select-modal.component';
 import { flightpassenger, AddPassenger, EditPassenger, FlightPassengerState } from 'src/app/stores/passenger/flight.passenger.states';
 import { FlightSearchState } from 'src/app/stores/search/flight.state';
+import { DatePicker } from '@ionic-native/date-picker/ngx';
 
 @Component({
   selector: 'app-passenger-detail',
@@ -34,11 +35,11 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
   Passenger: FormGroup;
   type: string;
 
-  onwardbaggage : baggage[];
-  returnbaggage : baggage[];
+  onwardbaggage : servicebySegment[];
+  returnbaggage : servicebySegment[];
 
-  onwardmeal : meal[];
-  returnmeal : meal[];
+  onwardmeal : servicebySegment[];
+  returnmeal : servicebySegment[];
 
   baggagePlaceholder : string;
   mealplaceholder : string;
@@ -47,6 +48,8 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
 
   selectedCity: city;
   customAlertOptions: AlertOptions;
+  MealsAlertOptions : AlertOptions;
+  
 
   regex: any = {
     alphaonly: "^[A-Za-z]+$",
@@ -60,6 +63,7 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
     private store : Store,
     public modalCtrl: ModalController,
     private flightBookState : FLightBookState,
+    public datePicker : DatePicker
   ) { }
 
   ngOnInit() {
@@ -69,9 +73,14 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
       cssClass: 'cabinClass'
     }
 
+    this.MealsAlertOptions = {
+      header: 'Title',
+      cssClass: 'mealsOption'
+    }
+
     this.company = this.store.selectSnapshot(CompanyState.getCompany);
 
-    this.onwardbaggage = this.store.selectSnapshot(FLightBookState.getOnwardBaggages);
+    this.onwardbaggage = this.store.selectSnapshot(FLightBookState.getOnwardBaggages)
     this.returnbaggage = this.store.selectSnapshot(FLightBookState.getReturnBaggages);
 
     this.onwardmeal = this.store.selectSnapshot(FLightBookState.getOnwardMeals);
@@ -196,24 +205,56 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
     return await modal.present();
   }
 
-  async focusDate(evt : CustomEvent) {
+  async focusDate(evt : CustomEvent,field : string) {
     console.log(evt);
+    this.Passenger.get(field).patchValue(moment(evt.detail.value).format('DD-MMM-YYYY'));
+  }
+
+  async getDate(label : string) {
+    let getdate = await this.datePicker.show({
+    mode: 'date',
+    date: new Date(),
+    minDate: new Date(),
+    maxDate: new Date(),
+    titleText: label,
+    okText: 'Select',
+    cancelText: 'Cancel',
+    todayText: 'Today',
+    nowText: 'Now',
+    is24Hour: false,
+    androidTheme: this.datePicker.ANDROID_THEMES.THEME_TRADITIONAL,
+    allowOldDates: true,
+    allowFutureDates: true,
+    doneButtonLabel: "Done",
+    doneButtonColor: 'green',
+    cancelButtonLabel: 'Cancel',
+    cancelButtonColor: 'red',
+    x: 10,
+    y: 10,
+    minuteInterval: 2,
+    // popoverArrowDirection?: string;
+    // locale?: string;
+    });
+
+    console.log(getdate);
   }
 
   addPassenger() {
     this.formSubmit = true;
+
+    console.log(this.Passenger);
     if (this.Passenger.valid) {
       let passenger: flightpassenger = {
         Title: this.Passenger.value.Title,
         FirstName: this.Passenger.value.FirstName,
         LastName: this.Passenger.value.LastName,
         Email: this.Passenger.value.Email,
-        DateOfBirth: moment.utc(this.Passenger.value.DateOfBirth).format('YYYY-MM-DD hh:mm:ss A Z'),
+        DateOfBirth: moment.utc(this.Passenger.value.DateOfBirth).format('YYYY-MM-DDT00:00:00.000Z'),
         AddressLine1: this.Passenger.value.Address,
         City: this.Passenger.value.City,
         ContactNo: this.Passenger.value.ContactNo,
         PassportNo: this.Passenger.value.PassportNo,
-        PassportExpiry: moment.utc(this.Passenger.value.DateOfBirth).format('YYYY-MM-DD hh:mm:ss A Z'),
+        PassportExpiry: moment.utc(this.Passenger.value.DateOfBirth).format('YYYY-MM-DDT00:00:00.000Z'),
         nationality: this.Passenger.value.nationality,
         ftnumber: this.Passenger.value.ftnumber,
         GSTCompanyName: this.Passenger.value.CompanyName,
@@ -224,47 +265,29 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
         CountryCode: this.selectedCity.country_code,
         CountryName:this.selectedCity.country_name,
         onwardExtraServices: {
-          Meal: this.Passenger.value.onwardmeal,
-          MealTotal: 0,
-          BagTotal: 0,
-          Baggage: this.Passenger.value.onwardbaggage
+          Meal: this.Passenger.value.onwardmeal !== null ? [this.Passenger.value.onwardmeal] : [],
+          MealTotal: (this.Passenger.value.onwardmeal as meal).Price,
+          BagTotal: (this.Passenger.value.onwardbaggage as baggage).Price,
+          Baggage: this.Passenger.value.onwardbaggage !== null ? [this.Passenger.value.onwardbaggage] : []
         },
         returnExtraServices: {
-          Meal: this.Passenger.value.returnmeal,
-          MealTotal: 0,
-          BagTotal: 0,
-          Baggage: this.Passenger.value.onwardbaggage
+          Meal: this.Passenger.value.returnmeal !== null ? [this.Passenger.value.returnmeal] : [],
+          MealTotal: (this.Passenger.value.returnmeal as meal).Price,
+          BagTotal: (this.Passenger.value.returnbaggage as baggage).Price,
+          Baggage: this.Passenger.value.returnbaggage !== null ? [this.Passenger.value.returnbaggage] : []
         },
         Gender: this.flightBookState.getGender(this.Passenger.value.Title),
         PaxType: 1,
         IsLeadPax: this.leadPax(this.form),
         Fare: this.store.selectSnapshot(FLightBookState.getFare)
       }
+
       if (this.form == 'add') {
-
-        let passenger : flightpassenger = Object.assign({},this.Passenger.value);
-        passenger.onwardExtraServices = {
-          Meal: this.Passenger.value.onwardmeal,
-          MealTotal: 0,
-          BagTotal: 0,
-          Baggage: this.Passenger.value.onwardbaggage
-        }
-        passenger.returnExtraServices = {
-          Meal: this.Passenger.value.returnmeal,
-          MealTotal: 0,
-          BagTotal: 0,
-          Baggage: this.Passenger.value.onwardbaggage
-        }
-
-        delete passenger['onwardbaggage'];
-        delete passenger['returnbaggage'];
-        delete passenger['onwardmeal'];
-        delete passenger['returnmeal'];
-
         this.store.dispatch(new AddPassenger(passenger));
       }
-      else {
+      else if(this.form == 'edit'){
         this.store.dispatch(new EditPassenger(passenger,this.pax));
+
       }
     }
   }

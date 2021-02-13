@@ -72,12 +72,92 @@ ion-select{
                     }
                 }
             }
+            .mealsOption {
+                .alert-wrapper {
+                    min-width: 90%;
+                }
+                div.alert-head {
+                    background:#{$geraldine};
+                    --ion-text-color:#{$white};
+                }
+
+                div.alert-radio-group {
+                    max-height: fit-content;
+                    background: url(#{$content-background});
+                    .alert-radio-label {
+                        white-space: pre-wrap;
+                    }
+                    button {
+                        div.alert-button-inner {
+                            div.alert-radio-icon {
+                                border-color:#{$geraldine};
+
+                                div.alert-radio-inner {
+                                    background-color: #{$geraldine};
+                                }
+                            }
+                        }
+                    }
+                }
+
+                div.alert-button-group {
+                    justify-content: space-around;
+                    background:#{$geraldine};
+
+                    button {
+                        background: #{$geraldine};
+
+                        span {
+                            color:#{$white};
+                        }
+                    }
+                }
+            }
         }
 
         &.expense-tab{
             .cabinClass,
             .cc,
             .purpose {
+                div.alert-head {
+                    background:#{$limerick};
+                    --ion-text-color:#{$white};
+                }
+
+                div.alert-radio-group {
+                    background: url(#{$content-background});
+
+                    button {
+                        div.alert-button-inner {
+                            div.alert-radio-icon {
+                                border-color:#{$limerick};
+
+                                div.alert-radio-inner {
+                                    background-color: #{$limerick};
+                                }
+                            }
+                        }
+                    }
+                }
+
+                div.alert-button-group {
+                    justify-content: space-around;
+                    background:#{$limerick};
+
+                    button {
+                        background: #{$limerick};
+
+                        span {
+                            color:#{$white};
+                        }
+                    }
+                }
+            }
+            .mealsOption {
+                .alert-wrapper {
+                    height: 80%;
+                    min-width: 90%;
+                }
                 div.alert-head {
                     background:#{$limerick};
                     --ion-text-color:#{$white};

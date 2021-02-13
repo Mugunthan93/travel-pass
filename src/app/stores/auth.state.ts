@@ -23,6 +23,7 @@ import { SharedState } from './shared.state';
 import { ExpenseState } from './expense.state';
 import { ThemeState } from './theme.stata';
 import { AgencyState, SetAgency } from './agency.state';
+import { SetVendor, VendorState } from './vendor.state';
 
 export interface auth {
     forgotToken : string
@@ -137,7 +138,7 @@ export class AuthState {
                 concatMap(
                     () => {
                         let agencyid = this.store.selectSnapshot(CompanyState.getCompany).agency_id;
-                        return states.dispatch(new SetAgency(agencyid));
+                        return states.dispatch([new SetAgency(agencyid),new SetVendor(agencyid.toString(),"vendor")]);
                     }
                 ),
                 tap(() => from(this.loadingCtrl.dismiss(null,null,'login'))),
@@ -174,6 +175,7 @@ export class AuthState {
                                     AuthState,
                                     UserState,
                                     AgencyState,
+                                    VendorState,
                                     CompanyState,
                                     DashboardState,
                             

@@ -1,7 +1,6 @@
-import { Injectable, ɵSWITCH_CHANGE_DETECTOR_REF_FACTORY__POST_R3__ } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { NativeHttpService } from '../http/native-http/native-http.service';
-import { HTTPResponse } from '@ionic-native/http/ngx';
-import { company } from 'src/app/models/company';
+import { from } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +13,14 @@ export class CompanyService {
    }
 
   async getCompany(companyId : number) {
-    const id: { [key: string]: string | string[] } = {
-      "customer_id": companyId.toString()
-    }
     return await this.http.get("/customers/" + companyId, undefined );
+  }
+
+  getBranches(agencyId : number) {
+    const type: { [key: string]: string | string[] } = {
+      "company_type":"corporate_branch"
+    }
+    return from(this.http.get("/customers/agency/getallbranches/" + agencyId, type));
+
   }
 }

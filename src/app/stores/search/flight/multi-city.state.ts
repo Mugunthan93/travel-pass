@@ -75,6 +75,11 @@ export class MultiCitySearchState extends BaseFlightSearch {
         return states.tripType;
     }
 
+    @Selector()
+    static getTripClass(states: multicitySearch): string {
+        return states.formData.class.toLowerCase();
+    }
+
 
     @Selector()
     static getTravelDate(states: multicitySearch): string {

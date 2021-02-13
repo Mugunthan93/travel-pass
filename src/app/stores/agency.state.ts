@@ -1,3 +1,4 @@
+import { state } from "@angular/animations";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { map } from "rxjs/operators";
 import { markupCharges, serviceCharges } from "../models/company";
@@ -26,6 +27,10 @@ export interface agency {
             rate: number
             start_dt: string
         }[]
+        gst_applied : {
+            id: number
+            lb: string
+        }
     },
     service_charges:serviceCharges,
     markup_charges:markupCharges,
@@ -109,6 +114,16 @@ export class AgencyState {
     @Selector()
     static getAgency(state : agency) : agency {
         return state;
+    }
+
+    @Selector()
+    static getGstApplied(state : agency) : string {
+        return state.gst_details.gst_applied.lb;
+    }
+
+    @Selector()
+    static getCreditLimit(state : agency) : number {
+        return state.cash_limits.amount;
     }
 
 

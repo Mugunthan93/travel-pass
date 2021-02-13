@@ -83,11 +83,11 @@ export class FlightService {
     return from(this.http.post("/airlineTicket",ticketpl));
   }
 
-  getPLB() {
+  getPLB(code : string,cls : string,triptype : string) {
     let plbparam = {
-      'a_code' :'6E',
-      'class' :'economy',
-      'type' :'domestic'
+      "a_code" : code.toString(),
+      "class" : cls.toString(),
+      "type" : triptype.toString()
     }
     return from(this.http.get("/plb/getone/plbByFilter/forGST/calculation",plbparam));
   }
