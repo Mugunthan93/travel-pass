@@ -1,0 +1,24 @@
+ion-grid{
+    --ion-grid-padding:0px;
+    height : 100%;
+    ion-row{
+        height: 25%;
+    }
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    >ion-row{
+        margin: auto 10px;
+        justify-content: space-between;
+        align-content: center;
+    }
+}
+
+ion-text {
+    font-size: large;
+    font-weight: 500;
+    margin: auto 0px;
+}

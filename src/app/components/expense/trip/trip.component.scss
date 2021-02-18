@@ -1,0 +1,27 @@
+@import "../../../../style/component/item.scss";
+
+ion-content {
+    // ion-list{
+    //     ion-item {
+    //         @include profile;
+    //     }
+    //     ion-row{
+    //         >ion-label{
+    //             margin: auto;
+    //             margin-right: 10px;
+    //         }
+    //     }
+    // }
+    ion-list {
+        margin: 10px;
+        ion-item {
+            border-width: 0px 0px 2px 0px;
+            border-style: solid;
+            --min-height: 50px;
+            margin-bottom: 10px;
+        }
+        ion-select {
+            min-width: -webkit-fill-available;
+        }
+    }
+}

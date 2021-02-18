@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="back()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      {{bookMode$ | async | titlecase}} Book
+      {{ ((bookMode$ | async) == 'train' || (bookMode$ | async) == 'flight') ? '['+(bookType$ | async)+']' : ''}}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <ion-router-outlet></ion-router-outlet>
+</ion-content>
+
+<ion-footer>
+
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button *ngIf="!(this.isAdmin$ | async) && !((invrooms$ | async).length > 0)" (click)="confirmRequest('request')">
+        <ion-label class="medium bold">Send Request</ion-label>
+      </ion-button>
+      <ion-button *ngIf="(invrooms$ | async).length > 0" (click)="confirmRequest('offline')">
+        <ion-label class="medium bold">Offline Request</ion-label>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end" *ngIf="(this.isAdmin$ | async)">
+      <ion-button (click)="confirmRequest('book')">
+        <ion-label class="medium bold">Book Now</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+</ion-footer>

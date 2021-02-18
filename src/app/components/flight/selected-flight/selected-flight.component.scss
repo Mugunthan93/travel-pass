@@ -1,0 +1,81 @@
+@import "../../../../style/util/mixins.scss";
+@import "../../../../style/base/color.scss";
+
+
+ion-content{
+    >mat-accordion {
+
+        mat-expansion-panel {
+            margin: 5px;
+
+            >mat-expansion-panel-header {
+                background:transparent;
+                padding-left: 10px;
+                padding-right: 10px;
+                border: 2px solid #{$geraldine};
+
+                >::ng-deep span {
+                    >ion-item{
+                        ion-text:last-child{
+                            align-self: flex-start;
+                        }
+                    }
+                }
+            }
+
+            ::ng-deep .mat-expansion-panel-body {
+                padding: 0px;
+                height: 100%;
+                margin: 5px;
+
+                >div {
+                    ion-item {
+                        --padding-start: 0px;
+
+                        >ion-row {
+                            >* {
+                                margin: auto 5px;
+                            }
+
+                            >ion-row {
+                                flex-direction: column;
+                            }
+                        }
+
+                        >ion-row:last-child {
+                            >ion-row {
+                                >ion-text {
+                                    align-self: flex-end;
+                                }
+                            }
+                        }
+                    }
+
+                    >ion-row {
+                        justify-content: space-between;
+
+                        >ion-col {
+                            flex-direction: column;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-around;
+
+                            &:first-child {
+                                align-items: flex-start;
+                            }
+
+                            &:last-child {
+                                align-items: flex-end;
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            ::ng-deep .mat-expansion-indicator {
+                color:#{$geraldine};
+            }
+        }
+    }
+}

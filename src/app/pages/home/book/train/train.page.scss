@@ -1,0 +1,14 @@
+@import "../../../../../style/util/mixins.scss";
+
+
+ion-grid,
+ion-row,
+ion-col,
+app-one-way {
+    @include flex-col-grid;
+}
+
+ion-grid {
+    margin: 5px;
+    height: 89vh;
+}

@@ -1,0 +1,36 @@
+<ion-content>
+    <ion-row>
+        <ion-segment mode="ios" (ionChange)="typeChange($event)" [value]="journeyType$ | async" class="search">
+            <ion-segment-button value="one-way" class="search">
+                <ion-text class="medium bold">One Way</ion-text>
+            </ion-segment-button>
+            <ion-segment-button value="round-trip" class="search">
+                <ion-text class="medium bold">Round Trip</ion-text>
+            </ion-segment-button>
+            <ion-segment-button value="multi-city" class="search">
+                <ion-text class="medium bold">Multi City</ion-text>
+            </ion-segment-button>
+        </ion-segment>
+    </ion-row>
+    <ion-row>
+        <ion-segment mode="ios" (ionChange)="travelChange($event)" [value]="travelType$ | async" class="search">
+            <ion-segment-button value="business" class="search">
+                <ion-text class="medium bold">Business</ion-text>
+            </ion-segment-button>
+            <ion-segment-button value="personal" class="search">
+                <ion-text class="medium bold">Personal</ion-text>
+            </ion-segment-button>
+        </ion-segment>
+    </ion-row>
+    <ion-row>
+        <ion-segment mode="ios" (ionChange)="categoryChange($event)" [value]="trainType$ | async" class="search">
+            <ion-segment-button value="domestic" class="search">
+                <ion-text class="medium bold">Domestic</ion-text>
+            </ion-segment-button>
+            <ion-segment-button value="international" class="search">
+                <ion-text class="medium bold">International</ion-text>
+            </ion-segment-button>
+        </ion-segment>
+    </ion-row>
+    <ion-router-outlet mode="md"></ion-router-outlet>
+</ion-content>

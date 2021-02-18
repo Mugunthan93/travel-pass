@@ -1,0 +1,57 @@
+
+ion-content{
+    >ion-card{
+        >ion-card-content{
+            >form{
+                >ion-row:not(:last-of-type) {
+                    border-bottom: 2px solid grey;
+                }
+                >ion-row{
+                    min-height: fit-content;
+                    padding: 30px 0px;
+                }
+                >ion-row:nth-child(1) {
+                    >ion-row{
+                        display: flex;
+                        flex-direction: column;
+                        margin: auto;
+                        >ion-text {
+                            align-self: center;
+                        }
+                    }
+                }
+    
+                >ion-row:nth-child(2),ion-row:nth-child(3) {
+                    justify-content: space-between;
+                    >ion-row {
+                        flex-direction: column;
+                        align-content: center;
+                    }
+                    >ion-row:last-child {
+                        >ion-text:last-child {
+                            margin-left: auto;
+                            margin-bottom: auto;
+                        }
+                    }
+                }
+    
+                >ion-row:nth-child(2) {
+                    >ion-row:nth-child(2){
+                        >ion-text {
+                            margin: 0px auto;
+                        }
+                    }
+                }
+    
+                >ion-row:last-of-type{
+                    justify-content: center;
+                    >ion-button{
+                        ion-label {
+                            margin:10px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

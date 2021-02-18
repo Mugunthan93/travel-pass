@@ -1,0 +1,25 @@
+ion-grid{
+    --ion-grid-padding: 16px !important;
+    >ion-row{
+        height: -webkit-fill-available;
+        >ion-col{
+            ion-card{
+                margin: 0px;
+                height: 100%;
+                >ion-card-header{
+                }
+                >ion-card-content{
+                    >ion-row{
+                        >ion-col{
+                            margin:auto;
+                            max-width: 32px;
+                            >ion-icon{
+                                font-size: 64px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

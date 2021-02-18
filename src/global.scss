@@ -9,6 +9,8 @@
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
 
+// @import "../node_modules/@angular/material/prebuilt-themes/purple-green.css";
+
 /* Core CSS required for Ionic components to work properly */
 @import "~@ionic/angular/css/core.css";
 
@@ -24,3 +26,98 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+@import "style/main.scss";
+
+:root {
+
+    .baggage {
+        .modal-wrapper, .picker-wrapper{
+        position: absolute;
+        overflow: hidden;
+        max-width: 320px;
+        border-radius: 10px;
+        width: 90vw;
+        height: 50vh !important;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        border: 0;
+        box-shadow: 0 16px 20px rgba(0,0,0,.4);
+        background-color: #fafafa;
+        }
+    }
+
+    .passenger
+    {
+        .modal-wrapper,
+        .picker-wrapper {
+            position: absolute;
+            overflow: hidden;
+            max-width: 320px;
+            border-radius: 10px;
+            width: 90vw;
+            height: 29vh !important;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            border: 0;
+            box-shadow: 0 16px 20px rgba(0, 0, 0, .4);
+            background-color: #fafafa;
+        }
+    }
+
+    .emailitinerary
+    {
+        .modal-wrapper,
+        .picker-wrapper {
+            position: absolute;
+            overflow: hidden;
+            max-width: 320px;
+            border-radius: 10px;
+            width: 90vw;
+            height: 52vh !important;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            border: 0;
+            box-shadow: 0 16px 20px rgba(0, 0, 0, .4);
+            background-color: #fafafa;
+        }
+    }
+
+    .forgot {
+        .modal-wrapper,
+        .picker-wrapper {
+            position: absolute;
+            overflow: hidden;
+            max-width: 320px;
+            border-radius: 10px;
+            width: 90vw;
+            height: 60vh !important;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            border: 0;
+            box-shadow: 0 16px 20px rgba(0, 0, 0, .4);
+            background-color: #fafafa;
+        }
+    }
+
+    .get-expense {
+        .popover-content{
+            right: 20px;
+            left:331px !important;
+            width : auto !important;
+        }
+    } 
+    
+}

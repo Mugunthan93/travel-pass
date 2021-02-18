@@ -1,0 +1,34 @@
+@import "../base/color.scss";
+
+//variable
+$alert-backdrop-opacity:0.5;
+$alert-background:none;
+
+$alert-width:auto;
+$alert-height:auto;
+
+$alert-width-type:(
+    "min": min-content,
+    "max": max-content
+);
+$alert-height-type:(
+    "min": min-content,
+    "max": max-content
+);
+
+
+ion-alert {
+
+    --backdrop-opacity:#{$alert-backdrop-opacity};
+    --background:#{$alert-background};
+
+    --width:#{$alert-width};
+    --height:#{$alert-height};
+
+    --min-width:map.get($alert-width-type,"min");
+    --max-width:map.get($alert-width-type, "max");
+
+    --min-height:map.get($alert-height-type, "min");
+    --max-height:map.get($alert-height-type, "max");
+
+}

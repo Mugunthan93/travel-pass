@@ -1,0 +1,42 @@
+@import "../base/color.scss";
+
+//variable
+
+$progress-bar-background:transparent;
+$progress-bar-buffer-background:transparent;
+$progress-bar-progress-background:$geraldine;
+
+
+:root {
+
+    ion-app {
+
+        &.home-tab {
+
+            ion-progress-bar{
+                --background:#{$progress-bar-background};
+                --buffer-background:#{$progress-bar-buffer-background};
+                --progress-background:#{$geraldine};
+            }
+
+        }
+
+        &.expense-tab {
+
+            ion-progress-bar{
+                --background:#{$progress-bar-background};
+                --buffer-background:#{$crusta};
+                --progress-background:#{$limerick};
+            }
+
+        }
+
+    }
+
+}
+
+ion-progress-bar{
+    --background:#{$progress-bar-background};
+    --buffer-background:#{$progress-bar-buffer-background};
+    --progress-background:#{$progress-bar-progress-background};
+}

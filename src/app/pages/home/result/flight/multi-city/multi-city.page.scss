@@ -1,0 +1,14 @@
+@import "../../../../../../style/base/color.scss";
+@import "../../../../../../style/util/mixins.scss";
+
+ion-grid {
+    @include flex-col-grid;
+    margin:0px;
+    >ion-row{
+        @include flex-col-grid;
+        flex-grow: 1;
+            >app-result-list{
+                @include flex-col-grid;
+            }
+        }
+}

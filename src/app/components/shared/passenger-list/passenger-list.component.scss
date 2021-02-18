@@ -1,0 +1,75 @@
+@import "../../../../style/util/mixins.scss";
+@import "../../../../style/base/color.scss";
+
+ion-content {
+
+    >ion-row{
+        display: flex;
+        flex-direction: column;
+
+        >ion-item {
+            --padding-end: 16px;
+            --padding-start: 16px;
+            --padding-top: 8px;
+            --padding-bottom: 8px;
+    
+            >ion-row {
+                align-self: center;
+            }
+        }
+    
+        >ion-row {
+            width: -webkit-fill-available;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0px 16px;
+    
+            >ion-item {
+                width: 65%;
+                --border-width: 2px;
+                --border-radius: 8px;
+    
+                >ion-row {
+                    width: -webkit-fill-available;
+                    justify-content: space-between;
+                }
+
+                ion-label{
+                        min-width: -webkit-fill-available;
+                }
+            }
+            >ion-icon {
+                width: 10%;
+                margin: auto;
+                font-size: 25px;
+            }
+            >ion-label{
+                width: 25%;
+                margin: auto;
+                text-align: center;
+            }
+    
+        }
+
+        ion-row.buttons{
+            display: flex;
+             >ion-button {
+                 margin: 16px;
+
+                 --padding-start: 6px;
+                 --padding-end: 6px;
+                 --padding-top: 6px;
+                 --padding-bottom: 6px;
+             }
+        }
+    
+        >ion-button {
+            margin: 16px;
+    
+            --padding-start: 6px;
+            --padding-end: 6px;
+            --padding-top: 6px;
+            --padding-bottom: 6px;
+        }
+    }
+}

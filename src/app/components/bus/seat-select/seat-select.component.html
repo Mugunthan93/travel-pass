@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button  (click)="dismiss()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Select Seat</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-bus-seatlayout></app-bus-seatlayout>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar *ngIf="(selectedSeats$ | async).length == 0">
+    <ion-buttons>
+      <ion-button (click)="busReview()" *ngIf="false">
+        <ion-label>REVIEWS</ion-label>
+      </ion-button>
+      <ion-button (click)="busPhoto()" *ngIf="false">
+        <ion-label>PHOTOS</ion-label>
+      </ion-button>
+      <ion-button (click)="budAmenties()" *ngIf="false">
+        <ion-label>AMENTIES</ion-label>
+      </ion-button>
+      <ion-button (click)="busPolicy()">
+        <ion-label>POLICIES</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar *ngIf="(selectedSeats$ | async).length > 0">
+    <ion-buttons slot="end">
+      <ion-button (click)="pickupdrop()">
+        <ion-label>
+          Continue
+        </ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

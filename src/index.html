@@ -3,20 +3,37 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>Ionic App</title>
+  <title>TravellersPass</title>
+  <base href="/">
 
-  <base href="/" />
+  <link rel="icon" type="image/x-icon" href="../assets/icons/tp_logo_16x16.png" />
+  <meta name="viewport"
+    content="viewport-fit=cover, 
+    width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-  <meta name="color-scheme" content="light dark" />
-  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="format-detection" content="telephone=no" />
   <meta name="msapplication-tap-highlight" content="no" />
 
-  <link rel="icon" type="image/png" href="assets/icon/favicon.png" />
+  <!-- <meta http-equiv="Content-Security-Policy" 
+  content="
+    default-src *; 
+    style-src 'self' 'unsafe-inline'; 
+    img-src 'self' 'unsafe-inline' 'unsafe-eval' http://0.0.0.0:8100/favicon.ico ; 
+    script-src 'self' 'unsafe-inline' 'unsafe-eval'" -->
 
+   <meta http-equiv="Content-Security-Policy" 
+    content="
+      default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; 
+      style-src 'self' 'unsafe-inline';
+      media-src *;
+      **script-src 'self' http://onlineerp.solution.quebec 'unsafe-inline' 'unsafe-eval';
+      ** ">
+  
   <!-- add to homescreen for ios -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>

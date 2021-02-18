@@ -1,0 +1,24 @@
+@import "../../base/color.scss";
+
+
+mat-grid-list{
+    &.hotel-grid{
+        height: 250px;
+    }
+
+    mat-grid-tile{
+
+        figure{
+            display: flex;
+            flex-direction: column;
+        }
+
+        ion-label {
+            --color: #{$white};
+        }
+
+        ion-img{
+            width: 100%;
+        }
+    }
+}

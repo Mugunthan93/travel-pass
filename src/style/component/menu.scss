@@ -1,0 +1,78 @@
+@import "../base/color.scss";
+
+//variable
+
+$menu-background:transparent;
+
+$menu-width:75%;
+$menu-height:auto;
+
+$menu-width-type:(
+    "min": auto,
+    "max": auto
+);
+$menu-height-type:(
+    "min": auto,
+    "max": auto
+);
+
+
+///////////////////////////
+
+$menu-button-color:$white;
+$menu-button-color-type:(
+    "focused":$white,
+    "hover":$white
+);
+$menu-button-background:transparent;
+$menu-button-background-type:(
+    "focused":transparent,
+    "hover":transparent,
+    "focused-opacity":transparent,
+    "hover-opacity":transparent
+);
+$menu-button-border-radius:0px;
+$menu-button-padding:(
+    "bottom":0px,
+    "end":0px,
+    "start":0px,
+    "top":0px
+);
+
+ion-menu{
+
+    --background:#{$menu-background};
+
+    --width:#{$menu-width};
+    --height:#{$menu-height};
+
+    --min-width:map.get($menu-width-type,"min");
+    --max-width:map.get($menu-width-type,"max");
+
+    --max-height:map.get($menu-height-type,"min");
+    --min-height:map.get($menu-height-type,"max");
+
+}
+
+ion-menu-button{
+
+    --background: #{$menu-button-background};
+
+    --background-focused:map.get($menu-button-background-type, "focused");
+    --background-focused-opacity:map.get($menu-button-background-type, "focused-opacity");
+    --background-hover:map.get($menu-button-background-type, "hover");
+    --background-hover-opacity:map.get($menu-button-background-type, "hover-opacity");
+
+    --border-radius: #{$menu-button-border-radius};
+
+    --color: #{$menu-button-color};
+
+    --color-focused:map.get($menu-button-color-type, "focused");
+    --color-hover:map.get($menu-button-color-type, "hover");
+
+    --padding-bottom:map.get($menu-button-padding,"bottom");
+    --padding-end:map.get($menu-button-padding,"end");
+    --padding-start:map.get($menu-button-padding,"start");
+    --padding-top:map.get($menu-button-padding,"top");
+
+}

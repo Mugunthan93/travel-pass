@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+     <ion-title>
+       Select Travellers
+     </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-grid>
+    <form [formGroup]="traveller" (ngSubmit)="confirm()">
+      <ion-row>
+        <ion-label class="medium bold">Adult</ion-label>
+        <ion-icon size="large" name="remove-circle-outline" (click)="decrease('adult')"></ion-icon>
+        <ion-label class="medium bold">{{traveller.value.adult}}</ion-label>
+        <ion-icon size="large" name="add-circle-outline" (click)="increase('adult')"></ion-icon>
+      </ion-row>
+      <!-- <ion-row>
+        <ion-text>Child</ion-text>
+        <ion-icon size="large" name="add-circle-outline" (click)="increase('child')"></ion-icon>
+        <ion-text>{{traveller.value.child}}</ion-text>
+        <ion-icon size="large" name="remove-circle-outline"></ion-icon>
+      </ion-row>
+      <ion-row>
+        <ion-text>Infant</ion-text>
+        <ion-icon size="large" name="add-circle-outline" (click)="increase('infant')"></ion-icon>
+        <ion-text>{{traveller.value.infant}}</ion-text>
+        <ion-icon size="large" name="remove-circle-outline" (click)="decrease('infant')"></ion-icon>
+      </ion-row> -->
+      <ion-input type="number" formControlName="adult" hidden></ion-input>
+      <ion-input type="number" formControlName="child" hidden></ion-input>
+      <ion-input type="number" formControlName="infant" hidden></ion-input>
+    </form>
+  </ion-grid>
+</ion-content>
+
+<ion-footer>
+  <form [formGroup]="traveller" (ngSubmit)="confirm()">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="close()">
+          <ion-label>Cancel</ion-label>
+        </ion-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-button type="submit">
+          <ion-label>Confirm</ion-label>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </form>
+</ion-footer>
+

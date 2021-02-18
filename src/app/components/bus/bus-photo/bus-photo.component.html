@@ -1,0 +1,13 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Bus Photos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row *ngFor="let photo of photos">
+    <ion-col>
+      <ion-img [src]="'../../../../assets/img/bus/'+ photo +'.jpg'"></ion-img>
+    </ion-col>
+  </ion-row>
+</ion-content>

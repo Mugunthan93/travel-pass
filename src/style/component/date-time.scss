@@ -1,0 +1,19 @@
+@import "../base/color.scss";
+
+//variable
+$date-time-placeholder-color:$suva-grey;
+$date-time-padding:(
+    "bottom":10px,
+    "end":0px,
+    "start":0px,
+    "top":10px
+);
+
+
+ion-datetime {
+    --placeholder-color:#{$date-time-placeholder-color};
+    --padding-bottom: map.get($date-time-padding,"bottom");
+    --padding-end: map.get($date-time-padding, "end");
+    --padding-start: map.get($date-time-padding, "start");
+    --padding-top:map.get($date-time-padding, "top");
+}

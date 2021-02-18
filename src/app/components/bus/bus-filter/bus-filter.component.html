@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      Bus Filter
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="reset()">
+        <ion-label class="bold">RESET</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid>
+
+    <ion-label class="bold">Departure Time : {{ (inputs$ | async).depatureHours }}</ion-label>
+    <ion-range (ionChange)="depRange($event)" class="filter" pin="true" ticks="true" snaps="true" min="0" max="24"
+      [value]="(inputs$ | async).depatureHours">
+    </ion-range>
+
+    <ion-row>
+      <ion-label>0 Hours</ion-label>
+      <ion-label>24 Hours</ion-label>
+    </ion-row>
+
+    <ion-label class="bold">Arrival Time : {{ (inputs$ | async).arrivalHours }}</ion-label>
+    <ion-range (ionChange)="reRange($event)" class="filter" pin="true" ticks="true" snaps="true" min="0" max="24"
+      [value]="(inputs$ | async).arrivalHours">
+    </ion-range>
+
+    <ion-row>
+      <ion-label>0 Hours</ion-label>
+      <ion-label>24 Hours</ion-label>
+    </ion-row>
+
+    <ion-label class="bold">Bus Type</ion-label>
+
+    <ion-list>
+      <div *ngFor="let bus of (inputs$ | async).busType">
+        <ion-item>
+          <ion-label>{{bus.name}}</ion-label>
+          <ion-checkbox class="default" slot="end" 
+          [checked]="bus.value" (ionChange)="chooseAirline($event)" [value]="bus">
+          </ion-checkbox>
+        </ion-item>
+      </div>
+    </ion-list>
+  </ion-grid>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button size="large" (click)="dismiss()">
+      <ion-label class="bold">Cancel</ion-label>
+    </ion-button>
+    <ion-button size="large" (click)="done()">
+      <ion-label class="bold">Done</ion-label>
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

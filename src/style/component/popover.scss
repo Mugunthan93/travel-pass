@@ -1,0 +1,35 @@
+@import "../base/color.scss";
+
+//variable
+
+$popover-backdrop-opacity:0.5;
+$popover-background:transparent;
+
+$popover-height:fit-content;
+$popover-width:fit-content;
+
+$popover-height-type:(
+    "min":min-content,
+    "max": 100%
+);
+$popover-width-type:(
+    "min":min-content,
+    "max": 100%
+);
+$popover-box-shadow:none;
+
+ion-popover{
+
+    --backdrop-opacity:#{$popover-backdrop-opacity};
+    --background:#{$popover-background};
+    --box-shadow:#{$popover-box-shadow};
+
+    --height:#{$popover-height};
+    --min-height:map.get($popover-height-type,"min");
+    --max-height:map.get($popover-height-type,"max");
+
+    --width:#{$popover-width};
+    --min-width:map.get($popover-width-type,"min");
+    --max-width:map.get($popover-width-type,"max");
+
+}

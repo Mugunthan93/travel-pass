@@ -1,0 +1,80 @@
+<ion-header>
+
+  <ion-toolbar>
+
+    <ion-buttons slot="start">
+      <ion-button (click)="back()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <!-- flight title -->
+    <ion-title *ngIf="(resultMode$ | async) == 'flight'">
+      {{resultMode$ | async | titlecase}} Result 
+      {{
+        ((resultMode$ | async) == 'flight') && ((resultType$ | async) == 'animated-round-trip') ? '[Round Trip]' :
+        (resultMode$ | async) == 'flight' ? '['+(resultType$ | async)+']' : ''
+      }}
+    </ion-title>
+
+    <!-- hotel title -->
+    <ion-title class="bold back-modal" *ngIf="(resultMode$ | async) == 'hotel'">
+      {{ (hotelSearch$ | async).city.destination }}
+    </ion-title>
+    <ion-title class="medium bold  back-modal" *ngIf="(resultMode$ | async) == 'hotel'">
+      {{ 
+        (hotelSearch$ | async).checkin | date : 'd LLL' }} - {{ (hotelSearch$ | async).checkout | date : 'd LLL' }} |
+        {{ (hotelSearch$ | async).room.length }} Room |
+      {{ (totalGuest$ | async) }} Guest | {{ totalHotels$ | async }} Hotels
+    </ion-title>
+
+    <!-- bus title -->
+    <ion-title class="medium" *ngIf="(resultMode$ | async) == 'bus'">{{ (busSearch$ | async).source.station_name }} To
+      {{ (busSearch$ | async).destination.station_name }}
+    </ion-title>
+    <ion-title class="small" *ngIf="(resultMode$ | async) == 'bus'">
+      {{ (busSearch$ | async).departure | date : 'dd LLL, EEEE' }}
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="mailTicket()" *ngIf="mailStatus$ | async">
+        <ion-icon class="Blink" name="mail"></ion-icon>
+      </ion-button>
+      <ion-button (click)="flightFilter()" *ngIf="(resultMode$ | async) == 'flight'">
+        <ion-icon name="filter"></ion-icon>
+      </ion-button>
+      <ion-button (click)="hotelFilter()" *ngIf="(resultMode$ | async) == 'hotel'">
+        <ion-icon name="filter"></ion-icon>
+      </ion-button>
+      <ion-button (click)="busFilter()" *ngIf="(resultMode$ | async) == 'bus'">
+        <ion-icon name="filter"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+
+  <ion-segment 
+    (ionChange)="changeResult($event)" 
+    [value]="flightType$ | async"
+    class="round-trip-book" 
+    *ngIf="(resultType$ | async) == 'animated-round-trip'">
+    <ion-segment-button value="departure">
+      <ion-label class="bold">
+        Departure
+      </ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="return">
+      <ion-label class="bold">
+        Return
+      </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <app-result-sorting [type]="flightType$ | async"></app-result-sorting>
+  <ion-progress-bar *ngIf="((resultMode$ | async) !== 'flight') && ((loading$ | async) < 0.999)" [value]="loading$ | async">
+  </ion-progress-bar>
+  
+</ion-header>
+<ion-content>
+  <ion-router-outlet></ion-router-outlet>
+</ion-content>

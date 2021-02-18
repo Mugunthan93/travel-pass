@@ -1,0 +1,50 @@
+@import "../base/color.scss";
+
+
+$range-pin-color:$white;
+$range-background:(
+    "bar":$geraldine,
+    "knob":$geraldine,
+    "pin":$geraldine
+);
+$range-bar-background-active:none;
+
+$range-bar-height:3px;
+$range-height:42px;
+$range-knob-size:18px;
+
+$range-border-radius:(
+    "bar":50%,
+    "knob":10px
+);
+$range-knob-box-shadow:none;
+
+@mixin ion-range {
+    --pin-color:#{$range-pin-color};
+
+    --bar-background:map.get($range-background, "bar");
+    --pin-background:map.get($range-background, "pin");
+    --knob-background:map.get($range-background, "knob");
+
+    --bar-background-active:#{$range-bar-background-active};
+
+    --bar-border-radius:map.get($range-border-radius, "bar");
+    --knob-border-radius:map.get($range-border-radius, "knob");
+
+    --bar-height:#{$range-bar-height};
+    --height:#{$range-height};
+
+    --knob-box-shadow:#{$range-knob-box-shadow};
+    --knob-size:#{$range-knob-size};
+}
+
+ion-range{
+
+    @include ion-range;
+
+    &.filter{
+        --bar-background: #{$geraldine};
+        --knob-background: #{$geraldine};
+        --knob-border-radius: 50%;
+    }
+}

@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Baggage Information
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeBaggage()">
+        <ion-icon name="close-sharp"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row *ngFor="let bag of baggage">
+    <ion-item>
+      <ion-label class="medium bold">
+      Trip {{1 + baggage.indexOf(bag)}}
+      </ion-label>
+    </ion-item>
+    <ion-card *ngFor="let b of bag">
+      <ion-card-header>
+        <ion-item>
+          <ion-img slot="start" src="../../../../../../assets/AirlineLogo/{{b.logo}}.gif"></ion-img>
+          <ion-card-title>
+            <ion-label class="small bold">{{b.originName}} - {{b.destinationName}}</ion-label>
+          </ion-card-title>
+        </ion-item>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-row class="justify-content-between">
+          <ion-col>
+            <ion-label class="small bold">Baggage</ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-text class="bold">{{b.baggage == null ? 'Not Available' : b.baggage}}</ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row class="justify-content-between">
+          <ion-col>
+            <ion-label class="small bold">Cabin</ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-text class="bold">{{b.cabinBaggage == null ? 'Not Available' : b.cabinBaggage}}</ion-text>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+  </ion-row>
+</ion-content>

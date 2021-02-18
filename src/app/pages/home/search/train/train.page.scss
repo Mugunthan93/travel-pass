@@ -1,0 +1,11 @@
+
+ion-content{
+    ion-row {
+        height: 35px;
+        margin: 20px 40px;
+    }
+    
+    ion-router-outlet {
+        top: 180px;
+    }
+}

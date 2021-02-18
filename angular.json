@@ -19,30 +19,72 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "assets": [
-              {
+            "assets": [{
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"
               },
               {
                 "glob": "**/*.svg",
+                "input": "src/assets/icons",
+                "output": "./svg"
+              },
+              {
+                "glob": "**/*.svg",
                 "input": "node_modules/ionicons/dist/ionicons/svg",
+                "output": "./svg"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "src/assets/ionicons",
+                "output": "./svg"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "src/assets/ng-img/icons",
                 "output": "./svg"
               }
             ],
-            "styles": ["src/theme/variables.scss", "src/global.scss"],
-            "scripts": []
+            "styles": [
+              {
+                "input": "node_modules/bootstrap/scss/bootstrap.scss"
+              },
+              {
+                "input": "src/theme/variables.scss"
+              },
+              {
+                "input": "src/global.scss"
+              }
+            ],
+            "scripts": [
+              {
+                "input": "node_modules/jquery/dist/jquery.min.js"
+              },
+              {
+                "input": "node_modules/popper.js/dist/umd/popper.min.js"
+              },
+              {
+                "input": "node_modules/bootstrap/dist/js/bootstrap.min.js"
+              }
+            ],
+            "showCircularDependencies": false,
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "hammerjs",
+              "ion2-calendar",
+              "rxjs/internal/observable/from"
+            ]
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.prod.ts"
+              }],
+              "optimization":  {
+                "scripts": false,
+                "styles": true
+              },
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
@@ -50,13 +92,11 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                }
-              ]
+              "budgets": [{
+                "type": "initial",
+                "maximumWarning": "3mb",
+                "maximumError": "5mb"
+              }]
             },
             "ci": {
               "progress": false
@@ -92,8 +132,7 @@
             "karmaConfig": "karma.conf.js",
             "styles": [],
             "scripts": [],
-            "assets": [
-              {
+            "assets": [{
                 "glob": "favicon.ico",
                 "input": "src/",
                 "output": "/"
@@ -102,6 +141,11 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "/assets"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "node_modules/@ionic/angular/dist/ionic/svg",
+                "output": "./svg"
               }
             ]
           },
@@ -166,6 +210,7 @@
     }
   },
   "cli": {
+    "analytics": false,
     "defaultCollection": "@ionic/angular-toolkit"
   },
   "schematics": {

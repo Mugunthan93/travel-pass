@@ -1,0 +1,60 @@
+@import "../base/color.scss";
+@import "../base/fonts.scss";
+
+//variable 
+
+$label-color:$black;
+$label-family:'roboto-label';
+
+
+ion-label{
+    --color: #{$label-color};
+    font-family:#{$label-family};
+
+    margin:0px;
+
+    &.small{
+
+        font-size:#{$small-font};
+
+    }
+
+    &.medium{
+
+        font-size:#{$medium-font};
+
+    }
+
+    &.large{
+
+        font-size:#{$large-font};
+
+    }
+
+    &[aria-selected="true"]{
+
+        --color:#{$geraldine};
+
+    }
+
+    &.white {
+        color:#{$white};
+    }
+
+    &.bold {
+        font-weight: 700;
+    }
+
+    &.bolder {
+        font-weight: 800;
+    }
+
+    &.boldest {
+        font-weight: 900;
+    }
+    
+    &.highlight-text {
+        color : #{$geraldine} !important;
+    }
+
+}

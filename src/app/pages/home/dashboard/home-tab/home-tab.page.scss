@@ -1,0 +1,43 @@
+@import "../../../../../style/base/color.scss";
+
+ion-grid{
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    
+    >ion-row:first-child{
+        background: #{$geraldine};
+        padding: 20px 0px;
+        height: 150px;
+        >ion-row{
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            height: min-content;
+            >ion-label{
+                margin-top:10px;
+            }
+        }
+    }
+    
+    >ion-row:last-child{
+        position: relative;
+        top: -30px;
+        background: #F7F7F7;
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
+        height: calc(100% - 150px);
+        ion-title{
+            margin: 10px 22px;
+        }
+        >app-trip-list{
+            width: -webkit-fill-available;
+            height: -webkit-fill-available;
+        }
+    }
+}
+
+
+ion-virtual-scroll{
+    background:transparent;
+    box-sizing:unset;
+}

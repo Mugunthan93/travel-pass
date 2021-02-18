@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      Bus Policies
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-title class="bold">Travel Policies</ion-title>
+    <ion-item class="policy" *ngFor="let policy of (policies$ | async)">
+      <ion-label class="bold">{{ policy[0] }}</ion-label>
+      <ion-label>{{ policy[1] }}</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+
+</ion-footer>

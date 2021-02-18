@@ -1,0 +1,387 @@
+@import "../base/color.scss";
+@import "../base/fonts.scss";
+
+//variable
+
+$item-color:$suva-grey;
+$item-color-type:(
+    "activated":transparent,
+    "focused":transparent,
+    "hover":transparent
+);
+$item-ripple-color:transparent;
+$item-detail-icon:(
+    "color":$geraldine,
+    "opacity":1,
+    "font-size":13px
+);
+$item-highlight-color:(
+    "focused":$suva-grey,
+    "invalid":$geraldine,
+    "valid":$malibu
+);
+
+$item-background:transparent;
+$item-background-type:(
+    "activated":transparent,
+    "focused":transparent,
+    "hover":transparent,
+    "activated-opacity":1,
+    "focused-opacity":1,
+    "hover-opacity":1
+);
+
+$item-highlight-height:4px;
+$item-inner-border-width:max-content;
+$item-min-height:20px;
+
+$item-border:(
+    "color":transparent,
+    "radius":0px,
+    "style":none,
+    "width":0px
+);
+
+$item-padding:(
+    "bottom":0px,
+    "end":0px,
+    "start":0px,
+    "top":0px
+);
+
+$item-inner-padding:(
+    "bottom":0px,
+    "end":0px,
+    "start":0px,
+    "top":0px
+);
+$item-transition:none;
+$item-inner-box-shadow:none;
+
+$item-divider-color:$white;
+$item-divider-background:$geraldine;
+
+$item-divider-padding:(
+    "bottom":0px,
+    "end":0px,
+    "start":0px,
+    "top":0px
+);
+$item-divider-inner-padding:(
+    "bottom":0px,
+    "end":0px,
+    "start":0px,
+    "top":0px
+);
+$item-option-color:$black;
+$item-option-background:transparent;
+
+@mixin ion-item {
+    --background:#{$item-background};
+    --background-activated:map.get($item-background-type, "activated");
+    --background-activated-opacity:map.get($item-background-type, "activated-opacity");
+    --background-focused:map.get($item-background-type, "focused");
+    --background-focused-opacity:map.get($item-background-type, "focused-opacity");
+    --background-hover:map.get($item-background-type, "hover");
+    --background-hover-opacity:map.get($item-background-type, "hover-opacity");
+
+    --border-color:map.get($item-border, "color");
+    --border-radius:map.get($item-border, "radius");
+    --border-style:map.get($item-border, "style");
+    --border-width:map.get($item-border, "width");
+
+    --color:#{$item-color};
+    --color-activated:map.get($item-color-type, "activated");
+    --color-focused:map.get($item-color-type, "focused");
+    --color-hover:map.get($item-color-type, "hover");
+
+    --detail-icon-color:map.get($item-detail-icon, "color");
+    --detail-icon-font-size:map.get($item-detail-icon, "font-size");
+    --detail-icon-opacity:map.get($item-detail-icon, "opacity");
+
+    --highlight-color-focused:map.get($item-highlight-color, "focused");
+    --highlight-color-invalid:map.get($item-highlight-color, "invalid");
+    --highlight-color-valid:map.get($item-highlight-color, "valid");
+    --highlight-height: #{$item-highlight-height};
+
+    --inner-border-width:#{$item-inner-border-width};
+    --inner-box-shadow:#{$item-inner-box-shadow};
+
+    --inner-padding-bottom:map.get($item-inner-padding, "bottom");
+    --inner-padding-end:map.get($item-inner-padding, "end");
+    --inner-padding-start:map.get($item-inner-padding, "start");
+    --inner-padding-top:map.get($item-inner-padding, "top");
+
+    --min-height:#{$item-min-height};
+
+    --padding-bottom:map.get($item-padding, "bottom");
+    --padding-end:map.get($item-padding, "end");
+    --padding-start:map.get($item-padding, "start");
+    --padding-top:map.get($item-padding, "top");
+
+    --transition:#{$item-transition};
+}
+
+@mixin profile{
+    --min-height:36px !important;
+    --padding-end: 10px;
+    --padding-start: 10px;
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+
+    ion-input.form-control{
+        height:32px !important;
+        min-width: -webkit-fill-available;
+        margin: auto;
+        display: flex;
+    }
+    ion-button {
+        width: 50px;
+    }
+    >ion-label{
+        width:50%;
+    }
+    >ion-datetime{
+        width:50%;
+    }
+    >ion-select{
+        max-width: -webkit-fill-available;
+        margin: auto;
+        display: flex;
+    }
+    >ion-radio-group{
+        width: 50%;
+        display: flex;
+        height: 36px;
+        align-items: center;
+        >ion-item{
+            width:50%;
+            >ion-label{
+                text-align: center;
+            }
+            >ion-radio{
+                margin: auto;
+            }
+        }
+    }
+}
+
+:root {
+    ion-app {
+
+        &.home-tab{
+
+            ion-item{
+                @include ion-item;
+            }
+            
+            ion-item.menu-item{
+                @include ion-item;
+                --padding-start:14px;
+            
+                >ion-icon[slot="start"] {
+                    margin-right:10px;
+                }
+            
+                >ion-label{
+                    --color: #{$suva-grey} !important;
+                }
+            }
+            
+            ion-item.facility {
+               >ion-label {
+                    --color: #{$black} !important;
+               }
+            }
+            
+            ion-item.searchItem {
+                @include ion-item;
+                --inner-padding-start: 12px;
+                --inner-padding-end: 12px;
+                --min-height: 60px;
+                --padding-end: 16px;
+                margin: 5px 22px;
+                background: #FFFFFF 0% 0% no-repeat padding-box;
+                box-shadow: 0px 2px 6px #00000029;
+                border-radius: 8px;
+                opacity: 1;
+            }
+            
+            ion-item.policy{
+                @include ion-item;
+                --inner-padding-start: 12px;
+                --inner-padding-end: 12px;
+                --padding-end: 16px;
+                --padding-top: 5px;
+                --padding-bottom: 5px;
+            }
+            
+            ion-item.pointItem {
+                @include ion-item;
+                --padding-start: 10px;
+                --inner-padding-start: 12px;
+                --inner-padding-end: 12px;
+                --min-height: 60px;
+                --inner-padding-top: 40px;
+                --inner-padding-bottom: 40px;
+                margin: 10px 22px;
+                background: #FFFFFF 0% 0% no-repeat padding-box;
+                box-shadow: 0px 2px 6px #00000029;
+                border-radius: 8px;
+                opacity: 1;
+                ion-label:first-child{
+                    white-space: pre-wrap;
+                    min-width: calc(100% - 107px);
+                }
+            }
+            
+            ion-item-divider{
+            
+                --background:#{$item-divider-background};
+                --color:#{$item-divider-color};
+            
+                --inner-padding-bottom:map.get($item-divider-inner-padding, "bottom");
+                --inner-padding-end:map.get($item-divider-inner-padding, "end");
+                --inner-padding-start:map.get($item-divider-inner-padding, "start");
+                --inner-padding-top:map.get($item-divider-inner-padding, "top");
+            
+                --padding-bottom:map.get($item-divider-padding, "bottom");
+                --padding-end:map.get($item-divider-padding, "end");
+                --padding-start:map.get($item-divider-padding, "start");
+                --padding-top:map.get($item-divider-padding, "top");
+            
+            }
+            
+            ion-item-option{
+            
+                --background:#{$item-option-background};
+                --color:#{$item-option-color};
+            
+            }
+
+            ion-item.eligibility {
+                --padding-top: 8px;
+                --padding-bottom: 8px;
+                --padding-start: 8px;
+                --padding-end: 8px;
+        
+                border: 3px solid #{$geraldine};
+                border-radius: 10px;
+                margin: 8px;
+                
+                >ion-row{
+                    display: flex;
+                    flex-direction: column;
+                }
+            }
+
+        }
+
+        &.expense-tab{
+
+            $item-detail-icon:(
+                "color":$limerick,
+                "opacity":1,
+                "font-size":13px
+            );
+
+            $item-highlight-color:(
+                "focused":$suva-grey,
+                "invalid":$limerick,
+                "valid":$malibu
+            );
+
+            $item-divider-background:$limerick;
+
+            ion-item{
+                @include ion-item;
+            }
+            
+            ion-item.menu-item{
+                @include ion-item;
+                --padding-start:14px;
+            
+                >ion-icon[slot="start"] {
+                    margin-right:10px;
+                }
+            
+                >ion-label{
+                    --color: #{$suva-grey} !important;
+                }
+            }
+            
+            ion-item.facility {
+               >ion-label {
+                    --color: #{$black} !important;
+               }
+            }
+            
+            ion-item.searchItem {
+                @include ion-item;
+                --inner-padding-start: 12px;
+                --inner-padding-end: 12px;
+                --min-height: 60px;
+                --padding-end: 16px;
+                margin: 5px 22px;
+                background: #FFFFFF 0% 0% no-repeat padding-box;
+                box-shadow: 0px 2px 6px #00000029;
+                border-radius: 8px;
+                opacity: 1;
+            }
+            
+            ion-item.policy{
+                @include ion-item;
+                --inner-padding-start: 12px;
+                --inner-padding-end: 12px;
+                --padding-end: 16px;
+                --padding-top: 5px;
+                --padding-bottom: 5px;
+            }
+            
+            ion-item.pointItem {
+                @include ion-item;
+                --padding-start: 10px;
+                --inner-padding-start: 12px;
+                --inner-padding-end: 12px;
+                --min-height: 60px;
+                --inner-padding-top: 40px;
+                --inner-padding-bottom: 40px;
+                margin: 10px 22px;
+                background: #FFFFFF 0% 0% no-repeat padding-box;
+                box-shadow: 0px 2px 6px #00000029;
+                border-radius: 8px;
+                opacity: 1;
+                ion-label:first-child{
+                    white-space: pre-wrap;
+                    min-width: calc(100% - 107px);
+                }
+            }
+            
+            ion-item-divider{
+            
+                --background:#{$item-divider-background};
+                --color:#{$item-divider-color};
+            
+                --inner-padding-bottom:map.get($item-divider-inner-padding, "bottom");
+                --inner-padding-end:map.get($item-divider-inner-padding, "end");
+                --inner-padding-start:map.get($item-divider-inner-padding, "start");
+                --inner-padding-top:map.get($item-divider-inner-padding, "top");
+            
+                --padding-bottom:map.get($item-divider-padding, "bottom");
+                --padding-end:map.get($item-divider-padding, "end");
+                --padding-start:map.get($item-divider-padding, "start");
+                --padding-top:map.get($item-divider-padding, "top");
+            
+            }
+            
+            ion-item-option{
+            
+                --background:#{$item-option-background};
+                --color:#{$item-option-color};
+            
+            }
+
+        }
+    }
+}
+

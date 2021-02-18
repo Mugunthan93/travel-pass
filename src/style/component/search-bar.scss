@@ -1,0 +1,41 @@
+@import "../base/color.scss";
+
+
+
+$search-bar-background:$white;
+$search-bar-border-radius:4px;
+$search-bar-box-shadow:none;
+$search-bar-button-color:(
+    "clear":$geraldine,
+    "cancel":$geraldine
+    );
+$search-bar-color:$black;
+$search-bar-icon-color:$geraldine;
+$search-bar-placeholder:(
+    "color":$black,
+    "font-style":none,
+    "font-weight":none,
+    "opacity":1,
+);
+
+$search-bar-box-shadow:none;
+
+ion-searchbar{
+
+    --background: #{$search-bar-background};
+
+    --border-radius: #{$search-bar-border-radius};
+    --box-shadow: #{$search-bar-box-shadow};
+
+    --clear-button-color: map.get($search-bar-button-color,"clear");
+    --cancel-button-color: map.get($search-bar-button-color, "cancel");
+
+    --color: #{$search-bar-color};
+    --icon-color: #{$search-bar-icon-color};
+
+    --placeholder-color: map.get($search-bar-placeholder, "color");
+    --placeholder-font-style: map.get($search-bar-placeholder, "font-style");
+    --placeholder-font-weight: map.get($search-bar-placeholder, "font-weight");
+    --placeholder-opacity: map.get($search-bar-placeholder, "opacity");
+
+}

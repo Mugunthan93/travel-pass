@@ -1,0 +1,91 @@
+@import "../../../../style/base/color.scss";
+
+ion-content {
+    >ion-card:nth-child(1) {
+        >mat-accordion {
+            >mat-expansion-panel {
+                >mat-expansion-panel-header {
+                    >::ng-deep span {
+                        flex-direction: column;
+                    }
+                }
+
+                ::ng-deep .mat-expansion-panel-body {
+                    >ion-row {
+                        margin: 12px 0px;
+                        justify-content: space-between;
+                        >ion-row{
+                            display: flex;
+                            flex-direction: column;
+
+                            &:last-child{
+                                text-align: end;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    >ion-card:nth-child(2) {
+        >ion-card-header {
+            >ion-row {
+                margin: 12px auto;
+            }
+
+            >ion-row {
+                >ion-col {
+                    max-width: fit-content;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                >ion-col:first-child {
+                }
+
+                >ion-col:last-child {
+                    margin-left: auto;
+                    text-align: end;
+                }
+            }
+
+            >mat-divider {
+                color: #{$suva-grey};
+            }
+        }
+
+        >ion-card-content {
+            >ion-list {
+                >div {
+                    >ion-item {
+                        --padding-start: 0px;
+                        --min-height: 35px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+ion-footer {
+    >ion-toolbar {
+
+        >ion-item {
+
+            --padding-start: 16px;
+
+            ion-checkbox{
+                margin-right: 10px;
+            }
+
+            ion-label{
+                color: #{$white};
+            }
+
+            >ion-row {
+                flex-direction: column;
+            }
+        }
+    }
+}

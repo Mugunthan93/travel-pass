@@ -1,0 +1,52 @@
+
+
+//////////////////
+///Unused Color///
+/////////////////
+
+$grey-bermuda: #7791AA;
+$blue-irish: #0AB6CC;
+$limerick-rgb: 148,167,62;
+$london-hue: #9e5b91;
+$Bouquet: #BA8EB1;
+
+
+
+////////////////
+///Used Color///
+////////////////
+
+$geraldine : #e87474;
+$geraldine-rgb : 232,116,116;
+$limerick: #94A73E;
+$crusta: #EE925E;
+
+$beauty-bush: #f5b8b8;
+
+$malibu: #5BACDC;
+$onahau: #b9e4ff;
+
+$suva-grey: #8c8c8c;
+$black: #000000;
+$white: #ffffff;
+$gray55: #8c8c8c;
+
+:root {
+
+    .initial {
+        color: grey;
+        --placeholder-color:grey;
+    }
+
+    .invalid {
+        color: #E87474 !important;
+        --placeholder-color: #E87474 !important;
+
+    }
+
+    .valid {
+        color: #5BACDC !important;
+        --placeholder-color: #5BACDC !important;
+    }
+
+}

@@ -1,0 +1,23 @@
+ion-content {
+    >ion-item {
+        --min-height: 60px !important;
+        --padding-top: 8px !important;
+        --padding-bottom: 8px !important;
+        --padding-start: 16px !important;
+        --padding-end: 16px !important;
+
+        ion-label[slot="end"] {
+            text-align: end;
+        }
+    }
+
+    >ion-item:nth-child(4) {
+        border: 2px solid grey;
+        margin: 8px;
+        border-radius: 10px;
+
+        >ion-label {
+            margin-left: 8px;
+        }
+    }
+}

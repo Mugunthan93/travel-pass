@@ -1,0 +1,37 @@
+ion-header {
+    ion-title {
+        padding: 0px !important;
+    }
+}
+
+
+ion-content {
+    >ion-grid {
+        --ion-grid-padding: 10px !important;
+
+        >* {
+            margin: 4px 0px;
+        }
+
+        >ion-segment {
+            min-height: 40px !important;
+            >ion-segment-button {
+                min-width: 20px !important;
+            }
+        }
+
+        >ion-range {
+            padding: 0px;
+            min-height: 20px !important;
+            max-height: 20px !important;
+        }
+
+        >ion-item {
+            min-height: 50px;
+        }
+
+        >ion-row {
+            justify-content: space-between;
+        }
+    }
+}

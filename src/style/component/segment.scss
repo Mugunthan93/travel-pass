@@ -1,0 +1,171 @@
+@import "../base/color.scss";
+@import "../base/fonts.scss";
+
+//variable
+
+$segment-background:inherit;
+
+$segment-button-color:$black;
+$segment-button-indicator-color:none;
+$segment-button-color-type:(
+    "checked":none,
+    "focused":none,
+    "hover":none
+);
+
+$segment-button-background:none;
+$segment-button-background-type:(
+    "checked":none,
+    "focused":none,
+    "hover":none,
+    "checked-opacity":none,
+    "focused-opacity":none,
+    "hover-opacity":none,
+);
+
+$segment-button-border:(
+    "color": initial,
+    "radius": 0px,
+    "style": none,
+    "width": 0px
+);
+
+$segment-button-margin:(
+    "bottom":0px,
+    "end":0px,
+    "start":0px,
+    "top":0px
+);
+$segment-button-padding:(
+    "bottom":0px,
+    "end":0px,
+    "start":0px,
+    "top":0px
+);
+
+$segment-button-indicator:(
+    "color":none,
+    "height":0px,
+    "transition":none,
+    "transform":none,
+    "box-shadow":none
+    );
+$segment-button-transition:none;
+
+// ion-segment{
+//     --background:#{$segment-background};
+// }
+
+@mixin ion-segment-button{
+    --background: #{$segment-button-background};
+
+    --background-activated: map.get($segment-button-background-type, "activated");
+    --background-activated-opacity: map.get($segment-button-background-type, "activated-opacity");
+    --background-focused: map.get($segment-button-background-type, "focused");
+    --background-focused-opacity: map.get($segment-button-background-type, "focused-opacity");
+    --background-hover: map.get($segment-button-background-type, "hover");
+    --background-hover-opacity: map.get($segment-button-background-type, "hover-opacity");
+
+    --color:#{$segment-button-color};
+
+    --color-checked: map.get($segment-button-color-type, "checked");
+    --color-focused: map.get($segment-button-color-type, "focused");
+    --color-hover: map.get($segment-button-color-type, "hover");
+
+    --indicator-box-shadow: map.get($segment-button-indicator, "box-shadow");
+    --indicator-color: map.get($segment-button-indicator, "color");
+    --indicator-height: map.get($segment-button-indicator, "height");
+    --indicator-transform: map.get($segment-button-indicator, "transform");
+    --indicator-transition: map.get($segment-button-indicator, "transition");
+
+    --padding-bottom: map.get($segment-button-padding, "bottom");
+    --padding-end: map.get($segment-button-padding, "end");
+    --padding-start: map.get($segment-button-padding, "start");
+    --padding-top: map.get($segment-button-padding, "top");
+
+    --margin-bottom: map.get($segment-button-margin, "bottom");
+    --margin-end: map.get($segment-button-margin, "end");
+    --margin-start: map.get($segment-button-margin, "start");
+    --margin-top: map.get($segment-button-margin, "top");
+
+    --border-color: map.get($segment-button-border, "color");
+    --border-radius: map.get($segment-button-border, "radius");
+    --border-style: map.get($segment-button-border, "style");
+    --border-width: map.get($segment-button-border, "width");
+
+    --transition: #{$segment-button-transition};
+}
+
+ion-segment-button.sort {
+    @include ion-segment-button;
+
+    & {
+        >ion-icon {
+            font-size: #{$small-font};
+            stroke: #{$black} !important;
+
+        }
+    }
+
+    &.selectedItem {
+        ion-icon {
+            font-size: #{$small-font};
+            stroke: #{$geraldine} !important;
+        }
+
+        ion-label {
+            color: #{$geraldine} !important;
+        }
+    }
+
+}
+
+ion-segment.room-category {
+    --background: #{$white};
+    ion-segment-button.room-category {
+        >ion-chip {
+            --color:#{$geraldine} !important;
+            --background:#{$white} !important;
+            border: 1px solid #{$geraldine};
+        }
+    }
+}
+
+ion-segment.points {
+    --background: #{$white};
+
+    ion-segment-button.point {
+        --indicator-height: 0px;
+        >ion-chip {
+            --color:#{$geraldine} !important;
+            --background:#{$white} !important;
+            border: 1px solid #{$geraldine};
+        }
+    }
+}
+
+ion-segment.filghtfilter {
+    ion-segment-button {
+        --background:#{$white};
+        --background-checked:#{$white};
+
+        --color:#{$geraldine};
+        --color-checked:#{$geraldine};
+
+        --indicator-color:#{$geraldine};
+    }
+}
+
+ion-segment.round-trip-book {
+    ion-segment-button {
+        --background:#{$white};
+        --background-checked:#{$white};
+
+        --color:#{$geraldine};
+        --color-checked:#{$geraldine};
+
+        --indicator-color:#{$geraldine};
+    }
+}
+
+

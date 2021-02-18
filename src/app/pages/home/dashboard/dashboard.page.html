@@ -1,0 +1,62 @@
+
+<ion-header id="sidebar">
+  <ion-toolbar>
+    <ion-buttons slot="start" (click)="openMenu()">
+      <!-- <ion-button>
+        <ion-icon name="menu"></ion-icon>
+      </ion-button> -->
+      <ion-menu-button autohide="false"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="large">
+      Travellers Pass
+    </ion-title>
+    <ion-buttons slot="end">
+      <!-- <ion-button (click)="notification()">
+        <ion-icon slot="icon-only" name="notifications-outline" size="large"></ion-icon>
+      </ion-button> -->
+      <ion-button (click)="profile()">
+        <ion-icon slot="icon-only" src="../../../../../assets/ionicons/md-people-circle-outline.svg" size="large">
+        </ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-segment  *ngIf="currenttab == 'trip-tab'" [value]="tripStatus$ | async" (ionChange)="changeStatus($event)">
+    <ion-segment-button layout="icon-end" value="active">
+        <ion-badge *ngIf="(activePending$ | async) !== 0">{{ activePending$ | async }}</ion-badge>
+        <ion-label>
+            Active
+        </ion-label>
+    </ion-segment-button>
+    <ion-segment-button layout="icon-end" value="confirmed">
+        <ion-label>
+            Confirmed
+        </ion-label>
+    </ion-segment-button>
+    <ion-segment-button layout="icon-end" value="completed">
+        <ion-label>
+            Completed
+        </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-header>
+
+<ion-content>
+  <ion-tabs (ionTabsDidChange)="tabChange($event)">
+    <ion-tab-bar slot="bottom" class="ion-justify-content-around">
+      <ion-tab-button tab="home-tab">
+        <ion-icon name="briefcase"></ion-icon>
+        <ion-label class="large">Home</ion-label>
+      </ion-tab-button>
+  
+      <ion-tab-button tab="trip-tab">
+        <ion-icon name="home"></ion-icon>
+        <ion-label class="large">Trips</ion-label>
+      </ion-tab-button>
+  
+      <ion-tab-button tab="expense-tab">
+        <ion-icon name="card"></ion-icon>
+        <ion-label class="large">Expense</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+</ion-content>

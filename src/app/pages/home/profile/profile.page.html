@@ -1,0 +1,198 @@
+<ion-header id="sidebar">
+  <ion-toolbar>
+    <ion-buttons (click)="back()" slot="start">
+      <ion-button>
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form *ngIf="user$ | async" [formGroup]="edituser" (ngSubmit)="saveUser()">
+    <ion-list>
+      <ion-item>
+        <ion-title slot="start">Personal Details</ion-title>
+        <ion-button slot="end" (click)="editUser()" *ngIf="!editMode">
+          <ion-label class="bold">Edit</ion-label>
+        </ion-button>
+        <ion-button slot="end" type="submit" *ngIf="editMode">
+          <ion-label class="bold">Save</ion-label>
+        </ion-button>
+        <ion-button slot="end" (click)="cancel()" *ngIf="editMode">
+          <ion-label class="bold">Cancel</ion-label>
+        </ion-button>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label class="bold">First Name</ion-label>
+        <ion-label *ngIf="!editMode">{{ (user$ | async).name | titlecase }}</ion-label>
+        <ion-input type="text" 
+        [ngClass]="{
+        'is-valid': edituser.controls['name'].valid,
+        'is-invalid': edituser.controls['name'].invalid
+        }"
+        *ngIf="editMode" 
+        class="form-control" 
+        formControlName="name"></ion-input>
+      </ion-item>
+  
+  
+      <ion-item>
+        <ion-label class="bold">Last Name</ion-label>
+        <ion-label *ngIf="!editMode">{{ (user$ | async).lastname | titlecase }}</ion-label>
+        <ion-input type="text"
+        [ngClass]="{
+        'is-valid': edituser.controls['lastname'].valid,
+        'is-invalid': edituser.controls['lastname'].invalid
+        }"
+        *ngIf="editMode" 
+        class="form-control" 
+        formControlName="lastname"></ion-input>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label class="bold">Email</ion-label>
+        <ion-label *ngIf="!editMode">{{ (user$ | async).email | lowercase }}</ion-label>
+        <ion-input type="email"
+        [ngClass]="{
+        'is-valid': edituser.controls['email'].valid,
+        'is-invalid': edituser.controls['email'].invalid
+        }"
+        *ngIf="editMode" 
+        class="form-control" 
+        formControlName="email"></ion-input>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label class="bold">Designation</ion-label>
+        <ion-label *ngIf="!editMode">{{ (user$ | async).designation | titlecase }}</ion-label>
+        <ion-input type="text" 
+        [ngClass]="{
+        'is-valid': edituser.controls['designation'].valid,
+        'is-invalid': edituser.controls['designation'].invalid
+        }"
+        *ngIf="editMode" 
+        class="form-control" 
+        formControlName="designation"></ion-input>
+      </ion-item>
+  
+  
+      <ion-item>
+        <ion-label class="bold">Phone Number</ion-label>
+        <ion-label *ngIf="!editMode">{{ (user$ | async).phone_number }}</ion-label>
+        <ion-input type="number" 
+        [ngClass]="{
+        'is-valid': edituser.controls['phone_number'].valid,
+        'is-invalid': edituser.controls['phone_number'].invalid
+        }"
+        *ngIf="editMode" 
+        class="form-control" 
+        formControlName="phone_number"></ion-input>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label class="bold">PAN Number</ion-label>
+        <ion-label *ngIf="!editMode">{{ (user$ | async).PAN_number }}</ion-label>
+        <ion-input *ngIf="editMode" type="text"
+        [ngClass]="{
+          'is-valid': edituser.controls['PAN_number'].valid,
+          'is-invalid': edituser.controls['PAN_number'].invalid
+        }"
+        class="form-control"
+        formControlName="PAN_number"></ion-input>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label class="bold">Passport Number</ion-label>
+        <ion-label *ngIf="!editMode">{{ (user$ | async).passport_no }}</ion-label>
+        <ion-input type="text" 
+        [ngClass]="{
+        'is-valid': edituser.controls['passport_no'].valid,
+        'is-invalid': edituser.controls['passport_no'].invalid
+        }"
+        *ngIf="editMode" 
+        class="form-control" 
+        formControlName="passport_no"></ion-input>
+      </ion-item>
+  
+  
+      <ion-item>
+        <ion-label class="bold">Passport Expiry Date</ion-label>
+        <ion-label *ngIf="!editMode">{{ (user$ | async).passport_expiry  | date : 'dd-MM-yyyy'}}</ion-label>
+        <ion-datetime
+          *ngIf="editMode"
+          class="form-control"
+          displayFormat="DD-MM-YYYY"
+          pickerFormat="DD-MM-YYYY"
+          type="date" 
+          placeholder="Select Passport Expiry Date" 
+          max="2050"
+          formControlName="passport_expiry"
+          [ngClass]="{
+          'is-valid': edituser.controls['passport_expiry'].valid,
+          'is-invalid': edituser.controls['passport_expiry'].invalid
+          }"></ion-datetime>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label class="bold">Date Of Birth</ion-label>
+        <ion-label *ngIf="!editMode">{{ (user$ | async).dob | date : 'dd-MM-yyyy' }}</ion-label>
+        <ion-datetime 
+          *ngIf="editMode" 
+          class="form-control" 
+          displayFormat="DD-MM-YYYY"
+          pickerFormat="DD-MM-YYYY"
+          type="date"
+          placeholder="Select Date of Birth" 
+          max="2000" 
+          formControlName="dob"
+          [ngClass]="{
+          'is-valid': edituser.controls['dob'].valid,
+          'is-invalid': edituser.controls['dob'].invalid
+          }"></ion-datetime>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label class="bold">Address</ion-label>
+        <ion-label *ngIf="!editMode">{{ (user$ | async).address }}</ion-label>
+        <ion-input type="text" 
+        [ngClass]="{
+        'is-valid': edituser.controls['address'].valid,
+        'is-invalid': edituser.controls['address'].invalid
+        }"
+        *ngIf="editMode" 
+        class="form-control" 
+        formControlName="address"></ion-input>
+      </ion-item>
+      
+      <ion-item>
+        <ion-label class="bold">Gender</ion-label>
+        <ion-label *ngIf="!editMode">{{ (user$ | async).gender }}</ion-label>
+        <ion-radio-group 
+          [ngClass]="{
+          'is-valid': edituser.controls['gender'].valid,
+          'is-invalid': edituser.controls['gender'].invalid
+          }"
+          formControlName="gender"
+          *ngIf="editMode" 
+          [value]="(user$ | async).gender">
+          <ion-item>
+            <ion-label>Male</ion-label>
+            <ion-radio slot="start" value="Male"></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label>Female</ion-label>
+            <ion-radio slot="start" value="Female"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label class="bold">Employee Code</ion-label>
+        <ion-label>{{ (user$ | async).staff_code }}</ion-label>
+      </ion-item>
+    </ion-list>
+  </form>
+</ion-content>

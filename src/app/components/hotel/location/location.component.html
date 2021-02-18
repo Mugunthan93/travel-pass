@@ -1,0 +1,88 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-back-button icon="back" slot="start"></ion-back-button>
+    <ion-title>Chennai</ion-title>
+    <ion-title>Selected your Preferred Location</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar></ion-searchbar>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-row>
+          <ion-text>Popular with Tourists</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-chip *ngFor="let tourist of options.tourist;let i = index" (click)="chipSelection(tourist,i)">
+              <ion-text>{{tourist.value}}</ion-text>
+              <ion-icon name="close" *ngIf="tourist.selection"></ion-icon>
+            </ion-chip>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-row>
+          <ion-text>Bussiness & Shopping Hubs</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-chip *ngFor="let buss_shop of options.bussiness_shopping;let i = index" (click)="chipSelection(buss_shop,i)">
+              <ion-text>{{buss_shop.value}}</ion-text>
+              <ion-icon name="close" *ngIf="buss_shop.selection"></ion-icon>
+            </ion-chip>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-row>
+          <ion-text>Near Transit Hubs</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-chip *ngFor="let transit of options.transit;let i = index" (click)="chipSelection(transit,i)">
+              <ion-text>{{transit.value}}</ion-text>
+              <ion-icon name="close" *ngIf="transit.selection"></ion-icon>
+            </ion-chip>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-row>
+          <ion-text>Top Areas</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-chip *ngFor="let topareas of options.topareas;let i = index" (click)="chipSelection(topareas,i)">
+              <ion-text>{{topareas.value}}</ion-text>
+              <ion-icon name="close" *ngIf="topareas.selection"></ion-icon>
+            </ion-chip>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-footer>
+  <ion-row id="book-button">
+    <ion-col>
+      <ion-button>
+        <ion-text>Cancel</ion-text>
+      </ion-button>
+    </ion-col>
+    <ion-col>
+      <ion-button>
+        <ion-text>Apply</ion-text>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

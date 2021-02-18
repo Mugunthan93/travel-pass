@@ -1,0 +1,38 @@
+@import "../base/color.scss";
+@import "../base/fonts.scss";
+
+//variable 
+
+$title-color:$black;
+$title-family:'roboto-title';
+
+ion-title {
+    --color: #{$title-color};
+    font-family: #{$title-family};
+
+    padding:0px;
+
+    &.small {
+        font-size: #{$small-font};
+    }
+
+    &.medium {
+        font-size:#{$medium-font};
+    }
+
+    &.large {
+        font-size: #{$large-font};
+    }
+
+    &.bold {
+        font-weight: 700;
+    }
+
+    &.bolder {
+        font-weight: 800;
+    }
+
+    &.boldest {
+        font-weight: 900;
+    }
+}

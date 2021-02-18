@@ -1,0 +1,85 @@
+@import "../../../../../style/base/color.scss";
+
+ion-header {
+    background: white !important;
+    >ion-row.totalExpense{
+        width: 75% !important;
+        margin: 20px auto;
+        display: flex;
+        >ion-row.total{ 
+            display: flex;
+            flex-direction: column;
+            width: -webkit-fill-available;
+            text-align: center;
+            margin: 10px 0px;
+            >ion-skeleton-text {
+                width: 37%;
+            }
+        }
+        >ion-progress-bar{
+            height: 15px;
+            margin: 10px auto;
+        }
+        >ion-row.paid-bal{
+            width: -webkit-fill-available;
+            justify-content: space-between;
+            >ion-row{
+                display: flex;
+                flex-direction: column;
+            }
+            >ion-row:last-child{
+                text-align: end;
+            }
+        }
+    }
+    >ion-row.addtrip {
+        padding: 10px;
+        justify-content: space-between;
+        ion-label {
+            margin: 10px;
+        }
+    }
+}
+
+ion-content{
+
+    >ion-row {
+        margin: 16px;
+    }
+
+    >ion-card{
+        height : 120px !important;
+        background: white;
+        ion-card-header{
+            padding-bottom: 4px;
+            ion-item{
+                >ion-skeleton-text{
+                    margin-left:0px;
+                }
+            }
+        }
+        ion-card-content{
+            ion-item{
+                ion-title[slot="end"]{
+                    text-align: end;
+                }
+
+                ion-label[slot="end"]{
+                    text-align: end;
+                }
+            }
+        }
+    }
+
+    >ion-label {
+        position: absolute;
+        top: 45%;
+        left: 35%;
+        font-size: 20px;
+    }
+
+    ion-skeleton-text{
+        margin: auto;
+        height: 20px;
+    }
+}  

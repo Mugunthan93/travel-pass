@@ -1,0 +1,9 @@
+@import "../base/color.scss";
+
+$chip-color:$white;
+$chip-background:$geraldine;
+
+ion-chip {
+    --color:#{$chip-color};
+    --background:#{$chip-background};
+}

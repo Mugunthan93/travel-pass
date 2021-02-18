@@ -1,0 +1,216 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Reschedule Request - {{ type$ | async }}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-sharp"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-row slot="start">
+      <ion-label class="bold large">Travel Type :</ion-label>
+      <ion-label>{{ TripType() | async }}</ion-label>
+    </ion-row>
+    <ion-row slot="end">
+      <ion-label class="bold large">PNR :</ion-label>
+      <ion-label>{{ gePNR() | async }}</ion-label>
+    </ion-row>
+  </ion-item>
+  <ion-card class="flight-reschedule">
+    <ion-card-header>
+      <ion-item>
+        <ion-row slot="start">
+          <ion-label class="bold large">Journey Type :</ion-label>
+          <ion-label>{{ journeyType() | async }}</ion-label>
+        </ion-row>
+        <ion-row slot="end">
+          <ion-label class="bold large">Travel Type :</ion-label>
+          <ion-label>{{ travelType() | async }}</ion-label>
+        </ion-row>
+      </ion-item>
+    </ion-card-header>
+    <ion-card-content>
+      <form [formGroup]="rescheduleForm" (ngSubmit)="submitReschedule()">
+        <ion-row formArrayName="trips" *ngFor="let trip of trips.controls; let i = index;">
+          <ion-row [formGroupName]="i">
+            <ion-item (click)="selectCity(trip,i,'from')">
+                <ion-label slot="start" class="bold large">From</ion-label>
+                <ion-input 
+                  formControlName="from" 
+                  slot="end" 
+                  class="form-control"
+                  [ngClass]="error(trip,'from')"
+                  [disabled]="(travelType() | async) == 'Domestic'"
+                  >
+                </ion-input>
+            </ion-item>
+            <ion-item (click)="selectCity(trip,i,'to')">
+              <ion-label slot="start" class="bold large">To</ion-label>
+              <ion-input 
+                [value]="this.rescheduleForm.value.trips[i].to.DestinationName"
+                formControlName="to" 
+                slot="end" 
+                class="form-control"
+                [ngClass]="error(trip,'to')"
+                [disabled]="(travelType() | async) == 'Domestic'"
+                >
+              </ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label slot="start" class="bold large">Date</ion-label>
+              <ion-datetime 
+                class="form-control" 
+                displayFormat="DD-MM-YYYY" 
+                pickerFormat="DD-MM-YYYY"
+                type="date" 
+                placeholder="Select Travel Date" 
+                formControlName="date" 
+                (ionChange)="setDate($event,trip,i)"
+                [ngClass]="error(trip,'date')">
+              </ion-datetime>
+            </ion-item>
+          </ion-row>
+        </ion-row>
+        <ion-item>
+          <ion-label slot="start" class="bold large">Request Remarks</ion-label>
+          <ion-input formControlName="remark" slot="end" class="form-control" [ngClass]="{
+            'is-valid': rescheduleForm.controls['remark'].valid,
+            'is-invalid': rescheduleForm.controls['remark'].invalid
+          }">
+          </ion-input>
+        </ion-item>
+      </form>
+    </ion-card-content>
+  </ion-card>
+  <mat-accordion class="flight" multi="true"
+    *ngFor="let flight of (ticket$ | async).passenger_details.flight_details;let i = index">
+    <mat-expansion-panel *ngFor="let seg of flight.Segments;let i = index">
+      <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">
+        <ion-row>
+          <ion-label class="large bold">
+            Trip {{i+1}}
+          </ion-label>
+          <ion-row>
+            <ion-label>{{seg[0].Origin.Airport.CityName}}</ion-label>
+            <ion-icon src="../../../../../../assets/icons/flight.svg"></ion-icon>
+            <ion-label>{{seg[seg.length - 1].Destination.Airport.CityName}}</ion-label>
+          </ion-row>
+        </ion-row>
+      </mat-expansion-panel-header>
+      <div *ngFor="let s of seg;let i = index">
+        <ion-item>
+          <ion-row slot="start">
+            <ion-img src="../../../../../../assets/AirlineLogo/{{s.Airline.AirlineCode}}.gif"></ion-img>
+            <ion-row>
+              <ion-label class="bold">{{s.Airline.AirlineName}}</ion-label>
+              <ion-label>{{s.Airline.AirlineCode}} - {{s.Airline.FlightNumber}}</ion-label>
+            </ion-row>
+          </ion-row>
+        </ion-item>
+        <ion-row>
+          <ion-col>
+            <ion-label class="bold">({{s.Origin.Airport.AirportCode}}) {{s.Origin.DepTime  | date : 'HH:mm'}}
+            </ion-label>
+            <ion-label class="bold">{{s.Origin.DepTime | date : 'EEE,d LLL' | titlecase}}</ion-label>
+            <ion-label class="bold">{{s.Origin.Airport.AirportName}}</ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-icon size="large" src="../../../../../../assets/icons/passage-of-time.svg"></ion-icon>
+            <ion-label class="bold">{{s.Duration}} Mins</ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-label class="bold">({{s.Destination.Airport.AirportCode}})
+              {{s.Destination.ArrTime  | date : 'HH:mm'}}
+            </ion-label>
+            <ion-label class="bold">{{s.Destination.ArrTime | date : 'EEE,d LLL' | titlecase}}</ion-label>
+            <ion-label class="bold">{{s.Destination.Airport.AirportName}}</ion-label>
+          </ion-col>
+        </ion-row>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>
+        <ion-label class="large bold">
+          Travellers Details
+        </ion-label>
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-card *ngFor="let passenger of (passenger() | async); let i = index">
+        <ion-card-header>
+          <ion-card-subtitle>
+            <ion-label class="large bold">
+              {{ passengerTitle(passenger,i) }}
+            </ion-label>
+          </ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content *ngIf="type == 'flight'">
+          <ion-item>
+            <ion-label class="bold" slot="start">Name</ion-label>
+            <ion-label class="bold large" slot="end">{{passenger.FirstName+" "+passenger.LastName}}</ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label class="bold" slot="start">Email</ion-label>
+            <ion-label class="bold large" slot="end">{{passenger.Email}}</ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label class="bold" slot="start">Mobile</ion-label>
+            <ion-label class="bold large" slot="end">{{passenger.ContactNo}}</ion-label>
+          </ion-item>
+        </ion-card-content>
+
+        <ion-card-content *ngIf="type == 'hotel'">
+          <ion-item>
+            <ion-label class="bold" slot="start">Name</ion-label>
+            <ion-label class="bold large" slot="end">{{passenger.FirstName+" "+passenger.LastName}}</ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label class="bold" slot="start">Email</ion-label>
+            <ion-label class="bold large" slot="end">{{passenger.Email}}</ion-label>
+          </ion-item>
+          <ion-item *ngIf="passenger.LeadPassenger">
+            <ion-label class="bold" slot="start">PAN Number</ion-label>
+            <ion-label class="bold large" slot="end">{{passenger.PAN}}</ion-label>
+          </ion-item>
+        </ion-card-content>
+
+        <ion-card-content *ngIf="type == 'bus'">
+          <ion-item>
+            <ion-label class="bold" slot="start">Name</ion-label>
+            <ion-label class="bold large" slot="end">{{passenger.name+" "+passenger.lastName}}</ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label class="bold" slot="start">Email</ion-label>
+            <ion-label class="bold large" slot="end">{{passenger.email}}</ion-label>
+          </ion-item>
+          <ion-item *ngIf="passenger.LeadPassenger">
+            <ion-label class="bold" slot="start">{{ passenger.idType }}</ion-label>
+            <ion-label class="bold large" slot="end">{{passenger.idNumber}}</ion-label>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
+<ion-footer>
+  <form [formGroup]="rescheduleForm" (ngSubmit)="submitReschedule()">
+  <ion-toolbar>
+      <ion-buttons slot="end">
+        <ion-button type="submit">
+          <ion-label class="medium bold">Apply Reschedule</ion-label>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </form>
+</ion-footer>
+

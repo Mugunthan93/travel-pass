@@ -1,0 +1,40 @@
+@import "../base/color.scss";
+@import "../base/fonts.scss";
+
+//variable
+
+$loading-backdrop-opacity:0.5;
+$loading-spinner-color:$geraldine;
+$loading-background:transparent;
+
+$loading-width:auto;
+$loading-height:auto;
+
+$loading-width-type:(
+    "min": min-content,
+    "max": max-content
+);
+$loading-height-type:(
+    "min": min-content,
+    "max": max-content
+);
+
+ion-loading {
+    
+    --spinner-color:#{$loading-spinner-color} !important;
+
+    --backdrop-opacity:#{$loading-backdrop-opacity};
+    --background:#{$loading-background};
+
+    --width:#{$loading-width};
+    --height:#{$loading-height};
+
+    --min-width:map.get($loading-width-type,"min");
+    --max-width:map.get($loading-width-type,"max");
+
+    --min-height:map.get($loading-width-type,"min");
+    --max-height:map.get($loading-width-type,"max");
+
+    
+    
+}

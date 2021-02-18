@@ -1,0 +1,261 @@
+<ion-content>
+  <mat-accordion multi="false">
+    <mat-expansion-panel *ngFor="let flights of depFlightDetail.trip;let i = index">
+      <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">
+        <ion-row>
+          <ion-label class="large bold">
+            {{'Onward Trip Details'}}
+          </ion-label>
+          <ion-row>
+            <ion-label>{{flights.origin}}</ion-label>
+            <ion-icon src="../../../../../../assets/icons/flight.svg"></ion-icon>
+            <ion-label>{{flights.destination}}</ion-label>
+          </ion-row>
+        </ion-row>
+      </mat-expansion-panel-header>
+      <div *ngFor="let flight of flights.connecting_flight;let i = index">
+        <ion-item>
+          <ion-row slot="start">
+            <ion-img src="../../../../../../assets/AirlineLogo/{{flight.airline.code}}.gif"></ion-img>
+            <ion-row>
+              <ion-label class="bold">{{flight.airline.name}}</ion-label>
+              <ion-label class="large bold">{{flight.airline.code}} - {{flight.airline.number}}</ion-label>
+            </ion-row>
+          </ion-row>
+          <ion-row slot="end">
+            <!-- <ion-img src="../../../../../../assets/site-image/D7.gif"></ion-img> -->
+          </ion-row>
+        </ion-item>
+        <ion-row>
+          <ion-col>
+            <ion-label class="bold">({{flight.origin.code}}) {{flight.origin.date  | date : 'HH:mm'}}</ion-label>
+            <ion-label class="bold">{{flight.origin.date | date : 'EEE,d LLL' | titlecase}}</ion-label>
+            <ion-label class="bold">{{flight.origin.name}}</ion-label>
+            <ion-label class="bold">Terminal {{flight.origin.terminal}}</ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-icon size="large" src="../../../../../../assets/icons/passage-of-time.svg"></ion-icon>
+            <ion-label class="bold">{{flight.duration}}</ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-label class="bold">({{flight.destination.code}}) {{flight.destination.date  | date : 'HH:mm'}}
+            </ion-label>
+            <ion-label class="bold">{{flight.destination.date | date : 'EEE,d LLL' | titlecase}}</ion-label>
+            <ion-label class="bold">{{flight.destination.name}}</ion-label>
+            <ion-label class="bold">Terminal {{flight.destination.terminal}}</ion-label>
+          </ion-col>
+        </ion-row>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel *ngFor="let flights of reFlightDetail.trip;let i = index">
+      <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">
+        <ion-row>
+          <ion-label class="large bold">
+            {{'Return Trip Details'}}
+          </ion-label>
+          <ion-row>
+            <ion-label>{{flights.origin}}</ion-label>
+            <ion-icon src="../../../../../../assets/icons/flight.svg"></ion-icon>
+            <ion-label>{{flights.destination}}</ion-label>
+          </ion-row>
+        </ion-row>
+      </mat-expansion-panel-header>
+      <div *ngFor="let flight of flights.connecting_flight;let i = index">
+        <ion-item>
+          <ion-row slot="start">
+            <ion-img src="../../../../../../assets/AirlineLogo/{{flight.airline.code}}.gif"></ion-img>
+            <ion-row>
+              <ion-label class="bold">{{flight.airline.name}}</ion-label>
+              <ion-label class="large bold">{{flight.airline.code}} - {{flight.airline.number}}</ion-label>
+            </ion-row>
+          </ion-row>
+          <ion-row slot="end">
+            <!-- <ion-img src="../../../../../../assets/site-image/D7.gif"></ion-img> -->
+          </ion-row>
+        </ion-item>
+        <ion-row>
+          <ion-col>
+            <ion-label class="bold">({{flight.origin.code}}) {{flight.origin.date  | date : 'HH:mm'}}</ion-label>
+            <ion-label class="bold">{{flight.origin.date | date : 'EEE,d LLL' | titlecase}}</ion-label>
+            <ion-label class="bold">{{flight.origin.name}}</ion-label>
+            <ion-label class="bold">Terminal {{flight.origin.terminal}}</ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-icon size="large" src="../../../../../../assets/icons/passage-of-time.svg"></ion-icon>
+            <ion-label class="bold">{{flight.duration}}</ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-label class="bold">({{flight.destination.code}}) {{flight.destination.date  | date : 'HH:mm'}}
+            </ion-label>
+            <ion-label class="bold">{{flight.destination.date | date : 'EEE,d LLL' | titlecase}}</ion-label>
+            <ion-label class="bold">{{flight.destination.name}}</ion-label>
+            <ion-label class="bold">Terminal {{flight.destination.terminal}}</ion-label>
+          </ion-col>
+        </ion-row>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <ion-row (click)="addPassengerDetails()">
+    <ion-label class="large bold">Passenger Details</ion-label>
+    <ion-label>{{adult}} Adult</ion-label>
+  </ion-row>
+
+  <ion-segment (ionChange)="changeSummary($event)" value="onward" class="round-trip-book">
+    <ion-segment-button value="onward">
+      <ion-label class="bold">
+        Onward
+      </ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="return">
+      <ion-label class="bold">
+        Return
+      </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-list class="fare">
+    <ion-list-header>
+      <ion-label class="bold large">FARE SUMMARY</ion-label>
+    </ion-list-header>
+    <ion-item>
+      <ion-label slot="start">Base Fare</ion-label>
+      <ion-label slot="end">
+        {{ flightSummary.fare.base | currency : 'INR' }}
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label slot="start">Taxes</ion-label>
+      <ion-label slot="end">
+        {{ flightSummary.fare.taxes | currency : 'INR'}}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-list class="fare">
+    <ion-list-header>
+      <ion-label class="bold large">TOTAL SUMMARY</ion-label>
+    </ion-list-header>
+
+    <!-- service charge -->
+    <ion-item>
+      <ion-label slot="start">
+        Service Charges
+      </ion-label>
+      <ion-label slot="end">
+        {{ flightSummary.total.serviceCharge | currency : 'INR'}}
+      </ion-label>
+    </ion-item>
+    <!-- gst -->
+    <ion-item>
+      <ion-label slot="start">
+        SGST
+      </ion-label>
+      <ion-label slot="end">
+        {{ flightSummary.total.SGST | currency : 'INR'}}
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label slot="start">
+        CGST
+      </ion-label>
+      <ion-label slot="end">
+        {{ flightSummary.total.CGST | currency : 'INR'}}
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label slot="start">
+        IGST
+      </ion-label>
+      <ion-label slot="end">
+        {{ flightSummary.total.IGST | currency : 'INR'}}
+      </ion-label>
+    </ion-item>
+
+
+    <!-- flight fare -->
+    <ion-item>
+      <ion-label slot="start">
+        Flight Fare
+      </ion-label>
+      <ion-label slot="end">
+        {{ flightSummary.total.flight | currency : 'INR'}}
+      </ion-label>
+    </ion-item>
+    <!-- k3 -->
+    <ion-item>
+      <ion-label slot="start">
+        K3
+      </ion-label>
+      <ion-label slot="end">
+        {{ flightSummary.total.k3 | currency : 'INR'}}
+      </ion-label>
+    </ion-item>
+    <!--other taxes-->
+    <ion-item>
+      <ion-label slot="start">
+        Other Taxes
+      </ion-label>
+      <ion-label slot="end">
+        {{ flightSummary.total.other | currency : 'INR'}}
+      </ion-label>
+    </ion-item>
+    <!-- meals -->
+    <ion-item *ngIf="flightSummary.total.extraMeals !== null">
+      <ion-label slot="start">
+        Extra Meals
+      </ion-label>
+      <ion-label slot="end">
+        {{ flightSummary.total.extraMeals | currency : 'INR'}}
+      </ion-label>
+    </ion-item>
+    <!-- baggage -->
+    <ion-item *ngIf=" flightSummary.total.extraBaggage !== null">
+      <ion-label slot="start">
+        Extra Baggage
+      </ion-label>
+      <ion-label slot="end">
+        {{ flightSummary.total.extraBaggage | currency : 'INR'}}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-item>
+    <ion-label slot="start">{{'grand total' | uppercase}}</ion-label>
+    <ion-label class="bold large" slot="end" style="text-align: end"> {{ flightSummary.total.total | currency : 'INR'}}</ion-label>
+  </ion-item>
+
+  <ion-list class="cancel-radio">
+    <ion-radio-group allowEmptySelection="true" (ionChange)="radioSelect($event)">
+      <ion-list-header>
+        <ion-label class="large bold">{{ 'Cancelation Risk' | uppercase }}</ion-label>
+      </ion-list-header>
+
+      <ion-item>
+        <ion-label>0 - 25%</ion-label>
+        <ion-radio slot="start" value="0-25"></ion-radio>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>25 - 50%</ion-label>
+        <ion-radio slot="start" value="25-50"></ion-radio>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>50 - 75%</ion-label>
+        <ion-radio slot="start" value="50-75"></ion-radio>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>75 - 100%</ion-label>
+        <ion-radio slot="start" value="75-100"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+
+</ion-content>
+<ion-footer>
+  <ion-button (click)="confirmRequest()">
+    <ion-label class="medium bold">Send Request</ion-label>
+  </ion-button>
+</ion-footer>
+

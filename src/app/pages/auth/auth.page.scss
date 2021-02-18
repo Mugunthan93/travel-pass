@@ -1,0 +1,24 @@
+@import "../../../style/util/mixins.scss";
+
+ion-content{
+    >ion-title{
+        text-align: center;
+    }
+    >ion-img{
+        width: 220px;
+        height: 70px;
+        margin: 6vh auto;
+    }
+    >form {
+        padding: 0px 24px;
+        min-height: fit-content;
+
+        >ion-item {
+            margin: 20px auto;
+            >ion-row{
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    }
+}

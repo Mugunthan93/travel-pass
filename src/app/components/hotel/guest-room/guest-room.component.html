@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Guest Room
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-label>OK</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <mat-accordion *ngFor="let room of (rooms$ | async); let i = index">
+    <mat-expansion-panel expanded="true">
+      <mat-expansion-panel-header>
+        <ion-label class="bold">Room {{i + 1}}</ion-label>
+      </mat-expansion-panel-header>
+      <!-- no of adult -->
+      <ion-row>
+        <ion-row>
+          <ion-label>Adults</ion-label>
+        </ion-row>
+        <ion-row>
+          <ion-icon size="large" name="remove-circle-outline" (click)="decrease('adult',i)"></ion-icon>
+          <ion-label>{{room.NoOfAdults}}</ion-label>
+          <ion-icon size="large" name="add-circle-outline" (click)="increase('adult',i)"></ion-icon>
+        </ion-row>
+      </ion-row>
+      <!-- no of children -->
+      <ion-row>
+        <ion-row>
+          <ion-label>Children</ion-label>
+        </ion-row>
+        <ion-row>
+          <ion-icon size="large" name="remove-circle-outline" (click)="decrease('children',i)"></ion-icon>
+          <ion-label>{{room.NoOfChild}}</ion-label>
+          <ion-icon size="large" name="add-circle-outline" (click)="increase('children',i)"></ion-icon>
+        </ion-row>
+      </ion-row>
+      <!-- children Age -->
+      <ion-row>
+        <ion-label>Age of Children</ion-label>
+        <ion-label>Age 12 years and below</ion-label>
+      </ion-row>
+      <ion-row *ngFor="let child of room.ChildAge;let j = index">
+        <ion-row>
+          <ion-label>Child {{1 + j}}</ion-label>
+        </ion-row>
+        <ion-row>
+          <ion-select placeholder="Child Age" [interfaceOptions]="customAlertOptions" [value]="child" (ionChange)="selectedAge($event,j,i)">
+            <ion-select-option *ngFor="let age of ages" [value]="age">{{age}}</ion-select-option>
+          </ion-select>
+        </ion-row>
+      </ion-row>
+    </mat-expansion-panel>
+    <ion-icon name="close-outline" (click)="deleteRoom(i)"></ion-icon>
+  </mat-accordion>
+  <ion-button class="add" (click)="addRoom()">
+    <ion-icon name="add"></ion-icon>
+    <ion-label class="medium bold">Add Room</ion-label>
+  </ion-button>
+</ion-content>

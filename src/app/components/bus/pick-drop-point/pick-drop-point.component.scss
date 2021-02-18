@@ -1,0 +1,68 @@
+@import "../../../../style/base/color.scss";
+
+ion-content {
+    >ion-grid {
+        >ion-row:nth-child(1) {
+            ion-card.tab {
+
+                ion-card-content {
+                    padding: 0px;
+
+                    ion-chip {
+                        width: -webkit-fill-available;
+                    }
+                }
+            }
+        }
+
+        >ion-row:nth-child(2) {
+            >ion-list {
+                >ion-row {
+                    >ion-col {
+                        flex-direction: column;
+
+                        >ion-item {
+                            --inner-padding-top: 10px;
+                            --inner-padding-bottom: 10px;
+
+                            >ion-row {
+                                height: 100%;
+                                flex-direction: column;
+
+                                >ion-title {
+                                    padding-left: 0px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+ion-footer {
+    >ion-toolbar {
+        >ion-item {
+            >ion-row {
+                flex-direction: column;
+
+                >ion-title {
+                    padding: 0px;
+                }
+            }
+        }
+
+        ion-button {
+            width: -webkit-fill-available;
+
+            ion-text {
+                color: white;
+            }
+        }
+    }
+}
+
+.selectedItem {
+    background-color: #{$onahau} !important;
+}

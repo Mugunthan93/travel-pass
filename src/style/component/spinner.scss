@@ -1,0 +1,11 @@
+@import "../base/color.scss";
+@import "../base/fonts.scss";
+
+//variable
+
+$spinner-color:$geraldine;
+
+
+ion-spinner{
+    --color : #{$spinner-color};
+}

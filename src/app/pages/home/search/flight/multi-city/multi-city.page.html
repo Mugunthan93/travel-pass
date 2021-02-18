@@ -1,0 +1,120 @@
+<form [formGroup]="multiCitySearch" (ngSubmit)="searchFlight()">
+  <ion-grid>
+    <ion-row>
+      <ion-content>
+        <ion-row formArrayName="trips" *ngFor="let trip of trips.controls; let i = index;">
+          <ion-col [formGroupName]="i">
+            <ion-row>
+              <ion-col (click)="selectCity('from',trips.controls,i)">
+                <ion-row>
+                  <ion-label class="bold large">From</ion-label>
+                  <ion-text class="medium bold" [ngClass]="errorArrayClass('from',trip)">
+                    {{trip.value.from !== null ? trip.value.from.city_code : 'Select'}}
+                  </ion-text>
+                  <ion-text class="medium bold" [ngClass]="errorArrayClass('from',trip)">
+                    {{trip.value.from !== null ? trip.value.from.city_name : 'Origin'}}
+                  </ion-text>
+                </ion-row>
+              </ion-col>
+              <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
+              <ion-col (click)="selectCity('to',trips.controls,i)">
+                <ion-row>
+                  <ion-label class="bold large">To</ion-label>
+                  <ion-text class="medium bold" [ngClass]="errorArrayClass('to',trip)">
+                    {{trip.value.to !== null ? trip.value.to.city_code : 'Select'}}
+                  </ion-text>
+                  <ion-text class="medium bold" [ngClass]="errorArrayClass('to',trip)">
+                    {{trip.value.to !== null ? trip.value.to.city_name : 'Destination'}}
+                  </ion-text>
+                </ion-row>
+              </ion-col>
+              <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
+              <ion-col (click)="selectDate(trips.controls,i)">
+                <ion-row>
+                  <ion-label class="bold large">Depart</ion-label>
+                  <ion-text class="medium bold" [ngClass]="errorArrayClass('departure',trip)">
+                    {{trip.value.departure !== null ? (trip.value.departure | date : 'd LLL' | titlecase) : 'Select'}}
+                  </ion-text>
+                  <ion-text class="medium bold" [ngClass]="errorArrayClass('departure',trip)">
+                    {{trip.value.departure !== null ? (trip.value.departure | date : 'EEE yyyy' | titlecase) : 'Date'}}
+                  </ion-text>
+                </ion-row>
+              </ion-col>
+              <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
+              <ion-icon name="close" (click)="removeTrip(trips.controls,i)"></ion-icon>
+            </ion-row>
+            <ion-input formControlName="from" hidden></ion-input>
+            <ion-input formControlName="to" hidden></ion-input>
+            <ion-input formControlName="departure" hidden></ion-input>
+          </ion-col>
+        </ion-row>
+      </ion-content>
+    </ion-row>
+    <ion-row>
+      <ion-button (click)="addTrip()">
+        <ion-text class="large boldest">{{'Add city' | titlecase}}</ion-text>
+      </ion-button>
+    </ion-row>
+    <ion-row>
+      <!--class-->
+      <ion-col (click)="selectPassengers()">
+        <ion-row>
+          <ion-label class="bold large">Travellers</ion-label>
+          <ion-text class="medium bold" [ngClass]="errorClass('traveller')"
+           *ngIf="(this.multiCitySearch.value.traveller == null) ||
+                  (this.multiCitySearch.value.traveller?.adult <= 0 &&
+                    this.multiCitySearch.value.traveller?.child <=0 &&
+                    this.multiCitySearch.value.traveller.infant <=0)">
+            Select Passengers
+          </ion-text
+          >
+          <ion-text class="medium bold" [ngClass]="errorClass('traveller')"
+            *ngIf="this.multiCitySearch.value.traveller !== null && this.multiCitySearch.value.traveller.adult > 0">
+            {{this.multiCitySearch.value.traveller.adult+'   Adult'}}
+          </ion-text>
+          <ion-text class="medium bold" [ngClass]="errorClass('traveller')"
+            *ngIf="this.multiCitySearch.value.traveller !== null && this.multiCitySearch.value.traveller.child > 0">
+            {{this.multiCitySearch.value.traveller.child+'   Child'}}
+          </ion-text>
+          <ion-text class="medium bold" [ngClass]="errorClass('traveller')"
+          *ngIf="this.multiCitySearch.value.traveller !== null && this.multiCitySearch.value.traveller.infant >
+        0">
+            {{this.multiCitySearch.value.traveller.infant+'   Infant'}}
+          </ion-text>
+        </ion-row>
+      </ion-col>
+      <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
+      <ion-col>
+        <ion-row>
+          <ion-label class="bold large">Class</ion-label>
+          <ion-text class="medium bold" (click)="selectClass()" [ngClass]="errorClass('class')">
+            {{(this.multiCitySearch.value.class !== null ? this.multiCitySearch.value.class : 'Select Class') | titlecase}}
+          </ion-text>
+          <ion-item hidden="true">
+            <ion-label>Class</ion-label>
+            <ion-select 
+              #select 
+              formControlName="class" 
+              cancelText="Cancel" 
+              okText="Confirm"
+              [interfaceOptions]="customAlertOptions"
+              (ionChange)="changeClass($event)"
+              >
+              <ion-select-option value="all">All</ion-select-option>
+              <ion-select-option value="economy">Economy</ion-select-option>
+              <ion-select-option value="premium economy">Premium Economy</ion-select-option>
+              <ion-select-option value="bussiness">Bussiness</ion-select-option>
+              <ion-select-option value="first class">First Class</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-button type="submit">
+        <ion-text class="large boldest">{{'Search Flight' | titlecase}}</ion-text>
+      </ion-button>
+    </ion-row>
+  </ion-grid>
+  <ion-input formControlName="traveller" hidden></ion-input>
+</form>

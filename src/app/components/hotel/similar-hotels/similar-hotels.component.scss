@@ -1,0 +1,27 @@
+
+ion-content {
+    height: 100%;
+    >ion-row {
+        width:max-content;
+        height: 100%;
+        >ion-col {
+            padding: 7px;
+            >ion-card{
+                width:50vw;
+                height: 100% !important;
+                margin:0px;
+                >ion-img{
+                    height:21%;
+                }
+            }
+            
+        }
+    }
+}
+
+mat-divider{
+    width: 100%;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+

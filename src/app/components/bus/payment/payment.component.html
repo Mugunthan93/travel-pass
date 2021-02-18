@@ -1,0 +1,93 @@
+
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Payment</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <mat-accordion>
+      <mat-expansion-panel>
+
+        <mat-expansion-panel-header collapsedHeight="60px" expandedHeight="60px">
+          <ion-label class="large bold">Parveen Travels</ion-label>
+          <ion-label>Non AC Semi Sleeper(2+2)</ion-label>
+        </mat-expansion-panel-header>
+
+        <ion-row>
+          <ion-row>
+            <ion-label class="large">17:45<ion-text class="bold">20 may</ion-text></ion-label>
+            <ion-text class="bold">Adyar Perungalathur</ion-text>
+          </ion-row>
+          <ion-row>
+            <ion-label class="large">17:45 <ion-text class="bold">20 may</ion-text></ion-label>
+            <ion-text class="bold">Adyar Perungalathur</ion-text>
+          </ion-row>
+        </ion-row>
+
+        <ion-row>
+          <ion-row>
+            <ion-label class="bold">Borading Point</ion-label>
+            <ion-text class="bold">Tondiarpet Near Eci</ion-text>
+            <ion-text class="bold">Ph : 044 - 345755</ion-text>
+          </ion-row>
+          <ion-row>
+            <ion-label class="bold">Time</ion-label>
+            <ion-text class="bold">17:45 PM</ion-text>
+          </ion-row>
+        </ion-row>
+
+        <ion-row>
+          <ion-label class="bold">Seat Selected</ion-label>
+          <ion-text class="bold">1</ion-text>
+        </ion-row>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+  </ion-card>
+  <ion-card>
+    <ion-card-header>
+      <ion-row class="ion-justify-content-between">
+        <ion-col>
+          <ion-text class="medium bold">Travellers Details</ion-text>
+          <ion-text class="bold">Marriappan</ion-text>
+        </ion-col>
+        <ion-col>
+          <ion-text class="medium bold">Seat Number</ion-text>
+          <ion-text class="bold">S12</ion-text>
+        </ion-col>
+      </ion-row>
+      <mat-divider></mat-divider>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <div *ngFor="let fare of fares">
+          <ion-item>
+            <ion-row slot="start">
+              <ion-text class="medium bold">{{fare.name}}</ion-text>
+            </ion-row>
+            <ion-row slot="end">
+              <ion-text class="medium bold">{{ fare.value | currency : 'INR'}}</ion-text>
+            </ion-row>
+          </ion-item>
+          <mat-divider *ngIf="fares.indexOf(fare) == fares.length - 2"></mat-divider>
+        </div>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar class="book-footer">
+    <ion-item>
+      <ion-label>Travellerspass Wallet</ion-label>
+      <ion-checkbox class="default" slot="start"></ion-checkbox>
+    </ion-item>
+    <ion-buttons slot="end">
+      <ion-button (click)="bookBus()">
+        <ion-label class="medium bold">Book Now</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

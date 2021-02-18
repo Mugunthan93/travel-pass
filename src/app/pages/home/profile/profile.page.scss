@@ -1,0 +1,8 @@
+@import "../../../../style/component/item.scss";
+
+
+ion-content{
+    ion-item{
+        @include profile; 
+    }
+}

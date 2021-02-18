@@ -1,0 +1,152 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ exptype | titlecase }} Expense</ion-title>
+    <ion-buttons slot="end" (click)="dismiss()">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-sharp"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="expenseForm" (ngSubmit)="addExpense()">
+
+    <ion-list>
+
+      <ion-item>
+        <ion-select formControlName="travel_type" placeholder="Select Travel Type" cancelText="Cancel"
+          okText="Confirm" [interfaceOptions]="customAlertOptions('Travel Type')"
+          (ionChange)="changeTravelType($event)">
+          <ion-select-option *ngFor="let type of travelType" [value]="type">{{ type }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-select formControlName="type" placeholder="Select Type"
+          cancelText="Cancel" okText="Confirm" [interfaceOptions]="customAlertOptions('Type')"
+          (ionChange)="changeType($event)">
+          <ion-select-option *ngFor="let ty of formtype" [value]="ty">{{ ty }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item [hidden]="!hideItem('local_travel_value')">
+        <ion-label position="floating">{{ expenseForm.controls['type'].value | titlecase }} Name</ion-label>
+        <ion-input type="text" formControlName="local_travel_value" enterkeyhint="next"></ion-input>
+      </ion-item>
+      
+      <ion-item  [hidden]="hideItem('local_travel_value')">
+        <ion-select formControlName="local_travel_value" placeholder="Select Sub Type"
+          cancelText="Cancel" okText="Confirm" [interfaceOptions]="customAlertOptions('Local Sub Type')"
+          (ionChange)="changeSubType($event)">
+          <ion-select-option *ngFor="let ty of localSub" [value]="ty">{{ ty }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-row *ngIf="expenseForm.controls['local_travel_value'].hasError('required') && formSubmit">
+        <ion-label color="danger">Sub Type Required</ion-label>
+      </ion-row>
+
+      <ion-item button (click)="getCity('start_city')">
+        <ion-label position="floating">Start City</ion-label>
+        <ion-input type="text" formControlName="start_city"></ion-input>
+      </ion-item>
+      <ion-row *ngIf="expenseForm.controls['start_city'].hasError('required') && formSubmit">
+        <ion-label color="danger">Start City Required</ion-label>
+      </ion-row>
+
+      <ion-item button (click)="getCity('end_city')" [hidden]="hideItem('end_city')">
+        <ion-label position="floating">End City</ion-label>
+        <ion-input type="text" formControlName="end_city"></ion-input>
+      </ion-item>
+      <ion-row *ngIf="expenseForm.controls['end_city'].hasError('required') && formSubmit">
+        <ion-label color="danger">End City Required</ion-label>
+      </ion-row>
+
+      <ion-item>
+        <ion-label position="floating">Start Date</ion-label>
+        <ion-input type="date" formControlName="start_date" enterkeyhint="next"></ion-input>
+      </ion-item>
+      <ion-row *ngIf="expenseForm.controls['start_date'].hasError('required') && formSubmit">
+        <ion-label color="danger">Start Date Required</ion-label>
+      </ion-row>
+      <ion-row *ngIf="expenseForm.controls['start_date'].hasError('outOfRange') && formSubmit">
+        <ion-label color="danger">Selected Date is out of range from current trip date</ion-label>
+      </ion-row>
+      <ion-row *ngIf="expenseForm.controls['start_date'].hasError('mismatch')">
+        <ion-label color="danger">Start Date won't come after End Date</ion-label>
+      </ion-row>
+
+      <ion-item [hidden]="hideItem('end_date')">
+        <ion-label position="floating">End Date</ion-label>
+        <ion-input type="date" formControlName="end_date" enterkeyhint="next"></ion-input>
+      </ion-item>
+      <ion-row *ngIf="expenseForm.controls['end_date'].hasError('required') && formSubmit">
+        <ion-label color="danger">End Date Required</ion-label>
+      </ion-row>
+      <ion-row *ngIf="expenseForm.controls['end_date'].hasError('outOfRange') && formSubmit">
+        <ion-label color="danger">Selected Date is out of range from current trip date</ion-label>
+      </ion-row>
+      <ion-row *ngIf="expenseForm.controls['end_date'].hasError('mismatch')">
+        <ion-label color="danger">End Date won't come before Start Date</ion-label>
+      </ion-row>
+
+      <ion-item  [hidden]="hideItem('no_of_days')">
+        <ion-label position="floating">Days</ion-label>
+        <ion-input type="number" formControlName="no_of_days" enterkeyhint="next"></ion-input>
+      </ion-item>
+      <ion-row *ngIf="expenseForm.controls['no_of_days'].hasError('required') && formSubmit">
+        <ion-label color="danger">Days Required</ion-label>
+      </ion-row>
+
+      <ion-item>
+        <ion-label position="floating">Amount</ion-label>
+        <ion-input type="number" formControlName="cost" enterkeyhint="next"></ion-input>
+      </ion-item>
+      <ion-row *ngIf="expenseForm.controls['cost'].hasError('required') && formSubmit">
+        <ion-label color="danger">Amount Required</ion-label>
+      </ion-row>
+
+      <ion-item>
+        <ion-label>Paid By</ion-label>
+        <ion-radio-group formControlName="paid_by">
+          <ion-item>
+            <ion-label>Self</ion-label>
+            <ion-radio slot="start" value="paid_self"></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label>Company</ion-label>
+            <ion-radio slot="start" value="paid_company"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+      </ion-item>
+      <ion-row *ngIf="expenseForm.controls['paid_by'].hasError('required') && formSubmit">
+        <ion-label color="danger">Paid By Required</ion-label>
+      </ion-row>
+
+      <ion-item-divider>
+        <ion-label class="bold large">Bills</ion-label>
+        <ion-button slot="end" fill="outline" (click)="addBill()">
+          <ion-label>Add</ion-label>
+        </ion-button>
+      </ion-item-divider>
+
+      <ion-item *ngFor="let bill of billArray(); let i = index">
+        <ion-label class="large bold">{{ bill.name }}</ion-label>
+        <ion-icon name="close-sharp" (click)="deleteBill(i)"></ion-icon>
+      </ion-item>
+
+    </ion-list>
+  </form>
+</ion-content>
+
+<ion-footer>
+  <form [formGroup]="expenseForm" (ngSubmit)="addExpense()">
+    <ion-toolbar>
+      <ion-buttons slot="end">
+        <ion-button type="submit">
+          <ion-label class="large bold">Add Expense</ion-label>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </form>
+</ion-footer>

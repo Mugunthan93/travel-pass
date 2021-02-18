@@ -1,0 +1,96 @@
+@import "../base/color.scss";
+
+$card-color:$black;
+$card-background:none;
+
+$card-title-color:$black;
+$card-subtitle-color:$black;
+
+$label-family:'roboto-label';
+
+ion-card{
+    --color: #{$card-color};
+    --background: #{$card-background};
+}
+
+ion-card-title{
+    --color:#{$card-title-color};
+    font-family: #{$label-family};
+
+    &.small {
+
+        font-size:#{$small-font};
+
+    }
+
+    &.medium {
+
+        font-size:#{$medium-font};
+
+    }
+
+    &.large {
+
+        font-size:#{$large-font};
+
+    }
+
+    &.white {
+        color:#{$white};
+    }
+
+    &.bold {
+        font-weight: 700;
+    }
+
+    &.bolder {
+        font-weight: 800;
+    }
+
+    &.boldest {
+        font-weight: 900;
+    }
+
+}
+
+ion-card-subtitle{
+    --color:#{$card-subtitle-color};
+    font-family: #{$label-family};
+    
+    &.small {
+
+        font-size:#{$small-font};
+
+    }
+
+    &.medium {
+
+        font-size:#{$medium-font};
+
+    }
+
+    &.large {
+
+        font-size:#{$large-font};
+
+    }
+
+    &.white {
+        color:#{$white};
+    }
+
+    &.bold {
+        font-weight: 700;
+    }
+
+    &.bolder {
+        font-weight: 800;
+    }
+
+    &.boldest {
+        font-weight: 900;
+    }
+
+}
+
+

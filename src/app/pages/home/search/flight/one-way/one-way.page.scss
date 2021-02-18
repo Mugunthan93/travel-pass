@@ -1,0 +1,50 @@
+@import "../../../../../../style/util/mixins.scss";
+
+form{
+    @include flex-col-grid;
+    ion-grid{
+        margin-left:5vw;
+        margin-right:5vw;
+        >ion-row {
+            height:25%;
+            justify-content: space-between;
+            ion-col{
+                align-self: center;
+            }
+            ion-icon{
+                align-self: center;
+                height: -webkit-fill-available;
+            }
+            ion-col:first-child {
+                @include search-grid-input(left, right);
+            }
+    
+            ion-col:nth-child(2) {
+                @include search-grid-switch();
+            }
+    
+            ion-col:last-child {
+                @include search-grid-input(right, left);
+            }
+        }
+
+        >ion-row:last-child{
+            justify-content: center;
+            align-content: center;
+        }
+    
+        >ion-row:not(:last-child) {
+            border-bottom: 0.5px solid grey;
+        }
+    }
+}
+
+ion-button{
+    >ion-text{
+        margin: 12px;
+    }
+}
+
+ion-text{
+    line-height: 20px;
+}

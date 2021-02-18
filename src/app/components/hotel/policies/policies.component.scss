@@ -1,0 +1,30 @@
+
+
+ion-header{
+    ion-title{
+        padding-left: 0px !important;
+    }
+}
+
+
+ion-title {
+    padding-left: 10px !important;
+}
+
+ion-content{
+    ion-title {
+        padding-left: 10px !important;
+    }
+    ion-item{
+        ion-label[slot="end"] {
+            min-width: min-content;
+            text-align: end;
+        }
+    }
+}
+
+ion-label.hotel-policy{
+    display: flex;
+    flex-direction: column;
+    padding: 0px 10px;
+}

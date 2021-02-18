@@ -1,0 +1,50 @@
+@import "../base/color.scss";
+@import "../base/fonts.scss";
+
+//variable
+$text-color:$suva-grey;
+$text-family:'roboto-text';
+
+// $bold-text:
+// $bolder-text:
+// $boldest-text:
+
+ion-text{
+    color: #{$text-color};
+    font-family:#{$text-family};
+
+    &.small{
+        font-size: #{$small-font};
+    }
+
+    &.medium{
+        font-size:#{$medium-font};
+    }
+
+    &.large{
+        font-size: #{$large-font};
+    }
+
+    &.bold {
+        font-weight: 700;
+    }
+
+    &.bolder {
+        font-weight: 800;
+    }
+
+    &.boldest {
+        font-weight: 900;
+    }
+
+    &.selected-people {
+        border:2px solid #{$geraldine};
+        border-radius:50%;
+        -moz-border-radius:50%;
+        padding: 4px 8px;
+        -webkit-border-radius:50%;
+    }
+}
+
+
+

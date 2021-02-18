@@ -1,0 +1,85 @@
+<ion-content>
+  <ion-row>
+    <ion-col>
+      <ion-text *ngIf="(flightList | sort : (sortBy$ | async).property : (sortBy$ | async).state ).length == 0">No
+        result found
+      </ion-text>
+      <mat-accordion multi="false">
+        <mat-expansion-panel *ngFor="let item of flightList | sort : (sortBy$ | async).property : (sortBy$ | async).state;let i = index" [hideToggle]="true" #panel approxItemHeight="60px">
+          <mat-expansion-panel-header 
+            [collapsedHeight]="'fit-content'" 
+            [expandedHeight]="'fit-content'" 
+            (click)="selectFlight(panel,item,$event)">
+              <ion-row *ngIf="flightName" [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}">
+                <ion-label class="large bold">{{item.name}}</ion-label>
+                <ion-text class="bold">{{item.seats}} Seats Left</ion-text>
+                <ion-label class="bold">{{item.fare | currency : item.currency}}</ion-label>
+                <ion-item>
+                  <ion-checkbox  class="email" slot="start" class="email" [value]="item.email" (ionChange)="getFlight($event)" [checked]="emailSelect(item.email) | async"></ion-checkbox>
+                  <ion-label slot="end">Email</ion-label>
+                </ion-item>
+              </ion-row>
+              <ion-row class="ion-justify-content-around two" [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}"
+                *ngFor="let i of item.trips" [ngStyle]="{'height':'fit-content'}">
+                <ion-row class="heading">
+                  <ion-label class="bold">{{i.tripinfo.airline.name}} | {{i.tripinfo.airline.code}} - {{i.tripinfo.airline.number}}</ion-label>
+                  <ion-icon *ngIf="item.refund" src="../../../../assets/menu/refundable.svg"></ion-icon>
+                  <ion-icon *ngIf="!item.refund" src="../../../../assets/menu/nonrefundable.svg"></ion-icon>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <ion-img src="../../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
+                  </ion-col>
+                  <ion-col>
+                      <ion-text class="bold">
+                        {{i.tripinfo.depTime | date : 'HH:mm'}} - {{i.tripinfo.arrTime | date : 'HH:mm'}}</ion-text>
+                      <ion-text class="bold">
+                        {{i.tripinfo.class | titlecase }}</ion-text>
+                  </ion-col>
+                  <ion-col>
+                    <ion-text class="bold">
+                      {{i.tripinfo.duration}}{{i.tripinfo.day ? '(+1Day)' : ''}}</ion-text>
+                    <ion-text class="bold">{{i.tripinfo.stops}}
+                    </ion-text>
+                  </ion-col>
+                  <ion-col *ngIf="flightPrice">
+                    <ion-label class="bold">
+                      {{i.tripinfo.fare | currency : i.tripinfo.currency }}</ion-label>
+                    <ion-text class="bold">
+                      {{i.tripinfo.seats + ' Seat Left' }}</ion-text>
+                  </ion-col>
+                </ion-row>
+              </ion-row>
+              <ion-row *ngIf="flightMail" style="align-items: center"
+                [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}">
+                <ion-checkbox class="email" [value]="item.email" (ionChange)="getFlight($event)"
+                  [checked]="emailSelect(item.email) | async"></ion-checkbox>
+                <ion-label>Email</ion-label>
+              </ion-row>
+              <ion-button slot="icon-only" class="panel-button" expand="full" size="small" (click)="rotate(i)">
+                <ion-icon [@rotatedState]="state[i]" name="chevron-up"></ion-icon>
+              </ion-button>
+          </mat-expansion-panel-header>
+          <ion-row class="ion-justify-content-around">
+            <ion-row>
+              <ion-icon name="briefcase" (click)="showBaggage(item.baggage)">
+              </ion-icon>
+              <ion-label>Baggage</ion-label>
+            </ion-row>
+            <ion-row>
+              <ion-icon name="briefcase" (click)="showFareRule(item.fareRule)">
+              </ion-icon>
+              <ion-label>Fare Rule</ion-label>
+            </ion-row>
+            <ion-row>
+              <ion-icon src="../../../../assets/icons/dashboard/trip-flight.svg"
+                (click)="showFlightDetail(item.connectingFlights)">
+              </ion-icon>
+              <ion-label>Flight details</ion-label>
+            </ion-row>
+          </ion-row>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </ion-col>
+  </ion-row>
+</ion-content>

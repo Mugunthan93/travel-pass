@@ -1,0 +1,139 @@
+
+
+
+
+@import "../../../../../../style/util/mixins.scss";
+@import "../../../../../../style/component/item.scss";
+@import "../../../../../../style/base/color.scss";
+
+ion-content {
+    form{
+        >div{
+            >div{
+                >mat-accordion {
+                    @include flex-col-grid;
+                    width: 100%;
+                    margin-top: 5px;
+                    margin-bottom: 5px;
+                    height: auto;
+            
+                    mat-expansion-panel {
+                        margin-top: 3px;
+                        margin-bottom: 3px;
+            
+                        >mat-expansion-panel-header {
+                            background: transparent;
+                            padding-left: 10px;
+                            padding-right: 10px;
+                            border: 2px solid #{$geraldine};
+            
+                            >::ng-deep span {
+                                >ion-row {
+                                    display: flex;
+                                    flex-direction: column;
+            
+                                    >ion-row {
+                                        width: 250px;
+                                        justify-content: space-between;
+                                    }
+                                }
+                            }
+                        }
+            
+                        ::ng-deep .mat-expansion-panel-body {
+                            padding: 0px;
+                            height: 100%;
+                            margin: 5px;
+            
+                            >div {
+                                ion-item {
+                                    --padding-start: 0px;
+            
+                                    >ion-row {
+                                        >* {
+                                            margin: auto 5px;
+                                        }
+            
+                                        >ion-row {
+                                            flex-direction: column;
+                                        }
+                                    }
+            
+                                    >ion-row:last-child {
+                                        >ion-row {
+                                            >ion-text {
+                                                align-self: flex-end;
+                                            }
+                                        }
+                                    }
+                                }
+            
+                                >ion-row {
+                                    justify-content: space-between;
+            
+                                    >ion-col {
+                                        flex-direction: column;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: space-around;
+            
+                                        &:first-child {
+                                            align-items: flex-start;
+                                        }
+            
+                                        &:last-child {
+                                            align-items: flex-end;
+                                        }
+                                    }
+                                }
+                            }
+            
+                        }
+            
+                        ::ng-deep .mat-expansion-indicator {
+                            color:#{$geraldine};
+                        }
+                    }
+                }
+            
+                ion-item {
+                    @include profile;
+                    --padding-start: 10px;
+                    --padding-end: 10px;
+                    --padding-top: 8px;
+                    --padding-bottom: 8px;
+        
+                    ion-label {
+                        width: 50%;
+                    }
+        
+                    ion-input {
+                        width: 50%;
+                    }
+        
+                    ion-select {
+                        display: flex;
+                        width: 50%;
+                    }
+                }
+            }
+        }
+    
+        >ion-row {
+            background: transparent;
+            border: 2px solid #{$geraldine};
+    
+            padding: 5px;
+            border-radius: 4px;
+            flex-direction: column;
+        }
+    }
+}
+
+ion-footer {
+    form{
+        ion-button {
+            width: -webkit-fill-available;
+        }
+    }
+}

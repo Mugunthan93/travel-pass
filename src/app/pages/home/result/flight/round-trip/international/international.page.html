@@ -1,0 +1,59 @@
+<ion-content>
+  <app-result-list
+    [flightList]="flightList$ | async" 
+    [selectedFlights]="selectedFlight$ | async"
+    (getFlightValue)="currentFlight($event)">
+  </app-result-list>
+</ion-content>
+
+<ion-footer *ngIf="(selectedFlight$ | async) !== null">
+  <ion-toolbar class="result-footer">
+    <ion-row class="multi-city">
+      <ion-label class="large bold">{{(selectedFlight$ | async).fare | currency : (selectedFlight$ | async).currency}}
+      </ion-label>
+      <ion-button (click)="selectedFlight()">
+        <ion-label class="large bold">Continue</ion-label>
+      </ion-button>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>
+
+<!-- <ion-footer *ngIf="(selectedFlight$ | async) !== null">
+  <ion-toolbar>
+    <ion-row>
+      <ion-label>{{(selectedFlight$ | async).name}}</ion-label>
+      <ion-row>
+        <ion-row>
+          <ion-text>{{(selectedFlight$ | async).fare | currency : (selectedFlight$ | async).currency}}</ion-text>
+          <ion-text>{{(selectedFlight$ | async).seats}} Seats Left</ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-button size="small" (click)="book()">
+            <ion-text>Book</ion-text>
+          </ion-button>
+        </ion-row>
+      </ion-row>
+    </ion-row>
+    <ion-row class="ion-justify-content-around" *ngFor="let i of (selectedFlight$ | async).trips">
+      <ion-col>
+        <ion-img src="../../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
+        <ion-text>{{i.tripinfo.airline.name}}</ion-text>
+        <ion-text>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-text>
+      </ion-col>
+      <ion-col>
+        <ion-text>
+          {{i.tripinfo.depTime | date : 'HH:mm'}} - {{i.tripinfo.arrTime | date : 'HH:mm'}}
+        </ion-text>
+        <ion-text>{{i.tripinfo.class}}</ion-text>
+      </ion-col>
+      <ion-col>
+        <ion-text>
+          {{i.tripinfo.duration}}
+        </ion-text>
+        <ion-text>
+          {{i.tripinfo.stops}}
+        </ion-text>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer> -->

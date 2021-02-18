@@ -1,0 +1,36 @@
+
+
+<ion-content>
+
+  <ion-row class="no-bus" *ngIf="(busresut$ | async | sort : (sortBy$ | async).property : (sortBy$ | async).state).length == 0">
+    <ion-title class="large bold">No Bus Found</ion-title>
+  </ion-row>
+
+  <ion-card *ngFor="let item of (busresut$ | async | sort : (sortBy$ | async).property : (sortBy$ | async).state)"
+    (click)="selectBus(item)">
+    <ion-card-header>
+      <ion-card-title class="bold large">{{ item.operatorName }}</ion-card-title>
+      <ion-card-subtitle class="bold medium">{{ item.busType }}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row class="ion-justify-content-between">
+        <ion-col>
+          <ion-label class="bold">{{ departTime(item.departureTime) }}</ion-label>
+          <ion-label> - {{ duration(item.durationInMins) }} - </ion-label>
+          <ion-label class="bold">{{ arrivalTime(item.arrivalTime) }}</ion-label>
+        </ion-col>
+        <ion-col>
+          <ion-label *ngIf="item.fare !== '0.0'" class="bold">{{ item.fare | currency : 'INR'}}</ion-label>
+          <ion-label *ngIf="item.fare == '0.0'" class="bold highlight-text">Sold</ion-label>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-label>
+          {{ item.availableSeats == 0 ? '' : item.availableSeats == 1 ? '1 Seat Left' : 
+          item.availableSeats > 1 ? item.availableSeats + ' Seat Left' : '' }}
+        </ion-label>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+  
+</ion-content>

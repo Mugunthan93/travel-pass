@@ -1,0 +1,69 @@
+
+//variable
+// $grid-columns:;
+// $grid-width:(
+//     "xs":,
+//     "sm":,
+//     "md":,
+//     "lg":,
+//     "xl":  
+// );
+// $grid-padding:(
+//     "xs":,
+//     "sm":,
+//     "md":,
+//     "lg":,
+//     "xl": 
+// );
+// $grid-col-padding:(
+//     "xs":,
+//     "sm":,
+//     "md":,
+//     "lg":,
+//     "xl":
+// );
+
+
+
+
+:root {
+
+    --ion-grid-width-xs: 100%;
+    --ion-grid-width-sm: 320px;
+    --ion-grid-width-md: 375px;
+    --ion-grid-width-lg: 425px;
+    --ion-grid-width-xl: 768px;
+
+    ion-grid{
+        display: flex;
+        flex-flow: column;
+        height : 100%;
+        --ion-grid-padding:0px !important;
+    }
+
+    ion-col{
+        --ion-grid-column-padding:0px !important;
+        --ion-grid-column-padding-sm:0px !important;
+        --ion-grid-column-padding-md:0px !important;
+        --ion-grid-column-padding-lg:0px !important;
+        --ion-grid-column-padding-xl:0px !important;
+    }
+}
+
+.ios {
+
+    ion-grid {
+        --ion-grid-width: 320px !important;
+    }
+
+}
+
+.md {
+
+    ion-grid {
+        --ion-grid-width: 320px !important;
+    }
+
+}
+
+

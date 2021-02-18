@@ -1,0 +1,22 @@
+@import "../base/color.scss";
+
+//variable
+
+$badge-color:$white;
+$badge-background:$geraldine;
+
+$badge-padding:(
+    "bottom":5px,
+    "end":5px,
+    "start":5px,
+    "top":5px
+);
+
+ion-badge {
+    --color: #{$badge-color};
+    --background: #{$badge-background};
+    --padding-bottom: map.get($badge-padding,"bottom");
+    --padding-end: map.get($badge-padding, "end");
+    --padding-start: map.get($badge-padding, "start");
+    --padding-top:map.get($badge-padding, "top");
+}

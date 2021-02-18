@@ -1,0 +1,42 @@
+<ion-grid>
+  <ion-row class="ion-justify-content-around">
+    <ion-row>
+      <ion-thumbnail class="dashboard">
+        <ion-icon class="flight" src="../../../../../assets/icons/dashboard/flight.svg" (click)="searchFlight()"></ion-icon>
+      </ion-thumbnail>
+      <ion-label class="large white">Flight</ion-label>
+    </ion-row>
+    <ion-row>
+      <ion-thumbnail class="dashboard">
+        <ion-icon class="hotel" src="../../../../../assets/icons/dashboard/hotel.svg" (click)="searchHotel()">
+        </ion-icon>
+      </ion-thumbnail>
+      <ion-label class="large white">Hotel</ion-label>
+    </ion-row>
+    <ion-row>
+      <ion-thumbnail class="dashboard">
+        <ion-icon class="bus" src="../../../../../assets/icons/dashboard/bus.svg" (click)="searchBus()">
+        </ion-icon>
+      </ion-thumbnail>
+      <ion-label class="large white">Bus</ion-label>
+    </ion-row>
+    <ion-row>
+      <ion-thumbnail class="dashboard">
+        <ion-icon class="train" name="train-sharp" (click)="searchTrain()">
+        </ion-icon>
+      </ion-thumbnail>
+      <ion-label class="large white">Train</ion-label>
+    </ion-row>
+    <!-- <ion-row>
+      <ion-thumbnail class="dashboard">
+        <ion-icon class="cab" src="../../../../../assets/icons/dashboard/cab.svg" (click)="searchCab()">
+        </ion-icon>
+      </ion-thumbnail>
+      <ion-label class="large white">Cab</ion-label>
+    </ion-row> -->
+  </ion-row>
+  <ion-row>
+    <ion-title class="medium">Upcoming Trips</ion-title>
+    <app-trip-list></app-trip-list>
+  </ion-row>
+</ion-grid> 

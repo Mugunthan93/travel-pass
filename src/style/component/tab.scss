@@ -1,0 +1,131 @@
+@import "../base/color.scss";
+
+//variable
+
+$tab-bar-color:$suva-grey;
+$tab-bar-background:$white;
+$tab-bar-border:0px;
+
+$tab-button-color:$suva-grey;
+$tab-button-ripple-color:$suva-grey;
+$tab-button-color-type:(
+    "focused":$suva-grey,
+    "selected":$geraldine
+);
+
+$tab-button-background:transparent;
+$tab-button-background-type:(
+    "focused":transparent,
+    "focused-opacity":1
+);
+
+$tab-button-padding:(
+    "bottom":0px,
+    "end":0px,
+    "start":0px,
+    "top":0px
+);
+
+:root {
+
+    ion-app {
+
+        &.home-tab{
+            $tab-button-color-type:(
+                "focused":$suva-grey,
+                "selected":$geraldine
+            );
+            
+            ion-tab-bar{
+
+                --background:#{$tab-bar-background};
+                --border:#{$tab-bar-border};
+                --color:#{$tab-bar-color};
+
+            }
+
+            ion-tab-button {
+
+                --background:#{$tab-button-background};
+                --background-focused:map.get($tab-button-background-type,"focused");
+                --background-focused-opacity:map.get($tab-button-background-type,"focused-opacity");
+
+                --color:#{$tab-button-color};
+                --color-focused:map.get($tab-button-color-type, "focused");
+                --color-selected:map.get($tab-button-color-type, "selected");
+
+                --padding-bottom:map.get($tab-button-padding, "bottom");
+                --padding-end:map.get($tab-button-padding, "end");
+                --padding-start:map.get($tab-button-padding, "start");
+                --padding-top:map.get($tab-button-padding, "top");
+
+                --ripple-color:#{$tab-button-ripple-color};
+
+                >ion-icon{
+                    color:#{$suva-grey};
+                }
+
+                &[aria-selected="true"]{
+                    >ion-icon{
+                        color:#{$geraldine};
+                    }
+
+                    >ion-label{
+                        color:#{$geraldine};
+                    }
+                }
+
+            }
+        }
+
+        &.expense-tab{
+            $tab-button-color-type:(
+                "focused":$suva-grey,
+                "selected":$limerick
+            );
+                        
+            ion-tab-bar{
+
+                --background:#{$tab-bar-background};
+                --border:#{$tab-bar-border};
+                --color:#{$tab-bar-color};
+
+            }
+
+            ion-tab-button {
+
+                --background:#{$tab-button-background};
+                --background-focused:map.get($tab-button-background-type,"focused");
+                --background-focused-opacity:map.get($tab-button-background-type,"focused-opacity");
+
+                --color:#{$tab-button-color};
+                --color-focused:map.get($tab-button-color-type, "focused");
+                --color-selected:map.get($tab-button-color-type, "selected");
+
+                --padding-bottom:map.get($tab-button-padding, "bottom");
+                --padding-end:map.get($tab-button-padding, "end");
+                --padding-start:map.get($tab-button-padding, "start");
+                --padding-top:map.get($tab-button-padding, "top");
+
+                --ripple-color:#{$tab-button-ripple-color};
+
+                >ion-icon{
+                    color:#{$suva-grey};
+                }
+
+                &[aria-selected="true"]{
+                    >ion-icon{
+                        color:#{$limerick};
+                    }
+
+                    >ion-label{
+                        color:#{$limerick};
+                    }
+                }
+
+            }
+        }
+
+    }
+
+}

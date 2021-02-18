@@ -1,0 +1,125 @@
+@import "../../../../../style/util/mixins.scss";
+@import "../../../../../style/base/color.scss";
+
+ion-content{
+
+    >mat-accordion{
+        >mat-expansion-panel{
+            >mat-expansion-panel-header{
+                padding:0px;
+                >::ng-deep span{
+                    >ion-card{
+                        width: -webkit-fill-available;
+                        >ion-card-content{
+                            height: -webkit-fill-available;
+                            >ion-row{
+                                width: -webkit-fill-available;
+                                >ion-col{
+                                    max-width: fit-content;
+                                }
+                                >ion-col:nth-child(1){
+                                    >ion-img{
+                                        width:50px;
+                                    }
+                                }
+                                >ion-col:nth-child(2){
+                                    padding-left: 5px;
+                                }
+                                >ion-col:nth-child(3){
+                                    margin-left: auto;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            ::ng-deep .mat-expansion-panel-body {
+                padding: 0px;
+                >ion-card {
+                    >ion-card-header {
+                        >ion-row {
+                            >ion-col {
+                                max-width: fit-content;
+                            }
+
+                            >ion-col:first-child {
+                                ion-text {
+                                    font-size: x-small;
+                                }
+                            }
+
+                            >ion-col:last-child {
+                                ion-text {
+                                    font-size: xx-small;
+                                }
+                            }
+                        }
+                    }
+
+                    >ion-card-content {
+                        >ion-row {
+                            >ion-col {
+                                max-width: fit-content;
+
+                                ion-label {
+                                    color: #262626;
+                                }
+                            }
+                        }
+
+                        ion-item {
+                            --padding-start: 0px;
+                        }
+
+                        ion-icon {
+                            margin: 8px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    >ion-row.no-bus{
+        height: -webkit-fill-available;
+        >ion-title{
+            text-align: center;
+        }
+    }
+
+    >ion-card{
+        >ion-card-header{
+            >ion-row{
+                >ion-col{
+                    max-width: fit-content;
+                }
+                >ion-col:first-child{
+                    ion-text {
+                        font-size: x-small;
+                    }
+                }
+                >ion-col:last-child{
+                    ion-text{
+                        font-size: xx-small;
+                    }
+                }
+            }
+        }
+        >ion-card-content{
+            >ion-row{
+                >ion-col{
+                    max-width: fit-content;
+                    ion-label{
+                        color:#262626;
+                    }
+                }
+            }
+            ion-item{
+                --padding-start:0px;
+            }
+            ion-icon{
+                margin: 8px;
+            }
+        }
+    }
+}

@@ -1,0 +1,77 @@
+@import "../../../../../../style/util/mixins.scss";
+@import "../../../../../../style/base/color.scss";
+
+@mixin left-margin-img {
+    margin-left: 5px;
+    margin-bottom: auto;
+}
+
+@mixin left-margin-text {
+    margin-left: 5px;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: auto;
+}
+
+@mixin left-margin-text-only {
+    margin-left: 5px;
+    margin-right: auto;
+}
+
+@mixin footer-col {
+    & {
+        ion-img {
+            @include flex-col-grid;
+            @include left-margin-img;
+            float: left;
+            width: 30px;
+            height: 30px;
+        }
+
+        ion-text {
+            @include left-margin-text;
+            font-size: x-small;
+            opacity: 0.7;
+            color: black;
+        }
+
+        ion-text:only-child {
+            @include left-margin-text-only;
+            font-size: x-small;
+            opacity: 0.7;
+            color: black;
+        }
+
+        ion-button {
+            --background:#{$malibu};
+
+            ion-text {
+                color: white;
+                margin-left: auto;
+            }
+        }
+    }
+}
+
+ion-footer {
+    ion-toolbar {
+
+        >ion-row {
+            height: 75px;
+            padding: 3px;
+
+            ion-col {
+                @include flex-col-grid;
+                @include footer-col;
+                padding: 3px;
+                >ion-row{
+                    height: 40px;
+                    ion-col{
+                    @include flex-col-grid;
+                    @include footer-col;
+                    }
+                }
+            }
+        }
+    }
+}

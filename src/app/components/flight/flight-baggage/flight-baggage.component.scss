@@ -1,0 +1,25 @@
+
+
+
+ion-content{
+    >ion-row{
+        flex-direction: column;
+        >ion-item{
+            --padding-start: 16px !important;
+            --padding-top: 8px !important;
+            --padding-bottom: 8px  !important;
+        }
+        >ion-card{
+            --background: transparent;
+            >ion-card-content{
+                padding:10px;
+                >ion-row{
+                    margin: 5px 10px;
+                    >ion-col{
+                        align-self: center;
+                    }
+                }
+            }
+        }
+    }
+}

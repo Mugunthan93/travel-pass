@@ -1,0 +1,85 @@
+
+<ion-row class="addgroup">
+  <ion-button (click)="addTrip()">
+      <ion-icon name="add"></ion-icon>
+      <ion-label class="bold">Add Trip</ion-label>
+  </ion-button>
+</ion-row>
+<form [formGroup]="multiCityForm" (ngSubmit)="searchTrain()">
+  <ion-content>
+    <ion-row class="form" formArrayName="trips" *ngFor="let trip of trips.controls; let i = index;">
+      <ion-card [formGroupName]="i">
+          <ion-card-header>
+            <ion-title>Trip {{ i + 1 }}</ion-title>
+            <ion-icon name="close-circle" (click)="removeTrip(i)"></ion-icon>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-item>
+              <ion-row>
+                <ion-label class="bold large label">From Station</ion-label>
+                <ion-label class="value" [ngClass]="errorClass(trip,'from_location')"
+                  (click)="getStation(trips.controls,i,'from')">
+                  {{(trip.value.from_location !== null && trip.value.from_location !== '') ? trip.value.from_location : 'Select Station'}}
+                </ion-label>
+              </ion-row>
+              <ion-row *ngIf="(trainType$ | async) == 'international'">
+                <ion-label class="bold large label">Station Name</ion-label>
+                <input formControlName="from_name" [ngClass]="errorClass(trip,'from_name')" placeholder="Enter Station Name">
+              </ion-row>
+            </ion-item>
+
+            <ion-item>
+              <ion-row>
+                <ion-label class="bold large label">To Station</ion-label>
+                <ion-label class="value" [ngClass]="errorClass(trip,'to_location')"
+                  (click)="getStation(trips.controls,i,'to')">
+                  {{(trip.value.to_location !== null && trip.value.to_location !== '') ? trip.value.to_location : 'Select Station'}}
+                </ion-label>
+              </ion-row>
+              <ion-row *ngIf="(trainType$ | async) == 'international'">
+                <ion-label class="bold large label">Station Name</ion-label>
+                <input formControlName="to_name" [ngClass]="errorClass(trip,'to_name')" placeholder="Enter Station Name">
+              </ion-row>
+            </ion-item>
+
+            <ion-item>
+              <ion-row slot="start" (click)="selectDate(trips.controls,i)">
+                <ion-label class="bolder" [ngClass]="errorClass(trip,'date')" *ngIf="trip.value.date !== null">
+                  {{ trip.value.date !== null ? (trip.value.date | date : 'd') : '' }}
+                </ion-label>
+                <ion-row>
+                  <ion-label [ngClass]="errorClass(trip,'date')">
+                    {{ trip.value.date !== null ?  (trip.value.date | date : 'LLL yyyy') : 'Select' }}
+                  </ion-label>
+                  <ion-label [ngClass]="errorClass(trip,'date')">
+                    {{ trip.value.date !== null ?  (trip.value.date | date : 'EEE') : 'Date' }}
+                  </ion-label>
+                </ion-row>
+              </ion-row>
+              <ion-row slot="end" (click)="selectClass(i)">
+                <ion-label class="bold large">Class</ion-label>
+                <ion-label [ngClass]="errorClass(trip,'class')">
+                  {{ trip.value.class !== null ?  trip.value.class : 'Select Class' }}
+                </ion-label>
+              </ion-row>
+            </ion-item>
+
+            <ion-input formControlName="from_location" hidden></ion-input>
+            <ion-input formControlName="to_location" hidden></ion-input>
+            <ion-input formControlName="from_code" hidden></ion-input>
+            <ion-input formControlName="to_code" hidden></ion-input>
+            <ion-input formControlName="date" hidden></ion-input>
+            <ion-select #select formControlName="class" cancelText="Cancel" okText="Confirm"
+              [interfaceOptions]="customAlertOptions" (ionChange)="changeClass($event,trip)" hidden>
+              <ion-select-option *ngFor="let class of classes" [value]="class">{{ class }}</ion-select-option>
+            </ion-select>
+          </ion-card-content>
+      </ion-card>
+    </ion-row>
+  </ion-content>
+  <ion-row class="submit">
+    <ion-button class="submit" type="submit">
+      <ion-label>Continue</ion-label>
+    </ion-button>
+  </ion-row>
+</form>

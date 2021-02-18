@@ -1,0 +1,199 @@
+@import "../base/color.scss";
+@import "../base/fonts.scss";
+
+//variable
+
+$select-placeholder:(
+    "color":$suva-grey,
+    "opacity": 1
+);
+
+$select-padding:(
+    "bottom":0px,
+    "end":0px,
+    "start":0px,
+    "top":0px
+);
+
+$content-background:"../../assets/ng-img/bg.jpeg";
+
+ion-select{
+
+    --padding-bottom: map.get($select-padding, "bottom");
+    --padding-end: map.get($select-padding, "end");
+    --padding-start: map.get($select-padding, "start");
+    --padding-top: map.get($select-padding, "top");
+
+    --placeholder-color: map.get($select-placeholder, "color");
+    --placeholder-opacity: map.get($select-placeholder, "opacity");
+
+    align-items: center;
+}
+
+:root {
+
+    ion-app {
+
+        &.home-tab {
+            .cabinClass,
+            .cc,
+            .purpose {
+                div.alert-head {
+                    background:#{$geraldine};
+                    --ion-text-color:#{$white};
+                }
+
+                div.alert-radio-group {
+                    background: url(#{$content-background});
+
+                    button {
+                        div.alert-button-inner {
+                            div.alert-radio-icon {
+                                border-color:#{$geraldine};
+
+                                div.alert-radio-inner {
+                                    background-color: #{$geraldine};
+                                }
+                            }
+                        }
+                    }
+                }
+
+                div.alert-button-group {
+                    justify-content: space-around;
+                    background:#{$geraldine};
+
+                    button {
+                        background: #{$geraldine};
+
+                        span {
+                            color:#{$white};
+                        }
+                    }
+                }
+            }
+            .mealsOption {
+                .alert-wrapper {
+                    min-width: 90%;
+                }
+                div.alert-head {
+                    background:#{$geraldine};
+                    --ion-text-color:#{$white};
+                }
+
+                div.alert-radio-group {
+                    max-height: fit-content;
+                    background: url(#{$content-background});
+                    .alert-radio-label {
+                        white-space: pre-wrap;
+                    }
+                    button {
+                        div.alert-button-inner {
+                            div.alert-radio-icon {
+                                border-color:#{$geraldine};
+
+                                div.alert-radio-inner {
+                                    background-color: #{$geraldine};
+                                }
+                            }
+                        }
+                    }
+                }
+
+                div.alert-button-group {
+                    justify-content: space-around;
+                    background:#{$geraldine};
+
+                    button {
+                        background: #{$geraldine};
+
+                        span {
+                            color:#{$white};
+                        }
+                    }
+                }
+            }
+        }
+
+        &.expense-tab{
+            .cabinClass,
+            .cc,
+            .purpose {
+                div.alert-head {
+                    background:#{$limerick};
+                    --ion-text-color:#{$white};
+                }
+
+                div.alert-radio-group {
+                    background: url(#{$content-background});
+
+                    button {
+                        div.alert-button-inner {
+                            div.alert-radio-icon {
+                                border-color:#{$limerick};
+
+                                div.alert-radio-inner {
+                                    background-color: #{$limerick};
+                                }
+                            }
+                        }
+                    }
+                }
+
+                div.alert-button-group {
+                    justify-content: space-around;
+                    background:#{$limerick};
+
+                    button {
+                        background: #{$limerick};
+
+                        span {
+                            color:#{$white};
+                        }
+                    }
+                }
+            }
+            .mealsOption {
+                .alert-wrapper {
+                    height: 80%;
+                    min-width: 90%;
+                }
+                div.alert-head {
+                    background:#{$limerick};
+                    --ion-text-color:#{$white};
+                }
+
+                div.alert-radio-group {
+                    background: url(#{$content-background});
+
+                    button {
+                        div.alert-button-inner {
+                            div.alert-radio-icon {
+                                border-color:#{$limerick};
+
+                                div.alert-radio-inner {
+                                    background-color: #{$limerick};
+                                }
+                            }
+                        }
+                    }
+                }
+
+                div.alert-button-group {
+                    justify-content: space-around;
+                    background:#{$limerick};
+
+                    button {
+                        background: #{$limerick};
+
+                        span {
+                            color:#{$white};
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+}

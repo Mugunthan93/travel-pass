@@ -1,0 +1,117 @@
+<ion-content>
+  <form [formGroup]="bookForm" (ngSubmit)="sendRequest()">
+
+    
+    <mat-accordion multi="false">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">
+          <ion-row>
+            <ion-label class="large bold">
+              Departure Details
+            </ion-label>
+            <ion-row>
+              <ion-label>{{(departureForm | async).from_location}}</ion-label>
+              <ion-icon name="arrow-forward-outline"></ion-icon>
+              <ion-label>{{(departureForm | async).to_location}}</ion-label>
+            </ion-row>
+          </ion-row>
+        </mat-expansion-panel-header>
+        <div>
+          <ion-row>
+            <ion-col>
+              <ion-text class="bold">{{ (departureForm | async).from_location }}({{ (departureForm | async).from_code }})</ion-text>
+              <ion-text class="bold">{{ (departureForm | async).from_name }}</ion-text>
+            </ion-col>
+            <ion-col>
+              <ion-text class="bold">{{ (departureForm | async).date | date : 'EEE,d LLL' | titlecase }}</ion-text>
+              <ion-text class="bold">{{ (departureForm | async).class | uppercase }}</ion-text>
+            </ion-col>
+            <ion-col>
+              <ion-text class="bold">{{ (departureForm | async).to_location }}({{ (departureForm | async).to_code }})</ion-text>
+              <ion-text class="bold">{{ (departureForm | async).to_name }}</ion-text>
+            </ion-col>
+          </ion-row>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <ion-item>
+      <ion-label class="bold">Departure Train Name</ion-label>
+      <ion-input
+        formControlName="departure_train_name"
+        [ngClass]="errorClass('departure_train_name')"
+        class="form-control"
+        (ionChange)="trainname($event,'departure')"
+        ></ion-input>
+    </ion-item>
+
+    <mat-accordion multi="false">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">
+          <ion-row>
+            <ion-label class="large bold">
+              Return Details
+            </ion-label>
+            <ion-row>
+              <ion-label>{{(returnForm | async).from_location}}</ion-label>
+              <ion-icon name="arrow-forward-outline"></ion-icon>
+              <ion-label>{{(returnForm | async).to_location}}</ion-label>
+            </ion-row>
+          </ion-row>
+        </mat-expansion-panel-header>
+        <div>
+          <ion-row>
+            <ion-col>
+              <ion-text class="bold">{{ (returnForm | async).from_location }}({{ (returnForm | async).from_code }})</ion-text>
+              <ion-text class="bold">{{ (returnForm | async).from_name }}</ion-text>
+            </ion-col>
+            <ion-col>
+              <ion-text class="bold">{{ (returnForm | async).date | date : 'EEE,d LLL' | titlecase }}</ion-text>
+              <ion-text class="bold">{{ (returnForm | async).class | uppercase }}</ion-text>
+            </ion-col>
+            <ion-col>
+              <ion-text class="bold">{{ (returnForm | async).to_location }}({{ (returnForm | async).to_code }})</ion-text>
+              <ion-text class="bold">{{ (returnForm | async).to_name }}</ion-text>
+            </ion-col>
+          </ion-row>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <ion-item>
+      <ion-label class="bold">Return Train Name</ion-label>
+      <ion-input
+        formControlName="return_train_name"
+        [ngClass]="errorClass('return_train_name')"
+        class="form-control"
+        (ionChange)="trainname($event,'return')"
+        ></ion-input>
+    </ion-item>
+
+
+    <ion-row (click)="addPassengerDetails()">
+      <ion-label class="large bold">Passenger Details</ion-label>
+      <ion-label>Click to add Passenger Details</ion-label>
+    </ion-row>
+    <ion-item>
+      <ion-label class="bold">Book Type</ion-label>
+      <ion-select 
+        formControlName="book_type"
+        [ngClass]="errorClass('book_type')"
+        class="form-control" 
+        [placeholder]="'Select Book Type'" 
+        [interfaceOptions]="interfaceOption('Select Book Type')"
+        (ionChange)="selectedBookType($event)">
+        <ion-select-option *ngFor="let type of types" [value]="type">
+          {{ type }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+  </form>
+</ion-content>
+
+<ion-footer>
+  <form [formGroup]="bookForm" (ngSubmit)="sendRequest()">
+    <ion-button type="submit">
+      <ion-label>Send Request</ion-label>
+    </ion-button>
+  </form>
+</ion-footer>

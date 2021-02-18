@@ -1,0 +1,239 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start" (click)="back()">
+      <ion-button>
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="bold back-modal">
+      {{ (hotelSearch$ | async).city.destination }}
+    </ion-title>
+    <ion-title class="medium bold  back-modal">
+      {{ (hotelSearch$ | async).checkin | date : 'd LLL' }} - {{ (hotelSearch$ | async).checkout | date : 'd LLL' }} |
+      {{ (totalGuest$ | async) }} Guest | {{ totalHotels$ | async }} Hotels
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        {{ (hotel$ | async).HotelDetail.HotelName }}
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <mat-grid-list class="hotel-grid" cols="3" rowHeight="fit" gutterSize="10px">
+        <mat-grid-tile *ngFor="let tile of imgTile((hotel$ | async).HotelDetail.Images);let i = index"
+          [colspan]="tile.cols" [rowspan]="tile.rows"
+          [style.background]="'#e87474'">
+          <ion-img *ngIf="i !== 6" [src]="tile.img"></ion-img>
+          <ion-label 
+            *ngIf="i == 6" 
+            class="large white">
+            {{ (hotel$ | async).HotelDetail.Images.length + '+' }}
+          </ion-label>
+          <ion-label 
+            *ngIf="i == 6"
+            class="large white">
+              PHOTOS
+          </ion-label>
+        </mat-grid-tile>
+      </mat-grid-list>
+
+      <ion-row class="ion-justify-content-around" *ngIf="(hotel$ | async).HotelDetail.HotelFacilities">
+        <ion-row *ngFor="let facility of (hotel$ | async).HotelDetail.HotelFacilities | slice : 0 : 2 ; let i = index">
+          <ion-label class="large">{{facility}}</ion-label>
+        </ion-row>
+        <ion-row>
+          <ion-label class="large highlight-text">{{ (hotel$ | async).HotelDetail.HotelFacilities.length + '+' }}
+          </ion-label>
+          <ion-label class="large highlight-text">Amenities</ion-label>
+        </ion-row>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+
+
+  <ion-card class="hotel-about" *ngIf="(hotel$ | async).HotelDetail.Description">
+    <ion-card-header>
+      <ion-card-title class="medium bold">About the Hotel</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row [innerHTML]="decodeDescritption((hotel$ | async).HotelDetail.Description)" style="flex-direction: column;">
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="selectRoom()">
+        <ion-label class="bold">Continue</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+
+<!-- <ion-card class="hotel-rule" *ngIf="false">
+  <ion-card-header>
+    <ion-card-title>Hotel Rules</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-row>
+      <ion-col>
+        <ion-row>
+          <ion-col>
+            <ion-text>Guest Rules</ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-text>Pokémon Yellow</ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-text>Mega Man X</ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-text>The Legend of Zelda</ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-text>Pac-Man</ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-text>Super Mario World</ion-text>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-label class="highlight-text" (click)="showAll()">Show All</ion-label>
+  </ion-card-content>
+</ion-card>
+
+<ion-row *ngIf="false">
+  <ion-col>
+    <ion-row>
+      <ion-text>Similar Hotels</ion-text>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <app-similar-hotels></app-similar-hotels>
+      </ion-col>
+    </ion-row>
+  </ion-col>
+</ion-row>
+
+ <ion-card *ngIf="false">
+   <ion-card-header>
+     <ion-row>
+       <ion-col size="10">
+         <ion-card-title>
+           <ion-text>Reviews & Ratings</ion-text>
+         </ion-card-title>
+         <ion-card-subtitle>
+           <ion-text>1307 verified Reviews & 1789 Ratings</ion-text>
+         </ion-card-subtitle>
+       </ion-col>
+       <ion-col size="2">
+         <ion-badge color="primary">4.5/5</ion-badge>
+       </ion-col>
+     </ion-row>
+   </ion-card-header>
+   <ion-card-content>
+     <ion-row>
+       <ion-col size="4">
+         <ion-row>
+           <ion-text>EXCELLENT</ion-text>
+         </ion-row>
+         <ion-row>
+           <ion-text>Based on 1089 ratings</ion-text>
+         </ion-row>
+       </ion-col>
+       <ion-col size="8">
+         <ion-row>
+           <ion-range color="primary" pin="true" value="100"></ion-range>
+         </ion-row>
+       </ion-col>
+     </ion-row>
+     <ion-row>
+       <ion-col size="4">
+         <ion-row>
+           <ion-text>EXCELLENT</ion-text>
+         </ion-row>
+         <ion-row>
+           <ion-text>Based on 1089 ratings</ion-text>
+         </ion-row>
+       </ion-col>
+       <ion-col size="8">
+         <ion-range color="secondary" pin="true" value="80"></ion-range>
+       </ion-col>
+     </ion-row>
+     <ion-row>
+       <ion-col size="4">
+         <ion-row>
+           <ion-text>EXCELLENT</ion-text>
+         </ion-row>
+         <ion-row>
+           <ion-text>Based on 1089 ratings</ion-text>
+         </ion-row>
+       </ion-col>
+       <ion-col size="8">
+         <ion-range color="success" pin="true" value="60"></ion-range>
+       </ion-col>
+     </ion-row>
+     <ion-row>
+       <ion-col size="4">
+         <ion-row>
+           <ion-text>EXCELLENT</ion-text>
+         </ion-row>
+         <ion-row>
+           <ion-text>Based on 1089 ratings</ion-text>
+         </ion-row>
+       </ion-col>
+       <ion-col size="8">
+         <ion-range color="warning" pin="true" value="40"></ion-range>
+       </ion-col>
+     </ion-row>
+     <ion-row>
+       <ion-col size="4">
+         <ion-row>
+           <ion-text>EXCELLENT</ion-text>
+         </ion-row>
+         <ion-row>
+           <ion-text>Based on 1089 ratings</ion-text>
+         </ion-row>
+       </ion-col>
+       <ion-col size="8">
+         <ion-range color="danger" pin="true" value="20"></ion-range>
+       </ion-col>
+     </ion-row>
+   </ion-card-content>
+ </ion-card>
+
+<ion-row *ngIf="false">
+  <ion-col>
+    <ion-button size="small" fill="outline">Hotel</ion-button>
+  </ion-col>
+</ion-row>
+
+<ion-row *ngIf="false">
+  <ion-col>
+    <ion-text>Adyar</ion-text>
+  </ion-col>
+  <ion-col (click)="viewLocation()">
+    <ion-row>
+      <ion-text>View on Map</ion-text>
+      <ion-icon size="medium" name="map"></ion-icon>
+    </ion-row>
+  </ion-col>
+</ion-row> -->

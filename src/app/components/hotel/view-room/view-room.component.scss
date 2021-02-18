@@ -1,0 +1,74 @@
+@import "../../../../style/base/color.scss";
+
+ion-segment-button{
+        max-width: fit-content;
+        --indicator-height: 0px;
+}
+
+ion-content {
+
+    >ion-virtual-scroll{
+        >ion-card{
+            >ion-card-header{
+                padding: 0px;
+                >ion-img{
+                        height: 100px;
+                        object-fit: cover;
+                }
+            }
+    
+            >ion-card-content{
+                background: #dadada;
+                >div{
+                    >ion-title{
+                        padding-left: 0px !important;
+                    }
+                    >ion-row{
+                        justify-content: space-between;
+                        padding-top: 8px;
+                    }
+                }
+    
+                >ion-row.selectroom {
+                    justify-content: flex-end;
+    
+                    ion-label{
+                        margin: 12px;
+                    }
+    
+                    
+                    // >*{
+                    //     width: 35px;
+                    //     margin: 4px 0px;
+                    // }
+                    // >ion-label{
+                    //     align-self: center;
+                    //     text-align: center;
+                    // }
+    
+                    ion-icon{
+                        color: #{$white};
+                        padding: 0px 5px;
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+ion-footer{
+    ion-item{
+        --padding-start:16px;
+        ion-row.room-cost{
+            display: flex;
+            flex-direction: column;
+            >ion-label{
+                color: #{$white};
+                &:first-child{
+                    font-size: 17px;
+                }
+            }
+        }
+    }
+}

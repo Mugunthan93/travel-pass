@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start" (click)="back()">
+      <ion-button>
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Important Information</ion-title>
+  </ion-toolbar>
+  <ion-segment (ionChange)="tabChange($event)" [value]="selectedSegement">
+    <ion-segment-button value="about-hotel" class="about-tab">
+      <ion-label class="large bold">About Hotel</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="hotel-rules" class="about-tab">
+      <ion-label class="large bold">Hotel Rules</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-header>
+
+<ion-content>
+  <ion-card *ngIf="selectedSegement == 'about-hotel'">
+    <ion-card-header></ion-card-header>
+    <ion-card-content>
+      <ion-title>About Hotel</ion-title>
+      <ion-label class="about-hotel" [innerHTML]="decodeDescritption((hotel$ | async).HotelDetail.Description)">
+      </ion-label>
+    </ion-card-content>
+  </ion-card>
+  <ion-card *ngIf="selectedSegement == 'hotel-rules'">
+    <ion-card-header></ion-card-header>
+    <ion-card-content>
+      <ion-title>Hotel Norms</ion-title>
+      <ion-label class="hotel-norms" [innerHTML]="decodeDescritption((blockedroom$ | async).HotelPolicyDetail)">
+      </ion-label>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

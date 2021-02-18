@@ -1,0 +1,11 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="body_2" width="38" height="38">
+
+<g transform="matrix(1 0 0 1 0 0)">
+	<g transform="matrix(1 0 0 1 0 0)">
+        <path d="M0 0L0 38L38 38L38 0" stroke="none" fill="#FFFFFF" fill-rule="evenodd" />
+	</g>
+    <image  x="0" y="0" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAmCAIAAAAnX375AAAB1ElEQVR4nGP4T3fAMCKtXAQGdnZ2jpQBBweHrq6uf2CAz8p3797FuwcC0fWEKdeDeihCEf0pXmGXwQCflY8fP64KSwWia36dlKO+hJL9YDDIrHzy5ElFWGoFlazsji86CAaDzMq3b9/WRmYCEVWsnJhUdgIM8Fm5evVqSwMTILqWMpVC+64nTvGyduoFg8Fk5axZs5ydnSd29gKRmb7R1cwZ5FuZMhVoQm9LRwAYtLe3Y7cSKHcjdzZEz6reWXPT68m2ckV264TWLiDjRuwkIPL19cVuZUhIyI24yRA9x7qWzEitJtvK+Rn1O7vng4I3uAeIIiMjB5OVN5OmQfQc6VkyO62WbCsXZDRu7ZkHsjKsD4hGrRy1ctTKUStHrUS28kzbEmDRTLaVS7Na9nUtJGxlUFAQsNS/VrYAiKKioiz0jXsSiklFwIYkENkYmwOtuZEDrX0jIiKwWxkfH79hw4ZM9zAg2pXTez5r2tmc6eQhoN5NmZ3lfgmnwADoGexWAlvy8vLyc5NqgIjsIEVGXVF5ymBw+PDhQWMlEADbnLlekUB0PaSXQvuuR00ARhDhbhAQtIJBsW9sc1hmYyjJCKgLorHAJ3ratGn/sYFB0KUdnlYCANWfqyuxcydsAAAAAElFTkSuQmCC" width="38" height="38"/>
+</g>
+</svg>

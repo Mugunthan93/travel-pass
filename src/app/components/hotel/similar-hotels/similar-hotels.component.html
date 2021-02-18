@@ -1,0 +1,37 @@
+<ion-content scrollX="true" scrollY="false" (ionScroll)="scrolling($event)" scrollEvents="true">
+  <ion-row>
+    <ion-col *ngFor="let hotel of hotels">
+      <ion-card>
+        <ion-img [src]="hotel.image"></ion-img>
+        <ion-card-header>
+          <ion-text>Kollam Serviced Apartment</ion-text>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-row>
+            <ion-text>{{'2239' | currency : 'INR'}}</ion-text>
+          </ion-row>
+          <ion-row>
+            <ion-text>Per Night</ion-text>
+          </ion-row>
+          <mat-divider></mat-divider>
+          <ion-row>
+            <ion-text>2.6 Km from kollam serviced apartment - Adyar</ion-text>
+          </ion-row>
+          <mat-divider></mat-divider>
+          <ion-row>
+            Free Cancellation
+          </ion-row>
+          <mat-divider></mat-divider>
+          <ion-row>
+            <ion-text>Free Breakfast</ion-text>
+          </ion-row>
+          <ion-row>
+            <ion-text>
+              CONTINUE
+            </ion-text>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-content>

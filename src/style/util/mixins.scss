@@ -1,0 +1,81 @@
+
+
+@mixin first-tab-border($tab-name,$border-color) {
+    [tab=#{$tab-name}]{
+            border-left : 2px solid #{$border-color};
+            border-top: 2px solid #{$border-color};
+            border-bottom:2px solid #{$border-color};
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+    }
+}
+
+@mixin middle-tab-border($tab-name, $border-color) {
+    [tab=#{$tab-name}]{
+        border:2px solid #{$border-color};
+    }
+}
+
+@mixin last-tab-border($tab-name, $border-color) {
+    [tab=#{$tab-name}] {
+        border-right : 2px solid #{$border-color};
+        border-top: 2px solid #{$border-color};
+        border-bottom:2px solid #{$border-color};
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+}
+
+@mixin search-grid-input($side1,$side2){
+    ion-row{
+        flex-direction: column;
+        ion-label, ion-text {
+            margin-#{$side2}:auto !important;
+            margin-#{$side1}:0 !important;
+        }
+    }
+}
+
+@mixin search-grid-switch(){
+    &>ion-button{
+        --opacity: 1;
+        --background: transparent;
+        ion-icon {
+            height: 25px;
+            width: 100%;
+        }
+    }
+    &>ion-icon{
+        height:75px;
+        width:100%;
+    }
+}
+
+@mixin flex-col-grid{
+    display: flex;
+    flex-flow: column;
+    height : 100%;
+}
+
+@mixin first-segment-button($border-color) {
+    border-left : 2px solid #{$border-color};
+    border-top: 2px solid #{$border-color};
+    border-bottom:2px solid #{$border-color};
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+@mixin middle-segment-button($border-color) {
+    border-left : 1px solid #{$border-color};
+    border-right : 1px solid #{$border-color};
+    border-top: 2px solid #{$border-color};
+    border-bottom:2px solid #{$border-color};
+}
+
+@mixin last-segment-button($border-color) {
+    border-right : 2px solid #{$border-color};
+    border-top: 2px solid #{$border-color};
+    border-bottom:2px solid #{$border-color};
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}

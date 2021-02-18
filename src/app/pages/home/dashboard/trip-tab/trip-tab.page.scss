@@ -1,0 +1,71 @@
+@import "../../../../../style/base/color.scss";
+
+ion-item {
+    margin: 14px 12px;
+    min-height: 96px !important;
+    border-radius: 10px;
+    box-shadow: 0px 5px 5px;
+    >ion-row[slot="start"] {
+        flex-direction: column;
+        background: #{$geraldine};
+        padding: 6px 16px;
+        text-align: center;
+        margin-right: 0px;
+        ion-label{
+            color: #{$white};
+            &:nth-child(1) {
+                font-size: xx-large;
+            }
+            &:nth-child(2) {
+                font-size: x-large;
+            }
+        }
+    }
+    >ion-row.trip-detail {
+        width: -webkit-fill-available;
+        height: -webkit-fill-available;
+        background: white;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        >ion-row {
+
+            &:last-child {
+                background: #F8F8F8;
+                height: 30%;
+                justify-content: space-between;
+                >ion-label {
+                    text-align: end;
+                }
+            }
+
+            &:first-child {
+                font-size: larger;
+                >ion-row {
+                    justify-content: space-between;
+                    >ion-label{
+                        width: 35%;
+                        &:first-child {
+                            text-align: start;
+                        }
+                        &:last-child {
+                            text-align: end;
+                        }
+                    }
+                    >ion-icon{
+                        margin: auto;
+                    }
+                }
+
+            }
+
+            height: 70%;
+            width: -webkit-fill-available;
+            flex-direction: column;
+            justify-content: center;
+            ion-icon {
+                font-size:17px !important;
+                margin: auto 12px;
+            }
+        }
+    }
+}

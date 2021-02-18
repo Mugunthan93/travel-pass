@@ -1,0 +1,53 @@
+<ion-grid>
+  <ion-row>
+    <ion-col>
+      <ion-row>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <app-result-list
+            [flightList]="flightList$ | async"
+            [selectedFlights]="selectedFlight$ | async"
+            (getFlightValue)="currentFlight($event)"
+          ></app-result-list>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+<ion-footer *ngIf="(selectedFlight$ | async) !== null">
+  <ion-toolbar class="result-footer">
+    <ion-row *ngFor="let i of (selectedFlight$ | async).trips" class="one-way">
+      <ion-col>
+        <ion-img src="../../../../../../assets/AirlineLogo/{{i.tripinfo.logo}}.gif"></ion-img>
+        <ion-row>
+          <ion-label>{{i.tripinfo.airline.name}}</ion-label>
+          <ion-label>{{i.tripinfo.airline.code}}-{{i.tripinfo.airline.number}}</ion-label>
+        </ion-row>
+      </ion-col>
+      <ion-col>
+        <ion-label>
+          {{i.tripinfo.depTime | date : 'HH:mm'}} - {{i.tripinfo.arrTime | date : 'HH:mm'}}
+        </ion-label>
+        <ion-label>{{i.tripinfo.class}}</ion-label>
+      </ion-col>
+      <ion-col>
+        <ion-label>
+          {{i.tripinfo.duration}}
+        </ion-label>
+        <ion-label>
+          {{i.tripinfo.stops}}
+        </ion-label>
+      </ion-col>
+      <ion-col>
+        <ion-label>
+          {{i.tripinfo.fare | currency : i.tripinfo.currency }}
+        </ion-label>
+        <ion-button expand="block" size="small" (click)="book()">
+          <ion-label class="bold">Book</ion-label>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

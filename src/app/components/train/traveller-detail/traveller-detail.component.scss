@@ -1,0 +1,38 @@
+@import "../../../../style/component/item.scss";
+
+
+form {
+    text-align: -webkit-center;
+
+    ion-list {
+        ion-item {
+            @include profile;
+            --padding-start: 10px;
+            --padding-end: 10px;
+            --padding-top: 8px;
+            --padding-bottom: 8px;
+
+            ion-label {
+                width: 50%;
+            }
+
+            ion-input {
+                width: 50%;
+            }
+            ion-select{
+                display: flex;
+                width: 50%;
+            }
+        }
+    }
+
+    ion-button {
+        ion-label {
+            margin: 8px;
+
+            span {
+                color: red;
+            }
+        }
+    }
+}

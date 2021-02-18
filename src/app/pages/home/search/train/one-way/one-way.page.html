@@ -1,0 +1,66 @@
+<form [formGroup]="oneWayForm" (ngSubmit)="searchTrain()">
+
+  <ion-item>
+    <ion-row>
+      <ion-label class="bold large label">From Station</ion-label>
+      <ion-label class="value" [ngClass]="errorClass('from_location')" (click)="getStation('from')">
+        {{(this.oneWayForm.value.from_location !== null && this.oneWayForm.value.from_location !== '') ? this.oneWayForm.value.from_location : 'Select Station'}}
+      </ion-label>
+    </ion-row>
+    <ion-row *ngIf="(trainType$ | async) == 'international'">
+      <ion-label class="bold large label">Station Name</ion-label>
+      <input formControlName="from_name" [ngClass]="errorClass('from_name')" placeholder="Enter Station Name">
+    </ion-row>
+  </ion-item>
+
+  <ion-item>
+    <ion-row>
+      <ion-label class="bold large label">To Station</ion-label>
+      <ion-label class="value" [ngClass]="errorClass('to_location')" (click)="getStation('to')">
+        {{(this.oneWayForm.value.to_location !== null && this.oneWayForm.value.to_location !== '') ? this.oneWayForm.value.to_location : 'Select Station'}}
+      </ion-label>
+    </ion-row>
+    <ion-row *ngIf="(trainType$ | async) == 'international'">
+      <ion-label class="bold large label">To Station</ion-label>
+      <input formControlName="to_name" [ngClass]="errorClass('to_name')" placeholder="Enter Station Name">
+    </ion-row>
+  </ion-item>
+
+  <ion-item>
+    <ion-row slot="start" (click)="selectDate()">
+      <ion-label class="bolder" [ngClass]="errorClass('date')" *ngIf="this.oneWayForm.value.date !== null">
+        {{ this.oneWayForm.value.date !== null ? (this.oneWayForm.value.date | date : 'd') : '' }}
+      </ion-label>
+      <ion-row>
+        <ion-label [ngClass]="errorClass('date')">
+          {{ this.oneWayForm.value.date !== null ?  (this.oneWayForm.value.date | date : 'LLL yyyy') : 'Select' }}
+        </ion-label>
+        <ion-label [ngClass]="errorClass('date')">
+          {{ this.oneWayForm.value.date !== null ?  (this.oneWayForm.value.date | date : 'EEE') : 'Date' }}
+        </ion-label>
+      </ion-row>
+    </ion-row>
+    <ion-row slot="end" (click)="selectClass()">
+      <ion-label class="bold large">Class</ion-label>
+      <ion-label [ngClass]="errorClass('class')">
+        {{ this.oneWayForm.value.class !== null ?  this.oneWayForm.value.class : 'Select Class' }}
+      </ion-label>
+    </ion-row>
+  </ion-item>
+
+  <ion-row>
+    <ion-button type="submit">
+      <ion-label>Continue</ion-label>
+    </ion-button>
+  </ion-row>
+
+  <ion-input formControlName="from_location" hidden></ion-input>
+  <ion-input formControlName="to_location" hidden></ion-input>
+  <ion-input formControlName="from_code" hidden></ion-input>
+  <ion-input formControlName="to_code" hidden></ion-input>
+  <ion-input formControlName="date" hidden></ion-input>
+  <ion-select #select formControlName="class" cancelText="Cancel" okText="Confirm"
+    [interfaceOptions]="customAlertOptions" (ionChange)="changeClass($event)" hidden>
+    <ion-select-option *ngFor="let class of classes" [value]="class">{{ class }}</ion-select-option>
+  </ion-select>
+</form>

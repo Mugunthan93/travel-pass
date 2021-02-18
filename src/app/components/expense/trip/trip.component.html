@@ -1,0 +1,127 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add New Trip</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-sharp"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="tripForm" (ngSubmit)="addTrip()">
+    <ion-list>
+
+      <ion-item>
+        <ion-label position="floating">Trip Name</ion-label>
+        <ion-input type="text" formControlName="trip_name" enterkeyhint="next"></ion-input>
+      </ion-item>
+
+      <ion-row *ngIf="tripForm.controls['trip_name'].hasError('required') && formSubmit">
+        <ion-label color="danger">Trip Name Required</ion-label>
+      </ion-row>
+
+      <ion-item>
+        <ion-select formControlName="project_name" placeholder="Select Project"
+        #project_name
+        cancelText="Cancel"
+        okText="Confirm"
+        [interfaceOptions]="customAlertOptions('Project List')"
+        (ionChange)="changeProjectName($event)">
+          <ion-select-option *ngFor="let projName of (projectName$ | async)" [value]="projName">
+            {{ projName.project_name }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-row *ngIf="tripForm.controls['project_name'].hasError('required') && formSubmit">
+        <ion-label color="danger">Trip Name Required</ion-label>
+      </ion-row>
+
+      <ion-item>
+        <ion-select formControlName="claim_type" placeholder="Select Claim Type"
+        #claim_type
+        cancelText="Cancel"
+        okText="Confirm"
+        [interfaceOptions]="customAlertOptions('Claim Type')"
+        (ionChange)="changeClaimType($event)">
+          <ion-select-option value="At Actuals">At Actuals</ion-select-option>
+          <ion-select-option value="Per Diem">Per Diem</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-row *ngIf="tripForm.controls['claim_type'].hasError('required') && formSubmit">
+        <ion-label color="danger">Claim Required</ion-label>
+      </ion-row>
+
+      <ion-item>
+        <ion-label position="floating">Advance Amount</ion-label>
+        <ion-input type="number" formControlName="advance_amount" enterkeyhint="next"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Start Date</ion-label>
+        <ion-input type="date" formControlName="start_date" enterkeyhint="next">
+        </ion-input>
+      </ion-item>
+
+      <ion-row *ngIf="tripForm.controls['start_date'].hasError('required') && formSubmit">
+        <ion-label color="danger">start date Required</ion-label>
+      </ion-row>
+
+      <ion-row *ngIf="tripForm.controls['start_date'].hasError('mismatch') && formSubmit">
+        <ion-label color="danger">End Date won't come before Start Date</ion-label>
+      </ion-row>
+
+      <ion-row *ngIf="tripForm.controls['start_date'].hasError('hasDate') && formSubmit">
+        <ion-label color="danger">You already had a trip in this date,Try other dates</ion-label>
+      </ion-row>
+
+      <ion-item>
+        <ion-label position="floating">End Date</ion-label>
+        <ion-input type="date" formControlName="end_date" enterkeyhint="next">
+        </ion-input>
+      </ion-item>
+
+      
+      <ion-row *ngIf="tripForm.controls['end_date'].hasError('required') && formSubmit">
+        <ion-label color="danger">end date Required</ion-label>
+      </ion-row>
+
+      <ion-row *ngIf="tripForm.controls['end_date'].hasError('mismatch') && formSubmit">
+        <ion-label color="danger">End Date won't come before Start Date</ion-label>
+      </ion-row>
+      <ion-row *ngIf="tripForm.controls['end_date'].hasError('hasDate') && formSubmit">
+        <ion-label color="danger">You already had a trip in this date,Try other dates</ion-label>
+      </ion-row>
+
+      <ion-item>
+        <ion-select formControlName="select_manager" placeholder="Select Manager"
+        #select_manager
+        cancelText="Cancel"
+        okText="Confirm"
+        [interfaceOptions]="customAlertOptions('Managers List')"
+        (ionChange)="changeManager($event)">
+          <ion-select-option *ngFor="let manger of (manager$ | async)" [value]="manger">{{ manger.name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-row *ngIf="tripForm.controls['select_manager'].hasError('required') && formSubmit">
+        <ion-label color="danger">Select the manager</ion-label>
+      </ion-row>
+    </ion-list>
+  </form>
+</ion-content>
+
+<ion-footer>
+  <form [formGroup]="tripForm" (ngSubmit)="addTrip()">
+    <ion-toolbar>
+      <ion-buttons slot="end">
+        <ion-button type="submit">
+          <ion-label class="large bold">Add</ion-label>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </form>
+</ion-footer>

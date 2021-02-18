@@ -1,0 +1,58 @@
+@import "../base/color.scss";
+
+//variable
+
+$list-header-background:transparent;
+
+$list-header-border-type:(
+    "color":transparent,
+    "style":none,
+    "width":0px
+);
+
+$list-header-color:$black;
+$list-header-inner-border-width:0px;
+
+
+ion-list {
+    background: transparent !important;
+
+    &.employee-list {
+        padding: 0px;
+
+        ion-item-divider{
+            --background: transparent;
+            --color: #{geraldine};
+            >ion-title{
+                padding-left: 20px !important;
+                --color:#{$geraldine};
+            }
+        }
+
+        ion-item{
+            --padding-start: 20px;
+            --padding-end: 20px;
+            min-height: 40px !important;
+            >ion-label{
+                margin: 16px 0px;
+            }
+        }
+
+
+    }
+
+}
+
+ion-list-header{
+    --background:#{$list-header-background};
+    --border-color:map.get($list-header-border-type, "color");
+    --border-style:map.get($list-header-border-type, "style");
+    --border-width:map.get($list-header-border-type, "width");
+    --color:#{$list-header-color};
+    --inner-border-width:#{$list-header-inner-border-width};
+
+    &.searchHeading {
+        padding-right: 16px !important;
+        justify-content: space-between;
+    }
+}

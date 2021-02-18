@@ -1,0 +1,32 @@
+@import "../../../../style/base/color.scss";
+
+ion-header{
+    ion-title{
+        padding-left: 0px !important;
+    }
+}
+
+ion-segment-button.about-tab{
+    --indicator-height:0px;
+    ion-label{
+        color:#{$white};
+    }
+}
+
+ion-card-content{
+    ion-title {
+        padding-left: 0px !important;
+    }
+}
+
+ion-label.hotel-policy {
+    display: flex;
+    flex-direction: column;
+    padding: 0px 10px !important;
+}
+
+ion-label.about-hotel {
+    display: flex;
+    flex-direction: column;
+    padding: 0px 10px !important;
+}

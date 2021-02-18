@@ -1,0 +1,68 @@
+<ion-content>
+  <ion-list lines="none"  *ngIf="(loading$ | async)">
+    <ion-item *ngFor="let trip of [1,2,3,4,5,6,7,8,9,10]">
+      <ion-icon slot="start" src="../../../assets/icons/dashboard/trip-flight.svg"></ion-icon>
+      <ion-icon slot="end" src="../../../assets/ionicons/md-alert-circle.svg"></ion-icon>
+      <ion-row style="width: -webkit-fill-available;">
+        <ion-row>
+          <ion-text style="width: 15%;">
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </ion-text>
+          <ion-icon src="../../../assets/icons/straight.svg"></ion-icon>
+          <ion-text style="width: 15%;">
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </ion-text>
+        </ion-row>
+        <ion-row>
+          <ion-text style="width: 15%;">
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </ion-text>
+        </ion-row>
+      </ion-row>
+    </ion-item>
+  </ion-list>
+  <mat-accordion *ngIf="!(loading$ | async)">
+    <mat-expansion-panel *ngFor="let trip of (upcomingTrips$ | async)">
+      <mat-expansion-panel-header [collapsedHeight]="'70px'" [expandedHeight]="'70px'" >
+        <ion-item>
+          <ion-icon *ngIf="trip.type == 'flight'" slot="start" src="../../../assets/icons/dashboard/trip-flight.svg"></ion-icon>
+          <ion-icon *ngIf="trip.type == 'hotel'" slot="start" src="../../../assets/icons/dashboard/hotel.svg"></ion-icon>
+          <ion-icon *ngIf="trip.type == 'bus'" slot="start" src="../../../assets/icons/dashboard/bus.svg"></ion-icon>
+          <ion-icon *ngIf="trip.type == 'train'" slot="start" name="train-sharp"></ion-icon>
+          <ion-icon slot="end" src="../../../assets/ionicons/md-alert-circle.svg"></ion-icon>
+          <ion-row *ngIf="trip.type !== 'hotel'">
+            <ion-row>
+              <ion-label class="medium bold">{{ trip.from }}</ion-label>
+              <ion-icon  *ngIf="trip.journey == 1" name="arrow-forward-sharp"></ion-icon>
+              <ion-icon  *ngIf="trip.journey == 2" src="../../../assets/icons/straight.svg"></ion-icon>
+              <ion-icon *ngIf="trip.journey == 3" src="../../../assets/icons/around.svg"></ion-icon>
+              <ion-label class="medium bold">{{ trip.to }}</ion-label>
+            </ion-row>
+            <ion-row>
+              <ion-text class="bold">{{ trip.date | date : 'EEE, d MMM' }} | {{ trip.date | date : 'shortTime' }}</ion-text>
+            </ion-row>
+          </ion-row>
+          <ion-row *ngIf="trip.type == 'hotel'">
+            <ion-row>
+              <ion-label class="medium bold">{{ trip.date }}</ion-label>
+            </ion-row>
+            <ion-row>
+              <ion-text class="bold">{{ trip.from | date : 'EEE, d MMM' }} | {{ trip.to | date : 'shortTime' }}</ion-text>
+            </ion-row>
+          </ion-row>
+        </ion-item>
+      </mat-expansion-panel-header>
+      <ion-row class="trip-panels ion-justify-content-around">
+        <ion-button  (click)="download(trip.ticket)">
+          <ion-label class="medium bold">View</ion-label> 
+        </ion-button>
+        <ion-button  (click)="reschedule(trip.id)" *ngIf="rescheduled.includes(trip.type)">
+          <ion-label class="medium bold">Reschedule</ion-label>
+        </ion-button>
+        <ion-button  (click)="cancel(trip.id,trip.type)" *ngIf="cancelled.includes(trip.type)">
+          <ion-label class="medium bold">Cancel</ion-label>
+        </ion-button>
+      </ion-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+</ion-content>
