@@ -64,12 +64,7 @@ import { ExpenseState } from '../stores/expense.state';
 import { AgencyState } from '../stores/agency.state';
 import { VendorState } from '../stores/vendor.state';
 
-@NgModule({
-  imports: [
-    CommonModule,
-    IonicModule,
-    NgxsModule.forRoot([
-
+let stateArray = [
       AuthState,
       UserState,
       CompanyState,
@@ -141,33 +136,17 @@ import { VendorState } from '../stores/vendor.state';
       ReturnFilterState,
       HotelFilterState,
       BusFilterState
+];
 
-    ], { developmentMode: !environment.production }
+@NgModule({
+  imports: [
+    CommonModule,
+    IonicModule,
+    NgxsModule.forRoot(stateArray, { developmentMode: !environment.production }
     ),
     NgxsResetPluginModule.forRoot(),
     NgxsStoragePluginModule.forRoot({
-      key: [
-        UserState,
-        CompanyState,
-        AgencyState,
-        VendorState,
-
-        SearchState,
-        ResultState,
-        BookState,
-
-        BookingState,
-        ApprovalState,
-
-        FilterState,
-        SortState,
-        SharedState,
-        PassengerState,
-        EligibilityState,
-
-        ThemeState,
-        ExpenseState
-      ]
+      key: stateArray
     }),
     NgxsRouterPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot({

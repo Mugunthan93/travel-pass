@@ -199,7 +199,7 @@ export interface rt_sendRequest {
     transaction_id: any
     user_id: number
     traveller_id: number
-    managers: string[]
+    managers: string[] | managers
     trip_type: string
     comments: string
     vendor_id: number
@@ -1016,20 +1016,30 @@ export class FLightBookState {
     @Action(SetTaxable)
     setTaxable(states: StateContext<flight>) {
 
+      if(states.getState().plb.onward.length >= 1 && states.getState().fare.onward !== null) {
         let onplb = states.getState().plb.onward[0];
         let onfare = states.getState().fare.onward.BaseFare;
         let onyq = states.getState().fare.onward.YQTax;
 
+        states.setState(patch({
+          taxable : patch({
+            onward : this.getTaxable(onplb,onfare,onyq)
+          })
+      }));
+      }
+
+      if(states.getState().plb.onward.length >= 1 && states.getState().fare.onward != null) {
         let replb = states.getState().plb.return[0];
         let refare = states.getState().fare.return.BaseFare;
         let reyq = states.getState().fare.return.YQTax;
 
         states.setState(patch({
-            taxable : patch({
-              onward : this.getTaxable(onplb,onfare,onyq),
-              return : this.getTaxable(replb,refare,reyq)
-            })
-        }));
+          taxable : patch({
+            return : this.getTaxable(replb,refare,reyq)
+          })
+      }));
+
+      }
     }
 
     getGender(title : string) : number {
@@ -1172,7 +1182,7 @@ export class FLightBookState {
     }
 
     getTripType() : string {
-      let searchType : string = this.store.selectSnapshot(SearchType.type);
+      let searchType : string = this.store.selectSnapshot(SearchState.getSearchType);
       switch(searchType) {
         case "one-way" : return this.store.selectSnapshot(OneWaySearchState.getTripType);
         case "round-trip" : return this.store.selectSnapshot(RoundTripSearchState.getTripType);

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonSelect, ModalController, PickerController } from '@ionic/angular';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
@@ -125,7 +125,7 @@ export class RoundTripPage implements OnInit {
     });
 
     modal.present();
-    
+
     const event: any = await modal.onDidDismiss();
     if (event.role == 'done') {
       if (field == 'departure' && event.data.dateObj > this.roundTripSearch.controls['return'].value) {
@@ -136,7 +136,7 @@ export class RoundTripPage implements OnInit {
     else if (event.role == 'cancel') {
       return;
     }
-    
+
   }
 
   async selectPassengers() {

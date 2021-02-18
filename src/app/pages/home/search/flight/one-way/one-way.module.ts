@@ -13,6 +13,7 @@ import { OneWayPage } from './one-way.page';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     IonicModule,
     ReactiveFormsModule,
     OneWayPageRoutingModule

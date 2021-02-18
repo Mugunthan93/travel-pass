@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalController, PickerController, IonSelect, Platform, PopoverController } from '@ionic/angular';
 import { PassengerModalComponent } from 'src/app/components/flight/passenger-modal/passenger-modal.component';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
@@ -105,7 +105,7 @@ export class OneWayPage implements OnInit {
         options
       }
     });
-    
+
     modal.present();
 
     const event: any = await modal.onDidDismiss();
@@ -113,7 +113,7 @@ export class OneWayPage implements OnInit {
       this.oneWaySearch.controls['departure'].patchValue(event.data.dateObj);
     }
     else if (event.role == 'cancel') {
-      return; 
+      return;
     }
 
   }
@@ -148,7 +148,7 @@ export class OneWayPage implements OnInit {
           selectedPassenger.data.infant == 0) {
           this.oneWaySearch.controls['traveller'].patchValue(null);
         }
-        else {  
+        else {
           this.oneWaySearch.controls['traveller'].patchValue(selectedPassenger.data);
         }
       }
