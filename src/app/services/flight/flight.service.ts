@@ -17,7 +17,7 @@ export class FlightService {
     private http: NativeHttpService
   ) {
   }
-  
+
   async metrixboard(metrixData: metrixBoard) {
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setData('json');
@@ -72,6 +72,7 @@ export class FlightService {
   }
 
   bookFlight(bookpl : bookpayload) {
+    this.http.setReqTimeout(300);
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setData('json');
     return from(this.http.post("/airlines/book",bookpl));

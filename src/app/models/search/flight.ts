@@ -199,7 +199,7 @@ export interface metrixSector {
     api?: string
     book_response?: any
     fareQuote_onward?:  any
-    fareQuote_return?: string
+    fareQuote_return?: any
     request_id?: number
 }
 

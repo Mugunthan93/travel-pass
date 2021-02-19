@@ -1,7 +1,6 @@
 import { State, Selector, Action, StateContext, Store } from '@ngxs/store';
 import { StateReset } from 'ngxs-reset-plugin';
 import { Navigate } from '@ngxs/router-plugin';
-import { SetServiceCharge } from './book/flight.state';
 import { Injectable } from '@angular/core';
 
 export interface result{

@@ -14,6 +14,12 @@ import { HotelFilterComponent } from 'src/app/components/hotel/hotel-filter/hote
 import { BusFilterComponent } from 'src/app/components/bus/bus-filter/bus-filter.component';
 import { FlightFilterComponent } from 'src/app/components/flight/flight-filter/flight-filter.component';
 import { sortButton } from 'src/app/stores/result/sort.state';
+import { SearchState } from 'src/app/stores/search.state';
+import { PassengerState } from 'src/app/stores/passenger.state';
+import { BusPassengerState } from 'src/app/stores/passenger/bus.passenger.state';
+import { FlightPassengerState } from 'src/app/stores/passenger/flight.passenger.states';
+import { HotelPassengerState } from 'src/app/stores/passenger/hotel.passenger.state';
+import { TrainPassengerState } from 'src/app/stores/passenger/train.passenger.state';
 
 @Component({
   selector: "app-result",
@@ -44,6 +50,9 @@ export class ResultPage implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    this.store.dispatch(new StateReset(PassengerState,FlightPassengerState,BusPassengerState,HotelPassengerState,TrainPassengerState));
+
     this.resultMode$ = this.store.select(ResultState.getResultMode);
     this.resultType$ = this.store.select(ResultState.getResultType);
 
@@ -61,7 +70,7 @@ export class ResultPage implements OnInit {
     this.busSearch$ = this.store.select(BusSearchState.getSearchData);
   }
 
-  
+
   ionViewWillEnter() {
     console.log(this.changeDet);
     this.changeDet.detectChanges();

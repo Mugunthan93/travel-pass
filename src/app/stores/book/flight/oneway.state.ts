@@ -1,7 +1,7 @@
 import { State, Action, Selector, Store, StateContext } from "@ngxs/store";
 import { bookObj, FLightBookState, sendRequest, kioskRequest, value, SetFare, SetMeal, SetBaggage, bookpayload, ticketpayload, totalsummary, taxes, plb, GetPLB, baggage, meal, managers, SetServiceCharge, SetGST, SetTaxable } from '../flight.state';
 import { flightResult, flightData, metrixBoard } from 'src/app/models/search/flight';
-import { SSR } from '../../result/flight.state';
+import { FlightResultState, SSR } from '../../result/flight.state';
 import { Navigate } from '@ngxs/router-plugin';
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { OneWayResultState } from '../../result/flight/oneway.state';
@@ -24,6 +24,7 @@ import { HTTPResponse } from "@ionic-native/http/ngx";
 import { ApprovalService } from "src/app/services/approval/approval.service";
 import { AgencyState } from "../../agency.state";
 import { Injectable } from "@angular/core";
+import { PassengerState } from "../../passenger.state";
 
 
 export interface onewayBook {
@@ -493,7 +494,7 @@ export class OneWayBookState{
                 handler: () => {
                     this.modalCtrl.dismiss(null, null, 'success-book');
                     states.dispatch(new Navigate(['/','home','dashboard','home-tab']));
-                    states.dispatch(new StateReset(SearchState,ResultState,BookState));
+                    states.dispatch(new StateReset(SearchState,ResultState,FlightResultState,OneWayResultState,BookState,PassengerState,FlightPassengerState));
                 }
             }]
         })).pipe(flatMap((el) => from(el.present())));
@@ -549,7 +550,7 @@ export class OneWayBookState{
                           Book_request: bkpl,
                           book_response: response,
                           request_id: openreq.id,
-                          fareQuote_onward: this.store.selectSnapshot(OneWayBookState.getFareQuote),
+                          fareQuote_onward: states.getState().fareQuote,
                           fareQuote_return: ""
                         }
                     }
@@ -795,7 +796,7 @@ export class OneWayBookState{
     }
 
     //approvereq for booking
-    approveRequestPayload(states,response,sendReq,bookres,openreq) {
+    approveRequestPayload(states: StateContext<onewayBook>,response,sendReq,bookres,openreq) {
 
         let data = JSON.parse(response.data);
         console.log(data,response);
@@ -819,7 +820,6 @@ export class OneWayBookState{
         let vendorId: number = environment.vendorID;
         let travellersId: number = this.store.selectSnapshot(UserState.getUserId);
         let companyId: number = this.store.selectSnapshot(UserState.getcompanyId);
-        let userId: number = this.store.selectSnapshot(UserState.getUserId);
         let approveStatus = this.store.selectSnapshot(CompanyState.getApprovalStatus);
         let manager = approveStatus ? this.store.selectSnapshot(UserState.getApprover) : this.bookingPerson();
 

@@ -1,7 +1,7 @@
 import { Selector, Action, State, Store, StateContext } from '@ngxs/store';
-import { flightResult, flightData } from 'src/app/models/search/flight';
-import { SSR } from '../../result/flight.state';
-import { bookObj, value, FLightBookState, rt_uapi_params, rt_sendRequest, rt_kioskRequest, SetFare, SetMeal, SetBaggage, taxes, plb, totalsummary, SetServiceCharge, GetPLB, SetTaxable, SetGST, baggage, meal } from '../flight.state';
+import { flightResult, flightData, metrixBoard } from 'src/app/models/search/flight';
+import { fareRule, FlightResultState, SSR } from '../../result/flight.state';
+import { bookObj, value, FLightBookState, rt_uapi_params, rt_sendRequest, rt_kioskRequest, SetFare, SetMeal, SetBaggage, taxes, plb, totalsummary, SetServiceCharge, GetPLB, SetTaxable, SetGST, baggage, meal, bookpayload, ticketpayload } from '../flight.state';
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { DomesticResultState } from '../../result/flight/domestic.state';
 import { RoundTripSearch, RoundTripSearchState } from '../../search/flight/round-trip.state';
@@ -17,14 +17,16 @@ import { BookMode, BookState, BookType } from '../../book.state';
 import { LoadingController, AlertController, ModalController } from '@ionic/angular';
 import { StateReset } from 'ngxs-reset-plugin';
 import { ResultState } from '../../result.state';
-import { FlightPassengerState, SetFirstPassengers } from '../../passenger/flight.passenger.states';
+import { flightpassenger, FlightPassengerState, SetFirstPassengers } from '../../passenger/flight.passenger.states';
 import { AgencyState } from '../../agency.state';
 import * as _ from 'lodash';
 import { Injectable } from '@angular/core';
 import { concat, empty, forkJoin, from, iif, of, throwError } from 'rxjs';
-import { catchError, flatMap, map } from 'rxjs/operators';
+import { catchError, flatMap, map, tap } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { patch } from '@ngxs/store/operators';
+import { ApprovalService } from 'src/app/services/approval/approval.service';
+import { PassengerState } from '../../passenger.state';
 
 export interface domesticBook {
     departure: {
@@ -93,7 +95,8 @@ export class DomesticBookState {
         private flightService: FlightService,
         public loadingCtrl: LoadingController,
         public alertCtrl: AlertController,
-        public modalCtrl:ModalController
+        public modalCtrl:ModalController,
+        private approvalService : ApprovalService
     ) {
     }
 
@@ -124,13 +127,6 @@ export class DomesticBookState {
 
     @Action(GetFareQuoteSSR)
     getFareQuoteSSR(states: StateContext<domesticBook>) {
-
-        let depFQ = null;
-        let depPriceChange = false;
-        let depSSR : SSR = null;
-        let reFQ = null;
-        let rePriceChange = false;
-        let reSSR : SSR = null;
 
         let loading$ = from(this.loadingCtrl.create({
           spinner: "crescent",
@@ -534,131 +530,6 @@ export class DomesticBookState {
                 }
             )
             );
-
-        // try {
-        //     const departureFQResponse = await this.flightService.fairQuote(this.store.selectSnapshot(DomesticResultState.getSelectedDepartureFlight).fareRule);
-        //     const returnFQResponse = await this.flightService.fairQuote(this.store.selectSnapshot(DomesticResultState.getSelectedReturnFlight).fareRule);
-        //     console.log(departureFQResponse, returnFQResponse);
-        //     if (departureFQResponse.status == 200 && returnFQResponse.status == 200) {
-        //         let depResponse = JSON.parse(departureFQResponse.data).response;
-        //         let reResponse = JSON.parse(returnFQResponse.data).response;
-        //         console.log(depResponse, reResponse);
-        //         if (depResponse.Results && reResponse.Results) {
-
-        //             let taxkey = _.keyBy(depResponse.Results.Fare.TaxBreakup,(o) => {
-        //                 console.log(o);
-        //                 return o.key;
-        //             })
-
-        //             console.log(taxkey);
-        //             let taxval = _.mapValues(taxkey,(o) => o.value);
-        //             console.log(taxval);
-
-        //             depFQ = depResponse.Results;
-        //             depPriceChange = depResponse.IsPriceChanged;
-        //             reFQ = reResponse.Results;
-        //             rePriceChange = reResponse.IsPriceChanged;
-
-        //             let gstapplied = this.store.selectSnapshot(AgencyState.getGstApplied);
-        //             let plb = this.store.selectSnapshot(FLightBookState.getPLB)[0];
-        //             let basefare = depResponse.Results.Fare.BaseFare;
-        //             let yq = (taxval as taxes).YQTax;
-        //             let paxcount = this.store.selectSnapshot(RoundTripSearchState.getAdult)
-
-        //             states.patchState({
-        //                 departure: {
-        //                     fareQuote: depFQ,
-        //                     isPriceChanged: depPriceChange,
-        //                     ssr: depSSR,
-        //                     flight: this.domesticbookData(depFQ, gstapplied,plb,basefare,yq,paxcount)
-        //                 },
-        //                 return: {
-        //                     fareQuote: reFQ,
-        //                     isPriceChanged: rePriceChange,
-        //                     ssr: reSSR,
-        //                     flight: this.domesticbookData(reFQ, gstapplied,plb,basefare,yq,paxcount)
-        //                 }
-        //             });
-
-
-        //         }
-        //         else if (depResponse.Error.ErrorCode == 2 || reResponse.Error.ErrorCode == 2) {
-        //             console.log(depResponse.Error.ErrorMessage);
-        //             loading.dismiss();
-        //             this.store.dispatch(new RoundTripSearch());
-        //             return;
-        //         }
-        //         else if (depResponse.Error.ErrorCode == 6 || reResponse.Error.ErrorCode == 6) {
-        //             console.log(depResponse.Error.ErrorMessage);
-        //             loading.dismiss();
-        //             this.store.dispatch(new RoundTripSearch());
-        //             return;
-        //         }
-        //     }
-        // }
-        // catch (error) {
-        //     console.log(error);
-        //     if (error.status == -4) {
-        //         loading.dismiss();
-        //         failedAlert.message = "Timeout, Try Again";
-        //         return;
-        //     }
-        // }
-
-        // try {
-        //     const departureSSRResponse = await this.flightService.SSR(this.store.selectSnapshot(DomesticResultState.getSelectedDepartureFlight).fareRule);
-        //     const returnSSRResponse = await this.flightService.SSR(this.store.selectSnapshot(DomesticResultState.getSelectedReturnFlight).fareRule);
-        //     console.log(departureSSRResponse, returnSSRResponse);
-        //     if (departureSSRResponse.status == 200 && returnSSRResponse.status == 200) {
-        //         depSSR = JSON.parse(departureSSRResponse.data).response;
-        //         reSSR = JSON.parse(returnSSRResponse.data).response;
-        //         console.log(depSSR, reSSR);
-
-        //         states.patchState({
-        //             departure: {
-        //                 fareQuote: states.getState().departure.fareQuote,
-        //                 isPriceChanged: states.getState().departure.isPriceChanged,
-        //                 ssr: depSSR,
-        //                 flight: states.getState().departure.flight
-        //             },
-        //             return: {
-        //                 fareQuote: states.getState().return.fareQuote,
-        //                 isPriceChanged: states.getState().return.isPriceChanged,
-        //                 ssr: reSSR,
-        //                 flight: states.getState().return.flight
-        //             }
-        //         });
-
-        //         this.store.dispatch(new SetMeal(depSSR.MealDynamic, reSSR.MealDynamic));
-        //         this.store.dispatch(new SetBaggage(depSSR.Baggage, reSSR.Baggage));
-
-        //         if (depSSR.MealDynamic) {
-        //             this.store.dispatch(new SetMeal(depSSR.MealDynamic, reSSR.MealDynamic));
-        //         }
-        //         else if (depSSR.Meal) {
-        //             this.store.dispatch(new SetMeal(depSSR.Meal, reSSR.Meal));
-        //         }
-
-        //         if (depSSR.Baggage) {
-        //             this.store.dispatch(new SetBaggage(depSSR.Baggage, reSSR.Baggage));
-        //         }
-        //     }
-        // }
-        // catch (error) {
-        //     console.log(error);
-        //     if (error.status == -4) {
-        //         loading.dismiss();
-        //         failedAlert.message = "Timeout, Try Again";
-        //         return;
-        //     }
-        // }
-
-        // states.dispatch(new SetFare(states.getState().departure.fareQuote.Fare, states.getState().return.fareQuote.Fare));
-        // states.dispatch(new SetFirstPassengers());
-        // states.dispatch(new BookMode('flight'));
-        // states.dispatch(new BookType('animated-round-trip'));
-        // states.dispatch(new Navigate(['/', 'home', 'book', 'flight', 'round-trip','domestic']));
-        // loading.dismiss();
     }
 
     @Action(DomesticSendRequest)
@@ -703,7 +574,7 @@ export class DomesticBookState {
         loading.message = "Request Sending";
         loading.present();
 
-        let sendReq: rt_sendRequest = this.sendRequestPayload(states,action);
+        let sendReq: rt_sendRequest = this.sendRequestPayload(states,action,"onward");
 
         console.log(JSON.stringify(sendReq));
 
@@ -720,6 +591,109 @@ export class DomesticBookState {
             console.log(err);
         }
         loading.dismiss();
+    }
+
+    @Action(DomesticTicket)
+    domesticTicket(states : StateContext<domesticBook>, action: DomesticTicket) {
+
+      console.log(action);
+      let loading$ = from(this.loadingCtrl.create({
+          spinner: "crescent",
+          message : "Booking Ticket...",
+          id : 'loading-book'
+      })).pipe(flatMap((el) => from(el.present())));
+
+      let failedAlert = (msg : string) => from(this.alertCtrl.create({
+        header: 'Booking Failed',
+        message: msg,
+        id : 'failed-book',
+        buttons: [{
+            text: 'Ok',
+            role: 'ok',
+            cssClass: 'danger',
+            handler: () => {
+                this.alertCtrl.dismiss(null,null,'failed-book');
+            }
+        }]
+      })).pipe(flatMap((el) => from(el.present())));
+
+      let successAlert = from(this.alertCtrl.create({
+          header: 'Booking Success',
+          subHeader: 'your ticket is booked successfully',
+          id : 'success-book',
+          buttons: [{
+              text: 'Ok',
+              role: 'ok',
+              cssClass: 'danger',
+              handler: () => {
+                  this.modalCtrl.dismiss(null, null, 'success-book');
+                  states.dispatch(new Navigate(['/','home','dashboard','home-tab']));
+                  states.dispatch(new StateReset(SearchState,ResultState,FlightResultState,DomesticResultState,BookState,PassengerState,FlightPassengerState));
+              }
+          }]
+      })).pipe(flatMap((el) => from(el.present())));
+
+      let fareIndex = {
+        onward : this.store.selectSnapshot(DomesticResultState.getSelectedDepartureFlight).fareRule,
+        return : this.store.selectSnapshot(DomesticResultState.getSelectedReturnFlight).fareRule
+      }
+
+      let depSendreq: rt_sendRequest = this.sendRequestPayload(states,action,"onward");
+      let reSendReq: rt_sendRequest = this.sendRequestPayload(states,action,"return");
+
+      console.log(JSON.stringify(depSendreq),JSON.stringify(reSendReq));
+
+      return loading$.pipe(
+        flatMap(() => this.bookTicket(states,depSendreq,fareIndex.onward,"onward")),
+        flatMap((response) => {
+          if(response.status == 200) {
+            return this.bookTicket(states,reSendReq,fareIndex.return,"return");
+          }
+          else {
+            return failedAlert("ticket pdf generated but some problem occured")
+              .pipe(
+                flatMap(
+                  () => {
+                    return throwError(response);
+                  }
+                )
+              );
+          }
+        }),
+        flatMap(
+          (response) => {
+            if(response.status == 200) {
+              return successAlert;
+            }
+            else {
+              return failedAlert("ticket pdf generated but some problem occured")
+              .pipe(
+                flatMap(
+                  () => {
+                    return throwError(response);
+                  }
+                )
+              );
+            }
+          }
+        ),
+        catchError(
+          (error : HTTPResponse | any) => {
+            console.log(error);
+              this.loadingCtrl.dismiss(null,null,'loading-book');
+              console.log(error);
+              if(error.status = 502) {
+                  return failedAlert("Problem with request book API,Please try later");
+              }
+              else if(error.status !== 200){
+                return failedAlert(error.Error.ErrorMessage);
+            }
+            return of(error);
+
+          }
+        )
+      );
+
     }
 
     domesticbookData(data: flightResult,type : string): bookObj {
@@ -779,10 +753,19 @@ export class DomesticBookState {
     }
 
     //sendrequest for approval & booking
-    sendRequestPayload(states : StateContext<domesticBook>,action : DomesticSendRequest | DomesticTicket) {
+    sendRequestPayload(states : StateContext<domesticBook>,action : DomesticSendRequest | DomesticTicket, type : string) {
 
-      let allGST : { onward : GST, return : GST } = this.store.selectSnapshot(FLightBookState.getGST);
+      let allGST : { onward : GST, return : GST } = {
+        onward : type == "onward" ?  this.store.selectSnapshot(FLightBookState.getGST).onward : this.store.selectSnapshot(FLightBookState.getGST).return,
+        return : type == "onward" ?  this.store.selectSnapshot(FLightBookState.getGST).return : this.store.selectSnapshot(FLightBookState.getGST).onward
+      };
       let serviceCharge : number = this.store.selectSnapshot(FLightBookState.getServiceCharge);
+
+      let depfareQuote = type == "onward" ?  states.getState().departure.fareQuote :  states.getState().return.fareQuote;
+      let refareQuote = type == "onward" ?  states.getState().return.fareQuote :  states.getState().departure.fareQuote;
+
+      let depPrice = type == "onward" ?  states.getState().departure.isPriceChanged :  states.getState().return.isPriceChanged;
+      let rePrice = type == "onward" ?  states.getState().return.isPriceChanged :  states.getState().departure.isPriceChanged;
 
       let vendorId: number = environment.vendorID;
       let travellersId: number = this.store.selectSnapshot(UserState.getUserId);
@@ -791,8 +774,8 @@ export class DomesticBookState {
       let approveStatus = this.store.selectSnapshot(CompanyState.getApprovalStatus);
       let manager = approveStatus ? this.store.selectSnapshot(UserState.getApprover) : this.bookingPerson();
 
-      let fromCity: city = this.store.selectSnapshot(RoundTripSearchState.getFromValue);
-      let toCity: city = this.store.selectSnapshot(RoundTripSearchState.getToValue);
+      let fromCity: city = type == "onward" ? this.store.selectSnapshot(RoundTripSearchState.getFromValue) : this.store.selectSnapshot(RoundTripSearchState.getToValue);
+      let toCity: city = type == "onward" ? this.store.selectSnapshot(RoundTripSearchState.getToValue) : this.store.selectSnapshot(RoundTripSearchState.getFromValue);
       let fromValue: value = {
           airportCode: fromCity.airport_code,
           airportName: fromCity.airport_name,
@@ -820,8 +803,8 @@ export class DomesticBookState {
           trip_mode: 1,
           fromValue: fromValue,
           toValue: toValue,
-          onwardDate: this.store.selectSnapshot(RoundTripSearchState.getTravelDate),
-          returnDate: this.store.selectSnapshot(RoundTripSearchState.getReturnDate),
+          onwardDate: type == "onward" ? this.store.selectSnapshot(RoundTripSearchState.getTravelDate) : this.store.selectSnapshot(RoundTripSearchState.getReturnDate),
+          returnDate: type == "onward" ? this.store.selectSnapshot(RoundTripSearchState.getReturnDate) : this.store.selectSnapshot(RoundTripSearchState.getTravelDate),
           adultsType: this.store.selectSnapshot(RoundTripSearchState.getAdult),
           childsType: 0,
           infantsType: 0,
@@ -831,18 +814,16 @@ export class DomesticBookState {
           client : null
       }
 
-      let onwardfarequote = states.getState().departure.fareQuote
-      let onwardtaxkey = _.keyBy(onwardfarequote.Fare.TaxBreakup,(o) => o.key)
+      let onwardtaxkey = _.keyBy(depfareQuote.Fare.TaxBreakup,(o) => o.key)
       let onwardtaxval = _.mapValues(onwardtaxkey,(o) => o.value);
 
-      let returnfarequote = states.getState().return.fareQuote
-      let returntaxkey = _.keyBy(returnfarequote.Fare.TaxBreakup,(o) => o.key)
+      let returntaxkey = _.keyBy(refareQuote.Fare.TaxBreakup,(o) => o.key)
       let returntaxval = _.mapValues(returntaxkey,(o) => o.value);
 
       let uapi_params: rt_uapi_params = {
         selected_plb_Value: {
             K3: onwardtaxval.K3,
-            PLB_earned: states.getState().departure.fareQuote.Fare.PLBEarned,
+            PLB_earned: depfareQuote.Fare.PLBEarned,
             queuenumber: 0,
             PCC: 0,
             consolidator_name: 'ONLINE FARE',
@@ -851,30 +832,30 @@ export class DomesticBookState {
         },
         selected_Return_plb_Value: {
             K3: returntaxval.K3,
-            PLB_earned: states.getState().return.fareQuote.Fare.PLBEarned,
+            PLB_earned: refareQuote.Fare.PLBEarned,
             queuenumber: 0,
             PCC: 0,
             consolidator_name: 'ONLINE FARE',
             vendor_id: environment.vendorID
         }
-    }
+      }
 
-    let published_fare = (
-      states.getState().departure.fareQuote.Fare.PublishedFare +
-      this.markupCharges(states.getState().departure.fareQuote.Fare.PublishedFare) +
-      states.getState().departure.fareQuote.Fare.OtherCharges +
-      serviceCharge +
-      allGST.onward.sgst +
-      allGST.onward.cgst +
-      allGST.onward.igst
-      ) + (
-      states.getState().return.fareQuote.Fare.PublishedFare +
-      this.markupCharges(states.getState().return.fareQuote.Fare.PublishedFare) +
-      states.getState().return.fareQuote.Fare.OtherCharges +
-      serviceCharge +
-      allGST.return.sgst +
-      allGST.return.cgst +
-      allGST.return.igst
+      let published_fare = (
+        depfareQuote.Fare.PublishedFare +
+        this.markupCharges(depfareQuote.Fare.PublishedFare) +
+        depfareQuote.Fare.OtherCharges +
+        serviceCharge +
+        allGST.onward.sgst +
+        allGST.onward.cgst +
+        allGST.onward.igst
+        ) + (
+        refareQuote.Fare.PublishedFare +
+        this.markupCharges(refareQuote.Fare.PublishedFare) +
+        refareQuote.Fare.OtherCharges +
+        serviceCharge +
+        allGST.return.sgst +
+        allGST.return.cgst +
+        allGST.return.igst
       );
 
       let taxable = this.store.selectSnapshot(FLightBookState.getTaxable);
@@ -882,24 +863,18 @@ export class DomesticBookState {
         passenger_details: {
             kioskRequest: kioskRequest,
             passenger: this.store.selectSnapshot(FlightPassengerState.getSelectedPassengers),
-            flight_details: [states.getState().departure.fareQuote, states.getState().return.fareQuote],
-            fareQuoteResults: [states.getState().departure.fareQuote, states.getState().return.fareQuote],
+            flight_details: [depfareQuote, refareQuote],
+            fareQuoteResults: [depfareQuote, refareQuote],
             country_flag: this.store.selectSnapshot(RoundTripSearchState.getTripType) == 'domestic' ? "0" : "1",
             user_eligibility: {
                 approverid: "airline",
                 msg: null,
                 company_type: "corporate"
             },
-            published_fare: (states.getState().departure.fareQuote.Fare.PublishedFare - states.getState().departure.fareQuote.Fare.TaxBreakup[0].value) +
-            this.markupCharges(states.getState().departure.fareQuote.Fare.PublishedFare) +
-            (states.getState().return.fareQuote.Fare.PublishedFare - states.getState().return.fareQuote.Fare.TaxBreakup[0].value) +
-            this.markupCharges(states.getState().return.fareQuote.Fare.PublishedFare),
+            published_fare: (depfareQuote.Fare.PublishedFare - depfareQuote.Fare.TaxBreakup[0].value) + this.markupCharges(depfareQuote.Fare.PublishedFare) + (refareQuote.Fare.PublishedFare - refareQuote.Fare.TaxBreakup[0].value) + this.markupCharges(refareQuote.Fare.PublishedFare),
             uapi_params: uapi_params,
             fare_response: {
-                published_fare: (states.getState().departure.fareQuote.Fare.PublishedFare - states.getState().departure.fareQuote.Fare.TaxBreakup[0].value) +
-                this.markupCharges(states.getState().departure.fareQuote.Fare.PublishedFare) +
-                (states.getState().return.fareQuote.Fare.PublishedFare - states.getState().return.fareQuote.Fare.TaxBreakup[0].value) +
-                this.markupCharges(states.getState().return.fareQuote.Fare.PublishedFare),
+                published_fare: (depfareQuote.Fare.PublishedFare - depfareQuote.Fare.TaxBreakup[0].value) + this.markupCharges(depfareQuote.Fare.PublishedFare) + (refareQuote.Fare.PublishedFare - refareQuote.Fare.TaxBreakup[0].value) + this.markupCharges(refareQuote.Fare.PublishedFare),
                 cancellation_risk: this.store.selectSnapshot(FLightBookState.getRisk),
                 charges_details: {
                     GST_total: 0,
@@ -929,44 +904,44 @@ export class DomesticBookState {
                     }
                 },
                 onwardfare: [[{
-                    FareBasisCode: states.getState().departure.fareQuote.FareRules[0].FareBasisCode,
-                    IsPriceChanged: states.getState().departure.isPriceChanged,
-                    PassengerCount: states.getState().departure.fareQuote.FareBreakdown[0].PassengerCount,
-                    PassengerType: states.getState().departure.fareQuote.FareBreakdown[0].PassengerCount,
-                    basefare: states.getState().departure.fareQuote.FareBreakdown[0].BaseFare,
+                    FareBasisCode: depfareQuote.FareRules[0].FareBasisCode,
+                    IsPriceChanged: depPrice,
+                    PassengerCount: depfareQuote.FareBreakdown[0].PassengerCount,
+                    PassengerType: depfareQuote.FareBreakdown[0].PassengerCount,
+                    basefare: depfareQuote.FareBreakdown[0].BaseFare,
                     details: {
                         AdditionalTxnFeeOfrd: 0,
                         AdditionalTxnFeePub: 0,
-                        BaseFare: states.getState().departure.fareQuote.FareBreakdown[0].BaseFare,
-                        PassengerCount: states.getState().departure.fareQuote.FareBreakdown[0].PassengerCount,
-                        PassengerType: states.getState().departure.fareQuote.FareBreakdown[0].PassengerCount,
-                        Tax: states.getState().departure.fareQuote.Fare.Tax,
+                        BaseFare: depfareQuote.FareBreakdown[0].BaseFare,
+                        PassengerCount: depfareQuote.FareBreakdown[0].PassengerCount,
+                        PassengerType: depfareQuote.FareBreakdown[0].PassengerCount,
+                        Tax: depfareQuote.Fare.Tax,
                         TransactionFee: 0,
-                        YQTax: states.getState().departure.fareQuote.Fare.TaxBreakup[1].value
+                        YQTax: depfareQuote.Fare.TaxBreakup[1].value
                     },
-                    tax: states.getState().departure.fareQuote.Fare.Tax,
-                    total_amount: states.getState().departure.fareQuote.Fare.PublishedFare,
-                    yqtax: states.getState().departure.fareQuote.Fare.TaxBreakup[1].value
+                    tax: depfareQuote.Fare.Tax,
+                    total_amount: depfareQuote.Fare.PublishedFare,
+                    yqtax: depfareQuote.Fare.TaxBreakup[1].value
                 }]],
                 returnfare: [[{
-                    FareBasisCode: states.getState().return.fareQuote.FareRules[0].FareBasisCode,
-                    IsPriceChanged: states.getState().return.isPriceChanged,
-                    PassengerCount: states.getState().return.fareQuote.FareBreakdown[0].PassengerCount,
-                    PassengerType: states.getState().return.fareQuote.FareBreakdown[0].PassengerCount,
-                    basefare: states.getState().return.fareQuote.FareBreakdown[0].BaseFare,
+                    FareBasisCode: refareQuote.FareRules[0].FareBasisCode,
+                    IsPriceChanged: rePrice,
+                    PassengerCount: refareQuote.FareBreakdown[0].PassengerCount,
+                    PassengerType: refareQuote.FareBreakdown[0].PassengerCount,
+                    basefare: refareQuote.FareBreakdown[0].BaseFare,
                     details: {
                         AdditionalTxnFeeOfrd: 0,
                         AdditionalTxnFeePub: 0,
-                        BaseFare: states.getState().return.fareQuote.FareBreakdown[0].BaseFare,
-                        PassengerCount: states.getState().return.fareQuote.FareBreakdown[0].PassengerCount,
-                        PassengerType: states.getState().return.fareQuote.FareBreakdown[0].PassengerCount,
-                        Tax: states.getState().return.fareQuote.Fare.Tax,
+                        BaseFare: refareQuote.FareBreakdown[0].BaseFare,
+                        PassengerCount: refareQuote.FareBreakdown[0].PassengerCount,
+                        PassengerType: refareQuote.FareBreakdown[0].PassengerCount,
+                        Tax: refareQuote.Fare.Tax,
                         TransactionFee: 0,
-                        YQTax: states.getState().return.fareQuote.Fare.TaxBreakup[1].value
+                        YQTax: refareQuote.Fare.TaxBreakup[1].value
                     },
-                    tax: states.getState().return.fareQuote.Fare.Tax,
-                    total_amount: states.getState().return.fareQuote.Fare.PublishedFare,
-                    yqtax: states.getState().return.fareQuote.Fare.TaxBreakup[1].value
+                    tax: refareQuote.Fare.Tax,
+                    total_amount: refareQuote.Fare.PublishedFare,
+                    yqtax: refareQuote.Fare.TaxBreakup[1].value
                 }]]
             }
         },
@@ -984,7 +959,7 @@ export class DomesticBookState {
         user_id: userId,
         vendor_id: vendorId,
         trip_requests : this.store.selectSnapshot(RoundTripSearchState.getTripRequest)
-    }
+      }
     }
 
     bookingPerson() {
@@ -1013,7 +988,7 @@ export class DomesticBookState {
               return 0;
           }
       }
-  }
+    }
 
     totalSummary(data : flightResult, segment : flightData[][],type : string) : totalsummary[] {
 
@@ -1055,5 +1030,262 @@ export class DomesticBookState {
               }
           }
       );
+    }
+
+    bookTicket(states: StateContext<domesticBook> ,rqst : rt_sendRequest,fareIndex : fareRule, type : string) {
+
+      let bkpl: bookpayload = null;
+      let openreq = null;
+      let bookres = null;
+      let segpax = null;
+
+      return from(this.flightService.rtSendRequest(rqst,false))
+        .pipe(
+          flatMap(
+            (response : HTTPResponse) => {
+
+                console.log(response);
+                openreq = JSON.parse(response.data).data;
+                //open req json
+                console.log(JSON.stringify(openreq));
+                segpax = this.paxArray(openreq.passenger_details.passenger);
+                bkpl = {
+                    Passengers : segpax,
+                    TraceId: fareIndex.TraceId,
+                    JourneyType: openreq.trip_requests.JourneyType,
+                    IsLCC: openreq.passenger_details.flight_details[0].IsLCC,
+                    ResultIndex: fareIndex.ResultIndex
+                }
+
+                console.log(bkpl);
+                console.log(JSON.stringify(bkpl));
+                return from(this.flightService.bookFlight(bkpl))
+                  .pipe(
+                    tap((res) => console.log("bookflight",res)),
+                    catchError(error =>  throwError(error))
+                  );
+            }
+          ),
+          flatMap(
+              (response) => {
+                  console.log(response);
+                  bookres = JSON.parse(response.data);
+
+                  if(bookres.response.Response == null) {
+                      console.log(bookres);
+                      return throwError(bookres.response);
+                  }
+
+                  //book res json
+                  console.log(JSON.stringify(bookres));
+                  let metrix : metrixBoard = {
+                      type_of_booking: "airline",
+                      sector: {
+                        api: "/airlines/book",
+                        Book_request: bkpl,
+                        book_response: response,
+                        request_id: openreq.id,
+                        fareQuote_onward: type == "onward" ? states.getState().departure.fareQuote : states.getState().return.fareQuote,
+                        fareQuote_return: type == "onward" ? states.getState().return.fareQuote : states.getState().departure.fareQuote
+                      }
+                  }
+
+                  console.log(JSON.stringify(metrix));
+                  return from(this.flightService.metrixboard(metrix))
+                  .pipe(
+                    tap((res) => console.log("metrixboard",res)),
+                    catchError(error =>  throwError(error))
+                  );
+              }
+          ),
+          flatMap(
+              (response) => {
+                  let approveObj = this.approveRequestPayload(states,response,rqst,bookres,openreq,fareIndex,type);
+                  console.log(JSON.stringify(approveObj));
+                  let bookreq$ = this.approvalService.approvalReq('flight',openreq.id,approveObj);
+                  return bookreq$
+                  .pipe(
+                    tap((res) => console.log("bookflight",res)),
+                    catchError(error =>  throwError(error))
+                  );
+              }
+          ),
+          flatMap(
+              (resp : HTTPResponse) => {
+                  console.log(resp);
+                  let data = JSON.parse(resp.data).data;
+                  console.log(data);
+
+                  //metrix json
+                  console.log(JSON.stringify(data));
+
+                  let ticket : ticketpayload = {
+                      user_id: data.traveller_id,
+                      airline_request_id: data.req_id,
+                      pnr: data.passenger_details.PNR,
+                      booking_id: data.passenger_details.BookingId,
+                      booking_status: "Booked",
+                      published_fare: data.passenger_details.fare_response.published_fare,
+                      offered_fare: data.passenger_details.fare_response.published_fare,
+                      collected_fare: 0,
+                      ticket_status: "Booked",
+                      email_notify: true
+                  };
+                  return this.flightService.bookTicket(ticket)
+                  .pipe(
+                    tap((res) => console.log("bookticket",res)),
+                    catchError(error =>  throwError(error))
+                  );
+              }
+          ),
+          map(
+              (response) => {
+                  console.log(response);
+                  let data = JSON.parse(response.data).data;
+                  console.log(data);
+                  //book ticket json
+                  console.log(JSON.stringify(data));
+                  this.loadingCtrl.dismiss(null,null,'loading-book');
+                  return response
+              }
+          )
+        )
+    }
+
+    //approvereq for booking
+    approveRequestPayload(states : StateContext<domesticBook>,response,sendReq,bookres,openreq, fr : fareRule, type : string) {
+
+      let data = JSON.parse(response.data);
+      console.log(data,response);
+
+      //metrix json
+      console.log(JSON.stringify(data));
+      let pnr = JSON.stringify([bookres.response.Response.PNR.toString()])
+      let bookingid = JSON.stringify([bookres.response.Response.BookingId.toString()]);
+      console.log(pnr,bookingid);
+
+      let depfareQuote = type == "onward" ?  states.getState().departure.fareQuote :  states.getState().return.fareQuote;
+      let refareQuote = type == "onward" ?  states.getState().return.fareQuote :  states.getState().departure.fareQuote;
+
+      let onwardtaxkey = _.keyBy(depfareQuote.Fare.TaxBreakup,(o) => o.key)
+      let onwardtaxval = _.mapValues(onwardtaxkey,(o) => o.value);
+
+      let returntaxkey = _.keyBy(refareQuote.Fare.TaxBreakup,(o) => o.key)
+      let returntaxval = _.mapValues(returntaxkey,(o) => o.value);
+
+      let uapi_params: rt_uapi_params = {
+        selected_plb_Value: {
+            K3: onwardtaxval.K3,
+            PLB_earned: depfareQuote.Fare.PLBEarned,
+            queuenumber: 0,
+            PCC: 0,
+            consolidator_name: 'ONLINE FARE',
+            vendor_id: environment.vendorID
+
+        },
+        selected_Return_plb_Value: {
+            K3: returntaxval.K3,
+            PLB_earned: refareQuote.Fare.PLBEarned,
+            queuenumber: 0,
+            PCC: 0,
+            consolidator_name: 'ONLINE FARE',
+            vendor_id: environment.vendorID
+        }
+      }
+
+      let fairIndex = fr;
+      let vendorId: number = environment.vendorID;
+      let travellersId: number = this.store.selectSnapshot(UserState.getUserId);
+      let companyId: number = this.store.selectSnapshot(UserState.getcompanyId);
+      let approveStatus = this.store.selectSnapshot(CompanyState.getApprovalStatus);
+      let manager = approveStatus ? this.store.selectSnapshot(UserState.getApprover) : this.bookingPerson();
+
+      let bookresponse = bookres;
+      let newSegments = (bookresponse.response.Response.FlightItinerary.Segments as [])
+          .map(
+              (el : any) => {
+                  el.Passenger = bookresponse.response.Response.FlightItinerary.Passenger
+                  return el;
+              }
+          );
+      bookresponse.response.Response.FlightItinerary.Segments = newSegments;
+
+      return{
+          passenger_details: {
+            BookingDate: moment({}).format("DD-MM-YYYY hh:mm:A"),
+            vendor: "TBO",
+            onwardDuration: "01h:45m",
+            PNR: pnr,
+            BookingId:bookingid ,
+            ticket_details: [
+              {
+                data: [bookres]
+              }
+            ],
+            uapi_params: uapi_params,
+            passenger: this.store.selectSnapshot(FlightPassengerState.getSelectedPassengers),
+            fare_response: {
+              published_fare: depfareQuote.Fare.PublishedFare +
+              this.markupCharges(depfareQuote.Fare.PublishedFare),
+              charges_details: sendReq.passenger_details.fare_response.charges_details,
+              cancellation_risk: this.store.selectSnapshot(FLightBookState.getRisk)
+            },
+            flight_details: [depfareQuote,refareQuote],
+            country_flag: this.store.selectSnapshot(RoundTripSearchState.getTripType) == 'domestic' ? 0 :
+            this.store.selectSnapshot(RoundTripSearchState.getTripType) == 'international' ? 1 : 0,
+            trace_Id: fairIndex.TraceId,
+            published_fare: depfareQuote.Fare.PublishedFare +
+            this.markupCharges(depfareQuote.Fare.PublishedFare),
+            user_eligibility: {
+              approverid: "airline",
+              msg: null,
+              company_type: "corporate"
+          }
+          },
+          booking_mode: "online",
+          traveller_id: travellersId,
+          travel_date: openreq.travel_date,
+          comments: null,
+          trip_requests:  this.store.selectSnapshot(RoundTripSearchState.getTripRequest),
+          cancellation_remarks: null,
+          trip_type: "business",
+          customer_id: companyId,
+          transaction_id: null,
+          managers: manager,
+          user_id: data.user_id,
+          req_id: openreq.id,
+          vendor_id: vendorId,
+          purpose: null,
+          status: "booked"
+      }
+    }
+
+    paxArray(passenger : flightpassenger[]) {
+
+      let fare = this.store.selectSnapshot(FLightBookState.getFare);
+
+      return _.chain(passenger)
+      .map(((el : flightpassenger) => {
+          let newel = {
+              AddressLine1: el.AddressLine1,
+              City: el.City,
+              CountryName: el.CountryName,
+              CountryCode: el.CountryCode,
+              Email: el.Email,
+              PaxType: el.PaxType,
+              IsLeadPax: el.IsLeadPax,
+              FirstName: el.FirstName,
+              LastName: el.LastName,
+              ContactNo: el.ContactNo,
+              DateOfBirth:el.DateOfBirth,
+              Title: el.Title,
+              Gender: el.Gender,
+              Fare : fare,
+              Baggage : el.onwardExtraServices.Baggage,
+              MealDynamic : el.onwardExtraServices.Meal
+          }
+          return newel;
+      }))
+      .value();
     }
 }

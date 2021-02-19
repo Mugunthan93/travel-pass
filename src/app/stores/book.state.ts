@@ -9,7 +9,7 @@ import { TrainOneWayRequest } from './book/train/one-way.state';
 import { LoadingController, AlertController, ModalController } from '@ionic/angular';
 import { BookOneWayTicket, FlightOneWaySendRequest, OneWayBookState } from './book/flight/oneway.state';
 import { InternationalBookState, InternationalSendRequest } from './book/flight/international.state';
-import { DomesticBookState, DomesticSendRequest } from './book/flight/domestic.state';
+import { DomesticBookState, DomesticSendRequest, DomesticTicket } from './book/flight/domestic.state';
 import { MultiCityBookState, MultiCitySendRequest } from './book/flight/multi-city.state';
 import { TrainRoundTripRequest } from './book/train/round-trip.state';
 import { TrainMultiCityRequest } from './book/train/multi-city.state';
@@ -291,7 +291,7 @@ export class BookState {
                                     // states.dispatch(new InternationalSendRequest(comment, mailCC, purpose));
                                 }
                                 else if (type == 'animated-round-trip') {
-                                    // states.dispatch(new DomesticSendRequest(comment, mailCC, purpose));
+                                    return states.dispatch(new DomesticTicket());
                                 }
                                 else if (type == 'multi-city') {
                                     // states.dispatch(new MultiCitySendRequest(comment, mailCC, purpose));
