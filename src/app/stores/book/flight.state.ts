@@ -907,12 +907,21 @@ export class FLightBookState {
     @Action(SetFare)
     setFare(states: StateContext<flight>, action: SetFare) {
 
+      let type = this.store.selectSnapshot(SearchState.getSearchType);
+      let paxcount = (type) => {
+        switch(type) {
+          case "one-way" : return this.store.selectSnapshot(OneWaySearchState.getAdult);
+          case "animated-round-trip" : case "round-trip" : return this.store.selectSnapshot(RoundTripSearchState.getAdult);
+          case "multi-city" : return this.store.selectSnapshot(MultiCitySearchState.getAdult);
+        }
+      }
+
         if (action.fare2) {
             let fare1 : fareObj = {
                 AdditionalTxnFeeOfrd: action.fare1.AdditionalTxnFeeOfrd,
                 AdditionalTxnFeePub: action.fare1.AdditionalTxnFeePub,
                 BaseFare: action.fare1.BaseFare,
-                PassengerCount: action.fare1.PassengerCount,
+                PassengerCount: _.isUndefined(action.fare1.PassengerCount) ? paxcount(type) : action.fare1.PassengerCount,
                 PassengerType: 1,
                 Tax: action.fare1.Tax,
                 TransactionFee: 0,
@@ -922,7 +931,7 @@ export class FLightBookState {
                 AdditionalTxnFeeOfrd: action.fare2.AdditionalTxnFeeOfrd,
                 AdditionalTxnFeePub: action.fare2.AdditionalTxnFeePub,
                 BaseFare: action.fare2.BaseFare,
-                PassengerCount: action.fare2.PassengerCount,
+                PassengerCount: _.isUndefined(action.fare2.PassengerCount) ? paxcount(type) : action.fare2.PassengerCount,
                 PassengerType: 1,
                 Tax: action.fare2.Tax,
                 TransactionFee: 0,
@@ -951,7 +960,7 @@ export class FLightBookState {
                 AdditionalTxnFeeOfrd: action.fare1.AdditionalTxnFeeOfrd,
                 AdditionalTxnFeePub: action.fare1.AdditionalTxnFeePub,
                 BaseFare: action.fare1.BaseFare,
-                PassengerCount: action.fare1.PassengerCount,
+                PassengerCount: _.isUndefined(action.fare1.PassengerCount) ? paxcount(type) : action.fare1.PassengerCount,
                 PassengerType: 1,
                 Tax: action.fare1.Tax,
                 TransactionFee: 0,

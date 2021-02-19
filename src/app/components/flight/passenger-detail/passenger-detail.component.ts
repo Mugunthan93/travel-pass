@@ -108,10 +108,10 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
         "GSTNumber": new FormControl(this.company.gst_details.gstNo, [Validators.required, Validators.pattern(this.regex.gst)]),
         "CompanyAddress": new FormControl(this.company.company_address_line1, [Validators.required]),
         "CompanyNumber": new FormControl(this.company.phone_number, [Validators.required, Validators.pattern(this.regex.phone_number)]),
-        "onwardbaggage" : new FormControl([]),
-        "returnbaggage" : new FormControl([]),
-        "onwardmeal" : new FormControl([]),
-        "returnmeal" : new FormControl([]),
+        "onwardbaggage" : new FormControl(null),
+        "returnbaggage" : new FormControl(null),
+        "onwardmeal" : new FormControl(null),
+        "returnmeal" : new FormControl(null),
       });
     }
     else if (this.form == 'edit'){
@@ -133,10 +133,10 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
         "GSTNumber": new FormControl(this.pax.GSTNumber, [Validators.required, Validators.pattern(this.regex.gst)]),
         "CompanyAddress": new FormControl(this.pax.GSTCompanyAddress, [Validators.required]),
         "CompanyNumber": new FormControl(this.pax.GSTCompanyContactNumber, [Validators.required, Validators.pattern(this.regex.phone_number)]),
-        "onwardbaggage" : new FormControl(this.pax.onwardExtraServices.Baggage),
-        "returnbaggage" : new FormControl(this.pax.returnExtraServices.Baggage),
-        "onwardmeal" : new FormControl(this.pax.returnExtraServices.Meal),
-        "returnmeal" : new FormControl(this.pax.returnExtraServices.Meal)
+        "onwardbaggage" : new FormControl(this.pax.onwardExtraServices.Baggage[0]),
+        "returnbaggage" : new FormControl(this.pax.returnExtraServices.Baggage[0]),
+        "onwardmeal" : new FormControl(this.pax.returnExtraServices.Meal[0]),
+        "returnmeal" : new FormControl(this.pax.returnExtraServices.Meal[0])
       });
     }
 
@@ -234,21 +234,20 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
         CountryCode: this.selectedCity.country_code,
         CountryName:this.selectedCity.country_name,
         onwardExtraServices: {
-          Meal: this.Passenger.value.onwardmeal !== null ? [this.Passenger.value.onwardmeal] : [],
-          MealTotal: (this.Passenger.value.onwardmeal as meal).Price,
-          BagTotal: (this.Passenger.value.onwardbaggage as baggage).Price,
-          Baggage: this.Passenger.value.onwardbaggage !== null ? [this.Passenger.value.onwardbaggage] : []
+          Meal: this.Passenger.value.onwardmeal !== null ? [this.Passenger.value.onwardmeal] : [null],
+          MealTotal: this.Passenger.value.onwardmeal !== null ? (this.Passenger.value.onwardmeal as meal).Price : 0,
+          BagTotal: this.Passenger.value.onwardbaggage !== null ? (this.Passenger.value.onwardbaggage as baggage).Price : 0,
+          Baggage: this.Passenger.value.onwardbaggage !== null ? [this.Passenger.value.onwardbaggage] : [null]
         },
         returnExtraServices: {
-          Meal: this.Passenger.value.returnmeal !== null ? [this.Passenger.value.returnmeal] : [],
-          MealTotal: (this.Passenger.value.returnmeal as meal).Price,
-          BagTotal: (this.Passenger.value.returnbaggage as baggage).Price,
-          Baggage: this.Passenger.value.returnbaggage !== null ? [this.Passenger.value.returnbaggage] : []
+          Meal: this.Passenger.value.returnmeal !== null ? [this.Passenger.value.returnmeal] : [null],
+          MealTotal: this.Passenger.value.returnmeal !== null ? (this.Passenger.value.returnmeal as meal).Price : 0,
+          BagTotal: this.Passenger.value.returnbaggage !== null ? (this.Passenger.value.returnbaggage as baggage).Price : 0,
+          Baggage: this.Passenger.value.returnbaggage !== null ? [this.Passenger.value.returnbaggage] : [null]
         },
         Gender: this.flightBookState.getGender(this.Passenger.value.Title),
         PaxType: 1,
-        IsLeadPax: this.leadPax(this.form),
-        Fare: this.store.selectSnapshot(FLightBookState.getFare).onward
+        IsLeadPax: this.leadPax(this.form)
       }
 
       if (this.form == 'add') {

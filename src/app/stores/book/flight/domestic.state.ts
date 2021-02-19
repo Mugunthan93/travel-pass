@@ -1048,7 +1048,7 @@ export class DomesticBookState {
                 openreq = JSON.parse(response.data).data;
                 //open req json
                 console.log(JSON.stringify(openreq));
-                segpax = this.paxArray(openreq.passenger_details.passenger);
+                segpax = this.paxArray(openreq.passenger_details.passenger, type);
                 bkpl = {
                     Passengers : segpax,
                     TraceId: fareIndex.TraceId,
@@ -1260,13 +1260,13 @@ export class DomesticBookState {
       }
     }
 
-    paxArray(passenger : flightpassenger[]) {
+    paxArray(passenger : flightpassenger[],type : string) {
 
-      let fare = this.store.selectSnapshot(FLightBookState.getFare);
-
+      let fare = type == "onward" ? this.store.selectSnapshot(FLightBookState.getFare).onward :  this.store.selectSnapshot(FLightBookState.getFare).return;
       return _.chain(passenger)
       .map(((el : flightpassenger) => {
-          let newel = {
+          console.log(el);
+          let newel : any = {
               AddressLine1: el.AddressLine1,
               City: el.City,
               CountryName: el.CountryName,
@@ -1280,10 +1280,27 @@ export class DomesticBookState {
               DateOfBirth:el.DateOfBirth,
               Title: el.Title,
               Gender: el.Gender,
-              Fare : fare,
-              Baggage : el.onwardExtraServices.Baggage,
-              MealDynamic : el.onwardExtraServices.Meal
+              Fare : fare
           }
+
+          if(type == "onward") {
+            if(!_.isNull(el.onwardExtraServices.Baggage[0])) {
+              newel.Baggage = el.onwardExtraServices.Baggage
+            }
+            if(!_.isNull(el.onwardExtraServices.Meal[0])) {
+              newel.MealDynamic = el.onwardExtraServices.Meal
+            }
+          }
+          else {
+            if(!_.isNull(el.returnExtraServices.Baggage[0])) {
+              newel.Baggage = el.returnExtraServices.Baggage
+            }
+            if(!_.isNull(el.returnExtraServices.Meal[0])) {
+              newel.MealDynamic = el.returnExtraServices.Meal
+            }
+          }
+
+
           return newel;
       }))
       .value();

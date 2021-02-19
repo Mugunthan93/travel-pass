@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 import { fareRule } from '../../stores/result/flight.state';
 import { itineraryPayload } from 'src/app/components/flight/email-itinerary/email-itinerary.component';
 import { sendRequest, rt_sendRequest, int_sendRequest, bookpayload, ticketpayload } from 'src/app/stores/book/flight.state';
-import { from } from 'rxjs';
+import { from, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -71,7 +71,7 @@ export class FlightService {
     return await this.http.post("/airlines/airlineTicketing" + pnr + ".pdf", {});
   }
 
-  bookFlight(bookpl : bookpayload) {
+  bookFlight(bookpl : bookpayload) : Observable<HTTPResponse> {
     this.http.setReqTimeout(300);
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setData('json');

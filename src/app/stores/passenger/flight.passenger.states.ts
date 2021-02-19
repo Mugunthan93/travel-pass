@@ -37,7 +37,7 @@ export interface flightpassenger extends addPassenger {
     GSTCompanyContactNumber?: string,
     GSTCompanyName?: string,
     GSTNumber?: string,
-    Fare: fareObj
+    Fare?: fareObj
 }
 
 export interface addPassenger {
@@ -204,16 +204,16 @@ export class FlightPassengerState {
             CountryCode: null,
             Email: this.store.selectSnapshot(UserState.getEmail),
             onwardExtraServices: {
-                Meal: [],
+                Meal: [null],
                 MealTotal: 0,
                 BagTotal: 0,
-                Baggage: []
+                Baggage: [null]
             },
             returnExtraServices: {
-                Meal: [],
+                Meal: [null],
                 MealTotal: 0,
                 BagTotal: 0,
-                Baggage: []
+                Baggage: [null]
             },
             PaxType: 1,
             IsLeadPax: true,

@@ -1045,11 +1045,11 @@ export class OneWayBookState{
 
     paxArray(passenger : flightpassenger[]) {
 
-        let fare = this.store.selectSnapshot(FLightBookState.getFare);
+        let fare = this.store.selectSnapshot(FLightBookState.getFare).onward;
 
         return _.chain(passenger)
         .map(((el : flightpassenger) => {
-            let newel = {
+            let newel : any = {
                 AddressLine1: el.AddressLine1,
                 City: el.City,
                 CountryName: el.CountryName,
@@ -1063,10 +1063,16 @@ export class OneWayBookState{
                 DateOfBirth:el.DateOfBirth,
                 Title: el.Title,
                 Gender: el.Gender,
-                Fare : fare,
-                Baggage : el.onwardExtraServices.Baggage,
-                MealDynamic : el.onwardExtraServices.Meal
+                Fare : fare
             }
+
+            if(!_.isNull(el.onwardExtraServices.Baggage[0])) {
+              newel.Baggage = el.onwardExtraServices.Baggage
+            }
+            if(!_.isNull(el.onwardExtraServices.Meal[0])) {
+              newel.MealDynamic = el.onwardExtraServices.Meal
+            }
+
             return newel;
         }))
         .value();

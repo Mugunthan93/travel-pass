@@ -1,5 +1,5 @@
 import { State, Action, Selector, Store, StateContext } from "@ngxs/store";
-import { bookObj, FLightBookState, value, rt_kioskRequest, int_sendRequest, SetFare, SetMeal, SetBaggage, totalsummary } from '../flight.state';
+import { bookObj, FLightBookState, value, rt_kioskRequest, int_sendRequest, SetFare, SetMeal, SetBaggage, totalsummary, SetServiceCharge, GetPLB, SetTaxable, SetGST, baggage, meal } from '../flight.state';
 import { flightResult, flightData } from 'src/app/models/search/flight';
 import { SSR } from '../../result/flight.state';
 import { Navigate } from '@ngxs/router-plugin';
@@ -20,6 +20,8 @@ import { ResultState } from '../../result.state';
 import { FlightPassengerState, SetFirstPassengers } from '../../passenger/flight.passenger.states';
 import * as _ from 'lodash';
 import { Injectable } from "@angular/core";
+import { empty, from, iif, of, throwError } from "rxjs";
+import { catchError, concatMap, flatMap, map } from "rxjs/operators";
 
 
 export interface internationalBook {
@@ -83,96 +85,312 @@ export class InternationalBookState {
     }
 
     @Action(GetFareQuoteSSR)
-    async getFareQuoteSSR(states: StateContext<internationalBook>) {
+    getFareQuoteSSR(states: StateContext<internationalBook>) {
 
-        const loading = await this.loadingCtrl.create({
-            spinner: "crescent"
-        });
-        const failedAlert = await this.alertCtrl.create({
-            header: 'Book Failed',
-            buttons: [{
-                text: 'Ok',
-                role: 'ok',
-                cssClass: 'danger',
-                handler: () => {
-                    failedAlert.dismiss({
-                        data: false,
-                        role: 'failed'
-                    });
+      let loading$ = from(this.loadingCtrl.create({
+        spinner: "crescent",
+        message : "Checking Flight Availability",
+        id : 'book-load'
+        })).pipe(
+            flatMap(
+                (loadingEl) => {
+                    return from(loadingEl.present());
                 }
-            }]
-        });
+            )
+        );
 
-        loading.message = "Checking Flight Availability";
-        loading.present();
+      const failedAlert$ = (msg : string) => from(this.alertCtrl.create({
+          header: 'Book Failed',
+          id : 'ssrfailed',
+          message : msg,
+          buttons: [{
+              text: 'Ok',
+              role: 'ok',
+              cssClass: 'danger',
+              handler: () => {
+                  this.alertCtrl.dismiss(null,null,'ssrfailed');
+              }
+          }]
+      })).pipe(
+          flatMap(
+              (loadingEl) => {
+                  return from(loadingEl.present());
+              }
+          )
+      );
 
-        let companyId = this.store.selectSnapshot(UserState.getcompanyId);
-        states.dispatch(new GetCompany(companyId));
+      let companyId = this.store.selectSnapshot(UserState.getcompanyId);
+      let selectedFlight = this.store.selectSnapshot(InternationalResultState.getSelectedFlight).fareRule;
 
-        try {
-            const fairQuoteResponse = await this.flightService.fairQuote(this.store.selectSnapshot(InternationalResultState.getSelectedFlight).fareRule);
-            if (fairQuoteResponse.status == 200) {
-                let response = JSON.parse(fairQuoteResponse.data).response;
-                if (response.Results) {
-                    states.patchState({
-                        fareQuote: response.Results,
-                        isPriceChanged: response.IsPriceChanged,
-                        flight: this.internationalbookData(response.Results)
-                    });
-                }
-                else if (response.Error.ErrorCode == 6) {
-                    console.log(response.Error.ErrorMessage);
-                    loading.dismiss();
-                    this.store.dispatch(new RoundTripSearch());
-                    return;
-                }
-            }
-        }
-        catch (error) {
-            console.log(error);
-            if (error.status == -4) {
-                loading.dismiss();
-                failedAlert.message = "Timeout, Try Again";
-                return;
-            }
-        }
-
-        try {
-            const SSRResponse = await this.flightService.SSR(this.store.selectSnapshot(InternationalResultState.getSelectedFlight).fareRule);
-            if (SSRResponse.status == 200) {
-                let response : SSR = JSON.parse(SSRResponse.data).response;
-                states.patchState({
-                    ssr: response
+      return loading$
+        .pipe(
+          flatMap(
+            () => states.dispatch([
+              new SetServiceCharge(),
+              new GetCompany(companyId)
+            ])
+          ),
+          flatMap(() => from(this.flightService.fairQuote(selectedFlight))),
+          flatMap((response) => {
+            console.log(response);
+            let fareQuote = JSON.parse(response.data).response.Results;
+            if(JSON.parse(response.data).response.Error.ErrorCode == 2) {
+                return throwError({
+                    error : JSON.parse(response.data).response.Error.ErrorMessage
                 });
-                if (response.MealDynamic) {
-                    this.store.dispatch(new SetMeal(response.MealDynamic, null));
-                }
-                else if (response.Meal) {
-                    this.store.dispatch(new SetMeal(response.Meal, null));
-                }
-
-                if (response.Baggage) {
-                    this.store.dispatch(new SetBaggage(response.Baggage, null));
-                }
             }
-        }
-        catch (error) {
-            console.log(error);
-            if (error.status == -4) {
-                loading.dismiss();
-                failedAlert.message = "Timeout, Try Again";
-                return;
-            }
-        }
+            return states.dispatch([
+                new SetFare(fareQuote.Fare),
+                new GetPLB(fareQuote),
+                new SetTaxable(),
+                new SetGST()
+            ]).pipe(
+                flatMap(() => {
+                    return of(response);
+                })
+            );
+          }),
+          flatMap(
+            (fairQuoteResponse) => {
 
-        console.log(states.getState().fareQuote);
+                if (fairQuoteResponse.status == 200) {
+                    let res = JSON.parse(fairQuoteResponse.data).response;
+                    if (res.Results) {
+                        states.patchState({
+                            fareQuote: res.Results,
+                            isPriceChanged: res.IsPriceChanged,
+                            flight: this.internationalbookData(res.Results)
+                        });
+                        return of(JSON.parse(fairQuoteResponse.data).response.Results.IsLCC);
+                    }
+                    else if (res.Error.ErrorCode == 6) {
+                        console.log(res.Error.ErrorMessage);
+                        this.loadingCtrl.dismiss(null,null,'book-load');
+                        this.store.dispatch(new RoundTripSearch());
+                        return of(false);
+                    }
+                    else if (res.Error.ErrorCode == 2) {
+                        console.log(res.Error.ErrorMessage);
+                        this.loadingCtrl.dismiss(null,null,'book-load');
+                        failedAlert$(res.Error.ErrorMessage);
+                        return of(false);
+                    }
+                }
+                return of(JSON.parse(fairQuoteResponse.data).response.Results.IsLCC);
+              }
+          ),
+          concatMap((response) => {
+              return iif(() => response,
+              from(this.flightService.SSR(selectedFlight))
+              .pipe(
+                  map(
+                      (ssrReponse) => {
+                          console.log(JSON.stringify(ssrReponse));
+                          console.log(ssrReponse);
+                          if (ssrReponse.status == 200) {
+                              let response : SSR = JSON.parse(ssrReponse.data).response;
+                              console.log(response);
+                              states.patchState({
+                                  ssr : response
+                              });
+                              let baggagebySegment = (services : baggage[]) => {
 
-        states.dispatch(new SetFare(states.getState().fareQuote.Fare));
-        states.dispatch(new SetFirstPassengers());
-        states.dispatch(new BookMode('flight'));
-        states.dispatch(new BookType('round-trip'));
-        states.dispatch(new Navigate(['/', 'home', 'book', 'flight', 'round-trip', 'international']));
-        loading.dismiss();
+                                  let firstorder = _.chain(services)
+                                      .groupBy("Origin")
+                                      .map((originVal,originKey) => {
+                                          return _.chain(originVal)
+                                              .groupBy("Destination")
+                                              .map((val,key) => {
+                                                  return {
+                                                      Origin : originKey,
+                                                      Destination : key,
+                                                      service : _.flatMapDeep(val).filter((el : baggage) => el.Origin == originKey && el.Destination == key)
+                                                  }
+                                              }).value();
+                                      })
+                                      .value()
+                                  console.log(firstorder);
+
+                                  return states.getState().fareQuote.Segments.map((el) => {
+                                      return el.map((e) => {
+                                          return {
+                                              Origin : e.Origin.Airport.CityCode,
+                                              Destination : e.Destination.Airport.CityCode,
+                                              service : _.flatMapDeep(services).filter((el : baggage) => el.Origin == e.Origin.Airport.CityCode && el.Destination == e.Destination.Airport.CityCode)
+                                          }
+                                      })
+                                  })
+                              }
+
+                              let mealbySegment = (services : meal[]) => {
+
+                                  let firstorder = _.chain(services)
+                                      .groupBy("Origin")
+                                      .map((originVal,originKey) => {
+                                          return _.chain(originVal)
+                                              .groupBy("Destination")
+                                              .map((val,key) => {
+                                                  return {
+                                                      Origin : originKey,
+                                                      Destination : key,
+                                                      service : _.flatMapDeep(val).filter((el : meal) => el.Origin == originKey && el.Destination == key)
+                                                  }
+                                              }).value();
+                                      })
+                                      .value()
+                                  console.log(firstorder);
+
+
+                                  return states.getState().fareQuote.Segments.map((el) => {
+                                      return el.map((e) => {
+                                          return {
+                                              Origin : e.Origin.Airport.CityCode,
+                                              Destination : e.Destination.Airport.CityCode,
+                                              service : _.flatMapDeep(services).filter((el : meal) => el.Origin == e.Origin.Airport.CityCode && el.Destination == e.Destination.Airport.CityCode)
+                                          }
+                                      })
+                                  })
+                              }
+
+                              let bySegment = (services : any[]) => {
+
+                                  let firstorder = _.chain(services)
+                                      .groupBy("Origin")
+                                      .map((originVal,originKey) => {
+                                          return _.chain(originVal)
+                                              .groupBy("Destination")
+                                              .map((val,key) => {
+                                                  return {
+                                                      Origin : originKey,
+                                                      Destination : key,
+                                                      service : _.flatMapDeep(val).filter((el : any) => el.Origin == originKey && el.Destination == key)
+                                                  }
+                                              }).value();
+                                      })
+                                      .value()
+                                  console.log(firstorder);
+
+
+                                  return states.getState().fareQuote.Segments.map((el) => {
+                                      return el.map((e) => {
+                                          return {
+                                              Origin : e.Origin.Airport.CityCode,
+                                              Destination : e.Destination.Airport.CityCode,
+                                              service : _.flatMapDeep(services).filter((el : any) => el.Origin == e.Origin.Airport.CityCode && el.Destination == e.Destination.Airport.CityCode)
+                                          }
+                                      })
+                                  })
+                              }
+
+                              if (response.MealDynamic) {
+                                  states.dispatch(new SetMeal(bySegment(response.MealDynamic).flat(), []));
+                              }
+                              else if (response.Meal) {
+                                  states.dispatch(new SetMeal(mealbySegment(response.Meal).flat(), []));
+                              }
+
+                              if (response.Baggage) {
+                                  states.dispatch(new SetBaggage(baggagebySegment(response.Baggage).flat(), []));
+                              }
+                              return true;
+                          }
+                          return true;
+                      }
+                  )
+              )
+              ,of(true))
+          }),
+          flatMap(
+              (response) => {
+                  if(response) {
+                      console.log(response);
+                      states.dispatch([
+                          new SetFirstPassengers(),
+                          new BookMode('flight'),
+                          new BookType('round-trip'),
+                          new Navigate(['/', 'home', 'book', 'flight', 'round-trip','international'])
+                      ])
+                      return from(this.loadingCtrl.dismiss(null,null,'book-load'));
+                  }
+                  else {
+                      return empty();
+                  }
+              }
+          ),
+          catchError(
+              (error) => {
+                  console.log(error);
+                  return from(this.loadingCtrl.dismiss(null,null,'book-load'))
+                      .pipe(
+                          flatMap(() => failedAlert$(error.error))
+                      );
+              }
+          )
+        );
+
+      // try {
+      //     const fairQuoteResponse = await this.flightService.fairQuote(this.store.selectSnapshot(InternationalResultState.getSelectedFlight).fareRule);
+      //     if (fairQuoteResponse.status == 200) {
+      //         let response = JSON.parse(fairQuoteResponse.data).response;
+      //         if (response.Results) {
+      //             states.patchState({
+      //                 fareQuote: response.Results,
+      //                 isPriceChanged: response.IsPriceChanged,
+      //                 flight: this.internationalbookData(response.Results)
+      //             });
+      //         }
+      //         else if (response.Error.ErrorCode == 6) {
+      //             console.log(response.Error.ErrorMessage);
+      //             loading.dismiss();
+      //             this.store.dispatch(new RoundTripSearch());
+      //             return;
+      //         }
+      //     }
+      // }
+      // catch (error) {
+      //     console.log(error);
+      //     if (error.status == -4) {
+      //         loading.dismiss();
+      //         failedAlert.message = "Timeout, Try Again";
+      //         return;
+      //     }
+      // }
+
+      // try {
+      //     const SSRResponse = await this.flightService.SSR(this.store.selectSnapshot(InternationalResultState.getSelectedFlight).fareRule);
+      //     if (SSRResponse.status == 200) {
+      //         let response : SSR = JSON.parse(SSRResponse.data).response;
+      //         states.patchState({
+      //             ssr: response
+      //         });
+      //         if (response.MealDynamic) {
+      //             this.store.dispatch(new SetMeal(response.MealDynamic, null));
+      //         }
+      //         else if (response.Meal) {
+      //             this.store.dispatch(new SetMeal(response.Meal, null));
+      //         }
+
+      //         if (response.Baggage) {
+      //             this.store.dispatch(new SetBaggage(response.Baggage, null));
+      //         }
+      //     }
+      // }
+      // catch (error) {
+      //     console.log(error);
+      //     if (error.status == -4) {
+      //         loading.dismiss();
+      //         failedAlert.message = "Timeout, Try Again";
+      //         return;
+      //     }
+      // }
+
+      // console.log(states.getState().fareQuote);
+      // states.dispatch(new SetFare(states.getState().fareQuote.Fare));
+      // states.dispatch(new SetFirstPassengers());
+      // states.dispatch(new BookMode('flight'));
+      // states.dispatch(new BookType('round-trip'));
+      // states.dispatch(new Navigate(['/', 'home', 'book', 'flight', 'round-trip', 'international']));
+      // loading.dismiss();
 
     }
 
@@ -388,12 +606,13 @@ export class InternationalBookState {
 
     internationalbookData(data: flightResult): bookObj {
 
+        let paxcount = this.store.selectSnapshot(RoundTripSearchState.getAdult);
         let book: bookObj = {
             summary: {
                 fare: {
                     base: data.Fare.BaseFare,
                     taxes: data.Fare.Tax,
-                    ot :0
+                    ot : (data.Fare.OtherCharges / paxcount)
                 },
                 total: this.totalSummary(data,data.Segments)
 
