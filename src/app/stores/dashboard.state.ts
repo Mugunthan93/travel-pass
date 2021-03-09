@@ -61,6 +61,13 @@ export class SearchTrain {
     }
 }
 
+export class SearchCab {
+  static readonly type = '[Dashboard] SearchCab';
+  constructor() {
+
+  }
+}
+
 export class UpcomingTrips {
     static readonly type = '[Dashboard] UpcomingTrips';
     constructor() {
@@ -145,6 +152,16 @@ export class DashboardState {
     this.store.dispatch(
       new Navigate(["/", "home", "search", "train", "one-way"])
     );
+  }
+
+  @Action(SearchCab)
+  searchCab() {
+    this.store.dispatch([
+      new SearchMode("cab"),
+      new SearchType("one-way"),
+      new JourneyType("one-way"),
+      new Navigate(["/", "home", "search", "cab","one-way"])
+    ]);
   }
 
   @Action(UpcomingTrips)

@@ -63,9 +63,9 @@ import { ThemeState } from '../stores/theme.stata';
 import { ExpenseState } from '../stores/expense.state';
 import { AgencyState } from '../stores/agency.state';
 import { VendorState } from '../stores/vendor.state';
+import { CabSearchState } from '../stores/search/cab.state';
 
-let stateArray = [
-      AuthState,
+export const stateArray = [
       UserState,
       CompanyState,
       AgencyState,
@@ -89,6 +89,7 @@ let stateArray = [
       FlightPassengerState,
       HotelPassengerState,
       BusPassengerState,
+
       TrainPassengerState,
 
       //lvl 2
@@ -135,18 +136,20 @@ let stateArray = [
       DepartureFilterState,
       ReturnFilterState,
       HotelFilterState,
-      BusFilterState
+      BusFilterState,
+
+      CabSearchState
 ];
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
-    NgxsModule.forRoot(stateArray, { developmentMode: !environment.production }
+    NgxsModule.forRoot([AuthState,...stateArray], { developmentMode: !environment.production }
     ),
     NgxsResetPluginModule.forRoot(),
     NgxsStoragePluginModule.forRoot({
-      key: stateArray
+      key: [AuthState,...stateArray]
     }),
     NgxsRouterPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot({

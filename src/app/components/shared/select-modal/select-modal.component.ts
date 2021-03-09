@@ -33,7 +33,7 @@ export class SelectModalComponent implements OnInit {
     public modalCtrl: ModalController,
     private keyboard: Keyboard
   ) { }
-  
+
   ionViewDidEnter() {
     setTimeout(() => {
       this.cityInput.setFocus();
@@ -66,7 +66,7 @@ export class SelectModalComponent implements OnInit {
         else if (this.type == 'hotel') {
           return this.store.dispatch(new GetHotelCity(searchString));
         }
-        else if (this.type == 'bus') {
+        else if (this.type == 'bus' || this.type == 'cab') {
           return this.store.dispatch(new GetBusCity(searchString));
         }
         else {

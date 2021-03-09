@@ -74,7 +74,7 @@ export class HandleRequest {
 })
 
 @Injectable()
-export class ApprovalState implements NgxsOnInit {
+export class ApprovalState {
 
     constructor(
         private store: Store,
@@ -86,9 +86,6 @@ export class ApprovalState implements NgxsOnInit {
         private approvalService : ApprovalService
     ) {
 
-    }
-    ngxsOnInit(states: StateContext<Approval>) {
-        console.log(states.getState().selectedRequest);
     }
 
     @Selector()

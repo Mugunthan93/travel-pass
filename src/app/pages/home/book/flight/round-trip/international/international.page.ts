@@ -8,6 +8,7 @@ import { InternationalBookState } from 'src/app/stores/book/flight/international
 import { PassengerListComponent } from 'src/app/components/shared/passenger-list/passenger-list.component';
 import { FlightPassengerState } from 'src/app/stores/passenger/flight.passenger.states';
 import { BookConfirmationComponent } from 'src/app/components/shared/book-confirmation/book-confirmation.component';
+import { first, take } from 'lodash';
 
 @Component({
   selector: 'app-international',

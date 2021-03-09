@@ -7,7 +7,6 @@ import { OneWaySearchState } from 'src/app/stores/search/flight/oneway.state';
 import { OneWayBookState } from 'src/app/stores/book/flight/oneway.state';
 import { PassengerListComponent } from 'src/app/components/shared/passenger-list/passenger-list.component';
 import { FlightPassengerState } from 'src/app/stores/passenger/flight.passenger.states';
-import { BookConfirmationComponent } from 'src/app/components/shared/book-confirmation/book-confirmation.component';
 
 @Component({
   selector: 'app-one-way',
@@ -15,7 +14,7 @@ import { BookConfirmationComponent } from 'src/app/components/shared/book-confir
   styleUrls: ['./one-way.page.scss'],
 })
 export class OneWayPage implements OnInit {
-  
+
   flightDetail: Observable<bookObj>;
   adult: Observable<number>;
 

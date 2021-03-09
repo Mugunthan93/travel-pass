@@ -9,7 +9,7 @@ import { PassengerListComponent } from 'src/app/components/shared/passenger-list
 import { BusSearchState } from 'src/app/stores/search/bus.state';
 import { BusBookState, fareDetails } from 'src/app/stores/book/bus.state';
 import { BookConfirmationComponent } from 'src/app/components/shared/book-confirmation/book-confirmation.component';
-import { GetSendRequest } from 'src/app/stores/book.state';
+import { SendRequest } from 'src/app/stores/book.state';
 
 @Component({
   selector: "app-bus",
@@ -49,6 +49,6 @@ export class BusPage implements OnInit {
   }
 
   sendRequest() {
-    this.store.dispatch(new GetSendRequest(BookConfirmationComponent));
+    this.store.dispatch(new SendRequest());
   }
 }

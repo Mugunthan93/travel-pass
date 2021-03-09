@@ -1,9 +1,41 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Cab</ion-title>
-  </ion-toolbar>
-</ion-header>
+
+  <ion-segment mode="ios" (ionChange)="tripChange($event)" [value]="travelType$ | async" class="d-flex- w-auto m-3 search">
+    <ion-segment-button value="out-station" class="search">
+        <ion-text class="medium bold">OutStation</ion-text>
+    </ion-segment-button>
+    <ion-segment-button value="local" class="search">
+        <ion-text class="medium bold">Local</ion-text>
+    </ion-segment-button>
+    <ion-segment-button value="airport" class="search">
+      <ion-text class="medium bold">Airport</ion-text>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-segment *ngIf="(travelType$ | async) == 'out-station'" mode="ios" (ionChange)="typeChange($event)" [value]="SearchType$ | async" class="d-flex- w-auto m-3 search">
+    <ion-segment-button value="one-way" class="search">
+      <ion-text class="medium bold">One Way</ion-text>
+    </ion-segment-button>
+    <ion-segment-button value="round-trip" class="search">
+      <ion-text class="medium bold">Round Trip</ion-text>
+    </ion-segment-button>
+    <ion-segment-button value="multi-city" class="search">
+      <ion-text class="medium bold">Multi City</ion-text>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-segment *ngIf="(travelType$ | async) == 'local'" mode="ios" (ionChange)="typeChange($event)" [value]="SearchType$ | async" class="d-flex- w-auto m-3 search">
+    <ion-segment-button value="half-day" class="search">
+      <ion-text class="medium bold">Half Day</ion-text>
+    </ion-segment-button>
+    <ion-segment-button value="full-day" class="search">
+      <ion-text class="medium bold">Full Day</ion-text>
+    </ion-segment-button>
+  </ion-segment>
 
 <ion-content>
 
+  <ion-router-outlet mode="md"></ion-router-outlet>
+
 </ion-content>
+
+

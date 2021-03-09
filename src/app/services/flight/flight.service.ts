@@ -79,12 +79,14 @@ export class FlightService {
   }
 
   bookTicket(ticketpl : ticketpayload) {
+    this.http.setReqTimeout(300);
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setData('json');
     return from(this.http.post("/airlineTicket",ticketpl));
   }
 
   getPLB(code : string,cls : string,triptype : string) {
+    console.log(code,cls,triptype);
     let plbparam = {
       "a_code" : code.toString(),
       "class" : cls.toString(),

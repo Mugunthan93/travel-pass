@@ -21,18 +21,18 @@
 
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button *ngIf="!(this.isAdmin$ | async) && !((invrooms$ | async).length > 0)" (click)="confirmRequest('request')">
+      <ion-button [hidden]="(invrooms$ | async).length > 0 || (this.isAdmin$ | async)" (click)="confirmRequest('request')">
         <ion-label class="medium bold">Send Request</ion-label>
       </ion-button>
-      <ion-button *ngIf="(invrooms$ | async).length > 0" (click)="confirmRequest('offline')">
-        <ion-label class="medium bold">Offline Request</ion-label>
+      <ion-button *ngIf="(invrooms$ | async).length > 0 || (this.isAdmin$ | async)" (click)="confirmRequest('offline')">
+        <ion-label class="medium bold">Send Offline</ion-label>
       </ion-button>
     </ion-buttons>
-    <ion-buttons slot="end" *ngIf="(this.isAdmin$ | async)">
+    <ion-buttons slot="end" *ngIf="(this.isAdmin$ | async) && (bookType$ | async) !== 'multi-city'">
       <ion-button (click)="confirmRequest('book')">
         <ion-label class="medium bold">Book Now</ion-label>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  
+
 </ion-footer>

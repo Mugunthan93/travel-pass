@@ -1,7 +1,7 @@
 import { Selector, Action, State, Store, StateContext } from '@ngxs/store';
 import { flightResult, flightData, metrixBoard } from 'src/app/models/search/flight';
 import { fareRule, FlightResultState, SSR } from '../../result/flight.state';
-import { bookObj, value, FLightBookState, rt_uapi_params, rt_sendRequest, rt_kioskRequest, SetFare, SetMeal, SetBaggage, taxes, plb, totalsummary, SetServiceCharge, GetPLB, SetTaxable, SetGST, baggage, meal, bookpayload, ticketpayload } from '../flight.state';
+import { bookObj, value, FLightBookState, rt_uapi_params, rt_sendRequest, rt_kioskRequest, SetFare, SetMeal, SetBaggage, taxes, plb, totalsummary, SetServiceCharge, GetPLB, SetTaxable, SetGST, baggage, meal, bookpayload, ticketpayload, servicebySegment } from '../flight.state';
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { DomesticResultState } from '../../result/flight/domestic.state';
 import { RoundTripSearch, RoundTripSearchState } from '../../search/flight/round-trip.state';
@@ -53,6 +53,13 @@ export class DomesticSendRequest {
     constructor(public comment: string, public mailCC: string[], public purpose: string) {
 
     }
+}
+
+export class DomesticOfflineRequest {
+  static readonly type = "[Domestic] DomesticOfflineRequest";
+  constructor(public comment: string, public mailCC: string[], public purpose: string) {
+
+  }
 }
 
 export class DomesticTicket {
@@ -269,105 +276,17 @@ export class DomesticBookState {
                                           ssr : response
                                         })
                                     }));
-                                    let baggagebySegment = (services : baggage[]) => {
 
-                                        let firstorder = _.chain(services)
-                                            .groupBy("Origin")
-                                            .map((originVal,originKey) => {
-                                                return _.chain(originVal)
-                                                    .groupBy("Destination")
-                                                    .map((val,key) => {
-                                                        return {
-                                                            Origin : originKey,
-                                                            Destination : key,
-                                                            service : _.flatMapDeep(val).filter((el : baggage) => el.Origin == originKey && el.Destination == key)
-                                                        }
-                                                    }).value();
-                                            })
-                                            .value()
-                                        console.log(firstorder);
+                                  if (response.MealDynamic) {
+                                      states.dispatch(new SetMeal(this.segmentSSR(states,response.MealDynamic,'onward'),[]));
+                                  }
+                                  else if (response.Meal) {
+                                    states.dispatch(new SetMeal(this.segmentSSR(states,response.Meal,'onward'),[]));
+                                  }
 
-                                        return states.getState().departure.fareQuote.Segments.map((el) => {
-                                            return el.map((e) => {
-                                                return {
-                                                    Origin : e.Origin.Airport.CityCode,
-                                                    Destination : e.Destination.Airport.CityCode,
-                                                    service : _.flatMapDeep(services).filter((el : baggage) => el.Origin == e.Origin.Airport.CityCode && el.Destination == e.Destination.Airport.CityCode)
-                                                }
-                                            })
-                                        })
-                                    }
-
-                                    let mealbySegment = (services : meal[]) => {
-
-                                        let firstorder = _.chain(services)
-                                            .groupBy("Origin")
-                                            .map((originVal,originKey) => {
-                                                return _.chain(originVal)
-                                                    .groupBy("Destination")
-                                                    .map((val,key) => {
-                                                        return {
-                                                            Origin : originKey,
-                                                            Destination : key,
-                                                            service : _.flatMapDeep(val).filter((el : meal) => el.Origin == originKey && el.Destination == key)
-                                                        }
-                                                    }).value();
-                                            })
-                                            .value()
-                                        console.log(firstorder);
-
-
-                                        return states.getState().departure.fareQuote.Segments.map((el) => {
-                                            return el.map((e) => {
-                                                return {
-                                                    Origin : e.Origin.Airport.CityCode,
-                                                    Destination : e.Destination.Airport.CityCode,
-                                                    service : _.flatMapDeep(services).filter((el : meal) => el.Origin == e.Origin.Airport.CityCode && el.Destination == e.Destination.Airport.CityCode)
-                                                }
-                                            })
-                                        })
-                                    }
-
-                                    let bySegment = (services : any[]) => {
-
-                                        let firstorder = _.chain(services)
-                                            .groupBy("Origin")
-                                            .map((originVal,originKey) => {
-                                                return _.chain(originVal)
-                                                    .groupBy("Destination")
-                                                    .map((val,key) => {
-                                                        return {
-                                                            Origin : originKey,
-                                                            Destination : key,
-                                                            service : _.flatMapDeep(val).filter((el : any) => el.Origin == originKey && el.Destination == key)
-                                                        }
-                                                    }).value();
-                                            })
-                                            .value()
-                                        console.log(firstorder);
-
-
-                                        return states.getState().departure.fareQuote.Segments.map((el) => {
-                                            return el.map((e) => {
-                                                return {
-                                                    Origin : e.Origin.Airport.CityCode,
-                                                    Destination : e.Destination.Airport.CityCode,
-                                                    service : _.flatMapDeep(services).filter((el : any) => el.Origin == e.Origin.Airport.CityCode && el.Destination == e.Destination.Airport.CityCode)
-                                                }
-                                            })
-                                        })
-                                    }
-
-                                    if (response.MealDynamic) {
-                                        states.dispatch(new SetMeal(bySegment(response.MealDynamic).flat(), []));
-                                    }
-                                    else if (response.Meal) {
-                                        states.dispatch(new SetMeal(mealbySegment(response.Meal).flat(), []));
-                                    }
-
-                                    if (response.Baggage) {
-                                        states.dispatch(new SetBaggage(baggagebySegment(response.Baggage).flat(), []));
-                                    }
+                                  if (response.Baggage) {
+                                    states.dispatch(new SetBaggage(this.segmentSSR(states,response.Baggage,'onward'),[]));
+                                  }
                                     return true;
                                 }
                                 return true;
@@ -392,105 +311,16 @@ export class DomesticBookState {
                                             ssr : response
                                           })
                                       }));
-                                      let baggagebySegment = (services : baggage[]) => {
-
-                                          let firstorder = _.chain(services)
-                                              .groupBy("Origin")
-                                              .map((originVal,originKey) => {
-                                                  return _.chain(originVal)
-                                                      .groupBy("Destination")
-                                                      .map((val,key) => {
-                                                          return {
-                                                              Origin : originKey,
-                                                              Destination : key,
-                                                              service : _.flatMapDeep(val).filter((el : baggage) => el.Origin == originKey && el.Destination == key)
-                                                          }
-                                                      }).value();
-                                              })
-                                              .value()
-                                          console.log(firstorder);
-
-                                          return states.getState().return.fareQuote.Segments.map((el) => {
-                                              return el.map((e) => {
-                                                  return {
-                                                      Origin : e.Origin.Airport.CityCode,
-                                                      Destination : e.Destination.Airport.CityCode,
-                                                      service : _.flatMapDeep(services).filter((el : baggage) => el.Origin == e.Origin.Airport.CityCode && el.Destination == e.Destination.Airport.CityCode)
-                                                  }
-                                              })
-                                          })
-                                      }
-
-                                      let mealbySegment = (services : meal[]) => {
-
-                                          let firstorder = _.chain(services)
-                                              .groupBy("Origin")
-                                              .map((originVal,originKey) => {
-                                                  return _.chain(originVal)
-                                                      .groupBy("Destination")
-                                                      .map((val,key) => {
-                                                          return {
-                                                              Origin : originKey,
-                                                              Destination : key,
-                                                              service : _.flatMapDeep(val).filter((el : meal) => el.Origin == originKey && el.Destination == key)
-                                                          }
-                                                      }).value();
-                                              })
-                                              .value()
-                                          console.log(firstorder);
-
-
-                                          return states.getState().return.fareQuote.Segments.map((el) => {
-                                              return el.map((e) => {
-                                                  return {
-                                                      Origin : e.Origin.Airport.CityCode,
-                                                      Destination : e.Destination.Airport.CityCode,
-                                                      service : _.flatMapDeep(services).filter((el : meal) => el.Origin == e.Origin.Airport.CityCode && el.Destination == e.Destination.Airport.CityCode)
-                                                  }
-                                              })
-                                          })
-                                      }
-
-                                      let bySegment = (services : any[]) => {
-
-                                          let firstorder = _.chain(services)
-                                              .groupBy("Origin")
-                                              .map((originVal,originKey) => {
-                                                  return _.chain(originVal)
-                                                      .groupBy("Destination")
-                                                      .map((val,key) => {
-                                                          return {
-                                                              Origin : originKey,
-                                                              Destination : key,
-                                                              service : _.flatMapDeep(val).filter((el : any) => el.Origin == originKey && el.Destination == key)
-                                                          }
-                                                      }).value();
-                                              })
-                                              .value()
-                                          console.log(firstorder);
-
-
-                                          return states.getState().return.fareQuote.Segments.map((el) => {
-                                              return el.map((e) => {
-                                                  return {
-                                                      Origin : e.Origin.Airport.CityCode,
-                                                      Destination : e.Destination.Airport.CityCode,
-                                                      service : _.flatMapDeep(services).filter((el : any) => el.Origin == e.Origin.Airport.CityCode && el.Destination == e.Destination.Airport.CityCode)
-                                                  }
-                                              })
-                                          })
-                                      }
-
                                       if (response.MealDynamic) {
-                                          states.dispatch(new SetMeal(bySegment(response.MealDynamic).flat(), []));
-                                      }
-                                      else if (response.Meal) {
-                                          states.dispatch(new SetMeal(mealbySegment(response.Meal).flat(), []));
-                                      }
+                                        states.dispatch(new SetMeal([],this.segmentSSR(states,response.MealDynamic,'return')));
+                                    }
+                                    else if (response.Meal) {
+                                      states.dispatch(new SetMeal([],this.segmentSSR(states,response.Meal,'return')));
+                                    }
 
-                                      if (response.Baggage) {
-                                          states.dispatch(new SetBaggage(baggagebySegment(response.Baggage).flat(), []));
-                                      }
+                                    if (response.Baggage) {
+                                      states.dispatch(new SetBaggage([],this.segmentSSR(states,response.Baggage,'return')));
+                                    }
                                       return true;
                                   }
                                   return true;
@@ -574,7 +404,68 @@ export class DomesticBookState {
         loading.message = "Request Sending";
         loading.present();
 
-        let sendReq: rt_sendRequest = this.sendRequestPayload(states,action,"onward");
+        let sendReq: rt_sendRequest = this.sendRequestPayload(states,action,"onward","pending","online");
+
+        console.log(JSON.stringify(sendReq));
+
+        try {
+            const sendReqResponse = await this.flightService.rtSendRequest(sendReq);
+            console.log(sendReqResponse);
+            if (sendReqResponse.status == 200) {
+                successAlert.present();
+            }
+        }
+        catch (error) {
+            console.log(error);
+            let err = JSON.parse(error.error);
+            console.log(err);
+        }
+        loading.dismiss();
+    }
+
+    @Action(DomesticOfflineRequest)
+    async roundTripOfflineRequest(states: StateContext<domesticBook>, action: DomesticOfflineRequest) {
+
+        const loading = await this.loadingCtrl.create({
+            spinner: "crescent"
+        });
+        const failedAlert = await this.alertCtrl.create({
+            header: 'Send Request Failed',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                cssClass: 'danger',
+                handler: () => {
+                    failedAlert.dismiss({
+                        data: false,
+                        role: 'failed'
+                    });
+                }
+            }]
+        });
+        const successAlert = await this.alertCtrl.create({
+            header: 'Send Request Success',
+            subHeader: 'Request status will be updated in My Bookings',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                cssClass: 'danger',
+                handler: () => {
+                    this.store.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']));
+                    successAlert.dismiss({
+                        data: false,
+                        role: 'failed'
+                    });
+                    this.store.dispatch(new StateReset(SearchState, ResultState, BookState));
+                    this.modalCtrl.dismiss(null, null, 'book-confirm');
+                }
+            }]
+        });
+
+        loading.message = "Request Sending";
+        loading.present();
+
+        let sendReq: rt_sendRequest = this.sendRequestPayload(states,action,"onward","open","offline");
 
         console.log(JSON.stringify(sendReq));
 
@@ -638,8 +529,8 @@ export class DomesticBookState {
         return : this.store.selectSnapshot(DomesticResultState.getSelectedReturnFlight).fareRule
       }
 
-      let depSendreq: rt_sendRequest = this.sendRequestPayload(states,action,"onward");
-      let reSendReq: rt_sendRequest = this.sendRequestPayload(states,action,"return");
+      let depSendreq: rt_sendRequest = this.sendRequestPayload(states,action,"onward","open","online");
+      let reSendReq: rt_sendRequest = this.sendRequestPayload(states,action,"return","open","online");
 
       console.log(JSON.stringify(depSendreq),JSON.stringify(reSendReq));
 
@@ -753,7 +644,7 @@ export class DomesticBookState {
     }
 
     //sendrequest for approval & booking
-    sendRequestPayload(states : StateContext<domesticBook>,action : DomesticSendRequest | DomesticTicket, type : string) {
+    sendRequestPayload(states : StateContext<domesticBook>,action : DomesticSendRequest | DomesticTicket, type : string,rqstStatus : string, bookingmode : string) {
 
       let allGST : { onward : GST, return : GST } = {
         onward : type == "onward" ?  this.store.selectSnapshot(FLightBookState.getGST).onward : this.store.selectSnapshot(FLightBookState.getGST).return,
@@ -949,8 +840,8 @@ export class DomesticBookState {
         approval_mail_cc: action.mailCC,
         purpose: action.purpose,
         comments: '[\"' + action.comment + '\"]',
-        booking_mode : "online",
-        status : "pending",
+        booking_mode : bookingmode,
+        status : rqstStatus,
         trip_type : "business",
         transaction_id : null,
         customer_id: companyId,
@@ -1052,7 +943,7 @@ export class DomesticBookState {
                 bkpl = {
                     Passengers : segpax,
                     TraceId: fareIndex.TraceId,
-                    JourneyType: openreq.trip_requests.JourneyType,
+                    JourneyType: 1,
                     IsLCC: openreq.passenger_details.flight_details[0].IsLCC,
                     ResultIndex: fareIndex.ResultIndex
                 }
@@ -1100,7 +991,7 @@ export class DomesticBookState {
           ),
           flatMap(
               (response) => {
-                  let approveObj = this.approveRequestPayload(states,response,rqst,bookres,openreq,fareIndex,type);
+                  let approveObj = this.approveRequestPayload(states,response,rqst,bookres,openreq,fareIndex,type,"booked","online");
                   console.log(JSON.stringify(approveObj));
                   let bookreq$ = this.approvalService.approvalReq('flight',openreq.id,approveObj);
                   return bookreq$
@@ -1153,7 +1044,7 @@ export class DomesticBookState {
     }
 
     //approvereq for booking
-    approveRequestPayload(states : StateContext<domesticBook>,response,sendReq,bookres,openreq, fr : fareRule, type : string) {
+    approveRequestPayload(states : StateContext<domesticBook>,response,sendReq,bookres,openreq, fr : fareRule, type : string,rqstStatus : string, bookingmode : string) {
 
       let data = JSON.parse(response.data);
       console.log(data,response);
@@ -1242,7 +1133,7 @@ export class DomesticBookState {
               company_type: "corporate"
           }
           },
-          booking_mode: "online",
+          booking_mode: bookingmode,
           traveller_id: travellersId,
           travel_date: openreq.travel_date,
           comments: null,
@@ -1256,12 +1147,11 @@ export class DomesticBookState {
           req_id: openreq.id,
           vendor_id: vendorId,
           purpose: null,
-          status: "booked"
+          status: rqstStatus
       }
     }
 
     paxArray(passenger : flightpassenger[],type : string) {
-
       let fare = type == "onward" ? this.store.selectSnapshot(FLightBookState.getFare).onward :  this.store.selectSnapshot(FLightBookState.getFare).return;
       return _.chain(passenger)
       .map(((el : flightpassenger) => {
@@ -1280,29 +1170,54 @@ export class DomesticBookState {
               DateOfBirth:el.DateOfBirth,
               Title: el.Title,
               Gender: el.Gender,
-              Fare : fare
+              Fare : fare,
+              Baggage : type == "onward" ? el.onwardExtraServices.Baggage : el.returnExtraServices.Baggage,
+              MealDynamic : type == "onward" ? el.onwardExtraServices.Meal : el.returnExtraServices.Meal
           }
-
-          if(type == "onward") {
-            if(!_.isNull(el.onwardExtraServices.Baggage[0])) {
-              newel.Baggage = el.onwardExtraServices.Baggage
-            }
-            if(!_.isNull(el.onwardExtraServices.Meal[0])) {
-              newel.MealDynamic = el.onwardExtraServices.Meal
-            }
-          }
-          else {
-            if(!_.isNull(el.returnExtraServices.Baggage[0])) {
-              newel.Baggage = el.returnExtraServices.Baggage
-            }
-            if(!_.isNull(el.returnExtraServices.Meal[0])) {
-              newel.MealDynamic = el.returnExtraServices.Meal
-            }
-          }
-
 
           return newel;
       }))
       .value();
+    }
+
+    segmentSSR(states : StateContext<domesticBook>, services : meal[] | baggage[] | any[],type : string) {
+
+      let onwardSource = states.getState().departure.fareQuote.Segments[0][0].Origin.Airport.AirportCode;
+      let onwardDestiation = _.last(states.getState().departure.fareQuote.Segments[0]).Destination.Airport.AirportCode;
+
+      let onwardSegmentService : servicebySegment[] =  states.getState().departure.fareQuote.Segments[0].map((el) => {
+        return {
+          Origin : el.Origin.Airport.CityCode,
+          Destination : el.Destination.Airport.CityCode,
+          service : _.flatMapDeep(services).filter((e : any) => e.Origin == el.Origin && e.Destination == el.Destination)
+        }
+
+      }).flat();
+
+      onwardSegmentService.push({
+          Origin : onwardSource,
+          Destination : onwardDestiation,
+          service : _.flatMapDeep(services).filter((e : any) => e.Origin == onwardSource && e.Destination == onwardDestiation)
+      });
+
+      let returnSource = states.getState().return.fareQuote.Segments[0][0].Origin.Airport.AirportCode;
+      let returnDestiation = _.last(states.getState().return.fareQuote.Segments[0]).Destination.Airport.AirportCode;
+
+      let returnSegmentService : servicebySegment[] =  states.getState().return.fareQuote.Segments[0].map((el) => {
+        return {
+          Origin : el.Origin.Airport.CityCode,
+          Destination : el.Destination.Airport.CityCode,
+          service : _.flatMapDeep(services).filter((e : any) => e.Origin == el.Origin && e.Destination == el.Destination)
+        }
+
+      }).flat();
+
+      returnSegmentService.push({
+        Origin : returnSource,
+        Destination : returnDestiation,
+        service : _.flatMapDeep(services).filter((e : any) => e.Origin == returnSource && e.Destination == returnDestiation)
+    });
+
+      return type == "onward" ? onwardSegmentService : returnSegmentService;
     }
 }

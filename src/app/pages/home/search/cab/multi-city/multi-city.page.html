@@ -1,0 +1,113 @@
+<form [formGroup]="multiCityCabSearch" (ngSubmit)="searchCab()">
+  <ion-grid>
+    <ion-row>
+      <ion-content>
+        <ion-row formArrayName="trips" *ngFor="let trip of trips.controls; let i = index;">
+          <ion-col [formGroupName]="i">
+            <ion-row>
+              <ion-col (click)="selectCity('from',trips.controls,i)">
+                <ion-row>
+                  <ion-label class="bold large">From</ion-label>
+                  <ion-text class="medium bold" [ngClass]="errorArrayClass('from',trip)">
+                    {{trip.value.from !== null ? trip.value.from.station_name : 'Select'}}
+                  </ion-text>
+                  <ion-text  class="medium bold" [ngClass]="errorArrayClass('from',trip)" *ngIf="trip.value.from == null">
+                    Origin
+                  </ion-text>
+                </ion-row>
+              </ion-col>
+              <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
+              <ion-col (click)="selectCity('to',trips.controls,i)">
+                <ion-row>
+                  <ion-label class="bold large">To</ion-label>
+                  <ion-text class="medium bold" [ngClass]="errorArrayClass('to',trip)">
+                    {{trip.value.to !== null ? trip.value.to.station_name : 'Select'}}
+                  </ion-text>
+                  <ion-text  class="medium bold" [ngClass]="errorArrayClass('to',trip)" *ngIf="trip.value.to == null">
+                    Destination
+                  </ion-text>
+                </ion-row>
+              </ion-col>
+              <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
+              <ion-col (click)="selectDate(trips.controls,i)">
+                <ion-row>
+                  <ion-label class="bold large">Depart</ion-label>
+                  <ion-text class="medium bold" [ngClass]="errorArrayClass('departure',trip)">
+                    {{trip.value.departure !== null ? (trip.value.departure | date : 'd LLL' | titlecase) : 'Select'}}
+                  </ion-text>
+                  <ion-text  class="medium bold" [ngClass]="errorArrayClass('departure',trip)" *ngIf="trip.value.departure == null">
+                    Date
+                  </ion-text>
+                </ion-row>
+              </ion-col>
+              <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
+              <ion-icon name="close" (click)="removeTrip(trips.controls,i)"></ion-icon>
+            </ion-row>
+            <ion-input formControlName="from" hidden></ion-input>
+            <ion-input formControlName="to" hidden></ion-input>
+            <ion-input formControlName="departure" hidden></ion-input>
+          </ion-col>
+        </ion-row>
+      </ion-content>
+    </ion-row>
+    <ion-row>
+      <ion-button (click)="addTrip()">
+        <ion-text class="large boldest">{{'Add city' | titlecase}}</ion-text>
+      </ion-button>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-row>
+          <ion-label class="bold large">Cab Type</ion-label>
+          <ion-text class="medium bold"
+            [ngClass]="errorClass('cab_type')"
+            (click)="selectCabType()">{{( multiCityCabSearch.controls['cab_type'].value !== null ? multiCityCabSearch.controls['cab_type'].value : 'Select Cab Type') | titlecase}}</ion-text>
+          <ion-item hidden="true">
+            <ion-label>Cab Type</ion-label>
+            <ion-select
+              #selectcab
+              formControlName="cab_type"
+              cancelText="Cancel"
+              okText="Confirm"
+              [interfaceOptions]="customAlertOptions('Cab Type')"
+              (ionChange)="changeCabType($event)"
+              >
+              <ion-select-option value="sedan">Sedan</ion-select-option>
+              <ion-select-option value="hatchback">Hatchback</ion-select-option>
+              <ion-select-option value="tempo traveller">Tempo Traveller</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-row>
+      </ion-col>
+      <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
+      <ion-col>
+        <ion-row>
+          <ion-label class="bold large">Passengers</ion-label>
+          <ion-text class="medium bold"
+            [ngClass]="errorClass('passenger')"
+            (click)="selectPassenger()">{{( multiCityCabSearch.controls['passenger'].value !== null ? multiCityCabSearch.controls['passenger'].value : 'Select Passenger') }}</ion-text>
+          <ion-item hidden="true">
+            <ion-label>Passenger</ion-label>
+            <ion-select
+              #selectpass
+              formControlName="passenger"
+              cancelText="Cancel"
+              okText="Confirm"
+              [interfaceOptions]="customAlertOptions('Passenger Count')"
+              (ionChange)="changePassenger($event)"
+              >
+              <ion-select-option *ngFor="let num of passengerArray" [value]="num">{{ num }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-button type="submit">
+        <ion-text class="large boldest">{{'Search Cab' | titlecase}}</ion-text>
+      </ion-button>
+    </ion-row>
+  </ion-grid>
+  <ion-input formControlName="cab_type" hidden></ion-input>
+  <ion-input formControlName="passenger" hidden></ion-input>
+</form>

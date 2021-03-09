@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { BookState, BookBack, GetSendRequest } from 'src/app/stores/book.state';
+import { BookState, BookBack } from 'src/app/stores/book.state';
 import { Observable } from 'rxjs';
 import { BookConfirmationComponent } from 'src/app/components/shared/book-confirmation/book-confirmation.component';
 import { UserState } from 'src/app/stores/user.state';

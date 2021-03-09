@@ -63,29 +63,4 @@ export class MultiCityPage implements OnInit {
     this.store.dispatch(new CancellationRisk(evt.detail.value));
   }
 
-  async confirmRequest() {
-    if (this.selected == this.count) {
-      const modal = await this.modalCtrl.create({
-        component: BookConfirmationComponent,
-        id: 'book-confirm',
-        keyboardClose: false
-      });
-
-      return await modal.present();
-    } else {
-      const alert = await this.alertCtrl.create({
-        header: 'Passenger Details',
-        subHeader: 'Select Your Passenger',
-        id: 'passenger-check',
-        buttons: [{
-          text: "Ok",
-          handler: () => {
-            alert.dismiss();
-          }
-        }]
-      });
-      return await alert.present();
-    }
-  }
-
 }

@@ -1,12 +1,10 @@
-import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit, ChangeDetectorRef, ElementRef, NgZone } from '@angular/core';
-import { IonTabs, NavController, IonTabButton, IonTabBar } from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
+import { IonTabs } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { JourneyType, FlightSearchState } from 'src/app/stores/search/flight.state';
 import { SearchType } from 'src/app/stores/search.state';
-import { RouterNavigation, Navigate } from '@ngxs/router-plugin';
-import { RouterStateSnapshot, RoutesRecognized, ActivatedRoute } from '@angular/router';
-import { RouterTrigger } from '@ngxs/router-plugin/src/router.state';
+import { Navigate } from '@ngxs/router-plugin';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -22,9 +20,9 @@ export class FlightPage implements OnInit {
   constructor(
     public store: Store
   ) {
-    
+
   }
-  
+
   ngOnInit() {
     this.journeyType$ = this.store.select(FlightSearchState.getJourneyType).pipe(map((type : number) => {
       if (type == 1) {

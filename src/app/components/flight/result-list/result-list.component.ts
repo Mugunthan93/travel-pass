@@ -34,7 +34,7 @@ export class ResultListComponent implements OnInit {
 
   @Input() flightList: resultObj[];
   @Input() selectedFlights: any;
-  
+
   @Output() getFlightValue: EventEmitter<any> = new EventEmitter<any>(null);
 
   selectedFlight = null;
@@ -57,7 +57,7 @@ export class ResultListComponent implements OnInit {
 
 
   ngOnInit() {
-    
+
     this.type = this.store.selectSnapshot(ResultState.getResultType);
     this.itiMail = this.store.select(FlightResultState.getItinerary);
     this.flightType = this.store.select(FlightResultState.getFlightType);
@@ -85,7 +85,9 @@ export class ResultListComponent implements OnInit {
         }
       );
     }
-    
+
+    console.log(this.flightList);
+
   }
 
   rotate(index: number) : void {
@@ -118,21 +120,21 @@ export class ResultListComponent implements OnInit {
     else {
       panel.expanded ? panel.close() : panel.open();
 
-      if (!(evt.target as HTMLElement).classList.contains('email')) {  
+      if (!(evt.target as HTMLElement).classList.contains('email')) {
         if (this.selectedFlights == null) {
-  
+
           this.selectedFlights = flight;
           this.getFlightValue.emit(flight);
-  
+
         }
         else if (this.selectedFlights !== null) {
-  
+
           if (this.selectedFlights == flight) {
             this.selectedFlights = null;
             this.getFlightValue.emit(null);
           }
           else if (this.selectedFlights !== flight) {
-  
+
             this.selectedFlights = flight;
             this.getFlightValue.emit(flight);
           }

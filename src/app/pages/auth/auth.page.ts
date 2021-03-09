@@ -16,6 +16,7 @@ export class AuthPage implements OnInit {
   cmpLogo: string = "../assets/logo.jpeg";
   emailPattern: string = '[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,63}';
   loginForm: FormGroup;
+  formSubmit: boolean = false;
 
   constructor(
     public store: Store,
@@ -31,8 +32,15 @@ export class AuthPage implements OnInit {
   }
 
   onLogin() {
-    this.store.dispatch(new Login(this.loginForm.value.email, this.loginForm.value.password));
-    this.loginForm.reset();
+    this.formSubmit = true;
+    if(this.loginForm.valid) {
+      this.store.dispatch(new Login(this.loginForm.value.email, this.loginForm.value.password))
+        .subscribe((res) => {
+          console.log("completed",res);
+          this.loginForm.reset();
+          this.formSubmit = false;
+        });
+    }
   }
 
   async forgotPassword() {

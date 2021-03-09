@@ -77,34 +77,35 @@ export class EligibilityState {
                         let gradearray: any[] = JSON.parse(response.data).data;
                         let usergrade: string = this.store.selectSnapshot(UserState.getGrade);
                         let filteredArray = gradearray.filter(el => el.grade == usergrade);
+                        console.log(filteredArray);
                         filteredArray.forEach(
                             (el) => {
                                 if (el.trip_type == "International")
                                 {
                                     states.patchState({
                                         international: {
-                                            bus:  _.isNumber(el.value.bus) ? el.value.bus : parseInt(el.value.bus),
-                                            cab: _.isNumber(el.value.cab) ? el.value.cab : parseInt(el.value.cab),
-                                            flight: _.isNumber(el.value.flight) ? el.value.flight : parseInt(el.value.flight),
-                                            food: _.isNumber(el.value.food) ? el.value.food : parseInt(el.value.food),
-                                            hotel: _.isNumber(el.value.hotel) ? el.value.hotel : parseInt(el.value.hotel),
-                                            localtravel: _.isNumber(el.value.localtravel) ? el.value.localtravel : parseInt(el.value.localtravel),
-                                            train: _.isNumber(el.value.train) ? el.value.train : parseInt(el.value.train),
-                                            othertravel: el.value.othertravel ? (_.isNumber(el.value.train) ? el.value.train : parseInt(el.value.train)) : 0
+                                            bus:  this.eligible(el.value.bus),
+                                            cab: this.eligible(el.value.cab),
+                                            flight: this.eligible(el.value.flight),
+                                            food: this.eligible(el.value.food),
+                                            hotel: this.eligible(el.value.hotel),
+                                            localtravel: this.eligible(el.value.localtravel),
+                                            train: this.eligible(el.value.train),
+                                            othertravel: this.eligible(el.value.othertravel)
                                         }
                                     });
                                 }
                                 else if (el.trip_type == "Domestic") {
                                     states.patchState({
                                         domestic: {
-                                            bus:  _.isNumber(el.value.bus) ? el.value.bus : parseInt(el.value.bus),
-                                            cab: _.isNumber(el.value.cab) ? el.value.cab : parseInt(el.value.cab),
-                                            flight: _.isNumber(el.value.flight) ? el.value.flight : parseInt(el.value.flight),
-                                            food: _.isNumber(el.value.food) ? el.value.food : parseInt(el.value.food),
-                                            hotel: _.isNumber(el.value.hotel) ? el.value.hotel : parseInt(el.value.hotel),
-                                            localtravel: _.isNumber(el.value.localtravel) ? el.value.localtravel : parseInt(el.value.localtravel),
-                                            train: _.isNumber(el.value.train) ? el.value.train : parseInt(el.value.train),
-                                            othertravel: el.value.othertravel ? (_.isNumber(el.value.train) ? el.value.train : parseInt(el.value.train)) : 0
+                                          bus:  this.eligible(el.value.bus),
+                                          cab: this.eligible(el.value.cab),
+                                          flight: this.eligible(el.value.flight),
+                                          food: this.eligible(el.value.food),
+                                          hotel: this.eligible(el.value.hotel),
+                                          localtravel: this.eligible(el.value.localtravel),
+                                          train: this.eligible(el.value.train),
+                                          othertravel: this.eligible(el.value.othertravel)
                                         }
                                     });
                                 }
@@ -114,6 +115,18 @@ export class EligibilityState {
                     }
                 )
             );
+    }
+
+    eligible(value : any) {
+      if(_.isString(value)) {
+        return parseInt(value);
+      }
+      else if(_.isNumber(value)) {
+        return value;
+      }
+      else {
+        return 0;
+      }
     }
 
 }

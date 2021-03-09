@@ -199,7 +199,7 @@ export class MultiCitySearchState extends BaseFlightSearch {
         }
 
         const searchData = states.getState();
-
+        console.log(JSON.stringify(searchData.payload));
         try {
             const flightResponse = await this.flightService.searchFlight(searchData.payload);
             console.log(flightResponse);
@@ -223,6 +223,7 @@ export class MultiCitySearchState extends BaseFlightSearch {
             }
             //502 => proxy error
             if (error.status == 502) {
+                console.log(JSON.stringify(error));
                 failedAlert.message = "Server failed to get correct information";
             }
             //503 => service unavailable, Maintanence downtime

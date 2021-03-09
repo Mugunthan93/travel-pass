@@ -25,6 +25,8 @@ export class InternationalPage implements OnInit {
   ngOnInit() {
     this.flightList$ = this.store.select(InternationalResultState.getInternationalRoundTrip);
     this.selectedFlight$ = this.store.select(InternationalResultState.getSelectedFlight);
+
+    this.flightList$.subscribe(el => console.log(el));
   }
 
   currentFlight(result: resultObj) {

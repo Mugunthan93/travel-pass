@@ -7,14 +7,12 @@
       <ion-row>
         <ion-input type="email" formControlName="email" placeholder="E-mail"></ion-input>
         <ion-label *ngIf="
-              loginForm.controls['email'].touched &&
-              loginForm.controls['email'].hasError('required')" color="danger">
+              loginForm.controls['email'].hasError('required') && formSubmit" color="danger">
           Email Address Required
         </ion-label>
         <ion-label *ngIf="
-              loginForm.controls['email'].touched && 
-              loginForm.controls['email'].dirty && 
-              loginForm.controls['email'].hasError('pattern')" color="danger">
+              loginForm.controls['email'].dirty &&
+              loginForm.controls['email'].hasError('pattern') && formSubmit" color="danger">
           Invalid Email Address
         </ion-label>
       </ion-row>
@@ -24,8 +22,7 @@
       <ion-row>
         <ion-input type="password" formControlName="password" placeholder="Password"></ion-input>
         <ion-label *ngIf="
-              loginForm.controls['password'].touched &&
-              loginForm.controls['password'].hasError('required')" color="danger">
+              loginForm.controls['password'].hasError('required') && formSubmit" color="danger">
           Password Required
         </ion-label>
       </ion-row>

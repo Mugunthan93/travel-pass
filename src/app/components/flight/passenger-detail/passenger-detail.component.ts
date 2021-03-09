@@ -1,9 +1,8 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { MealBaggageComponent } from '../meal-baggage/meal-baggage.component';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { Store } from '@ngxs/store';
-import { baggage, FLightBookState, meal, servicebySegment } from 'src/app/stores/book/flight.state';
+import { baggage, FLightBookState, meal, servicebySegment, services } from 'src/app/stores/book/flight.state';
 import * as moment from 'moment';
 import { BookState } from 'src/app/stores/book.state';
 import { company } from 'src/app/models/company';
@@ -17,6 +16,7 @@ import { SearchState } from 'src/app/stores/search.state';
 import { SelectModalComponent } from '../../shared/select-modal/select-modal.component';
 import { flightpassenger, AddPassenger, EditPassenger, FlightPassengerState } from 'src/app/stores/passenger/flight.passenger.states';
 import { FlightSearchState } from 'src/app/stores/search/flight.state';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-passenger-detail',
@@ -48,6 +48,11 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
   selectedCity: city;
   customAlertOptions: AlertOptions;
   MealsAlertOptions : AlertOptions;
+
+  onwardbagArr : FormArray;
+  onwardmealArr : FormArray;
+  returnbagArr : FormArray;
+  returnmealArr : FormArray;
 
 
   regex: any = {
@@ -108,10 +113,10 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
         "GSTNumber": new FormControl(this.company.gst_details.gstNo, [Validators.required, Validators.pattern(this.regex.gst)]),
         "CompanyAddress": new FormControl(this.company.company_address_line1, [Validators.required]),
         "CompanyNumber": new FormControl(this.company.phone_number, [Validators.required, Validators.pattern(this.regex.phone_number)]),
-        "onwardbaggage" : new FormControl(null),
-        "returnbaggage" : new FormControl(null),
-        "onwardmeal" : new FormControl(null),
-        "returnmeal" : new FormControl(null),
+        "onwardbaggage" : new FormArray(this.ServiceArray(this.onwardbaggage,null)),
+        "returnbaggage" : new FormArray(this.ServiceArray(this.returnbaggage,null)),
+        "onwardmeal" : new FormArray(this.ServiceArray(this.onwardmeal,null)),
+        "returnmeal" : new FormArray(this.ServiceArray(this.returnmeal,null))
       });
     }
     else if (this.form == 'edit'){
@@ -133,12 +138,17 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
         "GSTNumber": new FormControl(this.pax.GSTNumber, [Validators.required, Validators.pattern(this.regex.gst)]),
         "CompanyAddress": new FormControl(this.pax.GSTCompanyAddress, [Validators.required]),
         "CompanyNumber": new FormControl(this.pax.GSTCompanyContactNumber, [Validators.required, Validators.pattern(this.regex.phone_number)]),
-        "onwardbaggage" : new FormControl(this.pax.onwardExtraServices.Baggage[0]),
-        "returnbaggage" : new FormControl(this.pax.returnExtraServices.Baggage[0]),
-        "onwardmeal" : new FormControl(this.pax.returnExtraServices.Meal[0]),
-        "returnmeal" : new FormControl(this.pax.returnExtraServices.Meal[0])
+        "onwardbaggage" : new FormArray(this.ServiceArray(this.onwardbaggage,this.pax.onwardExtraServices.Baggage[0])),
+        "returnbaggage" : new FormArray(this.ServiceArray(this.returnbaggage,this.pax.returnExtraServices.Baggage[0])),
+        "onwardmeal" : new FormArray(this.ServiceArray(this.onwardmeal,this.pax.onwardExtraServices.Meal[0])),
+        "returnmeal" : new FormArray(this.ServiceArray(this.returnmeal,this.pax.returnExtraServices.Meal[0]))
       });
     }
+
+    this.onwardbagArr = this.Passenger.get('onwardbaggage') as FormArray;
+    this.returnbagArr = this.Passenger.get('returnbaggage') as FormArray;
+    this.onwardmealArr = this.Passenger.get('onwardmeal') as FormArray;
+    this.returnmealArr = this.Passenger.get('returnmeal') as FormArray;
 
     this.type = this.store.selectSnapshot(BookState.getBookType);
     this.Passenger.valueChanges.subscribe(() => console.log(this.Passenger));
@@ -146,40 +156,6 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     console.log(changes);
-  }
-
-  async addMeal() {
-    let prop: any = null;
-    if (this.form == 'add') {
-      prop = {
-        'onward': {
-          Meal: [],
-          MealTotal: 0,
-          BagTotal: 0,
-          Baggage: []
-        },
-        'return': {
-          Meal: [],
-          MealTotal: 0,
-          BagTotal: 0,
-          Baggage: []
-        }
-      }
-    }
-    else if (this.form == 'edit') {
-      prop = {
-        'onward': this.pax.onwardExtraServices,
-        'return': this.pax.returnExtraServices
-      }
-    }
-
-    const modal = await this.modalCtrl.create({
-      component: MealBaggageComponent,
-      id: 'passenger-meal',
-      componentProps: prop
-    });
-
-    return await modal.present();
   }
 
   async selectCity(field) {
@@ -223,7 +199,7 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
         City: this.Passenger.value.City,
         ContactNo: this.Passenger.value.ContactNo,
         PassportNo: this.Passenger.value.PassportNo,
-        PassportExpiry: moment.utc(this.Passenger.value.DateOfBirth).format('YYYY-MM-DDT00:00:00.000Z'),
+        PassportExpiry: moment.utc(this.Passenger.value.PassportExpiry).format('YYYY-MM-DDT00:00:00.000Z'),
         nationality: this.Passenger.value.nationality,
         ftnumber: this.Passenger.value.ftnumber,
         GSTCompanyName: this.Passenger.value.CompanyName,
@@ -234,21 +210,23 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
         CountryCode: this.selectedCity.country_code,
         CountryName:this.selectedCity.country_name,
         onwardExtraServices: {
-          Meal: this.Passenger.value.onwardmeal !== null ? [this.Passenger.value.onwardmeal] : [null],
-          MealTotal: this.Passenger.value.onwardmeal !== null ? (this.Passenger.value.onwardmeal as meal).Price : 0,
-          BagTotal: this.Passenger.value.onwardbaggage !== null ? (this.Passenger.value.onwardbaggage as baggage).Price : 0,
-          Baggage: this.Passenger.value.onwardbaggage !== null ? [this.Passenger.value.onwardbaggage] : [null]
+          Meal: _.compact((this.Passenger.value.onwardmeal as any[]).map(el => el.service).flat()),
+          MealTotal: this.Passenger.value.onwardmeal.reduce((acc,curr) => !_.isNull(curr.service) ? acc + curr.service.Price : acc,0),
+          BagTotal: this.Passenger.value.onwardbaggage.reduce((acc,curr) => !_.isNull(curr.service) ? acc + curr.service.Price : acc,0),
+          Baggage: _.compact((this.Passenger.value.onwardbaggage as any[]).map(el => el.service).flat())
         },
         returnExtraServices: {
-          Meal: this.Passenger.value.returnmeal !== null ? [this.Passenger.value.returnmeal] : [null],
-          MealTotal: this.Passenger.value.returnmeal !== null ? (this.Passenger.value.returnmeal as meal).Price : 0,
-          BagTotal: this.Passenger.value.returnbaggage !== null ? (this.Passenger.value.returnbaggage as baggage).Price : 0,
-          Baggage: this.Passenger.value.returnbaggage !== null ? [this.Passenger.value.returnbaggage] : [null]
+          Meal: _.compact((this.Passenger.value.returnmeal as any[]).map(el => el.service).flat()),
+          MealTotal: this.Passenger.value.returnmeal.reduce((acc,curr) => !_.isNull(curr.service) ? acc + curr.service.Price : acc,0),
+          BagTotal: this.Passenger.value.returnbaggage.reduce((acc,curr) => !_.isNull(curr.service) ? acc + curr.service.Price : acc,0),
+          Baggage: _.compact((this.Passenger.value.returnbaggage as any[]).map(el => el.service).flat())
         },
         Gender: this.flightBookState.getGender(this.Passenger.value.Title),
         PaxType: 1,
         IsLeadPax: this.leadPax(this.form)
       }
+
+      console.log(passenger);
 
       if (this.form == 'add') {
         this.store.dispatch(new AddPassenger(passenger));
@@ -292,6 +270,18 @@ export class PassengerDetailComponent implements OnInit,OnChanges {
       case 'round-trip': return this.store.selectSnapshot(RoundTripSearchState.getTripType); break;
       case 'multi-city': return this.store.selectSnapshot(MultiCitySearchState.getTripType); break;
     }
+  }
+
+  ServiceArray (seg : servicebySegment[],selected : baggage | meal) {
+    return seg.map(
+      (segEl) => {
+        return new FormGroup({
+          Origin : new FormControl(segEl.Origin),
+          Destination : new FormControl(segEl.Destination),
+          service : new FormControl((_.isNull(selected) || _.isUndefined(selected)) ? segEl.service[0] : selected)
+        });
+      }
+    );
   }
 
 }

@@ -82,7 +82,7 @@
                 "with": "src/environments/environment.prod.ts"
               }],
               "optimization":  {
-                "scripts": false,
+                "scripts": true,
                 "styles": true
               },
               "outputHashing": "all",

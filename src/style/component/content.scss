@@ -15,7 +15,7 @@ $content-padding:(
 );
 
 ion-content {
-    --background:#{$content-background};
+    --background:#{$white} url("../../assets/ng-img/bg.jpeg") no-repeat;
 
     --color:#{$content-color};
     --keyboard-offset:#{$content-keyboard-offset};

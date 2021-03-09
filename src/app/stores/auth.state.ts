@@ -1,15 +1,15 @@
 import { State, Action, StateContext, Store, Selector } from '@ngxs/store';
 import { AuthService } from '../services/auth/auth.service';
 import { Navigate } from '@ngxs/router-plugin';
-import { LoadingController, AlertController, MenuController } from '@ionic/angular';
+import { LoadingController, AlertController } from '@ionic/angular';
 import { GetUser, UserState } from './user.state';
 import { CompanyState, GetCompany } from './company.state';
 import { user } from '../models/user';
-import { StateClear, StateReset, StateResetAll } from 'ngxs-reset-plugin';
-import { AllUpcomingTrips, DashboardState, UpcomingTrips } from './dashboard.state';
+import { StateReset } from 'ngxs-reset-plugin';
+import { AllUpcomingTrips, DashboardState } from './dashboard.state';
 import { EligibilityState, GetEligibility } from './eligibility.state';
-import { concat, forkJoin, from, of } from 'rxjs';
-import { catchError, finalize, flatMap, map, first, tap, concatMap } from 'rxjs/operators';
+import { concat, forkJoin, from } from 'rxjs';
+import { catchError, flatMap, map, first, tap, concatMap } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { ApprovalState } from './approval.state';
 import { BookState } from './book.state';
@@ -40,13 +40,6 @@ export class Login {
 export class Logout {
     static readonly type = '[Auth] LogOutUser';
 }
-
-// export class Signup {
-//     static readonly type = '[Auth] SignUpUser';
-//     constructor(public signupData) {
-
-//     }
-// }
 
 export class SendConfirmationEmail {
     static readonly type = '[Auth] ConirmationEmail';
@@ -102,15 +95,16 @@ export class AuthState {
             id : 'login'
         })).pipe(flatMap(el => from(el.present())));
 
-        const failedAlert$ = from(this.alertCtrl.create({
-            header: 'Signup Failed',
-            message: "UnAuthorized Users",
+        let failedAlert$ = (msg : string) => from(this.alertCtrl.create({
+            header: 'Login Failed',
+            message: msg,
+            id : 'failed-login',
             buttons: [{
                 text: 'Ok',
                 role: 'ok',
                 cssClass: 'danger',
                 handler: () => {
-                    return true;
+                    this.alertCtrl.dismiss(null,null,'failed-login');
                 }
             }]
         })).pipe(flatMap(el => from(el.present())));
@@ -148,16 +142,21 @@ export class AuthState {
                 flatMap(() => states.dispatch(new Navigate(['/','home','dashboard','home-tab']))),
                 tap(() => states.patchState({userLogin : true})),
                 catchError(
-                    (error) => {
+                    (error : HTTPResponse) => {
                         console.log(error);
-                        if (error.error == "{message :'UnAuthorized User'}")
-                        {
-                            return concat(
-                                    from(this.loadingCtrl.dismiss(null,null,'login')),
-                                    failedAlert$,
-                                    states.dispatch(new Logout())
-                                )
-                        }
+                        return from(this.loadingCtrl.dismiss(null,null,'login'))
+                          .pipe(
+                            flatMap(
+                              () => {
+                                if (error.status == 401) {
+                                    return failedAlert$("UnAuthorized Users");
+                                }
+                                else if(error.status == 500) {
+                                  return failedAlert$("Problem occured,Please try again later");
+                                }
+                              }
+                            )
+                          );
                     }
                 ),
                 first()

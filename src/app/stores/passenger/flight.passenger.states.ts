@@ -10,7 +10,6 @@ import { ModalController, AlertController } from '@ionic/angular';
 import { SearchState } from '../search.state';
 import { from } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
-import { ChooseBaggage } from "../book/flight/oneway.state";
 import { append, patch, removeItem, updateItem } from "@ngxs/store/operators";
 import { Injectable } from "@angular/core";
 
@@ -147,10 +146,18 @@ export class FlightPassengerState {
     addPassenger(states: StateContext<flightpassengerstate>, action: AddPassenger) {
 
         let passenger : any = {};
+        let fare = null;
+
+        switch(this.store.selectSnapshot(SearchState.getSearchType)) {
+          case 'one-way' : case 'animated-round-trip' : case 'multi-city': fare = this.store.selectSnapshot(FLightBookState.getFare).onward
+          case 'round-trip':fare = this.store.selectSnapshot(FLightBookState.getFare).total
+        }
+
         if(!action.pass.IsLeadPax) {
             passenger = _.omit(Object.assign({},action.pass),['GSTCompanyEmail','GSTCompanyAddress','GSTCompanyContactNumber','GSTCompanyName','GSTNumber']);
         }
         passenger.Gender = action.pass.Title == 'Ms' ? 2 : 1;
+        passenger.Fare = fare;
 
         states.setState(patch({
             passengerList : append([passenger])
@@ -163,15 +170,24 @@ export class FlightPassengerState {
     editPassenger(states: StateContext<flightpassengerstate>, action: EditPassenger) {
 
         let passenger : any = {};
-        passenger.Fare = this.store.selectSnapshot(FLightBookState.getFare);
+        let fare = null;
+
+        switch(this.store.selectSnapshot(SearchState.getSearchType)) {
+          case 'one-way' : case 'animated-round-trip' : case 'multi-city': fare = this.store.selectSnapshot(FLightBookState.getFare).onward
+          case 'round-trip':fare = this.store.selectSnapshot(FLightBookState.getFare).total
+        }
+
         if(!action.pass.IsLeadPax) {
             passenger = _.omit(Object.assign({},action.pass),['GSTCompanyEmail','GSTCompanyAddress','GSTCompanyContactNumber','GSTCompanyName','GSTNumber']);
         }
+        else {
+          passenger = action.pass;
+        }
+
+        passenger.Fare = fare;
 
         states.setState(patch({
-            passengerList : updateItem((el : flightpassenger) =>
-            el.FirstName == passenger.FirstName && el.LastName == passenger.LastName && el.Email == passenger.Email,passenger
-            )
+            passengerList : updateItem((el : flightpassenger) => el.FirstName == passenger.FirstName && el.LastName == passenger.LastName && el.Email == passenger.Email,passenger)
         }));
 
         this.modalCtrl.dismiss(null, null, 'passenger-details');
@@ -180,7 +196,8 @@ export class FlightPassengerState {
     @Action(DeletePassenger)
     deletePassenger(states: StateContext<flightpassengerstate>, action: DeletePassenger) {
         states.setState(patch({
-            passengerList : removeItem((el : flightpassenger) => el.FirstName == action.pax.FirstName && el.LastName == action.pax.LastName && el.Email == action.pax.Email)
+            passengerList : removeItem((el : flightpassenger) => el.FirstName == action.pax.FirstName && el.LastName == action.pax.LastName && el.Email == action.pax.Email),
+            selected : removeItem((el : flightpassenger) => el.FirstName == action.pax.FirstName && el.LastName == action.pax.LastName && el.Email == action.pax.Email)
         }));
     }
 
@@ -188,11 +205,17 @@ export class FlightPassengerState {
     setFirstPassengers(states: StateContext<flightpassengerstate>) {
 
         let passengerCount: number = 0;
+        let fare = null;
 
         switch (this.store.selectSnapshot(SearchState.getSearchType)) {
             case 'one-way': passengerCount = this.store.selectSnapshot(OneWaySearchState.getAdult); break;
             case 'round-trip': passengerCount = this.store.selectSnapshot(RoundTripSearchState.getAdult); break;
             case 'multi-city': passengerCount = this.store.selectSnapshot(MultiCitySearchState.getAdult); break;
+        }
+
+        switch(this.store.selectSnapshot(SearchState.getSearchType)) {
+          case 'one-way' : case 'animated-round-trip' : case 'multi-city': fare = this.store.selectSnapshot(FLightBookState.getFare).onward
+          case 'round-trip':fare = this.store.selectSnapshot(FLightBookState.getFare).total
         }
 
         let passengers: flightpassenger[] = [];
@@ -204,16 +227,16 @@ export class FlightPassengerState {
             CountryCode: null,
             Email: this.store.selectSnapshot(UserState.getEmail),
             onwardExtraServices: {
-                Meal: [null],
+                Meal: [],
                 MealTotal: 0,
                 BagTotal: 0,
-                Baggage: [null]
+                Baggage: []
             },
             returnExtraServices: {
-                Meal: [null],
+                Meal: [],
                 MealTotal: 0,
                 BagTotal: 0,
-                Baggage: [null]
+                Baggage: []
             },
             PaxType: 1,
             IsLeadPax: true,
@@ -230,7 +253,7 @@ export class FlightPassengerState {
             GSTCompanyContactNumber: this.store.selectSnapshot(CompanyState.getContact),
             GSTCompanyName: this.store.selectSnapshot(CompanyState.getCompanyName),
             GSTNumber: this.store.selectSnapshot(CompanyState.gstNumber),
-            Fare: this.store.selectSnapshot(FLightBookState.getFare).onward
+            Fare: fare
         }
 
         states.setState(patch({
@@ -261,7 +284,6 @@ export class FlightPassengerState {
 
         let passportValidation = null;
         let passenger = states.getState().selected;
-        let pass = this.store.selectSnapshot(OneWaySearchState.getAdult);
 
         switch (this.store.selectSnapshot(SearchState.getSearchType)) {
             case 'one-way': passportValidation = this.store.selectSnapshot(OneWaySearchState.getTripType); break;
@@ -287,10 +309,35 @@ export class FlightPassengerState {
             )
         );
 
-        if (passportValidation == 'international' &&( _.isNull(passenger[0].PassportNo) || _.isNull(passenger[0].PassportExpiry))) {
+        let selection$ = from(this.alertCtrl.create({
+          header: 'Select the passengers',
+          id: 'passenger-select',
+          buttons: [{
+              text: "Ok",
+              handler: () => {
+                  return true;
+              }
+          }]
+        })).pipe(
+            flatMap(
+                (missingEl) => {
+                    return from(missingEl.present());
+                }
+            )
+        );
+
+      if(passenger.length == 0) {
+        return selection$;
+      }
+      else {
+        if (passportValidation == 'international' && ( _.isNull(passenger[0].PassportNo) || _.isNull(passenger[0].PassportExpiry))) {
             return missing$;
         }
-        this.modalCtrl.dismiss(null, null, 'passenger-info');
+        else {
+          return from(this.modalCtrl.dismiss(null, null, 'passenger-info'));
+        }
+      }
+
     }
 
 }

@@ -131,28 +131,28 @@
       <ion-label class="large bold">Baggage Details</ion-label>
     </ion-item>
 
-    <div *ngIf="onwardbaggage.length >= 1">
-      <ion-item class="p-3" *ngFor="let bag of onwardbaggage">
+    <div formArrayName="onwardbaggage" *ngFor="let bag of onwardbagArr.controls;let i = index">
+      <ion-item class="p-3" [formGroupName]="i" [hidden]="onwardbaggage[i].service.length == 0">
         <ion-row class="w-50">
-          <ion-label class="mx-1">{{ bag.Origin }}</ion-label>
+          <ion-label class="mx-1">{{ bag.value.Origin }}</ion-label>
           <ion-icon  class="mx-1"src="../../../../assets/icons/flight.svg"></ion-icon>
-          <ion-label  class="mx-1">{{ bag.Destination }}</ion-label>
+          <ion-label  class="mx-1">{{ bag.value.Destination }}</ion-label>
         </ion-row>
-        <ion-select class="w-50 ml-auto" [placeholder]="baggagePlaceholder" [interfaceOptions]="customAlertOptions" formControlName="onwardbaggage">
-          <ion-select-option *ngFor="let onbag of bag.service" [value]="onbag">{{ onbag.Code == "No Baggage" ? "No Baggage" : onbag.Weight +' Kg / Rs: '+ onbag.Price }}</ion-select-option>
+        <ion-select class="w-50 ml-auto" [placeholder]="baggagePlaceholder" [interfaceOptions]="customAlertOptions" formControlName="service">
+          <ion-select-option *ngFor="let onbag of onwardbaggage[i].service" [value]="onbag">{{ onbag.Code == "No Baggage" ? "No Baggage" : onbag.Weight +' Kg / Rs: '+ onbag.Price }}</ion-select-option>
         </ion-select>
       </ion-item>
     </div>
 
-    <div *ngIf="returnbaggage.length >= 1">
-      <ion-item class="p-3" *ngFor="let bag of returnbaggage">
+    <div formArrayName="returnbaggage" *ngFor="let bag of returnbagArr.controls;let i = index">
+      <ion-item class="p-3" [formGroupName]="i" [hidden]="returnbaggage[i].service.length == 0">
         <ion-row class="w-50">
-          <ion-label class="mx-1">{{ bag.Origin }}</ion-label>
-          <ion-icon  class="mx-1" src="../../../../assets/icons/flight.svg"></ion-icon>
-          <ion-label class="mx-1">{{ bag.Destination }}</ion-label>
+          <ion-label class="mx-1">{{ bag.value.Origin }}</ion-label>
+          <ion-icon  class="mx-1"src="../../../../assets/icons/flight.svg"></ion-icon>
+          <ion-label  class="mx-1">{{ bag.value.Destination }}</ion-label>
         </ion-row>
-        <ion-select class="w-50 ml-auto" placeholder="Select Return Baggage" [interfaceOptions]="customAlertOptions" formControlName="returnbaggage">
-          <ion-select-option *ngFor="let rebag of bag.service" [value]="rebag">{{ rebag.Code == "No Baggage" ? "No Baggage" : rebag.Weight +' Kg / Rs: '+ rebag.Price }}</ion-select-option>
+        <ion-select class="w-50 ml-auto" placeholder="Select Return Baggage" [interfaceOptions]="customAlertOptions" formControlName="service">
+          <ion-select-option *ngFor="let rebag of returnbaggage[i].service" [value]="rebag">{{ rebag.Code == "No Baggage" ? "No Baggage" : rebag.Weight +' Kg / Rs: '+ rebag.Price }}</ion-select-option>
         </ion-select>
       </ion-item>
     </div>
@@ -161,28 +161,28 @@
       <ion-label class="large bold">Meals Details</ion-label>
     </ion-item>
 
-    <div *ngIf="onwardmeal.length >= 1">
-      <ion-item class="p-3" *ngFor="let bag of onwardmeal">
+    <div formArrayName="onwardmeal" *ngFor="let bag of onwardmealArr.controls;let i = index">
+      <ion-item class="p-3" [formGroupName]="i" [hidden]="onwardmeal[i].service.length == 0">
         <ion-row class="w-50">
-          <ion-label class="mx-1">{{ bag.Origin }}</ion-label>
-          <ion-icon class="mx-1" src="../../../../assets/icons/flight.svg"></ion-icon>
-          <ion-label class="mx-1">{{ bag.Destination }}</ion-label>
+          <ion-label class="mx-1">{{ bag.value.Origin }}</ion-label>
+          <ion-icon  class="mx-1"src="../../../../assets/icons/flight.svg"></ion-icon>
+          <ion-label  class="mx-1">{{ bag.value.Destination }}</ion-label>
         </ion-row>
-        <ion-select class="w-50 ml-auto" [placeholder]="mealplaceholder" [interfaceOptions]="MealsAlertOptions" formControlName="onwardmeal">
-          <ion-select-option *ngFor="let onbag of bag.service" [value]="onbag">{{ onbag.AirlineDescription == "" ? onbag.Code : onbag.AirlineDescription +' / Rs: '+ onbag.Price }}</ion-select-option>
+        <ion-select class="w-50 ml-auto" [placeholder]="mealplaceholder" [interfaceOptions]="MealsAlertOptions" formControlName="service">
+          <ion-select-option *ngFor="let onbag of onwardmeal[i].service" [value]="onbag">{{ onbag.AirlineDescription == "" ? onbag.Code : onbag.AirlineDescription +' / Rs: '+ onbag.Price }}</ion-select-option>
         </ion-select>
       </ion-item>
     </div>
 
-    <div *ngIf="returnmeal.length >= 1">
-      <ion-item class="p-3" *ngFor="let bag of returnmeal">
+    <div formArrayName="returnmeal" *ngFor="let bag of returnmealArr.controls;let i = index">
+      <ion-item class="p-3" [formGroupName]="i" [hidden]="returnmeal[i].service.length == 0">
         <ion-row class="w-50">
-          <ion-label class="mx-1">{{ bag.Origin }}</ion-label>
-          <ion-icon class="mx-1" src="../../../../assets/icons/flight.svg"></ion-icon>
-          <ion-label class="mx-1">{{ bag.Destination }}</ion-label>
+          <ion-label class="mx-1">{{ bag.value.Origin }}</ion-label>
+          <ion-icon  class="mx-1"src="../../../../assets/icons/flight.svg"></ion-icon>
+          <ion-label  class="mx-1">{{ bag.value.Destination }}</ion-label>
         </ion-row>
-        <ion-select class="w-50 ml-auto"  placeholder="Select Return Meal" [interfaceOptions]="MealsAlertOptions" formControlName="returnmeal">
-          <ion-select-option *ngFor="let rebag of bag.service" [value]="rebag">{{ rebag.AirlineDescription == "" ? rebag.Code : rebag.AirlineDescription +' / Rs: '+ rebag.Price }}</ion-select-option>
+        <ion-select class="w-50 ml-auto"  placeholder="Select Return Meal" [interfaceOptions]="MealsAlertOptions" formControlName="service">
+          <ion-select-option *ngFor="let rebag of returnmeal[i].service" [value]="rebag">{{ rebag.AirlineDescription == "" ? rebag.Code : rebag.AirlineDescription +' / Rs: '+ rebag.Price }}</ion-select-option>
         </ion-select>
       </ion-item>
     </div>

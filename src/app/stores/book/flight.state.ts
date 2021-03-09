@@ -13,7 +13,7 @@ import { SearchState, SearchType } from '../search.state';
 import { flightpassenger } from '../passenger/flight.passenger.states';
 import { Injectable } from '@angular/core';
 import { FlightService } from 'src/app/services/flight/flight.service';
-import { patch } from '@ngxs/store/operators';
+import { append, patch } from '@ngxs/store/operators';
 import { map } from 'rxjs/operators';
 import { AgencyState } from '../agency.state';
 import { CompanyState } from '../company.state';
@@ -104,7 +104,7 @@ export interface GST {
 export interface bookpayload {
     Passengers: bookpassenger[],
     TraceId: string,
-    JourneyType: boolean,
+    JourneyType: number,
     IsLCC: boolean,
     ResultIndex: string
 }
@@ -217,7 +217,7 @@ export interface int_sendRequest {
     transaction_id: any
     user_id: number
     traveller_id: number
-    managers: string[]
+    managers: managers | string[]
     trip_type: string
     comments: string
     vendor_id: number
@@ -743,7 +743,7 @@ export class FLightBookState {
     }
 
     @Selector()
-    static getFare(states: flight): { onward : fareObj, return : fareObj } {
+    static getFare(states: flight): { onward : fareObj, return : fareObj, total : fareObj } {
         return states.fare;
     }
 
@@ -878,30 +878,22 @@ export class FLightBookState {
 
     @Action(SetMeal)
     setMeal(states: StateContext<flight>, action: SetMeal) {
-
-        let onward: meal[] = [];
-        let ret: meal[] = [];
-
-        states.patchState({
-            meal: {
-                onward: action.onward,
-                return: action.ret
-            }
-        });
+      states.setState(patch({
+        meal : patch({
+          onward : append(action.onward),
+          return : append(action.ret)
+        })
+      }));
     }
 
     @Action(SetBaggage)
     setBaggage(states: StateContext<flight>, action: SetBaggage) {
-
-        let onward: baggage[] = [];
-        let ret: baggage[] = [];
-
-        states.patchState({
-            baggage: {
-                onward: action.onward,
-                return: action.ret
-            }
-        });
+      states.setState(patch({
+        baggage : patch({
+          onward : append(action.onward),
+          return : append(action.ret)
+        })
+      }));
     }
 
     @Action(SetFare)
@@ -1037,7 +1029,7 @@ export class FLightBookState {
       }));
       }
 
-      if(states.getState().plb.onward.length >= 1 && states.getState().fare.onward != null) {
+      if(states.getState().plb.return.length >= 1 && states.getState().fare.return != null) {
         let replb = states.getState().plb.return[0];
         let refare = states.getState().fare.return.BaseFare;
         let reyq = states.getState().fare.return.YQTax;
@@ -1152,7 +1144,7 @@ export class FLightBookState {
         switch(type) {
             case "one-way" : return this.store.selectSnapshot(OneWaySearchState.getTripClass);
             case "round-trip" : return this.store.selectSnapshot(RoundTripSearchState.getTripClass);
-            case "muti-city" : return this.store.selectSnapshot(MultiCitySearchState.getTripClass);
+            case "multi-city" : return this.store.selectSnapshot(MultiCitySearchState.getTripClass);
         }
     }
 
@@ -1167,9 +1159,7 @@ export class FLightBookState {
     }
 
     serviceCharges(): number {
-
         let serviceCharge: number = 0;
-
         let type = this.store.selectSnapshot(SearchState.getSearchType);
         let adult = (type) => {
             switch(type) {
@@ -1178,12 +1168,11 @@ export class FLightBookState {
             case "multi-city" : return this.store.selectSnapshot(MultiCitySearchState.getAdult);
             }
         }
-
-        if (this.store.selectSnapshot(OneWaySearchState.getTripType) == 'domestic') {
+        if (this.getTripType() == 'domestic') {
             console.log(this.store.selectSnapshot(CompanyState.getDomesticServiceCharge),adult(type));
             serviceCharge = this.store.selectSnapshot(CompanyState.getDomesticServiceCharge) * adult(type);
         }
-        else if (this.store.selectSnapshot(OneWaySearchState.getTripType) == 'international') {
+        else if (this.getTripType() == 'international') {
             console.log(this.store.selectSnapshot(CompanyState.getInternationalServiceCharge),adult(type));
             serviceCharge = this.store.selectSnapshot(CompanyState.getInternationalServiceCharge) * adult(type);
         }
@@ -1195,7 +1184,7 @@ export class FLightBookState {
       switch(searchType) {
         case "one-way" : return this.store.selectSnapshot(OneWaySearchState.getTripType);
         case "round-trip" : return this.store.selectSnapshot(RoundTripSearchState.getTripType);
-        case "one-way" : return this.store.selectSnapshot(MultiCitySearchState.getTripType);
+        case "multi-city" : return this.store.selectSnapshot(MultiCitySearchState.getTripType);
       }
     }
 

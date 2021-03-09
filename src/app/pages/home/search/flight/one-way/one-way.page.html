@@ -6,10 +6,10 @@
         <ion-row>
           <ion-label class="bold large">From</ion-label>
           <ion-text class="medium bold" [ngClass]="errorClass('from')">
-            {{this.oneWaySearch.value.from !== null ? this.oneWaySearch.value.from.city_code : 'Select'}}
+            {{oneWaySearch.controls['from'].value !== null ? oneWaySearch.controls['from'].value.city_code : 'Select'}}
           </ion-text>
           <ion-text class="medium bold" [ngClass]="errorClass('from')">
-            {{this.oneWaySearch.value.from !== null ? this.oneWaySearch.value.from.city_name : 'Origin'}}
+            {{oneWaySearch.controls['from'].value !== null ? oneWaySearch.controls['from'].value.city_name : 'Origin'}}
           </ion-text>
         </ion-row>
       </ion-col>
@@ -24,10 +24,10 @@
         <ion-row>
           <ion-label class="bold large">To</ion-label>
           <ion-text class="medium bold" [ngClass]="errorClass('to')">
-            {{this.oneWaySearch.value.to !== null ? this.oneWaySearch.value.to.city_code : 'Select'}}
+            {{oneWaySearch.controls['to'].value !== null ? oneWaySearch.controls['to'].value.city_code : 'Select'}}
           </ion-text>
           <ion-text class="medium bold" [ngClass]="errorClass('to')">
-            {{this.oneWaySearch.value.to !== null ? this.oneWaySearch.value.to.city_name : 'Destination'}}
+            {{oneWaySearch.controls['to'].value !== null ? oneWaySearch.controls['to'].value.city_name : 'Destination'}}
           </ion-text>
         </ion-row>
       </ion-col>
@@ -38,8 +38,8 @@
         <ion-row>
           <ion-label class="bold large">Depart</ion-label>
           <ion-text class="medium bold" [ngClass]="errorClass('departure')">
-            {{this.oneWaySearch.value.departure !== null ? 
-              (this.oneWaySearch.value.departure | date : 'EEE,d LLL' | titlecase) : 
+            {{oneWaySearch.controls['departure'].value !== null ?
+              (oneWaySearch.controls['departure'].value | date : 'EEE,d LLL' | titlecase) :
               'Select Date'}}
           </ion-text>
         </ion-row>
@@ -51,27 +51,27 @@
           <ion-label class="bold large">Travellers</ion-label>
           <ion-text class="medium bold"
            [ngClass]="errorClass('traveller')"
-            *ngIf="(this.oneWaySearch.value.traveller == null) ||
-                  (this.oneWaySearch.value.traveller?.adult <= 0 &&
-                    this.oneWaySearch.value.traveller?.child <=0 &&
-                    this.oneWaySearch.value.traveller.infant <=0)"
+            *ngIf="(oneWaySearch.controls['traveller'].value == null) ||
+                  (oneWaySearch.controls['traveller'].value?.adult <= 0 &&
+                    oneWaySearch.controls['traveller'].value?.child <=0 &&
+                    oneWaySearch.controls['traveller'].value.infant <=0)"
           >
             Select Passengers
           </ion-text>
           <ion-text class="medium bold"
             [ngClass]="errorClass('traveller')"
-            *ngIf="this.oneWaySearch.value.traveller !== null && this.oneWaySearch.value.traveller.adult > 0">
-            {{this.oneWaySearch.value.traveller.adult+'   Adult'}}
+            *ngIf="oneWaySearch.controls['traveller'].value !== null && oneWaySearch.controls['traveller'].value.adult > 0">
+            {{oneWaySearch.controls['traveller'].value.adult+'   Adult'}}
           </ion-text>
           <ion-text class="medium bold"
             [ngClass]="errorClass('traveller')"
-            *ngIf="this.oneWaySearch.value.traveller !== null && this.oneWaySearch.value.traveller.child > 0">
-            {{this.oneWaySearch.value.traveller.child+'   Child'}}
+            *ngIf="oneWaySearch.controls['traveller'].value !== null && oneWaySearch.controls['traveller'].value.child > 0">
+            {{oneWaySearch.controls['traveller'].value.child+'   Child'}}
           </ion-text>
           <ion-text class="medium bold"
             [ngClass]="errorClass('traveller')"
-            *ngIf="this.oneWaySearch.value.traveller !== null && this.oneWaySearch.value.traveller.infant > 0">
-            {{this.oneWaySearch.value.traveller.infant+'   Infant'}}
+            *ngIf="oneWaySearch.controls['traveller'].value !== null && oneWaySearch.controls['traveller'].value.infant > 0">
+            {{oneWaySearch.controls['traveller'].value.infant+'   Infant'}}
           </ion-text>
         </ion-row>
       </ion-col>
@@ -83,13 +83,13 @@
           <ion-label class="bold large">Class</ion-label>
           <ion-text class="medium bold"
             [ngClass]="errorClass('class')"
-            (click)="selectClass()">{{(this.oneWaySearch.value.class !== null ? this.oneWaySearch.value.class : 'Select Class') | titlecase}}</ion-text>
+            (click)="selectClass()">{{(oneWaySearch.controls['class'].value !== null ? oneWaySearch.controls['class'].value : 'Select Class') | titlecase}}</ion-text>
           <ion-item hidden="true">
             <ion-label>Class</ion-label>
-            <ion-select 
-              #select 
-              formControlName="class" 
-              cancelText="Cancel" 
+            <ion-select
+              #select
+              formControlName="class"
+              cancelText="Cancel"
               okText="Confirm"
               [interfaceOptions]="customAlertOptions"
               (ionChange)="changeClass($event)"

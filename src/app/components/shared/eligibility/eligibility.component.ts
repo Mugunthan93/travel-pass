@@ -41,6 +41,7 @@ export class EligibilityComponent implements OnInit {
               case 'hotel': return el[1].hotel.toString();
               case 'bus': return el[1].bus.toString();
               case 'train': return el[1].train.toString();
+              case 'cab': return el[1].cab.toString();
               default: return;
             }
           }
@@ -55,6 +56,7 @@ export class EligibilityComponent implements OnInit {
               case 'hotel': return el[1].hotel.toString();
               case 'bus': return el[1].bus.toString();
               case 'train': return el[1].train.toString();
+              case 'cab': return el[1].cab.toString();
               default: return;
             }
           }

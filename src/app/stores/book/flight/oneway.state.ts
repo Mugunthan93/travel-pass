@@ -1,5 +1,5 @@
 import { State, Action, Selector, Store, StateContext } from "@ngxs/store";
-import { bookObj, FLightBookState, sendRequest, kioskRequest, value, SetFare, SetMeal, SetBaggage, bookpayload, ticketpayload, totalsummary, taxes, plb, GetPLB, baggage, meal, managers, SetServiceCharge, SetGST, SetTaxable } from '../flight.state';
+import { bookObj, FLightBookState, sendRequest, kioskRequest, value, SetFare, SetMeal, SetBaggage, bookpayload, ticketpayload, totalsummary, taxes, plb, GetPLB, baggage, meal, managers, SetServiceCharge, SetGST, SetTaxable, servicebySegment } from '../flight.state';
 import { flightResult, flightData, metrixBoard } from 'src/app/models/search/flight';
 import { FlightResultState, SSR } from '../../result/flight.state';
 import { Navigate } from '@ngxs/router-plugin';
@@ -25,6 +25,7 @@ import { ApprovalService } from "src/app/services/approval/approval.service";
 import { AgencyState } from "../../agency.state";
 import { Injectable } from "@angular/core";
 import { PassengerState } from "../../passenger.state";
+import { patch, updateItem } from "@ngxs/store/operators";
 
 
 export interface onewayBook {
@@ -58,18 +59,11 @@ export class FlightOneWaySendRequest {
     }
 }
 
-export class ChooseBaggage {
-    static readonly type = "[OneWay] SetBaggage";
-    constructor(public flightIndex: number, public baggage: number) {
+export class OneWayOfflineRequest {
+  static readonly type = "[OneWay] OneWayOfflineRequest";
+  constructor(public comment: string, public mailCC: string[], public purpose: string) {
 
-    }
-}
-
-export class ChooseMeal {
-    static readonly type = "[OneWay] SetMeal";
-    constructor(public flightIndex: number, public meal: number) {
-
-    }
+  }
 }
 
 export class BookOneWayTicket {
@@ -232,105 +226,17 @@ export class OneWayBookState{
                                     states.patchState({
                                         ssr : response
                                     });
-                                    let baggagebySegment = (services : baggage[]) => {
-
-                                        let firstorder = _.chain(services)
-                                            .groupBy("Origin")
-                                            .map((originVal,originKey) => {
-                                                return _.chain(originVal)
-                                                    .groupBy("Destination")
-                                                    .map((val,key) => {
-                                                        return {
-                                                            Origin : originKey,
-                                                            Destination : key,
-                                                            service : _.flatMapDeep(val).filter((el : baggage) => el.Origin == originKey && el.Destination == key)
-                                                        }
-                                                    }).value();
-                                            })
-                                            .value()
-                                        console.log(firstorder);
-
-                                        return states.getState().fareQuote.Segments.map((el) => {
-                                            return el.map((e) => {
-                                                return {
-                                                    Origin : e.Origin.Airport.CityCode,
-                                                    Destination : e.Destination.Airport.CityCode,
-                                                    service : _.flatMapDeep(services).filter((el : baggage) => el.Origin == e.Origin.Airport.CityCode && el.Destination == e.Destination.Airport.CityCode)
-                                                }
-                                            })
-                                        })
-                                    }
-
-                                    let mealbySegment = (services : meal[]) => {
-
-                                        let firstorder = _.chain(services)
-                                            .groupBy("Origin")
-                                            .map((originVal,originKey) => {
-                                                return _.chain(originVal)
-                                                    .groupBy("Destination")
-                                                    .map((val,key) => {
-                                                        return {
-                                                            Origin : originKey,
-                                                            Destination : key,
-                                                            service : _.flatMapDeep(val).filter((el : meal) => el.Origin == originKey && el.Destination == key)
-                                                        }
-                                                    }).value();
-                                            })
-                                            .value()
-                                        console.log(firstorder);
-
-
-                                        return states.getState().fareQuote.Segments.map((el) => {
-                                            return el.map((e) => {
-                                                return {
-                                                    Origin : e.Origin.Airport.CityCode,
-                                                    Destination : e.Destination.Airport.CityCode,
-                                                    service : _.flatMapDeep(services).filter((el : meal) => el.Origin == e.Origin.Airport.CityCode && el.Destination == e.Destination.Airport.CityCode)
-                                                }
-                                            })
-                                        })
-                                    }
-
-                                    let bySegment = (services : any[]) => {
-
-                                        let firstorder = _.chain(services)
-                                            .groupBy("Origin")
-                                            .map((originVal,originKey) => {
-                                                return _.chain(originVal)
-                                                    .groupBy("Destination")
-                                                    .map((val,key) => {
-                                                        return {
-                                                            Origin : originKey,
-                                                            Destination : key,
-                                                            service : _.flatMapDeep(val).filter((el : any) => el.Origin == originKey && el.Destination == key)
-                                                        }
-                                                    }).value();
-                                            })
-                                            .value()
-                                        console.log(firstorder);
-
-
-                                        return states.getState().fareQuote.Segments.map((el) => {
-                                            return el.map((e) => {
-                                                return {
-                                                    Origin : e.Origin.Airport.CityCode,
-                                                    Destination : e.Destination.Airport.CityCode,
-                                                    service : _.flatMapDeep(services).filter((el : any) => el.Origin == e.Origin.Airport.CityCode && el.Destination == e.Destination.Airport.CityCode)
-                                                }
-                                            })
-                                        })
-                                    }
 
                                     if (response.MealDynamic) {
-                                        states.dispatch(new SetMeal(bySegment(response.MealDynamic).flat(), []));
-                                    }
-                                    else if (response.Meal) {
-                                        states.dispatch(new SetMeal(mealbySegment(response.Meal).flat(), []));
-                                    }
+                                      states.dispatch(new SetMeal(this.segmentSSR(states,response.MealDynamic),[]));
+                                  }
+                                  else if (response.Meal) {
+                                    states.dispatch(new SetMeal(this.segmentSSR(states,response.Meal),[]));
+                                  }
 
-                                    if (response.Baggage) {
-                                        states.dispatch(new SetBaggage(baggagebySegment(response.Baggage).flat(), []));
-                                    }
+                                  if (response.Baggage) {
+                                    states.dispatch(new SetBaggage(this.segmentSSR(states,response.Baggage),[]));
+                                  }
                                     return true;
                                 }
                                 return true;
@@ -412,7 +318,7 @@ export class OneWayBookState{
         loading.message = "Request Sending";
         loading.present();
 
-        let sendReq = this.sendRequestPayload(states,action);
+        let sendReq = this.sendRequestPayload(states,action,'pending','online');
         console.log(JSON.stringify(sendReq));
 
         try {
@@ -431,32 +337,67 @@ export class OneWayBookState{
         loading.dismiss();
     }
 
-    @Action(ChooseBaggage)
-    chooseBaggage(states: StateContext<onewayBook>, action: ChooseBaggage) {
-      console.log(states,action);
-        // states.setState(patch({
-        //     flight : patch({
-        //         summary : patch({
-        //             total : updateItem((el : totalsummary) => el.id == action.flightIndex,patch({
-        //                 extraBaggage : action.baggage
-        //             }))
-        //         })
-        //     })
-        // }));
-    }
+    @Action(OneWayOfflineRequest)
+    async onewayOfflineRequest(states: StateContext<onewayBook>, action: OneWayOfflineRequest) {
 
-    @Action(ChooseMeal)
-    chooseMeal(states: StateContext<onewayBook>, action: ChooseMeal) {
-      console.log(states,action);
-        // states.setState(patch({
-        //     flight : patch({
-        //         summary : patch({
-        //             total : updateItem((el : totalsummary) => el.id == action.flightIndex,patch({
-        //                 extraMeals : action.meal
-        //             }))
-        //         })
-        //     })
-        // }));
+        const loading = await this.loadingCtrl.create({
+            spinner: "crescent"
+        });
+
+        const failedAlert = await this.alertCtrl.create({
+            header: 'Send Request Failed',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                cssClass: 'danger',
+                handler: () => {
+                    failedAlert.dismiss({
+                        data: false,
+                        role: 'failed'
+                    });
+                }
+            }]
+        });
+
+        const successAlert = await this.alertCtrl.create({
+            header: 'Send Request Success',
+            subHeader: 'Request status will be updated in My Bookings',
+            buttons: [{
+                text: 'Ok',
+                role: 'ok',
+                cssClass: 'danger',
+                handler: () => {
+                    states.dispatch(new Navigate(['/','home','dashboard','home-tab']));
+                    successAlert.dismiss({
+                        data: false,
+                        role: 'success'
+                    });
+                    states.dispatch(new StateReset(SearchState,ResultState,BookState));
+                    this.modalCtrl.dismiss(null, null, 'book-confirm');
+                }
+            }]
+        });
+
+        loading.message = "Request Sending";
+        loading.present();
+
+        let sendReq = this.sendRequestPayload(states,action,'open','offline');
+        console.log(JSON.stringify(sendReq));
+
+        try {
+            const sendReqResponse = await this.flightService.sendRequest(sendReq);
+            console.log(sendReqResponse);
+            console.log(JSON.parse(sendReqResponse.data));
+            if (sendReqResponse.status == 200) {
+                successAlert.present();
+            }
+        }
+        catch (error) {
+            console.log(error);
+            let err = JSON.parse(error.error);
+            console.log(err);
+        }
+        loading.dismiss();
     }
 
     @Action(BookOneWayTicket)
@@ -500,7 +441,7 @@ export class OneWayBookState{
         })).pipe(flatMap((el) => from(el.present())));
 
         let fairIndex = this.store.selectSnapshot(OneWayResultState.getSelectedFlight).fareRule;
-        let sendReq: sendRequest = this.sendRequestPayload(states,action);
+        let sendReq: sendRequest = this.sendRequestPayload(states,action,'open','online');
         console.log(JSON.stringify(sendReq));
 
         let bkpl: bookpayload = null;
@@ -561,7 +502,7 @@ export class OneWayBookState{
             ),
             flatMap(
                 (response) => {
-                    let approveObj = this.approveRequestPayload(states,response,sendReq,bookres,openreq);
+                    let approveObj = this.approveRequestPayload(states,response,sendReq,bookres,openreq,'booked','online');
                     console.log(JSON.stringify(approveObj));
                     let bookreq$ = this.approvalService.approvalReq('flight',openreq.id,approveObj);
                     return bookreq$
@@ -630,7 +571,7 @@ export class OneWayBookState{
     }
 
     //sendrequest for approval & booking
-    sendRequestPayload(states : StateContext<onewayBook>,action : FlightOneWaySendRequest | BookOneWayTicket) {
+    sendRequestPayload(states : StateContext<onewayBook>,action : FlightOneWaySendRequest | BookOneWayTicket, rqstStatus : string,bookingmode : string) {
 
         let gst : { onward : GST, return : GST } = this.store.selectSnapshot(FLightBookState.getGST);
         let serviceCharge : number = this.store.selectSnapshot(FLightBookState.getServiceCharge);
@@ -714,7 +655,6 @@ export class OneWayBookState{
                         PCC: 0,
                         consolidator_name: 'ONLINE FARE',
                         vendor_id:environment.vendorID
-
                     },
                     selected_Return_plb_Value:""
                 },
@@ -782,8 +722,8 @@ export class OneWayBookState{
             approval_mail_cc: action.mailCC,
             purpose: action.purpose,
             comments: '[\"' + action.comment + '\"]',
-            booking_mode : "online",
-            status : "pending",
+            booking_mode : bookingmode,
+            status : rqstStatus,
             trip_type : "business",
             transaction_id : null,
             customer_id: companyId,
@@ -796,7 +736,7 @@ export class OneWayBookState{
     }
 
     //approvereq for booking
-    approveRequestPayload(states: StateContext<onewayBook>,response,sendReq,bookres,openreq) {
+    approveRequestPayload(states: StateContext<onewayBook>,response,sendReq,bookres,openreq,rqstStatus : string, bookingmode : string) {
 
         let data = JSON.parse(response.data);
         console.log(data,response);
@@ -876,7 +816,7 @@ export class OneWayBookState{
                 company_type: "corporate"
             }
             },
-            booking_mode: "online",
+            booking_mode: bookingmode,
             traveller_id: travellersId,
             travel_date: openreq.travel_date,
             comments: null,
@@ -890,7 +830,7 @@ export class OneWayBookState{
             req_id: openreq.id,
             vendor_id: vendorId,
             purpose: null,
-            status: "booked"
+            status: rqstStatus
         }
     }
 
@@ -1063,19 +1003,43 @@ export class OneWayBookState{
                 DateOfBirth:el.DateOfBirth,
                 Title: el.Title,
                 Gender: el.Gender,
-                Fare : fare
+                Fare : fare,
+                Baggage : el.onwardExtraServices.Baggage,
+                MealDynamic : el.onwardExtraServices.Meal
             }
 
-            if(!_.isNull(el.onwardExtraServices.Baggage[0])) {
-              newel.Baggage = el.onwardExtraServices.Baggage
-            }
-            if(!_.isNull(el.onwardExtraServices.Meal[0])) {
-              newel.MealDynamic = el.onwardExtraServices.Meal
+            if(el.IsLeadPax) {
+              newel.PassportExpiry = el.PassportExpiry;
+              newel.PassportNo = el.PassportNo;
             }
 
             return newel;
         }))
         .value();
+    }
+
+    segmentSSR(states : StateContext<onewayBook>, services : meal[] | baggage[] | any[]) {
+
+      let onwardSource = states.getState().fareQuote.Segments[0][0].Origin.Airport.AirportCode;
+      let onwardDestiation = _.last(states.getState().fareQuote.Segments[0]).Destination.Airport.AirportCode;
+
+      let onwardSegmentService : servicebySegment[] =  states.getState().fareQuote.Segments[0].map((el) => {
+        return {
+          Origin : el.Origin.Airport.CityCode,
+          Destination : el.Destination.Airport.CityCode,
+          service : _.flatMapDeep(services).filter((e : any) => e.Origin == el.Origin && e.Destination == el.Destination)
+        }
+
+      }).flat();
+
+      onwardSegmentService.push({
+          Origin : onwardSource,
+          Destination : onwardDestiation,
+          service : _.flatMapDeep(services).filter((e : any) => e.Origin == onwardSource && e.Destination == onwardDestiation)
+      });
+
+      return onwardSegmentService;
+
     }
 
 }
