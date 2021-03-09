@@ -1,9 +1,120 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>airport</ion-title>
-  </ion-toolbar>
-</ion-header>
 
 <ion-content>
 
+  <form [formGroup]="airportCabSearch" (ngSubmit)="searchCab()">
+    <ion-grid>
+
+      <ion-row>
+        <!--from-->
+        <ion-col (click)="selectCity('source')">
+          <ion-row>
+            <ion-label class="bold large">From</ion-label>
+            <ion-text class="medium bold" [ngClass]="errorClass('source')">
+            {{ airportCabSearch.controls['source'].value !== null ? (airportCabSearch.controls['source'].value.station_name) : 'Select' }}
+            </ion-text>
+            <ion-text  class="medium bold" [ngClass]="errorClass('source')" *ngIf="airportCabSearch.controls['source'].value == null">
+              Origin
+            </ion-text>
+          </ion-row>
+        </ion-col>
+        <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
+        <!--exhange-->
+        <ion-col>
+          <ion-row>
+            <ion-label class="bold large">Passengers</ion-label>
+            <ion-text class="medium bold"
+              [ngClass]="errorClass('passenger')"
+              (click)="selectPassenger()">{{( airportCabSearch.controls['passenger'].value !== null ? airportCabSearch.controls['passenger'].value : 'Select Passenger') }}</ion-text>
+            <ion-item hidden="true">
+              <ion-label>Passenger</ion-label>
+              <ion-select
+                #selectpass
+                formControlName="passenger"
+                cancelText="Cancel"
+                okText="Confirm"
+                [interfaceOptions]="customAlertOptions('Passenger Count')"
+                (ionChange)="changePassenger($event)"
+                >
+                <ion-select-option *ngFor="let num of passengerArray" [value]="num">{{ num }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <!--depart-->
+        <ion-col (click)="selectDate('departure')">
+          <ion-row>
+            <ion-label class="bold large">Depart</ion-label>
+            <ion-text class="medium bold" [ngClass]="errorClass('departure')">
+              {{airportCabSearch.value.departure !== null ?
+                (airportCabSearch.value.departure | date : 'EEE,d LLL' | titlecase) :
+                'Select Date'}}
+            </ion-text>
+          </ion-row>
+        </ion-col>
+        <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
+        <ion-col>
+          <ion-row>
+            <ion-label class="bold large">Trip Type</ion-label>
+            <ion-text class="medium bold"
+              [ngClass]="errorClass('trip_type')"
+              (click)="selectTrip()">{{( airportCabSearch.controls['trip_type'].value !== null ? airportCabSearch.controls['trip_type'].value : 'Select Trip Type') | titlecase}}</ion-text>
+            <ion-item hidden="true">
+              <ion-label>Trip Type</ion-label>
+              <ion-select
+                #selecttrip
+                formControlName="trip_type"
+                cancelText="Cancel"
+                okText="Confirm"
+                [interfaceOptions]="customAlertOptions('Cab Type')"
+                (ionChange)="changeTripType($event)"
+                >
+                <ion-select-option value="from">Cab from the Airport</ion-select-option>
+                <ion-select-option value="to">Cab to the Airport</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-row>
+            <ion-label class="bold large">Cab Type</ion-label>
+            <ion-text class="medium bold"
+              [ngClass]="errorClass('cab_type')"
+              (click)="selectCabType()">{{( airportCabSearch.controls['cab_type'].value !== null ? airportCabSearch.controls['cab_type'].value : 'Select Cab Type') | titlecase}}</ion-text>
+            <ion-item hidden="true">
+              <ion-label>Cab Type</ion-label>
+              <ion-select
+                #selectcab
+                formControlName="cab_type"
+                cancelText="Cancel"
+                okText="Confirm"
+                [interfaceOptions]="customAlertOptions('Cab Type')"
+                (ionChange)="changeCabType($event)"
+                >
+                <ion-select-option value="sedan">Sedan</ion-select-option>
+                <ion-select-option value="hatchback">Hatchback</ion-select-option>
+                <ion-select-option value="tempo traveller">Tempo Traveller</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-row>
+        </ion-col>
+        <ion-col></ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-button type="submit">
+          <ion-text class="large boldest">{{'Search Cab' | titlecase}}</ion-text>
+        </ion-button>
+      </ion-row>
+    </ion-grid>
+    <ion-input formControlName="source" hidden required></ion-input>
+    <ion-input formControlName="departure" hidden required></ion-input>
+  </form>
+
+
 </ion-content>
+
