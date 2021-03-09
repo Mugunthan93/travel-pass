@@ -21,19 +21,15 @@ const routes: Routes = [
         loadChildren: () => import('./multi-city/multi-city.module').then( m => m.MultiCityPageModule)
       },
       {
-        path: 'half-day',
-        loadChildren: () => import('./half-day/half-day.module').then( m => m.HalfDayPageModule)
-      },
-      {
-        path: 'full-day',
-        loadChildren: () => import('./full-day/full-day.module').then( m => m.FullDayPageModule)
-      },
-      {
         path: 'airport',
         loadChildren: () => import('./airport/airport.module').then( m => m.AirportPageModule)
+      },
+      {
+        path: 'local',
+        loadChildren: () => import('./local/local.module').then( m => m.LocalPageModule)
       }
     ]
-  }
+  },
 ];
 
 @NgModule({

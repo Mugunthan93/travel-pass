@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { FullDayPage } from './full-day.page';
+import { LocalPage } from './local.page';
 
-describe('FullDayPage', () => {
-  let component: FullDayPage;
-  let fixture: ComponentFixture<FullDayPage>;
+describe('LocalPage', () => {
+  let component: LocalPage;
+  let fixture: ComponentFixture<LocalPage>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FullDayPage ],
+      declarations: [ LocalPage ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(FullDayPage);
+    fixture = TestBed.createComponent(LocalPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

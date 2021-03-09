@@ -51,13 +51,12 @@ export class CabPage implements OnInit {
       this.store.dispatch([
         new TravelType(evt.detail.value),
         new SearchType('half-day'),
-        new Navigate(['/','home','search','cab','half-day'])
+        new Navigate(['/','home','search','cab','local'])
       ]);
     }
-    else if(evt.detail.value == "airport") {
+    else {
       this.store.dispatch([
         new TravelType(evt.detail.value),
-        new SearchType('airport'),
         new Navigate(['/','home','search','cab',evt.detail.value])
       ]);
     }
@@ -65,11 +64,18 @@ export class CabPage implements OnInit {
   }
 
   typeChange(evt : CustomEvent) {
-    this.store.dispatch([
-      new JourneyType(evt.detail.value),
-      new SearchType(evt.detail.value),
-      new Navigate(['/','home','search','cab',evt.detail.value])
-    ]);
+    if(evt.detail.value == "half-day" || evt.detail.value == "full-day") {
+      this.store.dispatch([
+        new SearchType(evt.detail.value)
+      ]);
+    }
+    else {
+      this.store.dispatch([
+        new JourneyType(evt.detail.value),
+        new SearchType(evt.detail.value),
+        new Navigate(['/','home','search','cab',evt.detail.value])
+      ]);
+    }
   }
 
   travelChange(evt: CustomEvent) {
