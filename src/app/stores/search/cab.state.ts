@@ -1,19 +1,87 @@
 import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
+import { patch } from "@ngxs/store/operators";
+import { flightpassenger } from "../passenger/flight.passenger.states";
+import { buscity } from "../shared.state";
 
 export interface cab{
-  JourneyType : number,
-  travelType : string
+  travelType : string,
+  tripType : string,
+  cabform : cabform
+}
+
+export interface cabrequest {
+  passenger_count: number,
+  cab_requests: cab_request[],
+  purpose: string,
+  status: string,
+  booking_mode: string,
+  customer_id: number,
+  transaction_id: any,
+  user_id: number,
+  trip_type: string,
+  comments: any,
+  cab_type: string,
+  passenger_details: {
+    mode_of_request: string,
+    trip_type: string,
+    passenger: flightpassenger[]
+  },
+  managers: {
+    id: number,
+    name: string,
+    email: string
+  }
+}
+
+export interface cab_request {
+  sourceCity: string,
+  destinationCity: string,
+  doj: string
+}
+
+export interface cabform {
+  source: buscity,
+  departure : string,
+  cab_type : string,
+  passenger : string
+
+  destination?: buscity
+  return?: string
+  trip_type?: string
+  trips?: trips[]
+}
+
+export interface onewaycabform extends cabform{
+  destination: buscity
+}
+
+export interface roundtripcabform extends cabform{
+  destination: buscity
+  return: string
+}
+
+export interface multicitycabform{
+  trips: trips[]
+  cab_type : string
+  passenger : string
+}
+
+export interface localcabform extends cabform{
+  return: string
+}
+
+export interface airportcabform extends cabform{
+  trip_type: string,
+}
+
+export interface trips {
+  source: buscity,
+  destination: buscity,
+  departure: string
 }
 
 //class
-
-export class JourneyType {
-  static readonly type = "[Cab] JourneyType";
-  constructor(public type : string) {
-
-  }
-}
 
 export class TravelType {
   static readonly type = "[Cab] TravelType";
@@ -22,11 +90,26 @@ export class TravelType {
   }
 }
 
+export class TripType {
+  static readonly type = "[Cab] JourneyType";
+  constructor(public type : string) {
+
+  }
+}
+
+export class SetCabForm {
+  static readonly type = "[Cab] CabForm";
+  constructor(public form : cabform ) {
+
+  }
+}
+
 @State<cab>({
   name : 'cabsearch',
   defaults: {
-    JourneyType : 1,
-    travelType : "out-station"
+    travelType : "out-station",
+    tripType : "one-way",
+    cabform : null
 },
 })
 
@@ -43,45 +126,31 @@ export class CabSearchState {
   }
 
   @Selector()
-  static getJourneyType(states: cab) : number {
-      return states.JourneyType;
+  static getTripType(states: cab) : string {
+      return states.tripType;
   }
 
-  @Action(JourneyType)
-  journeyType(states: StateContext<cab>, action: JourneyType) {
-      if (action.type == "one-way") {
-          states.patchState({
-              JourneyType:1
-          });
-      }
-      else if (action.type == "round-trip") {
-          states.patchState({
-              JourneyType:2
-          });
-      }
-      else if (action.type == "multi-city") {
-          states.patchState({
-              JourneyType:3
-          });
-      }
+  @Action(TripType)
+  tripType(states: StateContext<cab>, action: TripType) {
+      states.setState(patch({
+        tripType : action.type
+      }));
   }
 
   @Action(TravelType)
   travelType(states: StateContext<cab>, action: TravelType) {
-
-    if(action.type == "out-station") {
-
-    }
-    else if(action.type == "local") {
-
-    }
-    else if(action.type == "airport"){
-
-    }
-
-    states.patchState({
+    states.setState(patch({
       travelType : action.type
-    });
+    }));
   }
+
+
+  @Action(SetCabForm)
+  setCabForm(states: StateContext<cab>, action: SetCabForm) {
+    states.setState(patch({
+      cabform : action.form
+    }));
+  }
+
 
 }

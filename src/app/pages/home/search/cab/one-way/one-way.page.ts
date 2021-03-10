@@ -2,8 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonSelect, ModalController } from '@ionic/angular';
 import { AlertOptions } from '@ionic/core';
+import { Navigate } from '@ngxs/router-plugin';
+import { Store } from '@ngxs/store';
 import { CalendarModal, CalendarModalOptions } from 'ion2-calendar';
 import { SelectModalComponent } from 'src/app/components/shared/select-modal/select-modal.component';
+import { SetCabForm } from 'src/app/stores/search/cab.state';
 
 @Component({
   selector: 'app-one-way',
@@ -22,7 +25,8 @@ export class OneWayPage implements OnInit {
 
   constructor(
     public modalCtrl : ModalController,
-    public fb : FormBuilder
+    public fb : FormBuilder,
+    private store : Store
   ) { }
 
   ngOnInit() {
@@ -122,6 +126,12 @@ export class OneWayPage implements OnInit {
   searchCab() {
     this.formSubmit = true;
     console.log(this.oneWayCabSearch);
+    if(this.oneWayCabSearch.valid) {
+      this.store.dispatch([
+        new SetCabForm(this.oneWayCabSearch.value),
+        new Navigate(['/','home','book','cab'])
+      ]);
+    }
   }
 
 

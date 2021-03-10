@@ -2,8 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IonSelect, ModalController } from '@ionic/angular';
 import { AlertOptions } from '@ionic/core';
+import { Navigate } from '@ngxs/router-plugin';
+import { Store } from '@ngxs/store';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
 import { SelectModalComponent } from 'src/app/components/shared/select-modal/select-modal.component';
+import { SetCabForm } from 'src/app/stores/search/cab.state';
 
 @Component({
   selector: 'app-local',
@@ -22,7 +25,8 @@ export class LocalPage implements OnInit {
 
   constructor(
     public modalCtrl : ModalController,
-    public fb : FormBuilder
+    public fb : FormBuilder,
+    private store : Store
   ) { }
 
   ngOnInit() {
@@ -133,6 +137,12 @@ export class LocalPage implements OnInit {
   searchCab() {
     this.formSubmit = true;
     console.log(this.localCabSearch);
+    if(this.localCabSearch.valid) {
+      this.store.dispatch([
+        new SetCabForm(this.localCabSearch.value),
+        new Navigate(['/','home','book','cab'])
+      ]);
+    }
   }
 
 

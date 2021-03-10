@@ -2,8 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonSelect, ModalController } from '@ionic/angular';
 import { AlertOptions } from '@ionic/core';
+import { Navigate } from '@ngxs/router-plugin';
+import { Store } from '@ngxs/store';
 import { CalendarModal, CalendarModalOptions } from 'ion2-calendar';
 import { SelectModalComponent } from 'src/app/components/shared/select-modal/select-modal.component';
+import { SetCabForm } from 'src/app/stores/search/cab.state';
 
 @Component({
   selector: 'app-multi-city',
@@ -23,7 +26,8 @@ export class MultiCityPage implements OnInit {
 
   constructor(
     public modalCtrl : ModalController,
-    public fb : FormBuilder
+    public fb : FormBuilder,
+    private store : Store
   ) { }
 
   ngOnInit() {
@@ -49,8 +53,8 @@ export class MultiCityPage implements OnInit {
 
   createTrip(): FormGroup {
     return this.fb.group({
-      from: this.fb.control(null, [Validators.required]),
-      to: this.fb.control(null, [Validators.required]),
+      source: this.fb.control(null, [Validators.required]),
+      destination: this.fb.control(null, [Validators.required]),
       departure: this.fb.control(null, [Validators.required])
     });
   }
@@ -80,13 +84,13 @@ export class MultiCityPage implements OnInit {
           return;
         }
         console.log(control);
-        if (field == 'to') {
+        if (field == 'destination') {
           if (control[i + 1]) {
-            control[i+1].controls['from'].patchValue(selectedCity.data);
+            control[i+1].controls['source'].patchValue(selectedCity.data);
           }
           else{
             this.addTrip();
-            control[i + 1].controls['from'].patchValue(selectedCity.data);
+            control[i + 1].controls['source'].patchValue(selectedCity.data);
           }
           // if (i !== control.length - 1) {
           // }
@@ -173,6 +177,12 @@ export class MultiCityPage implements OnInit {
   searchCab() {
     this.formSubmit = true;
     console.log(this.multiCityCabSearch);
+    if(this.multiCityCabSearch.valid) {
+      this.store.dispatch([
+        new SetCabForm(this.multiCityCabSearch.value),
+        new Navigate(['/','home','book','cab'])
+      ]);
+    }
   }
 
   errorClass(name: string) {

@@ -11,7 +11,7 @@
     </ion-segment-button>
   </ion-segment>
 
-  <ion-segment *ngIf="(travelType$ | async) == 'out-station'" mode="ios" (ionChange)="typeChange($event)" [value]="SearchType$ | async" class="d-flex- w-auto m-3 search">
+  <ion-segment *ngIf="(travelType$ | async) == 'out-station'" mode="ios" (ionChange)="typeChange($event)" [value]="searchType$ | async" class="d-flex- w-auto m-3 search">
     <ion-segment-button value="one-way" class="search">
       <ion-text class="medium bold">One Way</ion-text>
     </ion-segment-button>
@@ -23,7 +23,7 @@
     </ion-segment-button>
   </ion-segment>
 
-  <ion-segment *ngIf="(travelType$ | async) == 'local'" mode="ios" (ionChange)="typeChange($event)" [value]="SearchType$ | async" class="d-flex- w-auto m-3 search">
+  <ion-segment *ngIf="(travelType$ | async) == 'local'" mode="ios" (ionChange)="typeChange($event)" [value]="searchType$ | async" class="d-flex- w-auto m-3 search">
     <ion-segment-button value="half-day" class="search">
       <ion-text class="medium bold">Half Day</ion-text>
     </ion-segment-button>

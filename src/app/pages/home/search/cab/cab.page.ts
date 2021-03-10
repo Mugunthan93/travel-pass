@@ -4,7 +4,7 @@ import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SearchState, SearchType } from 'src/app/stores/search.state';
-import { CabSearchState, JourneyType, TravelType } from 'src/app/stores/search/cab.state';
+import { CabSearchState, TripType, TravelType } from 'src/app/stores/search/cab.state';
 
 @Component({
   selector: 'app-cab',
@@ -13,29 +13,18 @@ import { CabSearchState, JourneyType, TravelType } from 'src/app/stores/search/c
 })
 export class CabPage implements OnInit {
 
-  journeyType$: Observable<string>;
-  travelType$: Observable<unknown>;
-  SearchType$: Observable<string>;
+  searchType$: Observable<string>;
+  travelType$: Observable<string>;
+  tripType$: Observable<string>;
 
   constructor(
     private store : Store
   ) { }
 
   ngOnInit() {
-    this.journeyType$ = this.store.select(CabSearchState.getJourneyType).pipe(map((type : number) => {
-      if (type == 1) {
-        return 'one-way';
-      }
-      else if (type == 2) {
-        return 'round-trip';
-      }
-      else if (type == 3) {
-        return 'multi-city';
-      }
-    }));
-
-    this.SearchType$ = this.store.select(SearchState.getSearchType);
+    this.searchType$ = this.store.select(SearchState.getSearchType);
     this.travelType$ = this.store.select(CabSearchState.getTravelType);
+    this.tripType$ = this.store.select(CabSearchState.getTripType);
   }
 
   tripChange(evt : CustomEvent) {
@@ -71,15 +60,11 @@ export class CabPage implements OnInit {
     }
     else {
       this.store.dispatch([
-        new JourneyType(evt.detail.value),
         new SearchType(evt.detail.value),
+        new TripType(evt.detail.value),
         new Navigate(['/','home','search','cab',evt.detail.value])
       ]);
     }
-  }
-
-  travelChange(evt: CustomEvent) {
-    this.store.dispatch(new TravelType(evt.detail.value));
   }
 
 }

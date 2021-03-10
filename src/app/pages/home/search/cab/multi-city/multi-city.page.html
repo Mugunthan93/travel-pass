@@ -5,25 +5,25 @@
         <ion-row formArrayName="trips" *ngFor="let trip of trips.controls; let i = index;">
           <ion-col [formGroupName]="i">
             <ion-row>
-              <ion-col (click)="selectCity('from',trips.controls,i)">
+              <ion-col (click)="selectCity('source',trips.controls,i)">
                 <ion-row>
                   <ion-label class="bold large">From</ion-label>
-                  <ion-text class="medium bold" [ngClass]="errorArrayClass('from',trip)">
-                    {{trip.value.from !== null ? trip.value.from.station_name : 'Select'}}
+                  <ion-text class="medium bold" [ngClass]="errorArrayClass('source',trip)">
+                    {{trip.value.source !== null ? trip.value.source.station_name : 'Select'}}
                   </ion-text>
-                  <ion-text  class="medium bold" [ngClass]="errorArrayClass('from',trip)" *ngIf="trip.value.from == null">
+                  <ion-text  class="medium bold" [ngClass]="errorArrayClass('source',trip)" *ngIf="trip.value.source == null">
                     Origin
                   </ion-text>
                 </ion-row>
               </ion-col>
               <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
-              <ion-col (click)="selectCity('to',trips.controls,i)">
+              <ion-col (click)="selectCity('destination',trips.controls,i)">
                 <ion-row>
                   <ion-label class="bold large">To</ion-label>
-                  <ion-text class="medium bold" [ngClass]="errorArrayClass('to',trip)">
-                    {{trip.value.to !== null ? trip.value.to.station_name : 'Select'}}
+                  <ion-text class="medium bold" [ngClass]="errorArrayClass('destination',trip)">
+                    {{trip.value.destination !== null ? trip.value.destination.station_name : 'Select'}}
                   </ion-text>
-                  <ion-text  class="medium bold" [ngClass]="errorArrayClass('to',trip)" *ngIf="trip.value.to == null">
+                  <ion-text  class="medium bold" [ngClass]="errorArrayClass('destination',trip)" *ngIf="trip.value.destination == null">
                     Destination
                   </ion-text>
                 </ion-row>
@@ -43,8 +43,8 @@
               <ion-icon src="../../../../../../assets/icons/letter.svg"></ion-icon>
               <ion-icon name="close" (click)="removeTrip(trips.controls,i)"></ion-icon>
             </ion-row>
-            <ion-input formControlName="from" hidden></ion-input>
-            <ion-input formControlName="to" hidden></ion-input>
+            <ion-input formControlName="source" hidden></ion-input>
+            <ion-input formControlName="destination" hidden></ion-input>
             <ion-input formControlName="departure" hidden></ion-input>
           </ion-col>
         </ion-row>
