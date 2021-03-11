@@ -23,11 +23,12 @@ const routes: Routes = [
       {
         path: 'train',
         loadChildren: () => import('./train/train.module').then( m => m.TrainPageModule)
+      },
+      {
+        path: 'cab',
+        loadChildren: () => import('./cab/cab.module').then( m => m.CabPageModule)
       }
     ]
-  },  {
-    path: 'cab',
-    loadChildren: () => import('./cab/cab.module').then( m => m.CabPageModule)
   },
 
 ];

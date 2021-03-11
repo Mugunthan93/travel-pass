@@ -6,6 +6,8 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { CalendarModalOptions, CalendarModal } from 'ion2-calendar';
 import { SelectModalComponent } from 'src/app/components/shared/select-modal/select-modal.component';
+import { BookMode, BookType } from 'src/app/stores/book.state';
+import { SetFirstPassengers } from 'src/app/stores/passenger/cab.passenger.state';
 import { SetCabForm } from 'src/app/stores/search/cab.state';
 
 @Component({
@@ -149,6 +151,9 @@ export class AirportPage implements OnInit {
     if(this.airportCabSearch.valid) {
       this.store.dispatch([
         new SetCabForm(this.airportCabSearch.value),
+        new BookMode('cab'),
+        new BookType('airport'),
+        new SetFirstPassengers(),
         new Navigate(['/','home','book','cab'])
       ]);
     }

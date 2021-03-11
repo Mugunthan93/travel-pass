@@ -14,7 +14,6 @@ import { ProofValidator } from 'src/app/validator/proof.validator';
 })
 export class BusPassengerDetailComponent implements OnInit {
 
-
   @Input() form: string;
   @Input() pax: buspassenger;
   @Input() lead: boolean;
@@ -79,7 +78,7 @@ export class BusPassengerDetailComponent implements OnInit {
 
         Address: new FormControl(this.pax.Address, this.lead ? [Validators.required] : []),
       });
-      
+
     }
 
   }
@@ -103,7 +102,7 @@ export class BusPassengerDetailComponent implements OnInit {
       }
     }
   }
-  
+
   selectedTitle(evt: CustomEvent) {
     this.travellerForm.controls['title'].patchValue(evt.detail.value);
   }

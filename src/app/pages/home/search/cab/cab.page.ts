@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
+import { StateReset } from 'ngxs-reset-plugin';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { CabPassengerState } from 'src/app/stores/passenger/cab.passenger.state';
 import { SearchState, SearchType } from 'src/app/stores/search.state';
 import { CabSearchState, TripType, TravelType } from 'src/app/stores/search/cab.state';
 
@@ -22,6 +24,7 @@ export class CabPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.store.dispatch(new StateReset(CabPassengerState));
     this.searchType$ = this.store.select(SearchState.getSearchType);
     this.travelType$ = this.store.select(CabSearchState.getTravelType);
     this.tripType$ = this.store.select(CabSearchState.getTripType);

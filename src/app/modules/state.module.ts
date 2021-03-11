@@ -64,6 +64,7 @@ import { ExpenseState } from '../stores/expense.state';
 import { AgencyState } from '../stores/agency.state';
 import { VendorState } from '../stores/vendor.state';
 import { CabSearchState } from '../stores/search/cab.state';
+import { CabPassengerState } from '../stores/passenger/cab.passenger.state';
 
 export const stateArray = [
       UserState,
@@ -89,6 +90,7 @@ export const stateArray = [
       FlightPassengerState,
       HotelPassengerState,
       BusPassengerState,
+      CabPassengerState,
 
       TrainPassengerState,
 

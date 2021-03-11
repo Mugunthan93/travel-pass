@@ -14,7 +14,7 @@
 </ion-header>
 
 <ion-content>
-  
+
   <ion-row *ngIf="(bookMode$ | async) == 'flight'">
 
     <ion-item>
@@ -47,7 +47,6 @@
       </ion-button>
     </ion-row>
   </ion-row>
-
 
   <ion-row *ngIf="(bookMode$ | async) == 'hotel'">
 
@@ -160,6 +159,30 @@
     <ion-button class="add" (click)="addBusPassenger()">
       <ion-icon name="add"></ion-icon>
       <ion-label class="bold">Add Adults</ion-label>
+    </ion-button>
+  </ion-row>
+
+  <ion-row *ngIf="(bookMode$ | async) == 'cab'">
+    <ion-item>
+      <ion-label class="large" slot="start">Passengers</ion-label>
+      <ion-label class="large bold" slot="end" style="text-align: end;">{{(selectedCabPass$ | async)}}/{{(countCabPass$ | async)}}
+        Selected</ion-label>
+    </ion-item>
+    <ion-row *ngFor="let pax of (CabPassengers$ | async)">
+      <ion-item>
+        <ion-checkbox slot="start" [value]="pax" (ionChange)="getCabPass($event)"
+          [checked]="(selectedCabPassengers$ | async).includes(pax)"
+          [disabled]="(selectedCabPass$ | async) == (countCabPass$ | async) && !(selectedCabPassengers$ | async).includes(pax)">
+        </ion-checkbox>
+        <ion-label>{{pax.FirstName}} {{pax.LastName}}</ion-label>
+        <ion-label> {{ gender(pax) }}</ion-label>
+      </ion-item>
+      <ion-icon name="close-sharp" (click)="deleteCabPassenger(pax)"></ion-icon>
+      <ion-label class="bold" (click)="editCabPassenger(pax)">Edit</ion-label>
+    </ion-row>
+    <ion-button class="add" (click)="addCabPassenger()">
+      <ion-icon name="add"></ion-icon>
+      <ion-label class="bold">Add Passenger</ion-label>
     </ion-button>
   </ion-row>
 

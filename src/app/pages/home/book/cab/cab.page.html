@@ -1,9 +1,42 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>cab</ion-title>
-  </ion-toolbar>
-</ion-header>
 
 <ion-content>
+
+  <ion-card>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header collapsedHeight="60px" expandedHeight="60px">
+          <ion-title>
+            {{ (travelType$ | async) | titlecase}}
+          </ion-title>
+          <ion-label>
+            {{ (tripType$ | async) | titlecase }}
+          </ion-label>
+        </mat-expansion-panel-header>
+        <ion-row class="ion-justify-content-between">
+          <ion-col>
+            <label>
+              {{ 'Source :' + (cabForm$ | async).source.station_name }}
+            </label>
+            <label>
+              {{ 'DEPARTURE :' + (cabForm$ | async).departure }}
+            </label>
+          </ion-col>
+          <ion-col>
+            <label>
+              {{ 'Destination :' + (cabForm$ | async).destination.station_name }}
+            </label>
+            <label *ngIf="(cabForm$ | async).return">
+              {{ 'RETURN :' + (cabForm$ | async).return }}
+            </label>
+          </ion-col>
+        </ion-row>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </ion-card>
+
+  <ion-row class="addpass" (click)="addPassengerDetails()">
+    <ion-label class="large bold">Passenger Details</ion-label>
+    <ion-label>{{ (cabForm$ | async).passenger }} Seats</ion-label>
+  </ion-row>
 
 </ion-content>

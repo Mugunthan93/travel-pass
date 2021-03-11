@@ -22,6 +22,7 @@ import { AgencyState, SetAgency } from './agency.state';
 import { SetVendor, VendorState } from './vendor.state';
 import { CompanyState } from './company.state';
 import { Injectable } from '@angular/core';
+import { SendCabOfflineRequest } from './search/cab.state';
 
 export interface book {
     mode: string,
@@ -216,7 +217,7 @@ export class BookState {
                 states.dispatch(new Navigate(['/', 'home', 'result', bookMode, bookType]));
             }
         }
-        else if (bookMode == 'train') {
+        else if (bookMode == 'train' || bookMode == 'cab') {
             states.dispatch(new Navigate(['/', 'home', 'search', bookMode, bookType]));
         }
         else {
@@ -333,6 +334,9 @@ export class BookState {
             else if (type == 'multi-city') {
             //    states.dispatch(new TrainMultiCityRequest(comment,mailCC,purpose));
             }
+        }
+        else if(mode == 'cab') {
+          states.dispatch(new SendCabOfflineRequest(comment,mailCC,purpose));
         }
     }
 

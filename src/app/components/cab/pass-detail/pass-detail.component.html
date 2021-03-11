@@ -1,0 +1,76 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ form == 'add' ? 'Add' : 'Edit' }} Adult
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon name="close-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <form class="m-3" [formGroup]="cabForm" (ngSubmit)="passSubmit()">
+    <ion-list>
+
+      <ion-item class="my-2">
+        <ion-label>First Name</ion-label>
+        <ion-input formControlName="FirstName"></ion-input>
+      </ion-item>
+
+      <ion-item class="my-2">
+        <ion-label>Last Name</ion-label>
+        <ion-input formControlName="LastName"></ion-input>
+      </ion-item>
+
+      <ion-item class="my-2" [hidden]="!lead">
+        <ion-label>Email</ion-label>
+        <ion-input formControlName="Email"></ion-input>
+      </ion-item>
+
+      <ion-item class="my-2" [hidden]="!lead">
+        <ion-label>Phone</ion-label>
+        <ion-input formControlName="ContactNo"></ion-input>
+      </ion-item>
+
+      <ion-item class="my-2" [hidden]="!lead">
+        <ion-label>Address</ion-label>
+        <ion-input formControlName="AddressLine1"></ion-input>
+      </ion-item>
+
+      <ion-item class="my-2" [hidden]="!lead">
+        <ion-label>Company Name</ion-label>
+        <ion-input formControlName="GSTCompanyName"></ion-input>
+      </ion-item>
+
+      <ion-item class="my-2" [hidden]="!lead">
+        <ion-label>GST Number</ion-label>
+        <ion-input formControlName="GSTNumber"></ion-input>
+      </ion-item>
+
+      <ion-item class="my-2" [hidden]="!lead">
+        <ion-label>GST Email</ion-label>
+        <ion-input formControlName="GSTCompanyEmail"></ion-input>
+      </ion-item>
+
+      <ion-item class="my-2" [hidden]="!lead">
+        <ion-label>GST Address</ion-label>
+        <ion-textarea wrap="off" formControlName="GSTCompanyAddress"></ion-textarea>
+      </ion-item>
+
+      <ion-item class="my-2" [hidden]="!lead">
+        <ion-label>GST Phone Number</ion-label>
+        <ion-input formControlName="GSTCompanyContactNumber"></ion-input>
+      </ion-item>
+
+      <ion-button type="submit" class="my-2">
+        <ion-label class="mx-2">{{ form == 'add' ? 'Add' : 'Edit' }} Passenger</ion-label>
+      </ion-button>
+
+    </ion-list>
+  </form>
+
+</ion-content>
+

@@ -26,8 +26,8 @@ export interface flightpassenger extends addPassenger {
     CountryName: string,
     CountryCode: string,
     Email: string,
-    onwardExtraServices: services,
-    returnExtraServices: services,
+    onwardExtraServices: services | any,
+    returnExtraServices: services | any,
     PaxType: number,
     IsLeadPax: boolean,
     Gender: number,
@@ -37,16 +37,17 @@ export interface flightpassenger extends addPassenger {
     GSTCompanyName?: string,
     GSTNumber?: string,
     Fare?: fareObj
+    id?: number
 }
 
 export interface addPassenger {
-    Title: string,
+    Title?: string,
     FirstName: string,
     LastName: string,
     DateOfBirth: string,
     ContactNo: string,
-    PassportNo: string,
-    PassportExpiry: string,
+    PassportNo?: string,
+    PassportExpiry?: string,
 
     nationality?: string,
     ftnumber?: string
@@ -260,9 +261,6 @@ export class FlightPassengerState {
             passengerList : append(passengers),
             passengerCount : passengerCount
         }));
-
-        this.modalCtrl.dismiss(null, null, 'passenger-details');
-
     }
 
     @Action(SelectPassenger)

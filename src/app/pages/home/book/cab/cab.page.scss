@@ -1,0 +1,103 @@
+@import "../../../../../style/util/mixins.scss";
+@import "../../../../../style/base/color.scss";
+
+ion-content{
+    >ion-card:nth-child(1){
+        >mat-accordion{
+            >mat-expansion-panel{
+                >mat-expansion-panel-header{
+                    >::ng-deep span{
+                        flex-direction: column;
+                        >ion-title{
+                            padding-left:0px;
+                        }
+                    }
+                }
+                ::ng-deep .mat-expansion-panel-body{
+                    >ion-row{
+                        >ion-col{
+                            flex-direction: column;
+                        }
+                        >ion-col:first-child{
+                            >ion-card-title{
+                                padding-left: 0px;
+                                font-size: small;
+                            }
+                        }
+                        >ion-col:last-child{
+                            text-align: end;
+                            >ion-card-title {
+                                padding-right: 0px;
+                                text-align: end;
+                                font-size: small;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    >ion-row.addpass {
+        margin-left: 10px;
+        margin-right: 10px;
+        background: transparent;
+        border: 2px solid #{$geraldine};
+
+        padding: 5px;
+        border-radius: 4px;
+        flex-direction: column;
+    }
+
+    >ion-card:last-child {
+        >ion-card-header {
+            >ion-row {
+                margin: 12px auto;
+            }
+
+            >ion-row {
+                >ion-col {
+                    max-width: fit-content;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                >ion-col:last-child {
+                    margin-left: auto;
+                    text-align: end;
+                }
+            }
+
+            >mat-divider {
+                color: #{$suva-grey};
+            }
+        }
+
+        >ion-card-content {
+            >ion-list {
+                >ion-item {
+                    --padding-start: 0px;
+                    --min-height: 35px;
+                }
+            }
+        }
+    }
+}
+
+ion-footer {
+    >ion-toolbar {
+
+        >ion-item {
+            >ion-row {
+                flex-direction: column;
+
+                >ion-title {
+                    padding: 0px;
+                }
+            }
+        }
+
+        ion-button {
+            width: -webkit-fill-available;
+        }
+    }
+}
