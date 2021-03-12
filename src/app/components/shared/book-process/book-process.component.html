@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Book Ticket Processing</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-list>
+  <ion-item *ngFor="let flight of segments;let i = index">
+    <div class="d-flex flex-column w-100">
+      <ion-row class="w-100 m-2">
+        <ion-col>
+          <ion-label>{{ flight.source }}</ion-label>
+        </ion-col>
+        <ion-col>
+          <ion-icon src="../../../../assets/icons/flight.svg"></ion-icon>
+        </ion-col>
+        <ion-col>
+          <ion-label>{{ flight.destination }}</ion-label>
+        </ion-col>
+        <ion-col>
+          <div class="mx-3 circle-loader" *ngIf="flight.status !== 'error' && flight.status !== 'wait'" [ngClass]="{'load-complete': flight.status == 'complete', '': flight.status == 'process'}">
+            <div class="checkmark draw" [ngClass]="{'d-block': flight.status == 'complete', 'd-none': flight.status == 'process'}"></div>
+          </div>
+          <div class="mx-3" *ngIf="flight.status == 'error'">
+            <ion-icon class="m-auto" name="close-circle-outline"></ion-icon>
+          </div>
+          <div class="mx-3"  *ngIf="flight.status == 'wait'">
+            <ion-icon class="m-auto" name="pause-circle-outline"></ion-icon>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row  class="w-100" *ngIf="flight.status == 'error'">
+        <ion-label class="px-3" color="danger">{{ flight.errorMsg }}</ion-label>
+      </ion-row>
+    </div>
+  </ion-item>
+  <ion-item *ngIf="success()">
+    <ion-label color="success" class="px-3">Ticket Booked Successfully</ion-label>
+    <ion-button class="mx-3 bold large" (click)="ok()">
+      <ion-label class="mx-3">Ok</ion-label>
+    </ion-button>
+  </ion-item>
+  <ion-item *ngIf="failed()">
+    <ion-label color="danger" class="px-3">Failed to book ticket, try again later</ion-label>
+    <ion-button class="mx-3 bold large" (click)="ok()">
+      <ion-label class="mx-3">Ok</ion-label>
+    </ion-button>
+  </ion-item>
+</ion-list>

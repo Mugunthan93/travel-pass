@@ -161,6 +161,8 @@ export class BookState {
 
     @Action(SendRequest)
     sendRequest(states: StateContext<book>) {
+
+        this.modalCtrl.dismiss(null, null,'book-confirm');
         let mode = states.getState().mode;
         let type = states.getState().type;
 
@@ -228,6 +230,8 @@ export class BookState {
 
     @Action(BookTicket)
     bookTicket(states: StateContext<book>) {
+
+        this.modalCtrl.dismiss(null, null,'book-confirm');
         let mode = states.getState().mode;
         let type = states.getState().type;
 
@@ -297,6 +301,8 @@ export class BookState {
 
     @Action(OfflineRequest)
     OfflineRequest(states: StateContext<book>) {
+
+        this.modalCtrl.dismiss(null, null,'book-confirm');
         let mode = states.getState().mode;
         let type = states.getState().type;
 

@@ -22,11 +22,12 @@ import { AgencyState } from '../../agency.state';
 import * as _ from 'lodash';
 import { Injectable } from '@angular/core';
 import { concat, empty, forkJoin, from, iif, of, throwError } from 'rxjs';
-import { catchError, flatMap, map, tap } from 'rxjs/operators';
+import { catchError, delay, flatMap, map, tap } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { patch } from '@ngxs/store/operators';
 import { ApprovalService } from 'src/app/services/approval/approval.service';
 import { PassengerState } from '../../passenger.state';
+import { BookProcessComponent, processdetail } from 'src/app/components/shared/book-process/book-process.component';
 
 export interface domesticBook {
     departure: {
@@ -487,104 +488,102 @@ export class DomesticBookState {
     @Action(DomesticTicket)
     domesticTicket(states : StateContext<domesticBook>, action: DomesticTicket) {
 
-      console.log(action);
-      let loading$ = from(this.loadingCtrl.create({
-          spinner: "crescent",
-          message : "Booking Ticket...",
-          id : 'loading-book'
-      })).pipe(flatMap((el) => from(el.present())));
+    let fareIndex = {
+      onward : this.store.selectSnapshot(DomesticResultState.getSelectedDepartureFlight).fareRule,
+      return : this.store.selectSnapshot(DomesticResultState.getSelectedReturnFlight).fareRule
+    }
 
-      let failedAlert = (msg : string) => from(this.alertCtrl.create({
-        header: 'Booking Failed',
-        message: msg,
-        id : 'failed-book',
-        buttons: [{
-            text: 'Ok',
-            role: 'ok',
-            cssClass: 'danger',
-            handler: () => {
-                this.alertCtrl.dismiss(null,null,'failed-book');
-            }
-        }]
-      })).pipe(flatMap((el) => from(el.present())));
+    let depSendreq: rt_sendRequest = this.sendRequestPayload(states,action,"onward","open","online");
+    let reSendReq: rt_sendRequest = this.sendRequestPayload(states,action,"return","open","online");
 
-      let successAlert = from(this.alertCtrl.create({
-          header: 'Booking Success',
-          subHeader: 'your ticket is booked successfully',
-          id : 'success-book',
-          buttons: [{
-              text: 'Ok',
-              role: 'ok',
-              cssClass: 'danger',
-              handler: () => {
-                  this.modalCtrl.dismiss(null, null, 'success-book');
-                  states.dispatch(new Navigate(['/','home','dashboard','home-tab']));
-                  states.dispatch(new StateReset(SearchState,ResultState,FlightResultState,DomesticResultState,BookState,PassengerState,FlightPassengerState));
-              }
-          }]
-      })).pipe(flatMap((el) => from(el.present())));
+    let loaderSegment : processdetail[] = [
+      states.getState().departure.flight.summary.total.map((el) => {
+        return {
+          source : el.source,
+          destination : el.destination,
+          status : "process",
+          errorMsg : ""
+        }
+      }),
+      states.getState().return.flight.summary.total.map((el) => {
+        return {
+          source : el.source,
+          destination : el.destination,
+          status : "wait",
+          errorMsg : ""
+        }
+      })
+    ].flat();
 
-      let fareIndex = {
-        onward : this.store.selectSnapshot(DomesticResultState.getSelectedDepartureFlight).fareRule,
-        return : this.store.selectSnapshot(DomesticResultState.getSelectedReturnFlight).fareRule
-      }
-
-      let depSendreq: rt_sendRequest = this.sendRequestPayload(states,action,"onward","open","online");
-      let reSendReq: rt_sendRequest = this.sendRequestPayload(states,action,"return","open","online");
-
-      console.log(JSON.stringify(depSendreq),JSON.stringify(reSendReq));
-
-      return loading$.pipe(
-        flatMap(() => this.bookTicket(states,depSendreq,fareIndex.onward,"onward")),
-        flatMap((response) => {
-          if(response.status == 200) {
-            return this.bookTicket(states,reSendReq,fareIndex.return,"return");
-          }
-          else {
-            return failedAlert("ticket pdf generated but some problem occured")
-              .pipe(
-                flatMap(
-                  () => {
-                    return throwError(response);
+    return from(this.modalCtrl.create({
+      component : BookProcessComponent,
+      componentProps : {
+        segments : loaderSegment
+      },
+      id : 'book-process',
+      cssClass : 'book-process'
+    })).pipe(
+      flatMap(
+        (el) => {
+          console.log(el.componentProps);
+          return from(el.present())
+            .pipe(
+              flatMap(() => this.bookTicket(states,depSendreq,fareIndex.onward,"onward")),
+              flatMap((response) => {
+                if(response.status == 200) {
+                  el.componentProps.segments[0].status = "complete";
+                  return this.bookTicket(states,reSendReq,fareIndex.return,"return");
+                }
+                else {
+                  let err = {
+                    error : response,
+                    segment : 0
+                  };
+                  return throwError(err);
+                }
+              }),
+              flatMap(
+                (response) => {
+                  if(response.status == 200) {
+                    el.componentProps.segments[1].status = "complete";
+                    return of(response);
                   }
-                )
-              );
-          }
-        }),
-        flatMap(
-          (response) => {
-            if(response.status == 200) {
-              return successAlert;
-            }
-            else {
-              return failedAlert("ticket pdf generated but some problem occured")
-              .pipe(
-                flatMap(
-                  () => {
-                    return throwError(response);
+                  else {
+                    let err = {
+                      error : response,
+                      segment : 1
+                    };
+                    return throwError(err);
                   }
-                )
-              );
-            }
-          }
-        ),
-        catchError(
-          (error : HTTPResponse | any) => {
-            console.log(error);
-              this.loadingCtrl.dismiss(null,null,'loading-book');
-              console.log(error);
-              if(error.status = 502) {
-                  return failedAlert("Problem with request book API,Please try later");
-              }
-              else if(error.status !== 200){
-                return failedAlert(error.Error.ErrorMessage);
-            }
-            return of(error);
+                }
+              ),
+              catchError(
+                (err : {
+                  error : HTTPResponse,
+                  segment : number
+                } | any) => {
+                    console.log(err);
 
-          }
-        )
-      );
+                    el.componentProps.segments[err.segment].status = "error";
+                    if(err.error.status) {
+                      if(err.error.status = 502) {
+                        el.componentProps.segments[err.segment].errorMsg = "Problem with booking ticket API";
+                      }
+                      else if(err.error.status !== 200){
+                        el.componentProps.segments[err.segment].errorMsg = err.error.Error.ErrorMessage;
+                      }
+                    }
+                    else {
+                      el.componentProps.segments[err.segment].errorMsg = err.error.Error.ErrorMessage;
+                    }
 
+                  return of(err);
+                }
+              )
+            )
+        }
+      )
+    );
     }
 
     domesticbookData(data: flightResult,type : string): bookObj {
@@ -953,7 +952,6 @@ export class DomesticBookState {
                 return from(this.flightService.bookFlight(bkpl))
                   .pipe(
                     tap((res) => console.log("bookflight",res)),
-                    catchError(error =>  throwError(error))
                   );
             }
           ),
@@ -964,7 +962,11 @@ export class DomesticBookState {
 
                   if(bookres.response.Response == null) {
                       console.log(bookres);
-                      return throwError(bookres.response);
+                      let err = {
+                        error : bookres.response,
+                        segment : type == "onward" ? 0 : 1
+                      };
+                      return throwError(err);
                   }
 
                   //book res json
@@ -984,8 +986,7 @@ export class DomesticBookState {
                   console.log(JSON.stringify(metrix));
                   return from(this.flightService.metrixboard(metrix))
                   .pipe(
-                    tap((res) => console.log("metrixboard",res)),
-                    catchError(error =>  throwError(error))
+                    tap((res) => console.log("metrixboard",res))
                   );
               }
           ),
@@ -996,8 +997,7 @@ export class DomesticBookState {
                   let bookreq$ = this.approvalService.approvalReq('flight',openreq.id,approveObj);
                   return bookreq$
                   .pipe(
-                    tap((res) => console.log("bookflight",res)),
-                    catchError(error =>  throwError(error))
+                    tap((res) => console.log("bookflight",res))
                   );
               }
           ),
