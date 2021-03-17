@@ -106,8 +106,13 @@ export class RoundTripSearchState extends BaseFlightSearch {
     }
 
     @Selector()
-    static getPayloadTravelDate(states: roundtripSearch): string {
+    static getPayloadDepartureTravelDate(states: roundtripSearch): string {
         return moment(states.formData.departure).format('YYYY-MM-DD');
+    }
+
+    @Selector()
+    static getPayloadReturnTravelDate(states: roundtripSearch): string {
+        return moment(states.formData.return).format('YYYY-MM-DD');
     }
 
     @Selector()

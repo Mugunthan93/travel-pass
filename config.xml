@@ -4,7 +4,7 @@
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework.com" href="http://ionicframework.com/">Ionic Framework Team</author>
     <allow-navigation href="*" />
-    <content original-src="index.html" src="http://192.168.1.9:8100" />
+    <content original-src="index.html" src="http://192.168.1.8:8101" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -119,5 +119,5 @@
     <allow-navigation href="http://192.168.1.13:8100" sessionid="d254daa0" />
     <allow-navigation href="http://192.168.1.14:8100" sessionid="d11eeb62" />
     <allow-navigation href="http://192.168.1.15:8100" sessionid="4d7c00a3" />
-    <allow-navigation href="http://192.168.1.9:8100" sessionid="adf67761" />
+    <allow-navigation href="http://192.168.1.8:8101" sessionid="eb884f30" />
 </widget>

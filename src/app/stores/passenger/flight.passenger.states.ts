@@ -6,12 +6,14 @@ import { RoundTripSearchState } from '../search/flight/round-trip.state';
 import { MultiCitySearchState } from '../search/flight/multi-city.state';
 import { UserState } from '../user.state';
 import { CompanyState } from '../company.state';
-import { ModalController, AlertController } from '@ionic/angular';
+import { ModalController, AlertController, ToastController, PopoverController } from '@ionic/angular';
 import { SearchState } from '../search.state';
 import { from } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
 import { append, patch, removeItem, updateItem } from "@ngxs/store/operators";
 import { Injectable } from "@angular/core";
+import { user } from "src/app/models/user";
+import * as moment from "moment";
 
 
 export interface flightpassengerstate {
@@ -56,46 +58,53 @@ export interface addPassenger {
 /////////////////////////////////////////////////////////////////////
 
 export class SetFirstPassengers {
-    static readonly type = "[flight_book] SetFirstPassengers";
+    static readonly type = "[flight_passenger] SetFirstPassengers";
 }
 
 export class AddPassenger {
-    static readonly type = "[flight_book] AddPassenger";
+    static readonly type = "[flight_passenger] AddPassenger";
     constructor(public pass: flightpassenger) {
 
     }
 }
 
 export class EditPassenger {
-    static readonly type = "[flight_book] EditPassenger";
+    static readonly type = "[flight_passenger] EditPassenger";
     constructor(public pass: flightpassenger, public pax: flightpassenger) {
 
     }
 }
 
 export class DeletePassenger {
-    static readonly type = "[flight_book] DeletePassenger";
+    static readonly type = "[flight_passenger] DeletePassenger";
     constructor(public pax: flightpassenger) {
 
     }
 }
 
 export class SelectPassenger {
-    static readonly type = "[flight_book] SelectPassenger";
+    static readonly type = "[flight_passenger] SelectPassenger";
     constructor(public pass: flightpassenger) {
 
     }
 }
 
 export class DeselectPassenger {
-    static readonly type = "[flight_book] DeselectPassenger";
+    static readonly type = "[flight_passenger] DeselectPassenger";
     constructor(public pass: flightpassenger) {
 
     }
 }
 
 export class DismissFlightPassenger {
-    static readonly type = "[flight_book] DismissFlightPassenger";
+    static readonly type = "[flight_passenger] DismissFlightPassenger";
+}
+
+export class AddFlightEmployee {
+    static readonly type = "[flight_passenger] AddFlightEmployee";
+    constructor(public pass: user) {
+
+    }
 }
 
 @State<flightpassengerstate>({
@@ -113,6 +122,8 @@ export class FlightPassengerState {
     constructor(
         public modalCtrl: ModalController,
         public alertCtrl: AlertController,
+        public toastrCtrl : ToastController,
+        public popoverCtrl : PopoverController,
         private store : Store
     ) {
 
@@ -141,6 +152,68 @@ export class FlightPassengerState {
     @Selector()
     static getCount(states: flightpassengerstate): number {
         return states.passengerCount;
+    }
+
+    @Action(AddFlightEmployee)
+    addEmployee(states: StateContext<flightpassengerstate>, action: AddFlightEmployee) {
+
+      let exist$ = from(this.toastrCtrl.create({
+        message : action.pass.name + " is already added in list",
+        duration : 500
+      })).pipe(flatMap(el => from(el.present())));
+
+      if(!states.getState().passengerList.map(el => el.FirstName).includes(action.pass.name)) {
+        let passenger : any = {};
+        let fare = null;
+
+        switch(this.store.selectSnapshot(SearchState.getSearchType)) {
+          case 'one-way' : case 'animated-round-trip' : case 'multi-city': fare = this.store.selectSnapshot(FLightBookState.getFare).onward
+          case 'round-trip':fare = this.store.selectSnapshot(FLightBookState.getFare).total
+        }
+
+        passenger = {
+          Title: action.pass.gender == 'Female' ? 'Ms' : 'Mr',
+          FirstName: action.pass.name,
+          LastName: action.pass.lastname,
+          Email: action.pass.email,
+          DateOfBirth: moment.utc(action.pass.dob).format('YYYY-MM-DDT00:00:00.000Z'),
+          AddressLine1: action.pass.address,
+          City: action.pass.city,
+          ContactNo: action.pass.phone_number,
+          PassportNo: action.pass.passport_no,
+          PassportExpiry: moment.utc(action.pass.passport_expiry).format('YYYY-MM-DDT00:00:00.000Z'),
+          nationality: '',
+          ftnumber: '',
+          CountryCode: '',
+          CountryName:'',
+          onwardExtraServices: {
+            Meal: [],
+            MealTotal: 0,
+            BagTotal: 0,
+            Baggage: []
+          },
+          returnExtraServices: {
+            Meal: [],
+            MealTotal: 0,
+            BagTotal: 0,
+            Baggage: []
+          },
+          Gender:action.pass.gender == 'Female' ? 2 : 1,
+          PaxType: 1,
+          IsLeadPax: false
+        }
+
+        states.setState(patch({
+          passengerList : append([passenger])
+        }));
+        this.popoverCtrl.dismiss(null,null,'employee-list');
+      }
+      else {
+        this.popoverCtrl.dismiss(null,null,'employee-list');
+        return exist$;
+      }
+
+
     }
 
     @Action(AddPassenger)
@@ -196,14 +269,28 @@ export class FlightPassengerState {
 
     @Action(DeletePassenger)
     deletePassenger(states: StateContext<flightpassengerstate>, action: DeletePassenger) {
+
+      let exist$ = from(this.toastrCtrl.create({
+        message : action.pax.FirstName + " is lead passenger,cannot remove from the list",
+        duration : 800
+      })).pipe(flatMap(el => from(el.present())));
+
+      if(action.pax.IsLeadPax) {
+        return exist$;
+      }
+      else {
         states.setState(patch({
             passengerList : removeItem((el : flightpassenger) => el.FirstName == action.pax.FirstName && el.LastName == action.pax.LastName && el.Email == action.pax.Email),
             selected : removeItem((el : flightpassenger) => el.FirstName == action.pax.FirstName && el.LastName == action.pax.LastName && el.Email == action.pax.Email)
         }));
+      }
+
     }
 
     @Action(SetFirstPassengers)
     setFirstPassengers(states: StateContext<flightpassengerstate>) {
+
+      if(!(states.getState().passengerList.length >= 1)) {
 
         let passengerCount: number = 0;
         let fare = null;
@@ -261,6 +348,8 @@ export class FlightPassengerState {
             passengerList : append(passengers),
             passengerCount : passengerCount
         }));
+      }
+
     }
 
     @Action(SelectPassenger)

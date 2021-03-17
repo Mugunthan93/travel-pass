@@ -15,20 +15,20 @@ import { PipeModule } from 'src/app/modules/pipe.module';
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule, 
+    IonicModule,
     HomePageRoutingModule,
     PipeModule
   ],
   declarations: [
     HomePage,
     AboutHotelComponent,
-    MenuBarComponent,
+    MenuBarComponent
   ],
   entryComponents: [
     AboutHotelComponent
   ]
 })
-  
+
 export class HomePageModule {
 
 }

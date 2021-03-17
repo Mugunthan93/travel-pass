@@ -5,7 +5,7 @@
   "homepage": "https://ionicframework.com/",
   "scripts": {
     "ng": "ng",
-    "start": "ionic cordova run android -l --external --no-native-run",
+    "start": "ionic cordova run android -l --external --no-native-run --port=8101",
     "build": "ionic cordova run android",
     "test": "ng test",
     "lint": "ng lint",

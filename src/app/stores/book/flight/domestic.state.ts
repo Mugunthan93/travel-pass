@@ -730,7 +730,7 @@ export class DomesticBookState {
         }
       }
 
-      let published_fare = (
+      let published_fare = type == "onward" ?
         depfareQuote.Fare.PublishedFare +
         this.markupCharges(depfareQuote.Fare.PublishedFare) +
         depfareQuote.Fare.OtherCharges +
@@ -738,61 +738,48 @@ export class DomesticBookState {
         allGST.onward.sgst +
         allGST.onward.cgst +
         allGST.onward.igst
-        ) + (
+        :
         refareQuote.Fare.PublishedFare +
         this.markupCharges(refareQuote.Fare.PublishedFare) +
         refareQuote.Fare.OtherCharges +
         serviceCharge +
         allGST.return.sgst +
         allGST.return.cgst +
-        allGST.return.igst
-      );
+        allGST.return.igst;
 
       let taxable = this.store.selectSnapshot(FLightBookState.getTaxable);
+
+      let trip = this.store.selectSnapshot(RoundTripSearchState.getTripRequest);
+      let currenttrip = {
+        AdultCount: trip.AdultCount,
+        ChildCount: trip.ChildCount,
+        InfantCount: trip.InfantCount,
+        JourneyType: 1,
+        Segments: type == "onward" ? [trip.Segments[0]] : [trip.Segments[1]],
+        sources: trip.sources
+      }
+
+      let currentGST = type == "onward" ? allGST.onward : allGST.return;
+      let responseFare =  type == "onward" ? (depfareQuote.Fare.PublishedFare - depfareQuote.Fare.TaxBreakup[0].value) + this.markupCharges(depfareQuote.Fare.PublishedFare) : (refareQuote.Fare.PublishedFare - refareQuote.Fare.TaxBreakup[0].value) + this.markupCharges(refareQuote.Fare.PublishedFare)
+
       return {
         passenger_details: {
             kioskRequest: kioskRequest,
             passenger: this.store.selectSnapshot(FlightPassengerState.getSelectedPassengers),
-            flight_details: [depfareQuote, refareQuote],
-            fareQuoteResults: [depfareQuote, refareQuote],
+            flight_details: type == "onward" ? [depfareQuote] : [refareQuote],
+            fareQuoteResults: type == "onward" ? [depfareQuote] : [refareQuote],
             country_flag: this.store.selectSnapshot(RoundTripSearchState.getTripType) == 'domestic' ? "0" : "1",
             user_eligibility: {
                 approverid: "airline",
                 msg: null,
                 company_type: "corporate"
             },
-            published_fare: (depfareQuote.Fare.PublishedFare - depfareQuote.Fare.TaxBreakup[0].value) + this.markupCharges(depfareQuote.Fare.PublishedFare) + (refareQuote.Fare.PublishedFare - refareQuote.Fare.TaxBreakup[0].value) + this.markupCharges(refareQuote.Fare.PublishedFare),
+            published_fare: published_fare,
             uapi_params: uapi_params,
             fare_response: {
-                published_fare: (depfareQuote.Fare.PublishedFare - depfareQuote.Fare.TaxBreakup[0].value) + this.markupCharges(depfareQuote.Fare.PublishedFare) + (refareQuote.Fare.PublishedFare - refareQuote.Fare.TaxBreakup[0].value) + this.markupCharges(refareQuote.Fare.PublishedFare),
+                published_fare: responseFare,
                 cancellation_risk: this.store.selectSnapshot(FLightBookState.getRisk),
-                charges_details: {
-                    GST_total: 0,
-                    agency_markup: 0,
-                    cgst_Charges: allGST.onward.cgst + allGST.return.cgst,
-                    sgst_Charges: allGST.onward.sgst + allGST.return.sgst,
-                    igst_Charges: allGST.onward.igst + allGST.return.igst,
-                    service_charges: serviceCharge,
-                    total_amount: published_fare,
-                    cgst_onward: allGST.onward.cgst,
-                    sgst_onward: allGST.onward.sgst,
-                    igst_onward: allGST.onward.igst,
-                    sgst_return: allGST.return.sgst,
-                    cgst_return: allGST.return.cgst,
-                    igst_return: allGST.return.igst,
-                    onward_markup: 0,
-                    return_markup: 0,
-                    markup_charges: 0,
-                    other_taxes: 0,
-                    taxable_fare : taxable.onward + taxable.return,
-                    vendor: {
-                        service_charges: serviceCharge,
-                        GST: allGST.onward.cgst + allGST.return.cgst + allGST.onward.sgst + allGST.return.sgst,
-                        CGST : 0,
-                        SGST : 0,
-                        IGST : allGST.onward.igst + allGST.return.igst
-                    }
-                },
+                charges_details: this.chargeDetails(type,currentGST,serviceCharge,published_fare,taxable),
                 onwardfare: [[{
                     FareBasisCode: depfareQuote.FareRules[0].FareBasisCode,
                     IsPriceChanged: depPrice,
@@ -844,11 +831,11 @@ export class DomesticBookState {
         trip_type : "business",
         transaction_id : null,
         customer_id: companyId,
-        travel_date: this.store.selectSnapshot(RoundTripSearchState.getPayloadTravelDate),
+        travel_date: type == "onward" ? this.store.selectSnapshot(RoundTripSearchState.getPayloadDepartureTravelDate) : this.store.selectSnapshot(RoundTripSearchState.getPayloadReturnTravelDate),
         traveller_id: travellersId,
         user_id: userId,
         vendor_id: vendorId,
-        trip_requests : this.store.selectSnapshot(RoundTripSearchState.getTripRequest)
+        trip_requests : currenttrip
       }
     }
 
@@ -1046,6 +1033,12 @@ export class DomesticBookState {
     //approvereq for booking
     approveRequestPayload(states : StateContext<domesticBook>,response,sendReq,bookres,openreq, fr : fareRule, type : string,rqstStatus : string, bookingmode : string) {
 
+      let allGST : { onward : GST, return : GST } = {
+        onward : type == "onward" ?  this.store.selectSnapshot(FLightBookState.getGST).onward : this.store.selectSnapshot(FLightBookState.getGST).return,
+        return : type == "onward" ?  this.store.selectSnapshot(FLightBookState.getGST).return : this.store.selectSnapshot(FLightBookState.getGST).onward
+      };
+      let serviceCharge : number = this.store.selectSnapshot(FLightBookState.getServiceCharge);
+
       let data = JSON.parse(response.data);
       console.log(data,response);
 
@@ -1101,6 +1094,33 @@ export class DomesticBookState {
           );
       bookresponse.response.Response.FlightItinerary.Segments = newSegments;
 
+      let published_fare = type == "onward" ?
+        depfareQuote.Fare.PublishedFare +
+        this.markupCharges(depfareQuote.Fare.PublishedFare) +
+        depfareQuote.Fare.OtherCharges +
+        serviceCharge +
+        allGST.onward.sgst +
+        allGST.onward.cgst +
+        allGST.onward.igst
+        :
+        refareQuote.Fare.PublishedFare +
+        this.markupCharges(refareQuote.Fare.PublishedFare) +
+        refareQuote.Fare.OtherCharges +
+        serviceCharge +
+        allGST.return.sgst +
+        allGST.return.cgst +
+        allGST.return.igst;
+
+      let trip = this.store.selectSnapshot(RoundTripSearchState.getTripRequest);
+      let currenttrip = {
+        AdultCount: trip.AdultCount,
+        ChildCount: trip.ChildCount,
+        InfantCount: trip.InfantCount,
+        JourneyType: 1,
+        Segments: type == "onward" ? [trip.Segments[0]] : [trip.Segments[1]],
+        sources: trip.sources
+      }
+
       return{
           passenger_details: {
             BookingDate: moment({}).format("DD-MM-YYYY hh:mm:A"),
@@ -1114,30 +1134,24 @@ export class DomesticBookState {
               }
             ],
             uapi_params: uapi_params,
-            passenger: this.store.selectSnapshot(FlightPassengerState.getSelectedPassengers),
-            fare_response: {
-              published_fare: depfareQuote.Fare.PublishedFare +
-              this.markupCharges(depfareQuote.Fare.PublishedFare),
-              charges_details: sendReq.passenger_details.fare_response.charges_details,
-              cancellation_risk: this.store.selectSnapshot(FLightBookState.getRisk)
-            },
-            flight_details: [depfareQuote,refareQuote],
+            passenger: bookresponse.response.Response.FlightItinerary.Passenger,
+            fare_response: sendReq.fare_response,
+            flight_details: type == "onward" ? [depfareQuote] : [refareQuote],
             country_flag: this.store.selectSnapshot(RoundTripSearchState.getTripType) == 'domestic' ? 0 :
             this.store.selectSnapshot(RoundTripSearchState.getTripType) == 'international' ? 1 : 0,
             trace_Id: fairIndex.TraceId,
-            published_fare: depfareQuote.Fare.PublishedFare +
-            this.markupCharges(depfareQuote.Fare.PublishedFare),
+            published_fare: published_fare,
             user_eligibility: {
               approverid: "airline",
               msg: null,
               company_type: "corporate"
-          }
+            }
           },
           booking_mode: bookingmode,
           traveller_id: travellersId,
           travel_date: openreq.travel_date,
           comments: null,
-          trip_requests:  this.store.selectSnapshot(RoundTripSearchState.getTripRequest),
+          trip_requests:  currenttrip,
           cancellation_remarks: null,
           trip_type: "business",
           customer_id: companyId,
@@ -1219,5 +1233,37 @@ export class DomesticBookState {
     });
 
       return type == "onward" ? onwardSegmentService : returnSegmentService;
+    }
+
+    chargeDetails(type : string,gst : GST, serviceCharge : number,published_fare : number, taxable : any) {
+
+      let detail : any = {
+        GST_total: 0,
+        agency_markup: 0,
+        cgst_Charges: gst.cgst,
+        sgst_Charges: gst.sgst,
+        igst_Charges: gst.igst,
+        service_charges: serviceCharge,
+        total_amount: published_fare,
+        cgst_onward: type == "onward" ? gst.cgst : 0,
+        sgst_onward: type == "onward" ? gst.sgst : 0,
+        igst_onward: type == "onward" ? gst.igst : 0,
+        sgst_return: type == "return" ? gst.sgst : 0,
+        cgst_return: type == "return" ? gst.cgst : 0,
+        igst_return: type == "return" ? gst.igst : 0,
+        onward_markup: 0,
+        return_markup: 0,
+        markup_charges: 0,
+        other_taxes: 0,
+        vendor: {
+            service_charges: serviceCharge,
+            GST: gst.cgst + gst.sgst,
+            CGST : 0,
+            SGST : 0,
+            IGST : gst.igst
+        }
+      };
+      type == "onward" ? detail.taxable_fare = taxable.onward : detail.taxable_return_fare = taxable.return;
+      return detail;
     }
 }

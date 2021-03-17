@@ -43,7 +43,12 @@ export interface user {
   is_rightsto_book: string;
 
   staff_code: string;
+  frequent_flyer_number : ff_number[]
+}
 
+export interface ff_number {
+  key : string
+  value : string
 }
 
 export  interface creditReq{

@@ -131,7 +131,6 @@ $item-option-background:transparent;
 
     ion-input.form-control{
         height:32px !important;
-        min-width: -webkit-fill-available;
         margin: auto;
         display: flex;
     }
@@ -174,26 +173,26 @@ $item-option-background:transparent;
             ion-item{
                 @include ion-item;
             }
-            
+
             ion-item.menu-item{
                 @include ion-item;
                 --padding-start:14px;
-            
+
                 >ion-icon[slot="start"] {
                     margin-right:10px;
                 }
-            
+
                 >ion-label{
                     --color: #{$suva-grey} !important;
                 }
             }
-            
+
             ion-item.facility {
                >ion-label {
                     --color: #{$black} !important;
                }
             }
-            
+
             ion-item.searchItem {
                 @include ion-item;
                 --inner-padding-start: 12px;
@@ -206,7 +205,7 @@ $item-option-background:transparent;
                 border-radius: 8px;
                 opacity: 1;
             }
-            
+
             ion-item.policy{
                 @include ion-item;
                 --inner-padding-start: 12px;
@@ -215,7 +214,7 @@ $item-option-background:transparent;
                 --padding-top: 5px;
                 --padding-bottom: 5px;
             }
-            
+
             ion-item.pointItem {
                 @include ion-item;
                 --padding-start: 10px;
@@ -234,29 +233,29 @@ $item-option-background:transparent;
                     min-width: calc(100% - 107px);
                 }
             }
-            
+
             ion-item-divider{
-            
+
                 --background:#{$item-divider-background};
                 --color:#{$item-divider-color};
-            
+
                 --inner-padding-bottom:map.get($item-divider-inner-padding, "bottom");
                 --inner-padding-end:map.get($item-divider-inner-padding, "end");
                 --inner-padding-start:map.get($item-divider-inner-padding, "start");
                 --inner-padding-top:map.get($item-divider-inner-padding, "top");
-            
+
                 --padding-bottom:map.get($item-divider-padding, "bottom");
                 --padding-end:map.get($item-divider-padding, "end");
                 --padding-start:map.get($item-divider-padding, "start");
                 --padding-top:map.get($item-divider-padding, "top");
-            
+
             }
-            
+
             ion-item-option{
-            
+
                 --background:#{$item-option-background};
                 --color:#{$item-option-color};
-            
+
             }
 
             ion-item.eligibility {
@@ -264,11 +263,11 @@ $item-option-background:transparent;
                 --padding-bottom: 8px;
                 --padding-start: 8px;
                 --padding-end: 8px;
-        
+
                 border: 3px solid #{$geraldine};
                 border-radius: 10px;
                 margin: 8px;
-                
+
                 >ion-row{
                     display: flex;
                     flex-direction: column;
@@ -296,26 +295,26 @@ $item-option-background:transparent;
             ion-item{
                 @include ion-item;
             }
-            
+
             ion-item.menu-item{
                 @include ion-item;
                 --padding-start:14px;
-            
+
                 >ion-icon[slot="start"] {
                     margin-right:10px;
                 }
-            
+
                 >ion-label{
                     --color: #{$suva-grey} !important;
                 }
             }
-            
+
             ion-item.facility {
                >ion-label {
                     --color: #{$black} !important;
                }
             }
-            
+
             ion-item.searchItem {
                 @include ion-item;
                 --inner-padding-start: 12px;
@@ -328,7 +327,7 @@ $item-option-background:transparent;
                 border-radius: 8px;
                 opacity: 1;
             }
-            
+
             ion-item.policy{
                 @include ion-item;
                 --inner-padding-start: 12px;
@@ -337,7 +336,7 @@ $item-option-background:transparent;
                 --padding-top: 5px;
                 --padding-bottom: 5px;
             }
-            
+
             ion-item.pointItem {
                 @include ion-item;
                 --padding-start: 10px;
@@ -356,29 +355,29 @@ $item-option-background:transparent;
                     min-width: calc(100% - 107px);
                 }
             }
-            
+
             ion-item-divider{
-            
+
                 --background:#{$item-divider-background};
                 --color:#{$item-divider-color};
-            
+
                 --inner-padding-bottom:map.get($item-divider-inner-padding, "bottom");
                 --inner-padding-end:map.get($item-divider-inner-padding, "end");
                 --inner-padding-start:map.get($item-divider-inner-padding, "start");
                 --inner-padding-top:map.get($item-divider-inner-padding, "top");
-            
+
                 --padding-bottom:map.get($item-divider-padding, "bottom");
                 --padding-end:map.get($item-divider-padding, "end");
                 --padding-start:map.get($item-divider-padding, "start");
                 --padding-top:map.get($item-divider-padding, "top");
-            
+
             }
-            
+
             ion-item-option{
-            
+
                 --background:#{$item-option-background};
                 --color:#{$item-option-color};
-            
+
             }
 
         }

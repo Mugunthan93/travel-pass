@@ -190,10 +190,17 @@ export class UserState {
         let currentUser: user = Object.assign(user, action.user);
         let currentId: number = states.getState().id;
 
+        if(currentUser.frequent_flyer_number.length == 0) {
+          currentUser.frequent_flyer_number.length = null;
+        }
+
+        console.log(action.user);
+
         return this.userService.updateUser(currentId, currentUser)
             .pipe(
                 map(
                     (response: updateresponse) => {
+                      console.log(response);
                         if (response.status_code == 200)
                         {
                             let updatedUser : user = Object.assign(user, action.user);

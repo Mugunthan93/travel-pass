@@ -11,7 +11,7 @@
         <ion-title class="large">{{ emp[0].designation | titlecase }}</ion-title>
       </ion-item-divider>
 
-      <ion-item *ngFor="let e of emp" (click)="SelectEmployee(e)">
+      <ion-item class="mx-3" *ngFor="let e of emp" (click)="SelectEmployee(e)">
         <ion-label>{{ ((e.name !== null) && (e.lastname !== null)) ? (e.name+ ' ' +e.lastname | titlecase) : (e.name | titlecase) }}</ion-label>
         <ion-icon src="../../../../assets/ionicons/checkmark-outline.svg"
           *ngIf="checkAdded(e) | async"></ion-icon>

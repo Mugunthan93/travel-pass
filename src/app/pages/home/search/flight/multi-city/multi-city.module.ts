@@ -11,9 +11,9 @@ import { MultiCityPage } from './multi-city.page';
 @NgModule({
   imports: [
     CommonModule,
+    IonicModule,
     FormsModule,
     ReactiveFormsModule,
-    IonicModule,
     MultiCityPageRoutingModule
   ],
   declarations: [

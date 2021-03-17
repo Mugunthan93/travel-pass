@@ -6,7 +6,7 @@
 // $toast-border-color:;
 // $toast-button-color:;
 
-// $toast-background:;
+$toast-background: #{$geraldine};
 
 // $toast-box-model:(
 //     "height":,
@@ -26,3 +26,9 @@
 // $toast-box-shadow:;
 // $toast-position-start:;
 // $toast-position-end:;
+
+ion-toast {
+
+  --background : #{$toast-background};
+
+}

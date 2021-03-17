@@ -718,7 +718,7 @@ export class InternationalBookState {
           trip_type : "business",
           transaction_id : null,
           customer_id: companyId,
-          travel_date: this.store.selectSnapshot(RoundTripSearchState.getPayloadTravelDate),
+          travel_date: this.store.selectSnapshot(RoundTripSearchState.getPayloadDepartureTravelDate),
           traveller_id: travellersId,
           user_id: userId,
           vendor_id: vendorId,

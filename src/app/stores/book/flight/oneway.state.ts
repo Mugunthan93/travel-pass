@@ -556,8 +556,14 @@ export class OneWayBookState{
 
                     this.loadingCtrl.dismiss(null,null,'loading-book');
                     console.log(error);
+                    console.log(JSON.stringify(error));
                     if(error.status = 502) {
-                        return failedAlert("Problem with request book API,Please try later");
+                        if(error.Error.ErrorCode == 2) {
+                          return failedAlert(error.Error.ErrorMessage);
+                        }
+                        else {
+                          return failedAlert("Problem with request book API,Please try later");
+                        }
                     }
                     else {
                         return failedAlert(error.Error.ErrorMessage);

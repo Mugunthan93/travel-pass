@@ -7,7 +7,7 @@ export interface flightSearchPayload{
     JourneyType: number
     //flight departure and return details array
     Segments: segmentsPayload[]
-    prefferedAirline: any[]
+    prefferedAirline?: any[]
     sources: string[]
 }
 
