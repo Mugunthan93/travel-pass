@@ -1,11 +1,11 @@
-<ion-content>
+<ion-content #panelcontent>
   <ion-row>
     <ion-col>
       <ion-text *ngIf="(flightList | sort : (sortBy$ | async).property : (sortBy$ | async).state ).length == 0">No
         result found
       </ion-text>
       <mat-accordion multi="false">
-        <mat-expansion-panel *ngFor="let item of flightList | sort : (sortBy$ | async).property : (sortBy$ | async).state;let i = index" [hideToggle]="true" #panel approxItemHeight="60px">
+        <mat-expansion-panel *ngFor="let item of flightList | sort : (sortBy$ | async).property : (sortBy$ | async).state | limit : currentlimit ;let i = index" [hideToggle]="true" #panel approxItemHeight="60px">
           <mat-expansion-panel-header
             [collapsedHeight]="'fit-content'"
             [expandedHeight]="'fit-content'"
@@ -80,6 +80,12 @@
           </ion-row>
         </mat-expansion-panel>
       </mat-accordion>
+      <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+        <ion-infinite-scroll-content
+          loadingSpinner="bubbles"
+          loadingText="Loading more data...">
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
     </ion-col>
   </ion-row>
 </ion-content>

@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, QueryList, ElementRef, ViewChildren, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, QueryList, ElementRef, ViewChildren, AfterViewInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { matExpansionAnimations, MatExpansionPanel } from '@angular/material/expansion';
-import { ModalController } from '@ionic/angular';
+import { IonContent, ModalController } from '@ionic/angular';
 import { FlightBaggageComponent } from '../flight-baggage/flight-baggage.component';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { flightData } from 'src/app/models/search/flight';
@@ -30,6 +30,8 @@ import { sortButton, SortState } from 'src/app/stores/result/sort.state';
 })
 export class ResultListComponent implements OnInit {
 
+  @ViewChild('panelcontent',{static : true}) content : IonContent;
+
   flightType: Observable<string>;
 
   @Input() flightList: resultObj[];
@@ -47,6 +49,9 @@ export class ResultListComponent implements OnInit {
   itiMail: Observable<itinerarytrip[]>;
 
   sortBy$: Observable<sortButton>;
+
+  currentlimit : number = 10;
+  currentproperty : string = null;
 
   constructor(
     public modalCtrl: ModalController,
@@ -87,6 +92,16 @@ export class ResultListComponent implements OnInit {
     }
 
     console.log(this.flightList);
+    this.sortBy$.subscribe((el) => {
+      if(this.currentproperty !== el.property) {
+        this.currentlimit = 10;
+        this.currentproperty = el.property;
+        this.content.scrollToTop(1000);
+      }
+      else {
+        this.currentproperty = el.property;
+      }
+    });
 
   }
 
@@ -97,6 +112,21 @@ export class ResultListComponent implements OnInit {
     else if (this.state[index] == 'rotated') {
       this.state[index] = 'default'
     }
+  }
+
+  loadData(evt) {
+    console.log(evt);
+    setTimeout(
+      () => {
+        if(this.flightList.length < this.currentlimit) {
+          evt.target.disabled = true;
+        }
+        else {
+          this.currentlimit += 10;
+          (evt.target as any).complete();
+        }
+      },2000
+    );
   }
 
   changeType(): void {
