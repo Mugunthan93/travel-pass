@@ -1,5 +1,5 @@
 <ion-content [scrollX]="true">
-  <ion-img src="../../../../assets/ng-img/logo.jpeg"></ion-img>
+  <ion-img [src]="cmpLogo"></ion-img>
   <ion-title>Login</ion-title>
   <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
     <ion-item>

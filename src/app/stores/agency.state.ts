@@ -1,4 +1,3 @@
-import { state } from "@angular/animations";
 import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { map } from "rxjs/operators";

@@ -18,15 +18,23 @@ export class AuthGuard implements CanActivate  {
   }
 
   canActivate(): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    
+
     const isAuth = !!sessionStorage.getItem('session');
     if(isAuth) {
       return true;
     }
     else {
-      this.store.dispatch(new Logout());
+      let localuser = this.store.selectSnapshot(UserState.getUser);
+      if(localuser !== null) {
+        sessionStorage.setItem('session', JSON.stringify(localuser));
+        return true;
+      }
+      else {
+        this.store.dispatch(new Logout());
+        return false;
+      }
     }
   }
 
-  
+
 }

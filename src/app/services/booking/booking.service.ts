@@ -20,12 +20,12 @@ export class BookingService {
 
   myBooking(type : string, booktype : string, bookmode : string) : Observable<HTTPResponse> {
 
-    let typeUrl : string= this.typeUrl1(type);      
+    let typeUrl : string= this.typeUrl1(type);
     let typeUrl2 : string = this.typeUrl2(type);
-    const userId: number = this.store.selectSnapshot(UserState.getUserId);  
+    const userId: number = this.store.selectSnapshot(UserState.getUserId);
     let id : number = userId;
     const startDate = moment({}).format('YYYY-MM-DD%2023:59:59.000+00:00');
-    const endDate = moment({}).subtract(1,'month').format('YYYY-MM-DD%2000:00:01.000+00:00'); 
+    const endDate = moment({}).subtract(1,'month').format('YYYY-MM-DD%2000:00:01.000+00:00');
     const book : { [key: string]: string | string[] } | string = this.bookUrl(type,bookmode);
 
     let url : string = typeUrl + id.toString() + '/' + booktype + '/'  + endDate + "/" + startDate + typeUrl2;
@@ -35,8 +35,8 @@ export class BookingService {
     this.http.setData('json');
 
     if(type == 'flight' || type == 'train') {
-      let params : { [key: string]: string | string[] } = { 
-        "booking_mode": bookmode 
+      let params : { [key: string]: string | string[] } = {
+        "booking_mode": bookmode
       }
 
       return from(this.http.get(url, params));
@@ -52,36 +52,21 @@ export class BookingService {
       case 'hotel' : return '/hotelRequest/gethotelbyuserid/';
       case 'bus' : return '/busRequest/getbusByUser/';
       case 'train' : return '/trainRequest/gettrainbyuserid/';
+      case 'cab' : return '/cabrequest/get/user/id/';
     }
   }
 
   typeUrl2(type : string) {
     switch(type) {
-      case 'flight' : return '/0/999';
-      case 'hotel' : return '/0/10';
-      case 'bus' : return '/0/10';
-      case 'train': return '/0/999';
+      case 'flight' : case 'train': case 'cab' : return '/0/999';
+      case 'hotel' : case 'bus' : return '/0/10';
     }
   }
 
   bookUrl(type : string, mode : string) : { [key: string]: string | string[] } {
-
-    let params = null;
-
     switch(type) {
-      case 'flight' : return { "booking_mode": mode };
-      case 'hotel' : return {};
-      case 'bus' : return {};
-      case 'train': return { "booking_mode": mode };
-    }
-  }
-
-  bookUrl2(type : string, mode : string) : string {
-    switch(type) {
-      case 'flight' : return "?booking_mode="+mode;
-      case 'hotel' : return "";
-      case 'bus' : return "";
-      case 'train': return "?booking_mode="+mode;
+      case 'flight' : case 'train': case 'cab' : return { "booking_mode": mode };
+      case 'hotel' :  case 'bus' : return {};
     }
   }
 
@@ -90,5 +75,5 @@ export class BookingService {
     this.http.setData('json');
     return from(this.http.post('/airlines/sendChangeRequest',param));
   }
-  
+
 }

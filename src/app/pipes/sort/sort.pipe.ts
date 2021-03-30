@@ -34,7 +34,7 @@ export class SortPipe implements PipeTransform {
     else {
 
       arr.sort((a: any, b: any) => {
-  
+
         //number sorting
         if (property == 'id' || property == 'fare' || property == 'Duration' || property == 'StarRating' || property == 'star_rating') {
           return this.numberSorting(a, b, property, order);
@@ -52,11 +52,10 @@ export class SortPipe implements PipeTransform {
 
     }
 
-  } 
+  }
 
 
   numberSorting(a: any, b: any, property: string, order: string) {
-    console.log(a,b,property,order);
     if(a !== undefined &&  b !== undefined) {
       if (order == 'asc' || order == 'default') {
         if (parseInt(b[property]) < parseInt(a[property])) {
@@ -88,24 +87,24 @@ export class SortPipe implements PipeTransform {
 
   dateSorting(a: any, b: any, property: string, order: string) {
     if (order == 'asc' || order == 'default') {
-      if (moment(b[property]).isSameOrBefore(a[property],'date')) {
+      if (moment(b[property]).isBefore(a[property],'minute')) {
         return -1;
       }
-      else if (moment(b[property]).isSameOrAfter(a[property],'date')) {
+      else if (moment(b[property]).isAfter(a[property],'minute')) {
         return 1;
       }
-      else if (moment(b[property]).isSame(a[property],'date')) {
+      else if (moment(b[property]).isSame(a[property],'minute')) {
         return 0;
       }
     }
     else if (order == 'des' || order == 'rotated') {
-      if (moment(b[property]).isSameOrAfter(a[property],'date')) {
+      if (moment(b[property]).isAfter(a[property],'minute')) {
         return -1;
       }
-      else if (moment(b[property]).isSameOrBefore(a[property],'date')) {
+      else if (moment(b[property]).isBefore(a[property],'minute')) {
         return 1;
       }
-      else if (moment(b[property]).isSame(a[property],'date')) {
+      else if (moment(b[property]).isSame(a[property],'minute')) {
         return 0;
       }
     }

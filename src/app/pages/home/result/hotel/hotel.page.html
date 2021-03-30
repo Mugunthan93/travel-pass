@@ -2,7 +2,7 @@
 
     <mat-expansion-panel collapsedHeight="60px" expandedHeight="60px" expanded="true"
       *ngIf="(inventoryList$ | async | sort : (invsortBy$ | async).property : (invsortBy$ | async).state).length !== 0">
-      <mat-expansion-panel-header>
+      <mat-expansion-panel-header class="my-4">
         <ion-item>
           <ion-label>Corporate Deals</ion-label>
         </ion-item>
@@ -18,7 +18,7 @@
               <ion-row>
                 <ion-title class="medium">{{hotel.hotel_name | titlecase}}</ion-title>
                 <ion-label *ngFor="let add of address(hotel)">{{ add }}</ion-label>
-  
+
               </ion-row>
               <ion-row>
                 <ion-label class="bold">{{hotel.price | currency : 'INR'}}</ion-label>
@@ -26,9 +26,9 @@
               </ion-row>
             </ion-row>
           </ion-card-header>
-  
-  
-  
+
+
+
           <ion-card-content>
             <ion-item>
               <ion-row class="img">
@@ -40,7 +40,7 @@
               </ion-row>
             </ion-item>
           </ion-card-content>
-  
+
         </ion-card>
       </ion-virtual-scroll>
     </mat-expansion-panel>
@@ -62,7 +62,7 @@
             </ion-row>
           </ion-row>
         </ion-card-header>
-    
+
         <ion-card-content style="height: 100px;">
           <ion-item>
             <ion-row class="img">
@@ -84,7 +84,7 @@
     </ion-row>
 
     <ion-row class="no-bus" *ngIf="
-    ((hotelList$ | async | sort : (sortBy$ | async).property : (sortBy$ | async).state).length == 0) && 
+    ((hotelList$ | async | sort : (sortBy$ | async).property : (sortBy$ | async).state).length == 0) &&
     ((inventoryList$ | async | sort : (sortBy$ | async).property : (sortBy$ | async).state).length == 0)">
       <ion-title class="large bold">No Hotels Found</ion-title>
     </ion-row>

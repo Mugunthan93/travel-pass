@@ -155,6 +155,7 @@ j
             .pipe(
                 flatMap(
                     (current : HTTPResponse) => {
+                      console.log(current);
                         let company: company[] = JSON.parse(current.data);
 
                         if(company[0].company_type == 'corporate') {

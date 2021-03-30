@@ -15,6 +15,11 @@ $content-padding:(
 );
 
 ion-content {
+
+  &::part(background) {
+    background-size: cover;
+  }
+
     --background:#{$white} url("../../assets/ng-img/bg.jpeg") no-repeat;
 
     --color:#{$content-color};

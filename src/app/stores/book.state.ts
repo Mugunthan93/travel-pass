@@ -273,24 +273,31 @@ export class BookState {
                         if (mode == 'flight') {
                             let airlineLimit = this.store.selectSnapshot(VendorState.getAirlineVendor).cash_limits.amount;
                             console.log(fare,corpLimit, airlineLimit);
-                            // (corpLimit > fare) && (airlineLimit > fare)
-                            if (type == 'one-way') {
-                                return states.dispatch(new BookOneWayTicket());
+                            if((corpLimit > fare) && (airlineLimit > fare)) {
+                              if (type == 'one-way') {
+                                  return states.dispatch(new BookOneWayTicket());
+                              }
+                              else if (type == 'round-trip') {
+                                return states.dispatch(new InternationalTicket());
+                              }
+                              else if (type == 'animated-round-trip') {
+                                  return states.dispatch(new DomesticTicket());
+                              }
+                              else {
+                                return empty();
+                              }
                             }
-                            else if (type == 'round-trip') {
-                              return states.dispatch(new InternationalTicket());
-                            }
-                            else if (type == 'animated-round-trip') {
-                                return states.dispatch(new DomesticTicket());
+                            else {
+                              return failedAlert$;
                             }
                         }
                         else if(mode == 'hotel'){
                             let hotelLimit = this.store.selectSnapshot(VendorState.getHotelVendor).cash_limits.amount;
                             if((corpLimit > fare) && (hotelLimit > fare)) {
-                                // states.dispatch(new HotelRequest(comment, mailCC, purpose))
+                              return states.dispatch(new HotelRequest(states.getState().comment, states.getState().mail, states.getState().purpose))
                             }
                             else {
-                                return failedAlert$;
+                              return failedAlert$;
                             }
                         }
                         return empty();

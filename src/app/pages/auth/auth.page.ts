@@ -5,6 +5,7 @@ import { Login } from 'src/app/stores/auth.state';
 import { ModalController } from '@ionic/angular';
 import { ForgotPasswordComponent } from 'src/app/components/flight/forgot-password/forgot-password.component';
 import { Navigate } from '@ngxs/router-plugin';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-auth',
@@ -13,7 +14,7 @@ import { Navigate } from '@ngxs/router-plugin';
 })
 export class AuthPage implements OnInit {
 
-  cmpLogo: string = "../assets/logo.jpeg";
+  cmpLogo: string = environment.baseURL + "/image/logo_black.png";
   emailPattern: string = '[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,63}';
   loginForm: FormGroup;
   formSubmit: boolean = false;

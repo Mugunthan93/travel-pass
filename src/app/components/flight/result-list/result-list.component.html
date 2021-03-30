@@ -6,9 +6,9 @@
       </ion-text>
       <mat-accordion multi="false">
         <mat-expansion-panel *ngFor="let item of flightList | sort : (sortBy$ | async).property : (sortBy$ | async).state;let i = index" [hideToggle]="true" #panel approxItemHeight="60px">
-          <mat-expansion-panel-header 
-            [collapsedHeight]="'fit-content'" 
-            [expandedHeight]="'fit-content'" 
+          <mat-expansion-panel-header
+            [collapsedHeight]="'fit-content'"
+            [expandedHeight]="'fit-content'"
             (click)="selectFlight(panel,item,$event)">
               <ion-row *ngIf="flightName" [ngClass]="{'selectedItem':item == selectedFlights,'':item !==selectedFlights}">
                 <ion-label class="large bold">{{item.name}}</ion-label>

@@ -6,6 +6,7 @@ import { File } from '@ionic-native/file/ngx';
 import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { ThemeState } from './stores/theme.stata';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 
 
 @Component({
@@ -22,6 +23,7 @@ export class AppComponent implements OnInit, OnDestroy{
     public platform: Platform,
     private androidPermissions: AndroidPermissions,
     private androidFullScreen: AndroidFullScreen,
+    private splashscreen : SplashScreen,
     public alertCtrl: AlertController,
     private file: File
   ) {
@@ -29,48 +31,40 @@ export class AppComponent implements OnInit, OnDestroy{
 
   async ngOnInit() {
 
-    this.theme$ = this.store.select(ThemeState.getTheme);
     await this.platform.ready();
+    this.theme$ = this.store.select(ThemeState.getTheme);
     await this.androidFullScreen.immersiveMode();
-    await this.writeAccess();
+    this.splashscreen.hide();
 
-    // let checkDir$ = concat([
-    //   from(this.file.checkDir(this.file.externalRootDirectory, 'TravellersPass')),
-    //   from(this.file.checkDir(this.file.externalRootDirectory + 'TravellersPass', 'Ticket')),
-    //   from(this.file.checkDir(this.file.externalRootDirectory + 'TravellersPass', 'Image')),
-    //   from(this.file.checkDir(this.file.externalRootDirectory + 'TravellersPass/Image', 'Hotel'))
-    // ]).pipe(flatMap(el => el));
+    //access
+    await this.Access('ACCESS_NETWORK_STATE');
+    await this.Access('WRITE_EXTERNAL_STORAGE');
 
-    // let creatrDir$ = concat([
-    //   from(this.file.createDir(this.file.externalRootDirectory, 'TravellersPass', true)),
-    //   from(this.file.createDir(this.file.externalRootDirectory + 'TravellersPass', 'Ticket', true)),
-    //   from(this.file.createDir(this.file.externalRootDirectory + 'TravellersPass', 'Image', true)),
-    //   from(this.file.createDir(this.file.externalRootDirectory + 'TravellersPass/Image', 'Hotel', true))
-    // ]).pipe(flatMap(el => of(true)));
-
-
+    //folder check
+    await this.checkFolder('','TravellersPass');
+    await this.checkFolder('TravellersPass','Ticket');
+    await this.checkFolder('TravellersPass','Image');
+    await this.checkFolder('TravellersPass/Image','Hotel');
   }
 
-  async networkAccess() {
+  async checkFolder(path : string,dir : string) {
     try {
-      const networkpermission = this.androidPermissions.PERMISSION.ACCESS_NETWORK_STATE;
-      const permission = await this.androidPermissions.checkPermission(networkpermission);
-      if (permission) {
-        await this.androidPermissions.requestPermission(networkpermission);
+      return await this.file.checkDir(this.file.externalRootDirectory + path, dir);
+    }
+    catch(error) {
+      await this.file.createDir(this.file.externalRootDirectory + path, dir, true);
+    }
+  }
+
+  async Access(perm : string) {
+    try {
+      const permission = this.androidPermissions.PERMISSION[perm];
+      const check = await this.androidPermissions.checkPermission(permission);
+      if (check) {
+        await this.androidPermissions.requestPermission(permission);
       }
-    }
-    catch (error) {
-      console.log(error);
-    }
-  }
-
-  async writeAccess() {
-    try {
-      const writeExtStorage = this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE;
-      const permission = await this.androidPermissions.hasPermission(writeExtStorage);
-      console.log(permission);
-      if (!permission) {
-        await this.androidPermissions.requestPermission(writeExtStorage);
+      else {
+        return;
       }
     }
     catch (error) {

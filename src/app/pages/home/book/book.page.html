@@ -19,23 +19,28 @@
 
 <ion-footer>
 
-  <ion-toolbar *ngIf="(invrooms$ | async).length > 0 || (this.isAdmin$ | async)">
-    <ion-buttons slot="start" [hidden]="(bookMode$ | async) == 'cab' || (bookMode$ | async) == 'train'">
-      <ion-button (click)="confirmRequest('request')">
-        <ion-label class="medium bold">Send Request</ion-label>
+  <ion-toolbar *ngIf="this.isAdmin$ | async">
+    <ion-buttons *ngIf="(invrooms$ | async).length > 0" slot="start">
+      <ion-button (click)="confirmRequest('offline')">
+        <ion-label class="medium bold">Offline Request</ion-label>
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="confirmRequest('offline')">
-        <ion-label class="medium bold">Send Offline</ion-label>
+      <ion-button (click)="confirmRequest('book')">
+        <ion-label class="medium bold">Book Now</ion-label>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 
-  <ion-toolbar *ngIf="(this.isAdmin$ | async) && (bookType$ | async) !== 'multi-city' && (bookMode$ | async) == 'flight'">
-    <ion-buttons slot="end">
-      <ion-button (click)="confirmRequest('book')">
-        <ion-label class="medium bold">Book Now</ion-label>
+  <ion-toolbar *ngIf="!(this.isAdmin$ | async)">
+    <ion-buttons *ngIf="(invrooms$ | async).length > 0 || (bookMode$ | async) == 'cab' || (bookMode$ | async) == 'train'" slot="start">
+      <ion-button (click)="confirmRequest('offline')">
+        <ion-label class="medium bold">Offline Request</ion-label>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end" [hidden]="(bookMode$ | async) == 'cab' || (bookMode$ | async) == 'train'">
+      <ion-button (click)="confirmRequest('request')">
+        <ion-label class="medium bold">Send Request</ion-label>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>

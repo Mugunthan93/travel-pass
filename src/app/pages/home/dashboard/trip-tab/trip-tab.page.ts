@@ -12,17 +12,21 @@ import { BookingState, MyAllBooking } from 'src/app/stores/booking.state';
 export class TripTabPage implements OnInit {
 
   allBooking$ : Observable<any[]>;
+  loading : any[];
   status : string = "active";
   activeStatus : string[] = ['new','open','pending','reschedule_pending'];
   confirmedStatus : string[] = ['booked','rescheduled'];
   completedStatus : string[] = ['booked','cancelled'];
   sortObj = {label: "traveldate", state: "rotated", property: "traveldate"};
+  getLoading$ : Observable<boolean>;
 
   constructor(
     private store : Store
   ) { }
 
   ngOnInit() {
+    this.loading = [1,2,3,4,5,6];
+    this.getLoading$ = this.store.select(BookingState.getLoading);
     this.allBooking$ = this.store.select(BookingState.getAllBookings);
   }
 

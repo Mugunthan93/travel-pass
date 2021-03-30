@@ -407,12 +407,13 @@ export class BookingState {
   myAllBooking(states: StateContext<booking>, action: MyAllBooking) {
 
     states.patchState({
-      allbookings : []
+      allbookings : [],
+      loading : true
     });
     console.log(action);
 
 
-    let type$ = from(['flight','hotel','bus','train']);
+    let type$ = from(['flight','hotel','bus','train','cab']);
     let currentStatus = (status: string) => {
       switch(status) {
         case 'active' : return ['new','open','pending'];
@@ -440,8 +441,11 @@ export class BookingState {
                             let book : any[] = _.isUndefined(JSON.parse(response.data).data) ? [] : JSON.parse(response.data).data;
                             let trip = this.tripResponse(book,states.getState().tripstatus);
                             states.setState(patch({
-                              allbookings : append(trip)
+                              allbookings : append(trip),
+                              loading : false
                             }));
+
+                            console.log(states.getState().allbookings);
                           }
                         )
                       );
@@ -1004,9 +1008,107 @@ export class BookingState {
               status : trip.status
             }
         }
+        else if(trip.hasOwnProperty('cab_requests')) {
+          console.log(trip);
+            let lastTrip =  trip.cab_requests.length - 1;
+            return {
+              type : 'cab',
+              source: trip.cab_requests[0].sourceCity,
+              destination: trip.cab_requests[lastTrip].destinationCity,
+              startdate: moment(trip.cab_requests[0].doj).utc().format("YYYY-MM-DDTHH:mm:ss"),
+              enddate : moment(trip.cab_requests[lastTrip].doj).utc().format("YYYY-MM-DDTHH:mm:ss"),
+              id : trip.id,
+              traveldate : moment(trip.cab_requests[0].doj).utc().format("YYYY-MM-DDTHH:mm:ss"),
+              journey : this.journeyType(trip.passenger_details.trip_type),
+              status : trip.status
+            }
+        }
       })
-    };
-    case 'confirmed' : {
+      };
+      case 'confirmed' : {
+          return data.map((trip) => {
+          if(trip.hasOwnProperty('trip_requests')) {
+            console.log(trip);
+            let lastdetail = trip.passenger_details.flight_details.length - 1;
+            let lastTrip = trip.passenger_details.flight_details[lastdetail].Segments.length - 1;
+            let lastFlight = trip.passenger_details.flight_details[lastdetail].Segments[lastTrip].length - 1;
+            let sourceplace : string = trip.passenger_details.flight_details[0].Segments[0][0].Origin.Airport.CityName;
+            let sourcedate : string = trip.passenger_details.flight_details[0].Segments[0][0].Origin.DepTime;
+
+            let desplace : string = trip.passenger_details.flight_details[lastdetail].Segments[lastTrip][lastFlight].Destination.Airport.CityName;
+            let desdate : string = trip.passenger_details.flight_details[lastdetail].Segments[lastTrip][lastFlight].Destination.ArrTime;
+
+            return {
+              id : trip.id,
+              source: sourceplace,
+              destination: desplace,
+              startdate : sourcedate,
+              enddate : desdate,
+              type : 'flight',
+              traveldate : sourcedate,
+              journey : trip.trip_requests.JourneyType,
+              status : trip.status
+            }
+
+          }
+          else if(trip.hasOwnProperty('hotel_requests')) {
+            return {
+              id : trip.id,
+              source : trip.guest_details.basiscInfo.HotelName,
+              destination : trip.guest_details.basiscInfo.CityName,
+              startdate : trip.guest_details.basiscInfo.CheckInDate,
+              enddate : trip.guest_details.basiscInfo.CheckOutDate,
+              type : 'hotel',
+              traveldate : trip.guest_details.basiscInfo.CheckInDate,
+              status : trip.status
+            }
+
+          }
+          else if(trip.hasOwnProperty('bus_requests')) {
+            return {
+              id : trip.id,
+              source : trip.passenger_details.selectedbus[0].operatorName,
+              destination : trip.passenger_details.selectedbus[0].busType,
+              startdate : trip.passenger_details.selectedbus[0].departureTime,
+              enddate :trip.passenger_details.selectedbus[0].arrivalTime,
+              type : 'bus',
+              traveldate : trip.bus_requests[0].doj,
+              status : trip.status
+            }
+          }
+          else if(trip.hasOwnProperty('train_requests')) {
+              console.log(trip);
+              let lastTrip =  trip.train_requests.Segments.length - 1;
+              return {
+                type : 'train',
+                source: trip.train_requests.Segments[0].OriginName,
+                destination: trip.train_requests.Segments[lastTrip].DestinationName,
+                startdate: moment(trip.train_requests.Segments[0].depDate).utc().format("YYYY-MM-DDTHH:mm:ss"),
+                enddate : moment(trip.train_requests.Segments[lastTrip].depDate).utc().format("YYYY-MM-DDTHH:mm:ss"),
+                id : trip.id,
+                traveldate : moment(trip.train_requests.Segments[0].depDate).utc().format("YYYY-MM-DDTHH:mm:ss"),
+                journey : trip.train_requests.JourneyType,
+                status : trip.status
+              }
+          }
+          else if(trip.hasOwnProperty('cab_requests')) {
+            console.log(trip);
+              let lastTrip =  trip.train_requests.length - 1;
+              return {
+                type : 'cab',
+                source: trip.cab_requests[0].sourceCity,
+                destination: trip.cab_requests[lastTrip].destinationCity,
+                startdate: moment(trip.cab_requests[0].doj).utc().format("YYYY-MM-DDTHH:mm:ss"),
+                enddate : moment(trip.cab_requests[lastTrip].doj).utc().format("YYYY-MM-DDTHH:mm:ss"),
+                id : trip.id,
+                traveldate : moment(trip.cab_requests[0].doj).utc().format("YYYY-MM-DDTHH:mm:ss"),
+                journey : this.journeyType(trip.passenger_details.trip_type),
+                status : trip.status
+              }
+          }
+        });
+      };
+      case 'completed' : {
         return data.map((trip) => {
         if(trip.hasOwnProperty('trip_requests')) {
           console.log(trip);
@@ -1072,76 +1174,35 @@ export class BookingState {
               status : trip.status
             }
         }
-      });
-    };
-    case 'completed' : {
-      return data.map((trip) => {
-      if(trip.hasOwnProperty('trip_requests')) {
-        console.log(trip);
-        let lastdetail = trip.passenger_details.flight_details.length - 1;
-        let lastTrip = trip.passenger_details.flight_details[lastdetail].Segments.length - 1;
-        let lastFlight = trip.passenger_details.flight_details[lastdetail].Segments[lastTrip].length - 1;
-        let sourceplace : string = trip.passenger_details.flight_details[0].Segments[0][0].Origin.Airport.CityName;
-        let sourcedate : string = trip.passenger_details.flight_details[0].Segments[0][0].Origin.DepTime;
-
-        let desplace : string = trip.passenger_details.flight_details[lastdetail].Segments[lastTrip][lastFlight].Destination.Airport.CityName;
-        let desdate : string = trip.passenger_details.flight_details[lastdetail].Segments[lastTrip][lastFlight].Destination.ArrTime;
-
-        return {
-          id : trip.id,
-          source: sourceplace,
-          destination: desplace,
-          startdate : sourcedate,
-          enddate : desdate,
-          type : 'flight',
-          traveldate : sourcedate,
-          journey : trip.trip_requests.JourneyType,
-          status : trip.status
-        }
-
-      }
-      else if(trip.hasOwnProperty('hotel_requests')) {
-        return {
-          id : trip.id,
-          source : trip.guest_details.basiscInfo.HotelName,
-          destination : trip.guest_details.basiscInfo.CityName,
-          startdate : trip.guest_details.basiscInfo.CheckInDate,
-          enddate : trip.guest_details.basiscInfo.CheckOutDate,
-          type : 'hotel',
-          traveldate : trip.guest_details.basiscInfo.CheckInDate,
-          status : trip.status
-        }
-
-      }
-      else if(trip.hasOwnProperty('bus_requests')) {
-        return {
-          id : trip.id,
-          source : trip.passenger_details.selectedbus[0].operatorName,
-          destination : trip.passenger_details.selectedbus[0].busType,
-          startdate : trip.passenger_details.selectedbus[0].departureTime,
-          enddate :trip.passenger_details.selectedbus[0].arrivalTime,
-          type : 'bus',
-          traveldate : trip.bus_requests[0].doj,
-          status : trip.status
-        }
-      }
-      else if(trip.hasOwnProperty('train_requests')) {
+        else if(trip.hasOwnProperty('cab_requests')) {
           console.log(trip);
-          let lastTrip =  trip.train_requests.Segments.length - 1;
-          return {
-            type : 'train',
-            source: trip.train_requests.Segments[0].OriginName,
-            destination: trip.train_requests.Segments[lastTrip].DestinationName,
-            startdate: moment(trip.train_requests.Segments[0].depDate).utc().format("YYYY-MM-DDTHH:mm:ss"),
-            enddate : moment(trip.train_requests.Segments[lastTrip].depDate).utc().format("YYYY-MM-DDTHH:mm:ss"),
-            id : trip.id,
-            traveldate : moment(trip.train_requests.Segments[0].depDate).utc().format("YYYY-MM-DDTHH:mm:ss"),
-            journey : trip.train_requests.JourneyType,
-            status : trip.status
-          }
-      }
-    });
-    };
+            let lastTrip =  trip.cab_requests.length - 1;
+            return {
+              type : 'cab',
+              source: trip.cab_requests[0].sourceCity,
+              destination: trip.cab_requests[lastTrip].destinationCity,
+              startdate: moment(trip.cab_requests[0].doj).utc().format("YYYY-MM-DDTHH:mm:ss"),
+              enddate : moment(trip.cab_requests[lastTrip].doj).utc().format("YYYY-MM-DDTHH:mm:ss"),
+              id : trip.id,
+              traveldate : moment(trip.cab_requests[0].doj).utc().format("YYYY-MM-DDTHH:mm:ss"),
+              journey : this.journeyType(trip.passenger_details.trip_type),
+              status : trip.status
+            }
+        }
+      });
+      };
+    }
+  }
+
+  journeyType(type : string) {
+    if (type == "one-way") {
+      return 1;
+    }
+    else if (type == "round-trip") {
+      return 2;
+    }
+    else if (type == "multi-city") {
+      return 3;
     }
   }
 

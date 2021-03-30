@@ -2,6 +2,7 @@ import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { ResultState, result } from '../result.state';
 import * as _ from 'lodash';
 import { Injectable } from '@angular/core';
+import { patch, updateItem } from '@ngxs/store/operators';
 
 export interface sort {
     flight: sortButton[]
@@ -134,256 +135,69 @@ export class SortState {
 
     @Action(SortChange)
     sortChange(states: StateContext<sort>, action: SortChange) {
-
-        if (action.mode == 'flight') {
-
-            if (action.type == 'departure') {
-                let currentStates: sortButton[] = states.getState().departure.map(
-                    (el: sortButton) => {
-                        if (!_.isEqual(action.button, el)) {
-                            let currentstate = Object.assign({}, el);
-                            currentstate.state = "default";
-                            return currentstate;
-                        }
-                        else {
-                            return el;
-                        }
-                    });
-
-                states.patchState({
-                    departure: currentStates,
-                    currentdeparture: action.button
-                });
-            }
-
-            else if (action.type == 'return') {
-                let currentStates: sortButton[] = states.getState().return.map(
-                    (el: sortButton) => {
-                        if (!_.isEqual(action.button, el)) {
-                            let currentstate = Object.assign({}, el);
-                            currentstate.state = "default";
-                            return currentstate;
-                        }
-                        else {
-                            return el;
-                        }
-                    });
-
-                states.patchState({
-                    return: currentStates,
-                    currentreturn: action.button
-                });
-            }
-
-            else {
-                let currentStates: sortButton[] = states.getState().flight.map(
-                    (el: sortButton) => {
-                        if (!_.isEqual(action.button,el)) {
-                            let currentstate = Object.assign({}, el);
-                            currentstate.state = "default";
-                            return currentstate;
-                        }
-                        else {
-                            return el;
-                        }
-                    });
-
-                states.patchState({
-                    flight: currentStates,
-                    currentFlight: action.button
-                });
-            }
-
-        }
-        else if (action.mode == 'hotel') {
-            let currentStates: sortButton[] = states.getState().flight.map(
-                (el: sortButton) => {
-                    if (!_.isEqual(action.button, el)) {
-                        let currentstate = Object.assign({}, el);
-                        currentstate.state = "default";
-                        return currentstate;
-                    }
-                    else {
-                        return el;
-                    }
-                });
-            states.patchState({
-                flight: currentStates,
-                currentFlight: action.button
-            });
-        }
-        else if (action.mode == 'bus') {
-            let currentStates: sortButton[] = states.getState().bus.map(
-                (el: sortButton) => {
-                    if (!_.isEqual(action.button, el)) {
-                        let currentstate = Object.assign({}, el);
-                        currentstate.state = "default";
-                        return currentstate;
-                    }
-                    else {
-                        return el;
-                    }
-                });
-            states.patchState({
-                bus: currentStates,
-                currentBus: action.button
-            });
-        }
-
+      switch(action.mode) {
+        case 'flight' : switch(action.type) {
+          case 'departure' : states.setState(patch({
+            departure : updateItem((el : any) => action.button.property !== el.property,patch({state : "default"})),
+            currentdeparture : patch(action.button)
+          }));
+          case 'return' : states.setState(patch({
+            return : updateItem((el : any) => action.button.property !== el.property,patch({state : "default"})),
+            currentreturn : patch(action.button)
+          }));
+        };
+        case 'flight' : states.setState(patch({
+          flight : updateItem((el : any) => action.button.property !== el.property,patch({state : "default"})),
+          currentFlight : patch(action.button)
+        }));
+        case 'hotel' : states.setState(patch({
+          hotel : updateItem((el : any) => action.button.property !== el.property,patch({state : "default"})),
+          currentHotel : patch(action.button)
+        }));
+        case 'bus' : states.setState(patch({
+          bus : updateItem((el : any) => action.button.property !== el.property,patch({state : "default"})),
+          currentBus : patch(action.button)
+        }));
+      }
     }
 
     @Action(SortBy)
     sortBy(states: StateContext<sort>, action: SortBy) {
 
-        if (action.mode == 'flight') {
-
-            if (action.type == 'departure') {
-                let currentsort: sortButton[] = states.getState().departure;
-                let sortedarray: sortButton[] = [];
-                currentsort.forEach((el, ind) => {
-                    if (_.isEqual(action.button, el) && action.button.state == 'default') {
-                        sortedarray[ind] = {
-                            label: action.button.label,
-                            property: action.button.property,
-                            state: 'rotated'
-                        }
-                    }
-                    else if (_.isEqual(action.button, el) && action.button.state == 'rotated') {
-                        sortedarray[ind] = {
-                            label: action.button.label,
-                            property: action.button.property,
-                            state: 'default'
-                        }
-                    }
-                    else {
-                        sortedarray[ind] = el;
-                    }
-                });
-
-                states.patchState({
-                    departure: sortedarray,
-                    currentdeparture: action.button
-                });
-            }
-
-            else if (action.type == 'return') {
-                let currentsort: sortButton[] = states.getState().return;
-                let sortedarray: sortButton[] = [];
-                currentsort.forEach((el, ind) => {
-                    if (_.isEqual(action.button, el) && action.button.state == 'default') {
-                        sortedarray[ind] = {
-                            label: action.button.label,
-                            property: action.button.property,
-                            state: 'rotated'
-                        }
-                    }
-                    else if (_.isEqual(action.button, el) && action.button.state == 'rotated') {
-                        sortedarray[ind] = {
-                            label: action.button.label,
-                            property: action.button.property,
-                            state: 'default'
-                        }
-                    }
-                    else {
-                        sortedarray[ind] = el;
-                    }
-                });
-
-                states.patchState({
-                    return: sortedarray,
-                    currentreturn: action.button
-                });
-            }
-
-            else {
-                let currentsort: sortButton[] = states.getState().flight;
-                let sortedarray: sortButton[] = [];
-                currentsort.forEach((el, ind) => {
-                    if (_.isEqual(action.button, el) && action.button.state == 'default') {
-                        sortedarray[ind] = {
-                            label: action.button.label,
-                            property: action.button.property,
-                            state: 'rotated'
-                        }
-                    }
-                    else if (_.isEqual(action.button, el) && action.button.state == 'rotated') {
-                        sortedarray[ind] = {
-                            label: action.button.label,
-                            property: action.button.property,
-                            state: 'default'
-                        }
-                    }
-                    else {
-                        sortedarray[ind] = el;
-                    }
-                });
-
-                states.patchState({
-                    flight: sortedarray,
-                    currentFlight: action.button
-                });
-            }
-
-
-        }
-        else if (action.mode == 'hotel') {
-
-            let currentsort: sortButton[] = states.getState().hotel;
-            let sortedarray: sortButton[] = [];
-            currentsort.forEach((el, ind) => {
-                if (_.isEqual(action.button, el) && action.button.state == 'default') {
-                    sortedarray[ind] = {
-                        label: action.button.label,
-                        property: action.button.property,
-                        state: 'rotated'
-                    }
-                }
-                else if (_.isEqual(action.button, el) && action.button.state == 'rotated') {
-                    sortedarray[ind] = {
-                        label: action.button.label,
-                        property: action.button.property,
-                        state: 'default'
-                    }
-                }
-                else {
-                    sortedarray[ind] = el;
-                }
-            });
-
-            states.patchState({
-                hotel: sortedarray,
-                currentHotel: action.button
-            });
-
-        }
-        else if (action.mode == 'bus') {
-            let currentsort: sortButton[] = states.getState().bus;
-            let sortedarray: sortButton[] = [];
-            currentsort.forEach((el, ind) => {
-                if (_.isEqual(action.button, el) && action.button.state == 'default') {
-                    sortedarray[ind] = {
-                        label: action.button.label,
-                        property: action.button.property,
-                        state: 'rotated'
-                    }
-                }
-                else if (_.isEqual(action.button, el) && action.button.state == 'rotated') {
-                    sortedarray[ind] = {
-                        label: action.button.label,
-                        property: action.button.property,
-                        state: 'default'
-                    }
-                }
-                else {
-                    sortedarray[ind] = el;
-                }
-            });
-
-            states.patchState({
-                bus: sortedarray,
-                currentBus: action.button
-            });
-        }
+        switch(action.mode) {
+            case 'flight' : switch(action.type) {
+              case 'departure' : states.setState(patch({
+                departure : updateItem((el : any) => action.button.property == el.property,patch({
+                    state : action.button.state == "default" ? "rotated" : "default"
+                })),
+                currentdeparture : patch(action.button)
+              }));
+              case 'return' : states.setState(patch({
+                return : updateItem((el : any) => action.button.property == el.property,patch({
+                    state : action.button.state == "default" ? "rotated" : "default"
+                })),
+                currentreturn : patch(action.button)
+              }));
+            };
+            case 'flight' : states.setState(patch({
+              flight : updateItem((el : any) => action.button.property == el.property,patch({
+                  state : action.button.state == "default" ? "rotated" : "default"
+              })),
+              currentFlight : patch(action.button)
+            }));
+            case 'hotel' : states.setState(patch({
+              hotel : updateItem((el : any) => action.button.property == el.property,patch({
+                  state : action.button.state == "default" ? "rotated" : "default"
+                })),
+              currentHotel : patch(action.button)
+            }));
+            case 'bus' : states.setState(patch({
+              bus : updateItem((el : any) => action.button.property == el.property,patch({
+                  state : action.button.state == "default" ? "rotated" : "default"
+                })),
+              currentBus : patch(action.button)
+            }));
+          }
     }
 
 }

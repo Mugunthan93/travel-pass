@@ -191,7 +191,7 @@ export class UserState {
         let currentId: number = states.getState().id;
 
         if(currentUser.frequent_flyer_number.length == 0) {
-          currentUser.frequent_flyer_number.length = null;
+          currentUser.frequent_flyer_number = null;
         }
 
         console.log(action.user);
@@ -210,6 +210,5 @@ export class UserState {
                     }
                 )
             )
-
     }
 }

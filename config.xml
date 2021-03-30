@@ -4,7 +4,7 @@
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework.com" href="http://ionicframework.com/">Ionic Framework Team</author>
     <allow-navigation href="*" />
-    <content original-src="index.html" src="http://192.168.1.8:8101" />
+    <content original-src="index.html" src="http://192.168.1.13:8100" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -25,7 +25,6 @@
     <preference name="KeyboardResizeMode" value="ionic" />
     <preference name="KeyboardDisplayRequiresUserAction" value="false" />
     <preference name="AndroidLaunchMode" value="singleTask" />
-    <preference name="loadUrlTimeoutValue" value="700000" />
     <platform name="android">
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application" xmlns:android="http://schemas.android.com/apk/res/android">
             <application android:networkSecurityConfig="@xml/network_security_config" />
@@ -111,13 +110,5 @@
     <plugin name="cordova-plugin-splashscreen" spec="5.0.2" />
     <plugin name="cordova-plugin-ionic-webview" spec="^4.0.0" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
-    <allow-navigation href="http://192.168.1.10:8100" sessionid="f4ae44e2" />
-    <allow-navigation href="http://192.168.1.3:8100" sessionid="46749c2a" />
-    <allow-navigation href="http://192.168.1.12:8100" sessionid="cc907429" />
-    <allow-navigation href="http://192.168.225.181:8101" sessionid="b538f170" />
-    <allow-navigation href="http://192.168.1.12:8101" sessionid="e9a64cce" />
-    <allow-navigation href="http://192.168.1.13:8100" sessionid="d254daa0" />
-    <allow-navigation href="http://192.168.1.14:8100" sessionid="d11eeb62" />
-    <allow-navigation href="http://192.168.1.15:8100" sessionid="4d7c00a3" />
-    <allow-navigation href="http://192.168.1.8:8101" sessionid="eb884f30" />
+    <allow-navigation href="http://192.168.1.13:8100" sessionid="2d963b21" />
 </widget>

@@ -1,7 +1,6 @@
-import { resultObj, itinerarytrip, emailtrip, fareRule, trips, baggage, AddEmailTrips } from '../flight.state';
+import { resultObj, AddEmailTrips } from '../flight.state';
 import { Store, State, Action, StateContext, Selector } from '@ngxs/store';
-import { flightSearchResult, flightResult, flightData } from 'src/app/models/search/flight';
-import { FilterState } from '../filter.state';
+import { flightSearchResult } from 'src/app/models/search/flight';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import { BaseFlightResult } from './flight-result';

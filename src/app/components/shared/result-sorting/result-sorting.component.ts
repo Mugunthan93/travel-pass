@@ -3,10 +3,9 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { Store } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
 import { sortButton, SortState, SortChange, SortBy } from 'src/app/stores/result/sort.state';
-import * as _ from 'lodash';
 import { ResultState } from 'src/app/stores/result.state';
-import { map, flatMap } from 'rxjs/operators';
-import { SearchState } from 'src/app/stores/search.state';
+import { flatMap } from 'rxjs/operators';
+import * as _ from 'lodash';
 
 @Component({
   selector: "app-result-sorting",
@@ -33,6 +32,7 @@ export class ResultSortingComponent implements OnInit, OnChanges {
   constructor(private store: Store) {}
 
   ngOnInit() {
+
     this.buttons$ = of(this.type).pipe(
       flatMap((type: string) => {
         if (type == "departure") {
@@ -66,17 +66,13 @@ export class ResultSortingComponent implements OnInit, OnChanges {
 
     this.currentButton$.subscribe((el) => {
       if(this.currentButton) {
+        console.log(el);
         this.currentButton = el
       }
     });
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.type.currentValue == "departure") {
-      this.currentButton$ = this.store.select(SortState.getDepartureSortBy);
-    } else if (changes.type.currentValue == "return") {
-      this.currentButton$ = this.store.select(SortState.getReturnSortBy);
-    }
 
     this.buttons$ = of(changes.type.currentValue).pipe(
       flatMap((type: string) => {
@@ -92,16 +88,24 @@ export class ResultSortingComponent implements OnInit, OnChanges {
         }
       })
     );
+
     if (this.currentButton$) {
-      this.currentButton$.subscribe((el) => (this.currentButton = el));
+      this.currentButton$.subscribe((el) => {
+        console.log(el);
+        this.currentButton = el
+      });
     }
+
+    if (changes.type.currentValue == "departure") {
+      this.currentButton$ = this.store.select(SortState.getDepartureSortBy);
+    } else if (changes.type.currentValue == "return") {
+      this.currentButton$ = this.store.select(SortState.getReturnSortBy);
+    }
+
   }
 
-  SortChange(evt: CustomEvent) {
-    console.log(evt, this.currentButton);
-  }
-
-  SortBy(item: sortButton) {
+  SortBy(item: sortButton, index : number) {
+    console.log(item,this.currentButton,index);
     if (item.property !== this.currentButton.property) {
       this.store.dispatch(new SortChange(item, this.resultMode, this.type));
       this.store.dispatch(new SortBy(item, this.resultMode, this.type));
@@ -113,7 +117,7 @@ export class ResultSortingComponent implements OnInit, OnChanges {
   selectedButton(button: sortButton): string {
     if (this.currentButton.property == button.property) {
       return "selectedItem";
-    } else if (this.currentButton.property == button.property) {
+    } else {
       return "";
     }
   }

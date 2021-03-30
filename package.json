@@ -5,8 +5,8 @@
   "homepage": "https://ionicframework.com/",
   "scripts": {
     "ng": "ng",
-    "start": "ionic cordova run android -l --external --no-native-run --port=8101",
-    "build": "ionic cordova run android",
+    "start": "ionic cordova run android -l --prod --external --no-native-run --port=8100",
+    "build": "ionic cordova run android --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -75,6 +75,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
+    "cordova-browser": "^6.0.0",
     "cordova-plugin-advanced-http": "^3.1.0",
     "cordova-plugin-android-permissions": "^1.1.2",
     "cordova-plugin-device": "^2.0.2",
@@ -133,7 +134,8 @@
       }
     },
     "platforms": [
-      "android"
+      "android",
+      "browser"
     ]
   }
 }

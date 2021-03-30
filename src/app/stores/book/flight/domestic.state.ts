@@ -1,5 +1,5 @@
 import { Selector, Action, State, Store, StateContext } from '@ngxs/store';
-import { flightResult, flightData, metrixBoard } from 'src/app/models/search/flight';
+import { flightResult, flightData, metrixBoard, flightSearchPayload } from 'src/app/models/search/flight';
 import { fareRule, FlightResultState, SSR } from '../../result/flight.state';
 import { bookObj, value, FLightBookState, rt_uapi_params, rt_sendRequest, rt_kioskRequest, SetFare, SetMeal, SetBaggage, taxes, plb, totalsummary, SetServiceCharge, GetPLB, SetTaxable, SetGST, baggage, meal, bookpayload, ticketpayload, servicebySegment } from '../flight.state';
 import { FlightService } from 'src/app/services/flight/flight.service';
@@ -750,7 +750,7 @@ export class DomesticBookState {
       let taxable = this.store.selectSnapshot(FLightBookState.getTaxable);
 
       let trip = this.store.selectSnapshot(RoundTripSearchState.getTripRequest);
-      let currenttrip = {
+      let currenttrip : flightSearchPayload = {
         AdultCount: trip.AdultCount,
         ChildCount: trip.ChildCount,
         InfantCount: trip.InfantCount,
@@ -1112,7 +1112,7 @@ export class DomesticBookState {
         allGST.return.igst;
 
       let trip = this.store.selectSnapshot(RoundTripSearchState.getTripRequest);
-      let currenttrip = {
+      let currenttrip : flightSearchPayload = {
         AdultCount: trip.AdultCount,
         ChildCount: trip.ChildCount,
         InfantCount: trip.InfantCount,

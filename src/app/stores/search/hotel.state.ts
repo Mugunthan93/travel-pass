@@ -562,6 +562,9 @@ export class HotelSearchState {
             payload: payload
         });
 
+        console.log(JSON.stringify(payload));
+        console.log(JSON.stringify(staticpay));
+
         let hotelResponse$ = this.hotelService.searchHotel(payload)
             .pipe(
                 map(
@@ -631,6 +634,7 @@ export class HotelSearchState {
                 catchError(
                     (error) => {
                         console.log(error);
+                        console.log(JSON.stringify(error));
                         this.store.dispatch(new SetLoading(1));
                         return forkJoin(loadingDismiss$,failedAlert$).pipe(
                             map(
