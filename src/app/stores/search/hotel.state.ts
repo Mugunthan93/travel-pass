@@ -565,25 +565,6 @@ export class HotelSearchState {
         console.log(JSON.stringify(payload));
         console.log(JSON.stringify(staticpay));
 
-        let hotelResponse$ = this.hotelService.searchHotel(payload)
-            .pipe(
-                map(
-                    (response: HTTPResponse) => {
-                        console.log(response);
-                        return response;
-                    }
-                )
-            );
-        let dumpResponse$ = this.hotelService.getStaticData(staticpay)
-            .pipe(
-                map(
-                    (response: HTTPResponse) => {
-                        console.log(response);
-                        return response;
-                    }
-                )
-            );
-
         return loadingPresent$
             .pipe(
                 tap(
@@ -593,74 +574,104 @@ export class HotelSearchState {
                     }
                 ),
                 flatMap(
-                    () => {
-                        return forkJoin([hotelResponse$, dumpResponse$])
-                    }
-                ),
-                flatMap(
-                    (response) => {
-                        console.log(response);
-                        let hotelresult: HTTPResponse = response[0];
-                        let dumpresponse: HTTPResponse = response[1];
+                  () => {
+                    return this.hotelService.searchHotel(payload)
+                      .pipe(
+                          flatMap(
+                              (response: HTTPResponse) => {
+                                  console.log(response);
+                                  return this.hotelService.getStaticData(staticpay)
+                                .pipe(
+                                    flatMap(
+                                        (response2: HTTPResponse) => {
+                                            console.log(response2);
+                                            return  of([response,response2])
+                                              .pipe(
+                                                flatMap(
+                                                  (response) => {
+                                                      console.log(response);
+                                                      let hotelresult: HTTPResponse = response[0];
+                                                      let dumpresponse: HTTPResponse = response[1];
 
-                        let list1: any[] = JSON.parse(hotelresult.data).response.HotelResults.filter(el => el.IsTBOMapped);
-                        let list2: any[] = JSON.parse(dumpresponse.data).ArrayOfBasicPropertyInfo.BasicPropertyInfo;
+                                                      let list1: any[] = JSON.parse(hotelresult.data).response.HotelResults.filter(el => el.IsTBOMapped);
+                                                      let list2: any[] = JSON.parse(dumpresponse.data).ArrayOfBasicPropertyInfo.BasicPropertyInfo;
 
-                        console.log(list1,list2);
-                        let list3: hotelresultlist[] = list1.map(el => _.pick(el, ["HotelCode", "Price", "ResultIndex", "StarRating", "SupplierHotelCodes", "Place", "Description","HotelPicture"]));
-                        let list4: staticresponselist[] = list2.map(el => _.pick(el, ["Address", "Attributes", "HotelName", "TBOHotelCode","VendorMessages"]));
-                        let list5: (staticresponselist & hotelresultlist)[] = list3
-                            .map(
-                                (dump) => {
-                                    if (list4.some(result => result.TBOHotelCode == dump.HotelCode)) {
-                                        let result1 = list4.find(result => result.TBOHotelCode == dump.HotelCode);
-                                        return _.merge(dump, result1);
-                                    }
-                                }
-                            );
-                        let list6: hotelresponse = JSON.parse(hotelresult.data).response;
-                        list6.HotelResults = _.compact(list5);
+                                                      console.log(list1,list2);
+                                                      let list3: hotelresultlist[] = list1.map(el => _.pick(el, ["HotelCode", "Price", "ResultIndex", "StarRating", "SupplierHotelCodes", "Place", "Description","HotelPicture"]));
+                                                      let list4: staticresponselist[] = list2.map(el => _.pick(el, ["Address", "Attributes", "HotelName", "TBOHotelCode","VendorMessages"]));
+                                                      let list5: (staticresponselist & hotelresultlist)[] = list3
+                                                          .map(
+                                                              (dump) => {
+                                                                  if (list4.some(result => result.TBOHotelCode == dump.HotelCode)) {
+                                                                      let result1 = list4.find(result => result.TBOHotelCode == dump.HotelCode);
+                                                                      return _.merge(dump, result1);
+                                                                  }
+                                                              }
+                                                          );
+                                                      let list6: hotelresponse = JSON.parse(hotelresult.data).response;
+                                                      list6.HotelResults = _.compact(list5);
 
-                        states.dispatch(new HotelResponse(list6));
-                        return loadingDismiss$
-                    }
-                ),
-                tap(
-                    () => {
-                        states.dispatch(new ResultMode('hotel'));
-                        states.dispatch(new Navigate(['/', 'home', 'result', 'hotel']));
-                    }
-                ),
-                catchError(
-                    (error) => {
-                        console.log(error);
-                        console.log(JSON.stringify(error));
-                        this.store.dispatch(new SetLoading(1));
-                        return forkJoin(loadingDismiss$,failedAlert$).pipe(
-                            map(
-                                (alert) => {
-                                    let failedAlert = alert[1];
-                                    if (error.status == -4) {
-                                        failedAlert.message = "Search Timeout, Try Again";
-                                    }
-                                    //no result error
-                                    if (error.status == 400) {
-                                        const errorString = JSON.parse(error.error);
-                                        failedAlert.message = 'No Hotels are found,Try some other Date';
-                                    }
-                                    //502 => proxy error
-                                    if (error.status == 502) {
-                                        failedAlert.message = "Server failed to get correct information";
-                                    }
-                                    //503 => service unavailable, Maintanence downtime
-                                    if (error.status == 503) {
-                                        failedAlert.message = "Server Maintanence Try again Later";
-                                    }
-                                    return from(failedAlert.present());
-                                }
-                            )
-                        );
-                    }
+                                                      states.dispatch(new HotelResponse(list6));
+                                                      return loadingDismiss$
+                                                  }
+                                                ),
+                                                tap(
+                                                    () => {
+                                                        states.dispatch(new ResultMode('hotel'));
+                                                        states.dispatch(new Navigate(['/', 'home', 'result', 'hotel']));
+                                                    }
+                                                ),
+                                                catchError(
+                                                    (error) => {
+                                                        console.log(error);
+                                                        console.log(JSON.stringify(error));
+                                                        this.store.dispatch(new SetLoading(1));
+                                                        return forkJoin(loadingDismiss$,failedAlert$).pipe(
+                                                            map(
+                                                                (alert) => {
+                                                                    let failedAlert = alert[1];
+                                                                    if (error.status == -4) {
+                                                                        failedAlert.message = "Search Timeout, Try Again";
+                                                                    }
+                                                                    //no result error
+                                                                    if (error.status == 400) {
+                                                                        const errorString = JSON.parse(error.error);
+                                                                        failedAlert.message = 'No Hotels are found,Try some other Date';
+                                                                    }
+                                                                    //502 => proxy error
+                                                                    if (error.status == 502) {
+                                                                        failedAlert.message = "Server failed to get correct information";
+                                                                    }
+                                                                    //503 => service unavailable, Maintanence downtime
+                                                                    if (error.status == 503) {
+                                                                        failedAlert.message = "Server Maintanence Try again Later";
+                                                                    }
+                                                                    return from(failedAlert.present());
+                                                                }
+                                                            )
+                                                        );
+                                                    }
+                                                )
+                                              );
+                                        }
+                                    ),
+                                    catchError(
+                                      (error) => {
+                                        console.log(error);
+                                        return of(error);
+                                      }
+                                    )
+                                )
+                              }
+                          ),
+                          catchError(
+                            (error) => {
+                              console.log(error);
+                              return of(error);
+                            }
+                          )
+                      )
+                  }
                 )
             )
 

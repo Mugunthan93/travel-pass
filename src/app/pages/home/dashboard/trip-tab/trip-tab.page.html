@@ -1,5 +1,24 @@
 <ion-content>
-    <ion-item *ngFor="let book of (allBooking$ | async | sort : sortObj.property : sortObj.state)">
+  <ion-segment [value]="tripStatus$ | async" (ionChange)="changeStatus($event)">
+    <ion-segment-button layout="icon-end" value="active">
+        <ion-badge *ngIf="(activePending$ | async) !== 0">{{ activePending$ | async }}</ion-badge>
+        <ion-label>
+            Active
+        </ion-label>
+    </ion-segment-button>
+    <ion-segment-button layout="icon-end" value="confirmed">
+        <ion-label>
+            Confirmed
+        </ion-label>
+    </ion-segment-button>
+    <ion-segment-button layout="icon-end" value="completed">
+        <ion-label>
+            Completed
+        </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <ion-list>
+    <ion-item *ngFor="let book of (allBooking$ | async | sort : sortObj.property : sortObj.state);let i = index" (click)="getBook(book)">
         <ion-row slot="start">
             <ion-label class="large bold">{{ book.traveldate | date : 'd' }}</ion-label>
             <ion-label class="large">{{ book.traveldate | date : 'MMM' }}</ion-label>
@@ -8,13 +27,13 @@
         <ion-row class="trip-detail">
             <ion-row class="row1" *ngIf="book.type == 'flight' || book.type == 'train'">
               <ion-row class="mx-4">
-                <ion-label class="medium bold">{{ book.source }} </ion-label>
+                <ion-label class="my-auto medium bold">{{ book.source }} </ion-label>
                 <ion-icon  *ngIf="book.journey ? book.journey == 1 : false" name="arrow-forward-sharp"></ion-icon>
                 <ion-icon  *ngIf="book.journey ? book.journey == 2 : false" src="../../../assets/icons/straight.svg"></ion-icon>
                 <ion-icon *ngIf="book.journey ? book.journey == 3 : false" src="../../../assets/icons/around.svg"></ion-icon>
                 <ion-label class="medium bold">{{ book.destination }}</ion-label>
               </ion-row>
-              <ion-row class="mx-4"> 
+              <ion-row class="mx-4">
                 <ion-text class="bold">{{ book.startdate | date : 'h:mm a' }} </ion-text>
                 <ion-text class="bold">{{ book.enddate | date : 'h:mm a' }} </ion-text>
               </ion-row>
@@ -24,7 +43,7 @@
                 <ion-label class="medium bold">{{ book.source }} </ion-label>
                 <ion-label class="medium bold">{{ book.destination }}</ion-label>
               </ion-row>
-              <ion-row class="mx-4"> 
+              <ion-row class="mx-4">
                 <ion-text class="bold">{{ book.startdate | date : 'h:mm a' }} </ion-text>
                 <ion-text class="bold">{{ book.enddate | date : 'h:mm a' }} </ion-text>
               </ion-row>
@@ -35,9 +54,9 @@
                 <ion-label class="medium bold">{{ book.source }} </ion-label>
                 <ion-label class="medium bold">{{ book.destination }}</ion-label>
               </ion-row>
-              <ion-row class="mx-4"> 
-                <ion-text class="bold">{{ book.startdate | date : 'h:mm a' }} </ion-text>
-                <ion-text class="bold">{{ book.enddate | date : 'h:mm a' }} </ion-text>
+              <ion-row class="mx-4">
+                <ion-text class="bold">{{ book.startdate }} </ion-text>
+                <ion-text class="bold">{{ book.enddate }} </ion-text>
               </ion-row>
             </ion-row>
 
@@ -50,4 +69,5 @@
             </ion-row>
         </ion-row>
     </ion-item>
+  </ion-list>
 </ion-content>

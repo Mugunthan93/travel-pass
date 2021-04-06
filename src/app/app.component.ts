@@ -32,8 +32,8 @@ export class AppComponent implements OnInit, OnDestroy{
   async ngOnInit() {
 
     await this.platform.ready();
-    this.theme$ = this.store.select(ThemeState.getTheme);
     await this.androidFullScreen.immersiveMode();
+    this.theme$ = this.store.select(ThemeState.getTheme);
     this.splashscreen.hide();
 
     //access
@@ -80,4 +80,5 @@ export class AppComponent implements OnInit, OnDestroy{
   }
 
 }
+
 

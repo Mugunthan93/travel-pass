@@ -7,6 +7,7 @@ import { PassengerListComponent } from 'src/app/components/shared/passenger-list
 import { GetRequest } from 'src/app/stores/book/train/one-way.state';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BookConfirmationComponent } from 'src/app/components/shared/book-confirmation/book-confirmation.component';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-one-way',
@@ -17,7 +18,7 @@ export class OneWayPage implements OnInit {
 
   onewayForm: Observable<trainonewayform>;
   types: string[] = ['Normal', 'Thakal'];
-  
+
   bookForm: FormGroup;
   formsubmit: boolean = false;
 

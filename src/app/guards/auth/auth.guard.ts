@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, CanActivate } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, CanActivate, CanActivateChild, Router } from '@angular/router';
 import { combineLatest, iif, Observable, of } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { AuthState, Logout } from 'src/app/stores/auth.state';
 import { UserState } from 'src/app/stores/user.state';
-import { delayWhen, flatMap, switchMap } from 'rxjs/operators';
+import { delayWhen, flatMap, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { user } from 'src/app/models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -12,28 +13,45 @@ import { delayWhen, flatMap, switchMap } from 'rxjs/operators';
 export class AuthGuard implements CanActivate  {
 
   constructor(
-    private store : Store
+    private store : Store,
+    private router : Router
   ) {
 
   }
 
-  canActivate(): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+  canActivate(
+    next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
 
-    const isAuth = !!sessionStorage.getItem('session');
-    if(isAuth) {
-      return true;
-    }
-    else {
-      let localuser = this.store.selectSnapshot(UserState.getUser);
-      if(localuser !== null) {
-        sessionStorage.setItem('session', JSON.stringify(localuser));
-        return true;
-      }
-      else {
-        this.store.dispatch(new Logout());
-        return false;
-      }
-    }
+    console.log(next,state);
+
+    return this.store.select(UserState.getUser)
+      .pipe(
+        withLatestFrom(of(JSON.parse(sessionStorage.getItem('session')) as user)),
+        flatMap(
+          (usr : user[]) => {
+            console.log(usr);
+            let local = usr[0];
+            let session = usr[1];
+
+            if(session !== null) {
+              return of(true);
+            }
+            else {
+              if(local !== null) {
+                sessionStorage.setItem('session',JSON.stringify(local));
+                return of(true);
+              }
+              else {
+                this.store.dispatch(new Logout());
+                return of(false);
+              }
+            }
+
+          }
+        )
+      );
   }
 
 

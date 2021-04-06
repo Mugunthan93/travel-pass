@@ -195,7 +195,8 @@ export class ApprovalState {
 
         states.patchState({
             pending : [],
-            approved : []
+            approved : [],
+            loading : true
         });
         console.log(action);
 
@@ -214,8 +215,9 @@ export class ApprovalState {
                             let book : any[] = _.isUndefined(JSON.parse(response.data)) ? [] : JSON.parse(response.data);
                             let trip : any[] = this.tripResponse(book);
                             states.setState(patch({
-                                pending : trip.filter(el => el.status == 'pending'),
-                                approved : trip.filter(el => el.status == 'open')
+                                pending : append(trip.filter(el => el.status == 'pending')),
+                                approved : append(trip.filter(el => el.status == 'open')),
+                                loading : false
                             }));
                         }
                     )

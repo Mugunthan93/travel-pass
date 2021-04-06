@@ -27,7 +27,7 @@
 
 <ion-content>
   <div [hidden]="(tripStatus$ | async) == 'approved'" style="text-align: -webkit-center;">
-    <ion-spinner class="m-3" *ngIf="(pending$ | async).length == 0"></ion-spinner>
+    <ion-spinner class="m-3" *ngIf="(pending$ | async).length == 0  && (getLoading$ | async)"></ion-spinner>
     <ion-item *ngFor="let book of (pending$ | async | sort : sortObj.property : sortObj.state)" (click)="getApprove(book.id,book.type)">
         <ion-row slot="start">
             <ion-label class="large bold">{{ book.traveldate | date : 'd' }}</ion-label>
@@ -35,7 +35,7 @@
             <ion-label>{{ book.traveldate | date : 'EEE' }}</ion-label>
         </ion-row>
         <ion-row class="trip-detail">
-          
+
             <ion-row class="row1" *ngIf="book.type == 'flight' || book.type == 'train'">
               <ion-row class="mx-4">
                 <ion-label class="medium bold">{{ book.source }} </ion-label>
@@ -44,34 +44,34 @@
                 <ion-icon *ngIf="book.journey == 3" src="../../../assets/icons/around.svg"></ion-icon>
                 <ion-label class="medium bold">{{ book.destination }}</ion-label>
               </ion-row>
-              <ion-row class="mx-4"> 
+              <ion-row class="mx-4">
                 <ion-text class="bold">{{ book.startdate }} </ion-text>
                 <ion-text class="bold">{{ book.enddate }} </ion-text>
               </ion-row>
             </ion-row>
-  
+
             <ion-row class="row2" *ngIf="book.type == 'hotel'">
               <ion-row class="mx-4">
                 <ion-label class="medium bold">{{ book.source }} </ion-label>
                 <ion-label class="medium bold">{{ book.destination }}</ion-label>
               </ion-row>
-              <ion-row class="mx-4"> 
+              <ion-row class="mx-4">
                 <ion-text class="bold">{{ book.startdate }} </ion-text>
                 <ion-text class="bold">{{ book.enddate }} </ion-text>
               </ion-row>
             </ion-row>
-  
+
             <ion-row class="row3" *ngIf="book.type == 'bus'">
               <ion-row class="mx-4">
                 <ion-label class="medium bold">{{ book.source }} </ion-label>
                 <ion-label class="medium bold">{{ book.destination }}</ion-label>
               </ion-row>
-              <ion-row class="mx-4"> 
+              <ion-row class="mx-4">
                 <ion-text class="bold">{{ book.startdate }} </ion-text>
                 <ion-text class="bold">{{ book.enddate }} </ion-text>
               </ion-row>
             </ion-row>
-  
+
             <ion-row class="px-4">
                 <ion-icon *ngIf="book.type == 'flight'" src="../../../assets/icons/dashboard/trip-flight.svg"></ion-icon>
                 <ion-icon *ngIf="book.type == 'hotel'" src="../../../assets/icons/dashboard/hotel.svg"></ion-icon>
@@ -82,7 +82,7 @@
     </ion-item>
   </div>
   <div [hidden]="(tripStatus$ | async) == 'pending'" style="text-align: -webkit-center;">
-    <ion-spinner  class="m-3" *ngIf="(approved$ | async).length == 0"></ion-spinner>
+    <ion-spinner  class="m-3" *ngIf="(approved$ | async).length == 0  && (getLoading$ | async)"></ion-spinner>
     <ion-item *ngFor="let book of (approved$ | async | sort : sortObj.property : sortObj.state)" (click)="getApprove(book.id,book.type)">
         <ion-row slot="start">
             <ion-label class="large bold">{{ book.traveldate | date : 'd' }}</ion-label>
@@ -98,34 +98,34 @@
                 <ion-icon *ngIf="book.journey == 3" src="../../../assets/icons/around.svg"></ion-icon>
                 <ion-label class="medium bold">{{ book.destination }}</ion-label>
               </ion-row>
-              <ion-row class="mx-4"> 
+              <ion-row class="mx-4">
                 <ion-text class="bold">{{ book.startdate }} </ion-text>
                 <ion-text class="bold">{{ book.enddate }} </ion-text>
               </ion-row>
             </ion-row>
-  
+
             <ion-row class="row2" *ngIf="book.type == 'hotel'">
               <ion-row class="mx-4">
                 <ion-label class="medium bold">{{ book.source }} </ion-label>
                 <ion-label class="medium bold">{{ book.destination }}</ion-label>
               </ion-row>
-              <ion-row class="mx-4"> 
+              <ion-row class="mx-4">
                 <ion-text class="bold">{{ book.startdate }} </ion-text>
                 <ion-text class="bold">{{ book.enddate }} </ion-text>
               </ion-row>
             </ion-row>
-  
+
             <ion-row class="row3" *ngIf="book.type == 'bus'">
               <ion-row class="mx-4">
                 <ion-label class="medium bold">{{ book.source }} </ion-label>
                 <ion-label class="medium bold">{{ book.destination }}</ion-label>
               </ion-row>
-              <ion-row class="mx-4"> 
+              <ion-row class="mx-4">
                 <ion-text class="bold">{{ book.startdate }} </ion-text>
                 <ion-text class="bold">{{ book.enddate }} </ion-text>
               </ion-row>
             </ion-row>
-  
+
             <ion-row class="px-4">
                 <ion-icon *ngIf="book.type == 'flight'" src="../../../assets/icons/dashboard/trip-flight.svg"></ion-icon>
                 <ion-icon *ngIf="book.type == 'hotel'" src="../../../assets/icons/dashboard/hotel.svg"></ion-icon>

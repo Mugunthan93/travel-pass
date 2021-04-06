@@ -14,6 +14,7 @@ import { ApproveRequestComponent } from 'src/app/components/shared/approve-reque
 export class ApprovalRequestPage implements OnInit {
 
   activePending$: Observable<number>;
+  getLoading$: Observable<boolean>;
 
   constructor(
     private store: Store,
@@ -34,6 +35,7 @@ export class ApprovalRequestPage implements OnInit {
     this.approved$ = this.store.select(ApprovalState.getApproved);
     this.tripStatus$ = this.store.select(ApprovalState.getStatus);
     this.activePending$ = this.store.select(ApprovalState.getActiveApproval);
+    this.getLoading$ = this.store.select(ApprovalState.getLoading);
 
   }
 

@@ -15,6 +15,7 @@ export class HotelService {
   constructor(
     private http: NativeHttpService
   ) {
+
   }
 
   getPrivateInventory(companyId : string) {
@@ -23,18 +24,20 @@ export class HotelService {
     this.http.setData('json');
     return from(this.http.get( "/hotelinventory/" + companyId,{}));
   }
-  
+
   searchHotel(payload: hotelsearchpayload): Observable<HTTPResponse> {
-    this.http.setReqTimeout(300);
+    this.http.setReqTimeout(3000);
     console.log(this.http.getReqTimeout());
-    this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
-    this.http.setData('json');
+    // this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
+    // this.http.setHeader(environment.baseURL, "Accept", "application/json, text/plain, */*");
+    // this.http.setData('json');
     return from(this.http.post("/hotels/search", payload));
   }
 
   async getHotelInfo(hotelpayload: getHotelInfo): Promise<HTTPResponse> {
     this.http.setReqTimeout(300);
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
+    this.http.setHeader(environment.baseURL, "Accept", "application/json, text/plain, */*");
     this.http.setData('json');
     return await this.http.post('/hotels/getHotelInfo',hotelpayload);
   }
@@ -61,9 +64,12 @@ export class HotelService {
   }
 
   getStaticData(staticpay: staticpayload): Observable<HTTPResponse> {
-    this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
-    this.http.setData('json');
-    return from(this.http.post('/hotels/getStaticData/',staticpay))
+    this.http.setReqTimeout(3000);
+    console.log(this.http.getReqTimeout());
+    // this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
+    // this.http.setHeader(environment.baseURL, "Accept", "application/json, text/plain, */*");
+    // this.http.setData('json');
+    return from(this.http.post('/hotels/getStaticData',staticpay))
   }
 
   sendofflineInventory(offlineinv : offlineinvReq) : Observable<HTTPResponse> {

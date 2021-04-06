@@ -33,7 +33,9 @@ export interface booking {
     mode : string
     status : string
     allbookings : any[]
+    viewBookings : any[]
     tripstatus : string
+    currentRequest : any
 }
 
 export interface cancel_request {
@@ -173,9 +175,21 @@ export class SetCancelType {
   }
 }
 
+export class SetType {
+  static readonly type = "[booking] SetType";
+  constructor(public type : string) {
+  }
+}
+
 export class SetTripStatus {
   static readonly type = "[booking] SetTripStatus";
   constructor(public status : string) {
+  }
+}
+
+export class SetCurrentRequest {
+  static readonly type = "[booking] SetCurrentRequest";
+  constructor(public request : any) {
   }
 }
 
@@ -192,14 +206,16 @@ export class SetTripStatus {
     cancelType : 'full',
     status : 'open',
     allbookings : [],
-    tripstatus : 'active'
+    viewBookings : [],
+    tripstatus : 'active',
+    currentRequest : null
   },
 })
 
 @Injectable()
 export class BookingState {
 
-  static activeStatus : string[] = ['new','open','pending'];
+  static activeStatus : string[] = ['new','open','pending','rej'];
   static confirmedStatus : string[] = ['booked','rescheduled','cancelled'];
   static completedStatus : string[] = ['booked','rescheduled'];
 
@@ -216,6 +232,11 @@ export class BookingState {
     public flightService : FlightService,
     public androidPermissions : AndroidPermissions
   ) {}
+
+  @Selector()
+  static getCurrentRequest(state : booking) : any {
+    return state.currentRequest;
+  }
 
   @Selector()
   static getNewBooking(state: booking): any[] {
@@ -294,8 +315,20 @@ export class BookingState {
   }
 
   @Selector()
+  static getViewBookings(state : booking) : any[] {
+    return state.viewBookings;
+  }
+
+  @Selector()
   static getTripStatus(state : booking) : string {
     return state.tripstatus;
+  }
+
+  @Action(SetCurrentRequest)
+  setCurrentRequest(states: StateContext<booking>, action: SetCurrentRequest) {
+    states.patchState({
+      currentRequest : states.getState().viewBookings.find(el => el.id == action.request.id)
+    });
   }
 
 
@@ -310,6 +343,13 @@ export class BookingState {
   setCancelType(states: StateContext<booking>, action: SetCancelType) {
     states.patchState({
       cancelType : action.status
+    });
+  }
+
+  @Action(SetType)
+  setType(states: StateContext<booking>, action: SetType) {
+    states.patchState({
+      type : action.type
     });
   }
 
@@ -408,6 +448,7 @@ export class BookingState {
 
     states.patchState({
       allbookings : [],
+      viewBookings : [],
       loading : true
     });
     console.log(action);
@@ -416,7 +457,7 @@ export class BookingState {
     let type$ = from(['flight','hotel','bus','train','cab']);
     let currentStatus = (status: string) => {
       switch(status) {
-        case 'active' : return ['new','open','pending'];
+        case 'active' : return ['new','open','pending','rej'];
         case 'confirmed' : return ['booked','cancelled','rescheduled'];
         case 'completed' : return ['booked','rescheduled'];
       }
@@ -441,6 +482,7 @@ export class BookingState {
                             let book : any[] = _.isUndefined(JSON.parse(response.data).data) ? [] : JSON.parse(response.data).data;
                             let trip = this.tripResponse(book,states.getState().tripstatus);
                             states.setState(patch({
+                              viewBookings : append(book),
                               allbookings : append(trip),
                               loading : false
                             }));

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthGuard } from 'src/app/guards/auth/auth.guard';
 
 import { HomePage } from './home.page';
 
@@ -10,23 +11,28 @@ const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardPageModule)
+        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardPageModule),
+        canActivate: [AuthGuard]
       },
       {
         path: 'search',
-        loadChildren: () => import('./search/search.module').then(m => m.SearchPageModule)
+        loadChildren: () => import('./search/search.module').then(m => m.SearchPageModule),
+        canActivate: [AuthGuard]
       },
       {
         path: 'result',
-        loadChildren: () => import('./result/result.module').then(m => m.ResultPageModule)
+        loadChildren: () => import('./result/result.module').then(m => m.ResultPageModule),
+        canActivate: [AuthGuard]
       },
       {
         path: 'book',
-        loadChildren: () => import('./book/book.module').then(m => m.BookPageModule)
+        loadChildren: () => import('./book/book.module').then(m => m.BookPageModule),
+        canActivate: [AuthGuard]
       },
       {
         path: 'approval-request',
-        loadChildren: () => import('./approval-request/approval-request.module').then(m => m.ApprovalRequestPageModule)
+        loadChildren: () => import('./approval-request/approval-request.module').then(m => m.ApprovalRequestPageModule),
+        canActivate: [AuthGuard]
       },
       {
         path: '',
@@ -42,11 +48,13 @@ const routes: Routes = [
   },
   {
     path: 'profile',
-    loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule)
+    loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'expense-list',
-    loadChildren: () => import('./expense-list/expense-list.module').then( m => m.ExpenseListPageModule)
+    loadChildren: () => import('./expense-list/expense-list.module').then( m => m.ExpenseListPageModule),
+    canActivate: [AuthGuard]
   }
 
 ];

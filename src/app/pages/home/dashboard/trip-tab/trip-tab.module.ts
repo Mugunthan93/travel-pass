@@ -8,6 +8,8 @@ import { TripTabPageRoutingModule } from './trip-tab-routing.module';
 
 import { TripTabPage } from './trip-tab.page';
 import { PipeModule } from 'src/app/modules/pipe.module';
+import { ViewRequestComponent } from 'src/app/components/shared/view-request/view-request.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   imports: [
@@ -15,8 +17,15 @@ import { PipeModule } from 'src/app/modules/pipe.module';
     FormsModule,
     IonicModule,
     PipeModule,
-    TripTabPageRoutingModule
+    TripTabPageRoutingModule,
+    MatExpansionModule
   ],
-  declarations: [TripTabPage]
+  declarations: [
+    TripTabPage,
+    ViewRequestComponent
+  ],
+  entryComponents : [
+    ViewRequestComponent
+  ]
 })
 export class TripTabPageModule {}
