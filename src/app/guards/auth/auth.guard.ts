@@ -39,14 +39,8 @@ export class AuthGuard implements CanActivate  {
               return of(true);
             }
             else {
-              if(local !== null) {
-                sessionStorage.setItem('session',JSON.stringify(local));
-                return of(true);
-              }
-              else {
-                this.store.dispatch(new Logout());
-                return of(false);
-              }
+              this.store.dispatch(new Logout());
+              return of(false);
             }
 
           }

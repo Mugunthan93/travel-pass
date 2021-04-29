@@ -14,7 +14,7 @@ import { flightpassenger } from '../passenger/flight.passenger.states';
 import { Injectable } from '@angular/core';
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { append, patch } from '@ngxs/store/operators';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { AgencyState } from '../agency.state';
 import { CompanyState } from '../company.state';
 import { forkJoin } from 'rxjs';

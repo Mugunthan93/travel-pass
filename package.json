@@ -6,7 +6,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ionic cordova run android -l --prod --external --no-native-run --port=8100",
-    "build": "ionic cordova run android --prod",
+    "build": "ionic cordova run android --prod  --no-native-run --port=8100",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -46,6 +46,7 @@
     "@ngxs/storage-plugin": "^3.7.1",
     "@ngxs/store": "^3.7.1",
     "@types/lodash": "^4.14.168",
+    "angular-user-idle": "^2.2.5",
     "bootstrap": "^5.0.0-beta2",
     "cordova-android": "9.0.0",
     "core-js": "^3.8.3",

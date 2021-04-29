@@ -4,7 +4,7 @@ import * as moment from 'moment';
 import { ModalController, AlertController, LoadingController } from '@ionic/angular';
 import { nationality, hotelcity } from '../shared.state';
 import { HotelService } from 'src/app/services/hotel/hotel.service';
-import { from, forkJoin, of, Observable } from 'rxjs';
+import { from, forkJoin, of, Observable, combineLatest } from 'rxjs';
 import { map, catchError, tap, flatMap, concat } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import { hotelprice, supplierhotelcodes, hotelresponse, HotelResponse, SetLoading } from '../result/hotel.state';
@@ -585,7 +585,7 @@ export class HotelSearchState {
                                     flatMap(
                                         (response2: HTTPResponse) => {
                                             console.log(response2);
-                                            return  of([response,response2])
+                                            return  combineLatest([of(response),of(response2)])
                                               .pipe(
                                                 flatMap(
                                                   (response) => {
@@ -634,17 +634,21 @@ export class HotelSearchState {
                                                                         failedAlert.message = "Search Timeout, Try Again";
                                                                     }
                                                                     //no result error
-                                                                    if (error.status == 400) {
+                                                                    else if (error.status == 400) {
                                                                         const errorString = JSON.parse(error.error);
                                                                         failedAlert.message = 'No Hotels are found,Try some other Date';
                                                                     }
                                                                     //502 => proxy error
-                                                                    if (error.status == 502) {
+                                                                    else if (error.status == 502) {
                                                                         failedAlert.message = "Server failed to get correct information";
                                                                     }
                                                                     //503 => service unavailable, Maintanence downtime
-                                                                    if (error.status == 503) {
+                                                                    else if (error.status == 503) {
                                                                         failedAlert.message = "Server Maintanence Try again Later";
+                                                                    }
+                                                                    else {
+                                                                      const errorString = JSON.parse(error.error);
+                                                                      failedAlert.message = errorString;
                                                                     }
                                                                     return from(failedAlert.present());
                                                                 }
@@ -658,7 +662,30 @@ export class HotelSearchState {
                                     catchError(
                                       (error) => {
                                         console.log(error);
-                                        return of(error);
+                                        return forkJoin(loadingDismiss$,failedAlert$).pipe(
+                                          map(
+                                              (alert) => {
+                                                  let failedAlert = alert[1];
+                                                  if (error.status == -4) {
+                                                      failedAlert.message = "Search Timeout, Try Again";
+                                                  }
+                                                  //no result error
+                                                  if (error.status == 400) {
+                                                      const errorString = JSON.parse(error.error);
+                                                      failedAlert.message = 'No Hotels are found,Try some other Date';
+                                                  }
+                                                  //502 => proxy error
+                                                  if (error.status == 502) {
+                                                      failedAlert.message = "Server failed to get correct information";
+                                                  }
+                                                  //503 => service unavailable, Maintanence downtime
+                                                  if (error.status == 503) {
+                                                      failedAlert.message = "Server Maintanence Try again Later";
+                                                  }
+                                                  return from(failedAlert.present());
+                                              }
+                                          )
+                                      );
                                       }
                                     )
                                 )

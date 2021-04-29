@@ -3,11 +3,11 @@ import { Platform, AlertController } from '@ionic/angular';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { AndroidFullScreen } from '@ionic-native/android-full-screen/ngx';
 import { File } from '@ionic-native/file/ngx';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { ThemeState } from './stores/theme.stata';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-
+import { UserIdleService } from 'angular-user-idle';
 
 @Component({
   selector: 'app-root',
@@ -32,8 +32,8 @@ export class AppComponent implements OnInit, OnDestroy{
   async ngOnInit() {
 
     await this.platform.ready();
-    await this.androidFullScreen.immersiveMode();
     this.theme$ = this.store.select(ThemeState.getTheme);
+    await this.immersiveMode();
     this.splashscreen.hide();
 
     //access
@@ -52,6 +52,7 @@ export class AppComponent implements OnInit, OnDestroy{
       return await this.file.checkDir(this.file.externalRootDirectory + path, dir);
     }
     catch(error) {
+      console.log(error);
       await this.file.createDir(this.file.externalRootDirectory + path, dir, true);
     }
   }
@@ -60,10 +61,12 @@ export class AppComponent implements OnInit, OnDestroy{
     try {
       const permission = this.androidPermissions.PERMISSION[perm];
       const check = await this.androidPermissions.checkPermission(permission);
-      if (check) {
+      console.log(check);
+      if (!check.hasPermission) {
         await this.androidPermissions.requestPermission(permission);
       }
       else {
+        console.log(check);
         return;
       }
     }
@@ -76,7 +79,24 @@ export class AppComponent implements OnInit, OnDestroy{
     return this.theme$;
   }
 
+  async immersiveMode() {
+    try {
+      await this.androidFullScreen.isSupported();
+      await this.androidFullScreen.isImmersiveModeSupported();
+      await this.androidFullScreen.immersiveMode();
+    }
+    catch(error) {
+      console.log(error);
+      let alert = await this.alertCtrl.create({
+        message : error
+      });
+
+      await alert.present();
+    }
+  }
+
   ngOnDestroy() {
+
   }
 
 }

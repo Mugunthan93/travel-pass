@@ -86,6 +86,10 @@ export class FlightService {
   }
 
   getPLB(code : string,cls : string,triptype : string) {
+    this.http.setReqTimeout(300);
+    console.log(this.http.getReqTimeout());
+    this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
+    this.http.setData('json');
     console.log(code,cls,triptype);
     let plbparam = {
       "a_code" : code.toString(),

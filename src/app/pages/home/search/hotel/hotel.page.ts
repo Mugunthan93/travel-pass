@@ -36,7 +36,7 @@ export class HotelPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    
+
     this.store.dispatch(new GetPrivateInventory());
     this.rooms$ = this.store.select(HotelSearchState.getRooms);
 
@@ -63,7 +63,7 @@ export class HotelPage implements OnInit {
       component: SelectModalComponent,
       componentProps: {
         title: 'city'
-        
+
       }
     });
 
@@ -136,7 +136,7 @@ export class HotelPage implements OnInit {
 
     const options: CalendarModalOptions = {
       title: field.toLocaleUpperCase(),
-      pickMode: 'range',
+      pickMode: 'single',
       color: '#e87474',
       cssClass: 'ion2-calendar',
       weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -144,10 +144,9 @@ export class HotelPage implements OnInit {
       canBackwardsSelected: false,
       closeLabel: 'Close',
       doneLabel: 'OK',
-      defaultDateRange: {
-        from: FromDate,
-        to: 0
-      }
+      defaultDate: this.hotelSearch.controls[field].value,
+      from: FromDate,
+      to:0
     }
 
     const modal = await this.modalCtrl.create({
@@ -160,10 +159,11 @@ export class HotelPage implements OnInit {
     modal.present();
 
     const event: any = await modal.onDidDismiss();
-    console.log(event.data);
     if (event.role == 'done') {
-      this.hotelSearch.controls['checkin'].patchValue(event.data.from.dateObj);
-      this.hotelSearch.controls['checkout'].patchValue(event.data.to.dateObj);
+      if (field == 'checkin' && event.data.dateObj > this.hotelSearch.controls['checkout'].value) {
+        this.hotelSearch.controls['checkout'].setValue(null);
+      }
+      this.hotelSearch.controls[field].patchValue(event.data.dateObj);
     }
     else if (event.role == 'cancel') {
       return;

@@ -10,6 +10,7 @@ import { OneWayResponse } from '../../result/flight/oneway.state';
 import { BaseFlightSearch } from './filght-search';
 import * as moment from 'moment';
 import { Injectable } from '@angular/core';
+import { SharedService } from 'src/app/services/shared/shared.service';
 
 export interface onewaySearch {
     formData: oneWayForm,
@@ -59,7 +60,8 @@ export class OneWaySearchState extends BaseFlightSearch{
         private store : Store,
         public loadingCtrl: LoadingController,
         public alertCtrl: AlertController,
-        private flightService : FlightService
+        private flightService : FlightService,
+        private sharedService : SharedService
     ) {
 
         super();
@@ -152,9 +154,12 @@ export class OneWaySearchState extends BaseFlightSearch{
         await loading.present();
 
         let currentState = states.getState();
+        let token = JSON.parse((await this.sharedService.getToken()).data).TokenId
 
         states.patchState({
             payload: {
+                EndUserIp : "192.168.10.10",
+                TokenId: token,
                 AdultCount: currentState.formData.traveller.adult.toString(),
                 ChildCount: currentState.formData.traveller.child.toString(),
                 InfantCount: currentState.formData.traveller.infant.toString(),
@@ -181,7 +186,6 @@ export class OneWaySearchState extends BaseFlightSearch{
                 type_of_booking: "airline"
             }
         });
-
 
         const metrixData = states.getState();
         try {

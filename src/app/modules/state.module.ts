@@ -4,7 +4,7 @@ import { NgxsModule } from '@ngxs/store';
 import { AuthState } from '../stores/auth.state';
 import { environment } from 'src/environments/environment';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
-import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
+import { NgxsRouterPluginModule, RouterStateSerializer } from '@ngxs/router-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { UserState } from '../stores/user.state';
 import { DashboardState } from '../stores/dashboard.state';
@@ -65,6 +65,7 @@ import { AgencyState } from '../stores/agency.state';
 import { VendorState } from '../stores/vendor.state';
 import { CabSearchState } from '../stores/search/cab.state';
 import { CabPassengerState } from '../stores/passenger/cab.passenger.state';
+import { Params, RouterStateSnapshot } from '@angular/router';
 
 export const stateArray = [
       UserState,
@@ -143,6 +144,31 @@ export const stateArray = [
       CabSearchState
 ];
 
+export interface RouterStateParams {
+  url: string;
+  params: Params;
+  queryParams: Params;
+}
+
+// Map the router snapshot to { url, params, queryParams }
+export class CustomRouterStateSerializer implements RouterStateSerializer<RouterStateParams> {
+  serialize(routerState: RouterStateSnapshot): RouterStateParams {
+    const {
+      url,
+      root: { queryParams }
+    } = routerState;
+
+    let { root: route } = routerState;
+    while (route.firstChild) {
+      route = route.firstChild;
+    }
+
+    const { params } = route;
+
+    return { url, params, queryParams };
+  }
+}
+
 @NgModule({
   imports: [
     CommonModule,
@@ -160,6 +186,9 @@ export const stateArray = [
     })
   ],
   declarations: [BookConfirmationComponent],
-  entryComponents: [BookConfirmationComponent]
+  entryComponents: [BookConfirmationComponent],
+  providers : [
+    { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer }
+  ]
 })
 export class StateModule {}

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthGuard } from 'src/app/guards/auth/auth.guard';
 
 import { DashboardPage } from './dashboard.page';
 
@@ -10,15 +11,15 @@ const routes: Routes = [
     children: [
       {
         path: 'home-tab',
-        loadChildren: () => import('./home-tab/home-tab.module').then(m => m.HomeTabPageModule)
+        loadChildren: () => import('./home-tab/home-tab.module').then(m => m.HomeTabPageModule),
       },
       {
         path: 'trip-tab',
-        loadChildren: () => import('./trip-tab/trip-tab.module').then(m => m.TripTabPageModule)
+        loadChildren: () => import('./trip-tab/trip-tab.module').then(m => m.TripTabPageModule),
       },
       {
         path: 'expense-tab',
-        loadChildren: () => import('./expense-tab/expense-tab.module').then(m => m.ExpenseTabPageModule)
+        loadChildren: () => import('./expense-tab/expense-tab.module').then(m => m.ExpenseTabPageModule),
       },
       {
         path: '',

@@ -16,7 +16,7 @@ export class BaseFlightSearch {
         else if (cls == "premium economy") {
             return "3";
         }
-        else if (cls == "bussiness") {
+        else if (cls == "business") {
             return "4";
         }
         else if (cls == "first class") {

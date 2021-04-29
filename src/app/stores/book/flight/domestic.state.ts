@@ -1,7 +1,7 @@
 import { Selector, Action, State, Store, StateContext } from '@ngxs/store';
 import { flightResult, flightData, metrixBoard, flightSearchPayload } from 'src/app/models/search/flight';
-import { fareRule, FlightResultState, SSR } from '../../result/flight.state';
-import { bookObj, value, FLightBookState, rt_uapi_params, rt_sendRequest, rt_kioskRequest, SetFare, SetMeal, SetBaggage, taxes, plb, totalsummary, SetServiceCharge, GetPLB, SetTaxable, SetGST, baggage, meal, bookpayload, ticketpayload, servicebySegment } from '../flight.state';
+import { fareRule, SSR } from '../../result/flight.state';
+import { bookObj, value, FLightBookState, rt_uapi_params, rt_sendRequest, rt_kioskRequest, SetFare, SetMeal, SetBaggage, totalsummary, SetServiceCharge, GetPLB, SetTaxable, SetGST, baggage, meal, bookpayload, ticketpayload, servicebySegment } from '../flight.state';
 import { FlightService } from 'src/app/services/flight/flight.service';
 import { DomesticResultState } from '../../result/flight/domestic.state';
 import { RoundTripSearch, RoundTripSearchState } from '../../search/flight/round-trip.state';
@@ -754,7 +754,7 @@ export class DomesticBookState {
         AdultCount: trip.AdultCount,
         ChildCount: trip.ChildCount,
         InfantCount: trip.InfantCount,
-        JourneyType: 1,
+        JourneyType: 2,
         Segments: type == "onward" ? [trip.Segments[0]] : [trip.Segments[1]],
         sources: trip.sources
       }
@@ -766,8 +766,8 @@ export class DomesticBookState {
         passenger_details: {
             kioskRequest: kioskRequest,
             passenger: this.store.selectSnapshot(FlightPassengerState.getSelectedPassengers),
-            flight_details: type == "onward" ? [depfareQuote] : [refareQuote],
-            fareQuoteResults: type == "onward" ? [depfareQuote] : [refareQuote],
+            flight_details: this.fareQuote('req',type , [depfareQuote,refareQuote]),
+            fareQuoteResults: this.fareQuote('req',type , [depfareQuote,refareQuote]),
             country_flag: this.store.selectSnapshot(RoundTripSearchState.getTripType) == 'domestic' ? "0" : "1",
             user_eligibility: {
                 approverid: "airline",
@@ -1265,5 +1265,14 @@ export class DomesticBookState {
       };
       type == "onward" ? detail.taxable_fare = taxable.onward : detail.taxable_return_fare = taxable.return;
       return detail;
+    }
+
+    fareQuote(reqtype : string,type : string,el : any[]) {
+      if(reqtype == 'req') {
+        return el;
+      }
+      else {
+        return type == "onward" ? [el[0]] : [el[1]];
+      }
     }
 }

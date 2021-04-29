@@ -30,8 +30,8 @@ export class ViewRoomComponent implements OnInit {
   totalRoom: number;
   selectionAlert$: Observable<void>;
 
-  openCombo : hotelDetail[][];
-  fixedCombo : hotelDetail[][];
+  openCombo$ : Observable<hotelDetail[][]>;
+  fixedCombo$ : Observable<hotelDetail[][]>;
 
   constructor(
     private store: Store,
@@ -48,7 +48,7 @@ export class ViewRoomComponent implements OnInit {
     this.totalGuest$ = this.store.select(HotelSearchState.getGuest);
     this.totalHotels$ = this.store.select(HotelResultState.totalResult);
 
-    this.category$ = this.store.select(HotelResultState.getCategory); 
+    this.category$ = this.store.select(HotelResultState.getCategory);
 
     this.selectedHotel$ = this.store.select(HotelResultState.getSelectedHotel);
     this.roomDetail$ = this.store.select(HotelResultState.getRoomDetail);
@@ -56,8 +56,8 @@ export class ViewRoomComponent implements OnInit {
     this.selectedRoom$ = this.store.select(HotelResultState.getSelectedRoom);
     this.totalRoom = this.store.selectSnapshot(HotelSearchState.getTotalRooms);
 
-    this.openCombo = this.store.selectSnapshot(HotelResultState.getOpenCombination);
-    this.fixedCombo = this.store.selectSnapshot(HotelResultState.getFixedCombination);
+    this.openCombo$ = this.store.select(HotelResultState.getOpenCombination);
+    this.fixedCombo$ = this.store.select(HotelResultState.getFixedCombination);
 
   }
 
@@ -69,7 +69,7 @@ export class ViewRoomComponent implements OnInit {
   bookHotel(room : hotelDetail[]) {
     room.forEach(rm => this.store.dispatch(new AddRoom(rm)));
   }
-  
+
   confirmHotel() {
     this.store.dispatch(new BlockRoom());
   }
@@ -128,8 +128,14 @@ export class ViewRoomComponent implements OnInit {
   }
 
   roomHeight() {
-    let length = (this.fixedCombo.length * 40) + 100;
-    return length + 'px';
+    return this.fixedCombo$.pipe(
+      map(
+        (combo) => {
+          let length = (combo.length * 40) + 100;
+          return length + 'px';
+        }
+      )
+    );
   }
 
   back() {

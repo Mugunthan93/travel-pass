@@ -1,5 +1,7 @@
 //request flight
 export interface flightSearchPayload{
+    TokenId?: string
+    EndUserIp? : string,
     AdultCount: string
     ChildCount: string
     InfantCount: string

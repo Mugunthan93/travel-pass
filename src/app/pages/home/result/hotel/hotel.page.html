@@ -114,7 +114,7 @@
         <ion-card-content>
           <ion-item>
             <ion-row class="img">
-              <ion-img [src]="loadImg(hotel)" (ionError)="changeImg($event)"></ion-img>
+              <img [src]="loadImg(hotel)" width="128" loading="lazy">
               <!-- <ion-icon size="large" name="heart-outline"></ion-icon>
               <ion-icon slot="start" name="heart-sharp" *ngIf="false"></ion-icon> -->
             </ion-row>

@@ -12,27 +12,22 @@ const routes: Routes = [
       {
         path: 'dashboard',
         loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardPageModule),
-        canActivate: [AuthGuard]
       },
       {
         path: 'search',
         loadChildren: () => import('./search/search.module').then(m => m.SearchPageModule),
-        canActivate: [AuthGuard]
       },
       {
         path: 'result',
         loadChildren: () => import('./result/result.module').then(m => m.ResultPageModule),
-        canActivate: [AuthGuard]
       },
       {
         path: 'book',
         loadChildren: () => import('./book/book.module').then(m => m.BookPageModule),
-        canActivate: [AuthGuard]
       },
       {
         path: 'approval-request',
         loadChildren: () => import('./approval-request/approval-request.module').then(m => m.ApprovalRequestPageModule),
-        canActivate: [AuthGuard]
       },
       {
         path: '',

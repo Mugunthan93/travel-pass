@@ -1,11 +1,11 @@
-import { State, Action, StateContext, Store, Selector, NgxsOnInit } from "@ngxs/store";
+import { State, Action, StateContext, Store, Selector } from "@ngxs/store";
 import { Navigate } from '@ngxs/router-plugin';
 import { MenuController, ModalController, AlertController, LoadingController } from '@ionic/angular';
 import { FlightService } from '../services/flight/flight.service';
 import { UserState } from './user.state';
 import * as _ from 'lodash';
-import { concat, forkJoin, from, iif, of, throwError } from 'rxjs';
-import { map, flatMap, catchError, mergeMap, toArray, skipWhile } from 'rxjs/operators';
+import { combineLatest, forkJoin, from, iif, of } from 'rxjs';
+import { map, flatMap, catchError, mergeMap, skipWhile, concatMap, toArray } from 'rxjs/operators';
 import { ApprovalService } from '../services/approval/approval.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
 import * as moment from 'moment';
@@ -21,6 +21,7 @@ export interface Approval {
     pending : any[]
     approved : any[]
     tripstatus : string
+    otherapproved : any[]
 }
 
 export class ApprovalRequest {
@@ -35,6 +36,10 @@ export class AllApprovalRequest {
     constructor() {
 
     }
+}
+
+export class AllOtherRequest {
+  static readonly type = "[approval] AllOtherRequest";
 }
 
 export class SetTripStatus {
@@ -69,6 +74,7 @@ export class HandleRequest {
         loading : true,
         pending : [],
         approved : [],
+        otherapproved : [],
         tripstatus : 'pending'
     }
 })
@@ -222,6 +228,60 @@ export class ApprovalState {
                         }
                     )
                 )}
+            )
+        )
+
+    }
+
+    @Action(AllOtherRequest,{ cancelUncompleted : true })
+    myOtherApproval(states: StateContext<Approval>) {
+
+      states.patchState({
+        otherapproved : [],
+        loading : true
+      });
+
+        let type$ = from(['flight','hotel','bus','train']);
+        const userId: string = this.store.selectSnapshot(UserState.getUserId).toString();
+        return type$
+        .pipe(
+            mergeMap(
+            (type) => {
+              let openBooking$ = this.approvalService.getOtherList(type, userId, 'open');
+              let cancellationpending$ = this.approvalService.getOtherList(type, userId, 'cancellation%20request');
+              let reschedulepending$ = this.approvalService.getOtherList(type, userId, 'reschedule_request');
+
+              let bookedBooking$ = this.approvalService.getOtherList(type, userId, 'booked');
+              let cancelled$ = this.approvalService.getOtherList(type, userId, 'cancelled');
+              let rescheduled$ = this.approvalService.getOtherList(type, userId, 'rescheduled');
+
+              return combineLatest([openBooking$, cancellationpending$, reschedulepending$, bookedBooking$, cancelled$, rescheduled$])
+                .pipe(
+                  flatMap(
+                    (el) => {
+                      return from(el)
+                        .pipe(
+                          concatMap(
+                            (e) => {
+                              let book : any[] = _.isUndefined(JSON.parse(e.data).data) ? [] : JSON.parse(e.data).data;
+                              let trip = this.tripResponse(book);
+                              return of(trip)
+                            }
+                          ),
+                          toArray()
+                        );
+                  }),
+                  map(
+                    (response) => {
+                      let alltrip = _.flattenDeep(response);
+                      states.patchState({
+                        otherapproved : alltrip,
+                        loading : false
+                      });
+                    }
+                  )
+              );
+              }
             )
         )
 
@@ -448,5 +508,5 @@ export class ApprovalState {
             .filter(el => (el.status == 'pending' || el.status == 'open'));
     }
 
-
 }
+

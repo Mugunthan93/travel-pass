@@ -169,7 +169,7 @@ export class BaseFlightResult {
             case 1: cabinclass = "All"; break;
             case 2: cabinclass = "economy"; break;
             case 3: cabinclass = "premium economy"; break;
-            case 4: cabinclass = "bussiness"; break;
+            case 4: cabinclass = "business"; break;
             case 6: cabinclass = "first class"; break;
             default: cabinclass = "All";  break;
         }

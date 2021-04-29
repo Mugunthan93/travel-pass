@@ -37,8 +37,8 @@
         <ion-row>
           <ion-label class="bold large">Depart</ion-label>
           <ion-text class="medium bold" [ngClass]="errorClass('departure')">
-            {{this.roundTripSearch.value.departure !== null ? 
-              (this.roundTripSearch.value.departure | date : 'EEE,d LLL' | titlecase) : 
+            {{this.roundTripSearch.value.departure !== null ?
+              (this.roundTripSearch.value.departure | date : 'EEE,d LLL' | titlecase) :
               'Select Date'}}
           </ion-text>
         </ion-row>
@@ -48,8 +48,8 @@
         <ion-row>
           <ion-label class="bold large">Return</ion-label>
           <ion-text class="medium bold" [ngClass]="errorClass('return')">
-            {{this.roundTripSearch.value.return !== null ? 
-              (this.roundTripSearch.value.return | date : 'EEE,d LLL' | titlecase) : 
+            {{this.roundTripSearch.value.return !== null ?
+              (this.roundTripSearch.value.return | date : 'EEE,d LLL' | titlecase) :
               'Select Date'}}
           </ion-text>
         </ion-row>
@@ -89,10 +89,10 @@
           </ion-text>
           <ion-item hidden="true">
             <ion-label>Class</ion-label>
-            <ion-select 
-              #select 
-              formControlName="class" 
-              cancelText="Cancel" 
+            <ion-select
+              #select
+              formControlName="class"
+              cancelText="Cancel"
               okText="Confirm"
               [interfaceOptions]="customAlertOptions"
               (ionChange)="changeClass($event)"
@@ -100,7 +100,7 @@
               <ion-select-option value="all">All</ion-select-option>
               <ion-select-option value="economy">Economy</ion-select-option>
               <ion-select-option value="premium economy">Premium Economy</ion-select-option>
-              <ion-select-option value="bussiness">Bussiness</ion-select-option>
+              <ion-select-option value="business">Bussiness</ion-select-option>
               <ion-select-option value="first class">First Class</ion-select-option>
             </ion-select>
           </ion-item>

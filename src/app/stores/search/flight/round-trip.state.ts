@@ -218,9 +218,11 @@ export class RoundTripSearchState extends BaseFlightSearch {
 
         const searchData = states.getState();
 
+        console.log(JSON.stringify(searchData.payload));
+
         try {
             const flightResponse = await this.flightService.searchFlight(searchData.payload);
-            console.log(flightResponse);
+            console.log(JSON.stringify(flightResponse));
             const data: flightSearchResponse = JSON.parse(flightResponse.data);
             console.log(data);
             this.store.dispatch(new ResultMode('flight'));
@@ -239,7 +241,7 @@ export class RoundTripSearchState extends BaseFlightSearch {
             loading.dismiss();
         }
         catch (error) {
-            console.log(error);
+            console.log(JSON.stringify(error));
             if (error.status == -4) {
                 failedAlert.message = "Search Timeout, Try Again";
             }

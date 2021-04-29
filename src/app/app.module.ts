@@ -30,6 +30,7 @@ import { CancellationComponent } from './components/shared/cancellation/cancella
 import { SelectModalComponent } from './components/shared/select-modal/select-modal.component';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { InventoryRoomsComponent } from './components/hotel/inventory-rooms/inventory-rooms.component';
+import { UserIdleModule } from 'angular-user-idle';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,15 @@ import { InventoryRoomsComponent } from './components/hotel/inventory-rooms/inve
     ReactiveFormsModule,
     MatExpansionModule,
     StateModule,
+    UserIdleModule.forRoot({
+      // idle: 600,
+      // timeout: 300,
+      // ping: 120
+
+      idle : 540,
+      timeout : 60,
+      ping : 10
+    })
   ],
   providers: [
     Platform,
