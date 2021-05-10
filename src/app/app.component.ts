@@ -8,6 +8,7 @@ import { Store } from '@ngxs/store';
 import { ThemeState } from './stores/theme.stata';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { UserIdleService } from 'angular-user-idle';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +25,7 @@ export class AppComponent implements OnInit, OnDestroy{
     private androidPermissions: AndroidPermissions,
     private androidFullScreen: AndroidFullScreen,
     private splashscreen : SplashScreen,
+    private statusBar : StatusBar,
     public alertCtrl: AlertController,
     private file: File
   ) {
@@ -33,8 +35,8 @@ export class AppComponent implements OnInit, OnDestroy{
 
     await this.platform.ready();
     this.theme$ = this.store.select(ThemeState.getTheme);
-    await this.immersiveMode();
     this.splashscreen.hide();
+    this.statusBar.hide();
 
     //access
     await this.Access('ACCESS_NETWORK_STATE');

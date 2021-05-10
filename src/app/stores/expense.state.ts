@@ -1,9 +1,9 @@
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, NgxsOnChanges, NgxsSimpleChange, Selector, State, StateContext, Store } from '@ngxs/store';
 import * as moment from 'moment';
 import { concat, forkJoin, from, of } from 'rxjs';
-import { flatMap, mergeMap, toArray, withLatestFrom, first, map, concatMap } from 'rxjs/operators';
+import { flatMap, mergeMap, toArray, withLatestFrom, first, map, concatMap, catchError } from 'rxjs/operators';
 import { ExpenseService } from '../services/expense/expense.service';
 import { UserState } from './user.state';
 import * as _ from 'lodash';
@@ -271,7 +271,8 @@ export class ExpenseState {
   constructor(
     private store: Store,
     private expenseService: ExpenseService,
-    public modalCtrl: ModalController
+    public modalCtrl: ModalController,
+    public alertCtrl : AlertController
   ) {}
 
   @Selector()
@@ -556,6 +557,20 @@ export class ExpenseState {
 
   @Action(GetProjectList)
   getProjectList(states: StateContext<any>, action: GetProjectList) {
+
+    let failedAlert$ = (msg) => from(this.alertCtrl.create({
+      message : msg,
+      id : 'project-list',
+      buttons : [
+        {
+          text : 'Ok',
+          handler : async () => {
+            await this.alertCtrl.dismiss(null,null,'project-list');
+          }
+        }
+      ]
+    }));
+
     let companyId$ = this.store.select(UserState.getcompanyId);
 
     return companyId$.pipe(
@@ -571,7 +586,12 @@ export class ExpenseState {
         }));
 
         return from(action.modal.present());
-      })
+      }),
+      catchError(
+        (error : HTTPResponse) => {
+          return failedAlert$(JSON.parse(error.error));
+        }
+      )
     );
   }
 

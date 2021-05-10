@@ -274,18 +274,14 @@ export class MultiCityBookState {
         const successAlert = await this.alertCtrl.create({
             header: 'Send Request Success',
             subHeader: 'Request status will be updated in My Bookings',
+            id: 'success-request',
             buttons: [{
                 text: 'Ok',
                 role: 'ok',
                 cssClass: 'danger',
                 handler: () => {
-                    this.store.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']));
-                    successAlert.dismiss({
-                        data: false,
-                        role: 'failed'
-                    });
-                    this.store.dispatch(new StateReset(SearchState, ResultState, BookState));
-                    this.modalCtrl.dismiss(null, null,'book-confirm');
+                  this.modalCtrl.dismiss(null, null, 'success-request');
+                  states.dispatch(new StateReset(SearchState,ResultState,FlightResultState,MultiCityResultState,BookState,PassengerState,FlightPassengerState)),states.dispatch(new Navigate(['/','home','dashboard','home-tab']));
                 }
             }]
         });
@@ -335,18 +331,14 @@ export class MultiCityBookState {
         const successAlert = await this.alertCtrl.create({
             header: 'Send Request Success',
             subHeader: 'Request status will be updated in My Bookings',
+            id: 'success-offline-request',
             buttons: [{
                 text: 'Ok',
                 role: 'ok',
                 cssClass: 'danger',
                 handler: () => {
-                    this.store.dispatch(new Navigate(['/', 'home', 'dashboard', 'home-tab']));
-                    successAlert.dismiss({
-                        data: false,
-                        role: 'failed'
-                    });
-                    this.store.dispatch(new StateReset(SearchState, ResultState, BookState));
-                    this.modalCtrl.dismiss(null, null,'book-confirm');
+                  this.modalCtrl.dismiss(null, null, 'success-offline-request');
+                  states.dispatch(new StateReset(SearchState,ResultState,FlightResultState,MultiCityResultState,BookState,PassengerState,FlightPassengerState)),states.dispatch(new Navigate(['/','home','dashboard','home-tab']));
                 }
             }]
         });

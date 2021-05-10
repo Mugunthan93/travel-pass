@@ -7,12 +7,13 @@ import { HotelService } from 'src/app/services/hotel/hotel.service';
 import { from, forkJoin, of, Observable, combineLatest } from 'rxjs';
 import { map, catchError, tap, flatMap, concat } from 'rxjs/operators';
 import { HTTPResponse } from '@ionic-native/http/ngx';
-import { hotelprice, supplierhotelcodes, hotelresponse, HotelResponse, SetLoading } from '../result/hotel.state';
-import { ResultMode } from '../result.state';
+import { hotelprice, supplierhotelcodes, hotelresponse, HotelResponse, SetLoading, HotelResultState } from '../result/hotel.state';
+import { ResultMode, ResultState } from '../result.state';
 import { Navigate } from '@ngxs/router-plugin';
 import { CompanyState } from '../company.state';
 import { append, patch, removeItem, updateItem } from '@ngxs/store/operators';
 import { Injectable } from '@angular/core';
+import { StateReset } from 'ngxs-reset-plugin';
 
 export interface hotelsearch{
     formData : hotelForm
@@ -526,7 +527,7 @@ export class HotelSearchState {
                 role: 'ok',
                 cssClass: 'danger',
                 handler: () => {
-                    return true;
+                    states.dispatch([new StateReset(HotelResultState,ResultState),new Navigate(['/','home','search','hotel'])]);
                 }
             }]
         }));
@@ -567,12 +568,6 @@ export class HotelSearchState {
 
         return loadingPresent$
             .pipe(
-                tap(
-                    () => {
-                        states.dispatch(new ResultMode('hotel'));
-                        states.dispatch(new Navigate(['/', 'home', 'result', 'hotel']));
-                    }
-                ),
                 flatMap(
                   () => {
                     return this.hotelService.searchHotel(payload)
@@ -580,6 +575,7 @@ export class HotelSearchState {
                           flatMap(
                               (response: HTTPResponse) => {
                                   console.log(response);
+                                  console.log(JSON.parse(response.data));
                                   return this.hotelService.getStaticData(staticpay)
                                 .pipe(
                                     flatMap(
@@ -627,7 +623,7 @@ export class HotelSearchState {
                                                         console.log(JSON.stringify(error));
                                                         this.store.dispatch(new SetLoading(1));
                                                         return forkJoin(loadingDismiss$,failedAlert$).pipe(
-                                                            map(
+                                                            flatMap(
                                                                 (alert) => {
                                                                     let failedAlert = alert[1];
                                                                     if (error.status == -4) {
@@ -663,7 +659,7 @@ export class HotelSearchState {
                                       (error) => {
                                         console.log(error);
                                         return forkJoin(loadingDismiss$,failedAlert$).pipe(
-                                          map(
+                                          flatMap(
                                               (alert) => {
                                                   let failedAlert = alert[1];
                                                   if (error.status == -4) {
@@ -694,7 +690,30 @@ export class HotelSearchState {
                           catchError(
                             (error) => {
                               console.log(error);
-                              return of(error);
+                              return forkJoin(loadingDismiss$,failedAlert$).pipe(
+                                flatMap(
+                                    (alert) => {
+                                        let failedAlert = alert[1];
+                                        if (error.status == -4) {
+                                            failedAlert.message = "Search Timeout, Try Again";
+                                        }
+                                        //no result error
+                                        if (error.status == 400) {
+                                            const errorString = JSON.parse(error.error);
+                                            failedAlert.message = 'No Hotels are found,Try some other Date';
+                                        }
+                                        //502 => proxy error
+                                        if (error.status == 502) {
+                                            failedAlert.message = "Server failed to get correct information";
+                                        }
+                                        //503 => service unavailable, Maintanence downtime
+                                        if (error.status == 503) {
+                                            failedAlert.message = "Server Maintanence Try again Later";
+                                        }
+                                        return from(failedAlert.present());
+                                    }
+                                )
+                            );
                             }
                           )
                       )

@@ -141,6 +141,11 @@ export class ApprovalState {
           );
     }
 
+    @Selector()
+    static getOtherRequest(state : Approval) : any[] {
+      return state.otherapproved;
+    }
+
     //getting approve list
     @Action(ApprovalRequest, { cancelUncompleted: true })
     approveRequest(states: StateContext<Approval>, action: ApprovalRequest) {

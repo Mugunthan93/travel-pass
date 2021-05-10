@@ -702,7 +702,7 @@ export class HotelResultState{
     getHotelResponse(states: StateContext<hotelresult>, action: HotelResponse) {
         let priceSortedResult: (staticresponselist & hotelresultlist)[] = _.sortBy(action.response.HotelResults, (o) => {
             return o.Price.PublishedPrice;
-        });
+        }).slice(0,100);
         states.patchState({
             hotelresponseList: priceSortedResult,
             traceId: action.response.TraceId

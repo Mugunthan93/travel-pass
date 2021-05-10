@@ -50,7 +50,11 @@ const routes: Routes = [
     path: 'expense-list',
     loadChildren: () => import('./expense-list/expense-list.module').then( m => m.ExpenseListPageModule),
     canActivate: [AuthGuard]
+  },  {
+    path: 'other-request',
+    loadChildren: () => import('./other-request/other-request.module').then( m => m.OtherRequestPageModule)
   }
+
 
 ];
 

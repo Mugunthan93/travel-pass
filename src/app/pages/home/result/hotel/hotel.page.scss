@@ -13,6 +13,7 @@ ion-content{
     }
 
     ion-virtual-scroll{
+
         >ion-card{
             width: -webkit-fill-available;
             --background: #{$white};
@@ -29,8 +30,14 @@ ion-content{
                     flex-direction: row;
                     justify-content: space-between;
                     >ion-row:nth-child(1){
+
+                      &.hotel-detail {
+                        flex-wrap: nowrap;
+                      }
+
                         width:75%;
                         flex-direction: column;
+                        flex-wrap: nowrap;
                     }
                     >ion-row:nth-child(2) {
                         width:25%;
@@ -45,6 +52,8 @@ ion-content{
                     --padding-start: 0px;
                     background-color: #ececec;
                     >ion-row.img{
+                      height: 100% !important;
+                      min-width: max-content;
                         >ion-img{
                             height: 100px;
                             width: 128px;
@@ -100,6 +109,8 @@ ion-content{
                     --padding-start: 0px;
                     background-color: #ececec;
                     >ion-row.img{
+                      height: 100% !important;
+                      min-width: max-content;
                         img{
                             height: 100px;
                             width: 128px;

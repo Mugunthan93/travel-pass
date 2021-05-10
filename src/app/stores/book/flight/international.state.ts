@@ -288,18 +288,14 @@ export class InternationalBookState {
       const successAlert = await this.alertCtrl.create({
           header: 'Send Request Success',
           subHeader: 'Request status will be updated in My Bookings',
+          id: 'success-request',
           buttons: [{
               text: 'Ok',
               role: 'ok',
               cssClass: 'danger',
               handler: () => {
-                  states.dispatch(new Navigate(['/','home','dashboard','home-tab']));
-                  successAlert.dismiss({
-                      data: false,
-                      role: 'success'
-                  });
-                  states.dispatch(new StateReset(SearchState,ResultState,BookState));
-                  this.modalCtrl.dismiss(null, null, 'book-confirm');
+                this.modalCtrl.dismiss(null, null, 'success-request');
+                states.dispatch(new StateReset(SearchState,ResultState,FlightResultState,InternationalResultState,BookState,PassengerState,FlightPassengerState)),states.dispatch(new Navigate(['/','home','dashboard','home-tab']));
               }
           }]
       });
@@ -352,18 +348,14 @@ export class InternationalBookState {
       const successAlert = await this.alertCtrl.create({
           header: 'Send Request Success',
           subHeader: 'Request status will be updated in My Bookings',
+          id: 'success-offline-request',
           buttons: [{
               text: 'Ok',
               role: 'ok',
               cssClass: 'danger',
               handler: () => {
-                  states.dispatch(new Navigate(['/','home','dashboard','home-tab']));
-                  successAlert.dismiss({
-                      data: false,
-                      role: 'success'
-                  });
-                  states.dispatch(new StateReset(SearchState,ResultState,BookState));
-                  this.modalCtrl.dismiss(null, null, 'book-confirm');
+                this.modalCtrl.dismiss(null, null, 'success-offline-request');
+                states.dispatch(new StateReset(SearchState,ResultState,FlightResultState,InternationalResultState,BookState,PassengerState,FlightPassengerState)),states.dispatch(new Navigate(['/','home','dashboard','home-tab']));
               }
           }]
       });
@@ -425,8 +417,7 @@ export class InternationalBookState {
                 cssClass: 'danger',
                 handler: () => {
                     this.modalCtrl.dismiss(null, null, 'success-book');
-                    states.dispatch(new Navigate(['/','home','dashboard','home-tab']));
-                    states.dispatch(new StateReset(SearchState,ResultState,FlightResultState,InternationalResultState,BookState,PassengerState,FlightPassengerState));
+                    states.dispatch([new StateReset(SearchState,ResultState,FlightResultState,InternationalResultState,BookState,PassengerState,FlightPassengerState),new Navigate(['/','home','dashboard','home-tab'])]);
                 }
             }]
         })).pipe(flatMap((el) => from(el.present())));

@@ -15,7 +15,7 @@
                 *ngFor="let star of starRating(hotel.star_rating)"></ion-icon>
             </ion-row>
             <ion-row>
-              <ion-row>
+              <ion-row class="hotel-detail">
                 <ion-title class="medium">{{hotel.hotel_name | titlecase}}</ion-title>
                 <ion-label *ngFor="let add of address(hotel)">{{ add }}</ion-label>
 
@@ -36,7 +36,7 @@
                 <!-- <ion-icon size="large" name="heart-outline"></ion-icon>
                 <ion-icon slot="start" name="heart-sharp" *ngIf="false"></ion-icon> -->
               </ion-row>
-              <ion-row class="headline" [innerHTML]="hotel.Description | slice : 0 : 100">
+              <ion-row class="headline" [innerHTML]="hotel.Description">
               </ion-row>
             </ion-item>
           </ion-card-content>
