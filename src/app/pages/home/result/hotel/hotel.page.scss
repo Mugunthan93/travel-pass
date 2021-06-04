@@ -51,6 +51,7 @@ ion-content{
                 >ion-item{
                     --padding-start: 0px;
                     background-color: #ececec;
+                    max-height: 120px !important;
                     >ion-row.img{
                       height: 100% !important;
                       min-width: max-content;
@@ -69,6 +70,10 @@ ion-content{
                     >ion-row.headline{
                         height: -webkit-fill-available;
                         margin: 8px;
+                        flex-direction: column;
+                        ion-label {
+                          white-space: pre-wrap;
+                        }
                     }
                 }
             }
@@ -108,6 +113,7 @@ ion-content{
                 >ion-item{
                     --padding-start: 0px;
                     background-color: #ececec;
+                    max-height: 120px !important;
                     >ion-row.img{
                       height: 100% !important;
                       min-width: max-content;

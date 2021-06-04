@@ -2,8 +2,8 @@ import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
 import { HotelService } from 'src/app/services/hotel/hotel.service';
 import { File, FileEntry } from '@ionic-native/file/ngx';
 import { LoadingController, ModalController, AlertController } from '@ionic/angular';
-import { Observable, from, of, forkJoin, concat } from 'rxjs';
-import { mergeMap, take, toArray, catchError, skipWhile, flatMap, map, concatMap, tap } from 'rxjs/operators';
+import { Observable, from, of, forkJoin, concat, empty } from 'rxjs';
+import { mergeMap, take, toArray, catchError, skipWhile, flatMap, map, concatMap, tap, takeWhile, ignoreElements } from 'rxjs/operators';
 import { SearchHotel, HotelSearchState, staticresponselist, hotelresultlist, staticpayload, paragraph, subsection, hotelForm } from '../search/hotel.state';
 import { SharedService } from 'src/app/services/shared/shared.service';
 import { HTTPResponse } from '@ionic-native/http/ngx';
@@ -20,6 +20,7 @@ import { append, insertItem, patch, removeItem } from '@ngxs/store/operators';
 import { InventoryRoomsComponent } from 'src/app/components/hotel/inventory-rooms/inventory-rooms.component';
 import { UserState } from '../user.state';
 import { AddAdultPassenger, AddChildPassenger } from '../passenger/hotel.passenger.state';
+import { ResultMode } from '../result.state';
 
 export interface hotelresult {
     hotelresponseList: (staticresponselist & hotelresultlist)[]
@@ -46,6 +47,8 @@ export interface selectedHotel {
     IsPolicyPerStay: boolean
     IsUnderCancellationAllowed: boolean
     RoomCombinationsArray: roomCombination[]
+    RoomCombinations?: roomCombination
+
     resultIndex : number
 }
 
@@ -117,12 +120,12 @@ export interface roomindex {
 }
 
 export interface getHotelInfo {
-    CategoryId: string
-    // EndUserIp: "192.168.0.115"
-    EndUserIp: string
-    HotelCode: string
-    ResultIndex: number
-    TraceId: string
+  CategoryId?: string
+  EndUserIp: string
+  HotelCode: string
+  ResultIndex: number
+  TokenId: string
+  TraceId: string
 }
 
 export interface hotelinfoList {
@@ -283,7 +286,7 @@ export interface hotellist {
 }
 
 export interface viewPayload {
-    CategoryId: string
+    CategoryId?: string
     EndUserIp: string
     HotelCode: string
     ResultIndex: number
@@ -667,6 +670,7 @@ export class HotelResultState{
                         states.patchState({
                             token: JSON.parse(response.data).TokenId
                         });
+                        return JSON.parse(response.data).TokenId;
                     }
                 ),
                 catchError(
@@ -702,77 +706,49 @@ export class HotelResultState{
     getHotelResponse(states: StateContext<hotelresult>, action: HotelResponse) {
         let priceSortedResult: (staticresponselist & hotelresultlist)[] = _.sortBy(action.response.HotelResults, (o) => {
             return o.Price.PublishedPrice;
-        }).slice(0,100);
+        });
         states.patchState({
             hotelresponseList: priceSortedResult,
             traceId: action.response.TraceId
         });
         let x : number = 1 / priceSortedResult.length;
         let resultarray: (staticresponselist & hotelresultlist)[][] = _.chunk(priceSortedResult, 10);
+
+
         console.log(resultarray);
         return from(resultarray)
-            .pipe(
-                concatMap(
-                    (result) => {
-                        return from(result)
-                            .pipe(
-                                mergeMap(
-                                    (hotelObj) => {
-                                        let result = Object.assign({}, hotelObj);
-                                        let currentCity: string = this.store.selectSnapshot(HotelSearchState.getCityId);
-                                        let staticPay: staticpayload = {
-                                            CityId: currentCity,
-                                            HotelId: result.HotelCode,
-                                            ClientId: "ApiIntegrationNew",
-                                            EndUserIp: "192.168.0.105"
+                .pipe(
+                    concatMap(
+                        (result) => {
+                            return from(result)
+                                .pipe(
+                                    mergeMap(hotelObj => this.getHotelDetails(states,hotelObj,x)),
+                                    toArray(),
+                                    map(
+                                        (el) => {
+                                            let uniqArr : (staticresponselist & hotelresultlist)[] = _.uniqWith(el, _.isEqual);
+                                            console.log(uniqArr);
+                                            return uniqArr;
                                         }
-                                        let dumpResponse$ = this.hotelService.getStaticData(staticPay);
-                                        return dumpResponse$.
-                                            pipe(
-                                                skipWhile(el => el.status !== 200),
-                                                map(
-                                                    (response: HTTPResponse) => {
-                                                        console.log(response);
-                                                        let currentX = states.getState().loading + x;
-                                                        states.patchState({
-                                                            loading: currentX
-                                                        });
-                                                        let hotelDetail: (staticresponselist & hotelresultlist) = JSON.parse(response.data).ArrayOfBasicPropertyInfo.BasicPropertyInfo;
-                                                        result.Place = this.hotelPlace(hotelDetail);
-                                                        result.Description = this.hotelDesc(hotelDetail);
-                                                        let Images: any[] = this.hotelImg(hotelDetail);
-                                                        let filteredImg: string[] = Images.filter(el => _.isString(el));
-                                                        result.Images = filteredImg;
-                                                        console.log(result);
-                                                        return result;
-                                                    }
-                                                )
-                                            );
-                                }),
-                                toArray(),
-                                map(
-                                    (el) => {
-                                        let uniqArr : (staticresponselist & hotelresultlist)[] = _.uniqWith(el, _.isEqual);
-                                        console.log(uniqArr);
-                                        return uniqArr;
-                                    }
+                                    )
                                 )
-                            )
-                    }
-                ),
-                toArray(),
-                map(
-                    (result) => {
-                        let flatresult = result.flat();
-                        states.dispatch(new GetPlaces(flatresult));
-                        let currentX = states.getState().loading;
-                        states.patchState({
-                            loading: currentX,
-                            hotelList: flatresult
-                        });
-                    }
+                        }
+                    ),
+                    toArray(),
+                    flatMap(
+                        (result) => {
+                            let flatresult = result.flat();
+                            states.dispatch(new GetPlaces(flatresult));
+                            let currentX = states.getState().loading;
+                            states.patchState({
+                                loading: currentX,
+                                hotelList: flatresult
+                            });
+                          return from(this.loadingCtrl.dismiss(null,null,'search-hotel'));
+                        }
+                    ),
+                    flatMap(() => states.dispatch([new ResultMode('hotel'),new Navigate(['/', 'home', 'result', 'hotel'])]))
                 )
-            )
     }
 
     @Action(AddHotels)
@@ -813,143 +789,259 @@ export class HotelResultState{
             ]
         })).pipe(flatMap(el => from(el.present())));
 
-        states.dispatch(new GetToken());
-        const token: string = states.getState().token;
+      const failedAlert$ = from(this.alertCtrl.create({
+          header: 'Search Failed',
+          buttons: [{
+              text: 'Ok',
+              role: 'ok',
+              cssClass: 'danger',
+              handler: () => {
+                this.loadingCtrl.dismiss(null,null,'load-hotel');
+              }
+          }]
+      }));
 
-        let hotelcategory = action.hotel.SupplierHotelCodes[0].CategoryId;
-
-        const viewPayload: viewPayload = {
-            EndUserIp: "192.168.0.115",
-            TokenId: token,
-            TraceId: states.getState().traceId,
-            ResultIndex: action.hotel.ResultIndex,
-            HotelCode: action.hotel.HotelCode,
-            CategoryId: hotelcategory
-        }
-
-        const viewhotel$ = this.hotelService.viewHotel(viewPayload)
+        return states.dispatch(new GetToken())
             .pipe(
-              tap(() => this.loadingCtrl.dismiss(null,null,'load-hotel')),
-              skipWhile(
-                  (response : HTTPResponse) => {
-                      let hotelResponse: selectedHotel = JSON.parse(response.data).response;
-                      //trace ID expired
-                      if (hotelResponse.Error.ErrorCode == 6) {
-                          let payload: hotelForm = this.store.selectSnapshot(HotelSearchState.getSearchData);
-                          states.dispatch(new SearchHotel(payload));
-                          return true;
-                      }
-                      else if (hotelResponse.Error.ErrorCode == 2) {
-                          return true;
+              flatMap(
+                () => {
+
+                  const token: string = states.getState().token;
+                  // let hotelcategory = action.hotel.SupplierHotelCodes[0].CategoryId;
+
+                  const viewPayload: viewPayload = {
+                      EndUserIp: "192.168.0.115",
+                      TokenId: token,
+                      TraceId: states.getState().traceId,
+                      ResultIndex: action.hotel.ResultIndex,
+                      HotelCode: action.hotel.HotelCode
+                      // CategoryId: hotelcategory
+                  }
+
+                  const viewhotel$ = this.hotelService.getHotelInfo(viewPayload)
+                    .pipe(
+                      skipWhile(
+                        (response : HTTPResponse) => {
+                            let hotelResponse: selectedHotel = JSON.parse(response.data).response;
+                            //trace ID expired
+                            if (hotelResponse.Error.ErrorCode == 6) {
+                                let payload: hotelForm = this.store.selectSnapshot(HotelSearchState.getSearchData);
+                                states.dispatch(new SearchHotel(payload));
+                                return true;
+                            }
+                            else if (hotelResponse.Error.ErrorCode == 2) {
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
+                        }
+                      ),
+                      flatMap(
+                        (inforesponse : HTTPResponse) => {
+                          let hotelinfoResponse = JSON.parse((inforesponse as HTTPResponse).data).response;
+                          console.log(hotelinfoResponse);
+                          return this.hotelService.viewHotel(viewPayload)
+                            .pipe(
+                              skipWhile(
+                                  (response : HTTPResponse) => {
+                                      let hotelResponse: selectedHotel = JSON.parse(response.data).response;
+                                      //trace ID expired
+                                      if (hotelResponse.Error.ErrorCode == 6) {
+                                          let payload: hotelForm = this.store.selectSnapshot(HotelSearchState.getSearchData);
+                                          states.dispatch(new SearchHotel(payload));
+                                          return true;
+                                      }
+                                      else if (hotelResponse.Error.ErrorCode == 2) {
+                                          return true;
+                                      }
+                                      else {
+                                          return false;
+                                      }
+                                  }
+                              ),
+                              flatMap(
+                                  (response) => {
+                                      let hotelResponse: selectedHotel = JSON.parse((response as HTTPResponse).data).response;
+                                      if (hotelResponse.Error.ErrorCode == 2) {
+                                          return noroom$.pipe(map(() => response));
+                                      }
+                                      else {
+                                          return of(response);
+                                      }
+                                  }
+                              ),
+                              flatMap(
+                                  (response) => {
+                                      let hotelResponse: selectedHotel = JSON.parse((response as HTTPResponse).data).response;
+                                      console.log(hotelResponse);
+                                      let roomDetail = hotelResponse.HotelRoomsDetails.map(
+                                          (detail) => {
+                                              return _.omitBy(detail, (val) => {
+                                                  return _.isNull(val) ||
+                                                      (_.isString(val) && val.length < 1) ||
+                                                      (_.isArray(val) && val.length < 1);
+                                              })
+                                          }
+                                      );
+
+                                      roomDetail = _.filter(roomDetail, (n) => {
+                                          return !_.isUndefined(n.DayRates);
+                                      });
+
+                                      roomDetail = _.uniqBy(roomDetail, 'RoomIndex');
+                                      let selected: selectedHotel = Object.assign({}, {
+                                          HotelDetail: action.hotel,
+                                          HotelRoomsDetails: roomDetail,
+                                          IsPolicyPerStay: hotelResponse.IsPolicyPerStay,
+                                          IsUnderCancellationAllowed: hotelResponse.IsUnderCancellationAllowed,
+                                          RoomCombinationsArray: [hotelResponse.RoomCombinations],
+                                          resultIndex: action.hotel.ResultIndex
+                                      });
+                                      return of(selected);
+                                  }
+                              ),
+                              flatMap(
+                                  (hotelObj) => {
+                                      let hotel = Object.assign({}, hotelObj);
+                                      console.log(hotel);
+                                      let category: string[] = Object.assign([], states.getState().roomCategory);
+
+                                      let roomDetail = Object.assign([], hotel.HotelRoomsDetails);
+                                      roomDetail.forEach(
+                                          (el) => {
+                                              if (el.Amenities) {
+                                                  let amen: string = _.lowerCase(el.Amenities[0]);
+                                                  category.push(amen);
+                                              }
+                                          }
+                                      );
+                                      category = _.uniq(category);
+
+                                      states.patchState({
+                                          roomCategory: category
+                                      });
+
+                                      let imgRoomDetail = roomDetail.map(
+                                          (el) => {
+                                              let randomNum: number = Math.floor(Math.random() * Math.floor(hotelinfoResponse.HotelDetails.Images.length));
+                                              let currentEl = Object.assign({}, el);
+                                              currentEl.Images = hotelinfoResponse.HotelDetails.Images[randomNum];
+                                              return currentEl;
+                                          }
+                                      );
+
+                                      hotel.HotelRoomsDetails = Object.assign([], imgRoomDetail);
+                                      console.log(hotel);
+
+                                      if(hotelObj.RoomCombinations) {
+                                        hotel.RoomCombinationsArray = [hotelObj.RoomCombinations];
+                                      }
+
+                                      let open = this.combination(hotel,'OpenCombination');
+                                      let fixed = this.combination(hotel,'FixedCombination');
+                                      console.log(open,fixed);
+                                      hotel.HotelDetail = { ...hotel.HotelDetail, ...hotelinfoResponse.HotelDetails };
+
+                                      states.patchState({
+                                          selectedHotel: hotel,
+                                          opencombination : open,
+                                          fixedcombination : fixed
+                                      });
+                                      return from(this.loadingCtrl.dismiss(null, null, 'load-hotel'));
+                                  }
+                              ),
+                              flatMap(
+                                () => {
+                                  return action.modal;
+                                }
+                              ),
+                              catchError(
+                                (error) => {
+                                  console.log(error);
+                                  return forkJoin(from(this.loadingCtrl.dismiss(null,null,'load-hotel')),failedAlert$).pipe(
+                                    flatMap(
+                                        (alert) => {
+                                            let failedAlert = alert[1];
+                                            if (error.status == -4) {
+                                                failedAlert.message = "Search Timeout, Try Again";
+                                            }
+                                            //no result error
+                                            if (error.status == 400) {
+                                                const errorString = JSON.parse(error.error);
+                                                failedAlert.message = 'No Hotels are found,Try some other Date';
+                                            }
+                                            //502 => proxy error
+                                            if (error.status == 502) {
+                                                failedAlert.message = "Server failed to get correct information";
+                                            }
+                                            //503 => service unavailable, Maintanence downtime
+                                            if (error.status == 503) {
+                                                failedAlert.message = "Server Maintanence Try again Later";
+                                            }
+                                            return from(failedAlert.present());
+                                        }
+                                    )
+                                );
+                                }
+                              )
+                            );
+                        }
+                      ),
+                      catchError(
+                        (error) => {
+                          console.log(error);
+                          return forkJoin(from(this.loadingCtrl.dismiss(null,null,'load-hotel')),failedAlert$).pipe(
+                            flatMap(
+                                (alert) => {
+                                    let failedAlert = alert[1];
+                                    if (error.status == -4) {
+                                        failedAlert.message = "Search Timeout, Try Again";
+                                    }
+                                    //no result error
+                                    if (error.status == 400) {
+                                        const errorString = JSON.parse(error.error);
+                                        failedAlert.message = 'No Hotels are found,Try some other Date';
+                                    }
+                                    //502 => proxy error
+                                    if (error.status == 502) {
+                                        failedAlert.message = "Server failed to get correct information";
+                                    }
+                                    //503 => service unavailable, Maintanence downtime
+                                    if (error.status == 503) {
+                                        failedAlert.message = "Server Maintanence Try again Later";
+                                    }
+                                    return from(failedAlert.present());
+                                }
+                            )
+                        );
+                        }
+                      )
+                    );
+
+                  if (_.isNull(states.getState().selectedHotel)) {
+                      return loading$.pipe(
+                        flatMap(() => viewhotel$)
+                      );
+                  }
+                  else {
+                      let samehotel: boolean = action.hotel.ResultIndex == states.getState().selectedHotel.HotelDetail.ResultIndex;
+                      if (samehotel) {
+                          states.patchState({
+                              selectedRoom: []
+                          });
+                          return action.modal;
                       }
                       else {
-                          return false;
+                        return loading$.pipe(
+                          flatMap(() => viewhotel$)
+                        );
                       }
                   }
-              ),
-              flatMap(
-                  (response) => {
-                      let hotelResponse: selectedHotel = JSON.parse((response as HTTPResponse).data).response;
-                      if (hotelResponse.Error.ErrorCode == 2) {
-                          return noroom$.pipe(map(() => response));
-                      }
-                      else {
-                          return of(response);
-                      }
-                  }
-              ),
-              flatMap(
-                  (response) => {
-                      console.log(response);
-                      let hotelResponse: selectedHotel = JSON.parse((response as HTTPResponse).data).response;
-                      let roomDetail = hotelResponse.HotelRoomsDetails.map(
-                          (detail) => {
-                              return _.omitBy(detail, (val) => {
-                                  return _.isNull(val) ||
-                                      (_.isString(val) && val.length < 1) ||
-                                      (_.isArray(val) && val.length < 1);
-                              })
-                          }
-                      );
-
-                      roomDetail = _.filter(roomDetail, (n) => {
-                          return !_.isUndefined(n.DayRates) && n.CategoryId == hotelcategory;
-                      });
-
-                      roomDetail = _.uniqBy(roomDetail, 'RoomIndex');
-                      let selected: selectedHotel = Object.assign({}, {
-                          HotelDetail: action.hotel,
-                          HotelRoomsDetails: roomDetail,
-                          IsPolicyPerStay: hotelResponse.IsPolicyPerStay,
-                          IsUnderCancellationAllowed: hotelResponse.IsUnderCancellationAllowed,
-                          RoomCombinationsArray: hotelResponse.RoomCombinationsArray,
-                          resultIndex: action.hotel.ResultIndex
-                      });
-                      return of(selected);
-                  }
-              ),
-              flatMap(
-                  (hotelObj) => {
-                      let hotel = Object.assign({}, hotelObj);
-                      let category: string[] = Object.assign([], states.getState().roomCategory);
-
-                      let roomDetail = Object.assign([], hotel.HotelRoomsDetails);
-                      roomDetail.forEach(
-                          (el) => {
-                              if (el.Amenities) {
-                                  let amen: string = _.lowerCase(el.Amenities[0]);
-                                  category.push(amen);
-                              }
-                          }
-                      );
-                      category = _.uniq(category);
-
-                      states.patchState({
-                          roomCategory: category
-                      });
-
-                      let imgRoomDetail = roomDetail.map(
-                          (el) => {
-                              let randomNum: number = Math.floor(Math.random() * Math.floor(hotel.HotelDetail.Images.length));
-                              let currentEl = Object.assign({}, el);
-                              currentEl.Images = hotel.HotelDetail.Images[randomNum];
-                              return currentEl;
-                          }
-                      );
-
-                      hotel.HotelRoomsDetails = Object.assign([], imgRoomDetail);
-                      console.log(hotel);
-
-                      let open = this.combination(hotel,'OpenCombination',hotelcategory);
-                      let fixed = this.combination(hotel,'FixedCombination',hotelcategory);
-                      console.log(open,fixed);
-
-                      states.patchState({
-                          selectedHotel: hotel,
-                          opencombination : open,
-                          fixedcombination : fixed
-                      });
-                      return from(this.loadingCtrl.dismiss(null, null, 'view-hotel'));
-                  }
+                }
               )
             );
 
-
-        if (_.isNull(states.getState().selectedHotel)) {
-            return forkJoin(loading$, viewhotel$);
-        }
-        else {
-            let samehotel: boolean = action.hotel.ResultIndex == states.getState().selectedHotel.HotelDetail.ResultIndex;
-            if (samehotel) {
-                states.patchState({
-                    selectedRoom: []
-                });
-                return action.modal;
-            }
-            else {
-                return forkJoin(loading$, viewhotel$);
-            }
-        }
 
     }
 
@@ -1014,11 +1106,9 @@ export class HotelResultState{
             )
         );
 
-        if (addedroomlength !== 0) {
-
-            return from(this.loadingCtrl.create({
-                spinner: "crescent",
-                id: 'search-hotel'
+        const blockRooom$ = from(this.loadingCtrl.create({
+          spinner: "crescent",
+          id: 'search-hotel'
             })).pipe(
                 flatMap(
                     (loadingEl) => {
@@ -1069,45 +1159,45 @@ export class HotelResultState{
 
                         let blockroom$ = from(this.hotelService.blockHotel(blockpayload))
                         .pipe(
-                                skipWhile(
-                                    (response : HTTPResponse) => {
-                                        console.log(response);
-                                        let blockedRoom: any = JSON.parse(response.data).response;
-                                        if (blockedRoom.Error.ErrorCode == 2) {
-                                            return true;
-                                        }
-                                        return false;
-                                    }
-                                ),
-                                flatMap(
-                                    (response: HTTPResponse) => {
-                                        console.log(response);
-                                        let blockedRoom: any = JSON.parse((response as HTTPResponse).data).response;
-                                        if (blockedRoom.Error.ErrorCode == 2) {
-                                            return concat(from(loadingEl.dismiss()),this.errorAlert(blockedRoom.Error.ErrorCode));
-                                        }
-                                        return concat(
-                                            from(this.loadingCtrl.dismiss(null, null, 'search-hotel')),
-                                            states.dispatch(new AddBlockRoom(blockedRoom)),
-                                            from(this.modalCtrl.dismiss(null, null, 'view-room')),
-                                            from(this.modalCtrl.dismiss(null, null, 'view-hotel')),
-                                            states.dispatch(new BookMode('hotel')),
-                                            states.dispatch(new Navigate(['/', 'home', 'book', 'hotel']))
-                                        );
-                                    }
-                                )
-                        )
+                          skipWhile(
+                              (response : HTTPResponse) => {
+                                  console.log(response);
+                                  let blockedRoom: any = JSON.parse(response.data).response;
+                                  if (blockedRoom.Error.ErrorCode == 2) {
+                                      return true;
+                                  }
+                                  return false;
+                              }
+                          ),
+                          flatMap(
+                              (response: HTTPResponse) => {
+                                  console.log(response);
+                                  let blockedRoom: any = JSON.parse((response as HTTPResponse).data).response;
+                                  if (blockedRoom.Error.ErrorCode == 2) {
+                                      return concat(from(loadingEl.dismiss()),this.errorAlert(blockedRoom.Error.ErrorCode));
+                                  }
+                                  return from(this.loadingCtrl.dismiss(null, null, 'search-hotel')).pipe(map(() => blockedRoom));
+                              }
+                          ),
+                          flatMap(room =>  states.dispatch(new AddBlockRoom(room))),
+                          flatMap(() => states.dispatch(new BookMode('hotel'))),
+                          flatMap(() => from(this.modalCtrl.dismiss(null, null, 'view-hotel'))),
+                          flatMap(() => from(this.modalCtrl.dismiss(null, null, 'view-room'))),
+                          flatMap(() => states.dispatch(new Navigate(['/', 'home', 'book', 'hotel'])))
+                        );
 
                         if(searchroomlength == addedroomlength) {
                             return blockroom$;
                         }
                         else {
-                            return concat(from(loadingEl.dismiss()),roomAlert$);
+                            return from(loadingEl.dismiss()).pipe(flatMap(() => roomAlert$));
                         }
                     }
                 )
             );
 
+        if (addedroomlength !== 0) {
+            return blockRooom$;
         }
         else {
             return selectionAlert$;
@@ -1282,17 +1372,80 @@ export class HotelResultState{
         );
     }
 
-    combination(hotel : selectedHotel,type : string,category : string) {
-        let open = hotel.RoomCombinationsArray
-            .filter(o => o.CategoryId == category && o.InfoSource == type);
+    combination(hotel : selectedHotel,type : string,category?: string) {
 
-        if(open.length > 0) {
-            let openIndex = open.flatMap(o => o.RoomCombination.map(el => el.RoomIndex.map(e => hotel.HotelRoomsDetails.find(rm => rm.RoomIndex == e))));
-            return openIndex;
+      let open = null;
+      console.log("open",hotel.RoomCombinationsArray);
+
+      if(category) {
+        open = hotel.RoomCombinationsArray.filter(o => o.CategoryId == category && o.InfoSource == type);
+      }
+      else {
+        open = hotel.RoomCombinationsArray.filter(o => o.InfoSource == type);
+      }
+
+      if(open.length > 0) {
+          let openIndex = open.flatMap(o => o.RoomCombination.map(el => el.RoomIndex.map(e => hotel.HotelRoomsDetails.find(rm => rm.RoomIndex == e))));
+          return openIndex;
+      }
+      else {
+          return [];
+      }
+
+
+
+    }
+
+    getHotelDetails(states : StateContext<hotelresult>, hotelObj : any, x: number) : Observable<any> {
+
+      let currentX = states.getState().loading + x;
+      states.patchState({
+          loading: currentX
+      });
+
+      if(hotelObj.HotelPicture.includes("HotelNA")) {
+        let result = Object.assign({}, hotelObj);
+        let currentCity: string = this.store.selectSnapshot(HotelSearchState.getCityId);
+        let staticPay: staticpayload = {
+            CityId: currentCity,
+            HotelId: result.HotelCode,
+            ClientId: "ApiIntegrationNew",
+            EndUserIp: "192.168.0.105"
         }
-        else {
-            return [];
-        }
+        let dumpResponse$ = this.hotelService.getStaticData(staticPay);
+        return dumpResponse$.
+            pipe(
+                takeWhile(el => el.status == 200),
+                map(
+                    (response: HTTPResponse) => {
+                        console.log(JSON.parse(response.data));
+                        let hotelDetail: (staticresponselist & hotelresultlist) = JSON.parse(response.data).ArrayOfBasicPropertyInfo.BasicPropertyInfo;
+                        result.Place = this.hotelPlace(hotelDetail);
+                        result.Description = this.hotelDesc(hotelDetail);
+
+                        let sanitizedTemplate = this.domSantizier.sanitize(SecurityContext.HTML, result.HotelDescription);
+                        sanitizedTemplate = _.trim(sanitizedTemplate, ',,,');
+                        result.HotelDescription = sanitizedTemplate;
+
+
+                        let Images: any[] = this.hotelImg(hotelDetail);
+                        let filteredImg: string[] = Images.filter(el => _.isString(el));
+                        result.Images = filteredImg;
+                        console.log(result);
+                        return result;
+                    }
+                ),
+                catchError(
+                  (error) => {
+                    console.log(error);
+                    return empty();
+                  }
+                )
+            );
+      }
+      else {
+        return of(hotelObj);
+      }
 
     }
 }

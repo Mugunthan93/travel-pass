@@ -77,13 +77,17 @@
         <ion-label color="danger">You already had a trip in this date,Try other dates</ion-label>
       </ion-row>
 
+      <ion-row *ngIf="tripForm.controls['start_date'].hasError('futuredate') && formSubmit">
+        <ion-label color="danger">Select atleast before today date</ion-label>
+      </ion-row>
+
       <ion-item>
         <ion-label position="floating">End Date</ion-label>
         <ion-input type="date" formControlName="end_date" enterkeyhint="next">
         </ion-input>
       </ion-item>
 
-      
+
       <ion-row *ngIf="tripForm.controls['end_date'].hasError('required') && formSubmit">
         <ion-label color="danger">end date Required</ion-label>
       </ion-row>
@@ -91,8 +95,13 @@
       <ion-row *ngIf="tripForm.controls['end_date'].hasError('mismatch') && formSubmit">
         <ion-label color="danger">End Date won't come before Start Date</ion-label>
       </ion-row>
+
       <ion-row *ngIf="tripForm.controls['end_date'].hasError('hasDate') && formSubmit">
         <ion-label color="danger">You already had a trip in this date,Try other dates</ion-label>
+      </ion-row>
+
+      <ion-row *ngIf="tripForm.controls['end_date'].hasError('futuredate') && formSubmit">
+        <ion-label color="danger">Select atleast before today date</ion-label>
       </ion-row>
 
       <ion-item>

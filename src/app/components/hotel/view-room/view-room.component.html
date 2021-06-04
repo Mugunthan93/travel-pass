@@ -26,7 +26,7 @@
 <ion-content>
 
   <ion-virtual-scroll [items]="(fixedCombo$ | async)" [approxItemHeight]="roomHeight() | async">
-    <ion-card  *virtualItem="let room;let i = index">
+    <ion-card *virtualItem="let room;let i = index">
       <ion-card-header>
         <ion-img [src]="getHotelImage(room[0].Images)"></ion-img>
       </ion-card-header>
@@ -42,7 +42,12 @@
           <ion-label class="bold">Room Tariffs</ion-label>
 
           <ion-row>
-            <ion-label class="small">{{ rm.RoomDescription ? rm.RoomDescription : rm.RoomTypeName }}</ion-label>
+            <div *ngIf="isHTML(rm.RoomDescription)">
+              <ion-label [innerHTML]="decodeDescritption(rm.RoomDescription)"></ion-label>
+            </div>
+            <div *ngIf="!isHTML(rm.RoomDescription)">
+              <ion-label class="small">{{ rm.RoomDescription ? rm.RoomDescription : rm.RoomTypeName }}</ion-label>
+            </div>
             <ion-row style="flex-direction: column;display:flex;">
               <ion-label class="bold">{{ rm.DayRates[0].Amount | currency : 'INR' }}</ion-label>
               <ion-label class="small">Per Day</ion-label>

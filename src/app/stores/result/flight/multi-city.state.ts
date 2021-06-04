@@ -57,7 +57,7 @@ export class MultiCityResultState extends BaseFlightResult {
             el =>
                 (filterState.stops !== -1 ? el.stops == filterState.stops : el) &&
                 (filterState.price == 0 ? el : filterState.price >= el.fare) &&
-                el.corporate == filterState.corporateFare &&
+                (filterState.corporateFare == false ? el : el.corporate == filterState.corporateFare) &&
                 moment(el.departure).hour() <= filterState.depatureHours &&
                 moment(el.arrival).hour() <= filterState.arrivalHours &&
                 (

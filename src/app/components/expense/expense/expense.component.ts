@@ -12,7 +12,7 @@ import { TripRangeValidators } from 'src/app/validator/uniq_trip_date.Validators
 import * as moment from 'moment';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
-import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+import { FileTransfer, FileTransferObject, FileUploadOptions } from '@ionic-native/file-transfer/ngx';
 import { environment } from 'src/environments/environment';
 import { File } from '@ionic-native/file/ngx';
 import { ExpenseCostValidator } from 'src/app/validator/expense_cost.validators';
@@ -27,7 +27,7 @@ export class ExpenseComponent implements OnInit {
 
   @Input() exptype : string;
   @Input() expense : expenselist;
-  
+
   expenseForm: FormGroup;
   travelType: string[] = ["domestic", "international"];
   formtype: string[] = [
@@ -81,7 +81,10 @@ export class ExpenseComponent implements OnInit {
 
       this.expenseForm = this.fb.group({
         travel_type: this.fb.control("domestic", [Validators.required]),
-        type: this.fb.control('flight', [Validators.required]),
+        type: this.fb.control('flight', {
+          validators : [Validators.required],
+          updateOn : 'change'
+        }),
 
         start_date: this.fb.control(null,{
           validators : [TripRangeValidators(this.currentTrip)],
@@ -109,6 +112,8 @@ export class ExpenseComponent implements OnInit {
           bills : new FormArray([])
         })
 
+      },{
+        updateOn : 'change'
       });
 
       this.changeValidation('flight');
@@ -164,6 +169,12 @@ export class ExpenseComponent implements OnInit {
       );
     }
 
+    this.expenseForm.get('type').valueChanges.subscribe(
+      (response) => {
+        this.changeValidation(response);
+      }
+    );
+
 
   }
 
@@ -184,31 +195,45 @@ export class ExpenseComponent implements OnInit {
     let UrlSegment = resolvepath.split('/');
     name = UrlSegment[UrlSegment.length - 1];
 
-    let options : any = {
+    let options : FileUploadOptions = {
       fileKey: "file",
       fileName: name,
       chunkedMode: false,
       mimeType: "multipart/form-data",
-      params : {'bill': name}
+      params : {'bill': name},
+      headers : {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
     };
 
-    let uploadResponse = await transferObj.upload(resolvepath,environment.baseURL+"/tripexpense/expense/uploadBill",options)
-    if(uploadResponse.responseCode == 200) {
-      let fileStatus =  await this.file.resolveLocalFilesystemUrl(resolvepath);
-      (fileStatus as any).file(
-        (data) => {
-          mime = data.type;
-          let uploadedBill :  bill = Object.assign({},{
-            name: name,
-            size: uploadResponse.bytesSent,
-            type: mime,
-            uploaded: true
-          });
-
-          this.bills.push(this.createBill(uploadedBill));
-        }
+    try {
+      let uploadResponse = await transferObj.upload(
+        resolvepath,
+        environment.baseURL+"/tripexpense/expense/uploadBill",
+        options
       );
+
+      if(uploadResponse.responseCode == 200) {
+        let fileStatus =  await this.file.resolveLocalFilesystemUrl(resolvepath);
+        (fileStatus as any).file(
+          (data) => {
+            mime = data.type;
+            let uploadedBill :  bill = Object.assign({},{
+              name: name,
+              size: uploadResponse.bytesSent,
+              type: mime,
+              uploaded: true
+            });
+
+            this.bills.push(this.createBill(uploadedBill));
+          }
+        );
+      }
     }
+    catch(error) {
+      console.log(error);
+    }
+
   }
 
   createBill(upload : bill) {
@@ -225,7 +250,7 @@ export class ExpenseComponent implements OnInit {
   }
 
   ionViewDidEnter() {
- 
+
   }
 
   customAlertOptions(header: string) {
@@ -265,7 +290,10 @@ export class ExpenseComponent implements OnInit {
       this.expenseForm.controls['start_date'].setValidators([TripRangeValidators(this.currentTrip),DateMatchValidator('start_date','end_date')]);
       this.expenseForm.controls['end_date'].setValidators([TripRangeValidators(this.currentTrip),DateMatchValidator('start_date','end_date')]);
       this.expenseForm.controls['no_of_days'].setValidators(Validators.required);
+
       this.expenseForm.controls['end_city'].clearValidators();
+      this.expenseForm.get('end_city').updateValueAndValidity();
+
       this.expenseForm.controls['local_travel_value'].clearValidators();
     }
     else if(value == 'localtravel' || value == 'othertravel') {
@@ -281,10 +309,8 @@ export class ExpenseComponent implements OnInit {
       }
     }
 
-    this.expenseForm.updateValueAndValidity({
-      emitEvent : false
-    });
-    
+    this.expenseForm.updateValueAndValidity();
+
   }
 
   hideItem(name : string) {
@@ -302,7 +328,7 @@ export class ExpenseComponent implements OnInit {
     console.log(field,type);
     if(type == 'flight' || type == 'hotel' || type == 'bus' || type == 'train') {
 
-      let currentTitle = (type == 'train') ? 'Station' : 'city'; 
+      let currentTitle = (type == 'train') ? 'Station' : 'city';
       let props = {
         title: currentTitle,
         category: this.expenseForm.get('travel_type').value
@@ -313,7 +339,7 @@ export class ExpenseComponent implements OnInit {
         component: SelectModalComponent,
         componentProps: props,
       });
-  
+
       modal.onDidDismiss().then(
         (selectedCity) => {
           if (selectedCity.role == "backdrop") {
@@ -341,7 +367,7 @@ export class ExpenseComponent implements OnInit {
 
         }
       );
-  
+
       return await modal.present();
     }
     else {
@@ -355,12 +381,12 @@ export class ExpenseComponent implements OnInit {
     console.log(this.expenseForm);
     if(this.expenseForm.valid) {
 
-      
+
       if(this.exptype == 'add') {
         this.store.dispatch(new AddExpense(this.expenseForm.value));
       }
       else if(this.exptype == 'edit') {
-        console.log(this.exptype); 
+        console.log(this.exptype);
         let prevExp : expenselist = Object.assign({},this.expense);
         let currentExpense = Object.assign(prevExp,this.expenseForm.value);
         this.store.dispatch(new EditExpense(currentExpense));

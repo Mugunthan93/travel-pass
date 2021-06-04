@@ -246,17 +246,20 @@ export class RoundTripSearchState extends BaseFlightSearch {
                 failedAlert.message = "Search Timeout, Try Again";
             }
             //no reesult error
-            if (error.status == 400) {
+            else if (error.status == 400) {
                 const errorString = JSON.parse(error.error);
                 failedAlert.message = errorString.message.response.Error.ErrorMessage;
             }
-            //502 => proxy error
-            if (error.status == 502) {
-                failedAlert.message = "Server failed to get correct information";
-            }
-            //503 => service unavailable, Maintanence downtime
-            if (error.status == 503) {
-                failedAlert.message = "Server Maintanence Try again Later";
+            // //502 => proxy error
+            // else if (error.status == 502) {
+            //     failedAlert.message = "Server failed to get correct information";
+            // }
+            // //503 => service unavailable, Maintanence downtime
+            // else if (error.status == 503) {
+            //     failedAlert.message = "Server Maintanence Try again Later";
+            // }
+            else {
+              failedAlert.message = "Result Not Found Kindly search again later";
             }
             loading.dismiss();
             failedAlert.present();

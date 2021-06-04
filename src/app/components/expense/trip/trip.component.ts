@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { CompanyState } from 'src/app/stores/company.state';
 import { user } from 'src/app/models/user';
-import { DateMatchValidator } from 'src/app/validator/date_match.validators';
+import { DateMatchValidator, isFuterDate } from 'src/app/validator/date_match.validators';
 import * as moment from 'moment';
 import { ModalController } from '@ionic/angular';
 import { UserState } from 'src/app/stores/user.state';
@@ -53,7 +53,7 @@ export class TripComponent implements OnInit {
 
     this.tripForm
     .get("start_date")
-    .setValidators([Validators.required,DateMatchValidator("start_date", "end_date")]);
+    .setValidators([isFuterDate('start_date'),Validators.required,DateMatchValidator("start_date", "end_date")]);
 
     this.tripForm
       .get("start_date")
@@ -61,7 +61,7 @@ export class TripComponent implements OnInit {
 
     this.tripForm
       .get("end_date")
-      .setValidators([Validators.required,DateMatchValidator("start_date", "end_date")]);
+      .setValidators([isFuterDate('end_date'),Validators.required,DateMatchValidator("start_date", "end_date")]);
 
     this.tripForm
       .get("end_date")
@@ -99,7 +99,7 @@ export class TripComponent implements OnInit {
       };
 
       this.store.dispatch(new AddNewTrip(payload));
-      
+
     }
   }
 
@@ -119,3 +119,4 @@ export class TripComponent implements OnInit {
     this.modalCtrl.dismiss(null,null,'trip');
   }
 }
+

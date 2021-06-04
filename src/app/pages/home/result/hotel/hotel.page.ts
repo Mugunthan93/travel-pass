@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, SecurityContext, ViewChild } from '@angular/core';
 import { matExpansionAnimations } from '@angular/material/expansion';
 import { ModalController, IonInfiniteScroll } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -40,11 +40,12 @@ export class HotelPage implements OnInit {
     public router: Router,
     public activatedRoute: ActivatedRoute,
     private store: Store,
-    private webview: WebView
+    private webview: WebView,
+    private domSantizier : DomSanitizer
   ) {
 
   }
-  
+
   ngOnInit() {
     this.length = this.store.selectSnapshot(HotelResultState.getHotelLength);
     this.inventoryList$ = this.store.select(HotelResultState.getInventoryList);
@@ -58,8 +59,14 @@ export class HotelPage implements OnInit {
 
   }
 
-  address(hotel: (staticresponselist & hotelresultlist)) {
-    if(hotel.Address) {
+  address(hotel: any) {
+
+    if(hotel.HotelAddress) {
+      // let addarray : string[] = hotel.HotelAddress.split(",");
+      // let newarray = [addarray.slice(0,1).join(' - '),addarray.slice(2,(addarray.length - 3)),addarray.slice((addarray.length - 2),(addarray.length - 1)).join(' - ')]
+      return [hotel.HotelAddress];
+    }
+    else if(hotel.Address) {
       let address = hotel.Address.AddressLine.filter(el => !_.isObject(el));
       return address.map(el => _.startCase(el));
     }
@@ -80,7 +87,7 @@ export class HotelPage implements OnInit {
           }
         )
     );
-    
+
     this.store.dispatch(new ViewHotel(hotel, viewmodal$))
   }
 
@@ -124,18 +131,23 @@ export class HotelPage implements OnInit {
       });
   }
 
-  loadImg(hotel: (staticresponselist & hotelresultlist)): string {
-    if(hotel.Images) {
-      return hotel.Images[0];
-      // return this.webview.convertFileSrc(hotel.Images[0]);
+  loadImg(hotel: any): string {
+    if(hotel.HotelPicture) {
+      return hotel.HotelPicture;
     }
     else {
-      "../../../../../assets/img/hotel/no-image-icon-hotel.png";
+      return "../../../../../assets/img/hotel/no-image-icon-hotel.png";
     }
+  }
+
+  hotelDesc(description : string) {
+    let sanitizedTemplate = this.domSantizier.sanitize(SecurityContext.HTML, description);
+    sanitizedTemplate = _.trim(sanitizedTemplate, ',,,');
+    return sanitizedTemplate;
   }
 
   viewInvRoom(inv : inventory) {
     this.store.dispatch(new SelectInventoryHotel(inv));
   }
-  
+
 }

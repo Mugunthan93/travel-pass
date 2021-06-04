@@ -12,3 +12,18 @@ export function DateMatchValidator(start : string, end : string): ValidatorFn {
         return null;
     }
 }
+
+export function isFuterDate(date : string): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } => {
+
+    if(moment().isBefore(moment(control.root.get(date).value),'date')) {
+      return {
+        'futuredate' : true
+      }
+    }
+    else {
+      return null;
+    }
+  }
+}
+

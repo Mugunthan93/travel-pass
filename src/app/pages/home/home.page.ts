@@ -48,19 +48,22 @@ export class HomePage implements OnInit,OnDestroy {
       async (count) => {
         console.log("count",count);
 
-        if(count == 1) {
-          this.toaster = await this.toasterCtrl.create({
-            header: 'Inactive Alert',
-            message: 'You are Inactive,Do something in ' + this.countdown + ' secound',
-            position: 'bottom',
-          });
-        }
+        if(this.router.url !== '/auth') {
+          if(count == 1) {
+            this.toaster = await this.toasterCtrl.create({
+              header: 'Inactive Alert',
+              message: 'You are Inactive,Do something in ' + this.countdown + ' secound',
+              position: 'bottom',
+            });
+          }
 
 
-        if(count !== 10) {
-          this.toaster.message = 'You are Inactive,Do something in ' + (this.countdown - count) + ' secound';
-          await this.toaster.present();
+          if(count !== 10) {
+            this.toaster.message = 'You are Inactive,Do something in ' + (this.countdown - count) + ' secound';
+            await this.toaster.present();
+          }
         }
+
     });
 
     // Start watch when time is up.

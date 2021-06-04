@@ -584,7 +584,6 @@ export class ExpenseState {
         states.setState(patch({
           projectList: list,
         }));
-
         return from(action.modal.present());
       }),
       catchError(

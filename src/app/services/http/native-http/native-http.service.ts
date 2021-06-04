@@ -3,7 +3,7 @@ import { HTTP, HTTPResponse } from '@ionic-native/http/ngx';
 import { environment } from 'src/environments/environment';
 import { Platform } from '@ionic/angular';
 
-export interface options { 
+export interface options {
   method: 'get' | 'post' | 'put' | 'patch' | 'head' | 'delete' | 'options' | 'upload' | 'download';
   data?: {
     [index: string]: any;
@@ -68,6 +68,10 @@ export class NativeHttpService implements OnInit{
 
   async post(url: string, body?: any): Promise<HTTPResponse> {
     return await this.http.post(environment.baseURL + url, body, this.header);
+  }
+
+  async postfromtbo(url: string, body?: any): Promise<HTTPResponse> {
+    return await this.http.post(environment.tbobaseURL + url, body, this.header);
   }
 
   async put(url: string, body: any) : Promise<HTTPResponse> {

@@ -18,6 +18,7 @@ ion-segment-button {
 }
 
 ion-list {
+  width: 100vw;
   position: absolute;
   top: 48px;
 }
@@ -50,6 +51,10 @@ ion-item {
         border-top-right-radius: 10px;
         border-bottom-right-radius: 10px;
         >ion-row {
+
+            .row2 {
+              width: -webkit-fill-available;
+            }
 
             &:last-child {
                 background: #F8F8F8;

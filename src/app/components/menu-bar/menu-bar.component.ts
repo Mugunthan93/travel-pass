@@ -19,6 +19,7 @@ export class MenuBarComponent implements OnInit {
   isUser: Observable<boolean>;
   isManager: Observable<boolean>;
   name: Observable<string>;
+  isAdmin: Observable<boolean>;
 
   constructor(
     private store: Store,
@@ -30,6 +31,7 @@ export class MenuBarComponent implements OnInit {
   ngOnInit() {
     this.name = this.store.select(UserState.getFirstName);
     this.isManager = this.store.select(UserState.isManager);
+    this.isAdmin = this.store.select(UserState.isAdmin);
   }
 
   async dashboard() {
@@ -39,6 +41,11 @@ export class MenuBarComponent implements OnInit {
 
   async approvalRequest() {
     this.store.dispatch(new Navigate(['/','home','approval-request']));
+    return await this.menuCtrl.close('first');
+  }
+
+  async otherRequest() {
+    this.store.dispatch(new Navigate(['/','home','other-request']));
     return await this.menuCtrl.close('first');
   }
 

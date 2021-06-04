@@ -34,7 +34,7 @@
         <ion-label position="floating">{{ expenseForm.controls['type'].value | titlecase }} Name</ion-label>
         <ion-input type="text" formControlName="local_travel_value" enterkeyhint="next"></ion-input>
       </ion-item>
-      
+
       <ion-item  [hidden]="hideItem('local_travel_value')">
         <ion-select formControlName="local_travel_value" placeholder="Select Sub Type"
           cancelText="Cancel" okText="Confirm" [interfaceOptions]="customAlertOptions('Local Sub Type')"
@@ -58,7 +58,7 @@
         <ion-label position="floating">End City</ion-label>
         <ion-input type="text" formControlName="end_city"></ion-input>
       </ion-item>
-      <ion-row *ngIf="expenseForm.controls['end_city'].hasError('required') && formSubmit">
+      <ion-row *ngIf="expenseForm.controls['end_city'].hasError('required') && formSubmit" [hidden]="hideItem('end_city')">
         <ion-label color="danger">End City Required</ion-label>
       </ion-row>
 

@@ -31,15 +31,15 @@ export class HotelService {
     // this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     // this.http.setHeader(environment.baseURL, "Accept", "application/json, text/plain, */*");
     // this.http.setData('json');
-    return from(this.http.post("/hotels/search", payload));
+    return from(this.http.postfromtbo("/hotels/search", payload));
   }
 
-  async getHotelInfo(hotelpayload: getHotelInfo): Promise<HTTPResponse> {
+  getHotelInfo(hotelpayload: getHotelInfo): Observable<HTTPResponse> {
     this.http.setReqTimeout(300);
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setHeader(environment.baseURL, "Accept", "application/json, text/plain, */*");
     this.http.setData('json');
-    return await this.http.post('/hotels/getHotelInfo',hotelpayload);
+    return from(this.http.postfromtbo('/hotels/getHotelInfo',hotelpayload));
   }
 
   viewHotel(viewpayload: viewPayload): Observable<HTTPResponse> {
@@ -69,7 +69,7 @@ export class HotelService {
     // this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     // this.http.setHeader(environment.baseURL, "Accept", "application/json, text/plain, */*");
     // this.http.setData('json');
-    return from(this.http.post('/hotels/getStaticData',staticpay))
+    return from(this.http.postfromtbo('/hotels/getStaticData',staticpay))
   }
 
   sendofflineInventory(offlineinv : offlineinvReq) : Observable<HTTPResponse> {

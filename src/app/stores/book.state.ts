@@ -339,13 +339,13 @@ export class BookState {
         }
         else if (mode == 'train') {
             if (type == 'one-way') {
-                // states.dispatch(new TrainOneWayRequest(comment,mailCC,purpose));
+                states.dispatch(new TrainOneWayRequest(comment,mailCC,purpose));
             }
             else if (type == 'round-trip') {
-                // states.dispatch(new TrainRoundTripRequest(comment,mailCC,purpose));
+                states.dispatch(new TrainRoundTripRequest(comment,mailCC,purpose));
             }
             else if (type == 'multi-city') {
-            //    states.dispatch(new TrainMultiCityRequest(comment,mailCC,purpose));
+               states.dispatch(new TrainMultiCityRequest(comment,mailCC,purpose));
             }
         }
         else if(mode == 'cab') {

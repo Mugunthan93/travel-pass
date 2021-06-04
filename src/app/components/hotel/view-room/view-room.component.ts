@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SecurityContext } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable, of, BehaviorSubject, from, combineLatest, iif } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 import { hotelForm, HotelSearchState } from 'src/app/stores/search/hotel.state';
 import { Store } from '@ngxs/store';
-import { HotelResultState, hotelDetail, selectedHotel, AddRoom, RemoveRoom, BlockRoom, roomCombination, ResetRoom } from 'src/app/stores/result/hotel.state';
+import { HotelResultState, hotelDetail, selectedHotel, AddRoom, RemoveRoom, BlockRoom, ResetRoom } from 'src/app/stores/result/hotel.state';
 import { ModalController, AlertController } from '@ionic/angular';
-import { map, tap, withLatestFrom, flatMap, switchMap } from 'rxjs/operators';
+import * as decode from 'decode-html';
+import { map } from 'rxjs/operators';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-view-room',
@@ -33,13 +35,16 @@ export class ViewRoomComponent implements OnInit {
   openCombo$ : Observable<hotelDetail[][]>;
   fixedCombo$ : Observable<hotelDetail[][]>;
 
+  isHTML = RegExp.prototype.test.bind(/^(<([^>]+)>)$/i);
+
   constructor(
     private store: Store,
     public modalCtrl : ModalController,
     public router: Router,
     public activatedRoute: ActivatedRoute,
     public webView: WebView,
-    public alertCtrl : AlertController
+    public alertCtrl : AlertController,
+    public domSantizier: DomSanitizer
   ) { }
 
   ngOnInit() {
@@ -64,6 +69,12 @@ export class ViewRoomComponent implements OnInit {
   getHotelImage(img : string) {
     return img;
     // return this.webView.convertFileSrc(img);
+  }
+
+  decodeDescritption(desc: string) {
+    const descTemplate = decode(desc);
+    const sanitizedTemplate = this.domSantizier.sanitize(SecurityContext.HTML, descTemplate);
+    return sanitizedTemplate;
   }
 
   bookHotel(room : hotelDetail[]) {

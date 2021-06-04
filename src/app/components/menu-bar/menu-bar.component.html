@@ -26,6 +26,12 @@
           Approval Request
         </ion-label>
       </ion-item>
+      <ion-item class="menu-item" (click)="otherRequest()" *ngIf="isAdmin | async">
+        <ion-icon slot="start" src="../../../assets/menu/approval.svg"></ion-icon>
+        <ion-label class="medium">
+          Other Request
+        </ion-label>
+      </ion-item>
       <ion-item class="menu-item" (click)="onLogout()">
         <ion-icon slot="start" src="../../../assets/menu/logout.svg"></ion-icon>
         <ion-label class="medium">

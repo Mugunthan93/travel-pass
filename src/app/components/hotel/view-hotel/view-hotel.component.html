@@ -24,10 +24,10 @@
     </ion-card-header>
     <ion-card-content>
       <mat-grid-list class="hotel-grid" cols="3" rowHeight="fit" gutterSize="10px">
-        <mat-grid-tile *ngFor="let tile of imgTile((hotel$ | async).HotelDetail.Images);let i = index"
+        <mat-grid-tile *ngFor="let tile of tiles;let i = index"
           [colspan]="tile.cols" [rowspan]="tile.rows"
           [style.background]="'#e87474'">
-          <ion-img *ngIf="i !== 6" [src]="tile.img" ></ion-img>
+          <img *ngIf="i !== 6" [src]="tile.img">
           <ion-label
             *ngIf="i == 6"
             class="large white">

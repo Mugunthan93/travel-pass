@@ -6,7 +6,6 @@ import { ViewRoomComponent } from '../view-room/view-room.component';
 import { Store } from '@ngxs/store';
 import { HotelResultState, selectedHotel } from 'src/app/stores/result/hotel.state';
 import { Observable } from 'rxjs';
-import { WebView } from '@ionic-native/ionic-webview/ngx';
 import * as decode from 'decode-html';
 import { DomSanitizer } from '@angular/platform-browser';
 import { HotelSearchState, hotelForm } from 'src/app/stores/search/hotel.state';
@@ -31,18 +30,19 @@ export class ViewHotelComponent implements OnInit {
   hotelSearch$: Observable<hotelForm>;
   totalGuest$: Observable<number>;
   totalHotels$: Observable<number>;
+  tiles : any;
 
   constructor(
     private store : Store,
     public modalCtrl: ModalController,
     public router: Router,
     public activatedRoute: ActivatedRoute,
-    public domSantizier: DomSanitizer,
-    private webView : WebView
+    public domSantizier: DomSanitizer
   ) { }
 
   ngOnInit() {
     this.hotel$ = this.store.select(HotelResultState.getSelectedHotel);
+    this.tiles = this.imgTile(this.store.selectSnapshot(HotelResultState.getSelectedHotel).HotelDetail.Images);
 
     this.hotelSearch$ = this.store.select(HotelSearchState.getSearchData);
     this.totalGuest$ = this.store.select(HotelSearchState.getGuest);
@@ -68,7 +68,7 @@ export class ViewHotelComponent implements OnInit {
           return {
             rows: 3,
             cols: 1,
-            img: this.webView.convertFileSrc(el)
+            img: el
           }
         }
         else if (ind >= 1) {
@@ -76,14 +76,14 @@ export class ViewHotelComponent implements OnInit {
             return {
               rows: 1,
               cols: 1,
-              img: this.webView.convertFileSrc(el)
+              img: el
             }
           }
           else if (ind == 6) {
             return {
               rows: 1,
               cols: 1,
-              img: this.webView.convertFileSrc(el)
+              img: el
             }
           }
         }
@@ -120,9 +120,6 @@ export class ViewHotelComponent implements OnInit {
     });
 
     return await modal.present();
-  }
-
-  async viewLocation() {
   }
 
   async selectRoom() {

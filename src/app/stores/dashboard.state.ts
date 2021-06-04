@@ -6,7 +6,7 @@ import { MenuController, ModalController } from '@ionic/angular';
 import { SharedService } from '../services/shared/shared.service';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { map, mergeMap, toArray } from 'rxjs/operators';
+import { map, mergeMap, skipWhile, toArray } from 'rxjs/operators';
 import { of, from, forkJoin } from 'rxjs';
 import { BookingService } from "../services/booking/booking.service";
 import { HTTPResponse } from "@ionic-native/http/ngx";
@@ -281,8 +281,8 @@ export class DashboardState {
               .pipe(
                 mergeMap(
                   (type) => {
-                    let bookedTrips$ = this.bookingService.myBooking(type,'booked',mode);
-                    let rescheduledTrips$ = this.bookingService.myBooking(type,'rescheduled',mode);
+                    let bookedTrips$ = this.bookingService.myBooking(type,'booked',mode).pipe(skipWhile(el => el.status !== 200));
+                    let rescheduledTrips$ = this.bookingService.myBooking(type,'rescheduled',mode).pipe(skipWhile(el => el.status !== 200));
 
                     return forkJoin([bookedTrips$,rescheduledTrips$])
                       .pipe(

@@ -1,7 +1,7 @@
 <ion-content>
   <form [formGroup]="bookForm" (ngSubmit)="sendRequest()">
 
-    
+
     <mat-accordion multi="false">
       <mat-expansion-panel>
         <mat-expansion-panel-header [collapsedHeight]="'45px'" [expandedHeight]="'45px'">
@@ -93,11 +93,11 @@
     </ion-row>
     <ion-item>
       <ion-label class="bold">Book Type</ion-label>
-      <ion-select 
+      <ion-select
         formControlName="book_type"
         [ngClass]="errorClass('book_type')"
-        class="form-control" 
-        [placeholder]="'Select Book Type'" 
+        class="form-control"
+        [placeholder]="'Select Book Type'"
         [interfaceOptions]="interfaceOption('Select Book Type')"
         (ionChange)="selectedBookType($event)">
         <ion-select-option *ngFor="let type of types" [value]="type">
@@ -107,11 +107,3 @@
     </ion-item>
   </form>
 </ion-content>
-
-<ion-footer>
-  <form [formGroup]="bookForm" (ngSubmit)="sendRequest()">
-    <ion-button type="submit">
-      <ion-label>Send Request</ion-label>
-    </ion-button>
-  </form>
-</ion-footer>

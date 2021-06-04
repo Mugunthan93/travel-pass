@@ -29,7 +29,7 @@ export class FlightService {
     console.log(this.http.getReqTimeout());
     this.http.setHeader(environment.baseURL, "Content-Type", "application/json");
     this.http.setData('json');
-    return await this.http.post("/airlines/search", searchData);
+    return await this.http.postfromtbo("/airlines/search", searchData);
   }
 
   async fairRule(fareRule: fareRule): Promise<HTTPResponse> {
